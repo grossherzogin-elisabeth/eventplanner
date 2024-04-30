@@ -15,4 +15,4 @@ RUN ./gradlew build
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 COPY --from=backend-builder /builder/build/libs/*.jar eventplanner.jar
-ENTRYPOINT ["java","-XX:+UseContainerSupport","-jar","/app/eventplanner.jar"]
+ENTRYPOINT ["java","-XX:+UseContainerSupport","-jar","/app/eventplanner.jar","--spring.profiles.active=prod"]
