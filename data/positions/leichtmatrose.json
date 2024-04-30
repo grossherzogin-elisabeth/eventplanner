@@ -1,0 +1,7 @@
+{
+    "key": "leichtmatrose",
+    "name": "Leichtmatrose:in",
+    "substitutes": ["deckshand"],
+    "color": "#38bdf8",
+    "prio": 2
+}

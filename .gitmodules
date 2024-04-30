@@ -1,0 +1,6 @@
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/grossherzogin-elisabeth/eventplanner-frontend
+[submodule "backend"]
+	path = backend
+	url = https://github.com/grossherzogin-elisabeth/eventplanner-backend

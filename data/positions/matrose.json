@@ -1,0 +1,7 @@
+{
+    "key": "matrose",
+    "name": "Matrose:in",
+    "substitutes": ["deckshand", "leichtmatrose"],
+    "color": "#fdba74",
+    "prio": 3
+}
