@@ -51,8 +51,8 @@ resource "azurerm_container_app" "eventplanner" {
     container {
       name   = "eventplanner"
       image  = "ghcr.io/grossherzogin-elisabeth/eventplanner:main"
-      cpu    = 1.0
-      memory = "2Gi"
+      cpu    = 0.5
+      memory = "1Gi"
 
       volume_mounts {
         name = "vol-eventplanner"
