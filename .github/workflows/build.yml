@@ -16,9 +16,9 @@ on:
 
 env:
   # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
+  REGISTRY: ${{ vars.AWS_ECR_REPOSITORY }}
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ vars.AWS_ECR_APP_NAME }}
 
 
 jobs:
@@ -59,7 +59,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3.0.0
         with:
-          registry: ${{ vars.AWS_ECR_REPOSITORY }}
+          registry: ${{ env.REGISTRY }}
           username: ${{ secrets.AWS_ACCESS_KEY }}
           password: ${{ secrets.AWS_ACCESS_SECRET }}
           
@@ -69,7 +69,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.0.0
         with:
-          images: ${{ vars.AWS_ECR_REPOSITORY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTY }}/${{ env.IMAGE_NAME }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
