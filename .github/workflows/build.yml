@@ -59,17 +59,17 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3.0.0
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
+          registry: ${{ env.AWS_ECR_REPOSITORY }}
+          username: ${{ secrets.AWS_ACCESS_KEY }}
+          password: ${{ secrets.AWS_ACCESS_SECRET }}
+          
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5.0.0
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.AWS_ECR_REPOSITORY }}/${{ env.IMAGE_NAME }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -99,20 +99,5 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes --force {}@${DIGEST}
-
-      # Log in to Azure to update the docker image and perform terraform updates
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
-      # Deploy image to Azure
-      - name: Deploy Container App
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          imageToDeploy: ghcr.io/grossherzogin-elisabeth/eventplanner:main
-          resourceGroup: "rg-eventplanner-live"
-          containerAppEnvironment: "cae-eventplanner-live"
-          containerAppName: "ca-eventplanner-live"
 
     
