@@ -1,4 +1,4 @@
-name: Docker
+name: Build and push Docker container
 
 on:
   push:
@@ -64,8 +64,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ghcr.io/grossherzogin-elisabeth/eventplanner:latest
-            ghcr.io/grossherzogin-elisabeth/eventplanner:1.0.0
+            ghcr.io/grossherzogin-elisabeth/eventplanner:1.0.0-alpha
             ${{ vars.AWS_ECR_REPOSITORY }}/eventplanner:latest
-            ${{ vars.AWS_ECR_REPOSITORY }}/eventplanner:1.0.0
+            ${{ vars.AWS_ECR_REPOSITORY }}/eventplanner:1.0.0-alpha
           cache-from: type=gha
           cache-to: type=gha,mode=max
