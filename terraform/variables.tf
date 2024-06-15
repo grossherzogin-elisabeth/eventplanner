@@ -19,6 +19,6 @@ variable "env" {
 variable "domain" {
   description = "Domain of the application"
   type        = string
-  default     = "crew.grosses-meer.surf"
+  default     = "crew.grossherzogin-elisabeth.de"
 }
 

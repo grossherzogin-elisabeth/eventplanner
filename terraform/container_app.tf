@@ -60,15 +60,19 @@ resource "azurerm_container_app" "eventplanner" {
       }
 
       env {
-        name  = "AUTH_ISSUER_URI"
-        value = "https://login.microsoftonline.com/63384ddf-6496-44bd-b22c-93e944e6ed88/v2.0"
+        name  = "AUTH_COGNITO_REGION"
+        value = "eu-central-1"
       }
       env {
-        name        = "AUTH_CLIENT_ID"
+        name  = "AUTH_COGNITO_USER_POOL_ID"
+        value = "eu-central-1_erXnjLJc7"
+      }
+      env {
+        name        = "AUTH_COGNITO_CLIENT_ID"
         secret_name = "client-id"
       }
       env {
-        name        = "AUTH_CLIENT_SECRET"
+        name        = "AUTH_COGNITO_CLIENT_SECRET"
         secret_name = "client-secret"
       }
       env {
