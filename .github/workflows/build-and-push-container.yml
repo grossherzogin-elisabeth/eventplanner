@@ -11,7 +11,7 @@ on:
 
 
 jobs:
-  build:
+  build-and-push-container:
 
     runs-on: ubuntu-latest
     permissions:
@@ -64,7 +64,7 @@ jobs:
           tags: |
             ghcr.io/grossherzogin-elisabeth/eventplanner:latest
             ghcr.io/grossherzogin-elisabeth/eventplanner:1.0.0
-            ${{ vars.AWS_REGISTRY }}/eventplanner:latest
-            ${{ vars.AWS_REGISTRY }}/eventplanner:1.0.0
+            ${{ vars.AWS_ECR_REPOSITORY }}/eventplanner:latest
+            ${{ vars.AWS_ECR_REPOSITORY }}/eventplanner:1.0.0
           cache-from: type=gha
           cache-to: type=gha,mode=max
