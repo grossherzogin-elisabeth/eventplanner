@@ -35,3 +35,4 @@ terraform.rc
 
 .vscode
 .idea
+*.local.env
