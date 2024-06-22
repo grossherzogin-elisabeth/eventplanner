@@ -23,7 +23,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      - WATCHTOWER_SCHEDULE=0 0 * * * *
 
 secrets:
   my_secret:
