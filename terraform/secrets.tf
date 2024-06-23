@@ -17,3 +17,13 @@ data "azurerm_key_vault_certificate" "ssl_certificate" {
   name         = "cert-crew-grossherzogin-elisabeth-de"
   key_vault_id = data.azurerm_key_vault.eventplanner.id
 }
+
+data "azurerm_key_vault_certificate" "users_excel_password" {
+  name         = "users-excel-password"
+  key_vault_id = data.azurerm_key_vault.eventplanner.id
+}
+
+data "azurerm_key_vault_certificate" "data_encryption_password" {
+  name         = "data-encryption-password"
+  key_vault_id = data.azurerm_key_vault.eventplanner.id
+}

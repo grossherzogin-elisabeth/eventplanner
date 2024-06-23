@@ -91,4 +91,14 @@ resource "azurerm_container_app" "eventplanner" {
     name  = "client-secret"
     value = data.azurerm_key_vault_secret.client_secret.value
   }
+
+  secret {
+    name  = "users-excel-password"
+    value = data.azurerm_key_vault_secret.users_excel_password.value
+  }
+
+  secret {
+    name  = "data-encryption-password"
+    value = data.azurerm_key_vault_secret.data_encryption_password.value
+  }
 }
