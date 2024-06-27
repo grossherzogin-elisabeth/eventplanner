@@ -76,6 +76,14 @@ resource "azurerm_container_app" "eventplanner" {
         secret_name = "client-secret"
       }
       env {
+        name        = "USERS_EXCEL_PASSWORD"
+        secret_name = "users-excel-password"
+      }
+      env {
+        name        = "DATA_ENCRYPTION_PASSWORD"
+        secret_name = "data-encryption-password"
+      }
+      env {
         name  = "SERVER_HOST"
         value = var.domain
       }
