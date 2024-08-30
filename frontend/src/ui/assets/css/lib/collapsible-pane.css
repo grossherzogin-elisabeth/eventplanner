@@ -1,0 +1,59 @@
+.collapsible-pane-btn {
+    @apply flex w-full cursor-pointer items-center;
+    @apply focus:outline-none;
+}
+
+.collapsible-pane-btn:focus {
+    outline: none;
+}
+
+.collapsible-pane-btn .collapsible-pane-btn-icon {
+    @apply ml-4 h-3.5 w-3.5;
+}
+
+.collapsible-pane {
+    --preferred-height: 100vh;
+    max-height: 0;
+    overflow: hidden;
+    animation-timing-function: ease;
+    animation-duration: 0.5s;
+    will-change: max-height;
+}
+
+.collapsible-pane-icon {
+    @apply ml-4 h-3.5 w-3.5 transition-transform;
+}
+
+.collapsible-pane.open {
+    max-height: unset;
+}
+
+.collapsible-pane.closed {
+    max-height: 0;
+}
+
+.collapsible-pane.open.animate {
+    animation-name: collapsible-pane-open-animation;
+}
+
+.collapsible-pane.closed.animate {
+    animation-name: collapsible-pane-close-animation;
+}
+
+@keyframes collapsible-pane-open-animation {
+    0% {
+        max-height: 0;
+    }
+    100% {
+        max-height: var(--preferred-height);
+    }
+}
+
+@keyframes collapsible-pane-close-animation {
+    0% {
+        max-height: var(--preferred-height);
+    }
+    100% {
+        max-height: 0;
+    }
+}

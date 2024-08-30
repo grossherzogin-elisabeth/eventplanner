@@ -1,0 +1,176 @@
+<template>
+    <div :class="$attrs.class" class="input-datepicker flex items-start">
+        <label v-if="props.label" class="input-label">
+            {{ props.label }}
+        </label>
+        <div class="relative h-full w-1/2 flex-grow">
+            <div ref="dropdownAnchor" class="input-field-wrapper">
+                <input
+                    :id="id"
+                    :aria-disabled="props.disabled"
+                    :aria-invalid="hasErrors"
+                    :aria-required="props.required"
+                    :class="{ invalid: showErrors && hasErrors }"
+                    :disabled="props.disabled"
+                    :placeholder="$t('shared.please-select')"
+                    :required="props.required"
+                    :value="displayValue"
+                    aria-haspopup="true"
+                    class="input-field w-full cursor-pointer overflow-ellipsis pr-10"
+                    readonly
+                    @blur="visited = true"
+                    @click="openDropdown()"
+                    @keydown.enter.prevent="openDropdown()"
+                    @keydown.space.prevent="openDropdown()"
+                    @keydown.left="onArrowLeft()"
+                    @keydown.right="onArrowRight()"
+                    @keydown.up.prevent="onArrowUp()"
+                    @keydown.down.prevent="onArrowDown()"
+                    @keydown.esc="showDropdown = false"
+                />
+
+                <div class="input-icon-right">
+                    <i class="fa-solid fa-calendar-day text-sm text-primary-600"></i>
+                </div>
+            </div>
+            <div v-if="showErrors && hasErrors" class="input-errors">
+                <p v-for="err in errors" :key="err.key" class="input-error">
+                    {{ $t(err.key, err.params) }}
+                </p>
+            </div>
+        </div>
+
+        <VDropdownWrapper
+            v-if="showDropdown"
+            :anchor="dropdownAnchor"
+            anchor-align-y="top"
+            class="input-datepicker-dropdown"
+            max-height="100vh"
+            max-width="100vw"
+            min-width="300px"
+            @close="showDropdown = false"
+        >
+            <Datepicker
+                ref="datepicker"
+                :inline="true"
+                :model-value="props.modelValue"
+                language="de"
+                monday-first
+                @input="onInput($event)"
+            />
+        </VDropdownWrapper>
+    </div>
+</template>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { DateUtils } from '@/common/date/DateUtils';
+import type { ValidationHint } from '@/domain';
+import { v4 as uuidv4 } from 'uuid';
+import Datepicker from 'vuejs3-datepicker';
+import VDropdownWrapper from '../dropdown/VDropdownWrapper.vue';
+
+interface Props {
+    // an optional label to render before the input field
+    label?: string;
+    // the value we edit, bind with v-model
+    modelValue?: Date;
+    // disables this input
+    disabled?: boolean;
+    // marks this input as required
+    required?: boolean;
+    // validation and/or service errors for this input
+    errors?: ValidationHint[];
+    // show errors, even if this field has not been focused jet, e.g. after pressing save
+    errorsVisible?: boolean;
+    // placeholder to display if no value is entered
+    placeholder?: string;
+    // input type used, defaults to text
+    type?: 'text' | 'passwort' | 'email' | 'time' | 'number';
+}
+
+interface Emits {
+    (e: 'update:modelValue', value: Date): void;
+}
+
+/**
+ * --------------------------------------------------------------------------------------------------------
+ * Component Definition
+ * --------------------------------------------------------------------------------------------------------
+ * Requires https://www.npmjs.com/package/vuejs3-datepicker
+ */
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+
+const id = uuidv4();
+const visited = ref(false);
+const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
+const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
+
+const dropdownAnchor = ref<HTMLElement | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const datepicker = ref<any | null>(null);
+const showDropdown = ref<boolean>(false);
+const displayValue = computed<string>(() => {
+    if (props.modelValue instanceof Date) {
+        let day = props.modelValue.getDate().toString();
+        if (day.length === 1) {
+            day = `0${day}`;
+        }
+        let month = (props.modelValue.getMonth() + 1).toString();
+        if (month.length === 1) {
+            month = `0${month}`;
+        }
+        const year = props.modelValue.getFullYear().toString();
+        return `${day}.${month}.${year}`;
+    }
+    return '';
+});
+
+function onInput(date: Date) {
+    visited.value = true;
+    showDropdown.value = false;
+    emit('update:modelValue', date);
+}
+
+function openDropdown(): void {
+    showDropdown.value = true;
+}
+
+function onArrowLeft(): void {
+    let date = props.modelValue || new Date();
+    date = DateUtils.subtract(date, { days: 1 });
+    emit('update:modelValue', date);
+}
+
+function onArrowRight(): void {
+    let date = props.modelValue || new Date();
+    date = DateUtils.add(date, { days: 1 });
+    emit('update:modelValue', date);
+}
+
+function onArrowUp(): void {
+    let date = props.modelValue || new Date();
+    if (showDropdown.value) {
+        // if the datepicker is open, select the previous row (= week)
+        date = DateUtils.subtract(date, { days: 7 });
+    } else {
+        // if the datepicker is not currently open, selecting the previous day feels more natural
+        date = DateUtils.subtract(date, { days: 1 });
+    }
+    emit('update:modelValue', date);
+}
+
+function onArrowDown(): void {
+    let date = props.modelValue || new Date();
+    if (showDropdown.value) {
+        // if the datepicker is open, select the next row (= week)
+        date = DateUtils.add(date, { days: 7 });
+    } else {
+        // if the datepicker is not currently open, selecting the next day feels more natural
+        date = DateUtils.add(date, { days: 1 });
+    }
+    emit('update:modelValue', date);
+}
+</script>

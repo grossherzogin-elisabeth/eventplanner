@@ -1,0 +1,90 @@
+# https://docs.spring.io/spring-boot/appendix/application-properties/index.html
+build:
+  time: ${BUILD_DATE:now}
+  commit: ${BUILD_COMMIT:local}
+  branch: ${BUILD_BRANCH:main}
+
+custom:
+  data-directory: data
+  data-encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
+  users-excel-password: ${USERS_EXCEL_PASSWORD:}
+  logout-success-url: ${frontend.domain}/login/oauth2/code/cognito
+  login-success-url: ${frontend.domain}
+  admins: >
+    admin@grossherzogin-elisabeth.de
+
+auth:
+  cognito:
+    user-pool-id: ${AUTH_COGNITO_USER_POOL_ID:eu-central-1_erXnjLJc7}
+    client-secret: ${AUTH_COGNITO_CLIENT_SECRET:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+    client-id: ${AUTH_COGNITO_CLIENT_ID:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
+    region: ${AUTH_COGNITO_REGION:eu-central-1}
+  entraid:
+    client-secret: ${AUTH_ENTRA_ID_CLIENT_SECRET:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+    client-id: ${AUTH_ENTRA_ID_CLIENT_ID:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
+    tennant-id: ${AUTH_ENTRA_ID_TENNANT_ID:63384ddf-6496-44bd-b22c-93e944e6ed88}
+  keycloak:
+    issuer-uri: ${AUTH_KEYCLOAK_ISSUER_URI:https://auth.grossherzogin-elisabeth.de}
+    client-secret: ${AUTH_KEYCLOAK_CLIENT_SECRET:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+    client-id: ${AUTH_KEYCLOAK_CLIENT_ID:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
+  # 60 * 60 * 24 * 30
+  session-timout: 2592000
+
+security:
+  # TODO csrf protection currently blocks all post requests even if the xsrf token is present
+  # temporary disabled until further investigation
+  enable-csrf: false
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          entraid:
+            redirect-uri: ${frontend.domain}/login/oauth2/code/entraid
+            scope: openid,email,profile
+            provider: entraid
+            client-id: ${auth.entraid.client-id}
+            client-secret: ${auth.entraid.client-secret}
+          cognito:
+            provider: cognito
+            client-secret: ${auth.cognito.client-secret}
+            client-id: ${auth.cognito.client-id}
+            scope: openid,email,profile
+            redirect-uri: ${frontend.domain}/login/oauth2/code/cognito
+          # keycloak:
+          #   provider: keycloak
+          #   client-secret: ${auth.keycloak.client-secret}
+          #   client-id: ${auth.keycloak.client-id}
+          #   scope: openid,email,profile
+          #   redirect-uri: ${frontend.domain}/login/oauth2/code/keycloak
+        provider:
+          cognito:
+            issuer-uri: https://cognito-idp.${auth.cognito.region}.amazonaws.com/${auth.cognito.user-pool-id}
+          entraid:
+            issuer-uri: https://login.microsoftonline.com/${auth.entraid.tennant-id}/v2.0
+          keycloak:
+            issuer-uri: ${auth.keycloak.issuer-uri}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  session:
+    timeout: ${auth.session-timout}
+
+server:
+  port: ${SERVER_PORT:8080}
+  host: ${SERVER_HOST:localhost}
+  protocol: ${SERVER_PROTOCOL:http}
+  domain: ${server.protocol}://${server.host}:${server.port}
+  servlet:
+    session:
+      timeout: ${auth.session-timout}s
+      cookie:
+        max-age: ${auth.session-timout}
+
+frontend:
+  protocol: ${server.protocol}
+  host: ${server.host}
+  port: ${server.port}
+  domain: ${frontend.protocol}://${frontend.host}:${frontend.port}

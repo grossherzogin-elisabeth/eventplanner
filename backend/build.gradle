@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'io.freefair.lombok' version '8.6'
+}
+
+group = 'org.eventplanner'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // spring
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.3.+'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.3.+'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.+'
+
+    // json parsing
+    implementation 'com.google.code.gson:gson:2.10.+'
+
+    // excel
+    implementation 'org.apache.poi:poi:5.2.+'
+    implementation 'org.apache.poi:poi-ooxml:5.2.+'
+
+    // tests
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.+'
+    testImplementation 'org.springframework.security:spring-security-test:6.3.+'
+
+    // silence 'unknown enum constant javax.annotation.meta.When.MAYBE' warning
+    // https://stackoverflow.com/questions/53326271/spring-nullable-annotation-generates-unknown-enum-constant-warning
+    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

@@ -1,0 +1,55 @@
+.bg-striped {
+    --color-1: rgb(255 255 255 / 0.6);
+    --color-2: rgb(255 255 255 / 0.2);
+    --pattern: linear-gradient(
+        135deg,
+        var(--color-1) 25%,
+        var(--color-2) 25%,
+        var(--color-2) 50%,
+        var(--color-1) 50%,
+        var(--color-1) 75%,
+        var(--color-2) 75%,
+        var(--color-2) 100%
+    );
+    background-size: 10px 10px;
+    background-image: var(--pattern);
+}
+
+.event-card {
+    @apply overflow-hidden rounded-xl border border-blue-200 hover:shadow-lg;
+    @apply cursor-pointer;
+    @apply text-sm font-semibold;
+}
+
+.event-card .border-event-card {
+    @apply border-blue-200;
+}
+
+.event-card > * {
+    @apply h-full w-full py-1 pl-2 pr-4 text-white sm:px-2;
+    @apply border-l-8 border-blue-400;
+    @apply bg-blue-100 bg-opacity-75 hover:bg-opacity-100;
+    @apply text-blue-900;
+}
+
+.event-card h3 {
+    @apply text-blue-900;
+}
+
+.event-card.assigned {
+    @apply border border-green-200;
+}
+
+.event-card.assigned > * {
+    @apply border-l-8 border-green-700;
+    @apply bg-green-100 bg-opacity-75 hover:bg-opacity-100;
+    @apply text-green-900;
+}
+
+.event-card.assigned h3 {
+    @apply text-green-900;
+}
+
+.event-card.assigned .border-event-card {
+    @apply border-green-200;
+}

@@ -1,0 +1,42 @@
+/* --------------------------------------------------------------- */
+/* Generic input styling */
+/* --------------------------------------------------------------- */
+
+.input-field-wrapper {
+    @apply flex items-center;
+}
+
+.input-field {
+    @apply w-full py-2.5 pl-4;
+    @apply border-none;
+    @apply bg-transparent;
+    @apply outline-none focus:outline-none;
+}
+
+.input-field:disabled {
+    @apply opacity-50;
+}
+
+/* select svgs next to input, like dropdown arrows */
+.input-field:disabled + svg {
+    @apply opacity-50;
+}
+
+.input-field:focus {
+    border-color: cornflowerblue;
+}
+
+.input-label {
+}
+
+.input-label.required {
+    @apply font-semibold;
+}
+
+.input-label.required span:first-child:after {
+    content: ' *';
+}
+
+.input-icon-right {
+    @apply pointer-events-none absolute bottom-0 right-0 top-0 mr-4 flex w-4 items-center justify-center;
+}

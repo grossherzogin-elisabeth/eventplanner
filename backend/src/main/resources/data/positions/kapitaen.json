@@ -1,0 +1,7 @@
+ {
+    "key": "kapitaen",
+    "name": "Kapitän:in",
+    "substitutes": ["steuermann"],
+    "color": "#78716c",
+    "prio": 9
+}

@@ -1,0 +1,119 @@
+@import '@/ui/assets/css/lib/checkbox.css';
+@import '@/ui/assets/css/lib/input-generic.css';
+@import '@/ui/assets/css/lib/input-errors.css';
+@import '@/ui/assets/css/lib/input-date.css';
+@import '@/ui/assets/css/lib/input-numeric.css';
+@import '@/ui/assets/css/lib/input-multiselection.css';
+@import '@/ui/assets/css/lib/input-textarea.css';
+
+.input-field-wrapper {
+    @apply h-full overflow-hidden rounded-lg border border-primary-300 bg-primary-100;
+}
+
+.input-search .input-field-wrapper {
+    @apply rounded-full;
+    @apply border border-primary-100;
+    @apply focus-within:border-primary-300;
+}
+
+.input-search .input-field-wrapper:not(.disabled):hover {
+    @apply border-primary-300;
+}
+
+.input-search .input-field-wrapper .input-field {
+    @apply py-2;
+}
+
+.input-field {
+    @apply pb-1 pt-6;
+}
+
+.input-field::placeholder {
+    @apply text-primary-900 text-opacity-25;
+}
+
+.input-field-wrapper:not(.disabled):hover {
+    @apply border border-primary-400 bg-primary-200;
+}
+
+.input-field-wrapper:focus-within {
+    @apply border border-primary-400 bg-primary-100;
+}
+
+.input-field-wrapper input {
+    @apply border-none bg-transparent;
+}
+
+.input-field-wrapper:has(.invalid) {
+    @apply border-red-200 bg-red-50;
+}
+
+.input-field-wrapper:has(.invalid):not(.disabled):hover {
+    @apply border-red-300 bg-red-100;
+}
+
+.input-field-wrapper:has(.invalid):focus-within {
+    @apply border-red-300 bg-red-100;
+}
+
+.input-field-wrapper textarea {
+    @apply border-none bg-transparent;
+}
+
+.input-dropdown,
+.input-datepicker-dropdown {
+    @apply rounded-lg border border-primary-400 bg-primary-100 shadow-xl;
+}
+
+.input-dropdown li {
+    @apply py-4 pl-4;
+}
+
+.input-dropdown li.input-dropdown-option:hover {
+    @apply bg-primary-200;
+}
+
+.input-dropdown li.input-dropdown-option-focus {
+    @apply bg-primary-200 text-primary-700;
+}
+
+.input-label {
+    @apply mb-1 mt-4 text-sm font-bold;
+    @apply pointer-events-none relative z-10 -mb-5 ml-4 text-xs opacity-50;
+}
+
+.input-datepicker-dropdown .vuejs3-datepicker__calendar {
+    @apply rounded-lg border border-primary-400 bg-primary-100;
+}
+
+.input-datepicker-dropdown {
+    @apply overflow-hidden border-none;
+}
+
+.input-datepicker-dropdown .vuejs3-datepicker__calendar-topbar {
+    @apply hidden;
+}
+
+.input-datepicker-dropdown .day-header {
+    @apply font-semibold opacity-25;
+}
+
+.input-datepicker-dropdown .vuejs3-datepicker__calendar .day.selected {
+    @apply rounded-lg bg-primary-600 bg-opacity-20;
+    @apply text-primary-600;
+}
+
+.input-datepicker-dropdown .vuejs3-datepicker__calendar {
+    @apply mt-0 w-full;
+}
+
+.input-datepicker-dropdown .vuejs3-datepicker__calendar .cell {
+    @apply border-none;
+}
+
+.input-datepicker-dropdown .vuejs3-datepicker__calendar .cell:not(.blank):not(.disabled).day:hover,
+.input-datepicker-dropdown .vuejs3-datepicker__calendar .cell:not(.blank):not(.disabled).month:hover,
+.input-datepicker-dropdown .vuejs3-datepicker__calendar .cell:not(.blank):not(.disabled).year:hover {
+    @apply border-none;
+    @apply rounded-lg bg-primary-200;
+}

@@ -1,0 +1,24 @@
+{
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "printWidth": 120,
+    "semi": true,
+    "singleQuote": true,
+    "quoteProps": "consistent",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "importOrder": [
+        "^vue$",
+        "^vue-router$",
+        "^vue-i18n$",
+        "<THIRD_PARTY_MODULES>",
+        "^@/lib/(.*)$",
+        "^@/shared/(.*)$",
+        "^@/ctx-(.*)$",
+        "^[./]",
+        "^(.*).css$"
+    ],
+    "importOrderSeparation": false,
+    "importOrderSortSpecifiers": true,
+    "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"]
+}

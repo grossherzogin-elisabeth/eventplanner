@@ -1,0 +1,16 @@
+/* --------------------------------------------------------------- */
+/* Errors */
+/* --------------------------------------------------------------- */
+
+.input-error {
+    @apply pt-2;
+    color: indianred;
+}
+
+.input-field.invalid {
+    border-color: indianred;
+}
+
+.input-label.invalid {
+    color: indianred;
+}

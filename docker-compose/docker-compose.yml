@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  eventplanner:
+    container_name: eventplanner
+    image: ghcr.io/grossherzogin-elisabeth/eventplanner:1.0.0-alpha
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - eventplanner.local.env
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:25.0.2
+    restart: unless-stopped
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: [ 'start-dev' ]
+    ports:
+      - "8082:8080"
+
+  tunnel:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    env_file:
+      - tunnel.local.env
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_SCHEDULE=0 0 * * * *
+
+secrets:
+  my_secret:
+    file: ./secrets.txt

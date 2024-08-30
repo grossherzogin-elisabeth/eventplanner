@@ -1,0 +1,90 @@
+button:disabled {
+    @apply bg-opacity-50;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    @apply rounded-lg;
+    @apply px-4 py-2;
+    @apply font-bold;
+    @apply flex items-center space-x-4;
+}
+
+.btn-primary {
+    @apply bg-primary-300 text-primary-900;
+}
+
+.btn-primary:enabled {
+    @apply bg-primary-300 bg-opacity-75 hover:bg-opacity-100 hover:shadow;
+}
+
+.btn-primary:disabled {
+    @apply bg-primary-200 bg-opacity-75 text-primary-900 text-opacity-25;
+}
+
+.btn-secondary {
+    @apply bg-gray-200 text-gray-700;
+}
+
+.btn-secondary:enabled {
+    @apply bg-gray-200 bg-opacity-75 hover:bg-opacity-100 hover:shadow;
+}
+
+.btn-secondary:disabled {
+    @apply bg-gray-100 text-gray-700 text-opacity-25;
+}
+
+.btn-danger {
+    @apply bg-red-400 text-white;
+}
+
+.btn-danger:enabled {
+    @apply bg-red-400 bg-opacity-75 hover:bg-opacity-100 hover:shadow;
+}
+
+.btn-danger:disabled {
+    @apply bg-red-100 text-white;
+}
+
+.btn-floating {
+    @apply px-4 py-4;
+    @apply rounded-xl shadow-xl;
+    @apply bg-opacity-100 !important;
+}
+
+@media (max-width: 1279px) {
+    .-xl\:btn-floating {
+        @apply px-4 py-4;
+        @apply rounded-xl shadow-xl;
+        @apply bg-opacity-100 !important;
+    }
+}
+
+.btn-toolbar {
+    @apply rounded-lg px-2 py-1;
+}
+
+.btn-toolbar:enabled {
+    @apply hover:bg-gray-200;
+}
+
+.btn-ghost {
+    @apply flex items-center justify-center;
+    @apply text-sm font-bold uppercase text-primary-700;
+    @apply rounded-lg px-4 py-2 hover:bg-primary-50;
+    @apply hover:no-underline;
+}
+
+.bg-primary-50 .btn-ghost {
+    @apply text-primary-900 hover:bg-primary-100;
+}
+
+.bg-primary-200 .btn-ghost {
+    @apply text-primary-900 hover:bg-primary-300;
+}
+
+.btn-back {
+    @apply btn-ghost;
+    @apply rounded-full p-3 text-base;
+}

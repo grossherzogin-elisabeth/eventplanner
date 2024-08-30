@@ -1,0 +1,81 @@
+html {
+    /*font-family: 'Open Sans', sans-serif;*/
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 16px;
+    word-spacing: 1px;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-weight: normal;
+    @apply text-primary-950;
+}
+
+body {
+    @apply text-base;
+}
+
+h1 {
+    @apply text-lg font-bold;
+}
+
+h2 {
+    @apply text-sm font-bold text-primary-900;
+}
+
+h3 {
+    @apply text-base font-semibold text-primary-900;
+}
+
+hr {
+    @apply my-4 border-primary-300;
+}
+
+a {
+    @apply hover:underline;
+}
+
+code {
+    @apply rounded-lg bg-gray-300 px-2 py-1;
+}
+
+::-moz-selection {
+    @apply bg-gray-600 text-white;
+}
+
+::selection {
+    @apply bg-gray-600 text-white;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    font-weight: normal;
+    font-style: normal;
+    font-display: auto;
+    unicode-range: U+000-5FF;
+    src:
+        url('../../fonts/OpenSans-Regular.woff2') format('woff2'),
+        url('../../fonts/OpenSans-Regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    font-weight: 200;
+    font-style: normal;
+    font-display: auto;
+    unicode-range: U+000-5FF;
+    src:
+        url('../../fonts/OpenSans-Light.woff2') format('woff2'),
+        url('../../fonts/OpenSans-Light.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    font-weight: bold;
+    font-style: normal;
+    font-display: auto;
+    unicode-range: U+000-5FF;
+    src:
+        url('../../fonts/OpenSans-Semibold.woff2') format('woff2'),
+        url('../../fonts/OpenSans-Semibold.woff') format('woff');
+}

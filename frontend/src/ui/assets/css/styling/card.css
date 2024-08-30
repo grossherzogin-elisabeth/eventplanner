@@ -1,0 +1,19 @@
+.card {
+    @apply overflow-hidden rounded-2xl border border-gray-50 bg-white shadow;
+    @apply p-4 lg:p-8;
+    @apply md:overflow-auto md:rounded-none md:border-none md:bg-transparent md:p-0 md:shadow-none;
+}
+
+.card-blur {
+    @apply mb-4 overflow-hidden rounded-2xl bg-white bg-opacity-90 shadow backdrop-blur-lg;
+}
+
+.card-headline {
+    @apply mb-2 ml-4 text-sm font-semibold lg:ml-8;
+    @apply flex items-center space-x-4;
+    @apply md:mb-4 md:ml-0;
+}
+
+.card .card-headline {
+    @apply mb-4 ml-0 mt-0;
+}
