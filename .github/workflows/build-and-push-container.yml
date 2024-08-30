@@ -5,8 +5,6 @@ on:
     branches: [ "main" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 
@@ -24,9 +22,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          submodules: 'true'
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -43,16 +38,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
-      - name: Log into private aws registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3.0.0
-        with:
-          registry: ${{ vars.AWS_ECR_REPOSITORY }}
-          username: ${{ secrets.AWS_ACCESS_KEY }}
-          password: ${{ secrets.AWS_ACCESS_SECRET }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -72,7 +57,5 @@ jobs:
           tags: |
             ghcr.io/grossherzogin-elisabeth/eventplanner:latest
             ghcr.io/grossherzogin-elisabeth/eventplanner:1.0.0-alpha
-            ${{ vars.AWS_ECR_REPOSITORY }}/eventplanner:latest
-            ${{ vars.AWS_ECR_REPOSITORY }}/eventplanner:1.0.0-alpha
           cache-from: type=gha
           cache-to: type=gha,mode=max
