@@ -4,7 +4,6 @@ import type { Position } from '@/domain';
 interface PositionRepresentation {
     key: string;
     name: string;
-    substitutes: string[];
     color: string;
     prio: number;
 }
@@ -17,7 +16,6 @@ export class PositionRestRepository implements PositionRepository {
             return positions.map((it) => ({
                 key: it.key,
                 name: it.name,
-                substitutes: it.substitutes,
                 color: it.color,
                 prio: it.prio,
             }));
