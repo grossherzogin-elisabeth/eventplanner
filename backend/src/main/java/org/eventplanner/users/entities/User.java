@@ -1,14 +1,15 @@
 package org.eventplanner.users.entities;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import java.util.List;
+
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 
-import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

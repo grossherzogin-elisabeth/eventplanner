@@ -1,13 +1,13 @@
 package org.eventplanner.events.rest.dto;
 
-import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.events.entities.Slot;
-import org.eventplanner.events.values.SlotKey;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-
 import java.io.Serializable;
 import java.util.List;
+
+import org.eventplanner.events.entities.Slot;
+import org.eventplanner.events.values.SlotKey;
+import org.eventplanner.positions.values.PositionKey;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record SlotRepresentation(
     @NonNull String key,
@@ -23,7 +23,8 @@ public record SlotRepresentation(
             domain.order(),
             domain.required(),
             domain.positions().stream().map((PositionKey::value)).toList(),
-            domain.name());
+            domain.name()
+        );
     }
 
     public @NonNull Slot toDomain() {
@@ -32,6 +33,7 @@ public record SlotRepresentation(
             order,
             required,
             positionKeys().stream().map((PositionKey::new)).toList(),
-            name);
+            name
+        );
     }
 }

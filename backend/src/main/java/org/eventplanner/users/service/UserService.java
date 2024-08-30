@@ -1,5 +1,12 @@
 package org.eventplanner.users.service;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.eventplanner.users.adapter.UserRepository;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.User;
@@ -12,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 public class UserService {

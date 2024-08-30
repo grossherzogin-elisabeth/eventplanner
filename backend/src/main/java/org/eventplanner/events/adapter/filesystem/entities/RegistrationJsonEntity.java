@@ -1,15 +1,15 @@
 package org.eventplanner.events.adapter.filesystem.entities;
 
-import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.users.values.UserKey;
-import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.values.SlotKey;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import static org.eventplanner.utils.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import org.eventplanner.events.entities.Registration;
+import org.eventplanner.events.values.SlotKey;
+import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.users.values.UserKey;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record RegistrationJsonEntity(
     @NonNull String positionKey,
@@ -23,7 +23,8 @@ public record RegistrationJsonEntity(
             domain.position().value(),
             mapNullable(domain.user(), UserKey::value),
             domain.name(),
-            mapNullable(domain.slot(), SlotKey::value));
+            mapNullable(domain.slot(), SlotKey::value)
+        );
     }
 
     public @NonNull Registration toDomain() {
@@ -31,6 +32,7 @@ public record RegistrationJsonEntity(
             new PositionKey(positionKey),
             mapNullable(userKey, UserKey::new),
             name,
-            mapNullable(slotKey, SlotKey::new));
+            mapNullable(slotKey, SlotKey::new)
+        );
     }
 }

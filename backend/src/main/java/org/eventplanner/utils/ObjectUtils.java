@@ -1,10 +1,10 @@
 package org.eventplanner.utils;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-
 import java.util.List;
 import java.util.stream.Stream;
+
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public class ObjectUtils {
     public static @NonNull <T> T orElse(@Nullable T nullable, @NonNull T fallback) {
@@ -21,7 +21,11 @@ public class ObjectUtils {
         return mapper.map(nullable);
     }
 
-    public static @NonNull <T, E> T mapNullable(@Nullable E nullable, @NonNull Mapper<E, T> mapper, @NonNull T fallback) {
+    public static @NonNull <T, E> T mapNullable(
+        @Nullable E nullable,
+        @NonNull Mapper<E, T> mapper,
+        @NonNull T fallback
+    ) {
         if (nullable == null) {
             return fallback;
         }
@@ -35,7 +39,11 @@ public class ObjectUtils {
         return nullable.stream().map(mapper::map).toList();
     }
 
-    public static @NonNull <T, E> List<T> mapNullable(@Nullable List<E> nullable, @NonNull Mapper<E, T> mapper, @NonNull List<T> fallback) {
+    public static @NonNull <T, E> List<T> mapNullable(
+        @Nullable List<E> nullable,
+        @NonNull Mapper<E, T> mapper,
+        @NonNull List<T> fallback
+    ) {
         if (nullable == null) {
             return fallback;
         }
@@ -48,7 +56,6 @@ public class ObjectUtils {
         }
         return nullable.stream();
     }
-
 
     public interface Mapper<I, O> {
         O map(I i);

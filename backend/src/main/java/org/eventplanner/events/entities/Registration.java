@@ -1,8 +1,8 @@
 package org.eventplanner.events.entities;
 
+import org.eventplanner.events.values.SlotKey;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
-import org.eventplanner.events.values.SlotKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

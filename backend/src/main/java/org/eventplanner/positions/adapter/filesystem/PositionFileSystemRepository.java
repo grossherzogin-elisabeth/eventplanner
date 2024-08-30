@@ -1,5 +1,9 @@
 package org.eventplanner.positions.adapter.filesystem;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.positions.entities.Position;
@@ -10,17 +14,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 @Repository
 public class PositionFileSystemRepository implements PositionRepository {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final FileSystemJsonRepository<PositionJsonEntity> fs;
 
-    public PositionFileSystemRepository(@Value("${custom.data-directory}") String dataDirectory, ResourceLoader resourceLoader) {
+    public PositionFileSystemRepository(
+        @Value("${custom.data-directory}") String dataDirectory,
+        ResourceLoader resourceLoader
+    ) {
         var dir = new File(dataDirectory + "/positions");
         if (!dir.exists()) {
             try {

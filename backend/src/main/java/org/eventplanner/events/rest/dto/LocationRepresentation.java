@@ -1,10 +1,10 @@
 package org.eventplanner.events.rest.dto;
 
+import java.io.Serializable;
+
 import org.eventplanner.events.entities.Location;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
 
 public record LocationRepresentation(
     @NonNull String name,
@@ -17,7 +17,8 @@ public record LocationRepresentation(
             domain.name(),
             domain.icon(),
             domain.address(),
-            domain.country());
+            domain.country()
+        );
     }
 
     public @NonNull Location toDomain() {
@@ -25,6 +26,7 @@ public record LocationRepresentation(
             name,
             icon,
             address,
-            country);
+            country
+        );
     }
 }

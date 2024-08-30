@@ -1,11 +1,11 @@
 package org.eventplanner.events.spec;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import org.eventplanner.events.entities.Location;
 import org.eventplanner.events.entities.Slot;
 import org.springframework.lang.Nullable;
-
-import java.time.ZonedDateTime;
-import java.util.List;
 
 public record CreateEventSpec(
     @Nullable String name,

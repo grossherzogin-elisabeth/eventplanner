@@ -1,7 +1,9 @@
 package org.eventplanner.config;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static java.lang.String.format;
+
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,9 +16,8 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Set;
-
-import static java.lang.String.format;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class OAuthLogoutHandler implements LogoutHandler {
@@ -66,7 +67,10 @@ public class OAuthLogoutHandler implements LogoutHandler {
 
         var metadata = clientRegistration.getProviderDetails().getConfigurationMetadata();
         if (!(metadata.get("end_session_endpoint") instanceof String logoutEndpoint)) {
-            throw new IllegalStateException(format("The OpenID-Connect client %s does not support logout", clientRegistration.getClientName()));
+            throw new IllegalStateException(format(
+                "The OpenID-Connect client %s does not support logout",
+                clientRegistration.getClientName()
+            ));
         }
 
         return UriComponentsBuilder.fromUriString(logoutEndpoint)

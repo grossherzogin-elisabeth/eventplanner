@@ -1,13 +1,13 @@
 package org.eventplanner.users.rest.dto;
 
+import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public record UserSelfRepresentation(
     @NonNull String key,

@@ -1,12 +1,12 @@
 package org.eventplanner.events.entities;
 
-import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.events.values.SlotKey;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-
 import java.util.List;
 import java.util.UUID;
+
+import org.eventplanner.events.values.SlotKey;
+import org.eventplanner.positions.values.PositionKey;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record Slot(
     SlotKey key,

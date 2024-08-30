@@ -1,11 +1,11 @@
 package org.eventplanner.events.rest.dto;
 
-import org.eventplanner.events.entities.Event;
-import org.springframework.lang.NonNull;
-
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import org.eventplanner.events.entities.Event;
+import org.springframework.lang.NonNull;
 
 public record EventRepresentation(
     @NonNull String key,
@@ -31,6 +31,7 @@ public record EventRepresentation(
             event.end().format(DateTimeFormatter.ISO_DATE_TIME),
             event.locations().stream().map(LocationRepresentation::fromDomain).toList(),
             event.slots().stream().map(SlotRepresentation::fromDomain).toList(),
-            event.registrations().stream().map(RegistrationRepresentation::fromDomain).toList());
+            event.registrations().stream().map(RegistrationRepresentation::fromDomain).toList()
+        );
     }
 }

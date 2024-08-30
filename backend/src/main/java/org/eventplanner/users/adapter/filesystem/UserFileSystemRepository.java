@@ -1,5 +1,9 @@
 package org.eventplanner.users.adapter.filesystem;
 
+import java.io.File;
+import java.util.List;
+import java.util.Optional;
+
 import org.eventplanner.users.adapter.UserRepository;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.values.UserKey;
@@ -7,10 +11,6 @@ import org.eventplanner.utils.FileSystemJsonRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
-
-import java.io.File;
-import java.util.List;
-import java.util.Optional;
 
 // TODO encrypt user data
 @Repository

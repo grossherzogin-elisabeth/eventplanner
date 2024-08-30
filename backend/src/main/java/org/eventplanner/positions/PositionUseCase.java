@@ -1,16 +1,16 @@
 package org.eventplanner.positions;
 
+import java.util.List;
+
+import org.eventplanner.exceptions.NotImplementedException;
 import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.users.values.Permission;
 import org.eventplanner.users.entities.SignedInUser;
-import org.eventplanner.exceptions.NotImplementedException;
+import org.eventplanner.users.values.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PositionUseCase {

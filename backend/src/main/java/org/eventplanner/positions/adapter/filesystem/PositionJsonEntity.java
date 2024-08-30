@@ -1,10 +1,10 @@
 package org.eventplanner.positions.adapter.filesystem;
 
+import java.io.Serializable;
+
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
-
-import java.io.Serializable;
 
 public record PositionJsonEntity(
     @NonNull String key,

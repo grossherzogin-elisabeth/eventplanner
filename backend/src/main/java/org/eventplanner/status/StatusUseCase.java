@@ -1,11 +1,11 @@
 package org.eventplanner.status;
 
+import java.time.Instant;
+
 import org.eventplanner.status.entities.SystemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 
 @Service
 public class StatusUseCase {

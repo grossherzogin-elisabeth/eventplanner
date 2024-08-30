@@ -1,15 +1,21 @@
 package org.eventplanner.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class FileSystemJsonRepository<E> {
 

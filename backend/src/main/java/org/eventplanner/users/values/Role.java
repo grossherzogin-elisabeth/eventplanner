@@ -1,10 +1,10 @@
 package org.eventplanner.users.values;
 
-import org.springframework.lang.NonNull;
-
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import org.springframework.lang.NonNull;
 
 public enum Role {
 

@@ -1,11 +1,11 @@
 package org.eventplanner.users.rest.dto;
 
+import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
+
 import org.eventplanner.users.entities.UserQualification;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
 
 public record UserQualificationRepresentation(
     @NonNull String qualificationKey,
@@ -19,10 +19,12 @@ public record UserQualificationRepresentation(
         if (userQualification.getExpiresAt() == null) {
             return new UserQualificationRepresentation(
                 userQualification.getQualificationKey().value(),
-                null);
+                null
+            );
         }
         return new UserQualificationRepresentation(
             userQualification.getQualificationKey().value(),
-            userQualification.getExpiresAt().format(DateTimeFormatter.ISO_DATE_TIME));
+            userQualification.getExpiresAt().format(DateTimeFormatter.ISO_DATE_TIME)
+        );
     }
 }

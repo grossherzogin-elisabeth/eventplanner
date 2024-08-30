@@ -1,17 +1,17 @@
 package org.eventplanner.events.adapter.filesystem.entities;
 
-import org.eventplanner.events.entities.Event;
-import org.eventplanner.events.values.EventKey;
-import org.eventplanner.events.values.EventState;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import static org.eventplanner.utils.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import org.eventplanner.events.entities.Event;
+import org.eventplanner.events.values.EventKey;
+import org.eventplanner.events.values.EventState;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record EventJsonEntity(
     @NonNull String key,
@@ -36,7 +36,8 @@ public record EventJsonEntity(
             domain.end().toString(),
             domain.locations().stream().map(LocationJsonEntity::fromDomain).toList(),
             domain.slots().stream().map(SlotJsonEntity::fromDomain).toList(),
-            domain.registrations().stream().map(RegistrationJsonEntity::fromDomain).toList());
+            domain.registrations().stream().map(RegistrationJsonEntity::fromDomain).toList()
+        );
     }
 
     public Event toDomain() {
@@ -50,6 +51,7 @@ public record EventJsonEntity(
             ZonedDateTime.parse(end),
             mapNullable(locations, LocationJsonEntity::toDomain, Collections.emptyList()),
             mapNullable(slots, SlotJsonEntity::toDomain, Collections.emptyList()),
-            mapNullable(registrations, RegistrationJsonEntity::toDomain, Collections.emptyList()));
+            mapNullable(registrations, RegistrationJsonEntity::toDomain, Collections.emptyList())
+        );
     }
 }

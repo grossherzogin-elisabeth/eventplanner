@@ -1,8 +1,8 @@
 package org.eventplanner.events.rest.dto;
 
-import org.springframework.lang.NonNull;
-
 import java.io.Serializable;
+
+import org.springframework.lang.NonNull;
 
 public record AddUserToWaitingListRequest(
     @NonNull String userKey,

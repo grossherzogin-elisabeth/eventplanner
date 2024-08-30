@@ -1,19 +1,8 @@
 package org.eventplanner.users.service;
 
-import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.users.Crypto;
-import org.eventplanner.users.entities.EncryptedUserDetails;
-import org.eventplanner.users.entities.EncryptedUserQualification;
-import org.eventplanner.users.entities.UserDetails;
-import org.eventplanner.users.entities.UserQualification;
-import org.eventplanner.users.values.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
+import static java.util.Optional.ofNullable;
+import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import static org.eventplanner.utils.ObjectUtils.streamNullable;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,9 +11,24 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
-import static org.eventplanner.utils.ObjectUtils.streamNullable;
+import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.qualifications.values.QualificationKey;
+import org.eventplanner.users.Crypto;
+import org.eventplanner.users.entities.EncryptedUserDetails;
+import org.eventplanner.users.entities.EncryptedUserQualification;
+import org.eventplanner.users.entities.UserDetails;
+import org.eventplanner.users.entities.UserQualification;
+import org.eventplanner.users.values.Address;
+import org.eventplanner.users.values.AuthKey;
+import org.eventplanner.users.values.EncryptedAddress;
+import org.eventplanner.users.values.EncryptedString;
+import org.eventplanner.users.values.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserEncryptionService {

@@ -1,10 +1,10 @@
 package org.eventplanner.events.adapter.filesystem.entities;
 
+import java.io.Serializable;
+
 import org.eventplanner.events.entities.Location;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
 
 public record LocationJsonEntity(
     @Nullable String name,
@@ -18,7 +18,8 @@ public record LocationJsonEntity(
             domain.name(),
             domain.icon(),
             domain.address(),
-            domain.country());
+            domain.country()
+        );
     }
 
     public Location toDomain() {
@@ -26,6 +27,7 @@ public record LocationJsonEntity(
             name != null ? name : "",
             icon != null ? icon : "",
             address,
-            country);
+            country
+        );
     }
 }

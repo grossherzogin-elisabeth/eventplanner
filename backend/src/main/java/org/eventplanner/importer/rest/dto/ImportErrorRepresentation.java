@@ -1,9 +1,9 @@
 package org.eventplanner.importer.rest.dto;
 
+import java.io.Serializable;
+
 import org.eventplanner.importer.entities.ImportError;
 import org.springframework.lang.NonNull;
-
-import java.io.Serializable;
 
 public record ImportErrorRepresentation(
     @NonNull String eventKey,
@@ -18,6 +18,7 @@ public record ImportErrorRepresentation(
             domain.eventName(),
             domain.start().toString(),
             domain.end().toString(),
-            domain.message());
+            domain.message()
+        );
     }
 }

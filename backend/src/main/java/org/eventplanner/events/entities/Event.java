@@ -1,11 +1,11 @@
 package org.eventplanner.events.entities;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.springframework.lang.NonNull;
-
-import java.time.ZonedDateTime;
-import java.util.List;
 
 public record Event(
     @NonNull EventKey key,

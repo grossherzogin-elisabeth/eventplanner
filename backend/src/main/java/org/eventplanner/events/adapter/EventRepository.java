@@ -1,9 +1,9 @@
 package org.eventplanner.events.adapter;
 
+import java.util.List;
+
 import org.eventplanner.events.entities.Event;
 import org.springframework.lang.NonNull;
-
-import java.util.List;
 
 public interface EventRepository {
     @NonNull

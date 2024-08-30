@@ -1,5 +1,12 @@
 package org.eventplanner.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.eventplanner.users.values.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,13 +23,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfig {
@@ -58,7 +58,8 @@ public class SecurityConfig {
         http.exceptionHandling(exceptionHandling -> {
             exceptionHandling.defaultAuthenticationEntryPointFor(
                 new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                new AntPathRequestMatcher("/api/**"));
+                new AntPathRequestMatcher("/api/**")
+            );
         });
 
         http.sessionManagement(session -> {
@@ -70,7 +71,8 @@ public class SecurityConfig {
             oauth2Login.defaultSuccessUrl(loginSuccessUrl, true);
             oauth2Login.failureUrl(loginSuccessUrl);
             oauth2Login.authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.baseUri("/auth/login"));
-            oauth2Login.userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userAuthoritiesMapper(oAuthGrantedAuthoritiesMapper()));
+            oauth2Login.userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userAuthoritiesMapper(
+                oAuthGrantedAuthoritiesMapper()));
         });
 
         http.logout(logout -> {
@@ -117,7 +119,6 @@ public class SecurityConfig {
 
         // TODO get roles for keycloak authorities
         var keycloakRoles = oidcUserAuthority.getAttributes().get("cognito:groups");
-
 
         var roles = oidcUserAuthority.getIdToken().getClaimAsStringList("ROLES");
         if (roles != null) {

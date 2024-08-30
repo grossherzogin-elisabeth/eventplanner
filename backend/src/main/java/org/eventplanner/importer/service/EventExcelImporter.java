@@ -1,5 +1,19 @@
 package org.eventplanner.importer.service;
 
+import static org.eventplanner.utils.ObjectUtils.mapNullable;
+
+import java.io.File;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Location;
 import org.eventplanner.events.entities.Registration;
@@ -13,16 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
-import java.io.File;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.*;
-
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
-
 public class EventExcelImporter {
 
     private static final Logger log = LoggerFactory.getLogger(EventExcelImporter.class);
@@ -31,7 +35,12 @@ public class EventExcelImporter {
         return readFromFile(file, year, knownUsers, new ArrayList<>());
     }
 
-    public static @NonNull List<Event> readFromFile(@NonNull File file, int year, List<UserDetails> knownUsers, List<ImportError> errors) {
+    public static @NonNull List<Event> readFromFile(
+        @NonNull File file,
+        int year,
+        List<UserDetails> knownUsers,
+        List<ImportError> errors
+    ) {
         try {
             var data = ExcelUtils.readExcelFile(file);
             return parseEvents(data, year, knownUsers, errors);
@@ -41,7 +50,12 @@ public class EventExcelImporter {
         return Collections.emptyList();
     }
 
-    private static List<Event> parseEvents(String[][] data, int year, List<UserDetails> knownUsers, List<ImportError> errors) {
+    private static List<Event> parseEvents(
+        String[][] data,
+        int year,
+        List<UserDetails> knownUsers,
+        List<ImportError> errors
+    ) {
         if (knownUsers.isEmpty()) {
             log.warn("Userlist is empty, cannot resolve any username!");
         }
@@ -93,7 +107,8 @@ public class EventExcelImporter {
                         try {
                             registration = assignToFirstMatchingSlot(registration, slots, registrations);
                         } catch (Exception e) {
-                            log.warn("Failed to find matching " + positionKey.value() + " slot for " + name + " at event " + eventName + " starting on " + start);
+                            log.warn("Failed to find matching " + positionKey.value() + " slot for " + name + " at " +
+                                "event " + eventName + " starting on " + start);
                         }
                     }
                     registrations.add(registration);
@@ -176,16 +191,19 @@ public class EventExcelImporter {
                 })
                 .findFirst();
             if (allPartsContainedMatch.isPresent()) {
-                // log.debug("Found all parts contained match for " + name + " on " + allPartsContainedMatch.get().fullName());
+                // log.debug("Found all parts contained match for " + name + " on " + allPartsContainedMatch.get()
+                // .fullName());
                 return allPartsContainedMatch;
             }
 
             // search reverse parts contained match
             var reverseAllPartsContainedMatch = allUsers.stream()
-                .filter(user -> Arrays.stream(normalizeName(user.getFullName()).split(" ")).allMatch(normalizedName::contains))
+                .filter(user -> Arrays.stream(normalizeName(user.getFullName()).split(" "))
+                    .allMatch(normalizedName::contains))
                 .findFirst();
             if (reverseAllPartsContainedMatch.isPresent()) {
-                // log.debug("Found reverse all parts contained match for " + name + " on " + reverseAllPartsContainedMatch.get().fullName());
+                // log.debug("Found reverse all parts contained match for " + name + " on " +
+                // reverseAllPartsContainedMatch.get().fullName());
                 return reverseAllPartsContainedMatch;
             }
             log.warn("Could not find a matching user for " + name);
@@ -380,7 +398,8 @@ public class EventExcelImporter {
 
         // these slots should be filled last
         slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.BACKSCHAFT));
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired());
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA)
+            .withRequired());
         slots.add(Slot.of(Pos.KOCH, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired());
 
         for (int i = 0; i < slots.size(); i++) {

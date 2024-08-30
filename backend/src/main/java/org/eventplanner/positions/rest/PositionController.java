@@ -1,5 +1,7 @@
 package org.eventplanner.positions.rest;
 
+import java.util.List;
+
 import org.eventplanner.positions.PositionUseCase;
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.rest.dto.PositionRepresentation;
@@ -10,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/positions")
@@ -50,7 +54,10 @@ public class PositionController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/{positionKey}")
-    public ResponseEntity<PositionRepresentation> updatePosition(@PathVariable String positionKey, @RequestBody PositionRepresentation spec) {
+    public ResponseEntity<PositionRepresentation> updatePosition(
+        @PathVariable String positionKey,
+        @RequestBody PositionRepresentation spec
+    ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
         var positionSpec = new Position(new PositionKey(positionKey), spec.name(), spec.color(), spec.prio());

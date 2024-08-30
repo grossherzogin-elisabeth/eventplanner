@@ -1,5 +1,10 @@
 package org.eventplanner.users.entities;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.eventplanner.exceptions.MissingPermissionException;
 import org.eventplanner.exceptions.UnauthorizedException;
 import org.eventplanner.users.values.AuthKey;
@@ -9,11 +14,6 @@ import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public record SignedInUser(
     @NonNull UserKey key,
@@ -32,7 +32,8 @@ public record SignedInUser(
                 .flatMap(Role::getPermissions)
                 .distinct()
                 .toList(),
-            user.getEmail());
+            user.getEmail()
+        );
     }
 
     public static @NonNull SignedInUser technicalUser(Permission... permissions) {
@@ -41,7 +42,8 @@ public record SignedInUser(
             new AuthKey("technical-user"),
             List.of(Role.TECHNICAL_USER),
             List.of(permissions),
-            "technical-user");
+            "technical-user"
+        );
     }
 
     public static @NonNull SignedInUser anonymoUser() {
@@ -50,7 +52,8 @@ public record SignedInUser(
             new AuthKey("anonymous"),
             Collections.emptyList(),
             Collections.emptyList(),
-            "anonymous");
+            "anonymous"
+        );
     }
 
     public boolean isAnonymousUser() {
@@ -61,7 +64,8 @@ public record SignedInUser(
         return permissions.contains(permission);
     }
 
-    public void assertHasPermission(@NonNull Permission permission) throws UnauthorizedException, MissingPermissionException {
+    public void assertHasPermission(@NonNull Permission permission)
+    throws UnauthorizedException, MissingPermissionException {
         if (isAnonymousUser()) {
             throw new UnauthorizedException();
         }
@@ -70,7 +74,8 @@ public record SignedInUser(
         }
     }
 
-    public void assertHasAnyPermission(@NonNull Permission... permissions) throws UnauthorizedException, MissingPermissionException {
+    public void assertHasAnyPermission(@NonNull Permission... permissions)
+    throws UnauthorizedException, MissingPermissionException {
         if (isAnonymousUser()) {
             throw new UnauthorizedException();
         }

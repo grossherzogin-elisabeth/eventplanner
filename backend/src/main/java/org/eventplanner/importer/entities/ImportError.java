@@ -1,9 +1,9 @@
 package org.eventplanner.importer.entities;
 
+import java.time.ZonedDateTime;
+
 import org.eventplanner.events.values.EventKey;
 import org.springframework.lang.NonNull;
-
-import java.time.ZonedDateTime;
 
 public record ImportError(
     @NonNull EventKey eventKey,

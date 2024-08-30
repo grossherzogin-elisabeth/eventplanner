@@ -1,7 +1,9 @@
 package org.eventplanner.users;
 
-import org.eventplanner.users.values.EncryptedString;
-import org.springframework.lang.NonNull;
+import java.nio.charset.StandardCharsets;
+import java.security.AlgorithmParameters;
+import java.security.spec.KeySpec;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -9,10 +11,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.AlgorithmParameters;
-import java.security.spec.KeySpec;
-import java.util.Base64;
+
+import org.eventplanner.users.values.EncryptedString;
+import org.springframework.lang.NonNull;
 
 public class Crypto {
 
@@ -56,7 +57,10 @@ public class Crypto {
         }
     }
 
-    private static @NonNull EncryptedString encryptWithSecretKey(@NonNull final String value, @NonNull final SecretKey secretKey) {
+    private static @NonNull EncryptedString encryptWithSecretKey(
+        @NonNull final String value,
+        @NonNull final SecretKey secretKey
+    ) {
         try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -73,7 +77,10 @@ public class Crypto {
         }
     }
 
-    private static @NonNull String decryptWithSecretKey(@NonNull final EncryptedString encrypted, @NonNull final SecretKey secretKey) {
+    private static @NonNull String decryptWithSecretKey(
+        @NonNull final EncryptedString encrypted,
+        @NonNull final SecretKey secretKey
+    ) {
         try {
             byte[] cipherTextBytes = Base64.getDecoder().decode(encrypted.value());
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");

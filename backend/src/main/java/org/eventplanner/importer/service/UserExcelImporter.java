@@ -1,5 +1,11 @@
 package org.eventplanner.importer.service;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.values.Address;
@@ -9,12 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
 public class UserExcelImporter {
 
@@ -132,10 +132,10 @@ public class UserExcelImporter {
                 positions.add(Pos.MATROSE);
             }
             user.setPositions(positions.stream().toList());
-//            var fitnessForSeaService = data[COL_FITNESS_FOR_SEA_SERVICE_EXPIRATION_DATE][r].trim();;
-//            if (!fitnessForSeaService.isBlank() && !fitnessForSeaService.equals("-")) {
-//                user.withAddQualification(new QualificationKey())
-//            }
+            //            var fitnessForSeaService = data[COL_FITNESS_FOR_SEA_SERVICE_EXPIRATION_DATE][r].trim();;
+            //            if (!fitnessForSeaService.isBlank() && !fitnessForSeaService.equals("-")) {
+            //                user.withAddQualification(new QualificationKey())
+            //            }
             users.put(key, user);
         }
         return users.values().stream().toList();

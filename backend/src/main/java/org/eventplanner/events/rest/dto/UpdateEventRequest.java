@@ -1,13 +1,13 @@
 package org.eventplanner.events.rest.dto;
 
-import org.eventplanner.events.spec.UpdateEventSpec;
-import org.springframework.lang.Nullable;
+import static org.eventplanner.utils.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import org.eventplanner.events.spec.UpdateEventSpec;
+import org.springframework.lang.Nullable;
 
 public record UpdateEventRequest(
     @Nullable String name,

@@ -1,12 +1,12 @@
 package org.eventplanner.users.rest.dto;
 
-import org.eventplanner.users.values.Permission;
-import org.eventplanner.users.values.Role;
-import org.eventplanner.users.entities.SignedInUser;
-import org.springframework.lang.NonNull;
-
 import java.io.Serializable;
 import java.util.List;
+
+import org.eventplanner.users.entities.SignedInUser;
+import org.eventplanner.users.values.Permission;
+import org.eventplanner.users.values.Role;
+import org.springframework.lang.NonNull;
 
 public record AccountRepresentation(
     @NonNull String key,
