@@ -11,7 +11,6 @@ export interface Config {
     i18nAvailableLocales: string[];
 
     // service urls
-    serviceUrl: string;
     authLoginEndpoint: string;
     authLogoutEndpoint: string;
 
