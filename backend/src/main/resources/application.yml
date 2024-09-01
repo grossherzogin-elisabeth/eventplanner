@@ -28,14 +28,14 @@ spring:
       client:
         registration:
           default:
-            client-id: ${OAUTH_CLIENT_ID}
-            client-secret: ${OAUTH_CLIENT_SECRET}
+            client-id: ${OAUTH_CLIENT_ID:eventplanner}
+            client-secret: ${OAUTH_CLIENT_SECRET:********************}
             provider: default
-            redirect-uri: ${frontend.domain}/login/oauth2/code/cognito
+            redirect-uri: ${frontend.domain}/login/oauth2/code/default
             scope: openid,email,profile
         provider:
           default:
-            issuer-uri: ${OAUTH_ISSUER_URI}
+            issuer-uri: ${OAUTH_ISSUER_URI:https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_erXnjLJc7}
   servlet:
     multipart:
       max-file-size: 10MB
