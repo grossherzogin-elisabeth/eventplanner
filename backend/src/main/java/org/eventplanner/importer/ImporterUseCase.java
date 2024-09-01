@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eventplanner.events.adapter.EventRepository;
@@ -22,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -34,20 +37,25 @@ public class ImporterUseCase {
     private final UserService userService;
     private final String dataDirectory;
     private final String password;
+    private final Environment env;
 
     public ImporterUseCase(
         @Autowired EventRepository eventRepository,
         @Autowired UserRepository userRepository,
         @Autowired UserService userService,
         @Value("${custom.data-directory}") String dataDirectory,
-        @Value("${custom.users-excel-password}") String password
+        @Value("${custom.users-excel-password}") String password,
+        Environment env
     ) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.dataDirectory = dataDirectory;
         this.password = password;
-        importOnStartup();
+        this.env = env;
+        if (!Arrays.stream(env.getActiveProfiles()).toList().contains("test")) {
+            importOnStartup();
+        }
     }
 
     private void importOnStartup() {

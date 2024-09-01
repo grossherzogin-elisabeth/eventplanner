@@ -12,6 +12,7 @@ custom:
   login-success-url: ${frontend.domain}
   admins: >
     admin@grossherzogin-elisabeth.de
+  generate-test-data: false
 
 auth:
   # 60 * 60 * 24 * 30
