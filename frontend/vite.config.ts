@@ -8,7 +8,11 @@ const pwa = VitePWA({
     registerType: 'autoUpdate',
     workbox: {
        navigateFallbackDenylist: [
-           /^\/auth.*/, // never cache auth routes in serviceworker, as these need the backend to work
+           // api routes should always return the current server state and data caching should be done in app
+           /^\/api.*/,
+           // never cache auth routes in serviceworker, as these need the backend to work
+           /^\/auth.*/,
+           /^\/login\/oauth2\/code.*/,
        ],
    },
 });
@@ -21,8 +25,8 @@ export default defineConfig({
         port: 8080,
         host: true,
         proxy: {
-            '/auth/': 'http://localhost:8081',
             '/api/': 'http://localhost:8081',
+            '/auth/': 'http://localhost:8081',
             '/login/oauth2/code/': 'http://localhost:8081',
         },
     },
