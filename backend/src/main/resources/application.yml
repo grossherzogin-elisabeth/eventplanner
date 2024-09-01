@@ -14,19 +14,6 @@ custom:
     admin@grossherzogin-elisabeth.de
 
 auth:
-  cognito:
-    user-pool-id: ${AUTH_COGNITO_USER_POOL_ID:eu-central-1_erXnjLJc7}
-    client-secret: ${AUTH_COGNITO_CLIENT_SECRET:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
-    client-id: ${AUTH_COGNITO_CLIENT_ID:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
-    region: ${AUTH_COGNITO_REGION:eu-central-1}
-  entraid:
-    client-secret: ${AUTH_ENTRA_ID_CLIENT_SECRET:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
-    client-id: ${AUTH_ENTRA_ID_CLIENT_ID:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
-    tennant-id: ${AUTH_ENTRA_ID_TENNANT_ID:63384ddf-6496-44bd-b22c-93e944e6ed88}
-  keycloak:
-    issuer-uri: ${AUTH_KEYCLOAK_ISSUER_URI:https://auth.grossherzogin-elisabeth.de}
-    client-secret: ${AUTH_KEYCLOAK_CLIENT_SECRET:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
-    client-id: ${AUTH_KEYCLOAK_CLIENT_ID:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
   # 60 * 60 * 24 * 30
   session-timout: 2592000
 
@@ -40,31 +27,15 @@ spring:
     oauth2:
       client:
         registration:
-          entraid:
-            redirect-uri: ${frontend.domain}/login/oauth2/code/entraid
-            scope: openid,email,profile
-            provider: entraid
-            client-id: ${auth.entraid.client-id}
-            client-secret: ${auth.entraid.client-secret}
-          cognito:
-            provider: cognito
-            client-secret: ${auth.cognito.client-secret}
-            client-id: ${auth.cognito.client-id}
-            scope: openid,email,profile
+          default:
+            client-id: ${OAUTH_CLIENT_ID}
+            client-secret: ${OAUTH_CLIENT_SECRET}
+            provider: default
             redirect-uri: ${frontend.domain}/login/oauth2/code/cognito
-          # keycloak:
-          #   provider: keycloak
-          #   client-secret: ${auth.keycloak.client-secret}
-          #   client-id: ${auth.keycloak.client-id}
-          #   scope: openid,email,profile
-          #   redirect-uri: ${frontend.domain}/login/oauth2/code/keycloak
+            scope: openid,email,profile
         provider:
-          cognito:
-            issuer-uri: https://cognito-idp.${auth.cognito.region}.amazonaws.com/${auth.cognito.user-pool-id}
-          entraid:
-            issuer-uri: https://login.microsoftonline.com/${auth.entraid.tennant-id}/v2.0
-          keycloak:
-            issuer-uri: ${auth.keycloak.issuer-uri}
+          default:
+            issuer-uri: ${OAUTH_ISSUER_URI}
   servlet:
     multipart:
       max-file-size: 10MB

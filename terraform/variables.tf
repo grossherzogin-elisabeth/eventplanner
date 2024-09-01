@@ -4,14 +4,8 @@ variable "region" {
   default     = "germanywestcentral"
 }
 
-variable "app" {
-  description = "Application that we want to deploy"
-  type        = string
-  default     = "eventplanner"
-}
-
 variable "env" {
-  description = "Application env"
+  description = "Application environment (live, dev, ...)"
   type        = string
   default     = "live"
 }

@@ -64,6 +64,7 @@ out/
 
 /data/
 /backend/src/main/resources/static
+/backend/data/
 
 
 # -----------------------

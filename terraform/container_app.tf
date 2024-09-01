@@ -60,19 +60,15 @@ resource "azurerm_container_app" "eventplanner" {
       }
 
       env {
-        name  = "AUTH_COGNITO_REGION"
-        value = "eu-central-1"
+        name  = "OAUTH_ISSUER_URI"
+        value = "https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_erXnjLJc7"
       }
       env {
-        name  = "AUTH_COGNITO_USER_POOL_ID"
-        value = "eu-central-1_erXnjLJc7"
-      }
-      env {
-        name        = "AUTH_COGNITO_CLIENT_ID"
+        name        = "OAUTH_CLIENT_ID"
         secret_name = "client-id"
       }
       env {
-        name        = "AUTH_COGNITO_CLIENT_SECRET"
+        name        = "OAUTH_CLIENT_SECRET"
         secret_name = "client-secret"
       }
       env {

@@ -1,12 +1,3 @@
-locals {
-  stack = "${var.app}-${var.env}"
-
-  default_tags = {
-    environment = var.env
-    app         = var.app
-  }
-}
-
 resource "azurerm_resource_group" "eventplanner" {
   name     = "rg-${local.stack}"
   location = var.region
