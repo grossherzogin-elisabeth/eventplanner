@@ -1,8 +1,16 @@
 package org.eventplanner.testdata;
 
+import org.eventplanner.positions.entities.Position;
+import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.users.entities.UserDetails;
+import org.eventplanner.users.values.Address;
+import org.eventplanner.users.values.UserKey;
+
+import java.time.ZonedDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
-public class Names {
+public class UserGenerator {
     private static final List<String> names = List.of(
         "Maximilian Fischer",
         "Hannah Schmidt",
@@ -213,7 +221,46 @@ public class Names {
         "Sarah Walter"
     );
 
-    public static String get(int index) {
+    public static String getName(int index) {
         return names.get(index % names.size());
+    }
+
+    public static List<UserDetails> createTestUsers(int count) {
+        var users = new LinkedList<UserDetails>();
+        for (int i = 0; i < count; i++) {
+            var name = getName(i).split(" ");
+            var firstName = name[0];
+            var lastName = name[1];
+            var user = new UserDetails(new UserKey("user-" + i), firstName, lastName);
+            user.setEmail((firstName + "." + lastName + "@example.com").toLowerCase()
+                .replaceAll("ä", "ae")
+                .replaceAll("ö", "oe")
+                .replaceAll("ü", "ue")
+            );
+            user.setAddress(new Address("Teststraße " + i, null, "Teststadt", String.valueOf((12345 * i) % 99999)));
+            user.setDateOfBirth(ZonedDateTime.now());
+            user.setMobile("+49 123456789");
+            user.setPhone("+49 123456789");
+            user.setPlaceOfBirth("Teststadt");
+            user.setPassNr("PA12345");
+            user.setComment("This is an auto generated test user");
+            user.setPositions(createUserPositions(i));
+            users.add(user);
+        }
+        return users;
+    }
+
+    private static List<PositionKey> createUserPositions(int index) {
+        return switch (index % 20) {
+            case 1 -> List.of(Pos.KAPITAEN);
+            case 2 -> List.of(Pos.KOCH);
+            case 3 -> List.of(Pos.AUSBILDER, Pos.MATROSE);
+            case 4, 5 -> List.of(Pos.STM, Pos.MATROSE);
+            case 6 -> List.of(Pos.MATROSE);
+            case 7, 8, 10 -> List.of(Pos.LEICHTMATROSE);
+            case 11 -> List.of(Pos.MASCHINIST);
+            case 12, 13, 14, 15, 16, 17, 18 -> List.of(Pos.DECKSHAND);
+            default -> List.of(Pos.BACKSCHAFT);
+        };
     }
 }

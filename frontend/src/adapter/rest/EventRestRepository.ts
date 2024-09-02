@@ -111,22 +111,6 @@ export class EventRestRepository implements EventRepository {
         }
         const responseData: EventRepresentation[] = await response.clone().json();
         const events: Event[] = responseData.map(EventRestRepository.mapEventToDomain);
-        events.push(this.generateWorkEvent(new Date(2024, 10, 2)));
-        events.push(this.generateWorkEvent(new Date(2024, 10, 3)));
-        events.push(this.generateWorkEvent(new Date(2024, 10, 9)));
-        events.push(this.generateWorkEvent(new Date(2024, 10, 10)));
-        events.push(this.generateWorkEvent(new Date(2024, 10, 16)));
-        events.push(this.generateWorkEvent(new Date(2024, 10, 17)));
-        events.push(this.generateWorkEvent(new Date(2024, 10, 23)));
-        events.push(this.generateWorkEvent(new Date(2024, 10, 24)));
-        events.push(this.generateWorkEvent(new Date(2024, 10, 30)));
-        events.push(this.generateWorkEvent(new Date(2024, 11, 1)));
-        events.push(this.generateWorkEvent(new Date(2024, 11, 7)));
-        events.push(this.generateWorkEvent(new Date(2024, 11, 8)));
-        events.push(this.generateWorkEvent(new Date(2024, 11, 14)));
-        events.push(this.generateWorkEvent(new Date(2024, 11, 15)));
-        events.push(this.generateWorkEvent(new Date(2024, 11, 21)));
-        events.push(this.generateWorkEvent(new Date(2024, 11, 22)));
         return events;
     }
 
