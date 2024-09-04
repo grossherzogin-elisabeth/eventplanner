@@ -8,14 +8,14 @@
                 <div class="-mx-4 rounded-2xl bg-primary-100 p-8">
                     <h3 class="mb-4">Dein Account konnte nicht verknüpft werden</h3>
                     <p class="mb-4">
-                        Dein Account konnte nicht automatisch einem Stammcrew Mitglied zugeordnet werden.
-                        Das kann daran liegen, das du dich mit einer unbekannten eMail Adresse registriert hast,
-                        oder dein angegebener Name von dem in der Kaderliste abweicht. Aus Datenschutgründen können
-                        dir deshalb noch keine Reisen angezeigt werden.
+                        Dein Account konnte nicht automatisch einem Stammcrew Mitglied zugeordnet werden. Das kann daran
+                        liegen, das du dich mit einer unbekannten eMail Adresse registriert hast, oder dein angegebener
+                        Name von dem in der Kaderliste abweicht. Aus Datenschutgründen können dir deshalb noch keine
+                        Reisen angezeigt werden.
                     </p>
                     <p class="mb-4">
-                        Dieser Fehler kann aktuell leider noch nicht automatisch aufgelöst werden. Wir arbeiten an
-                        einer Lösung. Bitte habe noch etwas Gedult und kontaktiere für die An- und Abmeldung von Reisen
+                        Dieser Fehler kann aktuell leider noch nicht automatisch aufgelöst werden. Wir arbeiten an einer
+                        Lösung. Bitte habe noch etwas Gedult und kontaktiere für die An- und Abmeldung von Reisen
                         vorerst weiterhin direkt das Büro.
                     </p>
                 </div>
@@ -23,5 +23,4 @@
         </div>
     </div>
 </template>
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
