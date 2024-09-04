@@ -7,14 +7,14 @@ import svgLoader from 'vite-svg-loader';
 const pwa = VitePWA({
     registerType: 'autoUpdate',
     workbox: {
-       navigateFallbackDenylist: [
-           // api routes should always return the current server state and data caching should be done in app
-           /^\/api.*/,
-           // never cache auth routes in serviceworker, as these need the backend to work
-           /^\/auth.*/,
-           /^\/login\/oauth2\/code.*/,
-       ],
-   },
+        navigateFallbackDenylist: [
+            // api routes should always return the current server state and data caching should be done in app
+            /^\/api.*/,
+            // never cache auth routes in serviceworker, as these need the backend to work
+            /^\/auth.*/,
+            /^\/login\/oauth2\/code.*/,
+        ],
+    },
 });
 
 // https://vitejs.dev/config/

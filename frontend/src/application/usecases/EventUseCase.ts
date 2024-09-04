@@ -1,4 +1,5 @@
-import type { AuthRepository } from '@/application/ports/AuthRepository';
+import type { AuthService } from '@/application';
+import type { AccountRepository } from '@/application/ports/AccountRepository';
 import type { EventRepository } from '@/application/ports/EventRepository';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { DateFormatter } from '@/common/date';
@@ -7,16 +8,16 @@ import type { Event, EventKey, PositionKey, UserKey } from '@/domain';
 export class EventUseCase {
     private readonly eventCachingService: EventCachingService;
     private readonly eventRepository: EventRepository;
-    private readonly authRepository: AuthRepository;
+    private readonly authService: AuthService;
 
     constructor(params: {
         eventCachingService: EventCachingService;
         eventRepository: EventRepository;
-        authRepository: AuthRepository;
+        authService: AuthService;
     }) {
         this.eventCachingService = params.eventCachingService;
         this.eventRepository = params.eventRepository;
-        this.authRepository = params.authRepository;
+        this.authService = params.authService;
     }
 
     public async getEvents(year: number): Promise<Event[]> {
@@ -60,7 +61,7 @@ export class EventUseCase {
     }
 
     public async joinEvent(event: Event, positionKey: PositionKey): Promise<Event> {
-        const user = this.authRepository.getSignedInUser();
+        const user = this.authService.getSignedInUser();
         if (!user) {
             throw new Error('401');
         }
@@ -80,7 +81,7 @@ export class EventUseCase {
     }
 
     public async leaveEvent(event: Event): Promise<Event> {
-        const user = this.authRepository.getSignedInUser();
+        const user = this.authService.getSignedInUser();
         if (!user) {
             throw new Error('401');
         }

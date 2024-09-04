@@ -2,10 +2,16 @@
     <div class="menu flex-1 overflow-y-auto">
         <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">Segelschulschiff Großherzogin Elisabeth</h1>
         <ul class="menu-list my-4">
-            <li class="menu-item">
+            <li v-if="user.permissions.includes(Permission.READ_EVENTS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.Home }">
                     <i class="fa-solid fa-home"></i>
                     <span>Meine nächsten Reisen</span>
+                </RouterLink>
+            </li>
+            <li v-else class="menu-item">
+                <RouterLink :to="{ name: Routes.Onboarding }">
+                    <i class="fa-solid fa-home"></i>
+                    <span>Start</span>
                 </RouterLink>
             </li>
             <li

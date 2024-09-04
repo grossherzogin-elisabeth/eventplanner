@@ -1,49 +1,83 @@
-import type { AuthRepository } from '@/application/ports/AuthRepository';
-import type { SignedInUser } from '@/domain';
+import type { AuthService, Config } from '@/application';
+import type { AccountRepository } from '@/application/ports/AccountRepository';
+import { Timer } from '@/common';
+import type { SignedInUser, UserKey } from '@/domain';
 
 export class AuthUseCase {
-    private readonly authRepository: AuthRepository;
+    private readonly config: Config;
+    private readonly authService: AuthService;
+    private readonly accountRepository: AccountRepository;
+    private authentication?: Promise<string | undefined>;
 
-    constructor(params: { authRepository: AuthRepository }) {
-        this.authRepository = params.authRepository;
+    constructor(params: { config: Config; authService: AuthService; accountRepository: AccountRepository }) {
+        this.config = params.config;
+        this.authService = params.authService;
+        this.accountRepository = params.accountRepository;
+    }
+
+    public async authenticate(redirectPath?: string): Promise<string | undefined> {
+        const user = await this.accountRepository.getAccount();
+        this.authService.setSignedInUser(user);
+        if (!user) {
+            if (redirectPath) {
+                localStorage.setItem('auth.redirect', redirectPath || window.location.pathname);
+            }
+            return undefined;
+        }
+        const redirect = localStorage.getItem('auth.redirect') || undefined;
+        localStorage.removeItem('auth.redirect');
+        return redirect;
+    }
+
+    public async firstAuthentication(redirectPath?: string): Promise<string | undefined> {
+        if (!this.authentication) {
+            this.authentication = this.authenticate(redirectPath);
+            return this.authentication;
+        }
+        return undefined;
     }
 
     /**
-     * Triggers the login flow
+     * Starts the login flow
      */
-    public async login(redirectPath?: string): Promise<string | undefined> {
-        return this.authRepository.login(redirectPath);
+    public async loginWithCredentials(userName: string, password: string): Promise<void> {
+        window.location.href = `${this.config.authLoginEndpoint}/default`;
+        await Timer.wait(500);
     }
 
     /**
-     * Logs the user out
+     * Starts the login flow
+     */
+    public async loginWithIdentityProvider(provider: string): Promise<void> {
+        if (provider != 'google') {
+            alert(`Der Login mit ${provider} ist noch nicht implementiert.`);
+            return;
+        }
+        window.location.href = `${this.config.authLoginEndpoint}/${provider}`;
+        await Timer.wait(500);
+    }
+
+    /**
+     * Starts the logout flow
      */
     public logout(): void {
-        this.authRepository.logout();
+        window.location.href = this.config.authLogoutEndpoint;
     }
 
-    /**
-     * Resolves a promise when the user gets logged in. The promise resolves instantly, if the user is
-     * currently logged in.
-     */
-    public onLogin(): Promise<SignedInUser> {
-        return this.authRepository.onLogin();
+    public impersonateUser(userKey: UserKey): void {
+        // TODO
     }
 
-    /**
-     * Resolves a promise when the user gets logged out. The promise resolves instantly, if the user is
-     * currently logged out.
-     */
-    public onLogout(): Promise<void> {
-        return this.authRepository.onLogout();
+    public isLoggedIn(): boolean | null {
+        return this.authService.getSignedInUser() !== undefined;
     }
 
     public getSignedInUser(): SignedInUser {
         return (
-            this.authRepository.getSignedInUser() || {
+            this.authService.getSignedInUser() || {
                 key: '',
                 gender: 'd',
-                username: '',
+                username: 'anonymous',
                 lastname: '',
                 firstname: '',
                 email: '',
@@ -52,5 +86,13 @@ export class AuthUseCase {
                 permissions: [],
             }
         );
+    }
+
+    public async onLogin(): Promise<SignedInUser> {
+        return this.authService.onLogin();
+    }
+
+    public async onLogout(): Promise<void> {
+        return this.authService.onLogout();
     }
 }

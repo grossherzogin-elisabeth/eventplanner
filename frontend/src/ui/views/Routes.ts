@@ -1,11 +1,13 @@
 export enum Routes {
     Home = 'app_home',
+    Onboarding = 'app_onboarding',
     PageNotFound = 'app_page-not-found',
     Imprint = 'app_imprint',
     Privacy = 'app_privacy',
 
     Account = 'app_account',
     Unauthorized = 'app_unauthorized',
+    Login = 'app_login',
     Logout = 'app_logout',
 
     Events = 'app_events',

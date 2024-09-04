@@ -29,15 +29,20 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
      */
     router.beforeResolve(async (to, from, next) => {
         const meta = to.meta as RouteMetaData | undefined;
-        const user = authUseCase.getSignedInUser();
         // authentication guard
-        if (meta?.authenticated && user === undefined) {
-            await authUseCase.onLogin();
-            console.warn(`🛤️ Login required for route '${to.fullPath}'!`);
-            // next({ path: '/unauthorized' });
+        const redirect = await authUseCase.firstAuthentication(to.fullPath);
+        if (to.fullPath === '/' && redirect) {
+            next({ path: redirect });
+            return;
         }
+        if (meta?.authenticated && !authUseCase.isLoggedIn()) {
+            console.warn(`🛤️ Login required for route '${to.fullPath}'!`);
+            next({ path: '/login' });
+            return;
+        }
+        const user = authUseCase.getSignedInUser();
         // permission guard
-        if (meta?.permissions && meta.permissions.find((it) => !user?.permissions.includes(it as Permission))) {
+        if (meta?.permissions && meta.permissions.find((it) => !user.permissions.includes(it as Permission))) {
             console.warn(`🛤️ Missing permission for route '${to.fullPath}'!`);
             next({ path: '/' });
             return;

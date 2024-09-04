@@ -1,19 +1,15 @@
-import type { AuthRepository, EventRepository } from '@/application';
+import type { AuthService, EventRepository } from '@/application';
 import type { Cache } from '@/common';
 import type { Event, EventKey, Registration } from '@/domain';
 
 export class EventCachingService {
     private readonly eventRepository: EventRepository;
-    private readonly authRepository: AuthRepository;
+    private readonly authService: AuthService;
     private readonly cache: Cache<EventKey, Event>;
 
-    constructor(params: {
-        eventRepository: EventRepository;
-        authRepository: AuthRepository;
-        cache: Cache<EventKey, Event>;
-    }) {
+    constructor(params: { eventRepository: EventRepository; authService: AuthService; cache: Cache<EventKey, Event> }) {
         this.eventRepository = params.eventRepository;
-        this.authRepository = params.authRepository;
+        this.authService = params.authService;
         this.cache = params.cache;
     }
 
@@ -39,7 +35,7 @@ export class EventCachingService {
 
     private async fetchEvents(year: number): Promise<Event[]> {
         const events = await this.eventRepository.findAll(year);
-        const signedInUser = this.authRepository.getSignedInUser();
+        const signedInUser = this.authService.getSignedInUser();
         events.forEach((evt: Event) => {
             const registration = evt.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
             if (registration?.slotKey) {

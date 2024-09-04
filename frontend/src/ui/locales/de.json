@@ -43,6 +43,7 @@
     "app.page-title.imprint": "Impressum",
     "app.page-title.privacy": "Datenschutzerklärung",
     "app.page-title.account": "Meine Daten",
+    "app.page-title.login": "Login",
     "app.page-title.404": "404",
     "app.event-details.note-canceled": "Diese Reise fällt aus.",
     "app.event-details.note-assigned": "Du bist für diese Reise eingeplant.",
