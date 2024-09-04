@@ -2,9 +2,7 @@ package org.eventplanner.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.eventplanner.users.values.Role;
@@ -101,54 +99,43 @@ public class SecurityConfig {
     }
 
     private Stream<String> extractOidcRoles(OidcUserAuthority oidcUserAuthority) {
-        Stream.Builder<String> resultStream = Stream.builder();
+        List<String> roles = new LinkedList<>();
         var email = oidcUserAuthority.getIdToken().getEmail();
 
         if (admins.contains(email)) {
-            resultStream.add(Role.ADMIN.value());
-        } else {
-            resultStream.add(Role.TEAM_MEMBER.value());
+            roles.add(Role.ADMIN.value());
         }
 
         var cognitoRoles = oidcUserAuthority.getAttributes().get("cognito:groups");
-        if (cognitoRoles instanceof List) {
-            ((List<?>) cognitoRoles).stream()
-                .map(r -> "ROLE_" + r)
-                .forEach(resultStream::add);
+        if (cognitoRoles instanceof Collection<?> collection) {
+            collection.stream().map(r -> "ROLE_" + r).forEach(roles::add);
         }
 
         // TODO get roles for keycloak authorities
-        var keycloakRoles = oidcUserAuthority.getAttributes().get("cognito:groups");
+        // var keycloakRoles = oidcUserAuthority.getIdToken().getClaimAsStringList("ROLES");
+        // if (keycloakRoles != null) {
+        //     keycloakRoles.stream()
+        //         .map(r -> "ROLE_" + r)
+        //         .forEach(roles::add);
+        // }
 
-        var roles = oidcUserAuthority.getIdToken().getClaimAsStringList("ROLES");
-        if (roles != null) {
-            roles.stream()
-                .map(r -> "ROLE_" + r)
-                .forEach(resultStream::add);
-        }
-
-        return resultStream.build();
+        return roles.isEmpty() ? Stream.of(Role.NONE.value()) : roles.stream();
     }
 
     private Stream<String> extractOAuthRoles(OAuth2UserAuthority oAuth2UserAuthority) {
         var email = oAuth2UserAuthority.getAttributes().get("email");
-        Stream.Builder<String> resultStream = Stream.builder();
+        List<String> roles = new LinkedList<>();
 
         if (admins.contains(email)) {
-            resultStream.add(Role.ADMIN.value());
-        } else {
-            resultStream.add(Role.TEAM_MEMBER.value());
+            roles.add(Role.ADMIN.value());
         }
 
-        var roles = oAuth2UserAuthority.getAttributes().get("ROLES");
-        if (roles instanceof Collection<?> roleCollection) {
-            for (var item : roleCollection) {
-                if (item instanceof String role) {
-                    resultStream.accept(role);
-                }
-            }
+        var tokenRoles = oAuth2UserAuthority.getAttributes().get("ROLES");
+        if (tokenRoles instanceof Collection<?> collection) {
+            collection.stream().map(r -> "ROLE_" + r).forEach(roles::add);
         }
-        return resultStream.build();
+
+        return roles.isEmpty() ? Stream.of(Role.NONE.value()) : roles.stream();
     }
 
 }
