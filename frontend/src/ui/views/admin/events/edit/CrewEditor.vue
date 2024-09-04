@@ -82,7 +82,7 @@
                     <ul>
                         <template v-for="it in team" :key="it.key + it.userKey + it.userName + it.positionName">
                             <VDraggable
-                                class="mr-4 flex items-center rounded-xl px-4 py-2 hover:bg-primary-100 md:space-x-4"
+                                class="flex items-center rounded-xl px-4 py-2 hover:bg-primary-100 md:space-x-4"
                                 :class="{ 'cursor-move': it.userName !== undefined }"
                                 component="li"
                                 :value="it.userKey || it.userName ? it : undefined"
