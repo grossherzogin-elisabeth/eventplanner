@@ -21,29 +21,7 @@ export class AuthRestRepository implements AuthRepository {
         this.config = config;
     }
 
-    public async onLogin(): Promise<SignedInUser> {
-        if (this.user !== null) {
-            return this.mapUserToSignedInUser(this.user);
-        }
-        return new Promise((resolve, reject) => {
-            this.loginListeners.push(() => {
-                if (this.user != null) {
-                    resolve(this.mapUserToSignedInUser(this.user));
-                } else {
-                    reject('User is still undefined');
-                }
-            });
-        });
-    }
 
-    public async onLogout(): Promise<void> {
-        if (!this.isLoggedIn()) {
-            return Promise.resolve();
-        }
-        return new Promise((resolve) => {
-            this.logoutListeners.push(() => resolve());
-        });
-    }
 
     public isLoggedIn(): boolean {
         return this.user !== null;
@@ -84,14 +62,6 @@ export class AuthRestRepository implements AuthRepository {
             return user;
         }
         return undefined;
-    }
-
-    private async navigateToLogin(redirectPath?: string): Promise<void> {
-        if (!this.config.askBeforeLogin || confirm('Navigate to login?')) {
-            localStorage.setItem('auth.redirect', redirectPath || window.location.pathname);
-            window.location.href = this.config.authLoginEndpoint;
-            await Timer.wait(500);
-        }
     }
 
     private mapUserToSignedInUser(user: AccountRepresentation): SignedInUser {

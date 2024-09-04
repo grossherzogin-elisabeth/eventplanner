@@ -37,7 +37,6 @@ public class ImporterUseCase {
     private final UserService userService;
     private final String dataDirectory;
     private final String password;
-    private final Environment env;
 
     public ImporterUseCase(
         @Autowired EventRepository eventRepository,
@@ -45,15 +44,14 @@ public class ImporterUseCase {
         @Autowired UserService userService,
         @Value("${custom.data-directory}") String dataDirectory,
         @Value("${custom.users-excel-password}") String password,
-        Environment env
+        @Value("${custom.generate-test-data}") boolean generateTestData
     ) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.dataDirectory = dataDirectory;
         this.password = password;
-        this.env = env;
-        if (!Arrays.stream(env.getActiveProfiles()).toList().contains("test")) {
+        if (!generateTestData) {
             importOnStartup();
         }
     }

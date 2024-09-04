@@ -29,22 +29,17 @@ public class TestDataGenerationService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final UserService userService;
-    private final String password;
-    private final Environment env;
 
     public TestDataGenerationService(
         @Autowired EventRepository eventRepository,
         @Autowired UserRepository userRepository,
         @Autowired UserService userService,
-        @Value("${custom.users-excel-password}") String password,
-        Environment env
+        @Value("${custom.generate-test-data}") boolean generateTestData
     ) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.userService = userService;
-        this.password = password;
-        this.env = env;
-        if (Arrays.stream(env.getActiveProfiles()).toList().contains("test")) {
+        if (generateTestData) {
             generateTestData();
         }
     }
