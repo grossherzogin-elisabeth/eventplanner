@@ -2,6 +2,7 @@ package org.eventplanner.config;
 
 import static java.lang.String.format;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class OAuthLogoutHandler implements LogoutHandler {
 
     private String getLogoutUrl(Authentication authentication) {
         if (!(authentication instanceof OAuth2AuthenticationToken oAuth2Token)) {
-            throw new IllegalStateException("Provided authentication is not a an OAuth2AuthenticationToken");
+            return logoutSuccessUrl;
         }
 
         final var clientRegistration = knownClientRegistrationIds.stream()
@@ -62,22 +63,19 @@ public class OAuthLogoutHandler implements LogoutHandler {
             .orElseThrow(() -> new IllegalStateException("Unknown client registration"));
 
         if (!(oAuth2Token.getPrincipal() instanceof OidcUser oidcUser)) {
-            throw new IllegalStateException("User is not a an OidcUser");
+            return logoutSuccessUrl;
         }
 
         var metadata = clientRegistration.getProviderDetails().getConfigurationMetadata();
         if (!(metadata.get("end_session_endpoint") instanceof String logoutEndpoint)) {
-            throw new IllegalStateException(format(
-                "The OpenID-Connect client %s does not support logout",
-                clientRegistration.getClientName()
-            ));
+            // some social logins don't support logouts
+            return logoutSuccessUrl;
         }
 
         return UriComponentsBuilder.fromUriString(logoutEndpoint)
             .queryParam("id_token_hint", oidcUser.getIdToken().getTokenValue())
             .queryParam("client_id", clientRegistration.getClientId())
-            .queryParam("redirect_uri", logoutSuccessUrl)
-            .queryParam("response_type", "code")
+            .queryParam("logout_uri", logoutSuccessUrl)
             .encode().build().toUri().toString();
     }
 }

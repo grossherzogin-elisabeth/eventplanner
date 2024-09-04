@@ -8,7 +8,7 @@ custom:
   data-directory: data
   data-encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
   users-excel-password: ${USERS_EXCEL_PASSWORD:}
-  logout-success-url: ${frontend.domain}/login/oauth2/code/cognito
+  logout-success-url: ${frontend.domain}/login
   login-success-url: ${frontend.domain}
   admins: >
     admin@grossherzogin-elisabeth.de
@@ -33,6 +33,11 @@ spring:
             client-secret: ${OAUTH_CLIENT_SECRET:********************}
             provider: default
             redirect-uri: ${frontend.domain}/login/oauth2/code/default
+            scope: openid,email,profile
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:eventplanner}
+            client-secret: ${GOOGLE_CLIENT_SECRET:********************}
+            redirect-uri: ${frontend.domain}/login/oauth2/code/google
             scope: openid,email,profile
           cognito:
             client-id: ${OAUTH_CLIENT_ID:eventplanner}
