@@ -202,7 +202,7 @@
                 <i class="fa-solid fa-calendar-alt" />
                 <span>In Kalender speichern</span>
             </button>
-            <RouterLink :to="{ name: Routes.EventEdit }" class="btn-secondary">
+            <RouterLink v-if="user.permissions.includes(Permission.WRITE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
                 <i class="fa-solid fa-edit" />
                 <span>Reise bearbeiten</span>
             </RouterLink>
