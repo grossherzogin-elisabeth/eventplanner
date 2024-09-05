@@ -14,7 +14,7 @@
         </div>
 
         <div
-            class="sticky bottom-0 flex items-stretch justify-end space-x-2 pb-4 pr-3 pt-6 lg:justify-start lg:border-t lg:border-gray-300 lg:bg-primary-50 lg:px-20 lg:pb-8"
+            class="sticky bottom-0 flex items-stretch justify-end space-x-2 pb-4 pr-3 md:pr-14 pt-6 lg:justify-start lg:border-t lg:border-gray-300 lg:bg-primary-50 lg:px-20 lg:pb-8"
         >
             <div class="details-page-primary-button w-auto">
                 <slot name="primary-button" />
