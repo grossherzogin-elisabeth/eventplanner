@@ -98,7 +98,7 @@ public class FileSystemJsonRepository<E> {
         for (File file : files) {
             if (file.isDirectory()) {
                 entities.addAll(readAllFromDirectory(file));
-            } else {
+            } else if (file.getName().endsWith(".json")) {
                 readFromFile(file).ifPresent(entities::add);
             }
         }

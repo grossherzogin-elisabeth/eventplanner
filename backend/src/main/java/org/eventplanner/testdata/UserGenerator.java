@@ -4,6 +4,7 @@ import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.values.Address;
+import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
 
 import java.time.ZonedDateTime;
@@ -237,6 +238,7 @@ public class UserGenerator {
                 .replaceAll("ö", "oe")
                 .replaceAll("ü", "ue")
             );
+            user.getRoles().add(Role.TEAM_MEMBER);
             user.setAddress(new Address("Teststraße " + i, null, "Teststadt", String.valueOf((12345 * i) % 99999)));
             user.setDateOfBirth(ZonedDateTime.now());
             user.setMobile("+49 123456789");
