@@ -154,7 +154,9 @@
                     <i class="fa-solid fa-save" />
                 </template>
                 <template #label>
-                    <span>Speichern</span>
+                    <span v-if="tab === Tab.EVENT_SLOTS">Slots speichern</span>
+                    <span v-else-if="tab === Tab.EVENT_DATA">Event speichern</span>
+                    <span v-else-if="tab === Tab.EVENT_POSITIONS">Crew speichern</span>
                 </template>
             </AsyncButton>
         </template>
@@ -359,19 +361,44 @@ async function editSlot(slotkey: SlotKey): Promise<void> {
 }
 
 async function save(): Promise<void> {
-    if (event.value) {
-        try {
-            await eventAdministrationUseCase.updateEvent(event.value.key, event.value);
-        } catch (e) {
-            errorHandlingUseCase.handleError({
-                title: 'Speichern fehlgeschlagen',
-                message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
-                    wiederholt auftreten, melde ihn gerne.`,
-                error: e,
-                retry: () => save(),
-            });
-            throw e;
+    if (!event.value) {
+        return;
+    }
+    try {
+        switch (tab.value) {
+            case Tab.EVENT_DATA:
+                await eventAdministrationUseCase.updateEvent(event.value.key, {
+                    name: event.value.name,
+                    description: event.value.description,
+                    type: event.value.type,
+                    start: event.value.start,
+                    end: event.value.end,
+                    state: event.value.state,
+                    locations: event.value.locations,
+                });
+                break;
+            case Tab.EVENT_SLOTS:
+                await eventAdministrationUseCase.updateEvent(event.value.key, {
+                    slots: event.value.slots,
+                });
+                break;
+            case Tab.EVENT_POSITIONS:
+                await eventAdministrationUseCase.updateEvent(event.value.key, {
+                    registrations: event.value.registrations, // TODO
+                });
+                break;
+            default:
         }
+    } catch (e) {
+        errorHandlingUseCase.handleError({
+            title: 'Speichern fehlgeschlagen',
+            message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
+                wiederholt auftreten, melde ihn gerne.`,
+            error: e,
+            retry: () => save(),
+        });
+        // throw again for the async button to handle error state
+        throw e;
     }
 }
 
