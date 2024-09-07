@@ -27,7 +27,7 @@
                     </div>
                 </td>
                 <td class="">
-                    <ContextMenuButton>
+                    <ContextMenuButton class="px-4 py-2">
                         <ul>
                             <li>
                                 <RouterLink
