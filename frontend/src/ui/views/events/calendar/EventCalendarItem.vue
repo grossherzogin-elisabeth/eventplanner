@@ -196,7 +196,7 @@ init();
 }
 
 .calendar-event-entry.waiting-list {
-    @apply border-l-8 border-green-700 bg-green-200 bg-opacity-75 hover:bg-opacity-100;
+    @apply border-l-8 border-green-200 bg-green-200 bg-opacity-75 hover:bg-opacity-100;
     @apply text-green-800;
     background-image: var(--pattern);
 }
