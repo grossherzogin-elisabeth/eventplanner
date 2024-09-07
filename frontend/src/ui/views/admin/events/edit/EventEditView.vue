@@ -232,7 +232,7 @@ import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import {
     useAuthUseCase,
-    useErrorHandlingUseCase,
+    useErrorHandling,
     useEventAdministrationUseCase,
     useEventUseCase,
     useUsersUseCase,
@@ -264,7 +264,7 @@ const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const usersUseCase = useUsersUseCase();
 const authUseCase = useAuthUseCase();
-const errorHandlingUseCase = useErrorHandlingUseCase();
+const errorHandlingUseCase = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
 
 const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_SLOTS];

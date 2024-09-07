@@ -29,7 +29,11 @@ const open = ref<boolean>(false);
 
 <style>
 .context-menu-item {
-    @apply -mx-4 flex cursor-pointer items-center px-4 py-3 hover:bg-primary-200 md:py-2;
+    @apply -mx-4 flex cursor-pointer items-center px-4 py-3 hover:bg-primary-200 hover:no-underline md:py-2;
+}
+
+.context-menu-item.disabled {
+    @apply pointer-events-none opacity-50;
 }
 
 .context-menu-item > i,

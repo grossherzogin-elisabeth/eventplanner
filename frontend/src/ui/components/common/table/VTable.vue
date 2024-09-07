@@ -3,35 +3,41 @@
         <table :class="$attrs.class" class="v-table">
             <thead>
                 <tr ref="head">
+                    <th></th>
                     <slot name="head" :sort-by="sortCol" :sort-direction="sortDir > 0 ? 'asc' : 'desc'"></slot>
+                    <th></th>
                 </tr>
             </thead>
             <!-- loading -->
             <tbody v-if="loading">
                 <slot name="loading" :colspan="columnCount">
                     <tr>
+                        <td></td>
                         <td :colspan="columnCount" class="italic">Wird geladen...</td>
+                        <td></td>
                     </tr>
                 </slot>
             </tbody>
             <!-- no data -->
             <tbody v-else-if="empty">
                 <tr class="no-data">
+                    <td></td>
                     <slot name="no-data" :colspan="columnCount">
-                        <td :colspan="columnCount" class="italic">
-                            Keine Daten gefunden. Versuche einen anderen Filter, oder lege einen neuen Datensatz an.
-                        </td>
+                        <td :colspan="columnCount" class="italic">Keine Daten.</td>
                     </slot>
+                    <td></td>
                 </tr>
             </tbody>
             <!-- data -->
             <tbody v-else>
                 <tr v-for="(row, index) in pagedItems" :key="index" @click="emit('click', row)">
+                    <td></td>
                     <slot name="row" :item="row" :index="index">
                         <td v-for="(val, colIndex) in Object.values(row)" :key="colIndex">
                             {{ val }}
                         </td>
                     </slot>
+                    <td></td>
                 </tr>
             </tbody>
         </table>

@@ -35,10 +35,10 @@
 import { computed, ref } from 'vue';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog } from '@/ui/components/common';
-import { useErrorHandlingUseCase } from '@/ui/composables/Application';
+import { useErrorHandling } from '@/ui/composables/Application';
 import type { ErrorDialogMessage } from './ErrorDialog';
 
-const errorHandlingUseCase = useErrorHandlingUseCase();
+const errorHandlingUseCase = useErrorHandling();
 const dlg = ref<Dialog<void, ErrorDialogMessage> | null>(null);
 const error = ref<ErrorDialogMessage>({});
 

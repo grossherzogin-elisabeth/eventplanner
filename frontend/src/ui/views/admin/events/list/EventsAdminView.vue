@@ -28,27 +28,20 @@
             </div>
         </div>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 bg-primary-50 pt-4" />
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4" />
         <div class="w-full overflow-x-auto px-8 pt-6 md:px-16 xl:px-20 xl:pt-0">
-            <div class="-mx-4 px-4 pt-4">
-                <VTable :items="filteredEvents" :page-size="-1" class="interactive-table" @click="editEvent($event)">
-                    <template #head>
-                        <th class="w-16"></th>
-                        <th class="w-1/2" data-sortby="name">Reise</th>
-                        <th class="w-1/6" data-sortby="hasOpenRequiredSlots"></th>
-                        <th class="w-1/6" data-sortby="registrations">Anmeldungen</th>
-                        <th class="hidden w-1/6 md:table-cell" data-sortby="startDate">Datum</th>
-                        <th class="hidden w-1/6 md:table-cell" data-sortby="duration">Dauer</th>
-                    </template>
+            <div class="pt-4">
+                <VTable
+                    :items="filteredEvents"
+                    :page-size="-1"
+                    class="interactive-table no-header"
+                    @click="editEvent($event)"
+                >
                     <template #row="{ item }">
-                        <td>
-                            <i v-if="item.selected" class="fa-regular fa-check-square"></i>
-                            <i v-else class="fa-regular fa-square"></i>
-                        </td>
-                        <td class="w-full whitespace-nowrap border-none font-semibold">
-                            <span class="hover:text-primary-600">
+                        <td class="w-1/2 max-w-[65vw] whitespace-nowrap font-semibold">
+                            <p class="mb-1 truncate">
                                 {{ item.name }}
-                            </span>
+                            </p>
                             <p class="text-sm font-light">{{ item.locations }}</p>
                         </td>
                         <td>
@@ -74,13 +67,19 @@
                                 <span class="whitespace-nowrap font-semibold">Voll belegt</span>
                             </div>
                         </td>
-                        <td>
-                            {{ item.registrations }}
+                        <td class="w-1/6 whitespace-nowrap text-center">
+                            <p class="mb-1 font-semibold">
+                                {{ item.crewCount }}
+                                <span v-if="item.waitingListCount" class="opacity-40">
+                                    +{{ item.waitingListCount }}
+                                </span>
+                            </p>
+                            <p class="text-sm">Crew</p>
                         </td>
-                        <td class="hidden md:table-cell">
-                            {{ item.start }}
+                        <td class="w-2/6 whitespace-nowrap">
+                            <p class="mb-1 font-semibold">{{ formatDateRange(item.start, item.end) }}</p>
+                            <p class="text-sm">{{ item.duration }} Tage</p>
                         </td>
-                        <td class="hidden md:table-cell">{{ item.duration }} Tage</td>
                     </template>
                 </VTable>
             </div>
@@ -89,7 +88,7 @@
         <CreateEventDlg ref="createEventDialog" />
         <ImportEventsDlg ref="importEventsDialog" />
 
-        <div class="fixed bottom-0 right-0 flex justify-end pb-4 pr-3 md:pr-14 xl:hidden">
+        <div class="fixed bottom-0 right-0 z-10 flex justify-end pb-4 pr-3 md:pr-14 xl:hidden">
             <button class="btn-primary btn-floating" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Event erstellen</span>
@@ -101,15 +100,14 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import { ArrayUtils } from '@/common';
-import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputText, VTable, VTabs } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
+import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
 import CreateEventDlg from '@/ui/views/admin/events/list/CreateEventDlg.vue';
@@ -120,14 +118,13 @@ interface EventTableViewItem {
     eventKey: string;
     name: string;
     locations: string;
-    start: string;
-    end: string;
-    startDate: Date;
-    endDate: Date;
+    start: Date;
+    end: Date;
     duration: number;
     isPastEvent: boolean;
     registrations: number;
-    waitingList: number;
+    crewCount: number;
+    waitingListCount: number;
     hasOpenSlots: boolean;
     hasOpenRequiredSlots: boolean;
 }
@@ -138,7 +135,6 @@ const authUseCase = useAuthUseCase();
 const eventService = useEventService();
 const route = useRoute();
 const router = useRouter();
-const i18n = useI18n();
 const user = authUseCase.getSignedInUser();
 
 const events = ref<EventTableViewItem[]>([]);
@@ -174,7 +170,7 @@ async function fetchEvents(): Promise<void> {
         const now = new Date();
         const currentYear = await fetchEventsByYear(now.getFullYear());
         const nextYear = await fetchEventsByYear(now.getFullYear() + 1);
-        events.value = currentYear.concat(nextYear).filter((it) => it.endDate.getTime() > now.getTime());
+        events.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
     } else {
         const year = parseInt(tab.value);
         if (year) {
@@ -190,15 +186,14 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
             selected: false,
             eventKey: evt.key,
             name: evt.name,
-            start: i18n.d(evt.start, DateTimeFormat.DD_MM_YYYY),
-            startDate: evt.start,
-            end: i18n.d(evt.end, DateTimeFormat.DD_MM_YYYY),
-            endDate: evt.end,
+            start: evt.start,
+            end: evt.end,
             duration: new Date(evt.end.getTime() - evt.start.getTime()).getDate(),
             locations: evt.locations.map((it) => it.name).join(' - '),
             isPastEvent: evt.start.getTime() < new Date().getTime(),
             registrations: evt.registrations.length,
-            waitingList: evt.registrations.filter((it) => it.slotKey).length,
+            crewCount: evt.assignedUserCount,
+            waitingListCount: evt.registrations.length - evt.assignedUserCount,
             hasOpenSlots: hasOpenSlots(evt),
             hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
         };
@@ -213,7 +208,7 @@ function hasOpenSlots(event: Event): boolean {
 async function editEvent(evt: EventTableViewItem): Promise<void> {
     await router.push({
         name: Routes.EventEdit,
-        params: { year: evt.startDate.getFullYear(), key: evt.eventKey },
+        params: { year: evt.start.getFullYear(), key: evt.eventKey },
     });
 }
 

@@ -202,19 +202,23 @@
                 <i class="fa-solid fa-calendar-alt" />
                 <span>In Kalender speichern</span>
             </button>
-            <RouterLink v-if="user.permissions.includes(Permission.WRITE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
+            <RouterLink
+                v-if="user.permissions.includes(Permission.WRITE_EVENTS)"
+                :to="{ name: Routes.EventEdit }"
+                class="btn-secondary"
+            >
                 <i class="fa-solid fa-edit" />
                 <span>Reise bearbeiten</span>
             </RouterLink>
         </template>
         <template v-if="event" #actions-menu>
             <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
-                <i class="fa-solid fa-calendar-alt w-6" />
+                <i class="fa-solid fa-calendar-alt" />
                 <span>Kalendereintrag erstellen</span>
             </li>
             <li v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
-                    <i class="fa-solid fa-edit w-6" />
+                    <i class="fa-solid fa-edit" />
                     <span>Reise bearbeiten</span>
                 </RouterLink>
             </li>

@@ -20,7 +20,7 @@
     </div>
     <div v-if="props.modelValue && $slots[props.modelValue]" class="flex-1 px-8 py-4 md:px-16 md:py-8 xl:px-20">
         <template v-for="tab in props.tabs" :key="tab">
-            <div v-show="tab === props.modelValue">
+            <div v-show="tab === props.modelValue" class="h-full">
                 <slot :name="tab" :active="tab === props.modelValue" />
             </div>
         </template>

@@ -1,16 +1,19 @@
-@import '@/ui/assets/css/lib/pagination.css';
-
 .pagination {
-    @apply items-stretch space-x-2 px-6 py-2;
-    @apply fixed bottom-0 left-0 right-0 bg-primary-50 md:right-8 xl:absolute xl:right-12;
+    @apply flex items-stretch justify-end space-x-2;
+    @apply px-6 py-2 md:pr-12 xl:pr-16;
+    @apply fixed bottom-0 left-0 right-0 z-10 bg-primary-50 xl:absolute xl:pr-12;
+}
+
+.pagination-page {
+    @apply w-8 px-2 py-2 font-semibold opacity-50;
 }
 
 .pagination-page.enabled {
+    @apply opacity-100;
     @apply flex w-10 items-center justify-center rounded-lg py-1;
     @apply hover:bg-primary-100 hover:text-primary-600;
 }
 
 .pagination-page.active {
     @apply bg-primary-100 font-bold text-blue-600 shadow-none;
-    @apply no-underline;
 }

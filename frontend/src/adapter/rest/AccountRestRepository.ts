@@ -1,6 +1,4 @@
 import type { AccountRepository } from '@/application';
-import type { Config } from '@/application/values/Config';
-import { Timer } from '@/common';
 import type { SignedInUser } from '@/domain';
 import type { Permission, Role } from '@/domain';
 

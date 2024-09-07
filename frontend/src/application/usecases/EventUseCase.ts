@@ -1,5 +1,4 @@
 import type { AuthService } from '@/application';
-import type { AccountRepository } from '@/application/ports/AccountRepository';
 import type { EventRepository } from '@/application/ports/EventRepository';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { DateFormatter } from '@/common/date';

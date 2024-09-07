@@ -55,7 +55,7 @@ export function useUserAdministrationUseCase(): UserAdministrationUseCase {
     return useCase;
 }
 
-export function useErrorHandlingUseCase(): ErrorHandlingUseCase {
+export function useErrorHandling(): ErrorHandlingUseCase {
     const useCase = inject<ErrorHandlingUseCase>(ERROR_HANDLING_USE_CASE);
     if (!useCase) {
         throw new Error('Error handling usecase not found!');

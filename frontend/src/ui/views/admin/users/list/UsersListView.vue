@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="w-full overflow-x-auto px-8 pt-6 md:px-16 xl:px-20 xl:pt-0">
-            <div class="-mx-4 px-4">
+            <div class="pt-4">
                 <VTable
                     :items="filteredCrewMembers"
                     :page-size="50"
@@ -52,7 +52,7 @@
                                 <span class="whitespace-nowrap font-semibold">Alle gültig</span>
                             </div>
                         </td>
-                        <td>
+                        <td class="s">
                             <div class="flex">
                                 <span
                                     v-for="position in item.positionKeys"

@@ -15,11 +15,16 @@ export class ErrorHandlingUseCase {
     }
 
     public handleError(error: ErrorDetails): void {
+        console.error(error.error);
         if (this.errorHandler) {
             this.errorHandler(error);
-        } else {
-            console.error(error.error);
         }
+    }
+
+    public handleRawError(e: unknown | Error | Response): void {
+        this.handleError({
+            error: e,
+        });
     }
 
     public handleUnexpectedError(e: unknown | Error | Response): void {

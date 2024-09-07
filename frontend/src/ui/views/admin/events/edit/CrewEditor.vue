@@ -1,5 +1,5 @@
 <template>
-    <div class="-mx-4 flex h-full flex-col px-4 xl:flex-row xl:items-start">
+    <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 xl:flex-row xl:items-start">
         <!-- position counters -->
         <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-primary-50 px-8 pb-4 xl:sticky xl:mr-8 xl:w-64 xl:pt-10">
             <div class="flex flex-wrap items-start gap-2 text-sm font-bold text-white xl:flex-col">
@@ -265,6 +265,7 @@ const position = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>(
 const registrations = ref<ResolvedRegistration[]>([]);
 const team = ref<ResolvedSlot[]>([]);
 const dragSource = ref<DragSource | null>(null);
+const loading = ref<boolean>(true);
 
 const editRegistrationDialog = ref<Dialog<Registration> | null>(null);
 
@@ -284,11 +285,12 @@ const positions = computed<Position[]>(() => {
     return [...position.value.values()].sort((a, b) => b.prio - a.prio);
 });
 
-function init(): void {
-    fetchPositions();
-    fetchTeam();
+async function init(): Promise<void> {
+    await fetchPositions();
+    await fetchTeam();
     watch(props.event.registrations, () => fetchTeam(), { deep: true });
     watch(props.event.slots, () => fetchTeam(), { deep: true });
+    loading.value = false;
 }
 
 async function addToTeam(registration: ResolvedRegistration): Promise<void> {

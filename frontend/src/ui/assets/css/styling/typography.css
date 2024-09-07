@@ -48,7 +48,9 @@ code {
 
 @font-face {
     font-family: 'Comfortaa';
-    src: url("../../fonts/Comfortaa-VariableFont_wght.woff2") format("woff2 supports variations"),
-    url("../../fonts/Comfortaa-VariableFont_wght.woff2") format("woff2-variations");
+    src: url('../../fonts/Comfortaa-VariableFont_wght.woff2') format('woff2 supports variations');
+    src: url('../../fonts/Comfortaa-VariableFont_wght.woff2') format('woff2-variations');
+    src: url('../../fonts/Comfortaa-VariableFont_wght.woff2') format('woff2') tech('variations');
     font-weight: 100 1000;
+    font-stretch: 25% 151%;
 }

@@ -65,7 +65,8 @@ export class AuthUseCase {
     }
 
     public impersonateUser(userKey: UserKey): void {
-        // TODO
+        localStorage.setItem('eventplanner.overrideSignedInUserKey', userKey);
+        window.location.reload();
     }
 
     public isLoggedIn(): boolean | null {

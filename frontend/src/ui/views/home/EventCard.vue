@@ -5,11 +5,13 @@
     >
         <div class="event-card" :class="{ assigned: props.event.signedInUserAssignedPosition }">
             <div class="flex" :class="{ 'bg-striped': props.event.signedInUserWaitingListPosition }">
-                <div class="hidden sm:flex border-event-card -my-2 -ml-2 w-32 flex-col items-center justify-center border-r">
+                <div
+                    class="border-event-card -my-2 -ml-2 hidden w-32 flex-col items-center justify-center border-r sm:flex"
+                >
                     <span class="text-3xl">{{ props.event.start.getDate() }}</span>
                     <span class="text-lg">{{ $d(props.event.start, DateTimeFormat.MMM) }}</span>
                 </div>
-                <div class="flex flex-grow flex-col px-4 sm:px-8 py-3">
+                <div class="flex flex-grow flex-col px-4 py-3 sm:px-8">
                     <h3 class="mb-2 flex items-center space-x-2">
                         <span class="">{{ event.name }}</span>
                     </h3>

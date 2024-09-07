@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="xl:overflow-y-auto">
         <DetailsPage :back-to="{ name: Routes.UsersList }">
             <template #header>
                 <div>
@@ -8,7 +8,7 @@
                 </div>
             </template>
             <template #content>
-                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-10 bg-primary-50 pt-8 xl:top-0">
+                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
                     <template #[Tab.USER_DATA]>
                         <div class="space-y-8 xl:space-y-16">
                             <section v-if="user" class="-mx-4">
@@ -80,80 +80,26 @@
                         </div>
                     </template>
                     <template #[Tab.USER_EVENTS]>
-                        <div class="-mx-4 space-y-4 md:hidden">
-                            <div
-                                v-for="item in events"
-                                :key="item.eventKey"
-                                class="space-y-2 rounded-xl bg-primary-100 p-4"
-                            >
-                                <p class="text-sm font-light">{{ item.start }} / {{ item.duration }} Tage</p>
-                                <RouterLink
-                                    :to="{
-                                        name: Routes.EventEdit,
-                                        params: { year: item.startDate.getFullYear(), key: item.eventKey },
-                                    }"
-                                    class="hover:text-primary-600"
-                                >
-                                    {{ item.name }}
-                                </RouterLink>
-                                <p class="text-sm font-light">{{ item.locations }}</p>
-                                <div
-                                    :class="{ 'opacity-50': item.waitingList }"
-                                    :style="{ background: item.position.color }"
-                                    class="position inline-flex items-center space-x-2"
-                                >
-                                    <span>{{ item.positionName }}</span>
-                                    <i v-if="item.waitingList" class="fa-solid fa-clock"></i>
-                                </div>
+                        <div>
+                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events.length}`" class="mb-16">
+                                <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">
+                                    <template v-if="!eventsLoadedUntilYear">Zukünftige Reisen</template>
+                                    <template v-else>Reisen {{ year }}</template>
+                                </h2>
+                                <UserEventsTable
+                                    v-if="user && positions"
+                                    :events="events"
+                                    :positions="positions"
+                                    :user="user"
+                                />
+                            </div>
+
+                            <div class="-mt-8 mb-4 flex items-center justify-center">
+                                <button class="btn-ghost" @click="fetchNextEvents()">
+                                    <span>Vergangene Reisen anzeigen</span>
+                                </button>
                             </div>
                         </div>
-                        <VTable :items="events" :page-size="-1" class="hidden md:table">
-                            <template #head>
-                                <th class="w-1/2" data-sortby="name">Reise</th>
-                                <th class="w-1/6" data-sortby="startDate">Datum</th>
-                                <th class="w-1/6" data-sortby="duration">Dauer</th>
-                                <th class="w-1/6" data-sortby="position.name">Position</th>
-                                <th class="w-0"></th>
-                            </template>
-                            <template #row="{ item }">
-                                <td
-                                    :class="{ 'opacity-50': item.isPastEvent }"
-                                    class="w-full border-none font-semibold"
-                                >
-                                    <RouterLink
-                                        :to="{
-                                            name: Routes.EventEdit,
-                                            params: { year: item.startDate.getFullYear(), key: item.eventKey },
-                                        }"
-                                        class="hover:text-primary-600"
-                                    >
-                                        {{ item.name }}
-                                    </RouterLink>
-                                    <p class="text-sm font-light">{{ item.locations }}</p>
-                                </td>
-                                <td :class="{ 'opacity-50': item.isPastEvent }" class="hidden md:table-cell">
-                                    {{ item.start }}
-                                </td>
-                                <td :class="{ 'opacity-50': item.isPastEvent }" class="hidden md:table-cell">
-                                    {{ item.duration }} Tage
-                                </td>
-                                <td class="hidden md:table-cell">
-                                    <div
-                                        :class="{ 'opacity-50': item.waitingList }"
-                                        :style="{ background: item.position.color }"
-                                        class="position inline-flex items-center space-x-2"
-                                    >
-                                        <span>{{ item.positionName }}</span>
-                                        <i v-if="item.waitingList" class="fa-solid fa-clock"></i>
-                                    </div>
-                                </td>
-                                <td class="hidden md:table-cell">
-                                    <button class="btn-toolbar text-gray-500 hover:text-red-600">
-                                        <i class="fa-solid fa-xmark-circle"></i>
-                                    </button>
-                                </td>
-                            </template>
-                        </VTable>
                     </template>
                     <template #[Tab.USER_CERTIFICATES]>
                         <div class="space-y-8 overflow-x-auto xl:space-y-16">
@@ -197,25 +143,23 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import { ArrayUtils } from '@/common';
-import { DateTimeFormat } from '@/common/date';
-import type { InputSelectOption, Position, UserDetails } from '@/domain';
+import type { Event, InputSelectOption, Position, PositionKey, UserDetails } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTable, VTabs } from '@/ui/components/common';
+import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
 import CreateRegistrationForUserDlg from '@/ui/components/events/CreateRegistrationForUserDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import {
     useAuthUseCase,
-    useErrorHandlingUseCase,
+    useErrorHandling,
     useEventUseCase,
     useUserAdministrationUseCase,
     useUsersUseCase,
 } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
+import UserEventsTable from '@/ui/views/admin/users/details/UserEventsTable.vue';
 
 enum Tab {
     USER_DATA = 'app.user-details.tab.data',
@@ -224,35 +168,21 @@ enum Tab {
     USER_EVENTS = 'app.user-details.tab.events',
 }
 
-interface EventTableViewItem {
-    eventKey: string;
-    name: string;
-    locations: string;
-    start: string;
-    end: string;
-    startDate: Date;
-    endDate: Date;
-    duration: number;
-    position: Position;
-    positionName?: string;
-    waitingList: boolean;
-    isPastEvent: boolean;
-}
-
 const route = useRoute();
-const i18n = useI18n();
 const userAdministrationUseCase = useUserAdministrationUseCase();
 const usersUseCase = useUsersUseCase();
 const eventsUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
-const errorHandlingUseCase = useErrorHandlingUseCase();
+const errorHandlingUseCase = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
 
 const tabs = [Tab.USER_EVENTS, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_CERTIFICATES];
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const user = ref<UserDetails | null>(null);
-const events = ref<EventTableViewItem[]>([]);
+const eventsByYear = ref<Map<number, Event[]>>(new Map<number, Event[]>());
+const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const createRegistrationForUserDialog = ref<Dialog<UserDetails> | null>(null);
+const eventsLoadedUntilYear = ref<number>(0);
 
 const genderOptions: InputSelectOption[] = [
     { value: 'm', label: 'männlich' },
@@ -260,46 +190,43 @@ const genderOptions: InputSelectOption[] = [
     { value: 'd', label: 'divers' },
 ];
 
+const userKey = computed<string>(() => (route.params.key as string) || '');
+
 function init(): void {
     fetchUser();
-    fetchUserEvents();
+    fetchPositions();
+    fetchUserFutureEvents();
 }
 
 async function fetchUser(): Promise<void> {
-    const key = route.params.key as string;
-    user.value = await userAdministrationUseCase.getUserDetailsByKey(key);
+    user.value = await userAdministrationUseCase.getUserDetailsByKey(userKey.value);
 }
 
-async function fetchUserEvents(): Promise<void> {
-    const userKey = route.params.key as string;
-    const year = new Date().getFullYear();
-    const evts = await eventsUseCase.getEventsByUser(year, userKey);
-    const positions = await usersUseCase.resolvePositionNames();
-    events.value = evts
-        .map((evt) => {
-            const registration = evt.registrations.find((it) => it.userKey === userKey);
-            const slot = evt.slots.find((it) => it.key === registration?.slotKey);
-            const position = positions.get(registration?.positionKey || '');
-            if (position) {
-                return {
-                    eventKey: evt.key,
-                    name: evt.name,
-                    start: i18n.d(evt.start, DateTimeFormat.DD_MM_YYYY),
-                    startDate: evt.start,
-                    end: i18n.d(evt.end, DateTimeFormat.DD_MM_YYYY),
-                    endDate: evt.end,
-                    duration: new Date(evt.end.getTime() - evt.start.getTime()).getDate(),
-                    position: position,
-                    positionName: slot?.positionName || position.name,
-                    waitingList: slot === undefined,
-                    locations: evt.locations.map((it) => it.name).join(' - '),
-                    isPastEvent: evt.start.getTime() < new Date().getTime(),
-                };
-            }
-            console.warn('Failed to get users position');
-            return undefined;
-        })
-        .filter(ArrayUtils.filterUndefined);
+async function fetchNextEvents(): Promise<void> {
+    if (eventsLoadedUntilYear.value === 0) {
+        eventsLoadedUntilYear.value = new Date().getFullYear();
+    } else {
+        eventsLoadedUntilYear.value = eventsLoadedUntilYear.value - 1;
+    }
+    await fetchUserEventsOfYear(eventsLoadedUntilYear.value);
+}
+
+async function fetchUserFutureEvents(): Promise<void> {
+    const events = await eventsUseCase
+        .getFutureEventsByUser(userKey.value)
+        .then((evts) => evts.sort((a, b) => b.start.getTime() - a.start.getTime()));
+    eventsByYear.value.set(new Date().getFullYear(), events);
+}
+
+async function fetchUserEventsOfYear(year: number): Promise<void> {
+    const events = await eventsUseCase
+        .getEventsByUser(year, userKey.value)
+        .then((evts) => evts.sort((a, b) => b.start.getTime() - a.start.getTime()));
+    eventsByYear.value.set(year, events);
+}
+
+async function fetchPositions(): Promise<void> {
+    positions.value = await usersUseCase.resolvePositionNames();
 }
 
 async function save(): Promise<void> {
@@ -321,8 +248,7 @@ async function save(): Promise<void> {
 
 function impersonateUser() {
     if (user.value) {
-        localStorage.setItem('eventplanner.overrideSignedInUserKey', user.value.key);
-        window.location.reload();
+        authUseCase.impersonateUser(user.value.key);
     }
 }
 

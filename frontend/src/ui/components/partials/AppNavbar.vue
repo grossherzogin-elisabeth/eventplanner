@@ -1,6 +1,6 @@
 <template>
     <!-- Desktop navbar-->
-    <nav class="fixed top-0 z-40 w-screen print:hidden">
+    <nav class="fixed top-0 z-40 w-screen overflow-x-hidden overflow-y-scroll print:hidden">
         <div
             :class="meta.hasTransparentHeader ? 'sm:bg-navbar' : 'bg-navbar'"
             class="h-nav flex items-center text-white shadow"

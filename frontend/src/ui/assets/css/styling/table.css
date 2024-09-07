@@ -1,7 +1,63 @@
-@import '@/ui/assets/css/lib/table.css';
+table.v-table {
+    @apply w-full;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    width: calc(100% + 2rem);
+}
 
-.v-table {
-    @apply mb-16;
+@media (min-width: 768px) {
+    table.v-table {
+        margin-left: -2rem;
+        margin-right: -2rem;
+        width: calc(100% + 4rem);
+    }
+}
+
+.v-table thead tr {
+    @apply bg-transparent text-sm font-bold text-primary-600;
+}
+
+.v-table th {
+    @apply font-bold;
+    @apply px-4 py-4 text-left;
+}
+
+.v-table th[data-sortby] {
+    white-space: nowrap;
+    cursor: pointer;
+    padding-right: 2em;
+}
+
+.v-table th[data-sortby]:after {
+    content: '▼';
+    width: 1em;
+    font-size: 0.675em;
+    margin-left: 0.75em;
+    margin-top: 0.15em;
+    overflow: hidden;
+    opacity: 0.2;
+}
+
+.v-table th[data-sortby]:hover:after {
+    content: '▼';
+    opacity: 1;
+}
+
+.v-table th.sort.asc:after {
+    content: '▼';
+    opacity: 1;
+}
+
+.v-table th.sort.desc:after {
+    content: '▲';
+    opacity: 1;
+}
+
+.v-table td {
+    @apply px-4 py-4 text-left;
+}
+
+.v-table tbody td {
 }
 
 .v-table.sticky-table-header th {
@@ -14,25 +70,47 @@
     @apply border-b border-primary-100;
 }
 
-.v-table tbody tr {
-    @apply border-b border-primary-100 bg-transparent even:bg-transparent;
-}
-
 .v-table th:first-child,
 .v-table td:first-child {
-    @apply pl-0;
+    @apply w-0 border-none pl-0 pr-4 md:pr-8;
+}
+
+.v-table td:first-child::before {
+    @apply rounded-l-2xl;
 }
 
 .v-table th:last-child,
 .v-table td:last-child {
+    @apply w-0 border-none pl-4 pr-0 md:pl-8;
+}
+
+.v-table th:nth-child(2),
+.v-table td:nth-child(2) {
+    @apply pl-0;
+}
+
+.v-table th:nth-last-child(2),
+.v-table td:nth-last-child(2) {
     @apply pr-0;
 }
 
-.v-table thead tr,
-.v-table th {
-    @apply bg-transparent pt-0 text-sm font-bold text-primary-600;
+.v-table.no-header thead {
+    @apply hidden;
 }
 
 .v-table.interactive-table tbody tr {
-    @apply cursor-pointer hover:bg-primary-100;
+    @apply relative z-10;
+}
+
+.v-table.interactive-table tbody tr:not(.no-data) {
+    @apply cursor-pointer hover:text-primary-600;
+}
+
+.v-table.interactive-table tbody tr td:first-child::before {
+    content: '';
+    @apply absolute bottom-1 left-1 right-1 top-1 -z-10 rounded-xl bg-primary-100 bg-opacity-50;
+}
+
+.v-table.interactive-table tbody tr:not(.no-data):hover td:first-child::before {
+    @apply bg-primary-200 shadow-lg;
 }
