@@ -1,11 +1,16 @@
 .dialog {
     @apply flex flex-col overflow-hidden;
-    @apply sm:rounded-2xl sm:shadow-lg;
+    @apply sm:rounded-3xl sm:shadow-lg;
     @apply bg-gradient-to-br from-primary-50 from-50% to-primary-100;
 }
 
+.dialog.modal {
+    @apply rounded-3xl shadow-lg;
+    max-width: min(calc(100vw - 2rem), 35rem);
+}
+
 @media (max-width: 639px) {
-    .dialog {
+    .dialog:not(.modal) {
         @apply fixed bottom-0 left-0 right-0 top-0;
         @apply h-full max-h-full w-full max-w-full !important;
     }

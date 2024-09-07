@@ -1,4 +1,5 @@
-import { EventRepresentation, EventRestRepository } from '@/adapter/rest/EventRestRepository';
+import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
+import { EventRestRepository } from '@/adapter/rest/EventRestRepository';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRegistrationsRepository } from '@/application';
 import type { Event, EventKey, Registration } from '@/domain';
