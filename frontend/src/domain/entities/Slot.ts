@@ -1,4 +1,4 @@
-import type { PositionKey } from '../index';
+import type { PositionKey, SlotCriticality } from '../index';
 
 export type SlotKey = string;
 
@@ -9,9 +9,9 @@ export interface Slot {
      */
     order: number;
     /**
-     * Is this slot required?
+     * How important is it, that the slot is filled?
      */
-    required: boolean;
+    criticality: SlotCriticality;
     /**
      * A list of possible positions required for a user to fill this slot
      */

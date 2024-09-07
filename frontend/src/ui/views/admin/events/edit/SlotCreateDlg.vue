@@ -19,10 +19,11 @@
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Kritikaliät</VInputLabel>
                     <VInputSelect
-                        v-model="eventSlot.required"
+                        v-model="eventSlot.criticality"
                         :options="[
-                            { value: true, label: 'Erforderliche Slots' },
-                            { value: false, label: 'Optionale Slots' },
+                            { value: SlotCriticality.Security, label: 'Sichere Mindestbesatzung' },
+                            { value: SlotCriticality.Required, label: 'Erforderlich' },
+                            { value: SlotCriticality.Optional, label: 'Optional' },
                         ]"
                     />
                 </div>
@@ -59,6 +60,7 @@
 import { ref } from 'vue';
 import { ArrayUtils } from '@/common';
 import type { Event, Position, PositionKey, Slot } from '@/domain';
+import { SlotCriticality } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCheckBox, VInputCombobox, VInputLabel, VInputSelect, VInputText } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application';
@@ -84,7 +86,7 @@ async function open(event: Event): Promise<Event> {
         key: '',
         order: -1,
         positionKeys: [],
-        required: false,
+        criticality: SlotCriticality.Optional,
     };
     primaryPosition.value = positions.value.find((it) => it.key === eventSlot.value?.positionKeys[0]) || null;
     await dlg.value?.open();

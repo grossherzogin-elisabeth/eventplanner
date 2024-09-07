@@ -214,7 +214,7 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { ArrayUtils } from '@/common';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, Position, PositionKey, Slot, SlotKey } from '@/domain';
+import { Event, Position, PositionKey, Slot, SlotCriticality, SlotKey } from '@/domain';
 import { EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import {
@@ -253,6 +253,7 @@ interface SlotTableItem {
     key: SlotKey;
     name?: string;
     required: boolean;
+    criticality: SlotCriticality;
     position: Position;
     alternativePositions: Position[];
     filled: boolean;
@@ -283,7 +284,8 @@ const slots = computed<SlotTableItem[]>(() => {
     return event.value.slots.map((slot) => ({
         key: slot.key,
         name: slot.positionName,
-        required: slot.required,
+        required: slot.criticality >= 1,
+        criticality: slot.criticality,
         position: positions.value.get(slot.positionKeys[0])!,
         alternativePositions: slot.positionKeys.map((it) => positions.value.get(it)).filter(ArrayUtils.filterUndefined),
         filled: eventService.isSlotFilled(event.value, slot.key),

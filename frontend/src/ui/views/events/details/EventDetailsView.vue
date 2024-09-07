@@ -319,7 +319,7 @@ async function fetchEvent(): Promise<void> {
 
 async function fetchTeam(event: Event): Promise<void> {
     const slots = await usersUseCase.resolveEventSlots(event);
-    team.value = slots.filter((it) => it.required || it.userName);
+    team.value = slots.filter((it) => it.criticality >= 1 || it.userName);
     waitingList.value = await usersUseCase.resolveWaitingList(event);
 }
 

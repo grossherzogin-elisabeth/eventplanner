@@ -21,12 +21,13 @@
                     <VInputText v-model="eventSlot.positionName" :placeholder="primaryPosition?.name" />
                 </div>
                 <div class="-mx-4 mb-2">
-                    <VInputLabel>Kategorie</VInputLabel>
+                    <VInputLabel>Kritikaliät</VInputLabel>
                     <VInputSelect
-                        v-model="eventSlot.required"
+                        v-model="eventSlot.criticality"
                         :options="[
-                            { value: true, label: 'Erforderliche Slots' },
-                            { value: false, label: 'Optionale Slots' },
+                            { value: SlotCriticality.Security, label: 'Sichere Mindestbesatzung' },
+                            { value: SlotCriticality.Required, label: 'Erforderlich' },
+                            { value: SlotCriticality.Optional, label: 'Optional' },
                         ]"
                     />
                 </div>
@@ -59,6 +60,7 @@
 import { ref } from 'vue';
 import { ArrayUtils, ObjectUtils } from '@/common';
 import type { Position, PositionKey, Slot } from '@/domain';
+import { SlotCriticality } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCheckBox, VInputCombobox, VInputLabel, VInputSelect, VInputText } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application';

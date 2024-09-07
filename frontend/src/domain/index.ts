@@ -18,6 +18,7 @@ export * from './values/Role';
 export * from './values/Address';
 export * from './values/ValidationHint';
 export * from './values/InputSelectOption';
+export * from './values/SlotCriticality';
 export * from './services/EventService';
 export * from './services/RegistrationService';
 export * from './services/UserService';

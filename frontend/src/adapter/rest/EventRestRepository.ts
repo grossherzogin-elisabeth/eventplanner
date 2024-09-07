@@ -1,12 +1,13 @@
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
-import type { Event, EventKey, ImportError, PositionKey, UserKey } from '@/domain';
-import { EventState, EventType } from '@/domain';
+import type { Event, EventKey, EventState, ImportError, PositionKey, UserKey } from '@/domain';
+import { EventType, SlotCriticality } from '@/domain';
 
 interface SlotRepresentation {
     key: string;
     order: number;
     required: boolean;
+    criticality?: number; // TODO finish refactoring
     positionKeys: string[];
     name?: string;
 }
@@ -44,7 +45,6 @@ interface EventCreateRequest {
     end: string;
     locations: LocationRepresentation[];
     slots: SlotRepresentation[];
-    registrations: RegistrationRepresentation[];
 }
 
 interface EventUpdateRequest {
@@ -55,7 +55,6 @@ interface EventUpdateRequest {
     end?: string;
     locations?: LocationRepresentation[];
     slots?: SlotRepresentation[];
-    registrations?: RegistrationRepresentation[];
 }
 
 interface JoinEventRequest {
@@ -93,8 +92,8 @@ export class EventRestRepository implements EventRepository {
             })),
             slots: eventRepresentation.slots.map((slotRepresentation) => ({
                 key: slotRepresentation.key,
-                required: slotRepresentation.required,
                 order: slotRepresentation.order,
+                criticality: slotRepresentation.required ? SlotCriticality.Security : SlotCriticality.Optional,
                 positionKeys: slotRepresentation.positionKeys as PositionKey[],
                 positionName: slotRepresentation.name,
             })),
@@ -153,8 +152,13 @@ export class EventRestRepository implements EventRepository {
             start: event.start?.toISOString(),
             end: event.end?.toISOString(),
             locations: event.locations,
-            slots: event.slots,
-            registrations: event.registrations,
+            slots: event.slots?.map((it) => ({
+                key: it.key,
+                order: it.order,
+                criticality: it.criticality,
+                positionKeys: it.positionKeys,
+                name: it.positionName,
+            })),
         };
         const response = await fetch(`/api/v1/events`, {
             method: 'POST',
@@ -214,8 +218,13 @@ export class EventRestRepository implements EventRepository {
             start: updateRequest.start?.toISOString(),
             end: updateRequest.end?.toISOString(),
             locations: updateRequest.locations,
-            slots: updateRequest.slots,
-            registrations: updateRequest.registrations,
+            slots: updateRequest.slots?.map((it) => ({
+                key: it.key,
+                order: it.order,
+                criticality: it.criticality,
+                positionKeys: it.positionKeys,
+                name: it.positionName,
+            })),
         };
         const response = await fetch(`/api/v1/events/${eventKey}`, {
             method: 'PUT',
@@ -238,30 +247,5 @@ export class EventRestRepository implements EventRepository {
             return new Date(date.substring(0, date.indexOf('[')));
         }
         return new Date(date);
-    }
-
-    private generateWorkEvent(date: Date): Event {
-        const start = new Date(date.getTime());
-        start.setHours(9, 0, 0, 0);
-        const end = new Date(date.getTime());
-        end.setHours(17, 0, 0, 0);
-        return {
-            key: 'arbeitsdienst_' + date.toDateString(),
-            state: EventState.OpenForSignup,
-            type: EventType.WorkEvent,
-            name: 'Arbeitsdienst',
-            description: '',
-            start: start,
-            end: end,
-            locations: [
-                {
-                    name: 'Elsfleth',
-                    icon: 'fa-hammer',
-                },
-            ],
-            slots: [],
-            registrations: [],
-            assignedUserCount: 0,
-        };
     }
 }

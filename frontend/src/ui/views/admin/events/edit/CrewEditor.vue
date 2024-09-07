@@ -376,7 +376,7 @@ async function fetchPositions(): Promise<void> {
 async function fetchTeam(): Promise<void> {
     console.log('fetch team');
     const resolvedSlots = await usersUseCase.resolveEventSlots(props.event);
-    team.value = resolvedSlots.filter((it) => it.userName || it.userKey || it.required);
+    team.value = resolvedSlots.filter((it) => it.userName || it.userKey || it.criticality >= 1);
     registrations.value = await usersUseCase.resolveWaitingList(props.event);
 }
 
