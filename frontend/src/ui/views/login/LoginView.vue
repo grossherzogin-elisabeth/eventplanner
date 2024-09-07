@@ -43,7 +43,7 @@
                             </p>
                         </div>
 
-                        <div class="hidden">
+                        <div v-if="enableDirectLogin">
                             <h2 class="mb-4 px-4">Bei deinem Lissi Account anmelden</h2>
                             <div class="mb-4">
                                 <VInputLabel>Email ode Benutzername</VInputLabel>
@@ -65,7 +65,11 @@
                                 </button>
                             </div>
                         </div>
-                        <button class="btn-primary mb-4" @click="authUseCase.loginWithCredentials(username, password)">
+                        <button
+                            v-else
+                            class="btn-primary mb-4"
+                            @click="authUseCase.loginWithCredentials(username, password)"
+                        >
                             <i class="fa-solid fa-user text-xl sm:mx-4" />
                             <span class="mx-auto py-2"> Anmelden mit Lissi Account </span>
                         </button>
@@ -102,6 +106,7 @@ import { useAuthUseCase } from '@/ui/composables/Application';
 const authUseCase = useAuthUseCase();
 const router = useRouter();
 
+const enableDirectLogin = localStorage.getItem('flag.login-show-fields') === 'true';
 const username = ref<string>('');
 const password = ref<string>('');
 
