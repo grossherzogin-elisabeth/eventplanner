@@ -316,7 +316,7 @@ init();
 
 .calendar-day.today:after {
     content: '';
-    @apply absolute bottom-0 left-0 right-0 top-0 z-10 rounded-lg border-2 border-red-500 border-opacity-25;
+    @apply absolute bottom-0 left-0 right-0 top-0 z-10 rounded-lg border-2 border-red-500 border-opacity-50 bg-red-100 bg-opacity-25;
 }
 
 @media only screen and (min-width: 450px) {
@@ -333,7 +333,12 @@ init();
     }
 
     .calendar-header {
-        @apply bg-primary-50 bg-opacity-90 font-normal text-black;
+        @apply bg-transparent font-normal text-black;
+    }
+
+    .calendar-header::before {
+        content: '';
+        @apply absolute -left-8 bottom-0 right-0 top-0 -z-10 bg-primary-50 bg-opacity-95;
     }
 }
 

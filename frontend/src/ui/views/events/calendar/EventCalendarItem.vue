@@ -158,7 +158,7 @@ init();
 <style scoped>
 .calendar-event-wrapper {
     @apply absolute left-0 right-0 top-px z-10;
-    @apply rounded-lg bg-white hover:shadow-xl;
+    @apply rounded-lg bg-white hover:shadow-lg;
     @apply overflow-hidden;
 }
 
@@ -182,8 +182,8 @@ init();
 }
 
 .calendar-event-entry {
-    @apply border-l-8 border-blue-400 bg-blue-200 hover:bg-blue-300;
-    @apply text-blue-900 shadow-xl;
+    @apply border-l-8 border-blue-400 bg-blue-200 bg-opacity-75 hover:bg-opacity-100;
+    @apply text-blue-800;
 }
 
 .calendar-event-entry:not(.in-past).full {
@@ -191,13 +191,13 @@ init();
 }
 
 .calendar-event-entry.assigned {
-    @apply border-l-8 border-green-700 bg-green-200 hover:bg-green-300;
-    @apply text-green-900;
+    @apply border-l-8 border-green-700 bg-green-200 bg-opacity-75 hover:bg-opacity-100;
+    @apply font-bold;
 }
 
 .calendar-event-entry.waiting-list {
-    @apply border-l-8 border-green-700 bg-green-200 hover:bg-green-300;
-    @apply text-green-900;
+    @apply border-l-8 border-green-700 bg-green-200 bg-opacity-75 hover:bg-opacity-100;
+    @apply text-green-800;
     background-image: var(--pattern);
 }
 
@@ -207,7 +207,7 @@ init();
 }
 
 .calendar-event-entry.in-past {
-    @apply border-l-8 border-gray-400 bg-gray-200 bg-opacity-75 hover:bg-gray-300;
-    @apply text-gray-600 shadow-xl;
+    @apply border-l-8 border-gray-400 bg-gray-200 bg-opacity-75 hover:bg-opacity-100;
+    @apply text-gray-800;
 }
 </style>
