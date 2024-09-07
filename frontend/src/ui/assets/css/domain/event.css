@@ -36,6 +36,15 @@
     @apply text-blue-900;
 }
 
+.event-card.loading {
+    @apply hover:shadow-none;
+    @apply cursor-default;
+}
+
+.event-card.loading > * {
+    @apply bg-primary-100 bg-opacity-75;
+}
+
 .event-card.assigned {
     @apply border border-green-200;
 }

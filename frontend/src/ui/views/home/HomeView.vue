@@ -5,7 +5,19 @@
                 <div
                     class="sticky top-12 z-10 -mx-4 flex h-14 justify-end bg-primary-50 pb-2 pt-4 xl:top-0 xl:h-16 xl:pt-8"
                 ></div>
-                <div v-if="events.length === 0" class="-mx-4 rounded-2xl bg-primary-100 p-4">
+                <div v-if="loading" class="-mt-10">
+                    <div class="pb-8">
+                        <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">
+                            <h2 class="inline-block text-primary-800 text-opacity-50">Reisen werden geladen...</h2>
+                        </div>
+                        <ul class="-mx-4 max-w-xl">
+                            <li v-for="i in 3" :key="i" class="mt-4">
+                                <EventCard />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div v-else-if="events.length === 0" class="-mx-4 rounded-2xl bg-primary-100 p-4">
                     <h3 class="mb-2">Keine zukünftigen Reisen</h3>
                     <p>Du hast dich bisher noch für keine Reise angemeldet</p>
                 </div>
@@ -64,6 +76,7 @@ const i18n = useI18n();
 const user = authUseCase.getSignedInUser();
 
 const events = ref<Event[]>([]);
+const loading = ref<boolean>(true);
 const searchterm = ref<string>('');
 
 const filteredEvents = computed<Event[]>(() =>
@@ -108,6 +121,7 @@ function init(): void {
 
 async function fetchEvents(): Promise<void> {
     events.value = await eventUseCase.getFutureEventsByUser(user.key);
+    loading.value = false;
 }
 
 init();
