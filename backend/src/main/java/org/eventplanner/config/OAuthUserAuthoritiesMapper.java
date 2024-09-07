@@ -10,7 +10,9 @@ import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper  {
@@ -36,7 +38,7 @@ public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper  {
 
     private Stream<String> extractOidcRoles(OidcUserAuthority oidcUserAuthority) {
         if (oidcUserAuthority.getAttributes().get("iss") instanceof URL issuerUrl) {
-            List<String> roles;
+            List<String> roles = new LinkedList<>();
             if (issuerUrl.getAuthority().equals("accounts.google.com")) {
                 roles = extractGoogleRoles(oidcUserAuthority);
             } else if (issuerUrl.getAuthority().endsWith(".amazonaws.com")) {
@@ -45,8 +47,6 @@ public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper  {
                 roles = extractMicrosoftRoles(oidcUserAuthority);
             } else if (issuerUrl.getAuthority().endsWith(".apple.com")) {
                 roles = extractAppleRoles(oidcUserAuthority);
-            } else {
-                roles = Collections.emptyList();
             }
 
             var email = oidcUserAuthority.getIdToken().getEmail();
@@ -65,24 +65,25 @@ public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper  {
     private List<String> extractCognitoRoles(OidcUserAuthority oidcUserAuthority) {
         var cognitoRoles = oidcUserAuthority.getAttributes().get("cognito:groups");
         if (cognitoRoles instanceof Collection<?> collection) {
-            return collection.stream().map(r -> "ROLE_" + r).toList();
+            return collection.stream().map(r -> "ROLE_" + r)
+                .collect(Collectors.toCollection(LinkedList::new));
         }
-        return Collections.emptyList();
+        return new LinkedList<>();
     }
 
     private List<String> extractGoogleRoles(OidcUserAuthority oidcUserAuthority) {
         // we currently don't assign roles in google, so the roles in the token don't matter
-        return Collections.emptyList();
+        return new LinkedList<>();
     }
 
     private List<String> extractMicrosoftRoles(OidcUserAuthority oidcUserAuthority) {
         // we currently don't assign roles in azure entra id, so the roles in the token don't matter
-        return Collections.emptyList();
+        return new LinkedList<>();
     }
 
     private List<String> extractAppleRoles(OidcUserAuthority oidcUserAuthority) {
         // we currently don't assign roles in apple, so the roles in the token don't matter
-        return Collections.emptyList();
+        return new LinkedList<>();
     }
 
     private Stream<String> extractOAuthRoles(OAuth2UserAuthority oAuth2UserAuthority) {
