@@ -27,17 +27,9 @@
                 <VTable
                     :items="filteredCrewMembers"
                     :page-size="50"
-                    class="interactive-table"
+                    class="interactive-table no-header"
                     @click="editUser($event)"
                 >
-                    <template #head>
-                        <th data-sortby="firstName">Name</th>
-                        <th class="hidden md:table-cell" data-sortby="lastName">Nachname</th>
-                        <th>Zertifikate</th>
-                        <th data-sortby="role">Rolle</th>
-                        <th data-sortby="eventCount">Reisen</th>
-                        <th data-sortby="registrationCount">Warteliste</th>
-                    </template>
                     <template #row="{ item }">
                         <td class="whitespace-nowrap font-semibold">
                             <span>{{ item.firstName }}</span>
@@ -73,41 +65,73 @@
                                 {{ item.registrationCount || '-' }}
                             </span>
                         </td>
+                        <td class="">
+                            <ContextMenuButton class="px-4 py-2">
+                                <ul>
+                                    <li class="context-menu-item" @click="editUser(item)">
+                                        <i class="fa-solid fa-user-edit" />
+                                        <span>Bearbeiten</span>
+                                    </li>
+                                    <li class="context-menu-item" @click="impersonateUser(item)">
+                                        <i class="fa-solid fa-user-secret" />
+                                        <span>Impersonate</span>
+                                    </li>
+                                    <li class="context-menu-item" @click="createRegistration(item)">
+                                        <i class="fa-solid fa-calendar-plus" />
+                                        <span>Anmeldung hinzufügen</span>
+                                    </li>
+                                    <li class="context-menu-item disabled">
+                                        <i class="fa-solid fa-key" />
+                                        <span>Passwort zurücksetzen</span>
+                                    </li>
+                                    <li class="context-menu-item disabled text-red-700">
+                                        <i class="fa-solid fa-trash" />
+                                        <span>Nutzer löschen</span>
+                                    </li>
+                                </ul>
+                            </ContextMenuButton>
+                        </td>
                     </template>
                 </VTable>
             </div>
         </div>
 
+        <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
         <ImportUsersDlg ref="importUsersDialog" />
     </div>
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { User } from '@/domain';
+import type { User, UserDetails } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
+import { ContextMenuButton } from '@/ui/components/common';
 import { VInputCheckBox, VInputText, VTable } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import { useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { useUserService } from '@/ui/composables/Domain';
 import type { Selectable } from '@/ui/model/Selectable';
 import { Routes } from '@/ui/views/Routes';
+import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/CreateRegistrationForUserDlg.vue';
 import ImportUsersDlg from '@/ui/views/admin/users/list/ImportUsersDlg.vue';
 
 interface UserRegistrations extends User, Selectable {
-    eventCount?: number;
-    registrationCount?: number;
+    eventCount: number;
+    registrationCount: number;
 }
 
 const eventUseCase = useEventUseCase();
 const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
+const authUseCase = useAuthUseCase();
 const router = useRouter();
 
-const importUsersDialog = ref<Dialog | null>(null);
 const filter = ref<string>('');
 const filterOnlyActive = ref<boolean>(false);
 const crewMembers = ref<UserRegistrations[]>([]);
+
+const importUsersDialog = ref<Dialog | null>(null);
+const createRegistrationForUserDialog = ref<Dialog<User, void> | null>(null);
 
 const filteredCrewMembers = computed<UserRegistrations[]>(() =>
     crewMembers.value.filter(
@@ -125,20 +149,36 @@ function importUsers(): void {
     importUsersDialog.value?.open().catch();
 }
 
-function editUser(user: User): void {
+function editUser(user: UserRegistrations): void {
     router.push({ name: Routes.UserDetails, params: { key: user.key } });
 }
 
+function impersonateUser(user: UserRegistrations): void {
+    authUseCase.impersonateUser(user.key);
+}
+
+async function createRegistration(user: UserRegistrations): Promise<void> {
+    await createRegistrationForUserDialog.value
+        ?.open(user)
+        .then(() => (user.registrationCount = user.registrationCount + 1))
+        .catch(() => {
+            // ignore
+        });
+}
+
 async function fetchCrewMembers(): Promise<void> {
-    const users: UserRegistrations[] = await usersUseCase.getUsers();
+    const users: User[] = await usersUseCase.getUsers();
     const events = await eventUseCase.getEvents(new Date().getFullYear());
     const registrations = events.flatMap((it) => it.registrations);
-    users.forEach((user: UserRegistrations) => {
+    crewMembers.value = users.map((user: User) => {
         const userRegistrations = registrations.filter((it) => it.userKey === user.key);
-        user.eventCount = userRegistrations.filter((it) => it.slotKey).length;
-        user.registrationCount = userRegistrations.length - user.eventCount;
+        const eventCount = userRegistrations.filter((it) => it.slotKey).length;
+        return {
+            ...user,
+            eventCount: eventCount,
+            registrationCount: userRegistrations.length - eventCount,
+        };
     });
-    crewMembers.value = users;
 }
 
 init();

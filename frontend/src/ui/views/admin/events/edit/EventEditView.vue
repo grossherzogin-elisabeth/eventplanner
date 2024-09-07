@@ -216,7 +216,7 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { ArrayUtils } from '@/common';
 import { DateTimeFormat } from '@/common/date';
-import { Event, Position, PositionKey, Slot, SlotCriticality, SlotKey } from '@/domain';
+import type { Event, Position, PositionKey, Slot, SlotCriticality, SlotKey } from '@/domain';
 import { EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import {
@@ -230,7 +230,6 @@ import {
     VTabs,
 } from '@/ui/components/common';
 import VWarning from '@/ui/components/common/alerts/VWarning.vue';
-import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import {
     useAuthUseCase,
@@ -241,6 +240,7 @@ import {
 } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
+import CreateRegistrationDlg from '@/ui/views/admin/events/components/CreateRegistrationDlg.vue';
 import CrewEditor from './CrewEditor.vue';
 import SlotCreateDlg from './SlotCreateDlg.vue';
 import SlotEditDlg from './SlotEditDlg.vue';
@@ -275,9 +275,9 @@ const tab = ref<Tab>(Tab.EVENT_POSITIONS);
 const event = ref<Event | null>(null);
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 
-const createSlotDialog = ref<Dialog<Event> | null>(null);
-const editSlotDialog = ref<Dialog<Slot> | null>(null);
-const createRegistrationDialog = ref<Dialog<Event> | null>(null);
+const createSlotDialog = ref<Dialog<Event, Event> | null>(null);
+const editSlotDialog = ref<Dialog<Slot, Slot> | null>(null);
+const createRegistrationDialog = ref<Dialog<Event, Event> | null>(null);
 
 const slots = computed<SlotTableItem[]>(() => {
     if (!event.value) {

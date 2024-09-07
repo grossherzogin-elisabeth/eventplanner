@@ -1,4 +1,4 @@
-import type { AuthService } from '@/application';
+import type { AuthService, EventRegistrationsRepository } from '@/application';
 import type { EventRepository } from '@/application/ports/EventRepository';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { DateFormatter } from '@/common/date';
@@ -8,15 +8,18 @@ export class EventUseCase {
     private readonly eventCachingService: EventCachingService;
     private readonly eventRepository: EventRepository;
     private readonly authService: AuthService;
+    private readonly eventRegistrationsRepository: EventRegistrationsRepository;
 
     constructor(params: {
         eventCachingService: EventCachingService;
         eventRepository: EventRepository;
         authService: AuthService;
+        eventRegistrationsRepository: EventRegistrationsRepository;
     }) {
         this.eventCachingService = params.eventCachingService;
         this.eventRepository = params.eventRepository;
         this.authService = params.authService;
+        this.eventRegistrationsRepository = params.eventRegistrationsRepository;
     }
 
     public async getEvents(year: number): Promise<Event[]> {
@@ -34,7 +37,7 @@ export class EventUseCase {
         if (event) {
             return event;
         }
-        throw new Error('not found');
+        throw new Error('Event nicht gefunden');
     }
 
     public async getEventsByUser(year: number, userKey: UserKey): Promise<Event[]> {
@@ -62,10 +65,13 @@ export class EventUseCase {
     public async joinEvent(event: Event, positionKey: PositionKey): Promise<Event> {
         const user = this.authService.getSignedInUser();
         if (!user) {
-            throw new Error('401');
+            throw new Error('Authentifizierung erforderlich');
         }
         try {
-            const savedEvent = await this.eventRepository.joinEvent(event.key, user.key, positionKey);
+            const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
+                positionKey: positionKey,
+                userKey: user.key,
+            });
             return this.eventCachingService.updateCache(savedEvent);
         } catch (e) {
             const title = `Anmeldung: ${event.name} am ${DateFormatter.formatDate(event.start)}`;
@@ -82,10 +88,14 @@ export class EventUseCase {
     public async leaveEvent(event: Event): Promise<Event> {
         const user = this.authService.getSignedInUser();
         if (!user) {
-            throw new Error('401');
+            throw new Error('Authentifizierung erforderlich');
         }
         try {
-            const savedEvent = await this.eventRepository.leaveEvent(event.key, user.key);
+            const registration = event.registrations.find((it) => it.userKey === user.key);
+            if (!registration) {
+                throw new Error('Anmeldung nicht gefunden');
+            }
+            const savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
             return this.eventCachingService.updateCache(savedEvent);
         } catch (e) {
             const title = `Absage: ${event.name} am ${DateFormatter.formatDate(event.start)}`;

@@ -5,6 +5,7 @@ export * from './ports/AccountRepository';
 export * from './ports/PositionRepository';
 export * from './ports/EventRepository';
 export * from './ports/UserRepository';
+export * from './ports/EventRegistrationsRepository';
 
 export * from './services/EventCachingService';
 export * from './services/PositionCachingService';

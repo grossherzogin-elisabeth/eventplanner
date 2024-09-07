@@ -93,7 +93,7 @@ import { useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const eventUseCase = useEventUseCase();
 
-const dlg = ref<Dialog<Event> | null>(null);
+const dlg = ref<Dialog<Event, Event> | null>(null);
 const templates = ref<Event[]>([]);
 const template = ref<Event | null>(null);
 const event = ref<Event>({
@@ -127,7 +127,7 @@ async function open(): Promise<Event> {
     return event.value;
 }
 
-defineExpose<Dialog<Event>>({
+defineExpose<Dialog<Event, Event>>({
     open: () => open(),
     close: () => dlg.value?.reject(),
     submit: (result: Event) => dlg.value?.submit(result),

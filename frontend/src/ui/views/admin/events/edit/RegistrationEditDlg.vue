@@ -49,7 +49,7 @@ import { useUsersUseCase } from '@/ui/composables/Application';
 
 const usersUseCase = useUsersUseCase();
 
-const dlg = ref<Dialog<Registration> | null>(null);
+const dlg = ref<Dialog<Registration, Registration> | null>(null);
 const users = ref<User[]>([]);
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const registration = ref<Registration | null>(null);
@@ -99,7 +99,7 @@ async function open(eventRegistration: Registration): Promise<Registration> {
     return eventRegistration;
 }
 
-defineExpose<Dialog<Registration>>({
+defineExpose<Dialog<Registration, Registration>>({
     open: (eventRegistration: Registration) => open(eventRegistration),
     close: () => dlg.value?.reject(),
     submit: (result: Registration) => dlg.value?.submit(result),

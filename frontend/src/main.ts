@@ -1,7 +1,9 @@
 import { AccountRestRepository, EventRestRepository, PositionRestRepository, UserRestRepository } from '@/adapter';
+import { EventRegistrationRestRepository } from '@/adapter/rest/EventRegistrationRestRepository';
 import type {
     AccountRepository,
     Application,
+    EventRegistrationsRepository,
     EventRepository,
     PositionRepository,
     UserRepository,
@@ -53,6 +55,7 @@ const accountRepository: AccountRepository = new AccountRestRepository();
 const positionRepository: PositionRepository = new PositionRestRepository();
 const userRepository: UserRepository = new UserRestRepository();
 const eventRepository: EventRepository = new EventRestRepository();
+const eventRegistrationsRepository: EventRegistrationsRepository = new EventRegistrationRestRepository();
 
 // -----------------------------------------------------
 // initialize use cases and application services
@@ -95,6 +98,7 @@ const application: Application = {
             eventRepository: eventRepository,
             authService: authService,
             eventCachingService: eventCachingService,
+            eventRegistrationsRepository: eventRegistrationsRepository,
         }),
         users: new UsersUseCase({
             registrationService: domain.services.registrations,
@@ -109,6 +113,7 @@ const application: Application = {
         eventAdmin: new EventAdministrationUseCase({
             eventRepository: eventRepository,
             eventCachingService: eventCachingService,
+            eventRegistrationsRepository: eventRegistrationsRepository,
         }),
         errorHandling: new ErrorHandlingUseCase(),
     },

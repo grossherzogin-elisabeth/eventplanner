@@ -39,14 +39,21 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, User } from '@/domain';
+import type { Event, Registration, User } from '@/domain';
 import { type InputSelectOption, type Position, type PositionKey } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputTextArea } from '@/ui/components/common';
-import { useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
+import {
+    useErrorHandling,
+    useEventAdministrationUseCase,
+    useEventUseCase,
+    useUsersUseCase,
+} from '@/ui/composables/Application';
 
 const usersUseCase = useUsersUseCase();
 const eventsUseCase = useEventUseCase();
+const eventAdministrationUseCase = useEventAdministrationUseCase();
+const errorHandling = useErrorHandling();
 const i18n = useI18n();
 
 const dlg = ref<Dialog<User> | null>(null);
@@ -96,7 +103,7 @@ async function fetchPositions(): Promise<void> {
     positions.value = await usersUseCase.resolvePositionNames();
 }
 
-async function open(user: User): Promise<User> {
+async function open(user: User): Promise<void> {
     selectedUser.value = user;
     selectedPositionKey.value = user.positionKeys[0];
 
@@ -104,15 +111,28 @@ async function open(user: User): Promise<User> {
     hiddenEvents.value = eventsByUser.map((it) => it.key);
 
     // wait until user submits
-    await dlg.value?.open();
+    try {
+        await dlg.value?.open();
+    } catch (e) {
+        return;
+    }
 
-    return user;
+    if (selectedEventKey.value) {
+        try {
+            await eventAdministrationUseCase.addRegistration(selectedEventKey.value, {
+                userKey: user.key,
+                positionKey: selectedPositionKey.value,
+            });
+        } catch (e) {
+            errorHandling.handleRawError(e);
+        }
+    }
 }
 
-defineExpose<Dialog<User>>({
-    open: (event: User) => open(event),
+defineExpose<Dialog<User, void>>({
+    open: (user: User) => open(user),
     close: () => dlg.value?.reject(),
-    submit: (result: User) => dlg.value?.submit(result),
+    submit: () => dlg.value?.submit(),
     reject: (reason?: void) => dlg.value?.reject(reason),
 });
 

@@ -39,7 +39,7 @@ import { useErrorHandling } from '@/ui/composables/Application';
 import type { ErrorDialogMessage } from './ErrorDialog';
 
 const errorHandlingUseCase = useErrorHandling();
-const dlg = ref<Dialog<void, ErrorDialogMessage> | null>(null);
+const dlg = ref<Dialog<ErrorDialogMessage, void> | null>(null);
 const error = ref<ErrorDialogMessage>({});
 
 const details = computed<string>(() => {
@@ -76,7 +76,7 @@ function retry(): void {
     }
 }
 
-defineExpose<Dialog<void, ErrorDialogMessage>>({
+defineExpose<Dialog<ErrorDialogMessage, void>>({
     open: async (params?: ErrorDialogMessage) => open(params),
     close: () => dlg.value?.reject(),
     submit: () => dlg.value?.submit(),

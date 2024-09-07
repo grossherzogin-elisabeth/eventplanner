@@ -67,7 +67,7 @@ import { useUsersUseCase } from '@/ui/composables/Application';
 
 const usersUseCase = useUsersUseCase();
 
-const dlg = ref<Dialog<Slot> | null>(null);
+const dlg = ref<Dialog<Slot, Slot> | null>(null);
 const eventSlot = ref<Slot>();
 const positions = ref<Position[]>([]);
 const primaryPosition = ref<Position | null>(null);
@@ -103,7 +103,7 @@ function togglePosition(position: PositionKey, enabled: boolean): void {
     }
 }
 
-defineExpose<Dialog<Slot>>({
+defineExpose<Dialog<Slot, Slot>>({
     open: (eventSlot: Slot) => open(eventSlot),
     close: () => dlg.value?.reject(),
     submit: (result: Slot) => dlg.value?.submit(result),

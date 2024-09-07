@@ -14,7 +14,7 @@
                 </div>
                 <div class="flex flex-grow flex-col px-4 py-3 sm:px-8">
                     <h3 class="mb-2 flex items-center space-x-2">
-                        <span class="">{{ event.name }}</span>
+                        <span class="">{{ props.event.name }}</span>
                     </h3>
                     <p class="mb-4 flex text-sm">
                         <span class="flex-grow">

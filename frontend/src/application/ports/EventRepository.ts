@@ -1,4 +1,4 @@
-import type { Event, EventKey, ImportError, PositionKey, UserKey } from '@/domain';
+import type { Event, EventKey, ImportError } from '@/domain';
 
 export interface EventRepository {
     findAll(year: number): Promise<Event[]>;
@@ -8,8 +8,4 @@ export interface EventRepository {
     createEvent(event: Event): Promise<Event>;
 
     importEvents(year: number, file: Blob): Promise<ImportError[]>;
-
-    joinEvent(eventKey: EventKey, userKey: UserKey, positionKey: PositionKey): Promise<Event>;
-
-    leaveEvent(eventKey: EventKey, userKey: UserKey): Promise<Event>;
 }

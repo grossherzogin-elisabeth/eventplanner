@@ -149,7 +149,6 @@ import type { Event, InputSelectOption, Position, PositionKey, UserDetails } fro
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
-import CreateRegistrationForUserDlg from '@/ui/components/events/CreateRegistrationForUserDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import {
     useAuthUseCase,
@@ -159,6 +158,7 @@ import {
     useUsersUseCase,
 } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
+import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/CreateRegistrationForUserDlg.vue';
 import UserEventsTable from '@/ui/views/admin/users/details/UserEventsTable.vue';
 
 enum Tab {

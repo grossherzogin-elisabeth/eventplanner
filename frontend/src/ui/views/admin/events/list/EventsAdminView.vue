@@ -80,6 +80,53 @@
                             <p class="mb-1 font-semibold">{{ formatDateRange(item.start, item.end) }}</p>
                             <p class="text-sm">{{ item.duration }} Tage</p>
                         </td>
+
+                        <td class="">
+                            <ContextMenuButton class="px-4 py-2">
+                                <ul>
+                                    <li>
+                                        <RouterLink
+                                            :to="{
+                                                name: Routes.EventDetails,
+                                                params: { year: item.start.getFullYear(), key: item.eventKey },
+                                            }"
+                                            class="context-menu-item"
+                                        >
+                                            <i class="fa-solid fa-search" />
+                                            <span>Reise anzeigen</span>
+                                        </RouterLink>
+                                    </li>
+                                    <li v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
+                                        <RouterLink
+                                            :to="{
+                                                name: Routes.EventEdit,
+                                                params: { year: item.start.getFullYear(), key: item.eventKey },
+                                            }"
+                                            class="context-menu-item"
+                                        >
+                                            <i class="fa-solid fa-edit" />
+                                            <span>Reise bearbeiten</span>
+                                        </RouterLink>
+                                    </li>
+                                    <li class="context-menu-item disabled">
+                                        <i class="fa-solid fa-unlock-alt" />
+                                        <span>Freischalten</span>
+                                    </li>
+                                    <li class="context-menu-item disabled">
+                                        <i class="fa-solid fa-users" />
+                                        <span>Fehlende Crew anfragen</span>
+                                    </li>
+                                    <li class="context-menu-item disabled">
+                                        <i class="fa-solid fa-envelope" />
+                                        <span>Crew kontaktieren</span>
+                                    </li>
+                                    <li class="context-menu-item disabled text-red-700">
+                                        <i class="fa-solid fa-xmark" />
+                                        <span>Reise absagen</span>
+                                    </li>
+                                </ul>
+                            </ContextMenuButton>
+                        </td>
                     </template>
                 </VTable>
             </div>
@@ -104,6 +151,7 @@ import { ArrayUtils } from '@/common';
 import type { Event } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
+import { ContextMenuButton } from '@/ui/components/common';
 import { VInputText, VTable, VTabs } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';

@@ -267,7 +267,7 @@ const team = ref<ResolvedSlot[]>([]);
 const dragSource = ref<DragSource | null>(null);
 const loading = ref<boolean>(true);
 
-const editRegistrationDialog = ref<Dialog<Registration> | null>(null);
+const editRegistrationDialog = ref<Dialog<Registration, Registration> | null>(null);
 
 const summary = computed<Record<PositionKey, number>>(() => {
     const sum: Record<PositionKey, number> = {};

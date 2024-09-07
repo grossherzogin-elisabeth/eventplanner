@@ -24,7 +24,7 @@ interface LocationRepresentation {
     icon: string;
 }
 
-interface EventRepresentation {
+export interface EventRepresentation {
     key: string;
     state: string;
     templateKey: string;
@@ -71,7 +71,7 @@ interface ImportErrorRepresentation {
 }
 
 export class EventRestRepository implements EventRepository {
-    private static mapEventToDomain(eventRepresentation: EventRepresentation): Event {
+    public static mapEventToDomain(eventRepresentation: EventRepresentation): Event {
         return {
             key: eventRepresentation.key,
             type: EventType.VOYAGE,
@@ -155,6 +155,7 @@ export class EventRestRepository implements EventRepository {
             slots: event.slots?.map((it) => ({
                 key: it.key,
                 order: it.order,
+                required: it.criticality >= 1,
                 criticality: it.criticality,
                 positionKeys: it.positionKeys,
                 name: it.positionName,
@@ -221,6 +222,7 @@ export class EventRestRepository implements EventRepository {
             slots: updateRequest.slots?.map((it) => ({
                 key: it.key,
                 order: it.order,
+                required: it.criticality >= 1,
                 criticality: it.criticality,
                 positionKeys: it.positionKeys,
                 name: it.positionName,

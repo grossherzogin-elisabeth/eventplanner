@@ -1,4 +1,4 @@
-export interface Dialog<T = void, P = T, E = void> {
+export interface Dialog<P = void, T = void, E = void> {
     /**
      * Open this dialog, returning a promise that is resolve when it is closed
      */
