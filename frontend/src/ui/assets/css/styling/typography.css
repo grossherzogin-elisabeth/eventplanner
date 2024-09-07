@@ -1,5 +1,4 @@
 html {
-    /*font-family: 'Open Sans', sans-serif;*/
     font-family: 'Comfortaa', sans-serif;
     font-size: 16px;
     word-spacing: 1px;
@@ -48,34 +47,8 @@ code {
 }
 
 @font-face {
-    font-family: 'Open Sans';
-    font-weight: normal;
-    font-style: normal;
-    font-display: auto;
-    unicode-range: U+000-5FF;
-    src:
-        url('../../fonts/OpenSans-Regular.woff2') format('woff2'),
-        url('../../fonts/OpenSans-Regular.woff') format('woff');
-}
-
-@font-face {
-    font-family: 'Open Sans';
-    font-weight: 200;
-    font-style: normal;
-    font-display: auto;
-    unicode-range: U+000-5FF;
-    src:
-        url('../../fonts/OpenSans-Light.woff2') format('woff2'),
-        url('../../fonts/OpenSans-Light.woff') format('woff');
-}
-
-@font-face {
-    font-family: 'Open Sans';
-    font-weight: bold;
-    font-style: normal;
-    font-display: auto;
-    unicode-range: U+000-5FF;
-    src:
-        url('../../fonts/OpenSans-Semibold.woff2') format('woff2'),
-        url('../../fonts/OpenSans-Semibold.woff') format('woff');
+    font-family: 'Comfortaa';
+    src: url("../../fonts/Comfortaa-VariableFont_wght.woff2") format("woff2 supports variations"),
+    url("../../fonts/Comfortaa-VariableFont_wght.woff2") format("woff2-variations");
+    font-weight: 100 1000;
 }
