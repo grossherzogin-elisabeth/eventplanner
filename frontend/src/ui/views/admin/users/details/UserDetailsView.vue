@@ -81,9 +81,9 @@
                     </template>
                     <template #[Tab.USER_EVENTS]>
                         <div>
-                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events.length}`" class="mb-16">
+                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events.length}`" class="">
                                 <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">
-                                    <template v-if="!eventsLoadedUntilYear">Zukünftige Reisen</template>
+                                    <template v-if="year === 0">Zukünftige Reisen</template>
                                     <template v-else>Reisen {{ year }}</template>
                                 </h2>
                                 <UserEventsTable
@@ -92,12 +92,18 @@
                                     :positions="positions"
                                     :user="user"
                                 />
-                            </div>
-
-                            <div class="-mt-8 mb-4 flex items-center justify-center">
-                                <button class="btn-ghost" @click="fetchNextEvents()">
-                                    <span>Vergangene Reisen anzeigen</span>
-                                </button>
+                                <div class="mb-4 mt-8 flex items-center justify-center">
+                                    <div v-if="eventsLoadedUntilYear === year">
+                                        <AsyncButton :action="fetchNextEvents" class="btn-ghost">
+                                            <template #label>
+                                                <span v-if="eventsLoadedUntilYear" class="px-2">
+                                                    Reisen {{ eventsLoadedUntilYear - 1 }} anzeigen
+                                                </span>
+                                                <span v-else class="px-2"> Vergangene Reisen anzeigen </span>
+                                            </template>
+                                        </AsyncButton>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </template>
@@ -215,13 +221,16 @@ async function fetchUserFutureEvents(): Promise<void> {
     const events = await eventsUseCase
         .getFutureEventsByUser(userKey.value)
         .then((evts) => evts.sort((a, b) => b.start.getTime() - a.start.getTime()));
-    eventsByYear.value.set(new Date().getFullYear(), events);
+    eventsByYear.value.set(0, events);
 }
 
 async function fetchUserEventsOfYear(year: number): Promise<void> {
-    const events = await eventsUseCase
-        .getEventsByUser(year, userKey.value)
-        .then((evts) => evts.sort((a, b) => b.start.getTime() - a.start.getTime()));
+    let events = await eventsUseCase.getEventsByUser(year, userKey.value);
+    if (year === new Date().getFullYear()) {
+        const loadedEventKeys = eventsByYear.value.get(0)?.map((it) => it.key);
+        events = events.filter((it) => !loadedEventKeys?.includes(it.key));
+    }
+    events = events.sort((a, b) => b.start.getTime() - a.start.getTime());
     eventsByYear.value.set(year, events);
 }
 
