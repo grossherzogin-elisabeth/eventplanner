@@ -2,31 +2,36 @@
     <div class="scrollbar-invisible -mx-8 overflow-x-auto px-8 md:-mx-16 md:px-16 xl:-mx-20 xl:px-20">
         <VTable :items="renderedEvents" :page-size="-1" class="interactive-table no-header" @click="openEvent($event)">
             <template #row="{ item }">
-                <td class="w-16 text-xl opacity-50">
+                <td class="w-0 text-xl opacity-50">
                     <i v-if="!item.waitingList" class="fa-solid fa-check-circle text-green-700"></i>
                     <i v-else class="fa-solid fa-clock text-gray-500"></i>
                 </td>
                 <td class="w-1/2 max-w-[65vw] border-none font-semibold">
-                    <p class="mb-1 truncate">{{ item.name }}</p>
+                    <div class="mb-1 md:flex">
+                        <p class="flex-grow truncate md:w-0">{{ item.name }}</p>
+                    </div>
                     <p class="text-sm font-light">{{ item.locations }}</p>
                 </td>
-                <td class="w-1/6 whitespace-nowrap text-center">
-                    <p class="mb-1 font-semibold">
+                <td class="whitespace-nowrap text-center">
+                    <p class="mb-1 w-12 font-semibold">
                         {{ item.crewCount }}
                         <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
                     </p>
                     <p class="text-sm">Crew</p>
                 </td>
-                <td class="w-2/6 whitespace-nowrap">
-                    <p class="mb-1 font-semibold">{{ formatDateRange(item.start, item.end) }}</p>
+                <td class="whitespace-nowrap">
+                    <div class="mb-1 font-semibold">
+                        <p class="hidden w-56 lg:block">{{ formatDateRange(item.start, item.end) }}</p>
+                        <p class="w-20 lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
+                    </div>
                     <p class="text-sm">{{ item.duration }} Tage</p>
                 </td>
-                <td class="w-1/6">
+                <td class="">
                     <div :style="{ background: item.position.color }" class="position inline-flex">
                         <span class="px-2 text-sm">{{ item.positionName }}</span>
                     </div>
                 </td>
-                <td class="">
+                <td class="w-0">
                     <ContextMenuButton class="px-4 py-2">
                         <ul>
                             <li>
@@ -73,6 +78,51 @@
                     </ContextMenuButton>
                 </td>
             </template>
+            <template #loading>
+                <tr v-for="i in 5" :key="i" class="animate-pulse">
+                    <td><!-- spacer --></td>
+                    <td class="w-0 text-xl">
+                        <!-- registration status -->
+                        <i class="fa-solid fa-circle text-primary-200"></i>
+                    </td>
+                    <td class="w-1/2 max-w-[65vw]">
+                        <!-- event name and locations -->
+                        <p class="mb-1 h-5 w-64 rounded-lg bg-primary-200"></p>
+                        <p class="flex items-center space-x-2 text-sm font-light">
+                            <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                            <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                            <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                        </p>
+                    </td>
+                    <td class="">
+                        <!-- crew -->
+                        <p class="mb-1 h-5 w-12 rounded-lg bg-primary-200"></p>
+                        <p class="h-3 w-10 rounded-lg bg-primary-200"></p>
+                    </td>
+                    <td class="">
+                        <!-- date -->
+                        <div class="mb-1 font-semibold">
+                            <p class="hidden h-5 w-56 rounded-lg bg-primary-200 lg:block"></p>
+                            <p class="h-5 w-20 rounded-lg bg-primary-200 lg:hidden"></p>
+                        </div>
+                        <p class="h-3 w-16 rounded-lg bg-primary-200"></p>
+                    </td>
+
+                    <td class="">
+                        <!-- role -->
+                        <div
+                            class="inline-flex h-6 w-32 items-center space-x-2 rounded-full bg-primary-200 py-1 pl-3 pr-4"
+                        ></div>
+                    </td>
+
+                    <td class="w-0">
+                        <div class="px-4 py-2">
+                            <i class="fa-solid fa-circle text-primary-200"></i>
+                        </div>
+                    </td>
+                    <td><!-- spacer --></td>
+                </tr>
+            </template>
         </VTable>
     </div>
 </template>
@@ -80,6 +130,7 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { ArrayUtils } from '@/common';
+import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, PositionKey, UserDetails } from '@/domain';
 import { Permission } from '@/domain';
 import { ContextMenuButton, VTable } from '@/ui/components/common';
@@ -104,7 +155,7 @@ export interface EventTableViewItem {
 }
 
 interface Props {
-    events: Event[];
+    events?: Event[];
     positions: Map<PositionKey, Position>;
     user: UserDetails;
 }
@@ -118,9 +169,9 @@ const eventAdministrationUseCase = useEventAdministrationUseCase();
 const errorHandling = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
 
-const renderedEvents = computed<EventTableViewItem[]>(() => {
+const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
     return props.events
-        .map((evt) => {
+        ?.map((evt) => {
             const registration = evt.registrations.find((it) => it.userKey === props.user.key);
             const slot = evt.slots.find((it) => it.key === registration?.slotKey);
             const position = props.positions.get(registration?.positionKey || '');

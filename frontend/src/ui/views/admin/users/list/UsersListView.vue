@@ -103,7 +103,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { User, UserDetails } from '@/domain';
+import type { User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton } from '@/ui/components/common';
 import { VInputCheckBox, VInputText, VTable } from '@/ui/components/common';

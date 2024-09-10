@@ -102,15 +102,15 @@ table.v-table {
     @apply relative z-10;
 }
 
-.v-table.interactive-table tbody tr:not(.no-data) {
+.v-table.interactive-table:not(.loading) tbody tr:not(.no-data) {
     @apply cursor-pointer hover:text-primary-600;
 }
 
 .v-table.interactive-table tbody tr td:first-child::before {
     content: '';
-    @apply absolute bottom-1 left-1 right-1 top-1 -z-10 rounded-xl bg-primary-100 bg-opacity-50;
+    @apply absolute bottom-1 left-0 right-0 top-1 -z-10 rounded-xl bg-primary-100 bg-opacity-50;
 }
 
-.v-table.interactive-table tbody tr:not(.no-data):hover td:first-child::before {
-    @apply bg-primary-200 shadow-lg;
+.v-table.interactive-table:not(.loading) tbody tr:not(.no-data):hover td:first-child::before {
+    @apply bg-primary-100 bg-opacity-100;
 }

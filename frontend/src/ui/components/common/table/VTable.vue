@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <table :class="$attrs.class" class="v-table">
+        <table :class="$attrs.class + ' ' + classes.join(' ')" class="v-table">
             <thead>
                 <tr ref="head">
                     <th></th>
@@ -149,6 +149,13 @@ const sortDir = ref<number>(1);
 const loading = computed<boolean>(() => props.items === undefined);
 const empty = computed<boolean>(() => props.items !== undefined && props.items.length === 0);
 
+const classes = computed<string[]>(() => {
+    const result: string[] = [];
+    if (loading.value) {
+        result.push('loading');
+    }
+    return result;
+});
 const sortedItems = computed<T[]>(() => {
     if (!props.items) {
         return [];

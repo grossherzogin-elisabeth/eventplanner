@@ -33,7 +33,7 @@
             <div class="pt-4">
                 <VTable
                     :items="filteredEvents"
-                    :page-size="-1"
+                    :page-size="20"
                     class="interactive-table no-header"
                     @click="editEvent($event)"
                 >
@@ -128,6 +128,42 @@
                             </ContextMenuButton>
                         </td>
                     </template>
+                    <template #loading>
+                        <tr v-for="i in 20" :key="i" class="animate-pulse">
+                            <td></td>
+                            <td class="w-1/2 max-w-[65vw]">
+                                <p class="mb-1 h-5 w-64 rounded-lg bg-primary-200"></p>
+                                <p class="flex items-center space-x-2 text-sm font-light">
+                                    <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                                    <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                                    <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                                </p>
+                            </td>
+                            <td>
+                                <div
+                                    class="inline-flex w-auto items-center space-x-2 rounded-full bg-primary-100 py-1 pl-3 pr-4"
+                                >
+                                    <i class="fa-solid fa-circle text-primary-200"></i>
+                                    <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-primary-200"></span>
+                                </div>
+                            </td>
+                            <td class="w-1/6">
+                                <p class="mb-1 h-5 w-16 rounded-lg bg-primary-200"></p>
+                                <p class="h-3 w-10 rounded-lg bg-primary-200"></p>
+                            </td>
+                            <td class="w-2/6">
+                                <p class="mb-1 h-5 w-56 rounded-lg bg-primary-200"></p>
+                                <p class="h-3 w-16 rounded-lg bg-primary-200"></p>
+                            </td>
+
+                            <td class="">
+                                <div class="px-4 py-2">
+                                    <i class="fa-solid fa-circle text-primary-200"></i>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </template>
                 </VTable>
             </div>
         </div>
@@ -185,7 +221,7 @@ const route = useRoute();
 const router = useRouter();
 const user = authUseCase.getSignedInUser();
 
-const events = ref<EventTableViewItem[]>([]);
+const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
 const createEventDialog = ref<Dialog<Event> | null>(null);
@@ -193,7 +229,7 @@ const importEventsDialog = ref<Dialog<Event> | null>(null);
 
 const filteredEvents = computed<EventTableViewItem[]>(() => {
     const f = filter.value.toLowerCase();
-    return events.value.filter((it) => it.name.toLowerCase().includes(f));
+    return events.value?.filter((it) => it.name.toLowerCase().includes(f));
 });
 
 const tabs = computed<string[]>(() => {
@@ -214,6 +250,7 @@ function init(): void {
 }
 
 async function fetchEvents(): Promise<void> {
+    events.value = null;
     if (tab.value === tabs.value[0]) {
         const now = new Date();
         const currentYear = await fetchEventsByYear(now.getFullYear());

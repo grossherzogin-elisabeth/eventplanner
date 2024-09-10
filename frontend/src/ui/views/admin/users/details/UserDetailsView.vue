@@ -81,7 +81,7 @@
                     </template>
                     <template #[Tab.USER_EVENTS]>
                         <div>
-                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events.length}`" class="">
+                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`" class="">
                                 <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">
                                     <template v-if="year === 0">Zukünftige Reisen</template>
                                     <template v-else>Reisen {{ year }}</template>
@@ -185,7 +185,7 @@ const signedInUser = authUseCase.getSignedInUser();
 const tabs = [Tab.USER_EVENTS, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_CERTIFICATES];
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const user = ref<UserDetails | null>(null);
-const eventsByYear = ref<Map<number, Event[]>>(new Map<number, Event[]>());
+const eventsByYear = ref<Map<number, Event[]>>(new Map<number, Event[] | undefined>());
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const createRegistrationForUserDialog = ref<Dialog<UserDetails> | null>(null);
 const eventsLoadedUntilYear = ref<number>(0);
@@ -218,13 +218,14 @@ async function fetchNextEvents(): Promise<void> {
 }
 
 async function fetchUserFutureEvents(): Promise<void> {
-    const events = await eventsUseCase
-        .getFutureEventsByUser(userKey.value)
-        .then((evts) => evts.sort((a, b) => b.start.getTime() - a.start.getTime()));
+    eventsByYear.value.set(0, undefined);
+    let events = await eventsUseCase.getFutureEventsByUser(userKey.value);
+    events = events.sort((a, b) => b.start.getTime() - a.start.getTime());
     eventsByYear.value.set(0, events);
 }
 
 async function fetchUserEventsOfYear(year: number): Promise<void> {
+    eventsByYear.value.set(year, undefined);
     let events = await eventsUseCase.getEventsByUser(year, userKey.value);
     if (year === new Date().getFullYear()) {
         const loadedEventKeys = eventsByYear.value.get(0)?.map((it) => it.key);

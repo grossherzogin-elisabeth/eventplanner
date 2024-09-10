@@ -23,7 +23,6 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { Timer } from '@/common';
 import { VLoadingSpinner } from '@/ui/components/common';
 
 interface Props {
@@ -40,7 +39,6 @@ async function onClick(): Promise<void> {
     if (props.action) {
         loading.value = true;
         try {
-            await Timer.wait(500);
             await props.action();
             success.value = true;
         } catch (e) {

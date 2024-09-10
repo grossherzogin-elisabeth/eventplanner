@@ -39,7 +39,7 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, Registration, User } from '@/domain';
+import type { Event, User } from '@/domain';
 import { type InputSelectOption, type Position, type PositionKey } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputTextArea } from '@/ui/components/common';
