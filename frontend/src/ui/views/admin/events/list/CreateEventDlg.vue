@@ -15,8 +15,9 @@
                         v-model="event.type"
                         :options="[
                             { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
-                            { value: EventType.SINGLE_DAY_VOYAGE, label: 'Tagesfahrt' },
-                            { value: EventType.VOYAGE, label: 'Mehrtagesfahrt' },
+                            { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
+                            { value: EventType.WeekendEvent, label: 'Wochenendreise' },
+                            { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
                         ]"
                         required
                     />
@@ -100,7 +101,7 @@ const event = ref<Event>({
     key: '',
     name: '',
     description: '',
-    type: EventType.VOYAGE,
+    type: EventType.WeekendEvent,
     state: EventState.Draft,
     start: new Date(),
     end: new Date(),

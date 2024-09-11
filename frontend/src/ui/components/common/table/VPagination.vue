@@ -54,7 +54,7 @@ const props = defineProps<Props>();
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const emit = defineEmits<Emits>();
 
-const visiblePagesCount = ref<number>(7);
+const visiblePagesCount = ref<number>(8);
 const pageSize = computed<number>(() => props.pageSize || 10);
 const pageCount = computed<number>(() => Math.ceil(props.count / pageSize.value));
 

@@ -1,10 +1,10 @@
 <template>
-    <div class="flex h-full flex-1 flex-col xl:overflow-y-auto">
+    <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
             <NavbarFilter v-model="filter" placeholder="Nutzer durchsuchen" />
         </teleport>
         <div
-            class="top-12 z-10 hidden bg-primary-50 px-4 pb-8 pt-4 md:pl-12 md:pr-16 md:pt-8 xl:top-0 xl:block xl:pl-16 xl:pr-20"
+            class="sticky left-0 top-12 z-20 hidden border-b border-primary-200 bg-primary-50 px-4 pb-8 pt-4 md:pl-12 md:pr-16 md:pt-8 xl:top-0 xl:block xl:pl-16 xl:pr-20"
         >
             <div class="flex items-center space-x-4">
                 <VInputText v-model="filter" class="input-search w-96" placeholder="Nutzer filtern">
@@ -22,78 +22,134 @@
                 </div>
             </div>
         </div>
-        <div class="w-full overflow-x-auto px-8 pt-6 md:px-16 xl:px-20 xl:pt-0">
-            <div class="pt-4">
-                <VTable
-                    :items="filteredCrewMembers"
-                    :page-size="50"
-                    class="interactive-table no-header"
-                    @click="editUser($event)"
-                >
-                    <template #row="{ item }">
-                        <td class="whitespace-nowrap font-semibold">
-                            <span>{{ item.firstName }}</span>
-                            <span class="ml-2 md:hidden">{{ item.lastName }}</span>
-                        </td>
-                        <td class="hidden font-semibold md:table-cell">{{ item.lastName }}</td>
-                        <td>
-                            <div
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-100 py-1 pl-3 pr-4 text-green-700"
+        <div class="w-full">
+            <VTable
+                :items="filteredUsers"
+                :page-size="20"
+                class="interactive-table scrollbar-invisible overflow-x-auto px-8 md:px-16 xl:px-20"
+                @click="editUser($event)"
+            >
+                <template #head>
+                    <th>
+                        <VInputCheckBox></VInputCheckBox>
+                    </th>
+                    <th>Name</th>
+                    <th>Positionen</th>
+                    <th>Reisen</th>
+                    <!--                        <th>Anmeldungen</th>-->
+                    <th>Arbeitsdienst</th>
+                    <th>Zertifikate</th>
+                </template>
+                <template #row="{ item }">
+                    <td class="group" @click.stop="">
+                        <VInputCheckBox v-model="item.selected" />
+                        <!--<VInputCheckBox-->
+                        <!--    :class="{ 'hidden group-hover:block': !item.selected }"-->
+                        <!--    v-model="item.selected"-->
+                        <!--/>-->
+                        <!--<div :class="item.selected ? 'hidden' : 'group-hover:hidden'">-->
+                        <!--    <i class="fa-solid fa-user-circle text-2xl" />-->
+                        <!--</div>-->
+                    </td>
+                    <td class="whitespace-nowrap font-semibold">
+                        <p class="mb-2">{{ item.firstName }} {{ item.lastName }}</p>
+                        <p class="text-sm">Stammcrew</p>
+                    </td>
+                    <td class="">
+                        <div class="flex max-w-64 flex-wrap">
+                            <span
+                                v-for="position in item.positions"
+                                :key="position.key"
+                                class="position my-0.5 mr-1 bg-gray-500 opacity-75"
+                                :style="{ background: position.color }"
                             >
-                                <i class="fa-solid fa-check-circle"></i>
-                                <span class="whitespace-nowrap font-semibold">Alle gültig</span>
-                            </div>
-                        </td>
-                        <td class="s">
-                            <div class="flex">
-                                <span
-                                    v-for="position in item.positionKeys"
-                                    :key="position"
-                                    class="position mr-2 bg-gray-500"
-                                >
-                                    {{ position }}
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="rounded-full bg-primary-200 px-4 py-1 text-xs font-bold">
-                                {{ item.eventCount || '-' }}
+                                {{ position.name }}
                             </span>
-                        </td>
-                        <td>
-                            <span class="rounded-full bg-yellow-200 px-4 py-1 text-xs font-bold">
-                                {{ item.registrationCount || '-' }}
-                            </span>
-                        </td>
-                        <td class="">
-                            <ContextMenuButton class="px-4 py-2">
-                                <ul>
-                                    <li class="context-menu-item" @click="editUser(item)">
-                                        <i class="fa-solid fa-user-edit" />
-                                        <span>Bearbeiten</span>
-                                    </li>
-                                    <li class="context-menu-item" @click="impersonateUser(item)">
-                                        <i class="fa-solid fa-user-secret" />
-                                        <span>Impersonate</span>
-                                    </li>
-                                    <li class="context-menu-item" @click="createRegistration(item)">
-                                        <i class="fa-solid fa-calendar-plus" />
-                                        <span>Anmeldung hinzufügen</span>
-                                    </li>
-                                    <li class="context-menu-item disabled">
-                                        <i class="fa-solid fa-key" />
-                                        <span>Passwort zurücksetzen</span>
-                                    </li>
-                                    <li class="context-menu-item disabled text-red-700">
-                                        <i class="fa-solid fa-trash" />
-                                        <span>Nutzer löschen</span>
-                                    </li>
-                                </ul>
-                            </ContextMenuButton>
-                        </td>
-                    </template>
-                </VTable>
-            </div>
+                        </div>
+                    </td>
+                    <td class="">
+                        <div class="flex space-x-8">
+                            <div :class="{ 'opacity-25': !item.singleDayEventsCount }">
+                                <p class="mb-1 font-semibold">{{ item.singleDayEventsCount || '-' }}</p>
+                                <p class="text-sm" title="Tagesfahrten">TF</p>
+                            </div>
+                            <div :class="{ 'opacity-25': !item.weekendEventsCount }">
+                                <p class="mb-1 font-semibold">{{ item.weekendEventsCount || '-' }}</p>
+                                <p class="text-sm" title="Wochenendfahrten">WE</p>
+                            </div>
+                            <div :class="{ 'opacity-25': !item.multiDayEventsCount }">
+                                <p class="mb-1 font-semibold">{{ item.multiDayEventsCount || '-' }}</p>
+                                <p class="text-sm" title="Sommerreisen und mehrtägige Fahrten">SR</p>
+                            </div>
+                            <div :class="{ 'opacity-25': !item.waitingListCount }">
+                                <p class="mb-1 font-semibold">{{ item.waitingListCount || '-' }}</p>
+                                <p class="text-sm" title="Warteliste">WL</p>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="">
+                        <p class="mb-1 font-semibold">????</p>
+                        <p class="text-sm">Stunden</p>
+                    </td>
+                    <td class="">
+                        <div
+                            v-if="true"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
+                        >
+                            <i class="fa-solid fa-question-circle"></i>
+                            <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
+                        </div>
+                        <div
+                            v-else-if="item.firstName.includes('d')"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
+                        >
+                            <i class="fa-solid fa-check-circle"></i>
+                            <span class="whitespace-nowrap font-semibold">Alle gültig</span>
+                        </div>
+                        <div
+                            v-else-if="item.firstName.includes('e')"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
+                        >
+                            <i class="fa-solid fa-warning"></i>
+                            <span class="whitespace-nowrap font-semibold"> 2 laufen bald ab</span>
+                        </div>
+                        <div
+                            v-else
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
+                        >
+                            <i class="fa-solid fa-ban"></i>
+                            <span class="whitespace-nowrap font-semibold">2 abgelaufen</span>
+                        </div>
+                    </td>
+                    <td class="w-0">
+                        <ContextMenuButton class="px-4 py-2">
+                            <ul>
+                                <li class="context-menu-item" @click="editUser(item)">
+                                    <i class="fa-solid fa-user-edit" />
+                                    <span>Bearbeiten</span>
+                                </li>
+                                <li class="context-menu-item" @click="impersonateUser(item)">
+                                    <i class="fa-solid fa-user-secret" />
+                                    <span>Impersonate</span>
+                                </li>
+                                <li class="context-menu-item" @click="createRegistration(item)">
+                                    <i class="fa-solid fa-calendar-plus" />
+                                    <span>Anmeldung hinzufügen</span>
+                                </li>
+                                <li class="context-menu-item disabled">
+                                    <i class="fa-solid fa-key" />
+                                    <span>Passwort zurücksetzen</span>
+                                </li>
+                                <li class="context-menu-item disabled text-red-700">
+                                    <i class="fa-solid fa-trash" />
+                                    <span>Nutzer löschen</span>
+                                </li>
+                            </ul>
+                        </ContextMenuButton>
+                    </td>
+                </template>
+            </VTable>
         </div>
 
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
@@ -103,10 +159,11 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { User } from '@/domain';
+import { ArrayUtils } from '@/common';
+import type { Position, User } from '@/domain';
+import { EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { ContextMenuButton } from '@/ui/components/common';
-import { VInputCheckBox, VInputText, VTable } from '@/ui/components/common';
+import { ContextMenuButton, VInputCheckBox, VInputText, VTable } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { useUserService } from '@/ui/composables/Domain';
@@ -116,8 +173,11 @@ import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/Crea
 import ImportUsersDlg from '@/ui/views/admin/users/list/ImportUsersDlg.vue';
 
 interface UserRegistrations extends User, Selectable {
-    eventCount: number;
-    registrationCount: number;
+    positions: Position[];
+    singleDayEventsCount: number;
+    weekendEventsCount: number;
+    multiDayEventsCount: number;
+    waitingListCount: number;
 }
 
 const eventUseCase = useEventUseCase();
@@ -128,21 +188,25 @@ const router = useRouter();
 
 const filter = ref<string>('');
 const filterOnlyActive = ref<boolean>(false);
-const crewMembers = ref<UserRegistrations[]>([]);
+const users = ref<UserRegistrations[] | undefined>(undefined);
 
 const importUsersDialog = ref<Dialog | null>(null);
-const createRegistrationForUserDialog = ref<Dialog<User, void> | null>(null);
+const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
 
-const filteredCrewMembers = computed<UserRegistrations[]>(() =>
-    crewMembers.value.filter(
+const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
+    users.value?.filter(
         (it) =>
             usersService.doesUserMatchFilter(it, filter.value) &&
-            (!filterOnlyActive.value || it.registrationCount || it.eventCount)
+            (!filterOnlyActive.value ||
+                it.waitingListCount ||
+                it.multiDayEventsCount ||
+                it.weekendEventsCount ||
+                it.singleDayEventsCount)
     )
 );
 
 function init(): void {
-    fetchCrewMembers();
+    fetchUsers();
 }
 
 function importUsers(): void {
@@ -160,23 +224,38 @@ function impersonateUser(user: UserRegistrations): void {
 async function createRegistration(user: UserRegistrations): Promise<void> {
     await createRegistrationForUserDialog.value
         ?.open(user)
-        .then(() => (user.registrationCount = user.registrationCount + 1))
+        .then(() => (user.waitingListCount = user.waitingListCount + 1))
         .catch(() => {
             // ignore
         });
 }
 
-async function fetchCrewMembers(): Promise<void> {
-    const users: User[] = await usersUseCase.getUsers();
+async function fetchUsers(): Promise<void> {
+    const positions = await usersUseCase.resolvePositionNames();
+    const userlist: User[] = await usersUseCase.getUsers();
     const events = await eventUseCase.getEvents(new Date().getFullYear());
-    const registrations = events.flatMap((it) => it.registrations);
-    crewMembers.value = users.map((user: User) => {
-        const userRegistrations = registrations.filter((it) => it.userKey === user.key);
-        const eventCount = userRegistrations.filter((it) => it.slotKey).length;
+    const registrationsSingleDayEventsWithSlot = events
+        .filter((it) => it.type === EventType.SingleDayEvent)
+        .flatMap((it) => it.registrations)
+        .filter((it) => it.slotKey);
+    const registrationsWeekendEventsWithSlot = events
+        .filter((it) => it.type === EventType.WeekendEvent)
+        .flatMap((it) => it.registrations)
+        .filter((it) => it.slotKey);
+    const registrationsMultiDayEventsWithSlot = events
+        .filter((it) => it.type === EventType.MultiDayEvent)
+        .flatMap((it) => it.registrations)
+        .filter((it) => it.slotKey);
+    const registrationsWaitinglist = events.flatMap((it) => it.registrations).filter((it) => !it.slotKey);
+
+    users.value = userlist.map((user: User) => {
         return {
             ...user,
-            eventCount: eventCount,
-            registrationCount: userRegistrations.length - eventCount,
+            waitingListCount: registrationsWaitinglist.filter((it) => it.userKey === user.key).length,
+            multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
+            weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,
+            singleDayEventsCount: registrationsSingleDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
+            positions: user.positionKeys.map((key) => positions.get(key)).filter(ArrayUtils.filterUndefined),
         };
     });
 }

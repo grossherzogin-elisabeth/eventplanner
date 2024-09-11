@@ -1,5 +1,5 @@
 <template>
-    <div class="xl:overflow-y-auto">
+    <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <DetailsPage :back-to="{ name: Routes.UsersList }">
             <template #header>
                 <div>

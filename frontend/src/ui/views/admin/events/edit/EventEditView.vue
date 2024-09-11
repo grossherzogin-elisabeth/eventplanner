@@ -37,7 +37,9 @@
                                     v-model="event.type"
                                     :options="[
                                         { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
-                                        { value: EventType.VOYAGE, label: 'Mehrtagesreise' },
+                                        { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
+                                        { value: EventType.WeekendEvent, label: 'Wochenendreise' },
+                                        { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
                                     ]"
                                     required
                                 />

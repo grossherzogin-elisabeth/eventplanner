@@ -1,7 +1,7 @@
 <template>
     <div :class="$attrs.class">
         <h2
-            class="scrollbar-invisible flex space-x-8 overflow-x-auto border-b border-gray-300 px-8 text-base font-semibold md:px-16 xl:px-20"
+            class="scrollbar-invisible flex space-x-8 overflow-x-auto border-b border-primary-200 px-8 text-base font-semibold md:px-16 xl:px-20"
         >
             <button
                 v-for="tab in props.tabs"

@@ -1,5 +1,6 @@
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
+import { DateUtils } from '@/common';
 import type { Event, EventKey, EventState, ImportError, PositionKey, UserKey } from '@/domain';
 import { EventType, SlotCriticality } from '@/domain';
 
@@ -72,9 +73,9 @@ interface ImportErrorRepresentation {
 
 export class EventRestRepository implements EventRepository {
     public static mapEventToDomain(eventRepresentation: EventRepresentation): Event {
-        return {
+        const event: Event = {
             key: eventRepresentation.key,
-            type: EventType.VOYAGE,
+            type: EventType.MultiDayEvent,
             name: eventRepresentation.name,
             description: eventRepresentation.description,
             state: eventRepresentation.state as EventState,
@@ -99,6 +100,22 @@ export class EventRestRepository implements EventRepository {
             })),
             assignedUserCount: eventRepresentation.registrations.filter((it) => it.slotKey).length,
         };
+        event.type = EventRestRepository.mapEventType(event);
+        return event;
+    }
+
+    private static mapEventType(event: Event): EventType {
+        const start = DateUtils.cropToPrecision(event.start, 'days');
+        const end = DateUtils.cropToPrecision(event.end, 'days');
+        const durationDays = new Date(event.end.getTime() - event.start.getTime()).getDate();
+
+        if (start.getTime() === end.getTime()) {
+            return EventType.SingleDayEvent;
+        }
+        if (durationDays <= 3) {
+            return EventType.WeekendEvent;
+        }
+        return EventType.MultiDayEvent;
     }
 
     public async findAll(year: number): Promise<Event[]> {

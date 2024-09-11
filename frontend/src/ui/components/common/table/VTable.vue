@@ -1,6 +1,6 @@
 <template>
-    <div class="">
-        <table :class="$attrs.class + ' ' + classes.join(' ')" class="v-table">
+    <div :class="$attrs.class + ' ' + classes.join(' ')">
+        <table class="v-table">
             <thead>
                 <tr ref="head">
                     <th></th>

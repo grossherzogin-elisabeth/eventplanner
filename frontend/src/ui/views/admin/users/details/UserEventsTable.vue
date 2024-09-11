@@ -1,6 +1,11 @@
 <template>
-    <div class="scrollbar-invisible -mx-8 overflow-x-auto px-8 md:-mx-16 md:px-16 xl:-mx-20 xl:px-20">
-        <VTable :items="renderedEvents" :page-size="-1" class="interactive-table no-header" @click="openEvent($event)">
+    <div class="-mx-8 md:-mx-16 xl:-mx-20">
+        <VTable
+            :items="renderedEvents"
+            :page-size="-1"
+            class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+            @click="openEvent($event)"
+        >
             <template #row="{ item }">
                 <td class="w-0 text-xl opacity-50">
                     <i v-if="!item.waitingList" class="fa-solid fa-check-circle text-green-700"></i>

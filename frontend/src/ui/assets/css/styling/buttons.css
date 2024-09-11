@@ -9,6 +9,7 @@ button:disabled {
     @apply px-4 py-2;
     @apply font-bold;
     @apply flex items-center space-x-4;
+    @apply whitespace-nowrap;
 }
 
 .btn-primary {
@@ -85,6 +86,27 @@ button:disabled {
 }
 
 .btn-back {
-    @apply btn-ghost;
-    @apply rounded-full p-3 text-base;
+    @apply flex items-center justify-center;
+    @apply font-black text-primary-700 hover:text-primary-800;
+    @apply rounded-full p-3;
+    @apply hover:no-underline;
+    @apply relative;
+}
+
+.btn-back:before {
+    content: '';
+    @apply pointer-events-none absolute bg-primary-100;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    transition: top, left, right, bottom;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in-out;
+    border-radius: inherit;
+    z-index: -1;
+}
+
+.btn-back:hover:before {
+    @apply bottom-0 left-0 right-0 top-0;
 }
