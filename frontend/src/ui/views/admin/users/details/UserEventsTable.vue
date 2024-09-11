@@ -199,7 +199,7 @@ const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
 
 async function addUserToCrew(item: EventTableViewItem): Promise<void> {
     try {
-        let event = props.events.find((it) => it.key === item.eventKey);
+        let event = props.events?.find((it) => it.key === item.eventKey);
         if (!event) {
             throw new Error('Reise konnte nicht gefunden werden');
         }
@@ -219,7 +219,7 @@ async function addUserToCrew(item: EventTableViewItem): Promise<void> {
 
 async function deleteRegistration(item: EventTableViewItem): Promise<void> {
     try {
-        let event = props.events.find((it) => it.key === item.eventKey);
+        let event = props.events?.find((it) => it.key === item.eventKey);
         if (!event) {
             throw new Error('Reise konnte nicht gefunden werden');
         }

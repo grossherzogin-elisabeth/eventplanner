@@ -227,7 +227,7 @@ const filter = ref<string>('');
 const createEventDialog = ref<Dialog<Event> | null>(null);
 const importEventsDialog = ref<Dialog<Event> | null>(null);
 
-const filteredEvents = computed<EventTableViewItem[]>(() => {
+const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
     return events.value?.filter((it) => it.name.toLowerCase().includes(f));
 });
