@@ -12,15 +12,15 @@ button:disabled {
 }
 
 .btn-primary {
-    @apply bg-primary-300 text-primary-900;
+    @apply bg-primary-200 text-primary-900;
 }
 
 .btn-primary:enabled {
-    @apply bg-primary-300 bg-opacity-75 hover:bg-opacity-100 hover:shadow;
+    @apply bg-primary-200 hover:bg-primary-300 hover:shadow;
 }
 
 .btn-primary:disabled {
-    @apply bg-primary-200 bg-opacity-75 text-primary-900 text-opacity-25;
+    @apply bg-primary-200 text-primary-900 text-opacity-25;
 }
 
 .btn-secondary {
@@ -28,11 +28,11 @@ button:disabled {
 }
 
 .btn-secondary:enabled {
-    @apply bg-gray-200 bg-opacity-75 hover:bg-opacity-100 hover:shadow;
+    @apply bg-gray-200 hover:bg-gray-300 hover:shadow;
 }
 
 .btn-secondary:disabled {
-    @apply bg-gray-100 text-gray-700 text-opacity-25;
+    @apply bg-gray-200 text-gray-700 text-opacity-25;
 }
 
 .btn-danger {

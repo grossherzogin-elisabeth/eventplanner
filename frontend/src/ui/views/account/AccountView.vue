@@ -1,6 +1,6 @@
 <template>
     <div>
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-10 bg-primary-50 pt-4 xl:top-0">
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-10 bg-primary-50 pt-8 xl:top-0">
             <template #[Tab.ACCOUNT_DATA]>
                 <section v-if="userDetails" class="-mx-4">
                     <div class="mb-2 hidden md:w-1/2">

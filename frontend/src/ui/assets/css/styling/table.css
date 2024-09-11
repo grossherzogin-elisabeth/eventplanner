@@ -7,9 +7,9 @@ table.v-table {
 
 @media (min-width: 768px) {
     table.v-table {
-        margin-left: -2rem;
-        margin-right: -2rem;
-        width: calc(100% + 4rem);
+        /*margin-left: -2rem;*/
+        /*margin-right: -2rem;*/
+        /*width: calc(100% + 4rem);*/
     }
 }
 
@@ -72,7 +72,7 @@ table.v-table {
 
 .v-table th:first-child,
 .v-table td:first-child {
-    @apply w-0 border-none pl-0 pr-4 md:pr-8;
+    @apply w-0 border-none pl-0 pr-4;
 }
 
 .v-table td:first-child::before {
@@ -81,7 +81,7 @@ table.v-table {
 
 .v-table th:last-child,
 .v-table td:last-child {
-    @apply w-0 border-none pl-4 pr-0 md:pl-8;
+    @apply w-0 border-none pl-4 pr-0;
 }
 
 .v-table th:nth-child(2),
@@ -106,7 +106,7 @@ table.v-table {
     @apply cursor-pointer hover:text-primary-600;
 }
 
-.v-table.interactive-table tbody tr td:first-child::before {
+.v-table tbody tr td:first-child::before {
     content: '';
     @apply absolute bottom-1 left-0 right-0 top-1 -z-10 rounded-xl bg-primary-100 bg-opacity-50;
 }

@@ -1,0 +1,13 @@
+.input-search .input-field-wrapper {
+    @apply rounded-full;
+    @apply border border-primary-100;
+    @apply focus-within:border-primary-300;
+}
+
+.input-search .input-field-wrapper .input-field {
+    @apply py-2;
+}
+
+.input-search .input-field-wrapper:not(.disabled):hover {
+    @apply border-primary-300;
+}

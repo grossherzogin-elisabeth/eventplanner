@@ -1,0 +1,82 @@
+/* --------------------------------------------------------------- */
+/* Generic input styling */
+/* --------------------------------------------------------------- */
+
+.input-field-wrapper {
+    @apply flex items-center;
+    @apply h-full overflow-hidden;
+    @apply rounded-lg border border-primary-100 bg-primary-100;
+}
+
+.input-field {
+    @apply w-full pb-1 pl-4 pt-6;
+    @apply border-none;
+    @apply bg-transparent;
+    @apply outline-none focus:outline-none;
+    @apply text-primary-950;
+}
+
+/* placeholder state */
+.input-field::placeholder {
+    @apply text-primary-700 text-opacity-25;
+}
+
+/* disabled */
+.input-field-wrapper:has([disabled]) {
+    @apply border border-primary-200 bg-primary-100 bg-opacity-50;
+}
+
+.input-field:disabled {
+    @apply text-primary-700 text-opacity-50;
+}
+
+/* select svgs next to input, like dropdown arrows */
+.input-field:disabled + svg {
+    @apply opacity-50;
+}
+
+/* focus */
+.input-field-wrapper:focus-within {
+    @apply border border-primary-500 bg-primary-100;
+}
+
+/* hover */
+.input-field-wrapper:not(:has([disabled])):hover {
+    @apply border border-primary-200 bg-primary-200;
+}
+
+.input-field-wrapper:focus-within:hover {
+    @apply border border-primary-500 bg-primary-100;
+}
+
+/* invalid */
+.input-field-wrapper:has(.invalid) {
+    @apply border-red-200 bg-red-50;
+}
+
+.input-field-wrapper:has(.invalid):not(.disabled):hover {
+    @apply border-red-300 bg-red-100;
+}
+
+.input-field-wrapper:has(.invalid):focus-within {
+    @apply border-red-300 bg-red-100;
+}
+
+/* label */
+.input-label {
+    @apply mb-1 mt-4 text-sm font-bold;
+    @apply pointer-events-none relative z-10 -mb-5 ml-4 text-xs text-primary-700 text-opacity-50;
+}
+
+.input-label.required {
+    @apply font-semibold;
+}
+
+.input-label.required span:first-child:after {
+    content: ' *';
+}
+
+/* other */
+.input-icon-right {
+    @apply pointer-events-none absolute bottom-0 right-0 top-0 mr-4 flex w-4 items-center justify-center;
+}

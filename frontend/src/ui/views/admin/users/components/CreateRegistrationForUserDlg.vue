@@ -87,7 +87,7 @@ const positionOptions = computed<InputSelectOption<string | undefined>[]>(() => 
 });
 
 const isValid = computed<boolean>(() => {
-    return selectedEventKey.value !== undefined && selectedPositionKey.value !== undefined;
+    return selectedEventKey.value !== null && selectedPositionKey.value !== null;
 });
 
 async function init(): Promise<void> {
