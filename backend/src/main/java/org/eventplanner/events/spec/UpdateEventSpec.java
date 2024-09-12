@@ -3,7 +3,7 @@ package org.eventplanner.events.spec;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import org.eventplanner.events.entities.Location;
+import org.eventplanner.events.values.Location;
 import org.eventplanner.events.entities.Slot;
 import org.springframework.lang.Nullable;
 

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eventplanner.events.entities.Event;
-import org.eventplanner.events.entities.Location;
+import org.eventplanner.events.values.Location;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.EventKey;
@@ -105,7 +105,7 @@ public class EventExcelImporter {
                         : Registration.ofPerson(name, positionKey);
                     if (!waitingListReached) {
                         try {
-                            registration = assignToFirstMatchingSlot(registration, slots, registrations);
+                            slots = assignToFirstMatchingSlot(registration, slots);
                         } catch (Exception e) {
                             log.warn("Failed to find matching " + positionKey.value() + " slot for " + name + " at " +
                                 "event " + eventName + " starting on " + start);
@@ -308,18 +308,17 @@ public class EventExcelImporter {
         };
     }
 
-    private static @NonNull Registration assignToFirstMatchingSlot(
+    private static @NonNull List<Slot> assignToFirstMatchingSlot(
         @NonNull Registration registration,
-        @NonNull List<Slot> slots,
-        @NonNull List<Registration> registrations
+        @NonNull List<Slot> slots
     ) {
-        var occupiedSlots = registrations.stream().map(Registration::slot).toList();
         var matchingSlot = slots.stream()
-            .filter(slot -> !occupiedSlots.contains(slot.key()))
-            .filter(slot -> slot.positions().contains(registration.position()))
+            .filter(slot -> slot.getAssignedRegistration() == null)
+            .filter(slot -> slot.getPositions().contains(registration.getPosition()))
             .findFirst();
         if (matchingSlot.isPresent()) {
-            return registration.withSlot(matchingSlot.get().key());
+            matchingSlot.get().setAssignedRegistration(registration.getKey());
+            return slots;
         }
         throw new IllegalStateException("No matching slot found");
     }

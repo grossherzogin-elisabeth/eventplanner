@@ -156,9 +156,7 @@
                     <i class="fa-solid fa-save" />
                 </template>
                 <template #label>
-                    <span v-if="tab === Tab.EVENT_SLOTS">Slots speichern</span>
-                    <span v-else-if="tab === Tab.EVENT_DATA">Event speichern</span>
-                    <span v-else-if="tab === Tab.EVENT_POSITIONS">Crew speichern</span>
+                    <span>Speichern</span>
                 </template>
             </AsyncButton>
         </template>
@@ -317,7 +315,7 @@ async function fetchEvent(): Promise<void> {
 
 function resetTeam(): void {
     if (event.value) {
-        event.value.registrations.forEach((it) => (it.slotKey = undefined));
+        event.value.slots.forEach((it) => (it.assignedRegistrationKey = undefined));
         event.value.assignedUserCount = 0;
     }
 }
@@ -367,30 +365,7 @@ async function save(): Promise<void> {
         return;
     }
     try {
-        switch (tab.value) {
-            case Tab.EVENT_DATA:
-                await eventAdministrationUseCase.updateEvent(event.value.key, {
-                    name: event.value.name,
-                    description: event.value.description,
-                    type: event.value.type,
-                    start: event.value.start,
-                    end: event.value.end,
-                    state: event.value.state,
-                    locations: event.value.locations,
-                });
-                break;
-            case Tab.EVENT_SLOTS:
-                await eventAdministrationUseCase.updateEvent(event.value.key, {
-                    slots: event.value.slots,
-                });
-                break;
-            case Tab.EVENT_POSITIONS:
-                await eventAdministrationUseCase.updateEvent(event.value.key, {
-                    registrations: event.value.registrations, // TODO
-                });
-                break;
-            default:
-        }
+        await eventAdministrationUseCase.updateEvent(event.value.key, event.value);
     } catch (e) {
         errorHandlingUseCase.handleError({
             title: 'Speichern fehlgeschlagen',

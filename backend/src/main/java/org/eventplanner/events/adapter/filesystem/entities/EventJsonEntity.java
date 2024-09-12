@@ -27,16 +27,16 @@ public record EventJsonEntity(
 ) implements Serializable {
     public static @NonNull EventJsonEntity fromDomain(@NonNull Event domain) {
         return new EventJsonEntity(
-            domain.key().value(),
-            domain.name(),
-            domain.state().value(),
-            domain.note(),
-            domain.description(),
-            domain.start().toString(),
-            domain.end().toString(),
-            domain.locations().stream().map(LocationJsonEntity::fromDomain).toList(),
-            domain.slots().stream().map(SlotJsonEntity::fromDomain).toList(),
-            domain.registrations().stream().map(RegistrationJsonEntity::fromDomain).toList()
+            domain.getKey().value(),
+            domain.getName(),
+            domain.getState().value(),
+            domain.getNote(),
+            domain.getDescription(),
+            domain.getStart().toString(),
+            domain.getEnd().toString(),
+            domain.getLocations().stream().map(LocationJsonEntity::fromDomain).toList(),
+            domain.getSlots().stream().map(SlotJsonEntity::fromDomain).toList(),
+            domain.getRegistrations().stream().map(RegistrationJsonEntity::fromDomain).toList()
         );
     }
 

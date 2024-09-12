@@ -38,10 +38,13 @@ export class EventCachingService {
         const signedInUser = this.authService.getSignedInUser();
         events.forEach((evt: Event) => {
             const registration = evt.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
-            if (registration?.slotKey) {
-                evt.signedInUserAssignedPosition = registration.positionKey;
-            } else if (registration) {
-                evt.signedInUserWaitingListPosition = registration.positionKey;
+            if (registration !== undefined) {
+                const slot = evt.slots.find((it) => it.assignedRegistrationKey === registration.key);
+                if (slot) {
+                    evt.signedInUserAssignedPosition = registration.positionKey;
+                } else {
+                    evt.signedInUserWaitingListPosition = registration.positionKey;
+                }
             }
         });
         await this.cache.saveAll(events);

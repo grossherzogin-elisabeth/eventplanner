@@ -120,6 +120,7 @@ async function open(user: User): Promise<void> {
     if (selectedEventKey.value) {
         try {
             await eventAdministrationUseCase.addRegistration(selectedEventKey.value, {
+                key: '',
                 userKey: user.key,
                 positionKey: selectedPositionKey.value,
             });

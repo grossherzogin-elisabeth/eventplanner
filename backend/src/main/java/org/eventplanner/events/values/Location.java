@@ -1,4 +1,4 @@
-package org.eventplanner.events.entities;
+package org.eventplanner.events.values;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

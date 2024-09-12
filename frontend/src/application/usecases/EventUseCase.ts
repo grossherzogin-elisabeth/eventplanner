@@ -69,6 +69,7 @@ export class EventUseCase {
         }
         try {
             const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
+                key: '',
                 positionKey: positionKey,
                 userKey: user.key,
             });

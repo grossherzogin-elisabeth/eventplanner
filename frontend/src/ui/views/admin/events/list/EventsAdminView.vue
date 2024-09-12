@@ -185,7 +185,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ArrayUtils } from '@/common';
 import type { Event } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -288,8 +287,7 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 }
 
 function hasOpenSlots(event: Event): boolean {
-    const filledSlotKeys = event.registrations.map((it) => it.slotKey).filter(ArrayUtils.filterUndefined);
-    return filledSlotKeys.length < 23;
+    return event.slots.filter((slt) => !slt.assignedRegistrationKey).length > 0;
 }
 
 async function editEvent(evt: EventTableViewItem): Promise<void> {

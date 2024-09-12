@@ -40,15 +40,12 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
     }
 
     public async updateRegistration(eventKey: EventKey, registration: Registration): Promise<Event> {
-        const registrationKey = registration.userKey || encodeURIComponent(registration.name || '');
-
         const requestBody: RegistrationUpdateRequest = {
             positionKey: registration.positionKey,
             userKey: registration.userKey,
             name: registration.name,
-            slotKey: registration.slotKey,
         };
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}`, {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -64,9 +61,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
     }
 
     public async deleteRegistration(eventKey: EventKey, registration: Registration): Promise<Event> {
-        const registrationKey = registration.userKey || encodeURIComponent(registration.name || '');
-
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}`, {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

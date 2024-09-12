@@ -47,8 +47,7 @@ export class EventService {
         if (!registration) {
             throw new Error('Failed to resolve user registration');
         }
-        this.clearSlot(event, slotKey);
-        registration.slotKey = slotKey;
+        slot.assignedRegistrationKey = registration.key;
         event.assignedUserCount++;
         return event;
     }
@@ -62,8 +61,7 @@ export class EventService {
         if (!registration) {
             throw new Error('Failed to resolve guest registration');
         }
-        this.clearSlot(event, slotKey);
-        registration.slotKey = slotKey;
+        slot.assignedRegistrationKey = registration.key;
         event.assignedUserCount++;
         return event;
     }
@@ -73,7 +71,7 @@ export class EventService {
         if (!slot) {
             throw new Error('Failed to resolve slot');
         }
-        event = this.clearSlot(event, slotKey);
+        slot.assignedRegistrationKey = undefined;
         event = this.optimizeSlots(event);
         return event;
     }
@@ -85,12 +83,6 @@ export class EventService {
 
     public cancelGuestRegistration(event: Event, name?: string): Event {
         event.registrations = event.registrations.filter((it) => it.name !== name);
-        return event;
-    }
-
-    public clearSlot(event: Event, slotKey: SlotKey): Event {
-        event.registrations.filter((it) => it.slotKey === slotKey).forEach((it) => (it.slotKey = undefined));
-        event.assignedUserCount = event.registrations.filter((it) => it.slotKey).length;
         return event;
     }
 
@@ -107,8 +99,7 @@ export class EventService {
     }
 
     public getOpenSlots(event: Event): Slot[] {
-        const usedSlotKeys = event.registrations.map((it) => it.slotKey).filter(ArrayUtils.filterUndefined);
-        return event.slots.filter((it) => !usedSlotKeys.includes(it.key));
+        return event.slots.filter((it) => !it.assignedRegistrationKey);
     }
 
     /**
@@ -117,20 +108,22 @@ export class EventService {
      * @param event
      */
     private optimizeSlots(event: Event): Event {
-        const slotMap = new Map<SlotKey | undefined, Registration | undefined>();
-        event.registrations.forEach((it) => slotMap.set(it.slotKey, it));
-
         for (let i = 0; i < event.slots.length; i++) {
             const slot = event.slots[i];
-            if (!slotMap.has(slot.key)) {
+            if (!slot.assignedRegistrationKey) {
+                // try to fill slot with a registration from a slot with lesser prio
                 for (let j = i + 1; j < event.slots.length; j++) {
-                    const nextSlot = event.slots[j];
-                    const registration = slotMap.get(nextSlot?.key);
+                    const lowerPrioSlot = event.slots[j];
+                    if (!lowerPrioSlot.assignedRegistrationKey) {
+                        continue;
+                    }
+                    const registration = event.registrations.find(
+                        (r) => r.key === lowerPrioSlot.assignedRegistrationKey
+                    );
                     if (registration && slot.positionKeys.includes(registration.positionKey)) {
-                        // move registration to higher prio slot
-                        registration.slotKey = slot.key;
-                        slotMap.set(slot.key, registration);
-                        slotMap.delete(nextSlot.key);
+                        // the registration of a lower prio slot can also be assigned to this slot, move it up
+                        slot.assignedRegistrationKey = lowerPrioSlot.assignedRegistrationKey;
+                        lowerPrioSlot.assignedRegistrationKey = undefined;
                         break;
                     }
                 }
@@ -149,18 +142,28 @@ export class EventService {
         if (!event) {
             return false;
         }
-        return event.registrations.filter((it) => it.slotKey === slotkey).length > 0;
+        const slot = event.slots.find((it) => it.key === slotkey);
+        return slot !== undefined && slot.assignedRegistrationKey !== undefined;
     }
 
     public hasOpenRequiredSlots(event: Event): boolean {
-        const filledSlotKeys = event.registrations.map((it) => it.slotKey).filter(ArrayUtils.filterUndefined);
-        const openRequiredSlots = event.slots
-            .filter((it) => it.criticality >= 1)
-            .filter((it) => !filledSlotKeys.includes(it.key));
+        const openRequiredSlots = event.slots.filter(
+            (it) => it.criticality >= 1 && it.assignedRegistrationKey === undefined
+        );
         return openRequiredSlots.length > 0;
     }
 
     public findRegistration(event: Event, userKey?: string, name?: string): Registration | undefined {
         return event.registrations.find((r) => (userKey && r.userKey === userKey) || r.name === name);
+    }
+
+    public getAssignedRegistrations(event: Event): Registration[] {
+        return event.slots
+            .map((slt) => event.registrations.find((reg) => reg.key === slt.assignedRegistrationKey))
+            .filter(ArrayUtils.filterUndefined);
+    }
+
+    public getRegistrationsOnWaitinglist(event: Event): Registration[] {
+        return event.registrations.filter((reg) => !event.slots.find((slt) => slt.assignedRegistrationKey === reg.key));
     }
 }

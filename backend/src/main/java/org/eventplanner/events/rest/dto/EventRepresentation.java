@@ -22,16 +22,16 @@ public record EventRepresentation(
 
     public static EventRepresentation fromDomain(@NonNull Event event) {
         return new EventRepresentation(
-            event.key().value(),
-            event.name(),
-            event.state().value(),
-            event.note(),
-            event.description(),
-            event.start().format(DateTimeFormatter.ISO_DATE_TIME),
-            event.end().format(DateTimeFormatter.ISO_DATE_TIME),
-            event.locations().stream().map(LocationRepresentation::fromDomain).toList(),
-            event.slots().stream().map(SlotRepresentation::fromDomain).toList(),
-            event.registrations().stream().map(RegistrationRepresentation::fromDomain).toList()
+            event.getKey().value(),
+            event.getName(),
+            event.getState().value(),
+            event.getNote(),
+            event.getDescription(),
+            event.getStart().format(DateTimeFormatter.ISO_DATE_TIME),
+            event.getEnd().format(DateTimeFormatter.ISO_DATE_TIME),
+            event.getLocations().stream().map(LocationRepresentation::fromDomain).toList(),
+            event.getSlots().stream().map(SlotRepresentation::fromDomain).toList(),
+            event.getRegistrations().stream().map(RegistrationRepresentation::fromDomain).toList()
         );
     }
 }

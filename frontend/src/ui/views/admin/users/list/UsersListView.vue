@@ -166,7 +166,7 @@ import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VInputCheckBox, VInputText, VTable } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
-import { useUserService } from '@/ui/composables/Domain';
+import { useEventService, useUserService } from '@/ui/composables/Domain';
 import type { Selectable } from '@/ui/model/Selectable';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/CreateRegistrationForUserDlg.vue';
@@ -181,6 +181,7 @@ interface UserRegistrations extends User, Selectable {
 }
 
 const eventUseCase = useEventUseCase();
+const eventService = useEventService();
 const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
 const authUseCase = useAuthUseCase();
@@ -235,18 +236,15 @@ async function fetchUsers(): Promise<void> {
     const userlist: User[] = await usersUseCase.getUsers();
     const events = await eventUseCase.getEvents(new Date().getFullYear());
     const registrationsSingleDayEventsWithSlot = events
-        .filter((it) => it.type === EventType.SingleDayEvent)
-        .flatMap((it) => it.registrations)
-        .filter((it) => it.slotKey);
+        .filter((evt) => evt.type === EventType.SingleDayEvent)
+        .flatMap((evt) => eventService.getAssignedRegistrations(evt));
     const registrationsWeekendEventsWithSlot = events
-        .filter((it) => it.type === EventType.WeekendEvent)
-        .flatMap((it) => it.registrations)
-        .filter((it) => it.slotKey);
+        .filter((evt) => evt.type === EventType.WeekendEvent)
+        .flatMap((evt) => eventService.getAssignedRegistrations(evt));
     const registrationsMultiDayEventsWithSlot = events
-        .filter((it) => it.type === EventType.MultiDayEvent)
-        .flatMap((it) => it.registrations)
-        .filter((it) => it.slotKey);
-    const registrationsWaitinglist = events.flatMap((it) => it.registrations).filter((it) => !it.slotKey);
+        .filter((evt) => evt.type === EventType.MultiDayEvent)
+        .flatMap((evt) => eventService.getAssignedRegistrations(evt));
+    const registrationsWaitinglist = events.flatMap((evt) => eventService.getRegistrationsOnWaitinglist(evt));
 
     users.value = userlist.map((user: User) => {
         return {

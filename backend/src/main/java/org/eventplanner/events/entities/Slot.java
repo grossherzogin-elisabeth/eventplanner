@@ -1,34 +1,58 @@
 package org.eventplanner.events.entities;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.*;
+import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.events.values.SlotKey;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-public record Slot(
-    SlotKey key,
-    int order,
-    boolean required,
-    @NonNull List<PositionKey> positions,
-    @Nullable String name
-) {
+@Getter
+@Setter
+@EqualsAndHashCode
+@RequiredArgsConstructor
+@AllArgsConstructor
+public class Slot {
+
+    private @NonNull SlotKey key = new SlotKey();
+    private int order = 0;
+    private int criticality = 0;
+    private @NonNull List<PositionKey> positions = new LinkedList<>();
+    private @Nullable String name = null;
+    private @Nullable RegistrationKey assignedRegistration = null;
 
     public static Slot of(PositionKey... positions) {
-        return new Slot(new SlotKey(UUID.randomUUID().toString()), 0, false, List.of(positions), null);
+        return new Slot(
+            new SlotKey(),
+            0,
+            0,
+            List.of(positions),
+            null,
+            null
+        );
     }
 
     public Slot withRequired() {
-        return new Slot(key, order, true, positions, name);
+        this.criticality = 1;
+        return this;
+    }
+
+    public Slot withCriticality(int criticality) {
+        this.criticality = criticality;
+        return this;
     }
 
     public Slot withOrder(int order) {
-        return new Slot(key, order, required, positions, name);
+        this.order = order;
+        return this;
     }
 
     public Slot withName(String name) {
-        return new Slot(key, order, required, positions, name);
+        this.name = name;
+        return this;
     }
 }

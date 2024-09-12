@@ -9,7 +9,7 @@ export class RegistrationService {
     ): ResolvedSlot[] {
         return event.slots
             .map((slot) => {
-                const registration = event.registrations.find((it) => it.slotKey === slot.key);
+                const registration = event.registrations.find((it) => it.key === slot.assignedRegistrationKey);
                 if (registration) {
                     const userName = this.resolveRegistrationUserName(registration, users);
                     const position = positions.get(registration.positionKey) || this.unknownPosition();
@@ -48,8 +48,11 @@ export class RegistrationService {
         users: User[],
         positions: Map<string, Position>
     ): ResolvedRegistration[] {
+        const assignedRegistrationKeys = event.slots
+            .map((it) => it.assignedRegistrationKey)
+            .filter(ArrayUtils.filterUndefined);
         return event.registrations
-            .filter((registration) => !registration.slotKey)
+            .filter((registration) => !assignedRegistrationKeys.includes(registration.key))
             .map(
                 (registration) =>
                     ({

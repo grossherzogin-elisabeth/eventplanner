@@ -53,10 +53,10 @@ const dlg = ref<Dialog<Event, Event> | null>(null);
 const users = ref<User[]>([]);
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const registration = ref<Registration>({
+    key: '',
     positionKey: '',
     userKey: undefined,
     name: undefined,
-    slotKey: undefined,
 });
 const hiddenUsers = ref<string[]>([]);
 
@@ -103,10 +103,10 @@ async function fetchPositions(): Promise<void> {
 
 async function open(event: Event): Promise<Event> {
     registration.value = {
+        key: '',
         positionKey: '',
         userKey: undefined,
         name: undefined,
-        slotKey: undefined,
     };
     hiddenUsers.value = event.registrations.map((it) => it.userKey).filter(ArrayUtils.filterUndefined);
 

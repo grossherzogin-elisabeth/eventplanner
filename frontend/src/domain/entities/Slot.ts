@@ -1,4 +1,4 @@
-import type { PositionKey, SlotCriticality } from '../index';
+import type { PositionKey, RegistrationKey, SlotCriticality } from '../index';
 
 export type SlotKey = string;
 
@@ -20,4 +20,5 @@ export interface Slot {
      * Optional override for this slots position name
      */
     positionName?: string;
+    assignedRegistrationKey?: RegistrationKey;
 }

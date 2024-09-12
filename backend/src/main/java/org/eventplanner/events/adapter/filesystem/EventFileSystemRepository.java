@@ -30,13 +30,13 @@ public class EventFileSystemRepository implements EventRepository {
         var dir = new File(directory.getPath() + "/" + year);
         return fs.readAllFromDirectory(dir).stream()
             .map(EventJsonEntity::toDomain)
-            .sorted(comparing(Event::start))
+            .sorted(comparing(Event::getStart))
             .toList();
     }
 
     @Override
     public @NonNull Event create(@NonNull Event event) {
-        var year = event.start().getYear();
+        var year = event.getStart().getYear();
         var key = UUID.randomUUID().toString();
         var file = new File(directory.getPath() + "/" + year + "/" + key + ".json");
         fs.writeToFile(file, EventJsonEntity.fromDomain(event));
@@ -45,7 +45,7 @@ public class EventFileSystemRepository implements EventRepository {
 
     @Override
     public @NonNull Event update(@NonNull Event event) {
-        var year = event.start().getYear();
+        var year = event.getStart().getYear();
         var key = UUID.randomUUID().toString();
         var file = new File(directory.getPath() + "/" + year + "/" + key + ".json");
         fs.writeToFile(file, EventJsonEntity.fromDomain(event));

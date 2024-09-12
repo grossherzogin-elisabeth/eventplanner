@@ -178,7 +178,7 @@ const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
     return props.events
         ?.map((evt) => {
             const registration = evt.registrations.find((it) => it.userKey === props.user.key);
-            const slot = evt.slots.find((it) => it.key === registration?.slotKey);
+            const slot = evt.slots.find((it) => it.assignedRegistrationKey === registration?.key);
             const position = props.positions.get(registration?.positionKey || '');
             if (position) {
                 return {

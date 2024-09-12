@@ -1,8 +1,10 @@
 <template>
     <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 xl:flex-row xl:items-start">
         <!-- position counters -->
-        <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-primary-50 px-8 pb-4 xl:sticky xl:mr-8 xl:w-64 xl:pt-10">
-            <div class="flex flex-wrap items-start gap-2 text-sm font-bold text-white xl:flex-col">
+        <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-primary-50 pb-4 xl:sticky xl:mr-8 xl:w-64 xl:pt-10">
+            <div
+                class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap xl:flex-col"
+            >
                 <div class="flex cursor-pointer items-center rounded-2xl bg-gray-500 p-1">
                     <span class="px-2"> Alle </span>
                     <span

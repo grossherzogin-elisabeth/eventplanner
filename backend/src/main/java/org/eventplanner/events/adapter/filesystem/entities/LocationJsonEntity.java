@@ -2,7 +2,7 @@ package org.eventplanner.events.adapter.filesystem.entities;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.entities.Location;
+import org.eventplanner.events.values.Location;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

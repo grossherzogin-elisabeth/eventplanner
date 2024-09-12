@@ -1,12 +1,12 @@
 package org.eventplanner.testdata;
 
-import org.apache.logging.log4j.util.PropertySource;
 import org.eventplanner.events.entities.Event;
-import org.eventplanner.events.entities.Location;
+import org.eventplanner.events.values.Location;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
+import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.events.values.SlotKey;
 import org.eventplanner.users.entities.UserDetails;
 
@@ -63,16 +63,16 @@ public class EventGenerator {
             var user = users.get(i);
             if (random.nextInt(10) == 8) {
                 registrations.add(new Registration(
+                    new RegistrationKey(),
                     user.getPositions().getFirst(),
                     null,
-                    user.getFirstName() + " " + user.getLastName(),
-                    null
+                    user.getFirstName() + " " + user.getLastName()
                 ));
             } else {
                 registrations.add(new Registration(
+                    new RegistrationKey(),
                     user.getPositions().getFirst(),
                     user.getKey(),
-                    null,
                     null
                 ));
             }
@@ -91,24 +91,24 @@ public class EventGenerator {
         for (int i = 0; i < random.nextInt(15, 70); i++) {
             var user = users.get(i);
             var matchingSlots = slots.stream()
-                .filter(s -> !usedSlots.contains(s.key()))
+                .filter(s -> !usedSlots.contains(s.getKey()))
                 // .filter(s -> s.positions().stream().anyMatch((p) -> user.getPositions().contains(p)))
-                .filter(s -> s.positions().contains(user.getPositions().getFirst()))
+                .filter(s -> s.getPositions().contains(user.getPositions().getFirst()))
                 .toList();
             if (!matchingSlots.isEmpty()) {
                 var slot = matchingSlots.getFirst();
-                usedSlots.add(slot.key());
+                usedSlots.add(slot.getKey());
                 registrations.add(new Registration(
+                    new RegistrationKey(),
                     user.getPositions().getFirst(),
                     user.getKey(),
-                    null,
-                    slot.key()
+                    null
                 ));
             } else {
                 registrations.add(new Registration(
+                    new RegistrationKey(),
                     user.getPositions().getFirst(),
                     user.getKey(),
-                    null,
                     null
                 ));
             }
