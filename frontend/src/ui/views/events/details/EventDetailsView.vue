@@ -2,9 +2,6 @@
     <DetailsPage :back-to="{ name: Routes.Events }">
         <template #header>
             <h1 class="mb-2 w-full truncate">{{ event?.name }}</h1>
-            <p class="text-sm font-semibold text-gray-500">
-                {{ formatDateRange(event?.start, event?.end) }}
-            </p>
         </template>
         <template #content>
             <div
@@ -26,7 +23,7 @@
 
                 <!-- details -->
                 <section class="-mx-4 md:col-start-2 xl:mx-0">
-                    <h2 class="mb-2 ml-4 lg:ml-8">
+                    <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">
                         {{ $t('app.event-details.title') }}
                     </h2>
                     <div class="space-y-1 rounded-2xl bg-primary-100 p-4 lg:px-8">
@@ -63,8 +60,10 @@
 
                 <!-- route -->
                 <section class="-mx-4 md:col-start-2 xl:mx-0">
-                    <h2 v-if="event.locations.length === 1" class="mb-2 ml-4 lg:ml-8">Ort</h2>
-                    <h2 v-else class="mb-2 ml-4 lg:ml-8">Route</h2>
+                    <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">
+                        <template v-if="event.locations.length === 1">Ort</template>
+                        <template v-else>Route</template>
+                    </h2>
                     <div class="space-y-1 rounded-2xl bg-primary-100 p-4 lg:px-8">
                         <div v-if="event.locations.length === 0">
                             <i>Wird noch bekannt gegeben</i>
@@ -86,19 +85,27 @@
                 <section class="col-start-1 row-span-6 -mx-4 md:row-start-1 md:mx-0">
                     <h2
                         v-if="event.state !== EventState.OpenForSignup"
-                        class="mb-2 ml-4 flex space-x-4 md:mb-6 md:ml-0"
+                        class="mb-2 ml-4 flex space-x-4 font-bold text-primary-800 text-opacity-50 md:mb-6 md:ml-0"
                     >
-                        <button :class="{ 'text-primary-600 underline': tab === Tab.Team }" @click="tab = Tab.Team">
+                        <button
+                            class="hover:text-primary-600"
+                            :class="{ 'text-primary-600 underline': tab === Tab.Team }"
+                            @click="tab = Tab.Team"
+                        >
                             Crew ({{ event.assignedUserCount }})
                         </button>
                         <button
+                            class="hover:text-primary-600"
                             :class="{ 'text-primary-600 underline': tab === Tab.WaitingList }"
                             @click="tab = Tab.WaitingList"
                         >
                             Warteliste ({{ waitingListCount }})
                         </button>
                     </h2>
-                    <h2 v-else class="mb-2 ml-4 flex space-x-4 md:mb-6 md:ml-0">
+                    <h2
+                        v-else
+                        class="mb-2 ml-4 flex space-x-4 font-bold text-primary-800 text-opacity-50 md:mb-6 md:ml-0"
+                    >
                         <span>Anmeldungen</span>
                     </h2>
                     <div class="rounded-2xl bg-primary-100 p-4 md:rounded-none md:bg-transparent md:p-0">
@@ -163,7 +170,7 @@
                     v-if="user.permissions.includes(Permission.BETA_FEATURES)"
                     class="-mx-4 md:col-start-2 xl:mx-0"
                 >
-                    <h2 class="mb-2 ml-4 lg:ml-8">Dokumente</h2>
+                    <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">Dokumente</h2>
                     <div class="rounded-2xl bg-primary-100 p-4 lg:px-8">
                         <p v-for="doc in documentsMock" :key="doc" class="mb-1 flex items-center space-x-4">
                             <i class="fa-solid fa-file-pdf w-4 text-gray-700" />

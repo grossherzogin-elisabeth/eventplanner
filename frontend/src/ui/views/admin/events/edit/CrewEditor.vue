@@ -32,7 +32,7 @@
         </div>
         <div class="-mx-4 flex-1 gap-16 lg:flex">
             <div class="mb-8 w-full max-w-[35rem] px-4 pb-4 lg:mb-0">
-                <h2 class="mb-4">Crew</h2>
+                <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Crew</h2>
                 <!-- slot list dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute z-10 w-full" :class="{ hidden: dragSource !== DragSource.FROM_WAITING_LIST }">
@@ -122,7 +122,7 @@
             </div>
 
             <div class="w-full max-w-[35rem] px-4">
-                <h2 class="mb-4">Warteliste</h2>
+                <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Warteliste</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute w-full space-y-8" :class="{ hidden: dragSource !== DragSource.FROM_TEAM }">

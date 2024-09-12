@@ -8,7 +8,9 @@
                 <div v-if="loading" class="-mt-10">
                     <div class="pb-8">
                         <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">
-                            <h2 class="inline-block text-primary-800 text-opacity-50">Reisen werden geladen...</h2>
+                            <h2 class="inline-block font-bold text-primary-800 text-opacity-50">
+                                Reisen werden geladen...
+                            </h2>
                         </div>
                         <ul class="-mx-4 max-w-xl">
                             <li v-for="i in 3" :key="i" class="mt-4">
