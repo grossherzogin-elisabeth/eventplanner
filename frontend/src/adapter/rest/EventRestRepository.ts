@@ -9,15 +9,15 @@ interface SlotRepresentation {
     order: number;
     criticality: number;
     positionKeys: string[];
-    name?: string;
-    assignedRegistrationKey?: string;
+    name?: string | null;
+    assignedRegistrationKey?: string | null;
 }
 
 interface RegistrationRepresentation {
     key: string;
     positionKey: string;
-    name?: string;
-    userKey?: string;
+    name?: string | null;
+    userKey?: string | null;
 }
 
 interface LocationRepresentation {
@@ -49,11 +49,11 @@ interface EventCreateRequest {
 }
 
 interface EventUpdateRequest {
-    state?: string;
-    name?: string;
-    description?: string;
-    start?: string;
-    end?: string;
+    state?: string | null;
+    name?: string | null;
+    description?: string | null;
+    start?: string | null;
+    end?: string | null;
     locations?: LocationRepresentation[];
     slots?: SlotRepresentation[];
 }
@@ -79,8 +79,8 @@ export class EventRestRepository implements EventRepository {
             registrations: eventRepresentation.registrations.map((it) => ({
                 key: it.key,
                 positionKey: it.positionKey,
-                userKey: it.userKey,
-                name: it.name,
+                userKey: it.userKey || undefined,
+                name: it.name || undefined,
             })),
             locations: eventRepresentation.locations.map((locationRepresentation) => ({
                 name: locationRepresentation.name,
@@ -91,8 +91,8 @@ export class EventRestRepository implements EventRepository {
                 order: slotRepresentation.order,
                 criticality: slotRepresentation.criticality,
                 positionKeys: slotRepresentation.positionKeys as PositionKey[],
-                positionName: slotRepresentation.name,
-                assignedRegistrationKey: slotRepresentation.assignedRegistrationKey,
+                positionName: slotRepresentation.name || undefined,
+                assignedRegistrationKey: slotRepresentation.assignedRegistrationKey || undefined,
             })),
             assignedUserCount: eventRepresentation.slots.filter((it) => it.assignedRegistrationKey).length,
         };

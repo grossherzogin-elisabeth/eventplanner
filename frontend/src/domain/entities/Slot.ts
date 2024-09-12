@@ -20,5 +20,6 @@ export interface Slot {
      * Optional override for this slots position name
      */
     positionName?: string;
+
     assignedRegistrationKey?: RegistrationKey;
 }
