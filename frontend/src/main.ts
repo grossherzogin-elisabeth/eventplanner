@@ -1,11 +1,18 @@
-import { AccountRestRepository, EventRestRepository, PositionRestRepository, UserRestRepository } from '@/adapter';
-import { EventRegistrationRestRepository } from '@/adapter/rest/EventRegistrationRestRepository';
+import {
+    AccountRestRepository,
+    EventRegistrationRestRepository,
+    EventRestRepository,
+    PositionRestRepository,
+    QualificationRestRepository,
+    UserRestRepository,
+} from '@/adapter';
 import type {
     AccountRepository,
     Application,
     EventRegistrationsRepository,
     EventRepository,
     PositionRepository,
+    QualificationRepository,
     UserRepository,
 } from '@/application';
 import {
@@ -14,6 +21,7 @@ import {
     EventCachingService,
     EventUseCase,
     PositionCachingService,
+    QualificationCachingService,
     UserAdministrationUseCase,
     UserCachingService,
     UsersUseCase,
@@ -30,12 +38,13 @@ enum StoreNames {
     Events = 'events',
     Users = 'users',
     Positions = 'positions',
+    Qualifications = 'qualifications',
 }
 
 // -----------------------------------------------------
 // initialize indexed db
 // -----------------------------------------------------
-const indexedDB = IndexedDB.getConnection('lissi', Object.values(StoreNames), 2);
+const indexedDB = IndexedDB.getConnection('lissi', Object.values(StoreNames), 3);
 
 // -----------------------------------------------------
 // initialize domain services
@@ -56,6 +65,7 @@ const positionRepository: PositionRepository = new PositionRestRepository();
 const userRepository: UserRepository = new UserRestRepository();
 const eventRepository: EventRepository = new EventRestRepository();
 const eventRegistrationsRepository: EventRegistrationsRepository = new EventRegistrationRestRepository();
+const qualificationRepository: QualificationRepository = new QualificationRestRepository();
 
 // -----------------------------------------------------
 // initialize use cases and application services
@@ -79,6 +89,12 @@ const positionCachingService = new PositionCachingService({
         invalidateOnReload: true,
     }),
     positionRepository: positionRepository,
+});
+const qualificationCachingService = new QualificationCachingService({
+    cache: new IndexedDBRepository(indexedDB, StoreNames.Qualifications, {
+        invalidateOnReload: true,
+    }),
+    qualificationRepository: qualificationRepository,
 });
 
 const application: Application = {
@@ -105,6 +121,7 @@ const application: Application = {
             userRepository: userRepository,
             positionCachingService: positionCachingService,
             userCachingService: userCachingService,
+            qualificationCachingService: qualificationCachingService,
         }),
         userAdmin: new UserAdministrationUseCase({
             userRepository: userRepository,

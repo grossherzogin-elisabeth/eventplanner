@@ -38,4 +38,5 @@ public class EncryptedUserDetails implements Serializable {
     private @Nullable EncryptedString placeOfBirth;
     private @Nullable EncryptedString passNr;
     private @Nullable EncryptedString comment;
+    private @Nullable EncryptedString nationality;
 }

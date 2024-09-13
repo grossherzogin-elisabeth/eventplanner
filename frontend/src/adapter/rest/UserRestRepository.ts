@@ -7,6 +7,8 @@ interface UserRepresentation {
     firstName: string;
     lastName: string;
     positions: string[];
+    expiredQualificationCount?: number;
+    soonExpiringQualificationCount?: number;
 }
 
 interface UserDetailsRepresentation {
@@ -17,7 +19,7 @@ interface UserDetailsRepresentation {
     lastName: string;
     positions: string[];
     email: string;
-    // qualifications: any[];
+    qualifications: UserQualificationRepresentation[];
     phone?: string;
     mobile?: string;
     dateOfBirth?: string;
@@ -33,12 +35,17 @@ interface UserDetailsUpdateRequest {
     lastName?: string;
     positions?: string[];
     email?: string;
-    // qualifications?: any[];
+    qualifications?: UserQualificationRepresentation[];
     phone?: string;
     mobile?: string;
     passNr?: string;
     comment?: string;
     address?: Partial<AddressRepresentation>;
+}
+
+interface UserQualificationRepresentation {
+    qualificationKey: string;
+    expiresAt?: string;
 }
 
 interface AddressRepresentation {
@@ -72,6 +79,8 @@ export class UserRestRepository implements UserRepository {
             firstName: it.firstName,
             lastName: it.lastName,
             positionKeys: it.positions as PositionKey[],
+            expiredQualificationCount: it.expiredQualificationCount,
+            soonExpiringQualificationCount: it.soonExpiringQualificationCount,
         }));
     }
 
@@ -104,7 +113,10 @@ export class UserRestRepository implements UserRepository {
             lastName: user.lastName,
             positions: user.positionKeys,
             email: user.email,
-            // qualifications: any[],
+            qualifications: user.qualifications?.map((it) => ({
+                qualificationKey: it.qualificationKey,
+                expiresAt: it.expiresAt?.toISOString(),
+            })),
             phone: user.phone,
             mobile: user.mobile,
             passNr: user.passNr,
@@ -140,7 +152,6 @@ export class UserRestRepository implements UserRepository {
             lastName: user.lastName,
             positions: user.positionKeys,
             email: user.email,
-            // qualifications: any[],
             phone: user.phone,
             mobile: user.mobile,
             passNr: user.passNr,
@@ -191,7 +202,10 @@ export class UserRestRepository implements UserRepository {
             secondName: representation.secondName,
             lastName: representation.lastName,
             positionKeys: representation.positions as PositionKey[],
-            // qualifications: representation.qualifications;
+            qualifications: representation.qualifications.map((it) => ({
+                qualificationKey: it.qualificationKey,
+                expiresAt: UserRestRepository.parseDate(it.expiresAt),
+            })),
             email: representation.email,
             phone: representation.phone,
             mobile: representation.mobile,

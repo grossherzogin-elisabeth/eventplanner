@@ -287,7 +287,7 @@ function readFromQuery(): void {
         const qSort = route.query.sort as string;
         const qDirection = parseInt(route.query.direction as string, 10);
         if (!Number.isNaN(qPage)) {
-            page.value = qPage;
+            page.value = qPage - 1;
         }
         if (qSort) {
             sortCol.value = qSort;
@@ -317,7 +317,7 @@ async function init(): Promise<void> {
     watch(page, () => emit('update:page', page.value));
 
     await router.isReady();
-    watch(page, () => updateQuery('page', page.value));
+    watch(page, () => updateQuery('page', page.value + 1));
     watch(sortCol, () => updateQuery('sort', sortCol.value));
     watch(sortDir, () => updateQuery('direction', sortDir.value));
     setDefaultSorting();

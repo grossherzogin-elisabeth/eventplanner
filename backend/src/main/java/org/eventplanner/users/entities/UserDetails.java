@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.users.values.Address;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Role;
@@ -41,6 +42,7 @@ public class UserDetails {
     private @Nullable String placeOfBirth;
     private @Nullable String passNr;
     private @Nullable String comment;
+    private @Nullable String nationality;
 
     public @NonNull String getFullName() {
         StringBuilder stb = new StringBuilder();
@@ -57,5 +59,29 @@ public class UserDetails {
 
     public @NonNull User cropToUser() {
         return new User(key, firstName, lastName, positions);
+    }
+
+    public void addQualification(QualificationKey qualificationKey, ZonedDateTime expirationDate) {
+        var maybeExistingQualification = qualifications.stream().filter(it -> it.getQualificationKey().equals(qualificationKey)).findFirst();
+        if (maybeExistingQualification.isPresent()) {
+            var existingQualification = maybeExistingQualification.get();
+            if (existingQualification.getExpiresAt() != null
+                && expirationDate != null
+                && expirationDate.isAfter(existingQualification.getExpiresAt())
+            ) {
+                qualifications.remove(existingQualification);
+                qualifications.add(new UserQualification(qualificationKey, expirationDate));
+            }
+            if (existingQualification.getExpiresAt() == null && expirationDate != null) {
+                qualifications.remove(existingQualification);
+                qualifications.add(new UserQualification(qualificationKey, expirationDate));
+            }
+        } else {
+            qualifications.add(new UserQualification(qualificationKey, expirationDate));
+        }
+    }
+
+    public void addQualification(QualificationKey qualificationKey) {
+        addQualification(qualificationKey, null);
     }
 }

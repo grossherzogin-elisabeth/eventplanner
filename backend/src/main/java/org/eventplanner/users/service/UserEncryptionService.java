@@ -93,7 +93,8 @@ public class UserEncryptionService {
                 .orElse(null),
             encryptNullable(user.getPlaceOfBirth()),
             encryptNullable(user.getPassNr()),
-            encryptNullable(user.getComment())
+            encryptNullable(user.getComment()),
+            encryptNullable(user.getNationality())
         );
     }
 
@@ -128,7 +129,8 @@ public class UserEncryptionService {
                 .orElse(null),
             decryptNullable(user.getPlaceOfBirth()),
             decryptNullable(user.getPassNr()),
-            decryptNullable(user.getComment())
+            decryptNullable(user.getComment()),
+            decryptNullable(user.getNationality())
         );
     }
 

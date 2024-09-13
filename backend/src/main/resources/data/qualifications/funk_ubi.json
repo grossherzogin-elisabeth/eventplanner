@@ -1,0 +1,7 @@
+{
+  "key": "ubi",
+  "icon": "fa-tower-broadcast",
+  "name": "Sprechfunkzeugnis für den Binnenschifffahrtsfunk (UBI)",
+  "description": "UKW-Binnenschifffahrtsfunk, rein analog, ohne DSD",
+  "expires": false
+}

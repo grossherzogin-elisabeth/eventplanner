@@ -3,6 +3,7 @@ package org.eventplanner.users.rest;
 import java.util.List;
 
 import org.eventplanner.users.UserUseCase;
+import org.eventplanner.users.rest.dto.UserAdminListRepresentation;
 import org.eventplanner.users.rest.dto.UserDetailsRepresentation;
 import org.eventplanner.users.rest.dto.UserRepresentation;
 import org.eventplanner.users.rest.dto.UserSelfRepresentation;
@@ -33,9 +34,12 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, path = "")
     public ResponseEntity<List<?>> getUsers(@RequestParam(name = "details", required = false) boolean details) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        if (details && signedInUser.hasPermission(Permission.READ_USER_DETAILS)) {
+        if (signedInUser.hasPermission(Permission.READ_USER_DETAILS)) {
             var users = userUseCase.getDetailedUsers(signedInUser).stream();
-            return ResponseEntity.ok(users.map(UserDetailsRepresentation::fromDomain).toList());
+            if (details) {
+                return ResponseEntity.ok(users.map(UserDetailsRepresentation::fromDomain).toList());
+            }
+            return ResponseEntity.ok(users.map(UserAdminListRepresentation::fromDomain).toList());
         } else {
             var users = userUseCase.getUsers(signedInUser).stream();
             return ResponseEntity.ok(users.map(UserRepresentation::fromDomain).toList());

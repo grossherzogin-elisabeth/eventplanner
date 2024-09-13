@@ -10,33 +10,33 @@
             <template #content>
                 <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
                     <template #[Tab.USER_DATA]>
-                        <div class="space-y-8 xl:space-y-16">
+                        <div class="max-w-2xl space-y-8 xl:space-y-16">
                             <section v-if="user" class="-mx-4">
-                                <div class="mb-2 md:w-1/4">
+                                <div class="mb-2">
                                     <VInputLabel>Geschlecht</VInputLabel>
                                     <VInputSelect :options="genderOptions" required />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Vorname</VInputLabel>
                                     <VInputText v-model="user.firstName" required />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Zweiter Vorname</VInputLabel>
                                     <VInputText v-model="user.secondName" required />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Nachname</VInputLabel>
                                     <VInputText v-model="user.lastName" required />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Geboren am</VInputLabel>
                                     <VInputDate v-model="user.dateOfBirth" required />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Geburtsort</VInputLabel>
                                     <VInputText v-model="user.placeOfBirth" required />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Pass Nummer</VInputLabel>
                                     <VInputText v-model="user.passNr" required />
                                 </div>
@@ -44,30 +44,30 @@
                         </div>
                     </template>
                     <template #[Tab.USER_CONTACT_DATA]>
-                        <div class="space-y-8 xl:space-y-16">
+                        <div class="max-w-2xl space-y-8 xl:space-y-16">
                             <section v-if="user" class="-mx-4">
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Email</VInputLabel>
                                     <VInputText v-model="user.email" required />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Telefon</VInputLabel>
                                     <VInputText v-model="user.phone" />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Mobil</VInputLabel>
                                     <VInputText v-model="user.mobile" />
                                 </div>
-                                <div class="mb-2 mt-16 md:w-1/2">
+                                <div class="mb-2 mt-16">
                                     <VInputLabel>Straße, Hausnr</VInputLabel>
                                     <VInputText v-model="user.address.addressLine1" required />
                                 </div>
-                                <div class="mb-2 md:w-1/2">
+                                <div class="mb-2">
                                     <VInputLabel>Adresszusatz</VInputLabel>
                                     <VInputText v-model="user.address.addressLine2" />
                                 </div>
-                                <div class="flex space-x-4 md:w-1/2">
-                                    <div class="mb-2 w-24">
+                                <div class="flex space-x-4">
+                                    <div class="mb-2 w-32">
                                         <VInputLabel>PLZ</VInputLabel>
                                         <VInputText v-model="user.address.zipcode" required />
                                     </div>
@@ -80,7 +80,7 @@
                         </div>
                     </template>
                     <template #[Tab.USER_EVENTS]>
-                        <div>
+                        <div class="xl:max-w-5xl">
                             <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`" class="">
                                 <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">
                                     <template v-if="year === 0">Zukünftige Reisen</template>
@@ -108,8 +108,10 @@
                         </div>
                     </template>
                     <template #[Tab.USER_CERTIFICATES]>
-                        <div class="space-y-8 overflow-x-auto xl:space-y-16">
-                            Hier stehen später einmal Positionen, Zertifikate und sonstige Qualifikationen
+                        <div class="xl:max-w-5xl">
+                            <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                                <UserQualificationsTable v-if="user" v-model:user="user" />
+                            </div>
                         </div>
                     </template>
                 </VTabs>
@@ -125,9 +127,13 @@
                 </AsyncButton>
             </template>
             <template #secondary-buttons>
-                <button class="btn-secondary" @click="createRegistration()">
+                <button v-if="tab === Tab.USER_EVENTS" class="btn-secondary" @click="createRegistration()">
                     <i class="fa-solid fa-user-plus"></i>
                     <span>Reise hinzufügen</span>
+                </button>
+                <button v-if="tab === Tab.USER_CERTIFICATES" class="btn-secondary" @click="addUserQualification()">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    <span>Qualifikation hinzufügen</span>
                 </button>
             </template>
             <template #actions-menu>
@@ -146,12 +152,13 @@
             </template>
         </DetailsPage>
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
+        <QualificationEditDlg ref="addQualificationDialog" />
     </div>
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type { Event, InputSelectOption, Position, PositionKey, UserDetails } from '@/domain';
+import type { Event, InputSelectOption, Position, PositionKey, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
@@ -165,7 +172,9 @@ import {
 } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/CreateRegistrationForUserDlg.vue';
+import QualificationEditDlg from '@/ui/views/admin/users/details/QualificationEditDlg.vue';
 import UserEventsTable from '@/ui/views/admin/users/details/UserEventsTable.vue';
+import UserQualificationsTable from '@/ui/views/admin/users/details/UserQualificationsTable.vue';
 
 enum Tab {
     USER_DATA = 'app.user-details.tab.data',
@@ -188,6 +197,7 @@ const user = ref<UserDetails | null>(null);
 const eventsByYear = ref<Map<number, Event[] | undefined>>(new Map<number, Event[] | undefined>());
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const createRegistrationForUserDialog = ref<Dialog<UserDetails> | null>(null);
+const addQualificationDialog = ref<Dialog<UserQualification | undefined, UserQualification> | null>(null);
 const eventsLoadedUntilYear = ref<number>(0);
 
 const genderOptions: InputSelectOption[] = [
@@ -265,7 +275,22 @@ function impersonateUser() {
 async function createRegistration() {
     if (createRegistrationForUserDialog.value && user.value) {
         await createRegistrationForUserDialog.value.open(user.value);
-        // TODO
+        // TODO add to buffer and persist on save
+    }
+}
+
+function addUserQualification(): void {
+    if (addQualificationDialog.value) {
+        addQualificationDialog.value
+            .open(undefined)
+            .then((newQualification) => {
+                if (user.value?.qualifications) {
+                    user.value.qualifications.push(newQualification);
+                } else if (user.value) {
+                    user.value.qualifications = [newQualification];
+                }
+            })
+            .catch();
     }
 }
 

@@ -5,7 +5,7 @@
 .input-field-wrapper {
     @apply flex items-center;
     @apply h-full overflow-hidden;
-    @apply rounded-lg border border-primary-100 bg-primary-100;
+    @apply rounded-lg border border-primary-200 bg-primary-100;
 }
 
 .input-field {
@@ -23,11 +23,15 @@
 
 /* disabled */
 .input-field-wrapper:has([disabled]) {
-    @apply border border-primary-200 bg-primary-100 bg-opacity-50;
+    @apply border border-primary-200 bg-primary-100 bg-opacity-25;
 }
 
 .input-field:disabled {
     @apply text-primary-700 text-opacity-50;
+}
+
+.input-field-wrapper:has(.readonly) {
+    @apply border border-transparent bg-transparent;
 }
 
 /* select svgs next to input, like dropdown arrows */
@@ -36,16 +40,16 @@
 }
 
 /* focus */
-.input-field-wrapper:focus-within {
+.input-field-wrapper:not(:has(.readonly)):focus-within {
     @apply border border-primary-500 bg-primary-100;
 }
 
 /* hover */
-.input-field-wrapper:not(:has([disabled])):hover {
-    @apply border border-primary-200 bg-primary-200;
+.input-field-wrapper:not(:has([disabled])):not(:has(.readonly)):hover {
+    @apply border border-primary-300 bg-primary-200;
 }
 
-.input-field-wrapper:focus-within:hover {
+.input-field-wrapper:not(:has(.readonly)):focus-within:hover {
     @apply border border-primary-500 bg-primary-100;
 }
 

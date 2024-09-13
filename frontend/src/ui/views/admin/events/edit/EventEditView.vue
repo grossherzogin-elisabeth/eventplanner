@@ -23,10 +23,6 @@
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event" class="-mx-4">
-                            <!--<div class="mb-2">-->
-                            <!--    <VInputLabel>Typ</VInputLabel>-->
-                            <!--    <VInputSelect v-model="event.type" :options="eventTypeOptions" required />-->
-                            <!--</div>-->
                             <div class="mb-2">
                                 <VInputLabel>Name</VInputLabel>
                                 <VInputText v-model="event.name" required />

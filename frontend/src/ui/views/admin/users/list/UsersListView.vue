@@ -26,6 +26,7 @@
             <VTable
                 :items="filteredUsers"
                 :page-size="20"
+                :query="true"
                 class="interactive-table scrollbar-invisible overflow-x-auto px-8 md:px-16 xl:px-20"
                 @click="editUser($event)"
             >
@@ -94,32 +95,37 @@
                     </td>
                     <td class="">
                         <div
-                            v-if="true"
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
+                            v-if="item.expiredQualificationCount"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
                         >
-                            <i class="fa-solid fa-question-circle"></i>
-                            <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
+                            <i class="fa-solid fa-ban"></i>
+                            <span class="whitespace-nowrap font-semibold"
+                                >{{ item.expiredQualificationCount }} abgelaufen</span
+                            >
                         </div>
                         <div
-                            v-else-if="item.firstName.includes('d')"
+                            v-else-if="item.soonExpiringQualificationCount"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
+                        >
+                            <i class="fa-solid fa-warning"></i>
+                            <span class="whitespace-nowrap font-semibold">
+                                <template v-if="item.soonExpiringQualificationCount === 1">1 läuft bald ab</template>
+                                <template v-else>{{ item.soonExpiringQualificationCount }} laufen bald ab</template>
+                            </span>
+                        </div>
+                        <div
+                            v-else-if="item.soonExpiringQualificationCount === 0"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
                         >
                             <i class="fa-solid fa-check-circle"></i>
                             <span class="whitespace-nowrap font-semibold">Alle gültig</span>
                         </div>
                         <div
-                            v-else-if="item.firstName.includes('e')"
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                        >
-                            <i class="fa-solid fa-warning"></i>
-                            <span class="whitespace-nowrap font-semibold"> 2 laufen bald ab</span>
-                        </div>
-                        <div
                             v-else
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
                         >
-                            <i class="fa-solid fa-ban"></i>
-                            <span class="whitespace-nowrap font-semibold">2 abgelaufen</span>
+                            <i class="fa-solid fa-question-circle"></i>
+                            <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
                         </div>
                     </td>
                     <td class="w-0">

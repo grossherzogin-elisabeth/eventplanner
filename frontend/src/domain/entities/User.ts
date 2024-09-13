@@ -1,5 +1,6 @@
 import type { Address } from '../values/Address';
 import type { PositionKey } from './Position';
+import type { UserQualification } from './UserQualification';
 
 export type UserKey = string;
 export type AuthKey = string;
@@ -10,6 +11,8 @@ export interface User {
     lastName: string;
     positionKeys: PositionKey[];
     email?: string;
+    expiredQualificationCount?: number;
+    soonExpiringQualificationCount?: number;
 }
 
 export interface UserDetails {
@@ -19,7 +22,7 @@ export interface UserDetails {
     secondName?: string;
     lastName: string;
     positionKeys: PositionKey[];
-    // qualifications: any[];
+    qualifications: UserQualification[];
     email?: string;
     phone?: string;
     mobile?: string;

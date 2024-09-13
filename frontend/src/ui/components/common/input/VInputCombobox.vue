@@ -18,7 +18,7 @@
                         :required="props.required"
                         :value="displayValue"
                         aria-haspopup="true"
-                        class="input-field w-full cursor-pointer overflow-ellipsis pr-10"
+                        class="input-field w-full overflow-ellipsis pr-10"
                         readonly
                         @click="showDropdown()"
                         @keydown.down.prevent="focusNextOption()"

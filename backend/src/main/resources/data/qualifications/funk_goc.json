@@ -1,0 +1,7 @@
+{
+  "key": "goc",
+  "icon": "fa-tower-broadcast",
+  "name": "Allgemeines Betriebszeugnis für Funker (GOC)",
+  "description": "Für die Berufsschifffahrt. Seefunk mit und ohne GMDSS, national und international für UKW, Kurz- und Grenzwellen-Seefunk, Inmarst-Satellitenfunk",
+  "expires": false
+}

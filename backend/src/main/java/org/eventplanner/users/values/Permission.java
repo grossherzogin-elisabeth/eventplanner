@@ -14,7 +14,9 @@ public enum Permission {
     READ_USER_DETAILS("user-details:read"),
     WRITE_USERS("user-details:write"),
     READ_POSITIONS("positions:read"),
-    WRITE_POSITIONS("positions:write");
+    WRITE_POSITIONS("positions:write"),
+    READ_QUALIFICATIONS("qualifications:read"),
+    WRITE_QUALIFICATIONS("qualifications:write");
 
     private final String value;
 

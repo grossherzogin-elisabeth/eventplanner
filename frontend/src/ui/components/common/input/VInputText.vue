@@ -12,8 +12,13 @@
                     :placeholder="props.placeholder"
                     :disabled="props.disabled"
                     :required="props.required"
+                    :readonly="props.readonly"
                     :type="props.type || 'text'"
-                    :class="{ invalid: showErrors && hasErrors }"
+                    :class="{
+                        invalid: showErrors && hasErrors,
+                        readonly: props.readonly,
+                        disabled: props.disabled,
+                    }"
                     class="input-field"
                     :aria-disabled="props.disabled"
                     :aria-invalid="hasErrors"
@@ -46,6 +51,8 @@ interface Props {
     modelValue?: string;
     // disables this input
     disabled?: boolean;
+    // makes this input readonly
+    readonly?: boolean;
     // marks this input as required
     required?: boolean;
     // validation and/or service errors for this input
