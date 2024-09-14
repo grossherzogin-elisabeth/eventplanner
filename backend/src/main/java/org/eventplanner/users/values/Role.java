@@ -46,6 +46,7 @@ public enum Role {
                 Permission.READ_EVENTS,
                 Permission.READ_USERS,
                 Permission.READ_POSITIONS,
+                Permission.READ_QUALIFICATIONS,
                 Permission.JOIN_LEAVE_EVENT_TEAM
             );
             case EVENT_PLANNER -> Stream.of(
@@ -53,7 +54,7 @@ public enum Role {
                 Permission.WRITE_OWN_USER_DETAILS,
                 Permission.READ_EVENTS,
                 Permission.READ_USERS,
-                Permission.READ_POSITIONS,
+                Permission.READ_POSITIONS,Permission.READ_QUALIFICATIONS,
                 Permission.WRITE_EVENTS
             );
             case TEAM_PLANNER -> Stream.of(
@@ -62,6 +63,7 @@ public enum Role {
                 Permission.READ_EVENTS,
                 Permission.READ_USERS,
                 Permission.READ_POSITIONS,
+                Permission.READ_QUALIFICATIONS,
                 Permission.JOIN_LEAVE_EVENT_TEAM,
                 Permission.WRITE_EVENT_TEAM,
                 Permission.READ_USER_DETAILS
@@ -72,9 +74,11 @@ public enum Role {
                 Permission.READ_EVENTS,
                 Permission.READ_USERS,
                 Permission.READ_POSITIONS,
+                Permission.READ_QUALIFICATIONS,
                 Permission.READ_USER_DETAILS,
                 Permission.WRITE_USERS,
-                Permission.WRITE_POSITIONS
+                Permission.WRITE_POSITIONS,
+                Permission.WRITE_QUALIFICATIONS
             );
         };
     }

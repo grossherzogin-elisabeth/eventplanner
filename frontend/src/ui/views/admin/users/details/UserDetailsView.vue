@@ -145,6 +145,10 @@
                     <i class="fa-solid fa-user-plus" />
                     <span>Reise hinzufügen</span>
                 </li>
+                <li class="context-menu-item" @click="addUserQualification()">
+                    <i class="fa-solid fa-file-circle-plus" />
+                    <span>Qualifikation hinzufügen</span>
+                </li>
                 <li class="context-menu-item">
                     <i class="fa-solid fa-key" />
                     <span>Passwort zurücksetzen</span>
