@@ -27,27 +27,30 @@ export class EventCachingService {
     }
 
     public async updateCache(event: Event): Promise<Event> {
+        const updated = this.updateComputedValues(event);
         if ((await this.cache.count()) > 0) {
-            return await this.cache.save(event);
+            return await this.cache.save(updated);
+        }
+        return updated;
+    }
+
+    private updateComputedValues(event: Event): Event {
+        const signedInUser = this.authService.getSignedInUser();
+        const registration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
+        if (registration !== undefined) {
+            const slot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
+            if (slot) {
+                event.signedInUserAssignedPosition = registration.positionKey;
+            } else {
+                event.signedInUserWaitingListPosition = registration.positionKey;
+            }
         }
         return event;
     }
 
     private async fetchEvents(year: number): Promise<Event[]> {
         const events = await this.eventRepository.findAll(year);
-        const signedInUser = this.authService.getSignedInUser();
-        events.forEach((evt: Event) => {
-            const registration = evt.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
-            if (registration !== undefined) {
-                const slot = evt.slots.find((it) => it.assignedRegistrationKey === registration.key);
-                if (slot) {
-                    evt.signedInUserAssignedPosition = registration.positionKey;
-                } else {
-                    evt.signedInUserWaitingListPosition = registration.positionKey;
-                }
-            }
-        });
-        await this.cache.saveAll(events);
+        await this.cache.saveAll(events.map((evt) => this.updateComputedValues(evt)));
         return events;
     }
 }

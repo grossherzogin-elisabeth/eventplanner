@@ -62,28 +62,17 @@ export class EventUseCase {
             .sort((a, b) => a.start.getTime() - b.start.getTime());
     }
 
-    public async joinEvent(event: Event, positionKey: PositionKey): Promise<Event> {
+    public async joinEvent(event: Event, positionKey?: PositionKey): Promise<Event> {
         const user = this.authService.getSignedInUser();
         if (!user) {
             throw new Error('Authentifizierung erforderlich');
         }
-        try {
-            const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
-                key: '',
-                positionKey: positionKey,
-                userKey: user.key,
-            });
-            return this.eventCachingService.updateCache(savedEvent);
-        } catch (e) {
-            const title = `Anmeldung: ${event.name} am ${DateFormatter.formatDate(event.start)}`;
-            const message = `Moin liebes Büro Team,
-
-                Ich möchte mich gerne für die Reise "${event.name}" am ${DateFormatter.formatDate(event.start)} auf die Warteliste setzen lassen. Kontaktiert mich gerne, wenn hier noch ein Platz frei ist oder wird.
-
-                Viele Grüße,`;
-            this.openEmail(title, message);
-            return event;
-        }
+        const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
+            key: '',
+            positionKey: positionKey || 'deckshand', // TODO where can we best define the default?
+            userKey: user.key,
+        });
+        return this.eventCachingService.updateCache(savedEvent);
     }
 
     public async leaveEvent(event: Event): Promise<Event> {
@@ -91,23 +80,12 @@ export class EventUseCase {
         if (!user) {
             throw new Error('Authentifizierung erforderlich');
         }
-        try {
-            const registration = event.registrations.find((it) => it.userKey === user.key);
-            if (!registration) {
-                throw new Error('Anmeldung nicht gefunden');
-            }
-            const savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
-            return this.eventCachingService.updateCache(savedEvent);
-        } catch (e) {
-            const title = `Absage: ${event.name} am ${DateFormatter.formatDate(event.start)}`;
-            const message = `Moin liebes Büro Team,
-
-                Leider kann ich an der Reise "${event.name}" am ${DateFormatter.formatDate(event.start)} nicht teilnehmen. Bitte streicht mich von der Crew Liste.
-
-                Viele Grüße,`;
-            this.openEmail(title, message);
-            return event;
+        const registration = event.registrations.find((it) => it.userKey === user.key);
+        if (!registration) {
+            throw new Error('Anmeldung nicht gefunden');
         }
+        const savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
+        return this.eventCachingService.updateCache(savedEvent);
     }
 
     public downloadCalendarEntry(event: Event): void {

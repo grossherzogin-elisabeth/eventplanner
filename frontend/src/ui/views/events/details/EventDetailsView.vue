@@ -259,7 +259,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateUtils } from '@/common';
@@ -267,7 +267,7 @@ import type { Event, Position, PositionKey, ResolvedRegistration, ResolvedSlot }
 import { EventState, Permission } from '@/domain';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
-import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase, useErrorHandling, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { Routes } from '@/ui/views/Routes';
 
@@ -290,6 +290,7 @@ const emit = defineEmits<RouteEmits>();
 
 const i18n = useI18n();
 const route = useRoute();
+const errorHandling = useErrorHandling();
 const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
 const usersUseCase = useUsersUseCase();
@@ -316,6 +317,7 @@ const waitingListCount = computed<number>(() => {
 function init(): void {
     fetchPositions();
     fetchEvent();
+    watch(event, onEventChanged);
 }
 
 async function fetchPositions(): Promise<void> {
@@ -326,8 +328,15 @@ async function fetchEvent(): Promise<void> {
     const key = route.params.key as string;
     const year = parseInt(route.params.year as string, 10) || new Date().getFullYear();
     event.value = await eventUseCase.getEventByKey(year, key);
+}
 
-    emit('update:title', event.value.name);
+async function onEventChanged() {
+    console.log(event.value);
+    emit('update:title', event.value?.name || '');
+    if (!event.value) {
+        return;
+    }
+
     if (event.value.state === EventState.OpenForSignup) {
         tab.value = Tab.WaitingList;
     }
@@ -363,15 +372,30 @@ async function fetchTeam(event: Event): Promise<void> {
     waitingList.value = await usersUseCase.resolveWaitingList(event);
 }
 
-async function joinEvent(evt: Event): Promise<void> {
-    // TODO get real user position
-    event.value = await eventUseCase.joinEvent(evt, 'deckshand');
-    await fetchTeam(event.value);
+async function joinEvent(evt: Event, position?: PositionKey): Promise<void> {
+    try {
+        let signupPosition = position;
+        if (!position) {
+            const userDetails = await usersUseCase.getUserDetailsForSignedInUser();
+            if (userDetails.positionKeys.length === 1) {
+                signupPosition = userDetails.positionKeys[0];
+            } else {
+                signupPosition = userDetails.positionKeys[0];
+                alert(`Du hast mehrere mögliche Rollen. Wir nehmen erstmal ${signupPosition}`);
+            }
+        }
+        event.value = await eventUseCase.joinEvent(evt, signupPosition);
+    } catch (e) {
+        errorHandling.handleUnexpectedError(e);
+    }
 }
 
 async function leaveEvent(evt: Event): Promise<void> {
-    event.value = await eventUseCase.leaveEvent(evt);
-    await fetchTeam(event.value);
+    try {
+        event.value = await eventUseCase.leaveEvent(evt);
+    } catch (e) {
+        errorHandling.handleUnexpectedError(e);
+    }
 }
 
 init();

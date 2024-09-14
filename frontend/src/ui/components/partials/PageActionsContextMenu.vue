@@ -1,5 +1,5 @@
 <template>
-    <div class="hidden lg:block">
+    <div class="hidden lg:block" :class="$attrs.class">
         <ContextMenuButton class="btn-secondary h-full">
             <slot></slot>
         </ContextMenuButton>

@@ -31,7 +31,7 @@ public class UserDetails {
     private @NonNull List<Role> roles = new LinkedList<>();
     private @NonNull List<UserQualification> qualifications = new LinkedList<>();
     private @Nullable Address address;
-    private @Nullable String email;
+    private @NonNull String email;
     private @Nullable String phone;
     private @Nullable String mobile;
     private @Nullable ZonedDateTime dateOfBirth;

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.eventplanner.utils.ObjectUtils.applyNullable;
@@ -125,10 +126,7 @@ public class EventUseCase {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
         }
 
-        // create the registration
-        var registration = new Registration(new RegistrationKey(), spec.positionKey(), spec.userKey(), null, spec.note());
-        event.getRegistrations().add(registration);
-
+        event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), spec.userKey(), null, spec.note()));
         return this.eventRepository.update(event);
     }
 
@@ -149,9 +147,7 @@ public class EventUseCase {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
         }
 
-        var updatedRegistrations = event.getRegistrations().stream().filter(r -> !registrationKey.equals(r.getKey())).toList();
-        event.setRegistrations(updatedRegistrations);
-
+        event.removeRegistration(registrationKey);
         return this.eventRepository.update(event);
     }
 
@@ -178,11 +174,7 @@ public class EventUseCase {
             registration.setNote(spec.note());
         }
 
-        var updatedRegistrations = event.getRegistrations().stream()
-            .map(r -> registrationKey.equals(r.getKey()) ? r : registration)
-            .toList();
-        event.setRegistrations(updatedRegistrations);
-
+        event.updateRegistration(registrationKey, registration);
         return this.eventRepository.update(event);
     }
 }
