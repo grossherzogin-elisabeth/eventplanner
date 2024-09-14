@@ -331,7 +331,6 @@ async function fetchEvent(): Promise<void> {
 }
 
 async function onEventChanged() {
-    console.log(event.value);
     emit('update:title', event.value?.name || '');
     if (!event.value) {
         return;

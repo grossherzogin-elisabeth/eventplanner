@@ -10,7 +10,7 @@
             <div
                 class="relative flex h-full w-0 flex-grow flex-col bg-primary-50 xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl"
             >
-                <RouterView class="flex flex-1 flex-col" v-model:title="title" />
+                <RouterView v-model:title="title" class="flex flex-1 flex-col" />
             </div>
         </div>
         <div
@@ -27,8 +27,6 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import WorldMap from '@/ui/assets/images/worldmap.svg?component';
 import { VErrorDialog } from '@/ui/components/common';
 import AppFooter from '@/ui/components/partials/AppFooter.vue';
@@ -36,11 +34,7 @@ import AppMenu from '@/ui/components/partials/AppMenu.vue';
 import AppNavbar from '@/ui/components/partials/AppNavbar.vue';
 import { useAuthUseCase } from '@/ui/composables/Application';
 import { useViewportSize } from '@/ui/composables/ViewportSize';
-import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 
-const route = useRoute();
-const router = useRouter();
-const i18n = useI18n();
 useViewportSize();
 const authUseCase = useAuthUseCase();
 
