@@ -186,6 +186,12 @@ interface UserRegistrations extends User, Selectable {
     waitingListCount: number;
 }
 
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 const usersUseCase = useUsersUseCase();
@@ -213,6 +219,7 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
 );
 
 function init(): void {
+    emit('update:title', 'Nutzer verwalten');
     fetchUsers();
 }
 

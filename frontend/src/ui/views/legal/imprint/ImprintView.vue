@@ -27,3 +27,16 @@
         <p class="mb-4">Kapitän Johannes Reifig</p>
     </div>
 </template>
+<script lang="ts" setup>
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
+function init(): void {
+    emit('update:title', 'Impressum');
+}
+
+init();
+</script>

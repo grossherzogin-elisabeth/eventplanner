@@ -1,12 +1,5 @@
 package org.eventplanner.users.service;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.eventplanner.users.adapter.UserRepository;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.User;
@@ -19,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class UserService {
@@ -107,16 +102,21 @@ public class UserService {
         return Optional.empty();
     }
 
-    public void createUser(UserDetails userDetails) {
+    public UserDetails createUser(UserDetails userDetails) {
         var encrypted = userEncryptionService.encrypt(userDetails);
-        userRepository.create(encrypted);
-    }
-
-    public void updateUser(UserDetails userDetails) {
-        var encrypted = userEncryptionService.encrypt(userDetails);
+        encrypted = userRepository.create(encrypted);
         if (!cache.isEmpty()) {
             cache.put(encrypted.getKey(), encrypted);
         }
-        userRepository.update(encrypted);
+        return userEncryptionService.decrypt(encrypted);
+    }
+
+    public UserDetails updateUser(UserDetails userDetails) {
+        var encrypted = userEncryptionService.encrypt(userDetails);
+        encrypted = userRepository.update(encrypted);
+        if (!cache.isEmpty()) {
+            cache.put(encrypted.getKey(), encrypted);
+        }
+        return userEncryptionService.decrypt(encrypted);
     }
 }

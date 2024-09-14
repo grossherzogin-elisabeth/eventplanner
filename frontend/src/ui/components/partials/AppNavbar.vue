@@ -20,10 +20,9 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-grow">
-                <h1 v-if="!meta.hasTransparentHeader && title">
-                    <span class="truncate xl:hidden">{{ $t(title) }}</span>
-                    <span class="hidden xl:inline">Lissi App</span>
+            <div class="flex flex-grow">
+                <h1 v-if="!meta.hasTransparentHeader && props.title" class="block w-0 flex-grow truncate xl:hidden">
+                    {{ props.title }}
                 </h1>
             </div>
             <div class="flex h-full justify-end">
@@ -47,6 +46,12 @@ import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import AppMenu from './AppMenu.vue';
 import SlideMenu from './SlideMenu.vue';
 
+interface Props {
+    title: string;
+}
+
+const props = defineProps<Props>();
+
 const router = useRouter();
 const route = useRoute();
 
@@ -55,7 +60,6 @@ const authUseCase = useAuthUseCase();
 const menuOpen = ref<boolean>(false);
 const loggedIn = ref<boolean>(false);
 const backTo = ref<RouteLocationRaw>('');
-const title = ref<string>('');
 
 const meta = computed<RouteMetaData>(() => route.meta as RouteMetaData);
 
@@ -66,14 +70,6 @@ async function init(): Promise<void> {
 
 function onRouteChanged() {
     const meta = route.meta as RouteMetaData;
-    if (typeof meta.title === 'string') {
-        title.value = meta.title;
-    } else if (typeof meta.title === 'function') {
-        title.value = meta.title(route);
-    } else {
-        title.value = '';
-    }
-
     if (meta.backTo) {
         backTo.value = { name: meta.backTo };
     } else {

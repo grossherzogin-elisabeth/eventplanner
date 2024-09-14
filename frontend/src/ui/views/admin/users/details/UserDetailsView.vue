@@ -2,7 +2,7 @@
     <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <DetailsPage :back-to="{ name: Routes.UsersList }">
             <template #header>
-                <div>
+                <div class="hidden pt-8 xl:block">
                     <h1>{{ user?.firstName }} {{ user?.lastName }} bearbeiten</h1>
                     <p v-if="user && signedInUser.key === user.key" class="mt-1 text-sm">Das bist du!</p>
                 </div>
@@ -14,7 +14,7 @@
                             <section v-if="user" class="-mx-4">
                                 <div class="mb-2">
                                     <VInputLabel>Geschlecht</VInputLabel>
-                                    <VInputSelect :options="genderOptions" required />
+                                    <VInputSelect v-model="user.gender" :options="genderOptions" />
                                 </div>
                                 <div class="mb-2">
                                     <VInputLabel>Vorname</VInputLabel>
@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="mb-2">
                                     <VInputLabel>Zweiter Vorname</VInputLabel>
-                                    <VInputText v-model="user.secondName" required />
+                                    <VInputText v-model="user.secondName" />
                                 </div>
                                 <div class="mb-2">
                                     <VInputLabel>Nachname</VInputLabel>
@@ -187,6 +187,12 @@ enum Tab {
     USER_EVENTS = 'app.user-details.tab.events',
 }
 
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
 const route = useRoute();
 const userAdministrationUseCase = useUserAdministrationUseCase();
 const usersUseCase = useUsersUseCase();
@@ -220,6 +226,7 @@ function init(): void {
 
 async function fetchUser(): Promise<void> {
     user.value = await userAdministrationUseCase.getUserDetailsByKey(userKey.value);
+    emit('update:title', `${user.value.firstName} ${user.value.lastName}`);
 }
 
 async function fetchNextEvents(): Promise<void> {

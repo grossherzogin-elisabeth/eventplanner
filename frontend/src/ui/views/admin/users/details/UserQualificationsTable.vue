@@ -4,7 +4,7 @@
             <td :key="item.icon" class="text-xl">
                 <i class="fa-solid" :class="item.icon" />
             </td>
-            <td class="w-2/3">
+            <td class="w-2/3 min-w-80">
                 <p class="mb-1 font-semibold">{{ item.name }}</p>
                 <p class="text-sm">
                     {{ item.description }}

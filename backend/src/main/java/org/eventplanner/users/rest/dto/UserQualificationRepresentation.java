@@ -1,11 +1,15 @@
 package org.eventplanner.users.rest.dto;
 
-import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
-
+import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.users.entities.UserQualification;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static org.eventplanner.utils.ObjectUtils.mapNullable;
 
 public record UserQualificationRepresentation(
     @NonNull String qualificationKey,
@@ -16,15 +20,16 @@ public record UserQualificationRepresentation(
         if (userQualification == null) {
             return null;
         }
-        if (userQualification.getExpiresAt() == null) {
-            return new UserQualificationRepresentation(
-                userQualification.getQualificationKey().value(),
-                null
-            );
-        }
         return new UserQualificationRepresentation(
             userQualification.getQualificationKey().value(),
-            userQualification.getExpiresAt().format(DateTimeFormatter.ISO_DATE_TIME)
+            mapNullable(userQualification.getExpiresAt(), (d) -> d.format(DateTimeFormatter.ISO_DATE_TIME))
+        );
+    }
+
+    public @NonNull UserQualification toDomain() {
+        return new UserQualification(
+            new QualificationKey(qualificationKey),
+            mapNullable(expiresAt, ZonedDateTime::parse)
         );
     }
 }

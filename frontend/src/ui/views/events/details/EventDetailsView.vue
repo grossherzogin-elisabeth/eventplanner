@@ -1,7 +1,7 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.Events }">
         <template #header>
-            <h1 class="mb-2 w-full truncate">{{ event?.name }}</h1>
+            <h1 class="mb-2 hidden w-full truncate pt-8 xl:block">{{ event?.name }}</h1>
         </template>
         <template #content>
             <div
@@ -180,7 +180,10 @@
                 </section>
             </div>
         </template>
-        <template v-if="event && user.permissions.includes(Permission.EVENT_TEAM_WRITE_SELF)" #primary-button>
+        <template
+            v-if="event && !isInPast && user.permissions.includes(Permission.EVENT_TEAM_WRITE_SELF)"
+            #primary-button
+        >
             <button
                 v-if="event.signedInUserAssignedPosition"
                 class="btn-danger"
@@ -197,7 +200,7 @@
                 @click="leaveEvent(event)"
             >
                 <i class="fa-solid fa-user-minus" />
-                <span>Abmelden</span>
+                <span>Warteliste verlassen</span>
             </button>
             <button v-else class="btn-primary" :disabled="isInPast" @click="joinEvent(event)">
                 <i class="fa-solid fa-user-plus" />
@@ -229,6 +232,28 @@
                     <span>Reise bearbeiten</span>
                 </RouterLink>
             </li>
+            <li
+                v-if="event.signedInUserAssignedPosition"
+                class="context-menu-item"
+                :class="{ disabled: !canRegistrationStillBeCancelled }"
+                @click="leaveEvent(event)"
+            >
+                <i class="fa-solid fa-cancel" />
+                <span>Reise absagen</span>
+            </li>
+            <li
+                v-else-if="event.signedInUserWaitingListPosition"
+                class="context-menu-item"
+                :class="{ disabled: isInPast }"
+                @click="leaveEvent(event)"
+            >
+                <i class="fa-solid fa-user-plus" />
+                <span>Warteliste verlassen</span>
+            </li>
+            <li v-else class="context-menu-item" :class="{ disabled: isInPast }" @click="joinEvent(event)">
+                <i class="fa-solid fa-user-minus" />
+                <span>Anmelden</span>
+            </li>
         </template>
     </DetailsPage>
 </template>
@@ -256,6 +281,12 @@ enum Tab {
     Team = 'team',
     WaitingList = 'waitinglist',
 }
+
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
 
 const i18n = useI18n();
 const route = useRoute();
@@ -295,6 +326,8 @@ async function fetchEvent(): Promise<void> {
     const key = route.params.key as string;
     const year = parseInt(route.params.year as string, 10) || new Date().getFullYear();
     event.value = await eventUseCase.getEventByKey(year, key);
+
+    emit('update:title', event.value.name);
     if (event.value.state === EventState.OpenForSignup) {
         tab.value = Tab.WaitingList;
     }

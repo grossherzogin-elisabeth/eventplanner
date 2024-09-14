@@ -75,6 +75,12 @@ interface CalendarDayEvent {
     offset: number;
 }
 
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
 const route = useRoute();
 const i18n = useI18n();
 const eventUseCase = useEventUseCase();
@@ -91,6 +97,7 @@ const calendarStyle = ref({
 });
 
 function init(): void {
+    emit('update:title', `Alle Reisen ${route.params.year}`);
     watch(route, () => fetchEvents());
     onMounted(() => mounted());
     onBeforeUnmount(() => beforeUnmount());

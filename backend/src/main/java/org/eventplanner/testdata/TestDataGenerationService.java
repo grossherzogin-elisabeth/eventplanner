@@ -1,27 +1,16 @@
 package org.eventplanner.testdata;
 
 import org.eventplanner.events.adapter.EventRepository;
-import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.values.EventState;
-import org.eventplanner.positions.entities.Position;
 import org.eventplanner.users.adapter.UserRepository;
-import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
-import org.eventplanner.users.values.Address;
-import org.eventplanner.users.values.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 @Service
 public class TestDataGenerationService {

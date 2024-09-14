@@ -8,10 +8,17 @@ import { useRouter } from 'vue-router';
 import { useAuthUseCase } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
 const authUseCase = useAuthUseCase();
 const router = useRouter();
 
 async function init(): Promise<void> {
+    emit('update:title', 'Fehlende Berechtigung');
     await authUseCase.onLogin();
     await router.push({ name: Routes.Events, params: { year: new Date().getFullYear() } });
 }

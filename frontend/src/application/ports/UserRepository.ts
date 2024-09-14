@@ -7,6 +7,8 @@ export interface UserRepository {
 
     findBySignedInUser(): Promise<UserDetails>;
 
+    createUser(user: UserDetails): Promise<UserDetails>;
+
     updateUser(userKey: UserKey, user: Partial<UserDetails>): Promise<UserDetails>;
 
     updateSignedInUser(user: Partial<UserDetails>): Promise<UserDetails>;

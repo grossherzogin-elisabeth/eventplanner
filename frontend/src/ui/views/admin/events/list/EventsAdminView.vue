@@ -214,6 +214,12 @@ interface EventTableViewItem {
     hasOpenRequiredSlots: boolean;
 }
 
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
@@ -245,6 +251,7 @@ const tabs = computed<string[]>(() => {
 });
 
 function init(): void {
+    emit('update:title', 'Events verwalten');
     fetchEvents();
     watch(route, () => fetchEvents());
     watch(tab, () => fetchEvents());

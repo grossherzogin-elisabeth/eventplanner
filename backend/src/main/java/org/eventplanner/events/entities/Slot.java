@@ -1,15 +1,14 @@
 package org.eventplanner.events.entities;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-
 import lombok.*;
 import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.events.values.SlotKey;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter

@@ -1,11 +1,11 @@
 package org.eventplanner.users.adapter;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
     @NonNull

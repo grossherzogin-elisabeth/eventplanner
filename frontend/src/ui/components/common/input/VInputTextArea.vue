@@ -3,7 +3,7 @@
         <label v-if="props.label" class="input-label self-start">
             {{ props.label }}
         </label>
-        <div class="relative h-full w-1/2 flex-grow">
+        <div class="relative w-1/2 flex-grow">
             <div class="input-field-wrapper h-full">
                 <textarea
                     :id="id"

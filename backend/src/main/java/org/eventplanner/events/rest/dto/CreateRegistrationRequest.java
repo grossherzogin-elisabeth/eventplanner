@@ -1,12 +1,12 @@
 package org.eventplanner.events.rest.dto;
 
-import java.io.Serializable;
-
 import org.eventplanner.events.spec.CreateRegistrationSpec;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.io.Serializable;
 
 import static org.eventplanner.utils.ObjectUtils.mapNullable;
 

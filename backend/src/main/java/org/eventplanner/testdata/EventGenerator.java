@@ -1,23 +1,22 @@
 package org.eventplanner.testdata;
 
 import org.eventplanner.events.entities.Event;
-import org.eventplanner.events.values.Location;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
-import org.eventplanner.events.values.EventKey;
-import org.eventplanner.events.values.EventState;
-import org.eventplanner.events.values.RegistrationKey;
-import org.eventplanner.events.values.SlotKey;
+import org.eventplanner.events.values.*;
 import org.eventplanner.users.entities.UserDetails;
 
 import java.time.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class EventGenerator {
 
     protected static final Location ELSFLETH = new Location("Elsfleth", "fa-anchor", "An d. Kaje 1, 26931 Elsfleth", "DE");
     protected static final Location NORDSEE = new Location("Nordsee", "fa-water text-blue-600", null, null);
-    
+
     public static List<Event> createTestEvents(int year, List<UserDetails> users, EventState state) {
         var start = LocalDateTime.of(year, Month.APRIL, 1, 16, 0);
         // find first weekend
@@ -26,7 +25,7 @@ public class EventGenerator {
         }
 
         var events = new LinkedList<Event>();
-        while(start.getMonthValue() < Month.NOVEMBER.getValue()) {
+        while (start.getMonthValue() < Month.NOVEMBER.getValue()) {
             var random = new Random(start.toEpochSecond(ZoneOffset.UTC));
             Collections.shuffle(users, random);
 

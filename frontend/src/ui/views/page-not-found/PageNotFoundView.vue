@@ -34,4 +34,16 @@
 </template>
 <script lang="ts" setup>
 import ViewToolbar from '@/ui/components/partials/ViewToolbar.vue';
+
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
+function init(): void {
+    emit('update:title', '404');
+}
+
+init();
 </script>

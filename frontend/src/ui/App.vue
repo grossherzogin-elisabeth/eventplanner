@@ -1,7 +1,7 @@
 <template>
     <div class="flex min-h-screen flex-col bg-primary-50 from-primary-900 to-primary-800 to-50% xl:bg-gradient-to-r">
         <div v-if="initialized && loggedIn" class="xl:hidden">
-            <AppNavbar />
+            <AppNavbar :title="title" />
         </div>
         <div v-if="initialized" class="flex flex-1 items-stretch">
             <div class="relative hidden h-screen w-96 flex-col pt-4 text-white xl:flex">
@@ -10,7 +10,7 @@
             <div
                 class="relative flex h-full w-0 flex-grow flex-col bg-primary-50 xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl"
             >
-                <RouterView class="flex flex-1 flex-col" />
+                <RouterView class="flex flex-1 flex-col" v-model:title="title" />
             </div>
         </div>
         <div
@@ -47,22 +47,20 @@ const authUseCase = useAuthUseCase();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initialized = ref<boolean>(false);
 const loggedIn = ref<boolean>(false);
+const title = ref<string>('');
 
 async function init(): Promise<void> {
     console.info('🚀 Mounting app');
     setTitle();
-    watch(router.currentRoute, setTitle);
+    watch(title, setTitle);
     initialized.value = true;
     authUseCase.onLogin().then(() => (loggedIn.value = true));
     authUseCase.onLogout().then(() => (loggedIn.value = false));
 }
 
 function setTitle(): void {
-    const meta = route.meta as RouteMetaData | undefined;
-    if (typeof meta?.title === 'string') {
-        document.title = `Lissi App | ${i18n.t(meta.title)}`;
-    } else if (typeof meta?.title === 'function') {
-        document.title = `Lissi App | ${meta.title(route)}`;
+    if (title.value) {
+        document.title = `Lissi App | ${title.value}`;
     } else {
         document.title = 'Lissi App';
     }

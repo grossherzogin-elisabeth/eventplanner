@@ -1,7 +1,7 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.EventsAdmin }">
         <template #header>
-            <div v-if="event">
+            <div v-if="event" class="pt-8">
                 <h1 class="mb-1 truncate">{{ event.name }}</h1>
                 <p class="mb-4 text-sm">
                     {{ $d(event.start, DateTimeFormat.DDD_DD_MM) }}
@@ -257,6 +257,12 @@ interface SlotTableItem {
     filled: boolean;
 }
 
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
 const route = useRoute();
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
@@ -307,6 +313,7 @@ async function fetchEvent(): Promise<void> {
     const year = parseInt(route.params.year as string, 10);
     const key = route.params.key as string;
     event.value = await eventUseCase.getEventByKey(year, key);
+    emit('update:title', event.value.name);
 }
 
 function resetTeam(): void {

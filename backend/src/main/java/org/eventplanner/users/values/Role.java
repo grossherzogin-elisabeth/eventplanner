@@ -1,10 +1,10 @@
 package org.eventplanner.users.values;
 
+import org.springframework.lang.NonNull;
+
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import org.springframework.lang.NonNull;
 
 public enum Role {
 
@@ -54,7 +54,7 @@ public enum Role {
                 Permission.WRITE_OWN_USER_DETAILS,
                 Permission.READ_EVENTS,
                 Permission.READ_USERS,
-                Permission.READ_POSITIONS,Permission.READ_QUALIFICATIONS,
+                Permission.READ_POSITIONS, Permission.READ_QUALIFICATIONS,
                 Permission.WRITE_EVENTS
             );
             case TEAM_PLANNER -> Stream.of(

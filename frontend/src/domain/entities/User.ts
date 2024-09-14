@@ -18,16 +18,18 @@ export interface User {
 export interface UserDetails {
     key: UserKey;
     authKey: AuthKey;
+    gender?: string;
+    title?: string;
     firstName: string;
     secondName?: string;
     lastName: string;
     positionKeys: PositionKey[];
     qualifications: UserQualification[];
-    email?: string;
+    email: string;
     phone?: string;
     mobile?: string;
-    dateOfBirth?: Date;
-    placeOfBirth?: string;
+    dateOfBirth: Date;
+    placeOfBirth: string;
     passNr?: string;
     comment?: string;
     address: Address;

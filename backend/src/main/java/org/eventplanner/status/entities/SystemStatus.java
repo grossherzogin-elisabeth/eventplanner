@@ -1,11 +1,10 @@
 package org.eventplanner.status.entities;
 
-import java.time.Instant;
-
-import org.springframework.lang.NonNull;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
+
+import java.time.Instant;
 
 @Getter
 @Setter

@@ -50,4 +50,16 @@
 <script lang="ts" setup>
 import { VInputText } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
+
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
+function init(): void {
+    emit('update:title', 'Wiki');
+}
+
+init();
 </script>

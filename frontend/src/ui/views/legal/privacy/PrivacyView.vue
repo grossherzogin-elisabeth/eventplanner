@@ -38,4 +38,16 @@
         </p>
     </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
+function init(): void {
+    emit('update:title', 'Datenschutzerklärung');
+}
+
+init();
+</script>

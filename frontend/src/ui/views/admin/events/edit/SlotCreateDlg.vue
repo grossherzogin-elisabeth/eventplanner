@@ -50,7 +50,7 @@
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" @click="submit">
-                <span>Erstellen</span>
+                <span>Übernehmen</span>
             </button>
         </template>
     </VDialog>

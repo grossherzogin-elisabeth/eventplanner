@@ -2,7 +2,6 @@ package org.eventplanner.events.entities;
 
 import lombok.*;
 import org.eventplanner.events.values.RegistrationKey;
-import org.eventplanner.events.values.SlotKey;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;

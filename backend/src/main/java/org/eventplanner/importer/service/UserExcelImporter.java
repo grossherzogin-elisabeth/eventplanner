@@ -1,12 +1,7 @@
 package org.eventplanner.importer.service;
 
-import java.io.File;
-import java.util.*;
-import java.util.regex.Pattern;
-
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.values.Address;
 import org.eventplanner.users.values.Role;
@@ -15,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.io.File;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class UserExcelImporter {
 
@@ -353,12 +352,12 @@ public class UserExcelImporter {
                     case "LM STCW-A-VI/6" -> "lm, stcw-a-vi-6";
                     case "SHS" -> "shs";
                     case "SSS" -> "sss";
-                    case "STC Basic Safety"  -> "stcw-vi-1";
+                    case "STC Basic Safety" -> "stcw-vi-1";
                     case "STCW 95/ SHS" -> "stcw-ii-4, shs";
                     case "STCW (NWO)", "STCW-II/1 (NWO)" -> "stcw-ii-1";
                     case "STCW-II/2 (Kapt)" -> "stcw-ii-2";
                     case "STCW-II/3", "STCW-II/3 (Kapt)" -> "stcw-ii-3";
-                    case "STCW 95", "STCW 95 (Wachbefähigung)", "STWC 95 (Wachbefähigung)"-> "stcw-95";
+                    case "STCW 95", "STCW 95 (Wachbefähigung)", "STWC 95 (Wachbefähigung)" -> "stcw-95";
                     case "STCW-II/4 (Wachbefähigung)", "Wachbefähigung" -> "stcw-ii-4";
                     case "STCW-II/5" -> "stcw-ii-5";
                     case "STCW-III/2 (Ltd. Ing.)" -> "stcw-iii-2";

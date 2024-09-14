@@ -1,14 +1,14 @@
 package org.eventplanner.events.entities;
 
-import java.time.ZonedDateTime;
-import java.util.LinkedList;
-import java.util.List;
-
 import lombok.*;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
 import org.springframework.lang.NonNull;
+
+import java.time.ZonedDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter

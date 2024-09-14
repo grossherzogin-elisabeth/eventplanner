@@ -1,9 +1,6 @@
 package org.eventplanner.users.entities;
 
-import java.time.ZonedDateTime;
-import java.util.LinkedList;
-import java.util.List;
-
+import lombok.*;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.users.values.Address;
@@ -13,11 +10,9 @@ import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import java.time.ZonedDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +22,7 @@ import lombok.Setter;
 public class UserDetails {
     private final @NonNull UserKey key;
     private @Nullable AuthKey authKey;
+    private @Nullable String gender;
     private @Nullable String title;
     private @NonNull String firstName;
     private @Nullable String secondName;

@@ -5,7 +5,6 @@ import Edit from './edit/NestedRoute';
 import List from './list/NestedRoute';
 
 const routeMeta: RouteMetaData = {
-    title: 'Reisen verwalten',
     authenticated: true,
     permissions: [Permission.WRITE_EVENTS],
 };

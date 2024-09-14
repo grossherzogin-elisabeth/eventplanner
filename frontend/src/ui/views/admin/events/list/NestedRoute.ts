@@ -4,7 +4,6 @@ import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import { Routes } from '@/ui/views/Routes';
 
 const routeMeta: RouteMetaData = {
-    title: 'Reisen verwalten',
     authenticated: true,
     permissions: [Permission.WRITE_EVENTS],
 };

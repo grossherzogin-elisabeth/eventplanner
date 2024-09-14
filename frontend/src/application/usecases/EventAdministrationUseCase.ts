@@ -18,6 +18,10 @@ export class EventAdministrationUseCase {
     }
 
     public async updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event> {
+        const original = await this.eventCachingService.getEventByKey(eventKey);
+        // TODO create diff of registrations and save those that have changed
+        console.log(original?.registrations);
+        console.log(event?.registrations);
         const savedEvent = await this.eventRepository.updateEvent(eventKey, event);
         return this.eventCachingService.updateCache(savedEvent);
     }

@@ -1,7 +1,6 @@
 package org.eventplanner.users.rest.dto;
 
 import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.entities.UserQualification;
 import org.springframework.lang.NonNull;

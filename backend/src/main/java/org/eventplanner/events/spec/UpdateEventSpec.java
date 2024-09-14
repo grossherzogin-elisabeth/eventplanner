@@ -1,12 +1,12 @@
 package org.eventplanner.events.spec;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-
+import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
-import org.eventplanner.events.entities.Slot;
 import org.springframework.lang.Nullable;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 public record UpdateEventSpec(
     @Nullable String name,

@@ -1,17 +1,17 @@
 package org.eventplanner.events.adapter.filesystem.entities;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import org.eventplanner.events.entities.Event;
+import org.eventplanner.events.values.EventKey;
+import org.eventplanner.events.values.EventState;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import org.eventplanner.events.entities.Event;
-import org.eventplanner.events.values.EventKey;
-import org.eventplanner.events.values.EventState;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import static org.eventplanner.utils.ObjectUtils.mapNullable;
 
 public record EventJsonEntity(
     @NonNull String key,

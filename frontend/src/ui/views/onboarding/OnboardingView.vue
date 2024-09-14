@@ -23,4 +23,16 @@
         </div>
     </div>
 </template>
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
+function init(): void {
+    emit('update:title', 'Start');
+}
+
+init();
+</script>

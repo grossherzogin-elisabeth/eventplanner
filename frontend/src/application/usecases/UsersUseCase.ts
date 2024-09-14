@@ -42,6 +42,18 @@ export class UsersUseCase {
         return await this.userRepository.findBySignedInUser();
     }
 
+    public async updateUserDetailsForSignedInUser(details: UserDetails): Promise<UserDetails> {
+        return await this.userRepository.updateSignedInUser({
+            gender: details.gender,
+            title: details.title,
+            phone: details.phone,
+            mobile: details.mobile,
+            address: details.address,
+            passNr: details.passNr,
+            email: details.email,
+        });
+    }
+
     public async getUsers(keys?: UserKey[]): Promise<User[]> {
         let users = await this.userCachingService.getUsers();
         if (keys) {

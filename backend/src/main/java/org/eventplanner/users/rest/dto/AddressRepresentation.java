@@ -1,10 +1,10 @@
 package org.eventplanner.users.rest.dto;
 
-import java.io.Serializable;
-
 import org.eventplanner.users.values.Address;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.io.Serializable;
 
 public record AddressRepresentation(
     @NonNull String addressLine1,
@@ -21,6 +21,15 @@ public record AddressRepresentation(
             address.addressLine2(),
             address.town(),
             address.zipCode()
+        );
+    }
+
+    public @NonNull Address toDomain() {
+        return new Address(
+            addressLine1,
+            addressLine2,
+            town,
+            zipCode
         );
     }
 }

@@ -4,7 +4,7 @@ import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import { Routes } from '@/ui/views/Routes';
 
 const routeMeta: RouteMetaData = {
-    title: 'Reisedetails',
+    title: () => 'Reisedetails Test',
     authenticated: true,
     permissions: [Permission.READ_EVENTS],
     backTo: Routes.Events,

@@ -9,13 +9,12 @@ import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper  {
+public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
 
     private final List<String> admins;
 

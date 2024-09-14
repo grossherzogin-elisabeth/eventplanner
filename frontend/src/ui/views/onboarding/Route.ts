@@ -3,7 +3,6 @@ import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import { Routes } from '@/ui/views/Routes';
 
 const routeMeta: RouteMetaData = {
-    title: 'app.page-title.onboarding',
     authenticated: true,
 };
 

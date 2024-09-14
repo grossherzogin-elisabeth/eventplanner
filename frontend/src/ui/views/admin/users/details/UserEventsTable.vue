@@ -15,7 +15,7 @@
                     <div class="mb-1 md:flex">
                         <p class="flex-grow truncate md:w-0">{{ item.name }}</p>
                     </div>
-                    <p class="text-sm font-light">{{ item.locations }}</p>
+                    <p class="truncate text-sm font-light">{{ item.locations }}</p>
                 </td>
                 <td class="whitespace-nowrap text-center">
                     <p class="mb-1 w-12 font-semibold">

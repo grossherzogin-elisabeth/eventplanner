@@ -1,17 +1,13 @@
 package org.eventplanner.users;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import io.micrometer.common.lang.Nullable;
 import org.eventplanner.exceptions.UnauthorizedException;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
+import org.eventplanner.users.spec.UpdateUserSpec;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Permission;
 import org.eventplanner.users.values.UserKey;
@@ -25,7 +21,9 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import io.micrometer.common.lang.Nullable;
+import java.util.*;
+
+import static org.eventplanner.utils.ObjectUtils.applyNullable;
 
 @Service
 public class UserUseCase {
@@ -105,5 +103,30 @@ public class UserUseCase {
             signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         }
         return userService.getUserByKey(key);
+    }
+
+    public UserDetails updateUser(@NonNull SignedInUser signedInUser, @NonNull UserKey key, @NonNull UpdateUserSpec spec) {
+        signedInUser.assertHasPermission(Permission.WRITE_USERS);
+
+        var user = userService.getUserByKey(key).orElseThrow();
+        applyNullable(spec.gender(), user::setGender);
+        applyNullable(spec.title(), user::setTitle);
+        applyNullable(spec.firstName(), user::setFirstName);
+        applyNullable(spec.secondName(), user::setSecondName);
+        applyNullable(spec.lastName(), user::setLastName);
+        applyNullable(spec.dateOfBirth(), user::setDateOfBirth);
+        applyNullable(spec.placeOfBirth(), user::setPlaceOfBirth);
+        applyNullable(spec.nationality(), user::setNationality);
+        applyNullable(spec.passNr(), user::setPassNr);
+        applyNullable(spec.email(), user::setEmail);
+        applyNullable(spec.phone(), user::setPhone);
+        applyNullable(spec.address(), user::setAddress);
+        applyNullable(spec.mobile(), user::setMobile);
+        applyNullable(spec.comment(), user::setComment);
+        applyNullable(spec.qualifications(), user::setQualifications);
+        applyNullable(spec.positions(), user::setPositions);
+        applyNullable(spec.roles(), user::setRoles);
+
+        return userService.updateUser(user);
     }
 }

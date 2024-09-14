@@ -1,6 +1,5 @@
 package org.eventplanner.testdata;
 
-import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.values.Address;

@@ -23,7 +23,7 @@
                 </div>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Notiz</VInputLabel>
-                    <VInputTextArea />
+                    <VInputTextArea v-model="registration.note" />
                 </div>
             </div>
         </template>

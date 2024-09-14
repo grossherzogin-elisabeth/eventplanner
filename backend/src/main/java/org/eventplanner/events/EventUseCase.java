@@ -1,16 +1,8 @@
 package org.eventplanner.events;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.spec.CreateEventSpec;
 import org.eventplanner.events.spec.CreateRegistrationSpec;
 import org.eventplanner.events.spec.UpdateEventSpec;
@@ -18,17 +10,19 @@ import org.eventplanner.events.spec.UpdateRegistrationSpec;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.RegistrationKey;
-import org.eventplanner.exceptions.NotImplementedException;
-import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.values.Permission;
-import org.eventplanner.users.values.UserKey;
-import org.eventplanner.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import static org.eventplanner.utils.ObjectUtils.*;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
+
+import static org.eventplanner.utils.ObjectUtils.applyNullable;
+import static org.eventplanner.utils.ObjectUtils.orElse;
 
 @Service
 public class EventUseCase {

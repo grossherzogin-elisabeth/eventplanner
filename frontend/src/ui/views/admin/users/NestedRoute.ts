@@ -5,7 +5,6 @@ import Details from './details/NestedRoute';
 import List from './list/NestedRoute';
 
 const routeMeta: RouteMetaData = {
-    title: 'Crewverwaltung',
     authenticated: true,
     permissions: [Permission.READ_USER_DETAILS],
 };

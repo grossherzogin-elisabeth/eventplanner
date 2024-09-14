@@ -5,7 +5,6 @@ import List from '@/ui/views/events/calendar/NestedRoute';
 import Details from './details/NestedRoute';
 
 const routeMeta: RouteMetaData = {
-    title: (route) => 'Reisen ' + route.params.year,
     authenticated: true,
     permissions: [Permission.READ_EVENTS],
 };

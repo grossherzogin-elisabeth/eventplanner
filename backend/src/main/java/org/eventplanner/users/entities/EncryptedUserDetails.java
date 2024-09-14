@@ -1,19 +1,14 @@
 package org.eventplanner.users.entities;
 
-import java.io.Serializable;
-import java.util.List;
-
+import lombok.*;
 import org.eventplanner.users.values.EncryptedAddress;
 import org.eventplanner.users.values.EncryptedString;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +18,7 @@ import lombok.Setter;
 public class EncryptedUserDetails implements Serializable {
     private @NonNull UserKey key;
     private @Nullable EncryptedString authKey;
+    private @Nullable EncryptedString gender;
     private @Nullable EncryptedString title;
     private @NonNull EncryptedString firstName;
     private @Nullable EncryptedString secondName;

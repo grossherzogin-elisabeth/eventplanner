@@ -5,7 +5,6 @@ import Events from './events/NestedRoute';
 import Users from './users/NestedRoute';
 
 const routeMeta: RouteMetaData = {
-    title: 'Admin',
     authenticated: true,
     permissions: [Permission.WRITE_EVENTS],
 };

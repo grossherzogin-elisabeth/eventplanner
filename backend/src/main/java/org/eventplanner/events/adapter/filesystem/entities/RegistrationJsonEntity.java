@@ -1,15 +1,15 @@
 package org.eventplanner.events.adapter.filesystem.entities;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
-
-import java.io.Serializable;
-
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.io.Serializable;
+
+import static org.eventplanner.utils.ObjectUtils.mapNullable;
 
 public record RegistrationJsonEntity(
     @NonNull String key,

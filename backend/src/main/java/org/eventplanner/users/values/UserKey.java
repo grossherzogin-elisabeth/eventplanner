@@ -1,11 +1,11 @@
 package org.eventplanner.users.values;
 
+import org.springframework.lang.NonNull;
+
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import org.springframework.lang.NonNull;
 
 public record UserKey(
     @NonNull String value

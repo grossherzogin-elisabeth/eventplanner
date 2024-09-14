@@ -1,10 +1,10 @@
 package org.eventplanner.events.rest.dto;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.eventplanner.events.entities.Registration;
 import org.springframework.lang.NonNull;
+
+import java.io.Serializable;
+import java.util.List;
 
 public record UpdateEventTeamRequest(
     @NonNull List<RegistrationRepresentation> registrations

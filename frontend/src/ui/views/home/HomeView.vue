@@ -71,6 +71,12 @@ import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import EventCard from '@/ui/views/home/EventCard.vue';
 
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
@@ -118,6 +124,7 @@ function isNextMonth(date: Date): boolean {
 }
 
 function init(): void {
+    emit('update:title', 'Meine nächsten Reisen');
     fetchEvents();
 }
 

@@ -14,6 +14,52 @@ interface UserRepresentation {
 interface UserDetailsRepresentation {
     readonly key: string;
     readonly authKey: string;
+    gender?: string;
+    title?: string;
+    firstName: string;
+    secondName?: string;
+    lastName: string;
+    positions: string[];
+    email: string;
+    qualifications: UserQualificationRepresentation[];
+    phone?: string;
+    mobile?: string;
+    dateOfBirth: string;
+    placeOfBirth: string;
+    passNr?: string;
+    comment?: string;
+    address: AddressRepresentation;
+}
+
+interface SignedInUserUpdateRequest {
+    gender?: string;
+    title?: string;
+    email?: string;
+    phone?: string;
+    mobile?: string;
+    passNr?: string;
+    address?: AddressRepresentation;
+}
+
+interface UserDetailsUpdateRequest {
+    gender?: string;
+    title?: string;
+    firstName?: string;
+    secondName?: string;
+    lastName?: string;
+    positions?: string[];
+    email?: string;
+    qualifications?: UserQualificationRepresentation[];
+    phone?: string;
+    mobile?: string;
+    passNr?: string;
+    comment?: string;
+    address?: AddressRepresentation;
+}
+
+interface UserDetailsCreateRequest {
+    gender?: string;
+    title?: string;
     firstName: string;
     secondName?: string;
     lastName: string;
@@ -27,20 +73,6 @@ interface UserDetailsRepresentation {
     passNr?: string;
     comment?: string;
     address: AddressRepresentation;
-}
-
-interface UserDetailsUpdateRequest {
-    firstName?: string;
-    secondName?: string;
-    lastName?: string;
-    positions?: string[];
-    email?: string;
-    qualifications?: UserQualificationRepresentation[];
-    phone?: string;
-    mobile?: string;
-    passNr?: string;
-    comment?: string;
-    address?: Partial<AddressRepresentation>;
 }
 
 interface UserQualificationRepresentation {
@@ -85,7 +117,7 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async findByKey(key: UserKey): Promise<UserDetails> {
-        const response = await fetch(`/api/v1/users/by-key/${key}`, {
+        const response = await fetch(`/api/v1/users/${key}`, {
             credentials: 'include',
         });
         if (!response.ok) {
@@ -108,6 +140,8 @@ export class UserRestRepository implements UserRepository {
 
     public async updateUser(userKey: UserKey, user: Partial<UserDetails>): Promise<UserDetails> {
         const requestBody: UserDetailsUpdateRequest = {
+            gender: user.gender,
+            title: user.title,
             firstName: user.firstName,
             secondName: user.secondName,
             lastName: user.lastName,
@@ -131,7 +165,49 @@ export class UserRestRepository implements UserRepository {
                 : undefined,
         };
         const response = await fetch(`/api/v1/users/${userKey}`, {
-            method: 'PUT',
+            method: 'PATCH',
+            credentials: 'include',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': getCsrfToken(),
+            },
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        const representation: UserDetailsRepresentation = await response.clone().json();
+        return UserRestRepository.mapUserDetailsToDomain(representation);
+    }
+
+    public async createUser(user: UserDetails): Promise<UserDetails> {
+        const requestBody: UserDetailsCreateRequest = {
+            gender: user.gender,
+            title: user.title,
+            firstName: user.firstName,
+            secondName: user.secondName,
+            lastName: user.lastName,
+            dateOfBirth: user.dateOfBirth.toISOString(),
+            placeOfBirth: user.placeOfBirth,
+            positions: user.positionKeys,
+            email: user.email,
+            qualifications: user.qualifications?.map((it) => ({
+                qualificationKey: it.qualificationKey,
+                expiresAt: it.expiresAt?.toISOString(),
+            })),
+            phone: user.phone,
+            mobile: user.mobile,
+            passNr: user.passNr,
+            comment: user.comment,
+            address: {
+                addressLine1: user.address.addressLine1,
+                addressLine2: user.address.addressLine2,
+                town: user.address.town,
+                zipCode: user.address.zipcode,
+            },
+        };
+        const response = await fetch('/api/v1/users', {
+            method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
@@ -147,16 +223,13 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async updateSignedInUser(user: Partial<UserDetails>): Promise<UserDetails> {
-        const requestBody: UserDetailsUpdateRequest = {
-            firstName: user.firstName,
-            secondName: user.secondName,
-            lastName: user.lastName,
-            positions: user.positionKeys,
+        const requestBody: SignedInUserUpdateRequest = {
+            gender: user.gender,
+            title: user.title,
             email: user.email,
             phone: user.phone,
             mobile: user.mobile,
             passNr: user.passNr,
-            comment: user.comment,
             address: user.address
                 ? {
                       addressLine1: user.address.addressLine1,
@@ -167,7 +240,7 @@ export class UserRestRepository implements UserRepository {
                 : undefined,
         };
         const response = await fetch(`/api/v1/users/self`, {
-            method: 'PUT',
+            method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
@@ -198,6 +271,8 @@ export class UserRestRepository implements UserRepository {
 
     private static mapUserDetailsToDomain(representation: UserDetailsRepresentation): UserDetails {
         return {
+            gender: representation.gender,
+            title: representation.title,
             key: representation.key,
             authKey: representation.authKey,
             firstName: representation.firstName,
@@ -211,7 +286,7 @@ export class UserRestRepository implements UserRepository {
             email: representation.email,
             phone: representation.phone,
             mobile: representation.mobile,
-            dateOfBirth: UserRestRepository.parseDate(representation.dateOfBirth),
+            dateOfBirth: UserRestRepository.parseDate(representation.dateOfBirth) || new Date(),
             placeOfBirth: representation.placeOfBirth,
             passNr: representation.passNr,
             comment: representation.comment,

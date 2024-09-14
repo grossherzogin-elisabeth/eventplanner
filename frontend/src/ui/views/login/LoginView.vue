@@ -103,6 +103,12 @@ import { useRouter } from 'vue-router';
 import { VInputLabel, VInputText } from '@/ui/components/common';
 import { useAuthUseCase } from '@/ui/composables/Application';
 
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
+
+const emit = defineEmits<RouteEmits>();
+
 const authUseCase = useAuthUseCase();
 const router = useRouter();
 
@@ -111,6 +117,7 @@ const username = ref<string>('');
 const password = ref<string>('');
 
 async function init(): Promise<void> {
+    emit('update:title', 'Login');
     if (!authUseCase.isLoggedIn()) {
         await authUseCase.onLogin();
     }

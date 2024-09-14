@@ -1,9 +1,9 @@
 package org.eventplanner.status.rest.dto;
 
-import java.io.Serializable;
-
 import org.eventplanner.status.entities.SystemStatus;
 import org.springframework.lang.NonNull;
+
+import java.io.Serializable;
 
 public record StatusRepresentation(
     @NonNull String buildCommit,

@@ -1,10 +1,10 @@
 package org.eventplanner.events.rest.dto;
 
-import java.io.Serializable;
-
 import org.eventplanner.events.values.Location;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.io.Serializable;
 
 public record LocationRepresentation(
     @NonNull String name,

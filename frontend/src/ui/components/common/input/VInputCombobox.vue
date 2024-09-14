@@ -1,9 +1,9 @@
 <template>
-    <div :class="$attrs.class" class="v-input-combobox flex h-full items-start">
+    <div :class="$attrs.class" class="v-input-combobox flex items-start">
         <label v-if="props.label" class="input-label">
             {{ props.label }}
         </label>
-        <div class="relative h-full w-1/2 flex-grow">
+        <div class="relative w-1/2 flex-grow">
             <div ref="dropdownAnchor" class="input-field-wrapper overflow-hidden">
                 <slot name="before" />
                 <div class="relative flex flex-grow items-center">
