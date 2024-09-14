@@ -16,7 +16,8 @@ public record RegistrationRepresentation(
     @NonNull String key,
     @NonNull String positionKey,
     @Nullable String userKey,
-    @Nullable String name
+    @Nullable String name,
+    @Nullable String note
 ) implements Serializable {
 
     public static @NonNull RegistrationRepresentation fromDomain(@NonNull Registration domain) {
@@ -24,7 +25,8 @@ public record RegistrationRepresentation(
             domain.getKey().value(),
             domain.getPosition().value(),
             mapNullable(domain.getUser(), UserKey::value),
-            domain.getName()
+            domain.getName(),
+            domain.getNote()
         );
     }
 
@@ -33,7 +35,8 @@ public record RegistrationRepresentation(
             new RegistrationKey(key),
             new PositionKey(positionKey),
             mapNullable(userKey, UserKey::new),
-            name
+            name,
+            note
         );
     }
 }

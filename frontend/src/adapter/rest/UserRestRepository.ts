@@ -135,6 +135,7 @@ export class UserRestRepository implements UserRepository {
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
+                'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },
         });
@@ -170,6 +171,7 @@ export class UserRestRepository implements UserRepository {
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
+                'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },
         });

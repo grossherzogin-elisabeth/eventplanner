@@ -115,7 +115,7 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async findAll(year: number): Promise<Event[]> {
-        const response = await fetch(`/api/v1/events/by-year/${year}`, {
+        const response = await fetch(`/api/v1/events?year=${year}`, {
             credentials: 'include',
         });
         if (!response.ok) {
@@ -178,6 +178,7 @@ export class EventRestRepository implements EventRepository {
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
+                'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },
         });
@@ -206,10 +207,11 @@ export class EventRestRepository implements EventRepository {
             })),
         };
         const response = await fetch(`/api/v1/events/${eventKey}`, {
-            method: 'PUT',
+            method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
+                'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },
         });

@@ -1,6 +1,6 @@
 <template>
     <button
-        :disabled="props.disabled || loading || success === true"
+        :disabled="props.disabled || loading"
         class="flex-grow whitespace-nowrap"
         :class="$attrs.class || 'btn-primary'"
         @click="onClick()"
@@ -43,9 +43,9 @@ async function onClick(): Promise<void> {
             success.value = true;
         } catch (e) {
             success.value = false;
-            setTimeout(() => (success.value = null), 2000);
         } finally {
             loading.value = false;
+            setTimeout(() => (success.value = null), 2000);
         }
     }
 }

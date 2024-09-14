@@ -8,13 +8,14 @@ interface RegistrationCreateRequest {
     positionKey: string;
     name?: string;
     userKey?: string;
+    note?: string;
 }
 
 interface RegistrationUpdateRequest {
     positionKey: string;
     name?: string;
     userKey?: string;
-    slotKey?: string;
+    note?: string;
 }
 
 export class EventRegistrationRestRepository implements EventRegistrationsRepository {
@@ -23,12 +24,14 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             positionKey: registration.positionKey,
             userKey: registration.userKey,
             name: registration.name,
+            note: registration.note,
         };
         const response = await fetch(`/api/v1/events/${eventKey}/registrations`, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
+                'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },
         });
@@ -44,12 +47,14 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             positionKey: registration.positionKey,
             userKey: registration.userKey,
             name: registration.name,
+            note: registration.note,
         };
         const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
+                'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },
         });

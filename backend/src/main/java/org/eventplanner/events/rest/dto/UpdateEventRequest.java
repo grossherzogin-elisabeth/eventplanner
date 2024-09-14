@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.eventplanner.events.spec.UpdateEventSpec;
+import org.eventplanner.events.values.EventState;
 import org.springframework.lang.Nullable;
 
 public record UpdateEventRequest(
@@ -22,7 +23,7 @@ public record UpdateEventRequest(
     public UpdateEventSpec toDomain() {
         return new UpdateEventSpec(
             name,
-            state,
+            mapNullable(state, s -> EventState.fromString(s).orElseThrow()),
             note,
             description,
             mapNullable(start, ZonedDateTime::parse),

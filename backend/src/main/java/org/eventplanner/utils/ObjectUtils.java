@@ -14,6 +14,12 @@ public class ObjectUtils {
         return nullable;
     }
 
+    public static @Nullable <T> void applyNullable(@Nullable T nullable, @NonNull Applier<T> applier) {
+        if (nullable != null) {
+            applier.apply(nullable);
+        }
+    }
+
     public static @Nullable <T, E> T mapNullable(@Nullable E nullable, @NonNull Mapper<E, T> mapper) {
         if (nullable == null) {
             return null;
@@ -59,5 +65,9 @@ public class ObjectUtils {
 
     public interface Mapper<I, O> {
         O map(I i);
+    }
+
+    public interface Applier<I> {
+        void apply(I i);
     }
 }

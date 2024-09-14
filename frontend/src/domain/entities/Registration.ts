@@ -7,4 +7,5 @@ export interface Registration {
     positionKey: PositionKey;
     userKey?: UserKey;
     name?: string;
+    note?: string;
 }

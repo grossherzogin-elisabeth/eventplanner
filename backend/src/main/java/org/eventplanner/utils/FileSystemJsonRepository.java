@@ -126,6 +126,7 @@ public class FileSystemJsonRepository<E> {
         var json = toJson(entity);
         try {
             Files.writeString(file.toPath(), json);
+            cache.remove(file.getParentFile().getAbsolutePath());
         } catch (IOException e) {
             log.error("Failed to write event to file");
         }

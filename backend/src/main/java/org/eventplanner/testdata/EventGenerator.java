@@ -66,13 +66,15 @@ public class EventGenerator {
                     new RegistrationKey(),
                     user.getPositions().getFirst(),
                     null,
-                    user.getFirstName() + " " + user.getLastName()
+                    user.getFirstName() + " " + user.getLastName(),
+                    null
                 ));
             } else {
                 registrations.add(new Registration(
                     new RegistrationKey(),
                     user.getPositions().getFirst(),
                     user.getKey(),
+                    null,
                     null
                 ));
             }
@@ -102,6 +104,7 @@ public class EventGenerator {
                     new RegistrationKey(),
                     user.getPositions().getFirst(),
                     user.getKey(),
+                    null,
                     null
                 ));
             } else {
@@ -109,6 +112,7 @@ public class EventGenerator {
                     new RegistrationKey(),
                     user.getPositions().getFirst(),
                     user.getKey(),
+                    null,
                     null
                 ));
             }

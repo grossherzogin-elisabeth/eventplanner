@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.values.RegistrationKey;
-import org.eventplanner.events.values.SlotKey;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
@@ -16,7 +15,8 @@ public record RegistrationJsonEntity(
     @NonNull String key,
     @NonNull String positionKey,
     @Nullable String userKey,
-    @Nullable String name
+    @Nullable String name,
+    @Nullable String note
 ) implements Serializable {
 
     public static @NonNull RegistrationJsonEntity fromDomain(@NonNull Registration domain) {
@@ -24,7 +24,8 @@ public record RegistrationJsonEntity(
             domain.getKey().value(),
             domain.getPosition().value(),
             mapNullable(domain.getUser(), UserKey::value),
-            domain.getName()
+            domain.getName(),
+            domain.getNote()
         );
     }
 
@@ -33,7 +34,8 @@ public record RegistrationJsonEntity(
             new RegistrationKey(key),
             new PositionKey(positionKey),
             mapNullable(userKey, UserKey::new),
-            name
+            name,
+            note
         );
     }
 }
