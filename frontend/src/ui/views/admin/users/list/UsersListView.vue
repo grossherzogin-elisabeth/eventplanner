@@ -31,9 +31,9 @@
                 @click="editUser($event)"
             >
                 <template #head>
-                    <th>
-                        <VInputCheckBox></VInputCheckBox>
-                    </th>
+                    <!--                    <th>-->
+                    <!--                        <VInputCheckBox></VInputCheckBox>-->
+                    <!--                    </th>-->
                     <th>Name</th>
                     <th>Positionen</th>
                     <th>Reisen</th>
@@ -42,16 +42,16 @@
                     <th>Zertifikate</th>
                 </template>
                 <template #row="{ item }">
-                    <td class="group" @click.stop="">
-                        <VInputCheckBox v-model="item.selected" />
-                        <!--<VInputCheckBox-->
-                        <!--    :class="{ 'hidden group-hover:block': !item.selected }"-->
-                        <!--    v-model="item.selected"-->
-                        <!--/>-->
-                        <!--<div :class="item.selected ? 'hidden' : 'group-hover:hidden'">-->
-                        <!--    <i class="fa-solid fa-user-circle text-2xl" />-->
-                        <!--</div>-->
-                    </td>
+                    <!--                    <td class="group" @click.stop="">-->
+                    <!--                        <VInputCheckBox v-model="item.selected" />-->
+                    <!--<VInputCheckBox-->
+                    <!--    :class="{ 'hidden group-hover:block': !item.selected }"-->
+                    <!--    v-model="item.selected"-->
+                    <!--/>-->
+                    <!--<div :class="item.selected ? 'hidden' : 'group-hover:hidden'">-->
+                    <!--    <i class="fa-solid fa-user-circle text-2xl" />-->
+                    <!--</div>-->
+                    <!--                    </td>-->
                     <td class="whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.firstName }} {{ item.lastName }}</p>
                         <p class="text-sm">Stammcrew</p>
