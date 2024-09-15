@@ -1,4 +1,6 @@
+import type { NotificationService } from '@/application';
 import type { UserRepository } from '@/application/ports/UserRepository';
+import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { PositionCachingService } from '@/application/services/PositionCachingService';
 import type { QualificationCachingService } from '@/application/services/QualificationCachingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
@@ -23,6 +25,8 @@ export class UsersUseCase {
     private readonly positionCachingService: PositionCachingService;
     private readonly userCachingService: UserCachingService;
     private readonly qualificationCachingService: QualificationCachingService;
+    private readonly notificationService: NotificationService;
+    private readonly errorHandlingService: ErrorHandlingService;
 
     constructor(params: {
         userRepository: UserRepository;
@@ -30,12 +34,16 @@ export class UsersUseCase {
         positionCachingService: PositionCachingService;
         userCachingService: UserCachingService;
         qualificationCachingService: QualificationCachingService;
+        notificationService: NotificationService;
+        errorHandlingService: ErrorHandlingService;
     }) {
         this.userRepository = params.userRepository;
         this.registrationService = params.registrationService;
         this.positionCachingService = params.positionCachingService;
         this.userCachingService = params.userCachingService;
         this.qualificationCachingService = params.qualificationCachingService;
+        this.notificationService = params.notificationService;
+        this.errorHandlingService = params.errorHandlingService;
     }
 
     public async getUserDetailsForSignedInUser(): Promise<UserDetails> {
@@ -43,7 +51,7 @@ export class UsersUseCase {
     }
 
     public async updateUserDetailsForSignedInUser(details: UserDetails): Promise<UserDetails> {
-        return await this.userRepository.updateSignedInUser({
+        const savedUser = await this.userRepository.updateSignedInUser({
             gender: details.gender,
             title: details.title,
             phone: details.phone,
@@ -52,6 +60,8 @@ export class UsersUseCase {
             passNr: details.passNr,
             email: details.email,
         });
+        this.notificationService.success('Deine Angaben wurden gespeichert');
+        return savedUser;
     }
 
     public async getUsers(keys?: UserKey[]): Promise<User[]> {

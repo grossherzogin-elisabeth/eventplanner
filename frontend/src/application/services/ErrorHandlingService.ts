@@ -5,9 +5,10 @@ export interface ErrorDetails {
     retry?: () => void;
 }
 
-export class ErrorHandlingUseCase {
+export class ErrorHandlingService {
     private errorHandler: (error: ErrorDetails) => void = (error: ErrorDetails) => {
-        console.error(error.error);
+        alert(error.message || error.error);
+        console.log(error.error);
     };
 
     public registerErrorHandler(handler: (error: ErrorDetails) => void): void {

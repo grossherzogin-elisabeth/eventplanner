@@ -15,6 +15,7 @@ import type {
     QualificationRepository,
     UserRepository,
 } from '@/application';
+import { NotificationService } from '@/application';
 import {
     AuthUseCase,
     EventAdministrationUseCase,
@@ -27,7 +28,7 @@ import {
     UsersUseCase,
 } from '@/application';
 import { AuthService } from '@/application/services/AuthService';
-import { ErrorHandlingUseCase } from '@/application/usecases/ErrorHandlingUseCase';
+import { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import { IndexedDB, IndexedDBRepository } from '@/common';
 import type { Domain } from '@/domain';
 import { EventService, RegistrationService, UserService } from '@/domain';
@@ -96,6 +97,8 @@ const qualificationCachingService = new QualificationCachingService({
     }),
     qualificationRepository: qualificationRepository,
 });
+const notificationService = new NotificationService();
+const errorHandlingService = new ErrorHandlingService();
 
 const application: Application = {
     config: config,
@@ -103,6 +106,8 @@ const application: Application = {
         eventCache: eventCachingService,
         userCache: userCachingService,
         positionCache: positionCachingService,
+        notifications: notificationService,
+        errorHandling: errorHandlingService,
     },
     usecases: {
         auth: new AuthUseCase({
@@ -111,12 +116,16 @@ const application: Application = {
             config: config,
         }),
         events: new EventUseCase({
-            eventRepository: eventRepository,
             authService: authService,
+            notificationService: notificationService,
+            errorHandlingService: errorHandlingService,
+            eventRepository: eventRepository,
             eventCachingService: eventCachingService,
             eventRegistrationsRepository: eventRegistrationsRepository,
         }),
         users: new UsersUseCase({
+            notificationService: notificationService,
+            errorHandlingService: errorHandlingService,
             registrationService: domain.services.registrations,
             userRepository: userRepository,
             positionCachingService: positionCachingService,
@@ -124,15 +133,18 @@ const application: Application = {
             qualificationCachingService: qualificationCachingService,
         }),
         userAdmin: new UserAdministrationUseCase({
+            notificationService: notificationService,
+            errorHandlingService: errorHandlingService,
             userRepository: userRepository,
             userCachingService: userCachingService,
         }),
         eventAdmin: new EventAdministrationUseCase({
+            notificationService: notificationService,
+            errorHandlingService: errorHandlingService,
             eventRepository: eventRepository,
             eventCachingService: eventCachingService,
             eventRegistrationsRepository: eventRegistrationsRepository,
         }),
-        errorHandling: new ErrorHandlingUseCase(),
     },
 };
 

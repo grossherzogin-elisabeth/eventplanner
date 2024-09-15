@@ -21,6 +21,7 @@
             <span class="text-xl font-light text-white">Anwendung wird geladen...</span>
         </div>
     </div>
+    <VNotifications />
     <VErrorDialog />
     <AppFooter />
 </template>
@@ -32,6 +33,7 @@ import { VErrorDialog } from '@/ui/components/common';
 import AppFooter from '@/ui/components/partials/AppFooter.vue';
 import AppMenu from '@/ui/components/partials/AppMenu.vue';
 import AppNavbar from '@/ui/components/partials/AppNavbar.vue';
+import VNotifications from '@/ui/components/partials/VNotifications.vue';
 import { useAuthUseCase } from '@/ui/composables/Application';
 import { useViewportSize } from '@/ui/composables/ViewportSize';
 

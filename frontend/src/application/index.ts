@@ -13,6 +13,7 @@ export * from './services/PositionCachingService';
 export * from './services/UserCachingService';
 export * from './services/AuthService';
 export * from './services/QualificationCachingService';
+export * from './services/NotificationService';
 
 export * from './usecases/EventUseCase';
 export * from './usecases/UsersUseCase';

@@ -1,25 +1,33 @@
-import type { AuthService, EventRegistrationsRepository } from '@/application';
+import type { AuthService, EventRegistrationsRepository, NotificationService } from '@/application';
 import type { EventRepository } from '@/application/ports/EventRepository';
+import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { DateFormatter } from '@/common/date';
 import type { Event, EventKey, PositionKey, UserKey } from '@/domain';
+import { EventType } from '@/domain';
 
 export class EventUseCase {
     private readonly eventCachingService: EventCachingService;
     private readonly eventRepository: EventRepository;
     private readonly authService: AuthService;
     private readonly eventRegistrationsRepository: EventRegistrationsRepository;
+    private readonly notificationService: NotificationService;
+    private readonly errorHandlingService: ErrorHandlingService;
 
     constructor(params: {
         eventCachingService: EventCachingService;
         eventRepository: EventRepository;
         authService: AuthService;
         eventRegistrationsRepository: EventRegistrationsRepository;
+        notificationService: NotificationService;
+        errorHandlingService: ErrorHandlingService;
     }) {
         this.eventCachingService = params.eventCachingService;
         this.eventRepository = params.eventRepository;
         this.authService = params.authService;
         this.eventRegistrationsRepository = params.eventRegistrationsRepository;
+        this.notificationService = params.notificationService;
+        this.errorHandlingService = params.errorHandlingService;
     }
 
     public async getEvents(year: number): Promise<Event[]> {
@@ -67,12 +75,18 @@ export class EventUseCase {
         if (!user) {
             throw new Error('Authentifizierung erforderlich');
         }
-        const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
+        let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
             key: '',
             positionKey: positionKey || 'deckshand', // TODO where can we best define the default?
             userKey: user.key,
         });
-        return this.eventCachingService.updateCache(savedEvent);
+        savedEvent = await this.eventCachingService.updateCache(savedEvent);
+        if (event.type === EventType.WorkEvent) {
+            this.notificationService.success('Anmeldung wurde gespeichert');
+        } else {
+            this.notificationService.success('Du stehst jetzt auf der Warteliste');
+        }
+        return savedEvent;
     }
 
     public async leaveEvent(event: Event): Promise<Event> {
@@ -84,8 +98,10 @@ export class EventUseCase {
         if (!registration) {
             throw new Error('Anmeldung nicht gefunden');
         }
-        const savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
-        return this.eventCachingService.updateCache(savedEvent);
+        let savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
+        savedEvent = await this.eventCachingService.updateCache(savedEvent);
+        this.notificationService.success('Anmeldung wurde gelöscht');
+        return savedEvent;
     }
 
     public downloadCalendarEntry(event: Event): void {

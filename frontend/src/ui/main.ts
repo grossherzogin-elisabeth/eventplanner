@@ -3,9 +3,10 @@ import type { Application } from '@/application';
 import type { Domain } from '@/domain';
 import {
     AUTH_USE_CASE,
-    ERROR_HANDLING_USE_CASE,
+    ERROR_HANDLING_SERVICE,
     EVENT_ADMIN_USE_CASE,
     EVENT_USE_CASE,
+    NOTIFICATION_SERVICE,
     USER_ADMIN_USE_CASE,
     USER_USE_CASE,
 } from '@/ui/composables/Application';
@@ -30,6 +31,7 @@ export function setupVue(context: { domain: Domain; application: Application }) 
     app.provide(EVENT_ADMIN_USE_CASE, context.application.usecases.eventAdmin);
     app.provide(USER_USE_CASE, context.application.usecases.users);
     app.provide(USER_ADMIN_USE_CASE, context.application.usecases.userAdmin);
-    app.provide(ERROR_HANDLING_USE_CASE, context.application.usecases.errorHandling);
+    app.provide(NOTIFICATION_SERVICE, context.application.services.notifications);
+    app.provide(ERROR_HANDLING_SERVICE, context.application.services.errorHandling);
     app.mount('#app');
 }

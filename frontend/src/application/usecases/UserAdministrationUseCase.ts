@@ -1,14 +1,24 @@
-import type { UserRepository } from '@/application';
+import type { NotificationService, UserRepository } from '@/application';
+import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
 import type { UserDetails, UserKey } from '@/domain';
 
 export class UserAdministrationUseCase {
     private readonly userRepository: UserRepository;
     private readonly userCachingService: UserCachingService;
+    private readonly notificationService: NotificationService;
+    private readonly errorHandlingService: ErrorHandlingService;
 
-    constructor(params: { userRepository: UserRepository; userCachingService: UserCachingService }) {
+    constructor(params: {
+        userRepository: UserRepository;
+        userCachingService: UserCachingService;
+        notificationService: NotificationService;
+        errorHandlingService: ErrorHandlingService;
+    }) {
         this.userRepository = params.userRepository;
         this.userCachingService = params.userCachingService;
+        this.notificationService = params.notificationService;
+        this.errorHandlingService = params.errorHandlingService;
     }
 
     public async updateUser(user: UserDetails): Promise<UserDetails> {
@@ -20,6 +30,7 @@ export class UserAdministrationUseCase {
             positionKeys: savedUser.positionKeys,
             email: savedUser.email,
         });
+        this.notificationService.success('Änderungen gespeichert');
         return savedUser;
     }
 
