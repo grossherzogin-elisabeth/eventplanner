@@ -7,10 +7,7 @@ import org.eventplanner.events.values.*;
 import org.eventplanner.users.entities.UserDetails;
 
 import java.time.*;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class EventGenerator {
 
@@ -39,7 +36,7 @@ public class EventGenerator {
             }
 
             var event = new Event(
-                new EventKey("wochenendreise_kw_" + Math.floor(start.getDayOfYear() / 7.0)),
+                new EventKey(year + "_wochenendreise_kw_" + Math.floor(start.getDayOfYear() / 7.0)),
                 "Wochenendreise KW " + Math.floor(start.getDayOfYear() / 7.0),
                 state,
                 "Hier ist Platz für Notizen",
@@ -120,31 +117,36 @@ public class EventGenerator {
     }
 
     private static List<Slot> createSlots() {
-        return List.of(
-            Slot.of(Pos.KAPITAEN).withRequired(),
-            Slot.of(Pos.STM, Pos.KAPITAEN).withRequired(),
-            Slot.of(Pos.STM, Pos.KAPITAEN).withRequired(),
-            Slot.of(Pos.MASCHINIST).withName("1. Maschinist").withRequired(),
-            Slot.of(Pos.MASCHINIST).withName("2. Maschinist").withRequired(),
-            Slot.of(Pos.KOCH).withRequired(),
-            Slot.of(Pos.AUSBILDER, Pos.STM).withName("Ausbilder").withRequired(),
-            Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired(),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE),
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE),
-            // these slots should be filled last
-            Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.BACKSCHAFT),
-            Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired(),
-            Slot.of(Pos.KOCH, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired()
-        );
+        var slots = new ArrayList<Slot>();
+        slots.add(Slot.of(Pos.KAPITAEN).withRequired());
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withName("1. Steuermann:frau").withRequired());
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withName("2. Steuermann:frau").withRequired());
+        slots.add(Slot.of(Pos.MASCHINIST).withName("1. Maschinist").withRequired());
+        slots.add(Slot.of(Pos.MASCHINIST).withName("2. Maschinist").withRequired());
+        slots.add(Slot.of(Pos.KOCH).withRequired());
+        slots.add(Slot.of(Pos.AUSBILDER, Pos.STM).withName("Ausbilder").withRequired());
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
+        // these slots should be filled last
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.BACKSCHAFT));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired());
+        slots.add(Slot.of(Pos.KOCH, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired());
+        
+        for (int i = 0; i < slots.size(); i++) {
+            slots.set(i, slots.get(i).withOrder(i + 1));
+        }
+        return slots;
     }
 }
