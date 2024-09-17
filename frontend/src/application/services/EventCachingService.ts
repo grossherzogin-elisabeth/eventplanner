@@ -1,5 +1,5 @@
 import type { AuthService, EventRepository } from '@/application';
-import type { Cache } from '@/common';
+import { type Cache, DateUtils } from '@/common';
 import type { Event, EventKey, Registration } from '@/domain';
 
 export class EventCachingService {
@@ -38,12 +38,18 @@ export class EventCachingService {
         const signedInUser = this.authService.getSignedInUser();
         const registration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
         if (registration !== undefined) {
+            event.canSignedInUserJoin = false;
             const slot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
             if (slot) {
                 event.signedInUserAssignedPosition = registration.positionKey;
+                event.canSignedInUserLeave = event.start.getTime() > DateUtils.add(new Date(), { days: 7 }).getTime();
             } else {
                 event.signedInUserWaitingListPosition = registration.positionKey;
+                event.canSignedInUserLeave = event.start.getTime() > new Date().getTime();
             }
+        } else {
+            event.canSignedInUserLeave = false;
+            event.canSignedInUserJoin = event.start.getTime() > new Date().getTime();
         }
         return event;
     }

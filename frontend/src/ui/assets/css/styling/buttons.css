@@ -10,13 +10,14 @@ button:disabled {
     @apply font-bold;
     @apply flex items-center space-x-4;
     @apply whitespace-nowrap;
+    @apply hover:no-underline;
 }
 
 .btn-primary {
     @apply bg-primary-200 text-primary-900;
 }
 
-.btn-primary:enabled {
+a.btn-primary .btn-primary {
     @apply bg-primary-200 hover:bg-primary-300 hover:shadow;
 }
 
@@ -28,6 +29,7 @@ button:disabled {
     @apply bg-gray-200 text-gray-700;
 }
 
+a.btn-secondary,
 .btn-secondary:enabled {
     @apply bg-gray-200 hover:bg-gray-300 hover:shadow;
 }
@@ -40,6 +42,7 @@ button:disabled {
     @apply bg-red-400 text-white;
 }
 
+a.btn-danger,
 .btn-danger:enabled {
     @apply bg-red-400 bg-opacity-75 hover:bg-opacity-100 hover:shadow;
 }
@@ -70,19 +73,48 @@ button:disabled {
     @apply hover:bg-gray-200;
 }
 
-.btn-ghost {
+.btn-ghost,
+.btn-ghost-danger {
     @apply flex items-center justify-center;
-    @apply text-sm font-black text-primary-700 hover:text-primary-800;
-    @apply rounded-lg px-4 py-2 hover:bg-primary-50;
+    @apply text-sm font-black;
+    @apply rounded-lg px-4 py-2;
     @apply hover:no-underline;
+}
+
+.btn-ghost {
+    @apply text-primary-700 hover:bg-primary-50 hover:text-primary-800;
+}
+
+.btn-ghost-danger {
+    @apply text-red-700 hover:bg-red-50 hover:text-red-800;
 }
 
 .bg-primary-50 .btn-ghost {
     @apply text-primary-700 hover:bg-primary-100;
 }
 
+.bg-primary-50 .btn-ghost-danger {
+    @apply text-red-700 hover:bg-red-100 hover:text-red-800;
+}
+
 .bg-primary-200 .btn-ghost {
     @apply text-primary-800 hover:bg-primary-300 hover:text-primary-900;
+}
+
+.bg-primary-200 .btn-ghost-danger {
+    @apply text-red-800 hover:bg-red-300 hover:text-red-900;
+}
+
+.bg-red-100 .btn-ghost-danger {
+    @apply text-red-800 hover:bg-red-300 hover:text-red-900;
+}
+
+.btn-ghost:disabled {
+    @apply text-primary-700 text-opacity-25 hover:bg-transparent hover:text-primary-700 hover:text-opacity-25;
+}
+
+.btn-ghost-danger:disabled {
+    @apply text-red-700 text-opacity-25 hover:bg-transparent hover:text-red-700 hover:text-opacity-25;
 }
 
 .btn-back {

@@ -21,7 +21,7 @@
 }
 
 .dialog-close-button {
-    @apply h-10 w-10 rounded-full text-gray-700 hover:bg-primary-200 hover:text-gray-950;
+    @apply h-10 w-10 rounded-full text-gray-700 hover:bg-primary-100 hover:text-gray-950;
 }
 
 .dialog-buttons {

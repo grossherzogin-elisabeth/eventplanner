@@ -16,4 +16,6 @@ export interface Event {
     assignedUserCount: number;
     signedInUserAssignedPosition?: PositionKey;
     signedInUserWaitingListPosition?: PositionKey;
+    canSignedInUserJoin: boolean;
+    canSignedInUserLeave: boolean;
 }

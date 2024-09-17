@@ -26,9 +26,45 @@ export class EventAdministrationUseCase {
 
     public async updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event> {
         const original = await this.eventCachingService.getEventByKey(eventKey);
-        // TODO create diff of registrations and save those that have changed
-        console.log(original?.registrations);
-        console.log(event?.registrations);
+        if (original && event.registrations) {
+            const originalRegistrationKeys = original.registrations.map((r) => r.key);
+            const newRegistrationKeys = event.registrations.map((r) => r.key);
+
+            const newRegistrations = event.registrations.filter((r) => !originalRegistrationKeys.includes(r.key));
+            const deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
+            const changedRegistrations = event.registrations.filter((a) => {
+                const b = original.registrations.find((it) => it.key === a.key);
+                return b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey);
+            });
+
+            for (const r of newRegistrations) {
+                // eslint-disable-next-line no-await-in-loop
+                await this.eventRegistrationsRepository.createRegistration(eventKey, r);
+            }
+            for (const r of changedRegistrations) {
+                // eslint-disable-next-line no-await-in-loop
+                await this.eventRegistrationsRepository.updateRegistration(eventKey, r);
+            }
+            for (const r of deletedRegistrations) {
+                // eslint-disable-next-line no-await-in-loop
+                await this.eventRegistrationsRepository.deleteRegistration(eventKey, r);
+            }
+
+            // TODO the backend cannot handle these in parallel at the moment, because all requests write to
+            // the event resource
+            // const requests: Promise<Event>[] = [];
+            // newRegistrations
+            //     .map((r) => this.eventRegistrationsRepository.createRegistration(eventKey, r))
+            //     .forEach((r) => requests.push(r));
+            // deletedRegistrations
+            //     .map((r) => this.eventRegistrationsRepository.deleteRegistration(eventKey, r))
+            //     .forEach((r) => requests.push(r));
+            // changedRegistrations
+            //     .map((r) => this.eventRegistrationsRepository.updateRegistration(eventKey, r))
+            //     .forEach((r) => requests.push(r));
+            // await Promise.all(requests);
+        }
+
         let savedEvent = await this.eventRepository.updateEvent(eventKey, event);
         savedEvent = await this.eventCachingService.updateCache(savedEvent);
         this.notificationService.success('Deine Änderungen wurden gespeichert');
@@ -54,10 +90,12 @@ export class EventAdministrationUseCase {
 
     public async contactTeam(event: Event): Promise<void> {
         // contact all including crew.@grossherzogin-elisabeth.de
+        console.log(`TODO: contact team of event ${event.name}`);
         throw new Error('Not implemented');
     }
 
     public async contactWaitingList(event: Event): Promise<void> {
+        console.log(`TODO: contact waitinglist of event ${event.name}`);
         // contact all including crew.@grossherzogin-elisabeth.de
         throw new Error('Not implemented');
     }

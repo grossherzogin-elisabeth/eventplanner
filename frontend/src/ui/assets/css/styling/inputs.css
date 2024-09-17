@@ -1,9 +1,9 @@
 @import '@/ui/assets/css/lib/checkbox.css';
-@import '@/ui/assets/css/lib/input-errors.css';
-@import '@/ui/assets/css/styling/input-date.css';
 @import '@/ui/assets/css/lib/input-multiselection.css';
 
 @import '@/ui/assets/css/styling/input-generic.css';
+@import '@/ui/assets/css/styling/input-errors.css';
+@import '@/ui/assets/css/styling/input-date.css';
 @import '@/ui/assets/css/styling/input-textarea.css';
 @import '@/ui/assets/css/styling/input-numeric.css';
 @import '@/ui/assets/css/styling/input-search.css';

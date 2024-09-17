@@ -1,5 +1,5 @@
 import { ArrayUtils, DateUtils } from '@/common';
-import type { Event, Registration, Slot, SlotKey, User, UserKey } from '@/domain';
+import type { Event, Registration, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
 
 export class EventService {
     public doEventsHaveOverlappingDays(a?: Event, b?: Event): boolean {
@@ -49,7 +49,7 @@ export class EventService {
         }
         slot.assignedRegistrationKey = registration.key;
         event.assignedUserCount++;
-        return event;
+        return this.optimizeSlots(event);
     }
 
     public assignGuestToSlot(event: Event, name: string, slotKey: SlotKey): Event {
@@ -63,7 +63,7 @@ export class EventService {
         }
         slot.assignedRegistrationKey = registration.key;
         event.assignedUserCount++;
-        return event;
+        return this.optimizeSlots(event);
     }
 
     public unassignSlot(event: Event, slotKey: SlotKey): Event {
@@ -72,8 +72,7 @@ export class EventService {
             throw new Error('Failed to resolve slot');
         }
         slot.assignedRegistrationKey = undefined;
-        event = this.optimizeSlots(event);
-        return event;
+        return this.optimizeSlots(event);
     }
 
     public cancelUserRegistration(event: Event, userKey?: UserKey): Event {
@@ -108,6 +107,7 @@ export class EventService {
      * @param event
      */
     private optimizeSlots(event: Event): Event {
+        this.debugSlots(event);
         for (let i = 0; i < event.slots.length; i++) {
             const slot = event.slots[i];
             if (!slot.assignedRegistrationKey) {
@@ -129,7 +129,14 @@ export class EventService {
                 }
             }
         }
+        this.debugSlots(event);
         return event;
+    }
+
+    private debugSlots(event: Event): void {
+        event.slots.forEach((s) => {
+            console.log(s.order, s.positionKeys, s.assignedRegistrationKey);
+        });
     }
 
     public updateSlot(event: Event, slot: Slot): Event {
@@ -147,7 +154,6 @@ export class EventService {
     }
 
     public hasOpenRequiredSlots(event: Event): boolean {
-        console.log(event.slots);
         const openRequiredSlots = event.slots.filter(
             (it) => it.criticality >= 1 && it.assignedRegistrationKey === undefined
         );
@@ -166,5 +172,38 @@ export class EventService {
 
     public getRegistrationsOnWaitinglist(event: Event): Registration[] {
         return event.registrations.filter((reg) => !event.slots.find((slt) => slt.assignedRegistrationKey === reg.key));
+    }
+
+    public validate(event: Event): Record<string, ValidationHint[]> {
+        const errors: Record<string, ValidationHint[]> = {};
+        if (event.name.trim().length === 0) {
+            errors.name = errors.name || [];
+            errors.name.push({
+                key: 'Bitte gib einen Anzeigenamen für das Event an',
+                params: {},
+            });
+        }
+        if (event.start.getTime() < new Date().getTime()) {
+            errors.start = errors.start || [];
+            errors.start.push({
+                key: 'Das Startdatum muss in der Zukunft liegen',
+                params: {},
+            });
+        }
+
+        if (event.end.getTime() < event.start.getTime()) {
+            errors.end = errors.end || [];
+            errors.end.push({
+                key: 'Das Enddatum muss nach dem Startdatum sein',
+                params: {},
+            });
+        } else if (event.end.getTime() < new Date().getTime()) {
+            errors.end = errors.end || [];
+            errors.end.push({
+                key: 'Das Enddatum muss in der Zukunft liegen',
+                params: {},
+            });
+        }
+        return errors;
     }
 }

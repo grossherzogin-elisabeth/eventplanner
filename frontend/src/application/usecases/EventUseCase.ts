@@ -31,77 +31,121 @@ export class EventUseCase {
     }
 
     public async getEvents(year: number): Promise<Event[]> {
-        const events = await this.eventCachingService.getEvents(year);
-        return events.sort((a, b) => a.start.getTime() - b.start.getTime());
+        try {
+            const events = await this.eventCachingService.getEvents(year);
+            return events.sort((a, b) => a.start.getTime() - b.start.getTime());
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async getEventByKey(year: number, eventKey: EventKey): Promise<Event> {
-        let event = await this.eventCachingService.getEventByKey(eventKey);
-        if (event) {
-            return event;
+        try {
+            let event = await this.eventCachingService.getEventByKey(eventKey);
+            if (event) {
+                return event;
+            }
+            const events = await this.getEvents(year);
+            event = events.find((it) => it.key === eventKey);
+            if (event) {
+                return event;
+            }
+            this.errorHandlingService.handleError({
+                title: '404 - nicht gefunden',
+                message: 'Hoppla, die Reise oder das Event gibt es anscheinend nicht',
+            });
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
         }
-        const events = await this.getEvents(year);
-        event = events.find((it) => it.key === eventKey);
-        if (event) {
-            return event;
-        }
-        throw new Error('Event nicht gefunden');
+        throw new Error('not found');
     }
 
     public async getEventsByUser(year: number, userKey: UserKey): Promise<Event[]> {
-        const events = await this.eventCachingService.getEvents(year);
-        return events
-            .filter((evt) => evt.registrations.find((reg) => reg.userKey === userKey))
-            .sort((a, b) => a.start.getTime() - b.start.getTime());
+        try {
+            const events = await this.eventCachingService.getEvents(year);
+            return events
+                .filter((evt) => evt.registrations.find((reg) => reg.userKey === userKey))
+                .sort((a, b) => a.start.getTime() - b.start.getTime());
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async getFutureEvents(): Promise<Event[]> {
-        const now = new Date();
-        const events = await this.eventCachingService.getEvents(now.getFullYear());
-        return events.filter((evt) => evt.end > now).sort((a, b) => a.start.getTime() - b.start.getTime());
+        try {
+            const now = new Date();
+            const events = await this.eventCachingService.getEvents(now.getFullYear());
+            return events.filter((evt) => evt.end > now).sort((a, b) => a.start.getTime() - b.start.getTime());
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async getFutureEventsByUser(userKey: UserKey): Promise<Event[]> {
-        const now = new Date();
-        const events = await this.eventCachingService.getEvents(now.getFullYear());
-        return events
-            .filter((evt) => evt.end > now)
-            .filter((evt) => evt.registrations.find((reg) => reg.userKey === userKey))
-            .sort((a, b) => a.start.getTime() - b.start.getTime());
+        try {
+            const now = new Date();
+            const events = await this.eventCachingService.getEvents(now.getFullYear());
+            return events
+                .filter((evt) => evt.end > now)
+                .filter((evt) => evt.registrations.find((reg) => reg.userKey === userKey))
+                .sort((a, b) => a.start.getTime() - b.start.getTime());
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async joinEvent(event: Event, positionKey?: PositionKey): Promise<Event> {
-        const user = this.authService.getSignedInUser();
-        if (!user) {
-            throw new Error('Authentifizierung erforderlich');
+        try {
+            const user = this.authService.getSignedInUser();
+            if (!user) {
+                throw new Error('Authentifizierung erforderlich');
+            }
+            let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
+                key: '',
+                positionKey: positionKey || 'deckshand', // TODO where can we best define the default?
+                userKey: user.key,
+            });
+            savedEvent = await this.eventCachingService.updateCache(savedEvent);
+            if (event.type === EventType.WorkEvent) {
+                this.notificationService.success('Deine Anmeldung wurde gespeichert');
+            } else {
+                this.notificationService.success('Du stehst jetzt auf der Warteliste');
+            }
+            return savedEvent;
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
         }
-        let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
-            key: '',
-            positionKey: positionKey || 'deckshand', // TODO where can we best define the default?
-            userKey: user.key,
-        });
-        savedEvent = await this.eventCachingService.updateCache(savedEvent);
-        if (event.type === EventType.WorkEvent) {
-            this.notificationService.success('Anmeldung wurde gespeichert');
-        } else {
-            this.notificationService.success('Du stehst jetzt auf der Warteliste');
-        }
-        return savedEvent;
     }
 
     public async leaveEvent(event: Event): Promise<Event> {
-        const user = this.authService.getSignedInUser();
-        if (!user) {
-            throw new Error('Authentifizierung erforderlich');
+        try {
+            const user = this.authService.getSignedInUser();
+            if (!user) {
+                throw new Error('Authentifizierung erforderlich');
+            }
+            const registration = event.registrations.find((it) => it.userKey === user.key);
+            if (!registration) {
+                throw new Error('Anmeldung nicht gefunden');
+            }
+            const hasSlot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
+            let savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
+            savedEvent = await this.eventCachingService.updateCache(savedEvent);
+            if (hasSlot) {
+                this.notificationService.success('Deine Teilnahme wurde storniert');
+            } else {
+                this.notificationService.success('Du hast die Warteliste verlassen');
+            }
+            return savedEvent;
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
         }
-        const registration = event.registrations.find((it) => it.userKey === user.key);
-        if (!registration) {
-            throw new Error('Anmeldung nicht gefunden');
-        }
-        let savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
-        savedEvent = await this.eventCachingService.updateCache(savedEvent);
-        this.notificationService.success('Anmeldung wurde gelöscht');
-        return savedEvent;
     }
 
     public downloadCalendarEntry(event: Event): void {

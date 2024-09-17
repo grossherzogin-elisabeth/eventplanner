@@ -65,9 +65,9 @@
                         <template v-else>Route</template>
                     </h2>
                     <div class="space-y-1 rounded-2xl bg-primary-100 p-4 lg:px-8">
-                        <div v-if="event.locations.length === 0">
-                            <i>Wird noch bekannt gegeben</i>
-                        </div>
+                        <p v-if="event.locations.length === 0" class="text-sm">
+                            Für diese Reise wurde noch keine Reiseroute angegeben.
+                        </p>
                         <div
                             v-for="(stop, portIndex) in event.locations"
                             v-else
@@ -84,7 +84,7 @@
                 <!-- crew -->
                 <section class="col-start-1 row-span-6 -mx-4 md:row-start-1 md:mx-0">
                     <h2
-                        v-if="event.state !== EventState.OpenForSignup"
+                        v-if="event.state !== EventState.OpenForSignup && event.assignedUserCount > 0"
                         class="mb-2 ml-4 flex space-x-4 font-bold text-primary-800 text-opacity-50 md:mb-6 md:ml-0"
                     >
                         <button
@@ -108,7 +108,36 @@
                     >
                         <span>Anmeldungen</span>
                     </h2>
-                    <div class="rounded-2xl bg-primary-100 p-4 md:rounded-none md:bg-transparent md:p-0">
+                    <div
+                        v-if="team.length === 0"
+                        class="rounded-2xl bg-primary-100 px-4 md:-mx-4 md:-mt-4 lg:-mx-8 lg:px-8"
+                    >
+                        <div class="flex items-center py-8">
+                            <div class="mr-4">
+                                <h3 class="mb-4 text-base">
+                                    <i class="fa-solid fa-trophy opacity-75"></i>
+                                    Du könntest der erste sein!
+                                </h3>
+                                <p class="text-sm">
+                                    Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen
+                                    und dich anmelden. Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und
+                                    anschließend wird vom Büro eine Crew zusammengestellt.
+                                </p>
+                            </div>
+                            <div></div>
+                        </div>
+                        <ul class="pb-8 opacity-20">
+                            <li v-for="i in 5" :key="i" class="flex items-center space-x-4 rounded-xl py-2">
+                                <i class="fa-solid fa-circle text-gray-400"></i>
+                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-gray-400"> </span>
+                                <span class="flex-grow"></span>
+                                <span class="position bg-gray-400">
+                                    <span class="mx-2 inline-block h-2 w-16 rounded-full bg-gray-100"> </span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div v-else class="rounded-2xl bg-primary-100 p-4 md:rounded-none md:bg-transparent md:p-0">
                         <template v-if="tab === Tab.Team">
                             <ul class="space-y-2">
                                 <template v-for="(it, index) in team" :key="index">
@@ -180,14 +209,11 @@
                 </section>
             </div>
         </template>
-        <template
-            v-if="event && !isInPast && user.permissions.includes(Permission.EVENT_TEAM_WRITE_SELF)"
-            #primary-button
-        >
+        <template v-if="event && user.permissions.includes(Permission.EVENT_TEAM_WRITE_SELF)" #primary-button>
             <button
                 v-if="event.signedInUserAssignedPosition"
                 class="btn-danger"
-                :disabled="!canRegistrationStillBeCancelled"
+                :disabled="!event.canSignedInUserLeave"
                 @click="leaveEvent(event)"
             >
                 <i class="fa-solid fa-cancel" />
@@ -196,13 +222,13 @@
             <button
                 v-else-if="event.signedInUserWaitingListPosition"
                 class="btn-danger"
-                :disabled="isInPast"
+                :disabled="!event.canSignedInUserLeave"
                 @click="leaveEvent(event)"
             >
                 <i class="fa-solid fa-user-minus" />
                 <span>Warteliste verlassen</span>
             </button>
-            <button v-else class="btn-primary" :disabled="isInPast" @click="joinEvent(event)">
+            <button v-else class="btn-primary" :disabled="!event.canSignedInUserJoin" @click="joinEvent(event)">
                 <i class="fa-solid fa-user-plus" />
                 <span>Anmelden</span>
             </button>
@@ -235,7 +261,7 @@
             <li
                 v-if="event.signedInUserAssignedPosition"
                 class="context-menu-item"
-                :class="{ disabled: !canRegistrationStillBeCancelled }"
+                :class="{ disabled: !event.canSignedInUserLeave }"
                 @click="leaveEvent(event)"
             >
                 <i class="fa-solid fa-cancel" />
@@ -244,13 +270,18 @@
             <li
                 v-else-if="event.signedInUserWaitingListPosition"
                 class="context-menu-item"
-                :class="{ disabled: isInPast }"
+                :class="{ disabled: !event.canSignedInUserLeave }"
                 @click="leaveEvent(event)"
             >
                 <i class="fa-solid fa-user-plus" />
                 <span>Warteliste verlassen</span>
             </li>
-            <li v-else class="context-menu-item" :class="{ disabled: isInPast }" @click="joinEvent(event)">
+            <li
+                v-else
+                class="context-menu-item"
+                :class="{ disabled: !event.canSignedInUserJoin }"
+                @click="joinEvent(event)"
+            >
                 <i class="fa-solid fa-user-minus" />
                 <span>Anmelden</span>
             </li>
@@ -262,12 +293,11 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { DateUtils } from '@/common';
 import type { Event, Position, PositionKey, ResolvedRegistration, ResolvedSlot } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
-import { useAuthUseCase, useErrorHandling, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { Routes } from '@/ui/views/Routes';
 
@@ -290,7 +320,6 @@ const emit = defineEmits<RouteEmits>();
 
 const i18n = useI18n();
 const route = useRoute();
-const errorHandling = useErrorHandling();
 const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
 const usersUseCase = useUsersUseCase();
@@ -305,8 +334,6 @@ const position = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>(
 const waitingList = ref<ResolvedRegistration[]>([]);
 const team = ref<ResolvedSlot[]>([]);
 
-const canRegistrationStillBeCancelled = ref<boolean>(false);
-const isInPast = ref<boolean>(false);
 const state = ref<State | null>(null);
 
 const waitingListCount = computed<number>(() => {
@@ -336,13 +363,9 @@ async function onEventChanged() {
         return;
     }
 
-    if (event.value.state === EventState.OpenForSignup) {
+    if (event.value.state === EventState.OpenForSignup || event.value.assignedUserCount === 0) {
         tab.value = Tab.WaitingList;
     }
-
-    const latestCancelTime = DateUtils.subtract(event.value.start, { days: 7 });
-    canRegistrationStillBeCancelled.value = latestCancelTime.getTime() > new Date().getTime();
-    isInPast.value = event.value.start.getTime() < new Date().getTime();
 
     if (event.value?.signedInUserAssignedPosition !== undefined) {
         state.value = {
@@ -350,7 +373,7 @@ async function onEventChanged() {
                 ? i18n.t('app.event-details.note-assigned-position', { position: ownPosition.value.name })
                 : i18n.t('app.event-details.note-assigned'),
             icon: 'fa-check',
-            color: 'bg-green-200 text-green-800',
+            color: 'bg-green-100 text-green-800',
         };
     } else if (event.value?.signedInUserWaitingListPosition) {
         state.value = {
@@ -372,29 +395,21 @@ async function fetchTeam(event: Event): Promise<void> {
 }
 
 async function joinEvent(evt: Event, position?: PositionKey): Promise<void> {
-    try {
-        let signupPosition = position;
-        if (!position) {
-            const userDetails = await usersUseCase.getUserDetailsForSignedInUser();
-            if (userDetails.positionKeys.length === 1) {
-                signupPosition = userDetails.positionKeys[0];
-            } else {
-                signupPosition = userDetails.positionKeys[0];
-                alert(`Du hast mehrere mögliche Rollen. Wir nehmen erstmal ${signupPosition}`);
-            }
+    let signupPosition = position;
+    if (!position) {
+        const userDetails = await usersUseCase.getUserDetailsForSignedInUser();
+        if (userDetails.positionKeys.length === 1) {
+            signupPosition = userDetails.positionKeys[0];
+        } else {
+            signupPosition = userDetails.positionKeys[0];
+            alert(`Du hast mehrere mögliche Rollen. Wir nehmen erstmal ${signupPosition}`);
         }
-        event.value = await eventUseCase.joinEvent(evt, signupPosition);
-    } catch (e) {
-        errorHandling.handleUnexpectedError(e);
     }
+    event.value = await eventUseCase.joinEvent(evt, signupPosition);
 }
 
 async function leaveEvent(evt: Event): Promise<void> {
-    try {
-        event.value = await eventUseCase.leaveEvent(evt);
-    } catch (e) {
-        errorHandling.handleUnexpectedError(e);
-    }
+    event.value = await eventUseCase.leaveEvent(evt);
 }
 
 init();

@@ -1,7 +1,7 @@
 <template>
     <button
         :disabled="props.disabled || loading"
-        class="flex-grow whitespace-nowrap"
+        class="whitespace-nowrap"
         :class="$attrs.class || 'btn-primary'"
         @click="onClick()"
     >

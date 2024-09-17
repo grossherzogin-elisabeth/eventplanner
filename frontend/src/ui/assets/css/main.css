@@ -43,3 +43,7 @@ body {
 svg {
     fill: currentColor;
 }
+
+.animate-once {
+    animation-iteration-count: 1;
+}

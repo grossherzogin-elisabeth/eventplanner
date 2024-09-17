@@ -1,5 +1,7 @@
 <template>
-    <div class="fixed left-0 right-0 top-12 z-20 flex w-96 flex-col items-stretch px-4 py-2 xl:left-auto xl:right-16">
+    <div
+        class="pointer-events-none fixed left-0 right-0 top-12 z-30 flex w-full flex-col items-stretch px-4 py-2 sm:left-auto sm:w-96 xl:right-16 xl:top-2"
+    >
         <template v-for="(notification, index) in notifications" :key="index">
             <div v-if="!notification.hidden" :class="notification.class">
                 <div class="notification">
@@ -77,7 +79,15 @@ init();
 
 <style>
 .notification {
-    @apply flex h-full items-center gap-4 overflow-hidden rounded-xl px-4 py-4  shadow-xl;
+    @apply flex h-full items-center gap-4 overflow-hidden px-4 py-4;
+}
+
+.fixed .notification {
+    @apply rounded-xl shadow-xl;
+}
+
+.notification button {
+    @apply pointer-events-auto;
 }
 
 .success .notification {

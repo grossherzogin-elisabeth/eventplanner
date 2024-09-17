@@ -7,12 +7,19 @@
             <div class="p-8 lg:px-16">
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Name</VInputLabel>
-                    <VInputText v-model="event.name" />
+                    <VInputText
+                        v-model="event.name"
+                        :errors="validation.errors.value['name']"
+                        :errors-visible="validation.showErrors.value"
+                        required
+                    />
                 </div>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Kategorie</VInputLabel>
                     <VInputSelect
                         v-model="event.type"
+                        :errors="validation.errors.value['type']"
+                        :errors-visible="validation.showErrors.value"
                         :options="[
                             { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
                             { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
@@ -26,6 +33,8 @@
                     <VInputLabel>Vorlage</VInputLabel>
                     <VInputCombobox
                         v-model="template"
+                        :errors="validation.errors.value['template']"
+                        :errors-visible="validation.showErrors.value"
                         :options="
                             templates
                                 .filter((it) => it.type === event.type)
@@ -38,38 +47,70 @@
                 </div>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Beschreibung</VInputLabel>
-                    <VInputTextArea v-model="event.description" />
+                    <VInputTextArea
+                        v-model="event.description"
+                        :errors="validation.errors.value['description']"
+                        :errors-visible="validation.showErrors.value"
+                    />
                 </div>
                 <div class="-mx-4 mb-2 flex space-x-4">
-                    <div class="flex-grow">
+                    <div class="w-3/5">
                         <VInputLabel>Startdatum</VInputLabel>
-                        <VInputDate v-model="event.start" required />
+                        <VInputDate
+                            v-model="event.start"
+                            :errors="validation.errors.value['start']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        />
                     </div>
-                    <div class="flex-grow">
+                    <div class="w-2/5">
                         <VInputLabel>Crew an Board</VInputLabel>
-                        <VInputText model-value="16:00" required />
+                        <VInputText
+                            model-value="16:00"
+                            required
+                            :errors="validation.errors.value['startTime']"
+                            :errors-visible="validation.showErrors.value"
+                        />
                     </div>
                 </div>
 
                 <div class="-mx-4 mb-2 flex space-x-4">
-                    <div class="flex-grow">
+                    <div class="w-3/5">
                         <VInputLabel>Enddatum</VInputLabel>
-                        <VInputDate v-model="event.end" required />
+                        <VInputDate
+                            v-model="event.end"
+                            :errors="validation.errors.value['end']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        />
                     </div>
-                    <div class="flex-grow">
+                    <div class="w-2/5">
                         <VInputLabel>Crew von Board</VInputLabel>
-                        <VInputText model-value="16:00" required />
+                        <VInputText
+                            model-value="16:00"
+                            required
+                            :errors="validation.errors.value['endTime']"
+                            :errors-visible="validation.showErrors.value"
+                        />
                     </div>
                 </div>
             </div>
         </template>
         <template #buttons="{ reject, submit }">
             <button class="btn-secondary" @click="reject">
+                <i class="fa-solid fa-xmark"></i>
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" @click="submit">
-                <span>Event erstellen</span>
-            </button>
+            <AsyncButton
+                class="btn-primary"
+                :action="() => submitIfValid(submit)"
+                :disabled="validation.disableSubmit.value"
+            >
+                <template #icon>
+                    <i class="fa-solid fa-save"></i>
+                </template>
+                <template #label> Event erstellen </template>
+            </AsyncButton>
         </template>
     </VDialog>
 </template>
@@ -89,10 +130,13 @@ import {
     VInputText,
     VInputTextArea,
 } from '@/ui/components/common';
-import { useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
+import AsyncButton from '@/ui/components/common/buttons/AsyncButton.vue';
+import { useEventUseCase } from '@/ui/composables/Application';
+import { useEventService } from '@/ui/composables/Domain';
+import { useValidation } from '@/ui/composables/Validation';
 
-const eventAdministrationUseCase = useEventAdministrationUseCase();
 const eventUseCase = useEventUseCase();
+const eventService = useEventService();
 
 const dlg = ref<Dialog<Event, Event> | null>(null);
 const templates = ref<Event[]>([]);
@@ -109,7 +153,10 @@ const event = ref<Event>({
     slots: [],
     registrations: [],
     assignedUserCount: 0,
+    canSignedInUserJoin: false,
+    canSignedInUserLeave: false,
 });
+const validation = useValidation(event, eventService.validate);
 
 async function init(): Promise<void> {
     await fetchTemplates(new Date().getFullYear());
@@ -122,9 +169,26 @@ async function fetchTemplates(year: number): Promise<void> {
     }
 }
 
+async function submitIfValid(submitFun: () => void) {
+    if (validation.isValid.value) {
+        submitFun();
+    } else {
+        validation.showErrors.value = true;
+        throw validation.errors;
+    }
+}
+
 async function open(): Promise<Event> {
     await dlg.value?.open();
-    event.value = await eventAdministrationUseCase.createEvent(event.value);
+    if (template.value) {
+        event.value.slots = template.value.slots.map((slot) => ({
+            key: slot.key,
+            criticality: slot.criticality,
+            positionKeys: slot.positionKeys,
+            positionName: slot.positionName,
+            order: slot.order,
+        }));
+    }
     return event.value;
 }
 

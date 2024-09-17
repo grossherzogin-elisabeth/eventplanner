@@ -15,7 +15,7 @@
 
         <div class="h-16 xl:hidden"></div>
         <div
-            class="pointer-events-none fixed bottom-0 right-0 z-10 flex items-stretch justify-end space-x-2 pb-4 pr-3 pt-6 md:pr-14 lg:pointer-events-auto lg:justify-start lg:border-t lg:border-primary-200 lg:bg-primary-50 lg:px-16 lg:pb-8 xl:sticky xl:px-20"
+            class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 flex items-stretch justify-end space-x-2 pb-4 pr-3 pt-6 md:pr-14 lg:pointer-events-auto lg:justify-start lg:border-t lg:border-primary-200 lg:bg-primary-50 lg:px-16 lg:pb-8 xl:sticky xl:px-20"
         >
             <div class="details-page-primary-button pointer-events-auto w-auto">
                 <slot name="primary-button" />
