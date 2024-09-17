@@ -9,14 +9,25 @@
                 class="gap-x-20 gap-y-8 space-y-8 px-8 pb-8 pt-6 md:grid md:grid-cols-2 md:space-y-0 md:px-16 xl:px-20"
             >
                 <!-- state info banner -->
-                <section v-if="state" class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:mx-0">
-                    <div class="overflow-hidden rounded-2xl bg-white">
-                        <div :class="state.color">
-                            <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
-                                <i :class="state.icon" class="fa-solid" />
-                                <!-- eslint-disable-next-line vue/no-v-html -->
-                                <p class="text-sm font-bold" v-html="state.text"></p>
-                            </div>
+                <section
+                    v-if="event.signedInUserAssignedPosition"
+                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:mx-0"
+                >
+                    <div class="overflow-hidden rounded-2xl bg-green-100 text-green-800">
+                        <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
+                            <i class="fa-solid fa-check" />
+                            <p class="text-sm font-bold">Du bist für diese Reise eingeplant</p>
+                        </div>
+                    </div>
+                </section>
+                <section
+                    v-else-if="event.signedInUserWaitingListPosition"
+                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:mx-0"
+                >
+                    <div class="overflow-hidden rounded-2xl bg-yellow-100 text-yellow-800">
+                        <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
+                            <i class="fa-solid fa-hourglass-half" />
+                            <p class="text-sm font-bold">Du stehst für diese Reise auf der Warteliste</p>
                         </div>
                     </div>
                 </section>
@@ -39,10 +50,6 @@
                             <i class="fa-solid fa-clock w-4 text-gray-700" />
                             <span>Crew an Board: 16:00 Uhr</span>
                         </p>
-                        <!--                    <p class="flex items-center space-x-4">-->
-                        <!--                        <i class="fa-solid fa-route w-4 text-gray-700" />-->
-                        <!--                        <span>300 Seemeilen (geschätzt)</span>-->
-                        <!--                    </p>-->
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-users w-4 text-gray-700" />
                             <span v-if="event.assignedUserCount && waitingListCount">
@@ -66,7 +73,8 @@
                     </h2>
                     <div class="space-y-1 rounded-2xl bg-primary-100 p-4 lg:px-8">
                         <p v-if="event.locations.length === 0" class="text-sm">
-                            Für diese Reise wurde noch keine Reiseroute angegeben.
+                            Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen
+                            verfügbar sind, kannst du sie hier sehen.
                         </p>
                         <div
                             v-for="(stop, portIndex) in event.locations"
@@ -109,14 +117,14 @@
                         <span>Anmeldungen</span>
                     </h2>
                     <div
-                        v-if="team.length === 0"
+                        v-if="team.length === 0 && waitingListCount === 0"
                         class="rounded-2xl bg-primary-100 px-4 md:-mx-4 md:-mt-4 lg:-mx-8 lg:px-8"
                     >
                         <div class="flex items-center py-8">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
                                     <i class="fa-solid fa-trophy opacity-75"></i>
-                                    Du könntest der erste sein!
+                                    <span class="ml-4">Du könntest der erste sein!</span>
                                 </h3>
                                 <p class="text-sm">
                                     Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen
@@ -127,7 +135,7 @@
                             <div></div>
                         </div>
                         <ul class="pb-8 opacity-20">
-                            <li v-for="i in 5" :key="i" class="flex items-center space-x-4 rounded-xl py-2">
+                            <li v-for="i in 10" :key="i" class="flex items-center space-x-4 rounded-xl py-1">
                                 <i class="fa-solid fa-circle text-gray-400"></i>
                                 <span class="mx-2 inline-block h-4 w-64 rounded-full bg-gray-400"> </span>
                                 <span class="flex-grow"></span>

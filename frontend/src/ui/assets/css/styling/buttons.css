@@ -17,7 +17,8 @@ button:disabled {
     @apply bg-primary-200 text-primary-900;
 }
 
-a.btn-primary .btn-primary {
+a.btn-primary,
+.btn-primary:enabled {
     @apply bg-primary-200 hover:bg-primary-300 hover:shadow;
 }
 

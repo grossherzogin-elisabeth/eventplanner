@@ -38,19 +38,19 @@ async function showNotification(
     let icon = '';
     switch (type) {
         case 'success':
-            icon = 'fa-check-circle';
+            icon = 'fa-check';
             break;
         case 'info':
-            icon = 'fa-info-circle';
+            icon = 'fa-info';
             break;
         case 'warning':
             icon = 'fa-warning';
             break;
         case 'error':
-            icon = 'fa-exclamation-circle';
+            icon = 'fa-exclamation';
             break;
         default:
-            icon = 'fa-check-circle';
+            icon = 'fa-check';
             break;
     }
     const notification: Notification = {

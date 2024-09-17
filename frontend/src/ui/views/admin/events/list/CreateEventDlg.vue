@@ -179,6 +179,7 @@ async function submitIfValid(submitFun: () => void) {
 }
 
 async function open(): Promise<Event> {
+    validation.reset();
     await dlg.value?.open();
     if (template.value) {
         event.value.slots = template.value.slots.map((slot) => ({

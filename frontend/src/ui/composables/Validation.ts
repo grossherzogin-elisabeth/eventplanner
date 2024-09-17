@@ -17,5 +17,9 @@ export function useValidation<T>(t: Ref<T>, validationFunction: (t: T) => Record
         return showErrors.value && !isValid.value;
     });
 
-    return { errors, isValid, showErrors, disableSubmit };
+    function reset(): void {
+        showErrors.value = false;
+    }
+
+    return { errors, isValid, showErrors, disableSubmit, reset };
 }

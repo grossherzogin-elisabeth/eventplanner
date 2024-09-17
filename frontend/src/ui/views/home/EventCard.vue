@@ -22,7 +22,7 @@
                         </span>
                         <span>{{ props.event.assignedUserCount }} Crew</span>
                     </p>
-                    <div class="flex flex-col flex-wrap justify-between">
+                    <div class="flex flex-wrap">
                         <div
                             v-for="(location, index) in props.event.locations"
                             :key="index"
@@ -35,6 +35,7 @@
                                 :country="location.country"
                                 class="border border-gray-200"
                             />
+                            <span class="pr-2">↣</span>
                         </div>
                     </div>
 
@@ -43,7 +44,7 @@
                         class="-mx-4 mt-6 flex rounded-xl bg-blue-500 bg-opacity-15 px-4 py-2"
                     >
                         <p class="flex items-center space-x-2 text-blue-700">
-                            <i class="fa-solid fa-circle-info w-4" />
+                            <i class="fa-solid fa-hourglass-half w-4" />
                             <span class="text-sm font-bold">{{ $t('app.event-details.note-waitinglist') }}</span>
                         </p>
                     </div>
