@@ -30,33 +30,29 @@
             @close="showDropdown = false"
         >
             <div class="w-full px-2">
-                <div class="rounded-2xl bg-white p-4 px-8 shadow-xl">
+                <div class="rounded-2xl border border-primary-100 bg-primary-50 p-4 px-8 shadow-xl">
                     <div class="-mr-4 mb-4 flex items-center justify-end">
-                        <button
-                            class="rounded-lg px-2 py-1 hover:bg-gray-100"
-                            title="Schließen"
-                            @click="showDropdown = false"
-                        >
+                        <!-- title -->
+                        <h2 class="flex-grow text-lg">
+                            <span>{{ props.event.name }}</span>
+                        </h2>
+
+                        <button class="dialog-close-button" title="Schließen" @click="showDropdown = false">
                             <i class="fa-solid fa-close"></i>
                         </button>
                     </div>
 
-                    <!-- title -->
-                    <h2 class="mb-4 flex items-center space-x-4 text-lg">
-                        <span>{{ props.event.name }}</span>
-                    </h2>
-
                     <!-- state -->
                     <div
                         v-if="props.event.signedInUserAssignedPosition"
-                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-green-200 px-4 py-3 text-green-800"
+                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-green-100 px-4 py-3 text-green-800"
                     >
                         <i class="fa-solid fa-check" />
                         <p class="text-sm font-bold">{{ $t('app.event-details.note-assigned') }}</p>
                     </div>
                     <div
                         v-else-if="props.event.signedInUserWaitingListPosition"
-                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-blue-300 px-4 py-3 text-blue-800"
+                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-blue-100 px-4 py-3 text-blue-800"
                     >
                         <i class="fa-solid fa-clock" />
                         <p class="text-sm font-bold">{{ $t('app.event-details.note-waitinglist') }}</p>
@@ -71,6 +67,10 @@
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-clock w-4 text-gray-700"></i>
                             <span>Crew an Board: 16:00 Uhr</span>
+                        </p>
+                        <p v-if="props.event.assignedUserCount" class="items-center space-x-4">
+                            <i class="fa-solid fa-users w-4 text-gray-700"></i>
+                            <span>{{ props.event.assignedUserCount }} Crew</span>
                         </p>
                         <p v-if="props.event.description" class="flex items-center space-x-4">
                             <i class="fa-solid fa-info-circle w-4 text-gray-700"></i>
@@ -97,13 +97,41 @@
 
                     <!-- primary button -->
                     <div class="mt-4 flex justify-end space-x-2 xl:-mr-4">
+                        <button
+                            v-if="props.event.signedInUserAssignedPosition"
+                            class="btn-ghost-danger"
+                            title="Event absagen"
+                            :disabled="!props.event.canSignedInUserLeave"
+                            @click="leaveEvent()"
+                        >
+                            <i class="fa-solid fa-ban"></i>
+                            <span class="ml-2">Absagen</span>
+                        </button>
+                        <button
+                            v-else-if="props.event.signedInUserWaitingListPosition && props.event.canSignedInUserLeave"
+                            class="btn-ghost-danger"
+                            title="Warteliste verlassen"
+                            @click="leaveEvent()"
+                        >
+                            <i class="fa-solid fa-user-minus"></i>
+                            <span class="ml-2">Warteliste verlassen</span>
+                        </button>
+                        <button
+                            v-else-if="props.event.canSignedInUserJoin"
+                            class="btn-ghost"
+                            title="Anmelden"
+                            @click="joinEvent()"
+                        >
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span class="ml-2">Anmelden</span>
+                        </button>
                         <RouterLink
                             :to="{ name: Routes.EventDetails, params: { key: props.event.key } }"
                             class="btn-ghost"
                             title="Detailansicht"
                         >
-                            <span class="mr-2">Details</span>
                             <i class="fa-solid fa-up-right-from-square"></i>
+                            <span class="ml-2">Details</span>
                         </RouterLink>
                     </div>
                 </div>
@@ -117,6 +145,7 @@ import { useRoute, useRouter } from 'vue-router';
 import type { Event } from '@/domain';
 import { VDropdownWrapper } from '@/ui/components/common';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
+import { useEventUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { Routes } from '@/ui/views/Routes';
 
@@ -127,10 +156,16 @@ interface Props {
     start: number;
 }
 
+interface Emits {
+    (e: 'update:event', value: Event): void;
+}
+
 const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 const route = useRoute();
 const router = useRouter();
+const eventUseCase = useEventUseCase();
 
 const showDropdown = ref<boolean>(false);
 
@@ -150,6 +185,18 @@ function showDetails(): void {
     } else {
         showDropdown.value = true;
     }
+}
+
+async function joinEvent(): Promise<void> {
+    const updatedEvent = await eventUseCase.joinEvent(props.event);
+    emit('update:event', updatedEvent);
+    showDropdown.value = false;
+}
+
+async function leaveEvent(): Promise<void> {
+    const updatedEvent = await eventUseCase.leaveEvent(props.event);
+    emit('update:event', updatedEvent);
+    showDropdown.value = false;
 }
 
 init();

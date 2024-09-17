@@ -1,4 +1,4 @@
-import type { AuthService, Config } from '@/application';
+import type { AuthService, Config, UserRepository } from '@/application';
 import type { AccountRepository } from '@/application/ports/AccountRepository';
 import { Timer } from '@/common';
 import type { SignedInUser, UserKey } from '@/domain';
@@ -7,16 +7,29 @@ export class AuthUseCase {
     private readonly config: Config;
     private readonly authService: AuthService;
     private readonly accountRepository: AccountRepository;
+    private readonly userRepository: UserRepository;
     private authentication?: Promise<string | undefined>;
 
-    constructor(params: { config: Config; authService: AuthService; accountRepository: AccountRepository }) {
+    constructor(params: {
+        config: Config;
+        authService: AuthService;
+        accountRepository: AccountRepository;
+        userRepository: UserRepository;
+    }) {
         this.config = params.config;
         this.authService = params.authService;
         this.accountRepository = params.accountRepository;
+        this.userRepository = params.userRepository;
     }
 
     public async authenticate(redirectPath?: string): Promise<string | undefined> {
         const user = await this.accountRepository.getAccount();
+        if (user && this.config.overrideSignedInUserKey) {
+            const impersonatedUser = await this.userRepository.findByKey(this.config.overrideSignedInUserKey);
+            if (impersonatedUser) {
+                this.authService.impersonate(impersonatedUser);
+            }
+        }
         this.authService.setSignedInUser(user);
         if (!user) {
             if (redirectPath) {
@@ -64,8 +77,12 @@ export class AuthUseCase {
         window.location.href = this.config.authLogoutEndpoint;
     }
 
-    public impersonateUser(userKey: UserKey): void {
-        localStorage.setItem('eventplanner.overrideSignedInUserKey', userKey);
+    public impersonateUser(userKey: UserKey | null): void {
+        if (userKey) {
+            localStorage.setItem('eventplanner.overrideSignedInUserKey', userKey);
+        } else {
+            localStorage.removeItem('eventplanner.overrideSignedInUserKey');
+        }
         window.location.reload();
     }
 
@@ -77,14 +94,12 @@ export class AuthUseCase {
         return (
             this.authService.getSignedInUser() || {
                 key: '',
-                gender: 'd',
-                username: 'anonymous',
                 lastname: '',
                 firstname: '',
                 email: '',
-                phone: '',
                 roles: [],
                 permissions: [],
+                impersonated: false,
             }
         );
     }

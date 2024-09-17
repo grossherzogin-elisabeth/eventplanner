@@ -26,14 +26,12 @@ export class AccountRestRepository implements AccountRepository {
     private mapAccountToSignedInUser(user: AccountRepresentation): SignedInUser {
         return {
             key: user.key,
-            username: '?',
             firstname: '?',
             lastname: '?',
             email: user.email,
-            phone: '?',
-            gender: 'd',
             roles: user.roles as Role[],
             permissions: user.permissions as Permission[],
+            impersonated: false,
         };
     }
 }

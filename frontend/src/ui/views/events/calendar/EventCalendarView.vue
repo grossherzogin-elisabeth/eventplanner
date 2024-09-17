@@ -30,11 +30,12 @@
                                 <EventCalendarItem
                                     v-for="evt in d.events"
                                     :key="evt.event.key"
+                                    :event="evt.event"
                                     :class="evt.class"
                                     :duration="evt.duration"
                                     :duration-in-month="evt.durationInMonth"
-                                    :event="evt.event"
                                     :start="evt.offset"
+                                    @update:event="updateEvent"
                                 />
                             </div>
                         </div>
@@ -99,6 +100,11 @@ const calendarStyle = ref({
 function init(): void {
     emit('update:title', `Alle Reisen ${route.params.year}`);
     watch(route, () => fetchEvents());
+    watch(
+        () => events.value,
+        () => populateCalendar(),
+        { deep: true }
+    );
     onMounted(() => mounted());
     onBeforeUnmount(() => beforeUnmount());
     window.addEventListener('resize', updateCalendarWith, { passive: true });
@@ -155,7 +161,6 @@ async function fetchEvents(): Promise<void> {
     year.value = parseInt(route.params.year as string, 10) || new Date().getFullYear();
     months.value = buildCalender(year.value);
     events.value = await eventUseCase.getEvents(year.value);
-    months.value = populateCalendar(months.value, events.value);
 }
 
 function buildCalender(year: number): Map<Month, CalendarDay[]> {
@@ -182,13 +187,22 @@ function buildCalender(year: number): Map<Month, CalendarDay[]> {
     return temp;
 }
 
-function populateCalendar(calendar: Map<Month, CalendarDay[]>, evts: Event[]): Map<Month, CalendarDay[]> {
-    for (let i = 0; i < evts.length; i++) {
-        const previousEvent: Event | undefined = evts[i - 1];
-        const event: Event = evts[i];
-        const nextEvent: Event | undefined = evts[i + 1];
+function updateEvent(event: Event): void {
+    events.value = events.value.map((it) => (it.key === event.key ? event : it));
+}
 
-        const month = calendar.get(event.start.getMonth());
+function populateCalendar(): Map<Month, CalendarDay[]> {
+    // reset all events
+    [...months.value.values()].forEach((month) => {
+        month.forEach((day) => (day.events = []));
+    });
+
+    for (let i = 0; i < events.value.length; i++) {
+        const previousEvent: Event | undefined = events.value[i - 1];
+        const event: Event = events.value[i];
+        const nextEvent: Event | undefined = events.value[i + 1];
+
+        const month = months.value.get(event.start.getMonth());
         if (!month) {
             console.error(`Missing month with index ${event.start.getMonth()}!`);
             continue;
@@ -237,7 +251,7 @@ function populateCalendar(calendar: Map<Month, CalendarDay[]>, evts: Event[]): M
         // check if event ends in next month and split into two events
         if (dayIndex + calendarDayEvent.durationInMonth >= month.length) {
             calendarDayEvent.durationInMonth = month.length - dayIndex;
-            const nextMonth = calendar.get(event.start.getMonth() + 1);
+            const nextMonth = months.value.get(event.start.getMonth() + 1);
             if (!nextMonth) {
                 console.error(`Missing month with index ${event.start.getMonth() + 1}!`);
                 continue;
@@ -261,7 +275,7 @@ function populateCalendar(calendar: Map<Month, CalendarDay[]>, evts: Event[]): M
 
         day.events.push(calendarDayEvent);
     }
-    return calendar;
+    return months.value;
 }
 
 init();
@@ -289,10 +303,14 @@ init();
     @apply text-lg font-bold;
 }
 
+.impersonated .calendar-header {
+    @apply mb-16 sm:mb-0;
+}
+
 .calendar-day {
     height: var(--row-height);
     width: calc(var(--scrollcontainer-width) / var(--columns));
-    @apply flex items-center border-b border-r border-primary-50 pl-2 pr-1;
+    @apply relative flex items-center border-b border-r border-primary-50 bg-primary-50 pl-2 pr-1;
 }
 
 .calendar-day:nth-child(2) {
@@ -309,12 +327,16 @@ init();
     @apply w-7 text-sm font-bold opacity-40 md:w-8;
 }
 
+.calendar-day.holiday,
 .calendar-day.weekend {
-    @apply rounded-lg bg-gray-500 bg-opacity-5 text-red-500;
+    @apply text-red-500;
 }
 
-.calendar-day.holiday {
-    @apply rounded-lg bg-gray-500 bg-opacity-5 text-red-500;
+.calendar-day.holiday:before,
+.calendar-day.weekend:before {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 top-0;
+    @apply rounded-lg bg-primary-100 bg-opacity-50 text-red-500;
 }
 
 .calendar-day.today {
@@ -323,8 +345,15 @@ init();
 
 .calendar-day.today:after {
     content: '';
-    @apply absolute bottom-0 left-0 right-0 top-0 z-10 rounded-lg border-2 border-red-500 border-opacity-50 bg-red-100 bg-opacity-25;
+    @apply pointer-events-none absolute bottom-0 left-0 right-0 top-0 z-10;
+    @apply rounded-lg border-2 border-red-500 border-opacity-50 bg-red-100 bg-opacity-25;
 }
+
+/*
+.calendar-day:hover {
+    @apply bg-primary-200 rounded-lg cursor-pointer text-primary-700;
+} 
+*/
 
 @media only screen and (min-width: 450px) {
     .calendar {

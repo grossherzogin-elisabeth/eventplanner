@@ -98,7 +98,7 @@
                 </VTabs>
             </template>
             <template #primary-button>
-                <AsyncButton :action="save">
+                <AsyncButton v-if="userDetails" :action="save">
                     <template #icon>
                         <i class="fa-solid fa-save"></i>
                     </template>
@@ -150,9 +150,7 @@ async function fetchUserDetails() {
 }
 
 async function save(): Promise<void> {
-    if (userDetails.value) {
-        await usersUseCase.updateUserDetailsForSignedInUser(userDetails.value);
-    }
+    await usersUseCase.updateUserDetailsForSignedInUser(userDetails.value!);
 }
 
 function init() {

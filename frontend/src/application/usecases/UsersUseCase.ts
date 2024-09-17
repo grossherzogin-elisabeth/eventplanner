@@ -1,4 +1,4 @@
-import type { NotificationService } from '@/application';
+import type { Config, NotificationService } from '@/application';
 import type { UserRepository } from '@/application/ports/UserRepository';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { PositionCachingService } from '@/application/services/PositionCachingService';
@@ -20,6 +20,7 @@ import type {
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
 export class UsersUseCase {
+    private readonly config: Config;
     private readonly userRepository: UserRepository;
     private readonly registrationService: RegistrationService;
     private readonly positionCachingService: PositionCachingService;
@@ -29,6 +30,7 @@ export class UsersUseCase {
     private readonly errorHandlingService: ErrorHandlingService;
 
     constructor(params: {
+        config: Config;
         userRepository: UserRepository;
         registrationService: RegistrationService;
         positionCachingService: PositionCachingService;
@@ -37,6 +39,7 @@ export class UsersUseCase {
         notificationService: NotificationService;
         errorHandlingService: ErrorHandlingService;
     }) {
+        this.config = params.config;
         this.userRepository = params.userRepository;
         this.registrationService = params.registrationService;
         this.positionCachingService = params.positionCachingService;
@@ -47,21 +50,29 @@ export class UsersUseCase {
     }
 
     public async getUserDetailsForSignedInUser(): Promise<UserDetails> {
+        if (this.config.overrideSignedInUserKey) {
+            return await this.userRepository.findByKey(this.config.overrideSignedInUserKey);
+        }
         return await this.userRepository.findBySignedInUser();
     }
 
     public async updateUserDetailsForSignedInUser(details: UserDetails): Promise<UserDetails> {
-        const savedUser = await this.userRepository.updateSignedInUser({
-            gender: details.gender,
-            title: details.title,
-            phone: details.phone,
-            mobile: details.mobile,
-            address: details.address,
-            passNr: details.passNr,
-            email: details.email,
-        });
-        this.notificationService.success('Deine Angaben wurden gespeichert');
-        return savedUser;
+        try {
+            const savedUser = await this.userRepository.updateSignedInUser({
+                gender: details.gender,
+                title: details.title,
+                phone: details.phone,
+                mobile: details.mobile,
+                address: details.address,
+                passNr: details.passNr,
+                email: details.email,
+            });
+            this.notificationService.success('Deine Angaben wurden gespeichert');
+            return savedUser;
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async getUsers(keys?: UserKey[]): Promise<User[]> {

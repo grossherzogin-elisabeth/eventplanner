@@ -111,9 +111,10 @@ const application: Application = {
     },
     usecases: {
         auth: new AuthUseCase({
+            config: config,
             accountRepository: accountRepository,
             authService: authService,
-            config: config,
+            userRepository: userRepository,
         }),
         events: new EventUseCase({
             authService: authService,
@@ -124,6 +125,7 @@ const application: Application = {
             eventRegistrationsRepository: eventRegistrationsRepository,
         }),
         users: new UsersUseCase({
+            config: config,
             notificationService: notificationService,
             errorHandlingService: errorHandlingService,
             registrationService: domain.services.registrations,

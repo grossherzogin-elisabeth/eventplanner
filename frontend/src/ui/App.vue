@@ -1,16 +1,20 @@
 <template>
-    <div class="flex min-h-screen flex-col bg-primary-50 from-primary-900 to-primary-800 to-50% xl:bg-gradient-to-r">
-        <div v-if="initialized && loggedIn" class="xl:hidden">
+    <div
+        class="flex min-h-screen flex-col bg-primary-50 from-primary-900 to-primary-800 to-50% xl:bg-gradient-to-r"
+        :class="{ impersonated: signedInUser?.impersonated }"
+    >
+        <div v-if="initialized && signedInUser" class="xl:hidden">
             <AppNavbar :title="title" />
         </div>
+        <VNotifications />
         <div v-if="initialized" class="flex flex-1 items-stretch">
             <div class="relative hidden h-screen w-96 flex-col pt-4 text-white xl:flex">
-                <AppMenu v-if="loggedIn" class="relative z-10" />
+                <AppMenu v-if="signedInUser" class="relative z-10" />
             </div>
             <div
                 class="relative flex h-full w-0 flex-grow flex-col bg-primary-50 xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl"
             >
-                <RouterView v-model:title="title" class="flex flex-1 flex-col" />
+                <RouterView id="router-view" v-model:title="title" class="flex flex-1 flex-col" />
             </div>
         </div>
         <div
@@ -21,13 +25,13 @@
             <span class="text-xl font-light text-white">Anwendung wird geladen...</span>
         </div>
     </div>
-    <VNotifications />
     <VErrorDialog />
     <AppFooter />
 </template>
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
+import type { SignedInUser } from '@/domain';
 import WorldMap from '@/ui/assets/images/worldmap.svg?component';
 import { VErrorDialog } from '@/ui/components/common';
 import AppFooter from '@/ui/components/partials/AppFooter.vue';
@@ -42,7 +46,7 @@ const authUseCase = useAuthUseCase();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initialized = ref<boolean>(false);
-const loggedIn = ref<boolean>(false);
+const signedInUser = ref<SignedInUser | null>(null);
 const title = ref<string>('');
 
 async function init(): Promise<void> {
@@ -50,8 +54,8 @@ async function init(): Promise<void> {
     setTitle();
     watch(title, setTitle);
     initialized.value = true;
-    authUseCase.onLogin().then(() => (loggedIn.value = true));
-    authUseCase.onLogout().then(() => (loggedIn.value = false));
+    authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
+    authUseCase.onLogout().then(() => (signedInUser.value = null));
 }
 
 function setTitle(): void {

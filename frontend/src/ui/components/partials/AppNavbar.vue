@@ -1,5 +1,4 @@
 <template>
-    <!-- Desktop navbar-->
     <nav class="fixed top-0 z-40 w-screen print:hidden">
         <div
             :class="meta.hasTransparentHeader ? 'sm:bg-navbar' : 'bg-navbar'"
@@ -32,6 +31,25 @@
     </nav>
     <!-- Push the content away from the navbar -->
     <div class="h-nav"></div>
+    <div
+        v-if="signedInUser && signedInUser.impersonated"
+        class="h-16 bg-red-100 px-8 text-red-800 shadow-inner md:px-16"
+    >
+        <div class="flex h-full items-center">
+            <i class="fa-solid fa-warning" />
+            <p class="ml-4 mr-2 line-clamp-3 flex-grow py-4 text-sm font-bold">
+                Du siehst die Anwendung aus Sicht von
+                <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
+            </p>
+            <button
+                class="mr-2 hidden h-10 w-10 rounded-full hover:bg-red-200 sm:block"
+                @click="authUseCase.impersonateUser(null)"
+            >
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </button>
+        </div>
+    </div>
+
     <SlideMenu v-model:open="menuOpen">
         <AppMenu />
     </SlideMenu>
@@ -41,6 +59,7 @@
 import { computed, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRoute, useRouter } from 'vue-router';
+import type { SignedInUser } from '@/domain';
 import { useAuthUseCase } from '@/ui/composables/Application';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import AppMenu from './AppMenu.vue';
@@ -58,13 +77,13 @@ const route = useRoute();
 const authUseCase = useAuthUseCase();
 
 const menuOpen = ref<boolean>(false);
-const loggedIn = ref<boolean>(false);
+const signedInUser = ref<SignedInUser | null>(null);
 const backTo = ref<RouteLocationRaw>('');
 
 const meta = computed<RouteMetaData>(() => route.meta as RouteMetaData);
 
 async function init(): Promise<void> {
-    authUseCase.onLogin().then(() => (loggedIn.value = true));
+    authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
     watch(router.currentRoute, onRouteChanged);
 }
 

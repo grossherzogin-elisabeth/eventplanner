@@ -1,8 +1,25 @@
 <template>
     <div class="menu flex-1 overflow-y-auto">
         <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">Segelschulschiff Großherzogin Elisabeth</h1>
+
+        <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-red-100 pl-4 text-red-800 xl:mx-8 xl:pl-6">
+            <div class="flex items-center">
+                <i class="fa-solid fa-warning" />
+                <p class="ml-4 mr-2 w-0 flex-grow py-4 text-sm font-bold sm:ml-8">
+                    Du siehst die Anwendung aus Sicht von
+                    <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
+                </p>
+                <button
+                    class="mr-2 block h-10 w-10 rounded-full hover:bg-red-200"
+                    @click="authUseCase.impersonateUser(null)"
+                >
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+
         <ul class="menu-list my-4">
-            <li v-if="user.permissions.includes(Permission.READ_EVENTS)" class="menu-item">
+            <li v-if="signedInUser.permissions.includes(Permission.READ_EVENTS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.Home }">
                     <i class="fa-solid fa-home"></i>
                     <span>Meine nächsten Reisen</span>
@@ -15,7 +32,7 @@
                 </RouterLink>
             </li>
             <li
-                v-if="user.permissions.includes(Permission.READ_EVENTS)"
+                v-if="signedInUser.permissions.includes(Permission.READ_EVENTS)"
                 :class="{ expanded: eventsExpanded }"
                 class="menu-item"
             >
@@ -32,13 +49,13 @@
                     </li>
                 </ul>
             </li>
-            <li v-if="user.permissions.includes(Permission.WRITE_EVENTS)" class="menu-item">
+            <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.EventsAdmin }">
                     <i class="fa-solid fa-compass"></i>
                     <span>Reisen verwalten</span>
                 </RouterLink>
             </li>
-            <li v-if="user.permissions.includes(Permission.READ_USER_DETAILS)" class="menu-item">
+            <li v-if="signedInUser.permissions.includes(Permission.READ_USER_DETAILS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
                     <span>Nutzer verwalten</span>
@@ -88,7 +105,7 @@ import { Routes } from '@/ui/views/Routes';
 
 const authUseCase = useAuthUseCase();
 
-const user = authUseCase.getSignedInUser();
+const signedInUser = authUseCase.getSignedInUser();
 const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1];
 
 const eventsExpanded = ref<boolean>(false);

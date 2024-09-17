@@ -1,5 +1,5 @@
 import type { Config } from '@/application';
-import type { SignedInUser } from '@/domain';
+import type { SignedInUser, UserDetails } from '@/domain';
 import { Permission, Role } from '@/domain';
 
 export class AuthService {
@@ -7,14 +7,22 @@ export class AuthService {
     private loginListeners: (() => void)[] = [];
     private logoutListeners: (() => void)[] = [];
     private signedInUser: SignedInUser | undefined = undefined;
+    private impersonating: UserDetails | null = null;
 
     constructor(params: { config: Config }) {
         this.config = params.config;
     }
 
     public getSignedInUser(): SignedInUser | undefined {
-        if (this.signedInUser && this.config.overrideSignedInUserKey) {
-            this.signedInUser.key = this.config.overrideSignedInUserKey;
+        if (this.signedInUser && this.impersonating) {
+            return {
+                ...this.signedInUser,
+                key: this.impersonating.key,
+                email: this.impersonating.email,
+                firstname: this.impersonating.firstName,
+                lastname: this.impersonating.lastName,
+                impersonated: true,
+            };
         }
         return this.signedInUser;
     }
@@ -52,5 +60,9 @@ export class AuthService {
         return new Promise((resolve) => {
             this.logoutListeners.push(() => resolve());
         });
+    }
+
+    public impersonate(user: UserDetails | null): void {
+        this.impersonating = user;
     }
 }
