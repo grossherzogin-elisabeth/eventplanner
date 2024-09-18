@@ -190,12 +190,12 @@ import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton } from '@/ui/components/common';
 import { VInputText, VTable, VTabs } from '@/ui/components/common';
+import CreateEventDlg from '@/ui/components/events/CreateEventDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
-import CreateEventDlg from '@/ui/views/admin/events/list/CreateEventDlg.vue';
 import ImportEventsDlg from '@/ui/views/admin/events/list/ImportEventsDlg.vue';
 
 interface EventTableViewItem {

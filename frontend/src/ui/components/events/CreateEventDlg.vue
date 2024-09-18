@@ -1,7 +1,7 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Event erstellen</h1>
+            <h1>Neues Event erstellen</h1>
         </template>
         <template #default>
             <div class="p-8 lg:px-16">
@@ -118,8 +118,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
-import type { Event } from '@/domain';
-import { EventState, EventType } from '@/domain';
+import { Event, EventState, EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import {
     VDialog,
@@ -130,10 +129,10 @@ import {
     VInputText,
     VInputTextArea,
 } from '@/ui/components/common';
-import AsyncButton from '@/ui/components/common/buttons/AsyncButton.vue';
 import { useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import { useValidation } from '@/ui/composables/Validation';
+import AsyncButton from '../common/buttons/AsyncButton.vue';
 
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
@@ -178,23 +177,30 @@ async function submitIfValid(submitFun: () => void) {
     }
 }
 
-async function open(): Promise<Event> {
+async function open(partialEvent?: Partial<Event>): Promise<Event> {
     validation.reset();
+    event.value.name = partialEvent?.name || '';
+    event.value.description = partialEvent?.description || '';
+    event.value.locations = partialEvent?.locations || [];
+    event.value.state = partialEvent?.state || EventState.Draft;
+    event.value.type = partialEvent?.type || EventType.WeekendEvent;
+    event.value.start = partialEvent?.start || new Date();
+    event.value.end = partialEvent?.end || new Date();
+
     await dlg.value?.open();
-    if (template.value) {
-        event.value.slots = template.value.slots.map((slot) => ({
+    event.value.slots =
+        template.value?.slots.map((slot) => ({
             key: slot.key,
             criticality: slot.criticality,
             positionKeys: slot.positionKeys,
             positionName: slot.positionName,
             order: slot.order,
-        }));
-    }
+        })) || [];
     return event.value;
 }
 
-defineExpose<Dialog<Event, Event>>({
-    open: () => open(),
+defineExpose<Dialog<Partial<Event>, Event>>({
+    open: (event?: Partial<Event>) => open(event),
     close: () => dlg.value?.reject(),
     submit: (result: Event) => dlg.value?.submit(result),
     reject: (reason?: void) => dlg.value?.reject(reason),

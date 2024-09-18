@@ -12,11 +12,11 @@
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
-                <div 
-                    ref="calendar" 
+                <div
+                    ref="calendar"
                     :style="calendarStyle"
-                    class="calendar" 
-                    :class="{'enable-create': signedInUser.permissions.includes(Permission.WRITE_EVENTS)}"
+                    class="calendar"
+                    :class="{ 'enable-create': signedInUser.permissions.includes(Permission.WRITE_EVENTS) }"
                 >
                     <div v-for="m in months.entries()" :key="m[0]" class="calendar-month">
                         <div class="calendar-header">
@@ -28,24 +28,32 @@
                             :key="d.dayOfMonth"
                             :class="{ weekend: d.isWeekend, holiday: d.isHoliday, today: d.isToday }"
                             class="calendar-day"
-                            @mousedown="startCreateEventDrag()"
-                            @mouseover="updateCreateEventDrag()"
-                            @mouseup="stopCreateEventDrag()"
+                            @mousedown="startCreateEventDrag(d.date)"
+                            @mouseover="updateCreateEventDrag(d.date)"
+                            @mouseup="stopCreateEventDrag(d.date)"
                         >
                             <div class="calendar-day-label">{{ d.weekday }}</div>
                             <div class="calendar-day-label">{{ d.dayOfMonth }}</div>
                             <div class="relative w-0 flex-grow self-start">
-                                <EventCalendarItem
-                                    v-for="evt in d.events"
-                                    :key="evt.event.key"
-                                    :event="evt.event"
-                                    :class="evt.class"
-                                    :duration="evt.duration"
-                                    :duration-in-month="evt.durationInMonth"
-                                    :start="evt.offset"
-                                    @update:event="updateEvent"
-                                    @click.stop=""
-                                />
+                                <template v-if="d.events.length > 0">
+                                    <EventCalendarItem
+                                        v-for="evt in d.events"
+                                        :key="evt.event.key"
+                                        :event="evt.event"
+                                        :class="evt.class"
+                                        :duration="evt.duration"
+                                        :duration-in-month="evt.durationInMonth"
+                                        :start="evt.offset"
+                                        @update:event="updateEvent"
+                                        @click.stop=""
+                                    />
+                                </template>
+                                <div v-else-if="createEventFromDate === d.date" class="create-event-overlay">
+                                    <span>Neues Event</span>
+                                    <span v-if="calendarStyle['--create-event-days'] > 1" class="text-xs">
+                                        {{ calendarStyle['--create-event-days'] }} Tage
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div v-for="i in 31 - m[1].length" :key="i" class="calendar-filler"></div>
@@ -53,6 +61,7 @@
                 </div>
             </div>
         </div>
+        <CreateEventDlg ref="createEventDialog" />
     </div>
 </template>
 
@@ -61,8 +70,10 @@ import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat, DateUtils, Month } from '@/common/date';
-import { Permission, type Event } from '@/domain';
-import { useEventUseCase, useAuthUseCase } from '@/ui/composables/Application';
+import { type Event, Permission } from '@/domain';
+import type { Dialog } from '@/ui/components/common';
+import CreateEventDlg from '@/ui/components/events/CreateEventDlg.vue';
+import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import { isHoliday } from 'feiertagejs';
 import EventCalendarItem from './EventCalendarItem.vue';
@@ -96,9 +107,12 @@ const route = useRoute();
 const i18n = useI18n();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
+const eventAdministrationService = useEventAdministrationUseCase();
 const authUseCase = useAuthUseCase();
 const signedInUser = authUseCase.getSignedInUser();
 
+const createEventDialog = ref<Dialog<Partial<Event>, Event> | null>(null);
+const createEventFromDate = ref<Date | null>(null);
 const year = ref<number>(new Date().getFullYear());
 const events = ref<Event[]>([]);
 
@@ -107,6 +121,7 @@ const calendar = ref<HTMLDivElement | null>(null);
 const calendarStyle = ref({
     '--scrollcontainer-width': '100vw',
     '--scrollcontainer-height': '100vh',
+    '--create-event-days': 1,
 });
 
 function init(): void {
@@ -171,8 +186,12 @@ function scrollRight(): void {
 
 async function fetchEvents(): Promise<void> {
     year.value = parseInt(route.params.year as string, 10) || new Date().getFullYear();
+    if (months.value.size === 0) {
+        months.value = buildCalender(year.value);
+    }
+    const evts = await eventUseCase.getEvents(year.value);
     months.value = buildCalender(year.value);
-    events.value = await eventUseCase.getEvents(year.value);
+    events.value = evts;
 }
 
 function buildCalender(year: number): Map<Month, CalendarDay[]> {
@@ -204,8 +223,36 @@ function updateEvent(event: Event): void {
     events.value = events.value.map((it) => (it.key === event.key ? event : it));
 }
 
-async function createEvent(date: Date): Promise<void> {
-    alert(date);
+function startCreateEventDrag(date: Date): void {
+    createEventFromDate.value = date;
+    calendarStyle.value['--create-event-days'] = 1;
+}
+
+async function stopCreateEventDrag(date: Date): Promise<void> {
+    const from = createEventFromDate.value;
+    const to = date;
+    if (from && to && createEventDialog.value) {
+        await createEventDialog.value
+            .open({ start: from, end: to })
+            .then((evt) => eventAdministrationService.createEvent(evt))
+            .then(() => fetchEvents())
+            .catch()
+            .finally(() => {
+                createEventFromDate.value = null;
+                calendarStyle.value['--create-event-days'] = 1;
+            });
+    }
+}
+
+function updateCreateEventDrag(date: Date): void {
+    if (createEventFromDate.value !== null) {
+        const durationMillis = date.getTime() - createEventFromDate.value.getTime();
+        if (durationMillis >= 0) {
+            calendarStyle.value['--create-event-days'] = new Date(durationMillis).getDate();
+        } else if (durationMillis === 0) {
+            calendarStyle.value['--create-event-days'] = 1;
+        }
+    }
 }
 
 function populateCalendar(): Map<Month, CalendarDay[]> {
@@ -303,6 +350,7 @@ init();
     --row-height: max(2rem, calc((var(--viewport-height) - var(--nav-height) - 3.5rem) / 31));
     --scrollcontainer-width: 100vw;
     --scrollcontainer-height: 100vh;
+    --create-event-days: 1;
     --columns: 1.4;
     height: var(--viewport-height);
     @apply flex snap-x snap-always items-stretch overflow-scroll;
@@ -328,6 +376,7 @@ init();
     height: var(--row-height);
     width: calc(var(--scrollcontainer-width) / var(--columns));
     @apply relative flex items-center border-b border-r border-primary-50 bg-primary-50 pl-2 pr-1;
+    @apply select-none;
 }
 
 .calendar-day:nth-child(2) {
@@ -356,12 +405,13 @@ init();
     @apply rounded-lg bg-primary-100 bg-opacity-50 text-red-500;
 }
 
-.enable-create .calendar-day:hover:after {
-    content: 'Reise erstellen';
-    @apply absolute bottom-0 left-[4.5rem] right-1 top-0 z-10;
-    @apply rounded-lg bg-transparent text-primary-800 border border-dashed border-primary-500;
-    @apply py-1 px-4 flex items-center;
-    @apply text-sm font-semibold cursor-pointer;
+.create-event-overlay {
+    @apply pointer-events-none;
+    @apply absolute left-0 right-0 top-0 z-10;
+    height: calc((var(--create-event-days) * var(--row-height)) - 0.125rem);
+    @apply rounded-lg border border-dashed border-primary-500 bg-primary-200 bg-opacity-20 text-primary-800 text-opacity-50;
+    @apply cursor-pointer text-sm font-semibold;
+    @apply flex flex-col px-4 py-1;
 }
 
 .calendar-day.today {
@@ -377,7 +427,7 @@ init();
 /*
 .calendar-day:hover {
     @apply bg-primary-200 rounded-lg cursor-pointer text-primary-700;
-} 
+}
 */
 
 @media only screen and (min-width: 450px) {
