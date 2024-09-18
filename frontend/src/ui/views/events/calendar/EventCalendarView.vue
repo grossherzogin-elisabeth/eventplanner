@@ -12,7 +12,12 @@
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
-                <div ref="calendar" :style="calendarStyle" class="calendar">
+                <div 
+                    ref="calendar" 
+                    :style="calendarStyle"
+                    class="calendar" 
+                    :class="{'enable-create': signedInUser.permissions.includes(Permission.WRITE_EVENTS)}"
+                >
                     <div v-for="m in months.entries()" :key="m[0]" class="calendar-month">
                         <div class="calendar-header">
                             <span>{{ $t(`month.${m[0]}`) }}</span>
@@ -23,6 +28,9 @@
                             :key="d.dayOfMonth"
                             :class="{ weekend: d.isWeekend, holiday: d.isHoliday, today: d.isToday }"
                             class="calendar-day"
+                            @mousedown="startCreateEventDrag()"
+                            @mouseover="updateCreateEventDrag()"
+                            @mouseup="stopCreateEventDrag()"
                         >
                             <div class="calendar-day-label">{{ d.weekday }}</div>
                             <div class="calendar-day-label">{{ d.dayOfMonth }}</div>
@@ -36,6 +44,7 @@
                                     :duration-in-month="evt.durationInMonth"
                                     :start="evt.offset"
                                     @update:event="updateEvent"
+                                    @click.stop=""
                                 />
                             </div>
                         </div>
@@ -52,13 +61,14 @@ import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat, DateUtils, Month } from '@/common/date';
-import type { Event } from '@/domain';
-import { useEventUseCase } from '@/ui/composables/Application';
+import { Permission, type Event } from '@/domain';
+import { useEventUseCase, useAuthUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import { isHoliday } from 'feiertagejs';
 import EventCalendarItem from './EventCalendarItem.vue';
 
 interface CalendarDay {
+    date: Date;
     dayOfMonth: number;
     weekday: string;
     isHoliday: boolean;
@@ -86,6 +96,8 @@ const route = useRoute();
 const i18n = useI18n();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
+const authUseCase = useAuthUseCase();
+const signedInUser = authUseCase.getSignedInUser();
 
 const year = ref<number>(new Date().getFullYear());
 const events = ref<Event[]>([]);
@@ -172,6 +184,7 @@ function buildCalender(year: number): Map<Month, CalendarDay[]> {
             temp.set(date.getMonth(), []);
         }
         temp.get(date.getMonth())?.push({
+            date: date,
             dayOfMonth: date.getDate(),
             weekday: i18n.d(date, DateTimeFormat.DDD),
             isHoliday: isHoliday(date, 'NI'),
@@ -189,6 +202,10 @@ function buildCalender(year: number): Map<Month, CalendarDay[]> {
 
 function updateEvent(event: Event): void {
     events.value = events.value.map((it) => (it.key === event.key ? event : it));
+}
+
+async function createEvent(date: Date): Promise<void> {
+    alert(date);
 }
 
 function populateCalendar(): Map<Month, CalendarDay[]> {
@@ -337,6 +354,14 @@ init();
     content: '';
     @apply absolute bottom-0 left-0 right-0 top-0;
     @apply rounded-lg bg-primary-100 bg-opacity-50 text-red-500;
+}
+
+.enable-create .calendar-day:hover:after {
+    content: 'Reise erstellen';
+    @apply absolute bottom-0 left-[4.5rem] right-1 top-0 z-10;
+    @apply rounded-lg bg-transparent text-primary-800 border border-dashed border-primary-500;
+    @apply py-1 px-4 flex items-center;
+    @apply text-sm font-semibold cursor-pointer;
 }
 
 .calendar-day.today {

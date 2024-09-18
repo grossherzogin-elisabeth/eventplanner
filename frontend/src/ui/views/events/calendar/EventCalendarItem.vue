@@ -210,7 +210,7 @@ init();
 }
 
 .calendar-event-entry {
-    @apply block h-full w-full py-1 pl-2 pr-4 text-white sm:px-2;
+    @apply block h-full w-full py-1 pl-2 pr-4 sm:px-2;
     @apply cursor-pointer;
     @apply text-sm font-semibold;
     --color-1: rgb(255 255 255 / 0.6);
