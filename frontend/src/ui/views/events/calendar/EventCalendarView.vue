@@ -46,6 +46,7 @@
                                         :start="evt.offset"
                                         @update:event="updateEvent"
                                         @click.stop=""
+                                        @mousedown.stop=""
                                     />
                                 </template>
                                 <div v-else-if="createEventFromDate === d.date" class="create-event-overlay">
@@ -70,7 +71,7 @@ import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat, DateUtils, Month } from '@/common/date';
-import { type Event, Permission } from '@/domain';
+import { type Event, EventState, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import CreateEventDlg from '@/ui/components/events/CreateEventDlg.vue';
 import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
@@ -189,7 +190,8 @@ async function fetchEvents(): Promise<void> {
     if (months.value.size === 0) {
         months.value = buildCalender(year.value);
     }
-    const evts = await eventUseCase.getEvents(year.value);
+    let evts = await eventUseCase.getEvents(year.value);
+    evts = evts.filter((it) => it.state !== EventState.Canceled);
     months.value = buildCalender(year.value);
     events.value = evts;
 }
@@ -236,7 +238,7 @@ async function stopCreateEventDrag(date: Date): Promise<void> {
             .open({ start: from, end: to })
             .then((evt) => eventAdministrationService.createEvent(evt))
             .then(() => fetchEvents())
-            .catch()
+            .catch(() => {})
             .finally(() => {
                 createEventFromDate.value = null;
                 calendarStyle.value['--create-event-days'] = 1;

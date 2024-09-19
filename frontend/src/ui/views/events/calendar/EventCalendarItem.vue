@@ -72,9 +72,9 @@
                             <i class="fa-solid fa-users w-4 text-gray-700"></i>
                             <span>{{ props.event.assignedUserCount }} Crew</span>
                         </p>
-                        <p v-if="props.event.description" class="flex items-center space-x-4">
-                            <i class="fa-solid fa-info-circle w-4 text-gray-700"></i>
-                            <span>{{ props.event.description }}</span>
+                        <p v-if="props.event.description" class="flex items-baseline space-x-4">
+                            <i class="fa-solid fa-info-circle mt-0.5 w-4 text-gray-700"></i>
+                            <span class="line-clamp-3">{{ props.event.description }}</span>
                         </p>
                     </div>
 
