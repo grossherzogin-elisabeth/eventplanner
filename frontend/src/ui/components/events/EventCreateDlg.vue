@@ -119,10 +119,10 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { DateTimeFormat } from '@/common/date';
+import { DateTimeFormat, DateUtils } from '@/common/date';
 import type { Event } from '@/domain';
 import { EventState, EventType } from '@/domain';
-import type { Dialog} from '@/ui/components/common';
+import type { Dialog } from '@/ui/components/common';
 import { VInputTime } from '@/ui/components/common';
 import {
     VDialog,
@@ -188,8 +188,10 @@ async function open(partialEvent?: Partial<Event>): Promise<Event> {
     event.value.locations = partialEvent?.locations || [];
     event.value.state = partialEvent?.state || EventState.Draft;
     event.value.type = partialEvent?.type || EventType.WeekendEvent;
-    event.value.start = partialEvent?.start || new Date();
-    event.value.end = partialEvent?.end || new Date();
+    event.value.start = DateUtils.cropToPrecision(partialEvent?.start || new Date(), 'days');
+    event.value.end = DateUtils.cropToPrecision(partialEvent?.end || new Date(), 'days');
+    event.value.start.setHours(16);
+    event.value.end.setHours(18);
 
     await dlg.value?.open();
     event.value.slots =
