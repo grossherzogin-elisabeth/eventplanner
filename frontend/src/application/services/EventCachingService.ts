@@ -1,6 +1,7 @@
 import type { AuthService, EventRepository } from '@/application';
 import { type Cache, DateUtils } from '@/common';
 import type { Event, EventKey, Registration } from '@/domain';
+import { EventState } from '@/domain';
 
 export class EventCachingService {
     private readonly eventRepository: EventRepository;
@@ -24,6 +25,10 @@ export class EventCachingService {
 
     public async getEventByKey(eventKey: EventKey): Promise<Event | undefined> {
         return await this.cache.findByKey(eventKey);
+    }
+
+    public async removeFromCache(eventKey: EventKey): Promise<void> {
+        return await this.cache.deleteByKey(eventKey);
     }
 
     public async updateCache(event: Event): Promise<Event> {
@@ -50,6 +55,10 @@ export class EventCachingService {
         } else {
             event.canSignedInUserLeave = false;
             event.canSignedInUserJoin = event.start.getTime() > new Date().getTime();
+        }
+        if (event.state === EventState.Canceled) {
+            event.canSignedInUserJoin = false;
+            event.canSignedInUserLeave = false;
         }
         return event;
     }

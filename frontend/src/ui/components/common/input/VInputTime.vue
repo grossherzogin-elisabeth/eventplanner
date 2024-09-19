@@ -17,21 +17,12 @@
                     :value="displayValue"
                     aria-haspopup="true"
                     class="input-field w-full overflow-ellipsis pr-10"
-                    readonly
-                    @blur="visited = true"
-                    @click="openDropdown()"
-                    @keydown.enter.prevent="openDropdown()"
-                    @keydown.space.prevent="openDropdown()"
-                    @keydown.left="onArrowLeft()"
-                    @keydown.right="onArrowRight()"
+                    @blur="onBlur()"
+                    @input="onInput($event)"
+                    @focus="inputValue = displayValue"
                     @keydown.up.prevent="onArrowUp()"
                     @keydown.down.prevent="onArrowDown()"
-                    @keydown.esc="showDropdown = false"
                 />
-
-                <div class="input-icon-right">
-                    <i class="fa-solid fa-calendar-day text-sm text-primary-600"></i>
-                </div>
             </div>
             <div v-if="showErrors && hasErrors" class="input-errors">
                 <p v-for="err in errors" :key="err.key" class="input-error">
@@ -39,26 +30,6 @@
                 </p>
             </div>
         </div>
-
-        <VDropdownWrapper
-            v-if="showDropdown"
-            :anchor="dropdownAnchor"
-            anchor-align-y="top"
-            class="input-datepicker-dropdown"
-            max-height="100vh"
-            max-width="100vw"
-            min-width="300px"
-            @close="showDropdown = false"
-        >
-            <Datepicker
-                ref="datepicker"
-                :inline="true"
-                :model-value="props.modelValue"
-                language="de"
-                monday-first
-                @input="onInput($event)"
-            />
-        </VDropdownWrapper>
     </div>
 </template>
 
@@ -69,8 +40,6 @@ import { DateTimeFormat } from '@/common/date';
 import { DateUtils } from '@/common/date/DateUtils';
 import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
-import Datepicker from 'vuejs3-datepicker';
-import VDropdownWrapper from '../dropdown/VDropdownWrapper.vue';
 
 interface Props {
     // an optional label to render before the input field
@@ -99,7 +68,6 @@ interface Emits {
  * --------------------------------------------------------------------------------------------------------
  * Component Definition
  * --------------------------------------------------------------------------------------------------------
- * Requires https://www.npmjs.com/package/vuejs3-datepicker
  */
 
 const props = defineProps<Props>();
@@ -108,64 +76,62 @@ const emit = defineEmits<Emits>();
 const i18n = useI18n();
 
 const id = uuidv4();
-const visited = ref(false);
+const visited = ref<boolean>(false);
+const inputValue = ref<string | null>(null);
+
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
 
-const dropdownAnchor = ref<HTMLElement | null>(null);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const datepicker = ref<any | null>(null);
-const showDropdown = ref<boolean>(false);
 const displayValue = computed<string>(() => {
-    if (props.modelValue instanceof Date) {
-        return i18n.d(props.modelValue, DateTimeFormat.DDD_DD_MM_YYYY);
+    if (inputValue.value !== null) {
+        return inputValue.value;
+    } else if (props.modelValue instanceof Date) {
+        return i18n.d(props.modelValue, DateTimeFormat.hh_mm).replace(':', ' : ');
     }
-    return '';
+    return '00 : 00';
 });
 
-function onInput(date: Date) {
+function onBlur() {
     visited.value = true;
-    showDropdown.value = false;
-    emit('update:modelValue', date);
+    inputValue.value = null;
 }
 
-function openDropdown(): void {
-    showDropdown.value = true;
-}
-
-function onArrowLeft(): void {
-    let date = props.modelValue || new Date();
-    date = DateUtils.subtract(date, { days: 1 });
-    emit('update:modelValue', date);
-}
-
-function onArrowRight(): void {
-    let date = props.modelValue || new Date();
-    date = DateUtils.add(date, { days: 1 });
-    emit('update:modelValue', date);
+function onInput(inputEvent: Event) {
+    visited.value = true;
+    inputValue.value = (inputEvent.target as HTMLInputElement).value;
+    if (inputValue.value.length === 2 && !inputValue.value.includes(':')) {
+        inputValue.value = inputValue.value + ' : ';
+    }
+    const [hourRaw, minuteRaw] = inputValue.value.split(':').map((it) => it.trim());
+    try {
+        const d = new Date(props.modelValue?.getTime() || new Date().getTime());
+        const hh = parseInt(hourRaw, 10);
+        const mm = parseInt(minuteRaw, 10);
+        if (hh >= 0 && hh < 24) {
+            d.setHours(hh);
+        }
+        if (mm >= 0 && mm < 60) {
+            d.setMinutes(mm);
+        }
+        d.setSeconds(0);
+        d.setMilliseconds(0);
+        emit('update:modelValue', d);
+    } catch (e) {
+        console.warn(e);
+    }
 }
 
 function onArrowUp(): void {
     let date = props.modelValue || new Date();
-    if (showDropdown.value) {
-        // if the datepicker is open, select the previous row (= week)
-        date = DateUtils.subtract(date, { days: 7 });
-    } else {
-        // if the datepicker is not currently open, selecting the previous day feels more natural
-        date = DateUtils.subtract(date, { days: 1 });
-    }
+    date = DateUtils.add(date, { hours: 1 });
+    inputValue.value = i18n.d(date, DateTimeFormat.hh_mm).replace(':', ' : ');
     emit('update:modelValue', date);
 }
 
 function onArrowDown(): void {
     let date = props.modelValue || new Date();
-    if (showDropdown.value) {
-        // if the datepicker is open, select the next row (= week)
-        date = DateUtils.add(date, { days: 7 });
-    } else {
-        // if the datepicker is not currently open, selecting the next day feels more natural
-        date = DateUtils.add(date, { days: 1 });
-    }
+    date = DateUtils.subtract(date, { hours: 1 });
+    inputValue.value = i18n.d(date, DateTimeFormat.hh_mm).replace(':', ' : ');
     emit('update:modelValue', date);
 }
 </script>

@@ -35,7 +35,7 @@
                                 :country="location.country"
                                 class="border border-gray-200"
                             />
-                            <span class="pr-2">↣</span>
+                            <span v-if="index < props.event.locations.length - 1" class="pr-2">↣</span>
                         </div>
                     </div>
 

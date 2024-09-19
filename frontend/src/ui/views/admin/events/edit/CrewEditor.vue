@@ -1,9 +1,9 @@
 <template>
-    <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 xl:flex-row xl:items-start">
+    <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 2xl:flex-row 2xl:items-start">
         <!-- position counters -->
-        <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-primary-50 pb-4 xl:sticky xl:mr-8 xl:w-64 xl:pt-10">
+        <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-primary-50 pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
             <div
-                class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap xl:flex-col"
+                class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap 2xl:flex-col"
             >
                 <div class="flex cursor-pointer items-center rounded-2xl bg-gray-500 p-1">
                     <span class="px-2"> Alle </span>
@@ -30,8 +30,8 @@
                 </div>
             </div>
         </div>
-        <div class="-mx-4 flex-1 gap-16 lg:flex">
-            <div class="mb-8 w-full max-w-[35rem] px-4 pb-4 lg:mb-0">
+        <div class="-mx-4 flex-1 gap-16 lg:flex xl:pr-8 2xl:w-0">
+            <div class="mb-8 w-1/2 px-4 pb-4 lg:mb-0">
                 <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Crew</h2>
                 <!-- slot list dropzone -->
                 <div class="sticky top-24">
@@ -121,7 +121,7 @@
                 </div>
             </div>
 
-            <div class="w-full max-w-[35rem] px-4">
+            <div class="w-1/2 px-4">
                 <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Warteliste</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">

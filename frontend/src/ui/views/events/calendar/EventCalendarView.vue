@@ -73,7 +73,7 @@ import { useI18n } from 'vue-i18n';
 import { DateTimeFormat, DateUtils, Month } from '@/common/date';
 import { type Event, EventState, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import CreateEventDlg from '@/ui/components/events/CreateEventDlg.vue';
+import CreateEventDlg from '@/ui/components/events/EventCreateDlg.vue';
 import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import { isHoliday } from 'feiertagejs';

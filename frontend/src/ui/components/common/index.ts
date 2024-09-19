@@ -17,6 +17,7 @@ export { default as VInputSelect } from './input/VInputSelect.vue';
 export { default as VInputText } from './input/VInputText.vue';
 export { default as VInputTextArea } from './input/VInputTextArea.vue';
 export { default as VInputFile } from './input/VInputFile.vue';
+export { default as VInputTime } from './input/VInputTime.vue';
 export { default as VLoadingSpinner } from './loading/VLoadingSpinner.vue';
 export { default as VTable } from './table/VTable.vue';
 export { default as VPagination } from './table/VPagination.vue';

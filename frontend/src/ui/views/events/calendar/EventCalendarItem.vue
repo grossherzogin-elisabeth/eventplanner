@@ -65,8 +65,12 @@
                             <span>{{ formatDateRange(props.event.start, props.event.end) }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-clock w-4 text-gray-700"></i>
-                            <span>Crew an Board: 16:00 Uhr</span>
+                            <i class="fa-solid fa-bell w-4 text-gray-700" />
+                            <span>Crew an Board: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
+                        </p>
+                        <p class="flex items-center space-x-4">
+                            <i class="fa-solid fa-bell-slash w-4 text-gray-700" />
+                            <span>Crew von Board: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p v-if="props.event.assignedUserCount" class="items-center space-x-4">
                             <i class="fa-solid fa-users w-4 text-gray-700"></i>
@@ -142,6 +146,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
 import { VDropdownWrapper } from '@/ui/components/common';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';

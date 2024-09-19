@@ -11,6 +11,10 @@ export enum EventState {
      * event team is planned, team members can still sign up to the waiting list
      */
     Planned = 'planned',
+    /**
+     * event team is planned, team members can still sign up to the waiting list
+     */
+    Canceled = 'canceled',
 }
 
 // Draft: only visible for Eventplanners

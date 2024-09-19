@@ -2,7 +2,7 @@
     <DetailsPage :back-to="{ name: Routes.EventsAdmin }">
         <template #header>
             <div v-if="event" class="pt-8">
-                <h1 class="mb-1 truncate">{{ event.name }}</h1>
+                <h1 class="mb-1 truncate">{{ event.name || 'Err' }}</h1>
                 <p class="mb-4 text-sm">
                     {{ $d(event.start, DateTimeFormat.DDD_DD_MM) }}
                     -
@@ -24,8 +24,28 @@
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event" class="-mx-4">
                             <div class="mb-2">
+                                <VInputLabel>Status</VInputLabel>
+                                <VInputSelect
+                                    v-model="event.state"
+                                    :options="[
+                                        { value: EventState.Draft, label: 'Entwurf' },
+                                        { value: EventState.OpenForSignup, label: 'Anmeldungen freigegeben' },
+                                        { value: EventState.Planned, label: 'Crew geplant' },
+                                        { value: EventState.Canceled, label: 'Reise ist abgesagt', hidden: true },
+                                    ]"
+                                    :errors="validation.errors.value['state']"
+                                    :errors-visible="true"
+                                    required
+                                />
+                            </div>
+                            <div class="mb-2">
                                 <VInputLabel>Name</VInputLabel>
-                                <VInputText v-model="event.name" required />
+                                <VInputText
+                                    v-model="event.name"
+                                    :errors="validation.errors.value['name']"
+                                    :errors-visible="true"
+                                    required
+                                />
                             </div>
                             <div class="mb-2">
                                 <VInputLabel>Typ</VInputLabel>
@@ -37,38 +57,59 @@
                                         { value: EventType.WeekendEvent, label: 'Wochenendreise' },
                                         { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
                                     ]"
+                                    :errors="validation.errors.value['type']"
+                                    :errors-visible="true"
                                     required
                                 />
                             </div>
                             <div class="mb-2">
                                 <VInputLabel>Beschreibung</VInputLabel>
-                                <VInputTextArea v-model="event.description" />
+                                <VInputTextArea
+                                    v-model="event.description"
+                                    :errors="validation.errors.value['description']"
+                                    :errors-visible="true"
+                                />
                             </div>
                             <div class="mb-2 flex space-x-4">
-                                <div class="flex-grow">
+                                <div class="w-3/5">
                                     <VInputLabel>Startdatum</VInputLabel>
-                                    <VInputDate v-model="event.start" required />
+                                    <VInputDate
+                                        v-model="event.start"
+                                        :errors="validation.errors.value['start']"
+                                        :errors-visible="true"
+                                        required
+                                    />
                                 </div>
-                                <div class="flex-grow">
+                                <div class="w-2/5">
                                     <VInputLabel>Crew an Board</VInputLabel>
-                                    <VInputText model-value="16:00" required />
+                                    <VInputTime
+                                        v-model="event.start"
+                                        required
+                                        :errors="validation.errors.value['start']"
+                                        :errors-visible="true"
+                                    />
                                 </div>
                             </div>
 
                             <div class="mb-2 flex space-x-4">
-                                <div class="flex-grow">
+                                <div class="w-3/5">
                                     <VInputLabel>Enddatum</VInputLabel>
-                                    <VInputDate v-model="event.end" required />
+                                    <VInputDate
+                                        v-model="event.end"
+                                        :errors="validation.errors.value['end']"
+                                        :errors-visible="true"
+                                        required
+                                    />
                                 </div>
-                                <div class="flex-grow">
+                                <div class="w-2/5">
                                     <VInputLabel>Crew von Board</VInputLabel>
-                                    <VInputText model-value="16:00" required />
+                                    <VInputTime
+                                        v-model="event.end"
+                                        :errors="validation.errors.value['end']"
+                                        :errors-visible="true"
+                                        required
+                                    />
                                 </div>
-                            </div>
-
-                            <div class="flex-grow">
-                                <VInputLabel>Seemeilen</VInputLabel>
-                                <VInputText model-value="300" required />
                             </div>
                         </section>
                     </div>
@@ -147,7 +188,7 @@
             </VTabs>
         </template>
         <template v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)" #primary-button>
-            <AsyncButton :action="save">
+            <AsyncButton :action="saveIfValid" :disabled="!validation.isValid">
                 <template #icon>
                     <i class="fa-solid fa-save" />
                 </template>
@@ -158,18 +199,6 @@
         </template>
         <template #secondary-buttons>
             <div class="hidden items-stretch space-x-2 lg:flex">
-                <AsyncButton
-                    v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
-                    :action="save"
-                    class="btn-secondary"
-                >
-                    <template #icon>
-                        <i class="fa-solid fa-paper-plane" />
-                    </template>
-                    <template #label>
-                        <span>Anmeldungen freischalten</span>
-                    </template>
-                </AsyncButton>
                 <button v-if="tab === Tab.EVENT_POSITIONS" class="btn-secondary" @click="addRegistration()">
                     <i class="fa-solid fa-user-plus" />
                     <span>Anmeldung hinzufügen</span>
@@ -186,12 +215,8 @@
                 <span>Anmeldung hinzufügen</span>
             </li>
             <li class="context-menu-item" @click="contactTeam()">
-                <i class="fa-solid fa-envelope" />
+                <i class="fa-solid fa-paper-plane" />
                 <span>Crew kontaktieren</span>
-            </li>
-            <li class="context-menu-item" @click="contactWaitingList()">
-                <i class="fa-solid fa-envelope" />
-                <span>Warteliste kontaktieren</span>
             </li>
             <li
                 v-if="signedInUser.permissions.includes(Permission.EVENT_TEAM_WRITE)"
@@ -201,18 +226,28 @@
                 <i class="fa-solid fa-rotate" />
                 <span>Crew zurücksetzen</span>
             </li>
+            <li
+                v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
+                class="context-menu-item text-red-700"
+                @click="deleteEvent()"
+            >
+                <i class="fa-solid fa-trash" />
+                <span>Reise absagen</span>
+            </li>
         </template>
     </DetailsPage>
     <CreateRegistrationDlg ref="createRegistrationDialog" />
     <SlotCreateDlg ref="createSlotDialog" />
+    <EventCancelDlg ref="deleteEventDialog" />
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ArrayUtils } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, PositionKey, Slot, SlotCriticality, SlotKey } from '@/domain';
+import { EventState } from '@/domain';
 import { EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import {
@@ -222,19 +257,21 @@ import {
     VInputSelect,
     VInputText,
     VInputTextArea,
+    VInputTime,
     VTable,
     VTabs,
 } from '@/ui/components/common';
 import VWarning from '@/ui/components/common/alerts/VWarning.vue';
+import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import {
     useAuthUseCase,
-    useErrorHandling,
     useEventAdministrationUseCase,
     useEventUseCase,
     useUsersUseCase,
 } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
+import { useValidation } from '@/ui/composables/Validation';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationDlg from '@/ui/views/admin/events/components/CreateRegistrationDlg.vue';
 import CrewEditor from './CrewEditor.vue';
@@ -263,23 +300,26 @@ interface RouteEmits {
 
 const emit = defineEmits<RouteEmits>();
 
+const router = useRouter();
 const route = useRoute();
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const usersUseCase = useUsersUseCase();
 const authUseCase = useAuthUseCase();
-const errorHandlingUseCase = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
+
+const event = ref<Event | null>(null);
+const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
 
 const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_SLOTS];
 const tab = ref<Tab>(Tab.EVENT_POSITIONS);
-const event = ref<Event | null>(null);
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 
 const createSlotDialog = ref<Dialog<Event, Event> | null>(null);
 const editSlotDialog = ref<Dialog<Slot, Slot> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event, Event> | null>(null);
+const deleteEventDialog = ref<Dialog<Event, string> | null>(null);
 
 const slots = computed<SlotTableItem[]>(() => {
     if (!event.value) {
@@ -323,62 +363,52 @@ function resetTeam(): void {
     }
 }
 
+async function deleteEvent(): Promise<void> {
+    if (event.value && deleteEventDialog.value) {
+        const evt = event.value;
+        await deleteEventDialog.value
+            .open(evt)
+            .then((message) => eventAdministrationUseCase.cancelEvent(evt, message))
+            .then(() => router.push({ name: Routes.EventsAdmin }))
+            .catch(() => {});
+    }
+}
+
 async function addRegistration(): Promise<void> {
     if (createRegistrationDialog.value && event.value) {
-        await createRegistrationDialog.value.open(event.value).catch();
+        await createRegistrationDialog.value.open(event.value).catch(() => {});
     }
 }
 
 async function addSlot(): Promise<void> {
     if (createSlotDialog.value && event.value) {
-        await createSlotDialog.value.open(event.value).catch();
+        await createSlotDialog.value.open(event.value).catch(() => {});
     }
 }
 
 async function contactTeam(): Promise<void> {
     if (event.value) {
-        await eventAdministrationUseCase
-            .contactTeam(event.value)
-            .catch((e) => errorHandlingUseCase.handleUnexpectedError(e));
-    }
-}
-
-async function contactWaitingList(): Promise<void> {
-    if (event.value) {
-        await eventAdministrationUseCase
-            .contactWaitingList(event.value)
-            .catch((e) => errorHandlingUseCase.handleUnexpectedError(e));
+        await eventAdministrationUseCase.contactTeam(event.value);
     }
 }
 
 async function editSlot(slotkey: SlotKey): Promise<void> {
-    let slot = event.value?.slots.find((it) => it.key === slotkey);
-    try {
-        slot = await editSlotDialog.value?.open(slot);
-        if (event.value && slot) {
-            event.value = eventService.updateSlot(event.value, slot);
-        }
-    } catch (e) {
-        // ignore, dialog has been cancelled
+    const slot = event.value?.slots.find((it) => it.key === slotkey);
+    const evt = event.value;
+    if (slot && evt) {
+        await editSlotDialog.value
+            ?.open(slot)
+            .then((s) => (event.value = eventService.updateSlot(evt, s)))
+            .catch(() => {});
     }
 }
 
-async function save(): Promise<void> {
-    if (!event.value) {
-        return;
-    }
-    try {
+async function saveIfValid(): Promise<void> {
+    if (event.value && validation.isValid.value) {
         await eventAdministrationUseCase.updateEvent(event.value.key, event.value);
-    } catch (e) {
-        errorHandlingUseCase.handleError({
-            title: 'Speichern fehlgeschlagen',
-            message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
-                wiederholt auftreten, melde ihn gerne.`,
-            error: e,
-            retry: () => save(),
-        });
-        // throw again for the async button to handle error state
-        throw e;
+    } else {
+        validation.showErrors.value = true;
+        throw validation.errors;
     }
 }
 

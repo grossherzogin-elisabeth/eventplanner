@@ -6,6 +6,7 @@ export enum DateTimeFormat {
     DDD_DD_MM_YYYY = 'DDD DD.MM.YYYY',
     MMM = 'MMM',
     MMMM_YYYY = 'MMMM YYYY',
+    hh_mm = 'hh:mm',
 }
 
 export class DateFormatter {

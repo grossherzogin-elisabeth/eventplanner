@@ -1,7 +1,10 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.Events }">
         <template #header>
-            <h1 class="mb-2 hidden w-full truncate pt-8 xl:block">{{ event?.name }}</h1>
+            <h1 class="mb-2 hidden w-full truncate pt-8 xl:block">
+                {{ event?.name }}
+            </h1>
+            <p>{{ event?.description }}</p>
         </template>
         <template #content>
             <div
@@ -10,7 +13,18 @@
             >
                 <!-- state info banner -->
                 <section
-                    v-if="event.signedInUserAssignedPosition"
+                    v-if="event.state === EventState.Canceled"
+                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:mx-0"
+                >
+                    <div class="overflow-hidden rounded-2xl bg-red-100 text-red-800">
+                        <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
+                            <i class="fa-solid fa-ban" />
+                            <p class="text-sm font-bold">Diese Reise wurde abgesagt!</p>
+                        </div>
+                    </div>
+                </section>
+                <section
+                    v-else-if="event.signedInUserAssignedPosition"
                     class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:mx-0"
                 >
                     <div class="overflow-hidden rounded-2xl bg-green-100 text-green-800">
@@ -39,7 +53,7 @@
                     </h2>
                     <div class="space-y-1 rounded-2xl bg-primary-100 p-4 lg:px-8">
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-tag w-4 text-gray-700" />
+                            <i class="fa-solid fa-route w-4 text-gray-700" />
                             <span>{{ event.name }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
@@ -47,8 +61,12 @@
                             <span>{{ formatDateRange(event.start, event.end) }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-clock w-4 text-gray-700" />
-                            <span>Crew an Board: 16:00 Uhr</span>
+                            <i class="fa-solid fa-bell w-4 text-gray-700" />
+                            <span>Crew an Board: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
+                        </p>
+                        <p class="flex items-center space-x-4">
+                            <i class="fa-solid fa-bell-slash w-4 text-gray-700" />
+                            <span>Crew von Board: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-users w-4 text-gray-700" />
@@ -57,10 +75,6 @@
                             </span>
                             <span v-else-if="event.assignedUserCount"> {{ event.assignedUserCount }} Crew </span>
                             <span v-else> {{ event.registrations.length }} Anmeldungen </span>
-                        </p>
-                        <p v-if="event.description" class="flex items-center space-x-4">
-                            <i class="fa-solid fa-info-circle w-4 text-gray-700" />
-                            <span>{{ event.description }}</span>
                         </p>
                     </div>
                 </section>
@@ -117,7 +131,7 @@
                         <span>Anmeldungen</span>
                     </h2>
                     <div
-                        v-if="team.length === 0 && waitingListCount === 0"
+                        v-if="event.assignedUserCount === 0 && waitingListCount === 0"
                         class="rounded-2xl bg-primary-100 px-4 md:-mx-4 md:-mt-4 lg:-mx-8 lg:px-8"
                     >
                         <div class="flex items-center py-8">
@@ -281,7 +295,7 @@
                 :class="{ disabled: !event.canSignedInUserLeave }"
                 @click="leaveEvent(event)"
             >
-                <i class="fa-solid fa-user-plus" />
+                <i class="fa-solid fa-user-minus" />
                 <span>Warteliste verlassen</span>
             </li>
             <li
@@ -290,7 +304,7 @@
                 :class="{ disabled: !event.canSignedInUserJoin }"
                 @click="joinEvent(event)"
             >
-                <i class="fa-solid fa-user-minus" />
+                <i class="fa-solid fa-user-plus" />
                 <span>Anmelden</span>
             </li>
         </template>
@@ -308,6 +322,7 @@ import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
 import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { Routes } from '@/ui/views/Routes';
+import { DateTimeFormat } from '../../../../common/date';
 
 interface State {
     text: string;

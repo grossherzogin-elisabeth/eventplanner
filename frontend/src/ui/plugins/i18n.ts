@@ -36,6 +36,10 @@ datetimeFormatsDe[DateTimeFormat.MMMM_YYYY] = {
 datetimeFormatsDe[DateTimeFormat.MMM] = {
     month: 'short',
 };
+datetimeFormatsDe[DateTimeFormat.hh_mm] = {
+    hour: '2-digit',
+    minute: '2-digit',
+};
 
 export function setupI18n(config: Config): I18n {
     return createI18n({

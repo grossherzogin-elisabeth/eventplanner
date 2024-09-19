@@ -14,8 +14,8 @@ module.exports = {
     rules: {
         // allow to always explicitly define a type
         '@typescript-eslint/no-inferrable-types': 'off',
-        // allow empty functions (for development), but show a warning
-        '@typescript-eslint/no-empty-function': 'warn',
+        // allow empty functions (e.g. for handled exceptions)
+        '@typescript-eslint/no-empty-function': 'off',
         // allow unused vars (for development), but show a warning
         '@typescript-eslint/no-unused-vars': 'warn',
         // automatically add type import

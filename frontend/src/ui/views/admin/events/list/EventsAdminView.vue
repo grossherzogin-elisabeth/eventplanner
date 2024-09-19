@@ -15,7 +15,7 @@
                 <div class="hidden flex-grow md:block"></div>
                 <button class="btn-primary" @click="createEvent()">
                     <i class="fa-solid fa-calendar-plus"></i>
-                    <span>Event erstellen</span>
+                    <span>Reise erstellen</span>
                 </button>
                 <button
                     v-if="user.permissions.includes(Permission.WRITE_EVENTS)"
@@ -37,17 +37,29 @@
                 @click="editEvent($event)"
             >
                 <template #head>
+                    <th>
+                        <VInputCheckBox />
+                    </th>
                     <th>Name</th>
                     <th>Status</th>
                     <th>Crew</th>
                     <th>Datum</th>
                 </template>
                 <template #row="{ item }">
+                    <td class="group" @click.stop="">
+                        <VInputCheckBox v-model="item.selected" />
+                    </td>
                     <td class="w-1/2 max-w-[65vw] whitespace-nowrap font-semibold">
-                        <p class="mb-1 truncate">
+                        <p
+                            class="mb-1 truncate"
+                            :class="{ 'text-red-700 line-through': item.state === EventState.Canceled }"
+                        >
+                            <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
+                            <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
                             {{ item.name }}
                         </p>
-                        <p class="text-sm font-light">{{ item.locations }}</p>
+                        <p v-if="item.locations.length === 0" class="text-sm font-light">keine Reiseroute angegeben</p>
+                        <p v-else class="text-sm font-light">{{ item.locations.map((it) => it.name).join(' - ') }}</p>
                     </td>
                     <td>
                         <div
@@ -74,7 +86,7 @@
                     </td>
                     <td class="w-1/6 whitespace-nowrap text-center">
                         <p class="mb-1 font-semibold">
-                            {{ item.crewCount }}
+                            {{ item.assignedUserCount }}
                             <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
                         </p>
                         <p class="text-sm">Crew</p>
@@ -84,14 +96,14 @@
                         <p class="text-sm">{{ item.duration }} Tage</p>
                     </td>
 
-                    <td class="">
+                    <td class="w-0">
                         <ContextMenuButton class="px-4 py-2">
                             <ul>
                                 <li>
                                     <RouterLink
                                         :to="{
                                             name: Routes.EventDetails,
-                                            params: { year: item.start.getFullYear(), key: item.eventKey },
+                                            params: { year: item.start.getFullYear(), key: item.key },
                                         }"
                                         class="context-menu-item"
                                     >
@@ -103,7 +115,7 @@
                                     <RouterLink
                                         :to="{
                                             name: Routes.EventEdit,
-                                            params: { year: item.start.getFullYear(), key: item.eventKey },
+                                            params: { year: item.start.getFullYear(), key: item.key },
                                         }"
                                         class="context-menu-item"
                                     >
@@ -113,7 +125,7 @@
                                 </li>
                                 <li class="context-menu-item disabled">
                                     <i class="fa-solid fa-unlock-alt" />
-                                    <span>Freischalten</span>
+                                    <span>Anmeldungen freischalten</span>
                                 </li>
                                 <li class="context-menu-item disabled">
                                     <i class="fa-solid fa-users" />
@@ -123,8 +135,8 @@
                                     <i class="fa-solid fa-envelope" />
                                     <span>Crew kontaktieren</span>
                                 </li>
-                                <li class="context-menu-item disabled text-red-700">
-                                    <i class="fa-solid fa-xmark" />
+                                <li class="context-menu-item text-red-700" @click="deleteEvent(item)">
+                                    <i class="fa-solid fa-ban" />
                                     <span>Reise absagen</span>
                                 </li>
                             </ul>
@@ -170,7 +182,8 @@
             </VTable>
         </div>
 
-        <CreateEventDlg ref="createEventDialog" />
+        <EventCreateDlg ref="createEventDialog" />
+        <EventCancelDlg ref="deleteEventDialog" />
         <ImportEventsDlg ref="importEventsDialog" />
 
         <div class="sticky bottom-0 right-0 z-10 flex justify-end pb-4 pr-3 md:pr-14 xl:hidden">
@@ -186,11 +199,12 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { Event } from '@/domain';
-import { Permission } from '@/domain';
+import { EventState, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { ContextMenuButton } from '@/ui/components/common';
-import { VInputText, VTable, VTabs } from '@/ui/components/common';
-import CreateEventDlg from '@/ui/components/events/CreateEventDlg.vue';
+import { VInputCheckBox } from '@/ui/components/common';
+import { ContextMenuButton, VInputText, VTable, VTabs } from '@/ui/components/common';
+import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
+import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
@@ -198,17 +212,10 @@ import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
 import ImportEventsDlg from '@/ui/views/admin/events/list/ImportEventsDlg.vue';
 
-interface EventTableViewItem {
+interface EventTableViewItem extends Event {
     selected: boolean;
-    eventKey: string;
-    name: string;
-    locations: string;
-    start: Date;
-    end: Date;
     duration: number;
     isPastEvent: boolean;
-    registrations: number;
-    crewCount: number;
     waitingListCount: number;
     hasOpenSlots: boolean;
     hasOpenRequiredSlots: boolean;
@@ -232,6 +239,7 @@ const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
 const createEventDialog = ref<Dialog<Event> | null>(null);
+const deleteEventDialog = ref<Dialog<Event, string> | null>(null);
 const importEventsDialog = ref<Dialog<Event> | null>(null);
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
@@ -276,16 +284,10 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
     const evts = await eventUseCase.getEvents(year);
     return evts.map((evt) => {
         return {
+            ...evt,
             selected: false,
-            eventKey: evt.key,
-            name: evt.name,
-            start: evt.start,
-            end: evt.end,
             duration: new Date(evt.end.getTime() - evt.start.getTime()).getDate(),
-            locations: evt.locations.map((it) => it.name).join(' - '),
             isPastEvent: evt.start.getTime() < new Date().getTime(),
-            registrations: evt.registrations.length,
-            crewCount: evt.assignedUserCount,
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
             hasOpenSlots: hasOpenSlots(evt),
             hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
@@ -300,7 +302,7 @@ function hasOpenSlots(event: Event): boolean {
 async function editEvent(evt: EventTableViewItem): Promise<void> {
     await router.push({
         name: Routes.EventEdit,
-        params: { year: evt.start.getFullYear(), key: evt.eventKey },
+        params: { year: evt.start.getFullYear(), key: evt.key },
     });
 }
 
@@ -308,6 +310,16 @@ async function createEvent(): Promise<void> {
     const event = await createEventDialog.value?.open().catch();
     if (event) {
         await eventAdministrationUseCase.createEvent(event);
+    }
+}
+
+async function deleteEvent(evt: Event): Promise<void> {
+    if (deleteEventDialog.value) {
+        await deleteEventDialog.value
+            .open(evt)
+            .then((message) => eventAdministrationUseCase.cancelEvent(evt, message))
+            .then(() => fetchEvents())
+            .catch(() => {});
     }
 }
 

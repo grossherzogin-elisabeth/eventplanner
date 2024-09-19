@@ -58,6 +58,9 @@ module.exports = {
             navbar: colors.sky['800'],
         }),
         extend: {
+            screens: {
+                xxl: 1600,
+            },
             boxShadow: {
                 sm: '0 0px 2px rgb(0 0 0 / 0.05)',
                 DEFAULT: ['0 0px 3px rgb(0 0 0 / 0.1)', '0 0px 2px rgb(0 0 0 / 0.06)'],

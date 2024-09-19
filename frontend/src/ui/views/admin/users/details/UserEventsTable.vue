@@ -9,7 +9,7 @@
             <template #row="{ item }">
                 <td class="w-0 text-xl opacity-50">
                     <i v-if="!item.waitingList" class="fa-solid fa-check-circle text-green-700"></i>
-                    <i v-else class="fa-solid fa-clock text-gray-500"></i>
+                    <i v-else class="fa-solid fa-hourglass-half text-gray-500"></i>
                 </td>
                 <td class="w-1/2 max-w-[65vw] border-none font-semibold">
                     <div class="mb-1 md:flex">

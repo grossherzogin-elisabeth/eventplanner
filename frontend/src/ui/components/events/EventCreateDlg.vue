@@ -1,7 +1,7 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Neues Event erstellen</h1>
+            <h1>Neue Reise erstellen</h1>
         </template>
         <template #default>
             <div class="p-8 lg:px-16">
@@ -11,6 +11,7 @@
                         v-model="event.name"
                         :errors="validation.errors.value['name']"
                         :errors-visible="validation.showErrors.value"
+                        placeholder="Titel der Reise"
                         required
                     />
                 </div>
@@ -51,6 +52,7 @@
                         v-model="event.description"
                         :errors="validation.errors.value['description']"
                         :errors-visible="validation.showErrors.value"
+                        placeholder="Kurze Bschreibung oder Zusatzinformationen"
                     />
                 </div>
                 <div class="-mx-4 mb-2 flex space-x-4">
@@ -65,11 +67,11 @@
                     </div>
                     <div class="w-2/5">
                         <VInputLabel>Crew an Board</VInputLabel>
-                        <VInputText
-                            model-value="16:00"
-                            required
-                            :errors="validation.errors.value['startTime']"
+                        <VInputTime
+                            v-model="event.end"
+                            :errors="validation.errors.value['start']"
                             :errors-visible="validation.showErrors.value"
+                            required
                         />
                     </div>
                 </div>
@@ -86,11 +88,11 @@
                     </div>
                     <div class="w-2/5">
                         <VInputLabel>Crew von Board</VInputLabel>
-                        <VInputText
-                            model-value="16:00"
-                            required
-                            :errors="validation.errors.value['endTime']"
+                        <VInputTime
+                            v-model="event.end"
+                            :errors="validation.errors.value['end']"
                             :errors-visible="validation.showErrors.value"
+                            required
                         />
                     </div>
                 </div>
@@ -109,7 +111,7 @@
                 <template #icon>
                     <i class="fa-solid fa-save"></i>
                 </template>
-                <template #label> Event erstellen </template>
+                <template #label> Reise erstellen </template>
             </AsyncButton>
         </template>
     </VDialog>
@@ -118,8 +120,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
-import { Event, EventState, EventType } from '@/domain';
-import type { Dialog } from '@/ui/components/common';
+import type { Event } from '@/domain';
+import { EventState, EventType } from '@/domain';
+import type { Dialog} from '@/ui/components/common';
+import { VInputTime } from '@/ui/components/common';
 import {
     VDialog,
     VInputCombobox,

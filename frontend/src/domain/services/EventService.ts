@@ -183,24 +183,10 @@ export class EventService {
                 params: {},
             });
         }
-        if (event.start.getTime() < new Date().getTime()) {
-            errors.start = errors.start || [];
-            errors.start.push({
-                key: 'Das Startdatum muss in der Zukunft liegen',
-                params: {},
-            });
-        }
-
         if (event.end.getTime() < event.start.getTime()) {
             errors.end = errors.end || [];
             errors.end.push({
                 key: 'Das Enddatum muss nach dem Startdatum sein',
-                params: {},
-            });
-        } else if (event.end.getTime() < new Date().getTime()) {
-            errors.end = errors.end || [];
-            errors.end.push({
-                key: 'Das Enddatum muss in der Zukunft liegen',
                 params: {},
             });
         }

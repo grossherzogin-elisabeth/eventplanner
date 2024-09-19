@@ -2,6 +2,7 @@ import type { EventRegistrationsRepository, EventRepository, NotificationService
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import type { Event, EventKey, ImportError, Registration } from '@/domain';
+import { EventState } from '@/domain';
 
 export class EventAdministrationUseCase {
     private readonly eventCachingService: EventCachingService;
@@ -24,58 +25,88 @@ export class EventAdministrationUseCase {
         this.errorHandlingService = params.errorHandlingService;
     }
 
-    public async updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event> {
-        const original = await this.eventCachingService.getEventByKey(eventKey);
-        if (original && event.registrations) {
-            const originalRegistrationKeys = original.registrations.map((r) => r.key);
-            const newRegistrationKeys = event.registrations.map((r) => r.key);
-
-            const newRegistrations = event.registrations.filter((r) => !originalRegistrationKeys.includes(r.key));
-            const deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
-            const changedRegistrations = event.registrations.filter((a) => {
-                const b = original.registrations.find((it) => it.key === a.key);
-                return b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey);
+    public async cancelEvent(event: Event, message: string): Promise<void> {
+        try {
+            await this.eventRepository.updateEvent(event.key, {
+                state: EventState.Canceled,
+                description: message, // TODO is this the right place to put the message?
             });
-
-            for (const r of newRegistrations) {
-                // eslint-disable-next-line no-await-in-loop
-                await this.eventRegistrationsRepository.createRegistration(eventKey, r);
-            }
-            for (const r of changedRegistrations) {
-                // eslint-disable-next-line no-await-in-loop
-                await this.eventRegistrationsRepository.updateRegistration(eventKey, r);
-            }
-            for (const r of deletedRegistrations) {
-                // eslint-disable-next-line no-await-in-loop
-                await this.eventRegistrationsRepository.deleteRegistration(eventKey, r);
-            }
-
-            // TODO the backend cannot handle these in parallel at the moment, because all requests write to
-            // the event resource
-            // const requests: Promise<Event>[] = [];
-            // newRegistrations
-            //     .map((r) => this.eventRegistrationsRepository.createRegistration(eventKey, r))
-            //     .forEach((r) => requests.push(r));
-            // deletedRegistrations
-            //     .map((r) => this.eventRegistrationsRepository.deleteRegistration(eventKey, r))
-            //     .forEach((r) => requests.push(r));
-            // changedRegistrations
-            //     .map((r) => this.eventRegistrationsRepository.updateRegistration(eventKey, r))
-            //     .forEach((r) => requests.push(r));
-            // await Promise.all(requests);
+            await this.eventCachingService.removeFromCache(event.key);
+            this.notificationService.success('Reise wurde abgesagt');
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
         }
+    }
 
-        let savedEvent = await this.eventRepository.updateEvent(eventKey, event);
-        savedEvent = await this.eventCachingService.updateCache(savedEvent);
-        this.notificationService.success('Deine Änderungen wurden gespeichert');
-        return savedEvent;
+    public async updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event> {
+        try {
+            const original = await this.eventCachingService.getEventByKey(eventKey);
+            if (original && event.registrations) {
+                const originalRegistrationKeys = original.registrations.map((r) => r.key);
+                const newRegistrationKeys = event.registrations.map((r) => r.key);
+
+                const newRegistrations = event.registrations.filter((r) => !originalRegistrationKeys.includes(r.key));
+                const deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
+                const changedRegistrations = event.registrations.filter((a) => {
+                    const b = original.registrations.find((it) => it.key === a.key);
+                    return b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey);
+                });
+
+                for (const r of newRegistrations) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await this.eventRegistrationsRepository.createRegistration(eventKey, r);
+                }
+                for (const r of changedRegistrations) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await this.eventRegistrationsRepository.updateRegistration(eventKey, r);
+                }
+                for (const r of deletedRegistrations) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await this.eventRegistrationsRepository.deleteRegistration(eventKey, r);
+                }
+
+                // TODO the backend cannot handle these in parallel at the moment, because all requests write to
+                // the event resource
+                // const requests: Promise<Event>[] = [];
+                // newRegistrations
+                //     .map((r) => this.eventRegistrationsRepository.createRegistration(eventKey, r))
+                //     .forEach((r) => requests.push(r));
+                // deletedRegistrations
+                //     .map((r) => this.eventRegistrationsRepository.deleteRegistration(eventKey, r))
+                //     .forEach((r) => requests.push(r));
+                // changedRegistrations
+                //     .map((r) => this.eventRegistrationsRepository.updateRegistration(eventKey, r))
+                //     .forEach((r) => requests.push(r));
+                // await Promise.all(requests);
+            }
+
+            let savedEvent = await this.eventRepository.updateEvent(eventKey, event);
+            savedEvent = await this.eventCachingService.updateCache(savedEvent);
+            this.notificationService.success('Deine Änderungen wurden gespeichert');
+            return savedEvent;
+        } catch (e) {
+            this.errorHandlingService.handleError({
+                title: 'Speichern fehlgeschlagen',
+                message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
+                wiederholt auftreten, melde ihn gerne.`,
+                error: e,
+                retry: () => this.updateEvent(eventKey, event),
+            });
+            throw e;
+        }
     }
 
     public async createEvent(event: Event): Promise<Event> {
-        let savedEvent = await this.eventRepository.createEvent(event);
-        savedEvent = await this.eventCachingService.updateCache(savedEvent);
-        this.notificationService.success('Das neue Event wurde gespeichert');
-        return savedEvent;
+        try {
+            let savedEvent = await this.eventRepository.createEvent(event);
+            savedEvent = await this.eventCachingService.updateCache(savedEvent);
+            this.notificationService.success('Das neue Event wurde gespeichert');
+            return savedEvent;
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async importEvents(year: number, file: Blob): Promise<ImportError[]> {
@@ -89,34 +120,20 @@ export class EventAdministrationUseCase {
     }
 
     public async contactTeam(event: Event): Promise<void> {
-        // contact all including crew.@grossherzogin-elisabeth.de
-        console.log(`TODO: contact team of event ${event.name}`);
-        throw new Error('Not implemented');
-    }
-
-    public async contactWaitingList(event: Event): Promise<void> {
-        console.log(`TODO: contact waitinglist of event ${event.name}`);
-        // contact all including crew.@grossherzogin-elisabeth.de
-        throw new Error('Not implemented');
+        this.errorHandlingService.handleError({
+            title: 'TODO',
+            message: 'Diese Funktion ist derzeit noch nicht implementiert',
+        });
     }
 
     public async addRegistration(eventKey: EventKey, registration: Registration): Promise<void> {
-        const savedEvent = await this.eventRegistrationsRepository.createRegistration(eventKey, registration);
-        await this.eventCachingService.updateCache(savedEvent);
-        this.notificationService.success('Anmeldung wurde hinzugefügt');
-    }
-
-    public async deleteRegistration(eventKey: EventKey, registration: Registration): Promise<void> {
-        const savedEvent = await this.eventRegistrationsRepository.deleteRegistration(eventKey, registration);
-        await this.eventCachingService.updateCache(savedEvent);
-        this.notificationService.success('Anmeldung wurde gelöscht');
-    }
-
-    public async updateRegistrations(eventKey: EventKey, registrations: Registration[]): Promise<void> {
-        for (let i = 0; i < registrations.length; i++) {
-            const registration = registrations[i];
-            const savedEvent = await this.eventRegistrationsRepository.updateRegistration(eventKey, registration);
+        try {
+            const savedEvent = await this.eventRegistrationsRepository.createRegistration(eventKey, registration);
             await this.eventCachingService.updateCache(savedEvent);
+            this.notificationService.success('Anmeldung wurde hinzugefügt');
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
         }
     }
 }
