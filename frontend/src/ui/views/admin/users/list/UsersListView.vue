@@ -31,32 +31,18 @@
                 @click="editUser($event)"
             >
                 <template #head>
-                    <!--                    <th>-->
-                    <!--                        <VInputCheckBox></VInputCheckBox>-->
-                    <!--                    </th>-->
                     <th>Name</th>
                     <th>Positionen</th>
                     <th>Reisen</th>
-                    <!--                        <th>Anmeldungen</th>-->
                     <th>Arbeitsdienst</th>
                     <th>Zertifikate</th>
                 </template>
                 <template #row="{ item }">
-                    <!--                    <td class="group" @click.stop="">-->
-                    <!--                        <VInputCheckBox v-model="item.selected" />-->
-                    <!--<VInputCheckBox-->
-                    <!--    :class="{ 'hidden group-hover:block': !item.selected }"-->
-                    <!--    v-model="item.selected"-->
-                    <!--/>-->
-                    <!--<div :class="item.selected ? 'hidden' : 'group-hover:hidden'">-->
-                    <!--    <i class="fa-solid fa-user-circle text-2xl" />-->
-                    <!--</div>-->
-                    <!--                    </td>-->
-                    <td class="whitespace-nowrap font-semibold">
+                    <td class="w-1/4 whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.firstName }} {{ item.lastName }}</p>
                         <p class="text-sm">Stammcrew</p>
                     </td>
-                    <td class="">
+                    <td class="w-1/4">
                         <div class="flex max-w-64 flex-wrap">
                             <span
                                 v-for="position in item.positions"
@@ -68,7 +54,7 @@
                             </span>
                         </div>
                     </td>
-                    <td class="">
+                    <td class="w-1/5">
                         <div class="flex space-x-8">
                             <div :class="{ 'opacity-25': !item.singleDayEventsCount }">
                                 <p class="mb-1 font-semibold">{{ item.singleDayEventsCount || '-' }}</p>
@@ -88,12 +74,11 @@
                             </div>
                         </div>
                     </td>
-
-                    <td class="">
+                    <td class="w-1/12">
                         <p class="mb-1 font-semibold">????</p>
                         <p class="text-sm">Stunden</p>
                     </td>
-                    <td class="">
+                    <td class="w-1/12">
                         <div
                             v-if="item.expiredQualificationCount"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
@@ -154,6 +139,53 @@
                             </ul>
                         </ContextMenuButton>
                     </td>
+                </template>
+                <template #loading>
+                    <tr v-for="i in 20" :key="i" class="animate-pulse">
+                        <td></td>
+                        <td class="w-1/4">
+                            <p class="mb-1 h-5 w-64 rounded-lg bg-primary-200"></p>
+                            <p class="flex items-center space-x-2 text-sm font-light">
+                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                            </p>
+                        </td>
+                        <td class="w-1/4">
+                            <div class="flex gap-2">
+                                <span class="inline-block h-4 w-24 rounded-lg bg-primary-200"></span>
+                                <span class="inline-block h-4 w-20 rounded-lg bg-primary-200"></span>
+                            </div>
+                        </td>
+                        <td class="w-1/5">
+                            <div class="flex gap-4">
+                                <div v-for="n in 4" :key="n">
+                                    <p class="mb-1 h-5 w-8 rounded-lg bg-primary-200"></p>
+                                    <p class="h-3 w-12 rounded-lg bg-primary-200"></p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="w-1/12">
+                            <p class="mb-1 h-5 w-16 rounded-lg bg-primary-200"></p>
+                            <p class="h-3 w-20 rounded-lg bg-primary-200"></p>
+                        </td>
+
+                        <td class="w-1/12">
+                            <div
+                                class="inline-flex h-8 w-auto items-center space-x-2 rounded-full bg-primary-200 py-1 pl-3 pr-4 text-primary-300"
+                            >
+                                <i class="fa-solid fa-circle"></i>
+                                <p class="h-3 w-20 rounded-lg bg-primary-300"></p>
+                            </div>
+                        </td>
+
+                        <td class="w-0">
+                            <div class="px-4 py-2">
+                                <i class="fa-solid fa-circle text-primary-200"></i>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
                 </template>
             </VTable>
         </div>
