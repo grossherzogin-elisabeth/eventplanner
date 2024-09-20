@@ -68,7 +68,7 @@
                     <div class="w-2/5">
                         <VInputLabel>Crew an Board</VInputLabel>
                         <VInputTime
-                            v-model="event.end"
+                            v-model="event.start"
                             :errors="validation.errors.value['start']"
                             :errors-visible="validation.showErrors.value"
                             required
