@@ -32,7 +32,7 @@ a.btn-primary,
 
 a.btn-secondary,
 .btn-secondary:enabled {
-    @apply bg-gray-200 hover:bg-gray-300;
+    @apply hover:bg-gray-300;
 }
 
 .btn-secondary:disabled {
@@ -76,7 +76,7 @@ a.btn-danger,
 
 .btn-ghost,
 .btn-ghost-danger {
-    @apply flex items-center justify-center;
+    @apply flex items-center justify-center gap-4;
     @apply text-sm font-black;
     @apply rounded-lg px-4 py-2;
     @apply hover:no-underline;

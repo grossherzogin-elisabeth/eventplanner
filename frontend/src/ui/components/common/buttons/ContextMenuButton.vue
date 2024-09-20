@@ -7,11 +7,13 @@
     <VDropdownWrapper
         v-if="open"
         :anchor="$refs.button as HTMLElement"
-        anchor-align-x="right"
-        anchor-align-y="top"
-        dropdown-position-x="left"
-        max-width="20rem"
-        min-width="20rem"
+        :anchor-align-x="props.anchorAlignX || 'right'"
+        :anchor-align-y="props.anchorAlignY || 'top'"
+        :dropdown-position-x="props.dropdownPositionX || 'left'"
+        :dropdown-position-y="props.dropdownPositionY || 'bottom'"
+        :min-width="props.minWidth || '20rem'"
+        :max-width="props.maxWidth || '20rem'"
+        :max-height="props.maxHeight"
         @close="open = false"
     >
         <div class="mt-2 rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl" @click="open = false">
@@ -23,6 +25,28 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import VDropdownWrapper from '@/ui/components/common/dropdown/VDropdownWrapper.vue';
+
+interface Props {
+    // html element this dropdown is relative to
+    anchorAlignY?: 'top' | 'center' | 'bottom';
+    anchorAlignX?: 'left' | 'center' | 'right';
+    dropdownPositionX?: 'left' | 'center' | 'right';
+    dropdownPositionY?: 'top' | 'center' | 'bottom';
+    // max width of the dropdown, use a css value like `50px`
+    maxWidth?: string;
+    // min width of the dropdown, use a css value like `50px`
+    minWidth?: string;
+    // max height of the dropdown, use a css value like `50px`
+    maxHeight?: string;
+}
+
+/**
+ * --------------------------------------------------------------------------------------------------------
+ * Component Definition
+ * --------------------------------------------------------------------------------------------------------
+ */
+
+const props = defineProps<Props>();
 
 const open = ref<boolean>(false);
 </script>

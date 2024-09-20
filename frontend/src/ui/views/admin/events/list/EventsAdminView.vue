@@ -3,13 +3,16 @@
         <teleport to="#nav-right">
             <NavbarFilter v-model="filter" placeholder="Events durchsuchen" />
         </teleport>
-        <div class="top-0 hidden bg-primary-50 px-4 pb-8 pl-16 pr-20 pt-8 xl:block">
-            <div class="flex items-center space-x-4">
-                <VInputText v-model="filter" class="input-search w-96" placeholder="Reisen filtern">
-                    <template #before>
-                        <i class="fa-solid fa-magnifying-glass ml-4 text-primary-900 text-opacity-25" />
-                    </template>
-                </VInputText>
+        <div
+            v-if="false"
+            class="z-20 hidden bg-primary-50 px-4 pb-8 pt-4 md:px-16 md:pt-8 xl:static xl:top-0 xl:block xl:px-20"
+        >
+            <div class="-ml-6 flex items-center space-x-4">
+                <!--                <VInputText v-model="filter" class="input-search w-96" placeholder="Reisen filtern">-->
+                <!--                    <template #before>-->
+                <!--                        <i class="fa-solid fa-magnifying-glass ml-4 text-primary-900 text-opacity-25" />-->
+                <!--                    </template>-->
+                <!--                </VInputText>-->
                 <div class="hidden flex-grow md:block"></div>
                 <button class="btn-primary" @click="createEvent()">
                     <i class="fa-solid fa-calendar-plus"></i>
@@ -26,7 +29,70 @@
             </div>
         </div>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8" />
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
+            <template #after>
+                <div class="flex items-center gap-2 pb-2">
+                    <button class="btn-ghost h-full">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                    <button class="btn-ghost">
+                        <i class="fa-solid fa-lock-open"></i>
+                        <span class="text-base">Freigeben</span>
+                    </button>
+                    <button
+                        v-if="user.permissions.includes(Permission.WRITE_EVENTS)"
+                        class="btn-ghost"
+                        @click="importEvents()"
+                    >
+                        <i class="fa-solid fa-upload"></i>
+                        <span class="text-base">Importieren</span>
+                    </button>
+                    <button class="btn-primary ml-2" @click="createEvent()">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                        <span class="">Erstellen</span>
+                    </button>
+                </div>
+            </template>
+        </VTabs>
+
+        <div class="mt-4 w-full px-16 py-2">
+            <div class="flex cursor-pointer gap-2 text-sm">
+                <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
+                    <span class="mr-2">Name enthält 'Test'</span>
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </div>
+                <div
+                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
+                >
+                    <span class="mr-2">Alle</span>
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+                <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
+                    <span class="mr-2">Matrose:in</span>
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+                <div
+                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
+                >
+                    <span class="mr-2">Abgelaufene Qualifikationen</span>
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+                <div
+                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
+                >
+                    <span class="mr-2">Nutzer mit Reisen</span>
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+                <!--                <div-->
+                <!--                    v-for="tab in tabs"-->
+                <!--                    :key="tab"-->
+                <!--                    class="whitespace-nowrap rounded-full border border-primary-300 px-4 py-1"-->
+                <!--                >-->
+                <!--                    <span>{{ tab }}</span>-->
+                <!--                </div>-->
+            </div>
+        </div>
+
         <div class="w-full">
             <VTable
                 :items="filteredEvents"
@@ -223,7 +289,7 @@
         <EventCancelDlg ref="deleteEventDialog" />
         <ImportEventsDlg ref="importEventsDialog" />
 
-        <div class="sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-14 xl:hidden">
+        <div class="sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12">
             <button class="btn-primary btn-floating" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Event erstellen</span>
@@ -269,6 +335,7 @@ const router = useRouter();
 const user = authUseCase.getSignedInUser();
 
 const events = ref<EventTableViewItem[] | null>(null);
+const showSearch = ref<boolean>(false);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
 const createEventDialog = ref<Dialog<Event> | null>(null);

@@ -16,6 +16,7 @@ interface Props {
     anchorAlignY?: 'top' | 'center' | 'bottom';
     anchorAlignX?: 'left' | 'center' | 'right';
     dropdownPositionX?: 'left' | 'center' | 'right';
+    dropdownPositionY?: 'top' | 'center' | 'bottom';
 
     // x coordinate
     x?: number;
@@ -125,6 +126,17 @@ function applyDropdownAlignment(): void {
             dropdownStyle.value.left = `${dropdownRect.left - dropdownRect.width / 2}px`;
             break;
         case 'right':
+        default:
+    }
+
+    switch (props.dropdownPositionY) {
+        case 'top':
+            dropdownStyle.value.top = `${dropdownRect.top - dropdownRect.height}px`;
+            break;
+        case 'center':
+            dropdownStyle.value.top = `${dropdownRect.top - dropdownRect.height / 2}px`;
+            break;
+        case 'bottom':
         default:
     }
 }

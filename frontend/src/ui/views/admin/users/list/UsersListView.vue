@@ -1,15 +1,16 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
-            <NavbarFilter v-model="filter" placeholder="Nutzer durchsuchen" />
+            <NavbarFilter v-model="filter" placeholder="Nutzer filtern" />
         </teleport>
-        <div class="top-0 hidden bg-primary-50 px-4 pb-8 pl-16 pr-20 pt-8 xl:block">
-            <div class="flex items-center space-x-4">
+        <div v-if="false" class="z-20 hidden bg-primary-50 px-4 pb-16 pt-4 md:px-16 md:pt-8 xl:top-0 xl:block xl:px-20">
+            <div class="-ml-6 flex items-center space-x-4">
                 <VInputText v-model="filter" class="input-search w-96" placeholder="Nutzer filtern">
                     <template #before>
                         <i class="fa-solid fa-magnifying-glass ml-4 text-primary-900 text-opacity-25" />
                     </template>
                 </VInputText>
+                <!--                <VInputCheckBox v-model="filterOnlyActive" label="Nur Stammcrew mit Anmeldungen" />-->
                 <div class="hidden flex-grow md:block"></div>
                 <div class="hidden items-stretch justify-end space-x-2 md:flex">
                     <button class="btn-primary flex-grow whitespace-nowrap" @click="importUsers()">
@@ -18,12 +19,61 @@
                     </button>
                 </div>
             </div>
+            <div class="flex items-center">
+                <span></span>
+            </div>
         </div>
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8" />
+
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
+            <template #after>
+                <div class="self-stretch pb-2">
+                    <button class="btn-ghost h-full">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </div>
+                <div class="pb-2">
+                    <button class="btn-ghost" @click="importUsers()">
+                        <i class="fa-solid fa-upload"></i>
+                        <span class="text-base">Importieren</span>
+                    </button>
+                </div>
+                <div class="hidden pb-2 2xl:block">
+                    <button class="btn-primary" @click="importUsers()">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Hinzufügen</span>
+                    </button>
+                </div>
+            </template>
+        </VTabs>
+        <div
+            class="scrollbar-invisible flex h-12 min-h-12 w-full items-center gap-2 overflow-x-auto bg-primary-50 pl-8 pt-4 text-sm xl:pl-16"
+        >
+            <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
+                <span class="mr-2">Name enthält 'Test'</span>
+            </div>
+            <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
+                <span class="mr-2">Matrose:in</span>
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+            <div class="whitespace-nowrap rounded-full border border-primary-300 px-4 py-1 hover:bg-primary-100">
+                <span class="mr-2">Qualifikationen</span>
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+            <div class="whitespace-nowrap rounded-full border border-primary-300 px-4 py-1 hover:bg-primary-100">
+                <span class="mr-2">Mit/ohne Reisen</span>
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+            <div class="sticky right-0 h-full bg-primary-50 pr-4">
+                <button class="btn-ghost h-full">
+                    <i class="fa-solid fa-sliders"></i>
+                </button>
+            </div>
+        </div>
+
         <div class="w-full">
             <VTable
                 :items="filteredUsers"
-                :page-size="20"
+                :page-size="10"
                 :query="true"
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
                 @click="editUser($event)"
@@ -36,7 +86,7 @@
                     <th>Zertifikate</th>
                 </template>
                 <template #row="{ item }">
-                    <td class="w-1/4 whitespace-nowrap font-semibold">
+                    <td class="w-1/3 whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.nickName || item.firstName }} {{ item.lastName }}</p>
                         <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
                             {{ item.rolesStr }}
@@ -144,53 +194,16 @@
                     </td>
                 </template>
                 <template #loading>
-                    <tr v-for="i in 20" :key="i" class="animate-pulse">
-                        <td></td>
-                        <td class="w-1/4">
-                            <p class="mb-1 h-5 w-64 rounded-lg bg-primary-200"></p>
-                            <p class="flex items-center space-x-2 text-sm font-light">
-                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
-                            </p>
-                        </td>
-                        <td class="w-1/4">
-                            <div class="flex gap-2">
-                                <span class="inline-block h-4 w-24 rounded-lg bg-primary-200"></span>
-                                <span class="inline-block h-4 w-20 rounded-lg bg-primary-200"></span>
-                            </div>
-                        </td>
-                        <td class="w-1/5">
-                            <div class="flex gap-4">
-                                <div v-for="n in 4" :key="n">
-                                    <p class="mb-1 h-5 w-8 rounded-lg bg-primary-200"></p>
-                                    <p class="h-3 w-12 rounded-lg bg-primary-200"></p>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td class="w-1/12">
-                            <p class="mb-1 h-5 w-16 rounded-lg bg-primary-200"></p>
-                            <p class="h-3 w-20 rounded-lg bg-primary-200"></p>
-                        </td>
-
-                        <td class="w-1/12">
-                            <div
-                                class="inline-flex h-8 w-auto items-center space-x-2 rounded-full bg-primary-200 py-1 pl-3 pr-4 text-primary-300"
-                            >
-                                <i class="fa-solid fa-circle"></i>
-                                <p class="h-3 w-20 rounded-lg bg-primary-300"></p>
-                            </div>
-                        </td>
-
-                        <td class="w-0">
-                            <div class="px-4 py-2">
-                                <i class="fa-solid fa-circle text-primary-200"></i>
-                            </div>
-                        </td>
-                        <td></td>
-                    </tr>
+                    <UsersListSkeletonLoader :count="20" />
                 </template>
             </VTable>
+        </div>
+
+        <div class="sticky bottom-0 right-0 z-10 flex justify-end pb-4 pr-3 md:pr-14 2xl:hidden">
+            <button class="btn-primary btn-floating">
+                <i class="fa-solid fa-calendar-plus"></i>
+                <span>Hinzufügen</span>
+            </button>
         </div>
 
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
@@ -228,6 +241,7 @@ import type { Selectable } from '@/ui/model/Selectable';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/CreateRegistrationForUserDlg.vue';
 import ImportUsersDlg from '@/ui/views/admin/users/list/ImportUsersDlg.vue';
+import UsersListSkeletonLoader from '@/ui/views/admin/users/list/UsersListSkeletonLoader.vue';
 
 enum Tab {
     ACTIVE_TEAM_MEMBERS = 'Stammcrew (aktive)',
