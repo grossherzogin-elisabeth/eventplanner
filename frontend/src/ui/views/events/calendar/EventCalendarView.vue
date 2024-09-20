@@ -50,7 +50,7 @@
                                     />
                                 </template>
                                 <div v-else-if="createEventFromDate === d.date" class="create-event-overlay">
-                                    <span>Neues Event</span>
+                                    <span>Neue Reise</span>
                                     <span v-if="calendarStyle['--create-event-days'] > 1" class="text-xs">
                                         {{ calendarStyle['--create-event-days'] }} Tage
                                     </span>
