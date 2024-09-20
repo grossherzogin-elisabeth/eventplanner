@@ -1,23 +1,25 @@
 <template>
     <div :class="$attrs.class">
         <h2
-            class="scrollbar-invisible flex space-x-8 overflow-x-auto border-b border-primary-200 px-8 text-base font-semibold md:px-16 xl:px-20"
+            class="scrollbar-invisible flex gap-x-8 overflow-x-auto border-b border-primary-200 px-8 text-base font-semibold md:px-16 xl:px-20"
         >
+            <slot name="before" />
             <button
                 v-for="tab in props.tabs"
                 :key="tab"
                 class="whitespace-nowrap border-b pb-2 hover:text-primary-600"
-                :class="
-                    tab === props.modelValue ? 'border-b border-primary-600 text-primary-600' : 'border-transparent'
-                "
+                :class="tab === props.modelValue ? 'border-primary-600 text-primary-600' : 'border-transparent'"
                 @click="emit('update:modelValue', tab)"
             >
                 <slot name="tab" :tab="tab">
                     {{ $t(tab) }}
                 </slot>
             </button>
+            <span class="flex-grow"></span>
+            <slot name="after" />
         </h2>
     </div>
+    <!-- tab pane -->
     <div v-if="props.modelValue && $slots[props.modelValue]" class="flex-1 px-8 py-4 md:px-16 md:py-8 xl:px-20">
         <template v-for="tab in props.tabs" :key="tab">
             <div v-show="tab === props.modelValue" class="h-full">
