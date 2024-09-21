@@ -48,8 +48,14 @@
         <div
             class="scrollbar-invisible flex h-12 min-h-12 w-full items-center gap-2 overflow-x-auto bg-primary-50 pl-8 pt-4 text-sm xl:pl-16"
         >
-            <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
-                <span class="mr-2">Name enthält 'Test'</span>
+            <div
+                v-if="filter"
+                class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1"
+            >
+                <span class="mr-2">Name enthält '{{ filter }}'</span>
+                <button @click="filter = ''">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
             </div>
             <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
                 <span class="mr-2">Matrose:in</span>

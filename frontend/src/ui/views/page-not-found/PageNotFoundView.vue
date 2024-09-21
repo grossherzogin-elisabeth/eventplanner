@@ -23,15 +23,22 @@
             </p>
             <p class="mb-4">Danke für deine Geduld und für die gemeinsame Suche nach dem verlorenen Code!</p>
         </div>
+        <div class="mt-8 flex">
+            <RouterLink class="btn-primary" to="/">
+                <span>Zurück zur Startseite</span>
+            </RouterLink>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
-type RouteEmits = (e: 'update:title', value: string) => void;
+interface RouteEmits {
+    (e: 'update:title', value: string): void;
+}
 
 const emit = defineEmits<RouteEmits>();
 
 function init(): void {
-    emit('update:title', '404');
+    emit('update:title', '404 - Seite nicht gefunden');
 }
 
 init();

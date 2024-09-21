@@ -30,11 +30,22 @@
         </div>
 
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
+            <!--            <template #before>-->
+            <!--                <button class="btn-ghost">-->
+            <!--                    <i class="fa-solid fa-search"></i>-->
+            <!--                </button>-->
+            <!--            </template>-->
             <template #after>
                 <div class="flex items-center gap-2 pb-2">
-                    <button class="btn-ghost h-full">
-                        <i class="fa-solid fa-search"></i>
-                    </button>
+                    <div class="flex w-64 items-center gap-2 rounded-lg bg-primary-100 px-4 py-2">
+                        <i class="fa-solid fa-search text-primary-300"></i>
+                        <input
+                            v-model="filter"
+                            class="bg-transparent placeholder-primary-300"
+                            placeholder="Suchbegriff"
+                        />
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
                     <button class="btn-ghost">
                         <i class="fa-solid fa-lock-open"></i>
                         <span class="text-base">Freigeben</span>
@@ -47,42 +58,48 @@
                         <i class="fa-solid fa-upload"></i>
                         <span class="text-base">Importieren</span>
                     </button>
-                    <button class="btn-primary ml-2" @click="createEvent()">
-                        <i class="fa-solid fa-calendar-plus"></i>
-                        <span class="">Erstellen</span>
-                    </button>
+                    <div class="hidden 2xl:block">
+                        <button class="btn-primary ml-2" @click="createEvent()">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                            <span class="">Erstellen</span>
+                        </button>
+                    </div>
                 </div>
             </template>
         </VTabs>
 
-        <div class="mt-4 w-full px-16 py-2">
+        <div
+            class="scrollbar-invisible flex h-12 min-h-12 w-full items-center gap-2 overflow-x-auto bg-primary-50 pl-8 pt-4 text-sm xl:pl-16"
+        >
             <div class="flex cursor-pointer gap-2 text-sm">
-                <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
-                    <span class="mr-2">Name enthält 'Test'</span>
-                    <i class="fa-solid fa-xmark text-xs"></i>
+                <div
+                    v-if="filter"
+                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1"
+                >
+                    <span class="mr-2">Name enthält '{{ filter }}'</span>
+                    <button @click="filter = ''">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
                 </div>
                 <div
                     class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
                 >
-                    <span class="mr-2">Alle</span>
-                    <i class="fa-solid fa-chevron-down text-xs"></i>
-                </div>
-                <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
-                    <span class="mr-2">Matrose:in</span>
-                    <i class="fa-solid fa-chevron-down text-xs"></i>
-                </div>
-                <div
-                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
-                >
-                    <span class="mr-2">Abgelaufene Qualifikationen</span>
+                    <span class="mr-2">Alle Kategorien</span>
                     <i class="fa-solid fa-chevron-down text-xs"></i>
                 </div>
                 <div
                     class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
                 >
-                    <span class="mr-2">Nutzer mit Reisen</span>
+                    <span class="mr-2">Alle Bearbeitungsstatus</span>
                     <i class="fa-solid fa-chevron-down text-xs"></i>
                 </div>
+                <div
+                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
+                >
+                    <span class="mr-2">Alle Crewstatus</span>
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+
                 <!--                <div-->
                 <!--                    v-for="tab in tabs"-->
                 <!--                    :key="tab"-->
@@ -101,7 +118,7 @@
                 @click="editEvent($event)"
             >
                 <template #head>
-                    <!--                    <th>-->
+                    <!--                    <th class="hidden lg:table-cell">-->
                     <!--                        <VInputCheckBox />-->
                     <!--                    </th>-->
                     <th>Name</th>
@@ -110,7 +127,7 @@
                     <th>Datum</th>
                 </template>
                 <template #row="{ item }">
-                    <!--                    <td class="group" @click.stop="">-->
+                    <!--                    <td class="hidden lg:table-cell" @click.stop="">-->
                     <!--                        <VInputCheckBox v-model="item.selected" />-->
                     <!--                    </td>-->
                     <td class="w-1/2 max-w-[65vw] whitespace-nowrap font-semibold">
@@ -289,7 +306,7 @@
         <EventCancelDlg ref="deleteEventDialog" />
         <ImportEventsDlg ref="importEventsDialog" />
 
-        <div class="sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12">
+        <div class="sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden">
             <button class="btn-primary btn-floating" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Event erstellen</span>
