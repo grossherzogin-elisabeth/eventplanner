@@ -1,0 +1,9 @@
+.filter-chip .input-field-wrapper {
+    @apply relative flex items-center;
+    @apply h-full overflow-hidden;
+    @apply rounded-full border border-primary-300 bg-primary-50 hover:bg-primary-100;
+}
+
+.filter-chip .input-field {
+    @apply px-4 py-1 text-sm;
+}

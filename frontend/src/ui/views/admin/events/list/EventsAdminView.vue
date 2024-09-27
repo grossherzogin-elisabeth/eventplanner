@@ -37,19 +37,21 @@
             <!--            </template>-->
             <template #after>
                 <div class="flex items-center gap-2 pb-2">
-                    <div class="flex w-64 items-center gap-2 rounded-lg bg-primary-100 px-4 py-2">
+                    <div class="hidden w-64 items-center gap-2 rounded-lg bg-primary-100 px-4 py-2 xl:flex">
                         <i class="fa-solid fa-search text-primary-300"></i>
                         <input
                             v-model="filter"
                             class="bg-transparent placeholder-primary-300"
-                            placeholder="Suchbegriff"
+                            placeholder="Reisen filtern"
                         />
-                        <i class="fa-solid fa-xmark"></i>
+                        <button v-if="filter !== ''" @click="filter = ''">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                     </div>
-                    <button class="btn-ghost">
-                        <i class="fa-solid fa-lock-open"></i>
-                        <span class="text-base">Freigeben</span>
-                    </button>
+                    <!--                    <button class="btn-ghost">-->
+                    <!--                        <i class="fa-solid fa-lock-open"></i>-->
+                    <!--                        <span class="text-base">Freigeben</span>-->
+                    <!--                    </button>-->
                     <button
                         v-if="user.permissions.includes(Permission.WRITE_EVENTS)"
                         class="btn-ghost"
@@ -69,44 +71,52 @@
         </VTabs>
 
         <div
-            class="scrollbar-invisible flex h-12 min-h-12 w-full items-center gap-2 overflow-x-auto bg-primary-50 pl-8 pt-4 text-sm xl:pl-16"
+            class="scrollbar-invisible flex min-h-20 w-full items-center gap-2 overflow-x-auto bg-primary-50 pl-4 pt-4 text-sm md:pl-12 xl:pl-16"
         >
             <div class="flex cursor-pointer gap-2 text-sm">
                 <div
                     v-if="filter"
                     class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1"
                 >
-                    <span class="mr-2">Name enthält '{{ filter }}'</span>
+                    <span class="mr-2">Suchergebnisse für '{{ filter }}'</span>
                     <button @click="filter = ''">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
-                <div
-                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
-                >
-                    <span class="mr-2">Alle Kategorien</span>
-                    <i class="fa-solid fa-chevron-down text-xs"></i>
-                </div>
-                <div
-                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
-                >
-                    <span class="mr-2">Alle Bearbeitungsstatus</span>
-                    <i class="fa-solid fa-chevron-down text-xs"></i>
-                </div>
-                <div
-                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-50 px-4 py-1 hover:bg-primary-100"
-                >
-                    <span class="mr-2">Alle Crewstatus</span>
-                    <i class="fa-solid fa-chevron-down text-xs"></i>
-                </div>
-
-                <!--                <div-->
-                <!--                    v-for="tab in tabs"-->
-                <!--                    :key="tab"-->
-                <!--                    class="whitespace-nowrap rounded-full border border-primary-300 px-4 py-1"-->
-                <!--                >-->
-                <!--                    <span>{{ tab }}</span>-->
-                <!--                </div>-->
+                <VInputSelect
+                    v-model="filterCategory"
+                    class="filter-chip"
+                    placeholder="Alle Kategorien"
+                    :options="[
+                        { label: 'Alle Kategorien', value: null },
+                        { label: 'Tagesfahrten', value: EventType.SingleDayEvent },
+                        { label: 'Wochenendfahrten', value: EventType.WeekendEvent },
+                        { label: 'Sommerreisen', value: EventType.MultiDayEvent },
+                        { label: 'Arbeitsdienste', value: EventType.WorkEvent },
+                    ]"
+                />
+                <VInputSelect
+                    v-model="filterStatus"
+                    class="filter-chip"
+                    placeholder="Alle Status"
+                    :options="[
+                        { label: 'Alle Status', value: null },
+                        { label: 'Entwürfe', value: EventState.Draft },
+                        { label: 'Freigegebene', value: EventState.OpenForSignup },
+                        { label: 'Geplante', value: EventState.Planned },
+                        { label: 'Abgesagte', value: EventState.Canceled },
+                    ]"
+                />
+                <VInputSelect
+                    v-model="filterCrew"
+                    class="filter-chip"
+                    placeholder="Alle Crewstatus"
+                    :options="[
+                        { label: 'Alle Crewstatus', value: null },
+                        { label: 'Fehlende Crew', value: 1 },
+                        { label: 'Freie Plätze', value: 2 },
+                    ]"
+                />
             </div>
         </div>
 
@@ -318,9 +328,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Event, EventState, Permission } from '@/domain';
+import { Event, EventState, EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { ContextMenuButton, VInputText, VTable, VTabs } from '@/ui/components/common';
+import { ContextMenuButton, VInputSelect, VTable, VTabs } from '@/ui/components/common';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
@@ -355,6 +365,9 @@ const events = ref<EventTableViewItem[] | null>(null);
 const showSearch = ref<boolean>(false);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
+const filterCategory = ref<EventType | null>(null);
+const filterStatus = ref<EventState | null>(null);
+const filterCrew = ref<number | null>(null);
 const createEventDialog = ref<Dialog<Event> | null>(null);
 const deleteEventDialog = ref<Dialog<Event, string> | null>(null);
 const importEventsDialog = ref<Dialog<Event> | null>(null);

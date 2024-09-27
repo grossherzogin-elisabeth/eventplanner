@@ -4,17 +4,13 @@
             class="scrollbar-invisible flex gap-x-8 overflow-x-auto border-b border-primary-200 px-8 text-base font-semibold md:px-16 xl:px-20"
         >
             <slot name="before" />
-            <button
-                v-for="tab in props.tabs"
-                :key="tab"
-                class="whitespace-nowrap border-b pb-2 hover:text-primary-600"
-                :class="tab === props.modelValue ? 'border-primary-600 text-primary-600' : 'border-transparent'"
-                @click="emit('update:modelValue', tab)"
-            >
-                <slot name="tab" :tab="tab">
-                    {{ $t(tab) }}
-                </slot>
-            </button>
+            <div v-for="tab in props.tabs" :key="tab" class="tab" :class="{ active: tab === props.modelValue }">
+                <button class="btn-tab" @click="emit('update:modelValue', tab)">
+                    <slot name="tab" :tab="tab">
+                        {{ $t(tab) }}
+                    </slot>
+                </button>
+            </div>
             <span class="flex-grow"></span>
             <slot name="after" />
         </h2>
@@ -50,3 +46,16 @@ useQueryStateSync<string>(
     (v) => emit('update:modelValue', v)
 );
 </script>
+<style>
+.tab {
+    @apply whitespace-nowrap border-b border-transparent pb-1 text-primary-900 hover:text-primary-700;
+}
+.tab button {
+    @apply text-base font-black;
+    @apply -mx-4 rounded-lg px-4 py-2;
+    @apply hover:bg-primary-100;
+}
+.active.tab {
+    @apply border-b border-primary-600 text-primary-600;
+}
+</style>
