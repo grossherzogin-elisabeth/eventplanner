@@ -325,7 +325,7 @@ public class UserExcelImporter {
             .map((it) -> {
                 // TODO
                 // tradi
-                // tradi-maschinist
+                // tradi-maschine
                 // ab
                 // sm
                 // lm
@@ -345,7 +345,7 @@ public class UserExcelImporter {
                     case "Matrosenbrief" -> "matrosenbrief";
                     case "Schiffsmechaniker" -> "schiffsmechaniker";
                     case "Tradi" -> "tradi";
-                    case "Tradi-Maschinist" -> "tradi-machinist";
+                    case "Tradi-Maschinist" -> "tradi-machine";
                     case "Tradi-Maschinist/M/LM" -> "tradi-machine, lm"; // TODO m?
                     case "Tradi-SSS in Ausbildung" -> "sss, tradi";
                     case "Koch" -> "koch";

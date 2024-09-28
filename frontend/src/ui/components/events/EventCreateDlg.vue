@@ -68,7 +68,7 @@
                     <div class="w-2/5">
                         <VInputLabel>Crew an Board</VInputLabel>
                         <VInputTime
-                            v-model="event.end"
+                            v-model="event.start"
                             :errors="validation.errors.value['start']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -188,10 +188,12 @@ async function open(partialEvent?: Partial<Event>): Promise<Event> {
     event.value.locations = partialEvent?.locations || [];
     event.value.state = partialEvent?.state || EventState.Draft;
     event.value.type = partialEvent?.type || EventType.WeekendEvent;
-    event.value.start = DateUtils.cropToPrecision(partialEvent?.start || new Date(), 'days');
-    event.value.end = DateUtils.cropToPrecision(partialEvent?.end || new Date(), 'days');
-    event.value.start.setHours(16);
-    event.value.end.setHours(18);
+    const start = DateUtils.cropToPrecision(new Date(partialEvent?.start?.getTime() || new Date().getTime()), 'days');
+    start.setHours(16);
+    event.value.start = start;
+    const end = DateUtils.cropToPrecision(new Date(partialEvent?.end?.getTime() || new Date().getTime()), 'days');
+    end.setHours(18);
+    event.value.end = end;
 
     await dlg.value?.open();
     event.value.slots =
