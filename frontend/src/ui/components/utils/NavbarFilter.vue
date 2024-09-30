@@ -15,7 +15,7 @@
                 :placeholder="placeholder || 'Einträge filtern'"
                 @input="onInput($event)"
             />
-            <button @click="showSearch = false">
+            <button @click="cancel()">
                 <i class="fa-solid fa-xmark text-white" />
             </button>
         </div>
@@ -49,5 +49,13 @@ async function openSearch(): Promise<void> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onInput(event: any) {
     emit('update:modelValue', event.target?.value);
+}
+
+function cancel() {
+    if (props.modelValue) {
+        emit('update:modelValue', '');
+    } else {
+        showSearch.value = false;
+    }
 }
 </script>
