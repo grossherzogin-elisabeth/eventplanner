@@ -30,8 +30,8 @@
                 </div>
             </div>
         </div>
-        <div class="-mx-4 flex-1 gap-16 lg:flex xl:pr-8 2xl:w-0">
-            <div class="mb-8 w-1/2 px-4 pb-4 lg:mb-0">
+        <div class="-mx-4 flex-1 gap-16 md:flex xl:pr-8 2xl:w-0">
+            <div class="mb-8 px-4 pb-4 md:w-1/2 lg:mb-0">
                 <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Crew</h2>
                 <!-- slot list dropzone -->
                 <div class="sticky top-24">
@@ -121,7 +121,7 @@
                 </div>
             </div>
 
-            <div class="w-1/2 px-4">
+            <div class="px-4 md:w-1/2">
                 <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Warteliste</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">

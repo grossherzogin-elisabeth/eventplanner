@@ -155,7 +155,7 @@ export class EventService {
 
     public hasOpenRequiredSlots(event: Event): boolean {
         const openRequiredSlots = event.slots.filter(
-            (it) => it.criticality >= 1 && it.assignedRegistrationKey === undefined
+            (it) => it.criticality >= 2 && it.assignedRegistrationKey === undefined
         );
         return openRequiredSlots.length > 0;
     }
