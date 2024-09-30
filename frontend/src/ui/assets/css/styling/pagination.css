@@ -1,7 +1,7 @@
 .pagination {
     @apply flex items-stretch justify-end space-x-2;
     @apply px-8 py-2 md:px-16 xl:pr-20;
-    @apply sticky bottom-0 left-0 z-10 bg-primary-50 xl:px-20;
+    @apply bg-primary-50 xl:px-20;
 }
 
 .pagination-page {

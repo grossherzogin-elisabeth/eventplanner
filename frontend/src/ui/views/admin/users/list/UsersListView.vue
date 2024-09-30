@@ -3,9 +3,7 @@
         <teleport to="#nav-right">
             <NavbarFilter v-model="filter" placeholder="Nutzer durchsuchen" />
         </teleport>
-        <div
-            class="sticky left-0 top-12 z-20 hidden border-b border-primary-200 bg-primary-50 px-4 pb-8 pt-4 md:pl-12 md:pr-16 md:pt-8 xl:top-0 xl:block xl:pl-16 xl:pr-20"
-        >
+        <div class="top-0 hidden bg-primary-50 px-4 pb-8 pl-16 pr-20 pt-8 xl:block">
             <div class="flex items-center space-x-4">
                 <VInputText v-model="filter" class="input-search w-96" placeholder="Nutzer filtern">
                     <template #before>
@@ -22,12 +20,13 @@
                 </div>
             </div>
         </div>
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8" />
         <div class="w-full">
             <VTable
                 :items="filteredUsers"
                 :page-size="20"
                 :query="true"
-                class="interactive-table scrollbar-invisible overflow-x-auto px-8 md:px-16 xl:px-20"
+                class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
                 @click="editUser($event)"
             >
                 <template #head>
@@ -201,6 +200,7 @@ import { ArrayUtils } from '@/common';
 import type { Position, User } from '@/domain';
 import { EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
+import { VTabs } from '@/ui/components/common';
 import { ContextMenuButton, VInputCheckBox, VInputText, VTable } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
@@ -231,6 +231,8 @@ const usersService = useUserService();
 const authUseCase = useAuthUseCase();
 const router = useRouter();
 
+const tab = ref<string>('Alle Nutzer');
+const tabs = ref<string[]>(['Alle Nutzer']);
 const filter = ref<string>('');
 const filterOnlyActive = ref<boolean>(false);
 const users = ref<UserRegistrations[] | undefined>(undefined);

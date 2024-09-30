@@ -3,9 +3,7 @@
         <teleport to="#nav-right">
             <NavbarFilter v-model="filter" placeholder="Events durchsuchen" />
         </teleport>
-        <div
-            class="sticky top-12 z-20 hidden bg-primary-50 px-4 pb-8 pt-4 md:pl-12 md:pr-16 md:pt-8 xl:top-0 xl:block xl:pl-16 xl:pr-20"
-        >
+        <div class="top-0 hidden bg-primary-50 px-4 pb-8 pl-16 pr-20 pt-8 xl:block">
             <div class="flex items-center space-x-4">
                 <VInputText v-model="filter" class="input-search w-96" placeholder="Reisen filtern">
                     <template #before>
@@ -28,12 +26,12 @@
             </div>
         </div>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-[6.625rem]" />
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8" />
         <div class="w-full">
             <VTable
                 :items="filteredEvents"
-                :page-size="-1"
-                class="interactive-table scrollbar-invisible overflow-x-auto px-8 md:px-16 xl:px-20"
+                :page-size="20"
+                class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
                 @click="editEvent($event)"
             >
                 <template #head>
