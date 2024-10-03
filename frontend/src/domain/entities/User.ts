@@ -8,6 +8,7 @@ export type AuthKey = string;
 export interface User {
     key: UserKey;
     firstName: string;
+    nickName?: string;
     lastName: string;
     positionKeys: PositionKey[];
     email?: string;
@@ -21,6 +22,7 @@ export interface UserDetails {
     gender?: string;
     title?: string;
     firstName: string;
+    nickName?: string;
     secondName?: string;
     lastName: string;
     positionKeys: PositionKey[];

@@ -5,18 +5,18 @@
         </template>
         <template #default>
             <div v-if="eventSlot" class="flex flex-1 flex-col p-8 lg:px-16">
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Position</VInputLabel>
                     <VInputCombobox
                         v-model="primaryPosition"
                         :options="(positions || []).map((it) => ({ label: it.name, value: it }))"
                     />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Anzeigename</VInputLabel>
                     <VInputText v-model="eventSlot.positionName" :placeholder="primaryPosition?.name" />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Kritikaliät</VInputLabel>
                     <VInputSelect
                         v-model="eventSlot.criticality"

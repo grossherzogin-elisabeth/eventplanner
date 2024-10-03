@@ -9,18 +9,18 @@
                     Du kannst den Slot für diese Reise ohne Auswirkungen auf andere Reisen anpassen. Bereits zugwiesene
                     Crewmitglieder bleiben diesem Slot zugewiesen, auch wenn die Positionen dann nicht mehr passen.
                 </p>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Position</VInputLabel>
                     <VInputCombobox
                         v-model="primaryPosition"
                         :options="(positions || []).map((it) => ({ label: it.name, value: it }))"
                     />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Anzeigename</VInputLabel>
                     <VInputText v-model="eventSlot.positionName" :placeholder="primaryPosition?.name" />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Kritikaliät</VInputLabel>
                     <VInputSelect
                         v-model="eventSlot.criticality"

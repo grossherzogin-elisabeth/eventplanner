@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-baseline rounded-xl bg-yellow-100 p-2 pl-4 text-yellow-900" :class="{ hidden: dismissed }">
         <i class="fa-solid fa-warning"></i>
-        <span class="ml-2 mr-1 w-0 flex-grow">
+        <span class="ml-4 mr-1 w-0 flex-grow">
             <slot></slot>
         </span>
         <button class="h-9 w-9 rounded-full hover:bg-yellow-200 hover:bg-opacity-75" @click="dismiss()">

@@ -5,6 +5,7 @@ import type { PositionKey, User, UserDetails, UserKey } from '@/domain';
 interface UserRepresentation {
     key: string;
     firstName: string;
+    nickName?: string;
     lastName: string;
     positions: string[];
     expiredQualificationCount?: number;
@@ -17,6 +18,7 @@ interface UserDetailsRepresentation {
     gender?: string;
     title?: string;
     firstName: string;
+    nickName?: string;
     secondName?: string;
     lastName: string;
     positions: string[];
@@ -33,6 +35,7 @@ interface UserDetailsRepresentation {
 
 interface SignedInUserUpdateRequest {
     gender?: string;
+    nickName?: string;
     title?: string;
     email?: string;
     phone?: string;
@@ -45,6 +48,7 @@ interface UserDetailsUpdateRequest {
     gender?: string;
     title?: string;
     firstName?: string;
+    nickName?: string;
     secondName?: string;
     lastName?: string;
     positions?: string[];
@@ -61,6 +65,7 @@ interface UserDetailsCreateRequest {
     gender?: string;
     title?: string;
     firstName: string;
+    nickName?: string;
     secondName?: string;
     lastName: string;
     positions: string[];
@@ -109,6 +114,7 @@ export class UserRestRepository implements UserRepository {
         return representations.map((it) => ({
             key: it.key,
             firstName: it.firstName,
+            nickName: it.nickName,
             lastName: it.lastName,
             positionKeys: it.positions as PositionKey[],
             expiredQualificationCount: it.expiredQualificationCount,
@@ -143,6 +149,7 @@ export class UserRestRepository implements UserRepository {
             gender: user.gender,
             title: user.title,
             firstName: user.firstName,
+            nickName: user.nickName,
             secondName: user.secondName,
             lastName: user.lastName,
             positions: user.positionKeys,
@@ -185,6 +192,7 @@ export class UserRestRepository implements UserRepository {
             gender: user.gender,
             title: user.title,
             firstName: user.firstName,
+            nickName: user.nickName,
             secondName: user.secondName,
             lastName: user.lastName,
             dateOfBirth: user.dateOfBirth.toISOString(),
@@ -276,6 +284,7 @@ export class UserRestRepository implements UserRepository {
             key: representation.key,
             authKey: representation.authKey,
             firstName: representation.firstName,
+            nickName: representation.nickName,
             secondName: representation.secondName,
             lastName: representation.lastName,
             positionKeys: representation.positions as PositionKey[],

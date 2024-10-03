@@ -78,7 +78,7 @@ export class RegistrationService {
         if (!user) {
             return registration.name || '';
         }
-        return `${user.firstName} ${user.lastName}`.trim();
+        return `${user.nickName || user.firstName} ${user.lastName}`.trim();
     }
 
     private unknownPosition(): Position {

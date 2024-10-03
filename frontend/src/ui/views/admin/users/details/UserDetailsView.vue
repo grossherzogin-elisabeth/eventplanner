@@ -12,31 +12,35 @@
                     <template #[Tab.USER_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
                             <section v-if="user" class="-mx-4">
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Geschlecht</VInputLabel>
                                     <VInputSelect v-model="user.gender" :options="genderOptions" />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Vorname</VInputLabel>
                                     <VInputText v-model="user.firstName" required />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
+                                    <VInputLabel>Anzeigename</VInputLabel>
+                                    <VInputText v-model="user.nickName" :placeholder="user.firstName" />
+                                </div>
+                                <div class="mb-4">
                                     <VInputLabel>Zweiter Vorname</VInputLabel>
                                     <VInputText v-model="user.secondName" />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Nachname</VInputLabel>
                                     <VInputText v-model="user.lastName" required />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Geboren am</VInputLabel>
                                     <VInputDate v-model="user.dateOfBirth" required />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Geburtsort</VInputLabel>
                                     <VInputText v-model="user.placeOfBirth" required />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Pass Nummer</VInputLabel>
                                     <VInputText v-model="user.passNr" required />
                                 </div>
@@ -46,32 +50,32 @@
                     <template #[Tab.USER_CONTACT_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
                             <section v-if="user" class="-mx-4">
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Email</VInputLabel>
                                     <VInputText v-model="user.email" required />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Telefon</VInputLabel>
                                     <VInputText v-model="user.phone" />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Mobil</VInputLabel>
                                     <VInputText v-model="user.mobile" />
                                 </div>
-                                <div class="mb-2 mt-16">
+                                <div class="mb-4 mt-16">
                                     <VInputLabel>Straße, Hausnr</VInputLabel>
                                     <VInputText v-model="user.address.addressLine1" required />
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-4">
                                     <VInputLabel>Adresszusatz</VInputLabel>
                                     <VInputText v-model="user.address.addressLine2" />
                                 </div>
                                 <div class="flex space-x-4">
-                                    <div class="mb-2 w-32">
+                                    <div class="mb-4 w-32">
                                         <VInputLabel>PLZ</VInputLabel>
                                         <VInputText v-model="user.address.zipcode" required />
                                     </div>
-                                    <div class="mb-2 flex-grow">
+                                    <div class="mb-4 flex-grow">
                                         <VInputLabel>Ort</VInputLabel>
                                         <VInputText v-model="user.address.town" required />
                                     </div>

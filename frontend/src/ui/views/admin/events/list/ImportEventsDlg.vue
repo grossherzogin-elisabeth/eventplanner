@@ -30,15 +30,15 @@
                     Hier kannst du Reisen aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein paar
                     Minuten.
                 </p>
-                <VWarning class="-mx-4 mb-8">
+                <VWarning class="-mx-4">
                     Wenn du Reisen aus einer Excel Datei importierts, werden dadurch alle anderen Reisen für das
                     ausgewählte Jahr überschrieben!
                 </VWarning>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4 mt-8">
                     <VInputLabel>Jahr</VInputLabel>
                     <VInputSelect v-model="year" :options="yearOptions" />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Datei</VInputLabel>
                     <VInputFile v-model="file" />
                 </div>

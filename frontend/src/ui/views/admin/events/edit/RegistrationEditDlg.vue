@@ -9,19 +9,19 @@
                     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
                     labore et dolore magna aliquyam erat, sed diam voluptua.
                 </p>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Nutzer</VInputLabel>
                     <VInputCombobox v-model="registration.userKey" :options="userOptions" disabled />
                 </div>
-                <div v-if="!registration.userKey" class="-mx-4 mb-2">
+                <div v-if="!registration.userKey" class="-mx-4 mb-4">
                     <VInputLabel>Name</VInputLabel>
                     <VInputText v-model="registration.name" />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Position</VInputLabel>
                     <VInputCombobox v-model="registration.positionKey" :options="positionOptions" />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Notiz</VInputLabel>
                     <VInputTextArea v-model="registration.note" />
                 </div>

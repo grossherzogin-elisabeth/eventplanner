@@ -23,7 +23,7 @@
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event" class="-mx-4">
-                            <div class="mb-2">
+                            <div class="mb-4">
                                 <VInputLabel>Status</VInputLabel>
                                 <VInputSelect
                                     v-model="event.state"
@@ -38,7 +38,7 @@
                                     required
                                 />
                             </div>
-                            <div class="mb-2">
+                            <div class="mb-4">
                                 <VInputLabel>Name</VInputLabel>
                                 <VInputText
                                     v-model="event.name"
@@ -47,7 +47,7 @@
                                     required
                                 />
                             </div>
-                            <div class="mb-2">
+                            <div class="mb-4">
                                 <VInputLabel>Typ</VInputLabel>
                                 <VInputSelect
                                     v-model="event.type"
@@ -62,7 +62,7 @@
                                     required
                                 />
                             </div>
-                            <div class="mb-2">
+                            <div class="mb-4">
                                 <VInputLabel>Beschreibung</VInputLabel>
                                 <VInputTextArea
                                     v-model="event.description"
@@ -70,7 +70,7 @@
                                     :errors-visible="true"
                                 />
                             </div>
-                            <div class="mb-2 flex space-x-4">
+                            <div class="mb-4 flex space-x-4">
                                 <div class="w-3/5">
                                     <VInputLabel>Startdatum</VInputLabel>
                                     <VInputDate
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
 
-                            <div class="mb-2 flex space-x-4">
+                            <div class="mb-4 flex space-x-4">
                                 <div class="w-3/5">
                                     <VInputLabel>Enddatum</VInputLabel>
                                     <VInputDate

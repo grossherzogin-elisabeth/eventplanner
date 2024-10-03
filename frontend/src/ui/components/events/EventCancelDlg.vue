@@ -9,7 +9,7 @@
                     Wenn du die Reise absagst wird vom System automatisch eine Benachrichtigung an die Crew gesendet. Du
                     kannst die zu versendene Nachricht hier anpassen.
                 </p>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Nachricht an die Crew</VInputLabel>
                     <VInputTextArea v-model="message" class="min-h-64" />
                 </div>

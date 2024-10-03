@@ -4,66 +4,115 @@
             <template #content>
                 <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
                     <template #[Tab.ACCOUNT_DATA]>
-                        <section v-if="userDetails" class="max-w-2xl">
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Geschlecht</VInputLabel>
-                                <VInputSelect v-model="userDetails.gender" :options="genderOptions" required />
+                        <div class="items-start gap-32 2xl:flex">
+                            <section v-if="userDetails" class="w-full max-w-2xl">
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Geschlecht</VInputLabel>
+                                    <VInputSelect v-model="userDetails.gender" :options="genderOptions" required />
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Anzeigename</VInputLabel>
+                                    <VInputText v-model="userDetails.nickName" :placeholder="userDetails.firstName" />
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Vorname</VInputLabel>
+                                    <VInputText
+                                        :model-value="`${userDetails.firstName} ${userDetails.secondName || ''}`.trim()"
+                                        required
+                                        disabled
+                                    />
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Nachname</VInputLabel>
+                                    <VInputText v-model="userDetails.lastName" required disabled />
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Geboren am</VInputLabel>
+                                    <VInputDate v-model="userDetails.dateOfBirth" required disabled />
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Geburtsort</VInputLabel>
+                                    <VInputText v-model="userDetails.placeOfBirth" required disabled />
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Personalausweis Nummer</VInputLabel>
+                                    <VInputText v-model="userDetails.passNr" required />
+                                </div>
+                            </section>
+                            <div class="my-8 max-w-2xl flex-grow 2xl:my-0 2xl:w-0">
+                                <div class="-mx-4 rounded-xl bg-primary-100 p-4 text-sm">
+                                    <h2 class="mb-2">Name und Personalausweis Nummer</h2>
+                                    <p class="mb-2">
+                                        Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen,
+                                        da dieser auch zum Erstellen der IMO Liste verwendet wird. Bitte beachte, das du
+                                        den Personalausweis bei Reisen mitführen musst!
+                                    </p>
+                                    <p class="mb-2">
+                                        Solltest du mit einem anderen Namen oder Spitznamen angesprochen werden wollen,
+                                        kannst du einen abweichenden Anzeigenamen angeben. Dieser wird dann in der App
+                                        angezeigt und auch beim Kammerplan und der Getränkeliste verwendet.
+                                    </p>
+                                    <p>
+                                        <a
+                                            href="https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png"
+                                            class="text-primary-600"
+                                            target="_blank"
+                                        >
+                                            Wo finde ich meine Personalausweis Nummer?
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                        </a>
+                                    </p>
+                                </div>
                             </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Vorname</VInputLabel>
-                                <VInputText v-model="userDetails.firstName" required disabled />
-                            </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Nachname</VInputLabel>
-                                <VInputText v-model="userDetails.lastName" required disabled />
-                            </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Geboren am</VInputLabel>
-                                <VInputDate v-model="userDetails.dateOfBirth" required disabled />
-                            </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Geburtsort</VInputLabel>
-                                <VInputText v-model="userDetails.placeOfBirth" required disabled />
-                            </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Pass Nummer</VInputLabel>
-                                <VInputText v-model="userDetails.passNr" required />
-                            </div>
-                        </section>
+                        </div>
                     </template>
                     <template #[Tab.ACCOUNT_CONTACT_DATA]>
-                        <section v-if="userDetails" class="max-w-2xl">
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Email</VInputLabel>
-                                <VInputText v-model="userDetails.email" required />
-                            </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Straße, Hausnr</VInputLabel>
-                                <VInputText v-model="userDetails.address.addressLine1" required />
-                            </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Adresszusatz</VInputLabel>
-                                <VInputText v-model="userDetails.address.addressLine2" />
-                            </div>
-                            <div class="-mx-4 flex space-x-4">
-                                <div class="mb-2 w-24">
-                                    <VInputLabel>PLZ</VInputLabel>
-                                    <VInputText v-model="userDetails.address.zipcode" required />
+                        <div class="items-start gap-32 2xl:flex">
+                            <section v-if="userDetails" class="w-full max-w-2xl">
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Email</VInputLabel>
+                                    <VInputText v-model="userDetails.email" required disabled />
                                 </div>
-                                <div class="mb-2 flex-grow">
-                                    <VInputLabel>Ort</VInputLabel>
-                                    <VInputText v-model="userDetails.address.town" required />
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Straße, Hausnr</VInputLabel>
+                                    <VInputText v-model="userDetails.address.addressLine1" required />
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Adresszusatz</VInputLabel>
+                                    <VInputText v-model="userDetails.address.addressLine2" />
+                                </div>
+                                <div class="-mx-4 flex space-x-4">
+                                    <div class="mb-4 w-24">
+                                        <VInputLabel>PLZ</VInputLabel>
+                                        <VInputText v-model="userDetails.address.zipcode" required />
+                                    </div>
+                                    <div class="mb-4 flex-grow">
+                                        <VInputLabel>Ort</VInputLabel>
+                                        <VInputText v-model="userDetails.address.town" required />
+                                    </div>
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Telefon</VInputLabel>
+                                    <VInputText v-model="userDetails.phone" />
+                                </div>
+                                <div class="-mx-4 mb-4">
+                                    <VInputLabel>Mobil</VInputLabel>
+                                    <VInputText v-model="userDetails.mobile" />
+                                </div>
+                            </section>
+                            <div class="my-8 max-w-2xl flex-grow 2xl:my-0 2xl:w-0">
+                                <div class="-mx-4 rounded-xl bg-primary-100 p-4 text-sm">
+                                    <h2 class="mb-2">Du möchtest deine Email Adresse ändern?</h2>
+                                    <p>
+                                        Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login
+                                        verwendet. Wenn du die Email Adresse ändern möchtest wende dich bitte an
+                                        <a class="text-primary-600" href="mailto:admin@grossherzogin-elisabeth.de">
+                                            admin@grossherzogin-elisabeth.de </a
+                                        >.
+                                    </p>
                                 </div>
                             </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Telefon</VInputLabel>
-                                <VInputText v-model="userDetails.phone" />
-                            </div>
-                            <div class="-mx-4 mb-2">
-                                <VInputLabel>Mobil</VInputLabel>
-                                <VInputText v-model="userDetails.mobile" />
-                            </div>
-                        </section>
+                        </div>
                     </template>
                     <template #[Tab.ACCOUNT_CREDENTIALS]>
                         <section class="max-w-2xl">

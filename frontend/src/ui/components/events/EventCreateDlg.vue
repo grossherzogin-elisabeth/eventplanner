@@ -5,7 +5,7 @@
         </template>
         <template #default>
             <div class="p-8 lg:px-16">
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Name</VInputLabel>
                     <VInputText
                         v-model="event.name"
@@ -15,7 +15,7 @@
                         required
                     />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Kategorie</VInputLabel>
                     <VInputSelect
                         v-model="event.type"
@@ -30,7 +30,7 @@
                         required
                     />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Vorlage</VInputLabel>
                     <VInputCombobox
                         v-model="template"
@@ -46,7 +46,7 @@
                         "
                     />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Beschreibung</VInputLabel>
                     <VInputTextArea
                         v-model="event.description"
@@ -55,7 +55,7 @@
                         placeholder="Kurze Bschreibung oder Zusatzinformationen"
                     />
                 </div>
-                <div class="-mx-4 mb-2 flex space-x-4">
+                <div class="-mx-4 mb-4 flex space-x-4">
                     <div class="w-3/5">
                         <VInputLabel>Startdatum</VInputLabel>
                         <VInputDate
@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-                <div class="-mx-4 mb-2 flex space-x-4">
+                <div class="-mx-4 mb-4 flex space-x-4">
                     <div class="w-3/5">
                         <VInputLabel>Enddatum</VInputLabel>
                         <VInputDate
