@@ -269,6 +269,45 @@
                 <span>Reise bearbeiten</span>
             </RouterLink>
         </template>
+        <template v-if="event" #actions-menu>
+            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
+                <i class="fa-solid fa-calendar-alt" />
+                <span>Kalendereintrag erstellen</span>
+            </li>
+            <li v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
+                <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
+                    <i class="fa-solid fa-edit" />
+                    <span>Reise bearbeiten</span>
+                </RouterLink>
+            </li>
+            <li
+                v-if="event.signedInUserAssignedPosition"
+                class="context-menu-item"
+                :class="{ disabled: !event.canSignedInUserLeave }"
+                @click="leaveEvent(event)"
+            >
+                <i class="fa-solid fa-cancel" />
+                <span>Reise absagen</span>
+            </li>
+            <li
+                v-else-if="event.signedInUserWaitingListPosition"
+                class="context-menu-item"
+                :class="{ disabled: !event.canSignedInUserLeave }"
+                @click="leaveEvent(event)"
+            >
+                <i class="fa-solid fa-user-minus" />
+                <span>Warteliste verlassen</span>
+            </li>
+            <li
+                v-else
+                class="context-menu-item"
+                :class="{ disabled: !event.canSignedInUserJoin }"
+                @click="joinEvent(event)"
+            >
+                <i class="fa-solid fa-user-plus" />
+                <span>Anmelden</span>
+            </li>
+        </template>
     </DetailsPage>
 </template>
 
