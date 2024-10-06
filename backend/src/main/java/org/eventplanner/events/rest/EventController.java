@@ -72,35 +72,4 @@ public class EventController {
         eventUseCase.deleteEvent(signedInUser, new EventKey(eventKey));
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-    @RequestMapping(method = RequestMethod.POST, path = "/{eventKey}/registrations")
-    public ResponseEntity<EventRepresentation> createRegistration(
-        @PathVariable("eventKey") String eventKey,
-        @RequestBody CreateRegistrationRequest spec
-    ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = eventUseCase.addRegistration(signedInUser, new EventKey(eventKey), spec.toDomain());
-        return ResponseEntity.status(HttpStatus.CREATED).body(EventRepresentation.fromDomain(event));
-    }
-
-    @RequestMapping(method = RequestMethod.DELETE, path = "/{eventKey}/registrations/{registrationKey}")
-    public ResponseEntity<EventRepresentation> deleteRegistration(
-        @PathVariable("eventKey") String eventKey,
-        @PathVariable("registrationKey") String registrationKey
-    ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = eventUseCase.removeRegistration(signedInUser, new EventKey(eventKey), new RegistrationKey(registrationKey));
-        return ResponseEntity.ok(EventRepresentation.fromDomain(event));
-    }
-
-    @RequestMapping(method = RequestMethod.PUT, path = "/{eventKey}/registrations/{registrationKey}")
-    public ResponseEntity<EventRepresentation> updateRegistration(
-        @PathVariable("eventKey") String eventKey,
-        @PathVariable("registrationKey") String registrationKey,
-        @RequestBody UpdateRegistrationRequest spec
-    ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = eventUseCase.updateRegistration(signedInUser, new EventKey(eventKey), new RegistrationKey(registrationKey), spec.toDomain());
-        return ResponseEntity.ok(EventRepresentation.fromDomain(event));
-    }
 }
