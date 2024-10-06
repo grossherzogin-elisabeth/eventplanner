@@ -361,26 +361,26 @@ public class EventExcelImporter {
 
     private static List<Slot> generateDefaultEventSlots(String eventName) {
         var slots = new ArrayList<Slot>();
-        slots.add(Slot.of(Pos.KAPITAEN).withRequired());
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withRequired());
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withRequired());
-        slots.add(Slot.of(Pos.MASCHINIST).withName("1. Maschinist").withRequired());
-        slots.add(Slot.of(Pos.MASCHINIST).withName("2. Maschinist").withRequired());
+        slots.add(Slot.of(Pos.KAPITAEN).withCriticality(2));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withCriticality(2));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withCriticality(1));
+        slots.add(Slot.of(Pos.MASCHINIST).withName("1. Maschinist").withCriticality(2));
+        slots.add(Slot.of(Pos.MASCHINIST).withName("2. Maschinist").withCriticality(2));
 
-        slots.add(Slot.of(Pos.KOCH).withRequired());
-        slots.add(Slot.of(Pos.AUSBILDER, Pos.STM).withName("Ausbilder").withRequired());
-        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
-        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
-        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.KOCH).withCriticality(1));
+        slots.add(Slot.of(Pos.AUSBILDER, Pos.STM).withName("Ausbilder").withCriticality(1));
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
 
-        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
 
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withRequired());
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
         slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
         slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
         slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
@@ -395,7 +395,7 @@ public class EventExcelImporter {
         slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.BACKSCHAFT));
         slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA)
             .withRequired());
-        slots.add(Slot.of(Pos.KOCH, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired());
+        slots.add(Slot.of(Pos.KOCH, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withCriticality(1));
 
         for (int i = 0; i < slots.size(); i++) {
             slots.set(i, slots.get(i).withOrder(i + 1));
