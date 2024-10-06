@@ -50,7 +50,9 @@ export class EventAdministrationUseCase {
                 const deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
                 const changedRegistrations = event.registrations.filter((a) => {
                     const b = original.registrations.find((it) => it.key === a.key);
-                    return b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey);
+                    return (
+                        b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey || a.note !== b.note)
+                    );
                 });
 
                 for (const r of newRegistrations) {

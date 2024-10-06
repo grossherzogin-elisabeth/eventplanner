@@ -107,6 +107,7 @@ async function open(event: Event): Promise<Event> {
         positionKey: '',
         userKey: undefined,
         name: undefined,
+        note: '',
     };
     hiddenUsers.value = event.registrations.map((it) => it.userKey).filter(ArrayUtils.filterUndefined);
 

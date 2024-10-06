@@ -96,6 +96,7 @@ async function open(eventRegistration: Registration): Promise<Registration> {
     // wait until user submits
     await dlg.value?.open();
     eventRegistration.positionKey = registration.value.positionKey;
+    eventRegistration.note = registration.value.note;
     return eventRegistration;
 }
 
