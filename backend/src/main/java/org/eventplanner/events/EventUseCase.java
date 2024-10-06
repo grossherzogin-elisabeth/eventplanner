@@ -116,17 +116,17 @@ public class EventUseCase {
             if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUser()))) {
                 throw new IllegalArgumentException("Registration for " + spec.userKey().value() + " already exists");
             }
+            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), spec.userKey(), null, spec.note()));
         } else if (spec.name() != null) {
             // validate permission and request for guest registration
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
             if (event.getRegistrations().stream().anyMatch(r -> spec.name().equals(r.getName()))) {
                 throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
             }
+            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), null, spec.name(), spec.note()));
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
         }
-
-        event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), spec.userKey(), null, spec.note()));
         return this.eventRepository.update(event);
     }
 
