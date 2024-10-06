@@ -234,6 +234,7 @@ export class UserRestRepository implements UserRepository {
         const requestBody: SignedInUserUpdateRequest = {
             gender: user.gender,
             title: user.title,
+            nickName: user.nickName,
             email: user.email,
             phone: user.phone,
             mobile: user.mobile,

@@ -21,6 +21,7 @@ public class EncryptedUserDetails implements Serializable {
     private @Nullable EncryptedString gender;
     private @Nullable EncryptedString title;
     private @NonNull EncryptedString firstName;
+    private @Nullable EncryptedString nickName;
     private @Nullable EncryptedString secondName;
     private @NonNull EncryptedString lastName;
     private @NonNull List<EncryptedString> positions;

@@ -66,6 +66,7 @@ public class UserEncryptionService {
             encryptNullable(user.getGender()),
             encryptNullable(user.getTitle()),
             encrypt(user.getFirstName()),
+            encryptNullable(user.getNickName()),
             encryptNullable(user.getSecondName()),
             encrypt(user.getLastName()),
             streamNullable(user.getPositions(), Stream.empty())
@@ -102,6 +103,7 @@ public class UserEncryptionService {
             decryptNullable(user.getGender()),
             decryptNullable(user.getTitle()),
             decrypt(user.getFirstName()),
+            decryptNullable(user.getNickName()),
             decryptNullable(user.getSecondName()),
             decrypt(user.getLastName()),
             streamNullable(user.getPositions(), Stream.empty())

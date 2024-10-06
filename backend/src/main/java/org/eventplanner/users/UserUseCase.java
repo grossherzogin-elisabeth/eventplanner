@@ -112,6 +112,7 @@ public class UserUseCase {
         applyNullable(spec.gender(), user::setGender);
         applyNullable(spec.title(), user::setTitle);
         applyNullable(spec.firstName(), user::setFirstName);
+        applyNullable(spec.nickName(), user::setNickName);
         applyNullable(spec.secondName(), user::setSecondName);
         applyNullable(spec.lastName(), user::setLastName);
         applyNullable(spec.dateOfBirth(), user::setDateOfBirth);

@@ -25,6 +25,7 @@ public class UserDetails {
     private @Nullable String gender;
     private @Nullable String title;
     private @NonNull String firstName;
+    private @Nullable String nickName;
     private @Nullable String secondName;
     private @NonNull String lastName;
     private @NonNull List<PositionKey> positions = new LinkedList<>();

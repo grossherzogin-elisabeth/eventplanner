@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 public record CreateUserSpec(
     @Nullable String title,
     @NonNull String firstName,
+    @Nullable String nickName,
     @Nullable String secondName,
     @NonNull String lastName,
     @NonNull Address address,

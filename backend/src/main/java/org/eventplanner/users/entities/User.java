@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -18,5 +19,6 @@ public class User {
     private @NonNull UserKey key;
     private @NonNull String firstName;
     private @NonNull String lastName;
+    private @Nullable String nickName;
     private @NonNull List<PositionKey> positions;
 }

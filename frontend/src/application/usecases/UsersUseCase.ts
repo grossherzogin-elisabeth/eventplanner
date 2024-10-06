@@ -61,6 +61,7 @@ export class UsersUseCase {
             const savedUser = await this.userRepository.updateSignedInUser({
                 gender: details.gender,
                 title: details.title,
+                nickName: details.nickName,
                 phone: details.phone,
                 mobile: details.mobile,
                 address: details.address,

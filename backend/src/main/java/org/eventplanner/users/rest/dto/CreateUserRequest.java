@@ -10,6 +10,7 @@ import java.time.ZonedDateTime;
 public record CreateUserRequest(
     @Nullable String title,
     @NonNull String firstName,
+    @Nullable String nickName,
     @Nullable String secondName,
     @NonNull String lastName,
     @NonNull AddressRepresentation address,
@@ -26,6 +27,7 @@ public record CreateUserRequest(
         return new CreateUserSpec(
             title,
             firstName,
+            nickName,
             secondName,
             lastName,
             address.toDomain(),
