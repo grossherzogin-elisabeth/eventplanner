@@ -1,4 +1,5 @@
 # https://docs.spring.io/spring-boot/appendix/application-properties/index.html
+
 build:
   time: ${BUILD_DATE:now}
   commit: ${BUILD_COMMIT:local}
@@ -24,6 +25,8 @@ security:
   enable-csrf: false
 
 spring:
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
   security:
     oauth2:
       client:
