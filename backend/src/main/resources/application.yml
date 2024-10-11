@@ -37,11 +37,6 @@ spring:
             provider: default
             redirect-uri: ${frontend.domain}/login/oauth2/code/default
             scope: openid,email,profile
-          google:
-            client-id: ${GOOGLE_CLIENT_ID:eventplanner}
-            client-secret: ${GOOGLE_CLIENT_SECRET:********************}
-            redirect-uri: ${frontend.domain}/login/oauth2/code/google
-            scope: openid,email,profile
           cognito:
             client-id: ${OAUTH_CLIENT_ID:eventplanner}
             client-secret: ${OAUTH_CLIENT_SECRET:********************}
@@ -59,10 +54,10 @@ spring:
     timeout: ${auth.session-timout}
 
 server:
-  port: ${SERVER_PORT:8080}
-  host: ${SERVER_HOST:localhost}
   protocol: ${SERVER_PROTOCOL:http}
-  domain: ${server.protocol}://${server.host}:${server.port}
+  host: ${SERVER_HOST:localhost}
+  port: ${SERVER_PORT:8080}
+  domain: ${SERVER_URI:${server.protocol}://${server.host}:${server.port}}
   servlet:
     session:
       timeout: ${auth.session-timout}s
