@@ -2,9 +2,6 @@ name: Build and push Docker container
 
 on:
   push:
-    branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
   workflow_dispatch:
 
 
@@ -44,18 +41,36 @@ jobs:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date '+%Y-%m-%d %H:%M:%S')"
-      - name: Build and push Docker image
+
+      - name: Build and push Docker image (main)
+        if: ${{ github.ref == 'refs/heads/main' }}
         id: build-and-push
         uses: docker/build-push-action@v5.0.0
         with:
           context: .
           build-args: |
             COMMIT=${{ github.sha }}
-            BRANCH=${{ github.head_ref }}
+            BRANCH=${{ github.head_ref || github.ref_name }} 
             TIME=${{ steps.date.outputs.date }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ghcr.io/grossherzogin-elisabeth/eventplanner:latest
             ghcr.io/grossherzogin-elisabeth/eventplanner:1.0.0-alpha
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push Docker image (dev)
+        if: ${{ github.ref != 'refs/heads/main' }}
+        id: build-and-push
+        uses: docker/build-push-action@v5.0.0
+        with:
+          context: .
+          build-args: |
+            COMMIT=${{ github.sha }}
+            BRANCH=${{ github.head_ref || github.ref_name }} 
+            TIME=${{ steps.date.outputs.date }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ghcr.io/grossherzogin-elisabeth/eventplanner:${{ github.head_ref || github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
