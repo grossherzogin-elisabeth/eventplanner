@@ -35,18 +35,18 @@
                 @click="editEvent($event)"
             >
                 <template #head>
-                    <th>
-                        <VInputCheckBox />
-                    </th>
+                    <!--                    <th>-->
+                    <!--                        <VInputCheckBox />-->
+                    <!--                    </th>-->
                     <th>Name</th>
                     <th>Status</th>
                     <th>Crew</th>
                     <th>Datum</th>
                 </template>
                 <template #row="{ item }">
-                    <td class="group" @click.stop="">
-                        <VInputCheckBox v-model="item.selected" />
-                    </td>
+                    <!--                    <td class="group" @click.stop="">-->
+                    <!--                        <VInputCheckBox v-model="item.selected" />-->
+                    <!--                    </td>-->
                     <td class="w-1/2 max-w-[65vw] whitespace-nowrap font-semibold">
                         <p
                             class="mb-1 truncate"
