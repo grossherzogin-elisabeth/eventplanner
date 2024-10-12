@@ -11,7 +11,7 @@ export interface User {
     firstName: string;
     nickName?: string;
     lastName: string;
-    roles: Role[];
+    roles?: Role[];
     positionKeys: PositionKey[];
     email?: string;
     expiredQualificationCount?: number;

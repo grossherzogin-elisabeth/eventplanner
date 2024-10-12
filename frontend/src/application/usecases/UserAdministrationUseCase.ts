@@ -28,6 +28,7 @@ export class UserAdministrationUseCase {
             firstName: savedUser.firstName,
             lastName: savedUser.lastName,
             positionKeys: savedUser.positionKeys,
+            roles: savedUser.roles,
             email: savedUser.email,
         });
         this.notificationService.success('Änderungen gespeichert');

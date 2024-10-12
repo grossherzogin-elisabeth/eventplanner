@@ -118,7 +118,7 @@ const permissions = ref<PermissionTableEntry[]>([
     },
 ]);
 
-const userPermissions = computed<PermissionTableEntry>(() => {
+const userPermissions = computed<PermissionTableEntry[]>(() => {
     return permissions.value.map((p) => ({
         ...p,
         enabled: props.modelValue.roles.includes(p.role),
