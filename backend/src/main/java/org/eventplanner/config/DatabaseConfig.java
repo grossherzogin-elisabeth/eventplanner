@@ -15,9 +15,11 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @AllArgsConstructor
+@EnableTransactionManagement
 public class DatabaseConfig {
     private final Environment env;
 
