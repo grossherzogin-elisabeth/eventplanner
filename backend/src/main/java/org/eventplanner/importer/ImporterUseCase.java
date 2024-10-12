@@ -4,7 +4,13 @@ import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.importer.entities.ImportError;
 import org.eventplanner.importer.service.EventExcelImporter;
+import org.eventplanner.importer.service.PositionJsonImporter;
+import org.eventplanner.importer.service.QualificationJsonImporter;
 import org.eventplanner.importer.service.UserExcelImporter;
+import org.eventplanner.positions.adapter.PositionRepository;
+import org.eventplanner.positions.entities.Position;
+import org.eventplanner.qualifications.adapter.QualificationRepository;
+import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.users.adapter.UserRepository;
 import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.entities.UserDetails;
@@ -31,20 +37,26 @@ public class ImporterUseCase {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final PositionRepository positionRepository;
+    private final QualificationRepository qualificationRepository;
     private final UserService userService;
     private final String dataDirectory;
     private final String password;
 
     public ImporterUseCase(
-        @Autowired EventRepository eventRepository,
-        @Autowired UserRepository userRepository,
-        @Autowired UserService userService,
-        @Value("${custom.data-directory}") String dataDirectory,
-        @Value("${custom.users-excel-password}") String password,
-        @Value("${custom.generate-test-data}") boolean generateTestData
+            @Autowired EventRepository eventRepository,
+            @Autowired UserRepository userRepository,
+            @Autowired UserService userService,
+            PositionRepository positionRepository,
+            QualificationRepository qualificationRepository,
+            @Value("${custom.data-directory}") String dataDirectory,
+            @Value("${custom.users-excel-password}") String password,
+            @Value("${custom.generate-test-data}") boolean generateTestData
     ) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.positionRepository = positionRepository;
+        this.qualificationRepository = qualificationRepository;
         this.userService = userService;
         this.dataDirectory = dataDirectory;
         this.password = password;
@@ -54,6 +66,18 @@ public class ImporterUseCase {
     }
 
     private void importOnStartup() {
+        var positions = new File(dataDirectory + "/import/positions");
+        if (positions.exists()) {
+            log.info("Importing positions from {}", positions.getAbsolutePath());
+            importPositionsFromDirectory(positions);
+        }
+
+        var qualifications = new File(dataDirectory + "/import/qualifications");
+        if (qualifications.exists()) {
+            log.info("Importing qualifications from {}", qualifications.getAbsolutePath());
+            importQualificationsFromDirectory(qualifications);
+        }
+
         var users = new File(dataDirectory + "/import/users.encrypted.xlsx");
         if (users.exists()) {
             log.info("Importing users from {}", users.getAbsolutePath());
@@ -145,6 +169,22 @@ public class ImporterUseCase {
         userRepository.deleteAll();
         for (UserDetails user : users) {
             userService.createUser(user);
+        }
+    }
+
+    private void importPositionsFromDirectory(File directory) {
+        var positions = PositionJsonImporter.readFromDirectory(directory);
+        positionRepository.deleteAll();
+        for (Position position : positions) {
+            positionRepository.create(position);
+        }
+    }
+
+    private void importQualificationsFromDirectory(File directory) {
+        var qualifications = QualificationJsonImporter.readFromDirectory(directory);
+        qualificationRepository.deleteAll();
+        for (Qualification qualification : qualifications) {
+            qualificationRepository.create(qualification);
         }
     }
 }

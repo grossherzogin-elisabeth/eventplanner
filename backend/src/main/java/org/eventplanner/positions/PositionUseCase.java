@@ -24,24 +24,26 @@ public class PositionUseCase {
     public List<Position> getPosition(@NonNull SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_POSITIONS);
 
-        return this.positionRepository.findAll();
+        return positionRepository.findAll();
     }
 
     public Position createPosition(@NonNull SignedInUser signedInUser, Position position) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
-        throw new NotImplementedException("Positions are still hard coded in this version");
+        positionRepository.create(position);
+        return position;
     }
 
     public Position updatePosition(@NonNull SignedInUser signedInUser, PositionKey positionKey, Position position) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
-        throw new NotImplementedException("Positions are still hard coded in this version");
+        positionRepository.update(position);
+        return position;
     }
 
     public void deletePosition(@NonNull SignedInUser signedInUser, PositionKey positionKey) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
-        throw new NotImplementedException("Positions are still hard coded in this version");
+        positionRepository.deleteByKey(positionKey);
     }
 }

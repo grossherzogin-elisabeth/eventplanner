@@ -30,18 +30,20 @@ public class QualificationUseCase {
     public Qualification createQualification(@NonNull SignedInUser signedInUser, Qualification qualification) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
-        throw new NotImplementedException("Qualifications are still hard coded in this version");
+        qualificationRepository.create(qualification);
+        return qualification;
     }
 
     public Qualification updateQualification(@NonNull SignedInUser signedInUser, QualificationKey qualificationKey, Qualification qualification) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
-        throw new NotImplementedException("Qualifications are still hard coded in this version");
+        qualificationRepository.update(qualification);
+        return qualification;
     }
 
     public void deleteQualification(@NonNull SignedInUser signedInUser, QualificationKey qualificationKey) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
-        throw new NotImplementedException("Qualifications are still hard coded in this version");
+        qualificationRepository.deleteByKey(qualificationKey);
     }
 }
