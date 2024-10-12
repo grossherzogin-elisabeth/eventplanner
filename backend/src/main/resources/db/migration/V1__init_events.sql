@@ -5,13 +5,13 @@ CREATE TABLE events
     year          INTEGER NOT NULL,
     name          TEXT NOT NULL,
     state         TEXT NOT NULL,
-    note          TEXT NOT NULL default "",
-    description   TEXT NOT NULL default "",
+    note          TEXT NOT NULL default '',
+    description   TEXT NOT NULL default '',
     start         TEXT NOT NULL,
     end           TEXT NOT NULL,
-    locations     JSON NOT NULL DEFAULT "[]",
-    slots         JSON NOT NULL DEFAULT "[]",
-    registrations JSON NOT NULL DEFAULT "[]"
+    locations     JSON NOT NULL DEFAULT '[]',
+    slots         JSON NOT NULL DEFAULT '[]',
+    registrations JSON NOT NULL DEFAULT '[]'
 );
 
 -- Create index for better query performance on frequently used columns

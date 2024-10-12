@@ -1,12 +1,11 @@
 package org.eventplanner.events.adapter.jpa;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.*;
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
@@ -14,11 +13,17 @@ import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
 
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Entity
 @Table(name = "events")
@@ -30,7 +35,7 @@ public class EventJpaEntity {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Id
-    @Column(name = "key", nullable = false)
+    @Column(name = "key", nullable = false, updatable = false)
     private String key;
 
     @Column(name = "year", nullable = false)
@@ -63,54 +68,6 @@ public class EventJpaEntity {
     @Column(name = "registrations")
     private String registrationsRaw;
 
-    public List<Location> getLocations() {
-        try {
-            return objectMapper.readValue(locationsRaw, new TypeReference<>() {});
-        } catch (IOException e) {
-            return Collections.emptyList();
-        }
-    }
-
-    public void setLocations(List<Location> locations) {
-        try {
-            this.locationsRaw = objectMapper.writeValueAsString(locations);
-        } catch (IOException e) {
-            this.locationsRaw = "[]";
-        }
-    }
-
-    public List<Slot> getSlots() {
-        try {
-            return objectMapper.readValue(slotsRaw, new TypeReference<>() {});
-        } catch (IOException e) {
-            return Collections.emptyList();
-        }
-    }
-
-    public void setSlots(List<Slot> slots) {
-        try {
-            this.slotsRaw = objectMapper.writeValueAsString(slots);
-        } catch (IOException e) {
-            this.slotsRaw = "[]";
-        }
-    }
-
-    public List<Registration> getRegistrations() {
-        try {
-            return objectMapper.readValue(registrationsRaw, new TypeReference<>() {});
-        } catch (IOException e) {
-            return Collections.emptyList();
-        }
-    }
-
-    public void setRegistrations(List<Registration> registrations) {
-        try {
-            this.registrationsRaw = objectMapper.writeValueAsString(registrations);
-        } catch (IOException e) {
-            this.registrationsRaw = "[]";
-        }
-    }
-
     public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
         var eventJpaEntity = new EventJpaEntity();
         eventJpaEntity.setKey(domain.getKey().value());
@@ -127,18 +84,69 @@ public class EventJpaEntity {
         return eventJpaEntity;
     }
 
+    public List<Location> getLocations() {
+        try {
+            return objectMapper.readValue(locationsRaw, new TypeReference<>() {
+            });
+        } catch (IOException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public void setLocations(List<Location> locations) {
+        try {
+            this.locationsRaw = objectMapper.writeValueAsString(locations);
+        } catch (IOException e) {
+            this.locationsRaw = "[]";
+        }
+    }
+
+    public List<Slot> getSlots() {
+        try {
+            return objectMapper.readValue(slotsRaw, new TypeReference<>() {
+            });
+        } catch (IOException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public void setSlots(List<Slot> slots) {
+        try {
+            this.slotsRaw = objectMapper.writeValueAsString(slots);
+        } catch (IOException e) {
+            this.slotsRaw = "[]";
+        }
+    }
+
+    public List<Registration> getRegistrations() {
+        try {
+            return objectMapper.readValue(registrationsRaw, new TypeReference<>() {
+            });
+        } catch (IOException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public void setRegistrations(List<Registration> registrations) {
+        try {
+            this.registrationsRaw = objectMapper.writeValueAsString(registrations);
+        } catch (IOException e) {
+            this.registrationsRaw = "[]";
+        }
+    }
+
     public Event toDomain() {
         return new Event(
-                new EventKey(key),
-                name,
-                EventState.fromString(state).orElse(EventState.PLANNED),
-                note != null ? note : "",
-                description != null ? description : "",
-                ZonedDateTime.parse(start),
-                ZonedDateTime.parse(end),
-                getLocations(),
-                getSlots(),
-                getRegistrations()
+            new EventKey(key),
+            name,
+            EventState.fromString(state).orElse(EventState.PLANNED),
+            note != null ? note : "",
+            description != null ? description : "",
+            ZonedDateTime.parse(start),
+            ZonedDateTime.parse(end),
+            getLocations(),
+            getSlots(),
+            getRegistrations()
         );
     }
 }

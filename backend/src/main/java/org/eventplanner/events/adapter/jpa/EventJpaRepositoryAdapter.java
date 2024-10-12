@@ -20,14 +20,14 @@ public class EventJpaRepositoryAdapter implements EventRepository {
     @Override
     public Optional<Event> findByKey(EventKey key) {
         return this.eventJpaRepository.findById(key.value())
-                .map(EventJpaEntity::toDomain);
+            .map(EventJpaEntity::toDomain);
     }
 
     @Override
     public List<Event> findAllByYear(int year) {
         return this.eventJpaRepository.findAllByYear(year)
-                .map(EventJpaEntity::toDomain)
-                .toList();
+            .map(EventJpaEntity::toDomain)
+            .toList();
     }
 
     @Override
