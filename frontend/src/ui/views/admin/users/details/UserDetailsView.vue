@@ -11,76 +11,12 @@
                 <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
                     <template #[Tab.USER_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <section v-if="user" class="-mx-4">
-                                <div class="mb-4">
-                                    <VInputLabel>Geschlecht</VInputLabel>
-                                    <VInputSelect v-model="user.gender" :options="genderOptions" />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Vorname</VInputLabel>
-                                    <VInputText v-model="user.firstName" required />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Anzeigename</VInputLabel>
-                                    <VInputText v-model="user.nickName" :placeholder="user.firstName" />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Zweiter Vorname</VInputLabel>
-                                    <VInputText v-model="user.secondName" />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Nachname</VInputLabel>
-                                    <VInputText v-model="user.lastName" required />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Geboren am</VInputLabel>
-                                    <VInputDate v-model="user.dateOfBirth" required />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Geburtsort</VInputLabel>
-                                    <VInputText v-model="user.placeOfBirth" required />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Pass Nummer</VInputLabel>
-                                    <VInputText v-model="user.passNr" required />
-                                </div>
-                            </section>
+                            <UserDataForm v-if="user" v-model="user" />
                         </div>
                     </template>
                     <template #[Tab.USER_CONTACT_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <section v-if="user" class="-mx-4">
-                                <div class="mb-4">
-                                    <VInputLabel>Email</VInputLabel>
-                                    <VInputText v-model="user.email" required />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Telefon</VInputLabel>
-                                    <VInputText v-model="user.phone" />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Mobil</VInputLabel>
-                                    <VInputText v-model="user.mobile" />
-                                </div>
-                                <div class="mb-4 mt-16">
-                                    <VInputLabel>Straße, Hausnr</VInputLabel>
-                                    <VInputText v-model="user.address.addressLine1" required />
-                                </div>
-                                <div class="mb-4">
-                                    <VInputLabel>Adresszusatz</VInputLabel>
-                                    <VInputText v-model="user.address.addressLine2" />
-                                </div>
-                                <div class="flex space-x-4">
-                                    <div class="mb-4 w-32">
-                                        <VInputLabel>PLZ</VInputLabel>
-                                        <VInputText v-model="user.address.zipcode" required />
-                                    </div>
-                                    <div class="mb-4 flex-grow">
-                                        <VInputLabel>Ort</VInputLabel>
-                                        <VInputText v-model="user.address.town" required />
-                                    </div>
-                                </div>
-                            </section>
+                            <UserContactForm v-if="user" v-model="user" />
                         </div>
                     </template>
                     <template #[Tab.USER_EVENTS]>
@@ -114,7 +50,14 @@
                     <template #[Tab.USER_CERTIFICATES]>
                         <div class="xl:max-w-5xl">
                             <div class="-mx-8 md:-mx-16 xl:-mx-20">
-                                <UserQualificationsTable v-if="user" v-model:user="user" />
+                                <UserQualificationsTable v-if="user" v-model="user" />
+                            </div>
+                        </div>
+                    </template>
+                    <template #[Tab.USER_PERMISSIONS]>
+                        <div class="xl:max-w-5xl">
+                            <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                                <UserPermissionsTable v-if="user" v-model="user" />
                             </div>
                         </div>
                     </template>
@@ -166,10 +109,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type { Event, InputSelectOption, Position, PositionKey, UserDetails, UserQualification } from '@/domain';
+import type { Event, Position, PositionKey, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
+import { AsyncButton, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import {
     useAuthUseCase,
@@ -181,7 +124,10 @@ import {
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/CreateRegistrationForUserDlg.vue';
 import QualificationEditDlg from '@/ui/views/admin/users/details/QualificationEditDlg.vue';
+import UserContactForm from '@/ui/views/admin/users/details/UserContactForm.vue';
+import UserDataForm from '@/ui/views/admin/users/details/UserDataForm.vue';
 import UserEventsTable from '@/ui/views/admin/users/details/UserEventsTable.vue';
+import UserPermissionsTable from '@/ui/views/admin/users/details/UserPermissionsTable.vue';
 import UserQualificationsTable from '@/ui/views/admin/users/details/UserQualificationsTable.vue';
 
 enum Tab {
@@ -189,6 +135,7 @@ enum Tab {
     USER_CONTACT_DATA = 'app.user-details.tab.contact',
     USER_CERTIFICATES = 'app.user-details.tab.certificates',
     USER_EVENTS = 'app.user-details.tab.events',
+    USER_PERMISSIONS = 'app.user-details.tab.permissions',
 }
 
 interface RouteEmits {
@@ -205,7 +152,7 @@ const authUseCase = useAuthUseCase();
 const errorHandlingUseCase = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
 
-const tabs = [Tab.USER_EVENTS, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_CERTIFICATES];
+const tabs = [Tab.USER_EVENTS, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_CERTIFICATES, Tab.USER_PERMISSIONS];
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const user = ref<UserDetails | null>(null);
 const eventsByYear = ref<Map<number, Event[] | undefined>>(new Map<number, Event[] | undefined>());
@@ -213,12 +160,6 @@ const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>
 const createRegistrationForUserDialog = ref<Dialog<UserDetails> | null>(null);
 const addQualificationDialog = ref<Dialog<UserQualification | undefined, UserQualification> | null>(null);
 const eventsLoadedUntilYear = ref<number>(0);
-
-const genderOptions: InputSelectOption[] = [
-    { value: 'm', label: 'männlich' },
-    { value: 'f', label: 'weiblich' },
-    { value: 'd', label: 'divers' },
-];
 
 const userKey = computed<string>(() => (route.params.key as string) || '');
 

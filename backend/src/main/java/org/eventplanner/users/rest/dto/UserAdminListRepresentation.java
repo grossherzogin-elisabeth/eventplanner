@@ -3,6 +3,7 @@ package org.eventplanner.users.rest.dto;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.entities.UserQualification;
+import org.eventplanner.users.values.Role;
 import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
@@ -15,6 +16,7 @@ public record UserAdminListRepresentation(
     @NonNull String firstName,
     @NonNull String lastName,
     @NonNull List<String> positions,
+    @NonNull List<String> roles,
     long expiredQualificationCount,
     long soonExpiringQualificationCount
 ) implements Serializable {
@@ -24,6 +26,7 @@ public record UserAdminListRepresentation(
             user.getFirstName(),
             user.getLastName(),
             user.getPositions().stream().map(PositionKey::value).toList(),
+            user.getRoles().stream().map(Role::value).toList(),
             user.getQualifications().stream()
                 .map(UserQualification::getExpiresAt)
                 .filter(Objects::nonNull)

@@ -1,6 +1,6 @@
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { UserRepository } from '@/application';
-import type { PositionKey, User, UserDetails, UserKey } from '@/domain';
+import type { PositionKey, Role, User, UserDetails, UserKey } from '@/domain';
 
 interface UserRepresentation {
     key: string;
@@ -8,6 +8,7 @@ interface UserRepresentation {
     nickName?: string;
     lastName: string;
     positions: string[];
+    roles?: string[];
     expiredQualificationCount?: number;
     soonExpiringQualificationCount?: number;
 }
@@ -22,6 +23,7 @@ interface UserDetailsRepresentation {
     secondName?: string;
     lastName: string;
     positions: string[];
+    roles: string[];
     email: string;
     qualifications: UserQualificationRepresentation[];
     phone?: string;
@@ -52,6 +54,7 @@ interface UserDetailsUpdateRequest {
     secondName?: string;
     lastName?: string;
     positions?: string[];
+    roles?: string[];
     email?: string;
     qualifications?: UserQualificationRepresentation[];
     phone?: string;
@@ -117,6 +120,7 @@ export class UserRestRepository implements UserRepository {
             nickName: it.nickName,
             lastName: it.lastName,
             positionKeys: it.positions as PositionKey[],
+            roles: it.roles?.map((r) => r as Role),
             expiredQualificationCount: it.expiredQualificationCount,
             soonExpiringQualificationCount: it.soonExpiringQualificationCount,
         }));
@@ -153,6 +157,7 @@ export class UserRestRepository implements UserRepository {
             secondName: user.secondName,
             lastName: user.lastName,
             positions: user.positionKeys,
+            roles: user.roles,
             email: user.email,
             qualifications: user.qualifications?.map((it) => ({
                 qualificationKey: it.qualificationKey,
@@ -289,6 +294,7 @@ export class UserRestRepository implements UserRepository {
             secondName: representation.secondName,
             lastName: representation.lastName,
             positionKeys: representation.positions as PositionKey[],
+            roles: representation.roles?.map((r) => r as Role),
             qualifications: representation.qualifications.map((it) => ({
                 qualificationKey: it.qualificationKey,
                 expiresAt: UserRestRepository.parseDate(it.expiresAt),

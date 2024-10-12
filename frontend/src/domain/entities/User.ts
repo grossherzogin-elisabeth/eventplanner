@@ -1,3 +1,4 @@
+import type { Role } from '@/domain';
 import type { Address } from '../values/Address';
 import type { PositionKey } from './Position';
 import type { UserQualification } from './UserQualification';
@@ -10,6 +11,7 @@ export interface User {
     firstName: string;
     nickName?: string;
     lastName: string;
+    roles: Role[];
     positionKeys: PositionKey[];
     email?: string;
     expiredQualificationCount?: number;
@@ -25,6 +27,7 @@ export interface UserDetails {
     nickName?: string;
     secondName?: string;
     lastName: string;
+    roles: Role[];
     positionKeys: PositionKey[];
     qualifications: UserQualification[];
     email: string;

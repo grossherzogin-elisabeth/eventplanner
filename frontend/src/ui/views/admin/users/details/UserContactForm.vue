@@ -51,8 +51,12 @@ const emit = defineEmits<Emits>();
 const user = ref<UserDetails>(props.modelValue);
 
 watch(props.modelValue, () => (user.value = props.modelValue));
-watch(user.value.address, () => emit('update:modelValue', user.value));
-watch(user.value.email, () => emit('update:modelValue', user.value));
-watch(user.value.phone, () => emit('update:modelValue', user.value));
-watch(user.value.mobile, () => emit('update:modelValue', user.value));
+watch(() => user.value.address, emitUpdate, { deep: true });
+watch(() => user.value.email, emitUpdate);
+watch(() => user.value.phone, emitUpdate);
+watch(() => user.value.mobile, emitUpdate);
+
+function emitUpdate() {
+    emit('update:modelValue', user.value);
+}
 </script>

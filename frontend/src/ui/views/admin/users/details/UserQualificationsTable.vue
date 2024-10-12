@@ -81,11 +81,11 @@ import { useUserService } from '@/ui/composables/Domain';
 import QualificationEditDlg from '@/ui/views/admin/users/details/QualificationEditDlg.vue';
 
 interface Props {
-    user: UserDetails;
+    modelValue: UserDetails;
 }
 
 interface Emit {
-    (e: 'update:user', user: UserDetails): void;
+    (e: 'update:modelValue', user: UserDetails): void;
 }
 
 const props = defineProps<Props>();
@@ -101,7 +101,7 @@ const userQualifications = computed<ResolvedUserQualification[] | undefined>(() 
     if (qualifications.value === undefined) {
         return undefined;
     }
-    return usersService.resolveQualifications(props.user, qualifications.value);
+    return usersService.resolveQualifications(props.modelValue, qualifications.value);
 });
 
 function init(): void {
@@ -109,13 +109,13 @@ function init(): void {
 }
 
 function deleteUserQualification(userQualification: ResolvedUserQualification): void {
-    const user = props.user;
+    const user = props.modelValue;
     user.qualifications = user.qualifications.filter((it) => it.qualificationKey !== userQualification.key);
-    emit('update:user', user);
+    emit('update:modelValue', user);
 }
 
 async function editUserQualification(userQualification: ResolvedUserQualification): Promise<void> {
-    const user = props.user;
+    const user = props.modelValue;
     if (editQualificationDialog.value) {
         const editedQualification = await editQualificationDialog.value.open({
             qualificationKey: userQualification.key,
@@ -131,7 +131,7 @@ async function editUserQualification(userQualification: ResolvedUserQualificatio
                   }
                 : oldQualification;
         });
-        emit('update:user', user);
+        emit('update:modelValue', user);
     }
 }
 
