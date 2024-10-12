@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
@@ -15,10 +16,6 @@ import org.eventplanner.events.values.Location;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,6 +65,15 @@ public class EventJpaEntity {
     @Column(name = "registrations")
     private String registrationsRaw;
 
+    @Transient
+    private List<Location> locations;
+
+    @Transient
+    private List<Slot> slots;
+
+    @Transient
+    private List<Registration> registrations;
+
     public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
         var eventJpaEntity = new EventJpaEntity();
         eventJpaEntity.setKey(domain.getKey().value());
@@ -77,7 +83,7 @@ public class EventJpaEntity {
         eventJpaEntity.setNote(domain.getNote());
         eventJpaEntity.setDescription(domain.getDescription());
         eventJpaEntity.setStart(domain.getStart().format(DateTimeFormatter.ISO_DATE_TIME));
-        eventJpaEntity.setEnd(domain.getStart().format(DateTimeFormatter.ISO_DATE_TIME));
+        eventJpaEntity.setEnd(domain.getEnd().format(DateTimeFormatter.ISO_DATE_TIME));
         eventJpaEntity.setLocations(domain.getLocations());
         eventJpaEntity.setSlots(domain.getSlots());
         eventJpaEntity.setRegistrations(domain.getRegistrations());
@@ -85,51 +91,66 @@ public class EventJpaEntity {
     }
 
     public List<Location> getLocations() {
-        try {
-            return objectMapper.readValue(locationsRaw, new TypeReference<>() {
-            });
-        } catch (IOException e) {
-            return Collections.emptyList();
+        if (locations != null) {
+            return locations;
         }
+        try {
+            var entities = objectMapper.readValue(locationsRaw, new TypeReference<List<LocationJsonEntity>>() {});
+            locations = entities.stream().map(LocationJsonEntity::toDomain).toList();
+        } catch (IOException e) {
+            locations = Collections.emptyList();
+        }
+        return locations;
     }
 
     public void setLocations(List<Location> locations) {
         try {
-            this.locationsRaw = objectMapper.writeValueAsString(locations);
+            var entities = locations.stream().map(LocationJsonEntity::fromDomain).toList();
+            this.locationsRaw = objectMapper.writeValueAsString(entities);
         } catch (IOException e) {
             this.locationsRaw = "[]";
         }
     }
 
     public List<Slot> getSlots() {
-        try {
-            return objectMapper.readValue(slotsRaw, new TypeReference<>() {
-            });
-        } catch (IOException e) {
-            return Collections.emptyList();
+        if (slots != null) {
+            return slots;
         }
+        try {
+            var entities = objectMapper.readValue(slotsRaw, new TypeReference<List<SlotJsonEntity>>() {});
+            slots = entities.stream().map(SlotJsonEntity::toDomain).toList();
+        } catch (IOException e) {
+            slots = Collections.emptyList();
+        }
+        return slots;
     }
 
     public void setSlots(List<Slot> slots) {
         try {
-            this.slotsRaw = objectMapper.writeValueAsString(slots);
+            var entities = slots.stream().map(SlotJsonEntity::fromDomain).toList();
+            this.slotsRaw = objectMapper.writeValueAsString(entities);
         } catch (IOException e) {
             this.slotsRaw = "[]";
         }
     }
 
     public List<Registration> getRegistrations() {
-        try {
-            return objectMapper.readValue(registrationsRaw, new TypeReference<>() {
-            });
-        } catch (IOException e) {
-            return Collections.emptyList();
+        if (registrations != null) {
+            return registrations;
         }
+        try {
+            var entities = objectMapper.readValue(registrationsRaw, new TypeReference<List<RegistrationJsonEntity>>() {});
+            registrations = entities.stream().map(RegistrationJsonEntity::toDomain).toList();
+        } catch (IOException e) {
+            registrations = Collections.emptyList();
+        }
+        return registrations;
     }
 
     public void setRegistrations(List<Registration> registrations) {
         try {
-            this.registrationsRaw = objectMapper.writeValueAsString(registrations);
+            var entities = registrations.stream().map(RegistrationJsonEntity::fromDomain).toList();
+            this.registrationsRaw = objectMapper.writeValueAsString(entities);
         } catch (IOException e) {
             this.registrationsRaw = "[]";
         }

@@ -1,6 +1,5 @@
 package org.eventplanner.events.adapter.jpa;
 
-import org.eventplanner.events.entities.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

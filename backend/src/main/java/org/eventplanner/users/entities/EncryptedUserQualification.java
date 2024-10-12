@@ -1,9 +1,6 @@
 package org.eventplanner.users.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.users.Crypto;
 import org.eventplanner.users.values.Encryptable;

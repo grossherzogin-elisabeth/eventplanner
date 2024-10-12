@@ -1,4 +1,4 @@
-CREATE TABLE encrypted_user_details
+CREATE TABLE users
 (
     key            TEXT PRIMARY KEY,
     auth_key       TEXT,

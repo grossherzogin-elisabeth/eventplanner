@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "encrypted_user_details")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -58,16 +58,16 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     private String lastName;
 
     @Column(name = "positions", nullable = false)
-    private String positions;
+    private String positionsRaw;
 
     @Column(name = "roles", nullable = false)
-    private String roles;
+    private String rolesRaw;
 
     @Column(name = "qualifications", nullable = false)
-    private String qualifications;
+    private String qualificationsRaw;
 
     @Column(name = "address")
-    private String address;
+    private String addressRaw;
 
     @Column(name = "email")
     private String email;
@@ -103,8 +103,8 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             domain.getNickName() != null ? domain.getNickName().value() : null,
             domain.getSecondName() != null ? domain.getSecondName().value() : null,
             domain.getLastName().value(),
-            serializeList(domain.getPositions()),
-            serializeList(domain.getRoles()),
+            serializeEncryptedStringList(domain.getPositions()),
+            serializeEncryptedStringList(domain.getRoles()),
             serializeQualifications(domain.getQualifications()),
             domain.getAddress() != null ? serializeAddress(domain.getAddress()) : null,
             domain.getEmail() != null ? domain.getEmail().value() : null,
@@ -118,7 +118,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         );
     }
 
-    private static String serializeList(List<EncryptedString> list) {
+    private static String serializeEncryptedStringList(List<EncryptedString> list) {
         try {
             return objectMapper.writeValueAsString(list.stream().map(EncryptedString::value).toList());
         } catch (JsonProcessingException e) {
@@ -126,10 +126,9 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         }
     }
 
-    private static List<EncryptedString> deserializeList(String json) {
+    private static List<EncryptedString> deserializeEncryptedStringList(String json) {
         try {
-            List<String> list = objectMapper.readValue(json, new TypeReference<>() {
-            });
+            List<String> list = objectMapper.readValue(json, new TypeReference<>() {});
             return list.stream().map(EncryptedString::new).toList();
         } catch (IOException e) {
             throw new RuntimeException("Error deserializing list", e);
@@ -138,7 +137,8 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
 
     private static String serializeQualifications(List<EncryptedUserQualification> qualifications) {
         try {
-            return objectMapper.writeValueAsString(qualifications);
+            var entities = qualifications.stream().map(EncryptedUserQualificationsJsonEntity::fromDomain).toList();
+            return objectMapper.writeValueAsString(entities);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error serializing qualifications", e);
         }
@@ -146,8 +146,8 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
 
     private static List<EncryptedUserQualification> deserializeQualifications(String json) {
         try {
-            return objectMapper.readValue(json, new TypeReference<>() {
-            });
+            var entities = objectMapper.readValue(json, new TypeReference<List<EncryptedUserQualificationsJsonEntity>>() {});
+            return entities.stream().map(EncryptedUserQualificationsJsonEntity::toDomain).toList();
         } catch (IOException e) {
             throw new RuntimeException("Error deserializing qualifications", e);
         }
@@ -155,7 +155,8 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
 
     private static String serializeAddress(EncryptedAddress address) {
         try {
-            return objectMapper.writeValueAsString(address);
+            var entity = EncryptedAddressJsonEntity.fromDomain(address);
+            return objectMapper.writeValueAsString(entity);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error serializing address", e);
         }
@@ -163,7 +164,8 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
 
     private static EncryptedAddress deserializeAddress(String json) {
         try {
-            return objectMapper.readValue(json, EncryptedAddress.class);
+            var entity = objectMapper.readValue(json, EncryptedAddressJsonEntity.class);
+            return entity.toDomain();
         } catch (IOException e) {
             throw new RuntimeException("Error deserializing address", e);
         }
@@ -179,10 +181,10 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             nickName != null ? new EncryptedString(nickName) : null,
             secondName != null ? new EncryptedString(secondName) : null,
             new EncryptedString(lastName),
-            deserializeList(positions),
-            deserializeList(roles),
-            deserializeQualifications(qualifications),
-            address != null ? deserializeAddress(address) : null,
+            deserializeEncryptedStringList(positionsRaw),
+            deserializeEncryptedStringList(rolesRaw),
+            deserializeQualifications(qualificationsRaw),
+            addressRaw != null ? deserializeAddress(addressRaw) : null,
             email != null ? new EncryptedString(email) : null,
             phone != null ? new EncryptedString(phone) : null,
             mobile != null ? new EncryptedString(mobile) : null,
