@@ -65,15 +65,6 @@ public class EventJpaEntity {
     @Column(name = "registrations")
     private String registrationsRaw;
 
-    @Transient
-    private List<Location> locations;
-
-    @Transient
-    private List<Slot> slots;
-
-    @Transient
-    private List<Registration> registrations;
-
     public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
         var eventJpaEntity = new EventJpaEntity();
         eventJpaEntity.setKey(domain.getKey().value());
@@ -84,75 +75,63 @@ public class EventJpaEntity {
         eventJpaEntity.setDescription(domain.getDescription());
         eventJpaEntity.setStart(domain.getStart().format(DateTimeFormatter.ISO_DATE_TIME));
         eventJpaEntity.setEnd(domain.getEnd().format(DateTimeFormatter.ISO_DATE_TIME));
-        eventJpaEntity.setLocations(domain.getLocations());
-        eventJpaEntity.setSlots(domain.getSlots());
-        eventJpaEntity.setRegistrations(domain.getRegistrations());
+        eventJpaEntity.setLocationsRaw(serializeLocations(domain.getLocations()));
+        eventJpaEntity.setSlotsRaw(serializeSlots(domain.getSlots()));
+        eventJpaEntity.setRegistrationsRaw(serializeRegistrations(domain.getRegistrations()));
         return eventJpaEntity;
     }
 
-    public List<Location> getLocations() {
-        if (locations != null) {
-            return locations;
-        }
+    public static List<Location> deserializeLocations(String json) {
         try {
-            var entities = objectMapper.readValue(locationsRaw, new TypeReference<List<LocationJsonEntity>>() {});
-            locations = entities.stream().map(LocationJsonEntity::toDomain).toList();
+            var entities = objectMapper.readValue(json, new TypeReference<List<LocationJsonEntity>>() {});
+            return entities.stream().map(LocationJsonEntity::toDomain).toList();
         } catch (IOException e) {
-            locations = Collections.emptyList();
+            return Collections.emptyList();
         }
-        return locations;
     }
 
-    public void setLocations(List<Location> locations) {
+    public static String serializeLocations(List<Location> locations) {
         try {
             var entities = locations.stream().map(LocationJsonEntity::fromDomain).toList();
-            this.locationsRaw = objectMapper.writeValueAsString(entities);
+            return objectMapper.writeValueAsString(entities);
         } catch (IOException e) {
-            this.locationsRaw = "[]";
+            return "[]";
         }
     }
 
-    public List<Slot> getSlots() {
-        if (slots != null) {
-            return slots;
-        }
+    public static List<Slot> deserializeSlots(String json) {
         try {
-            var entities = objectMapper.readValue(slotsRaw, new TypeReference<List<SlotJsonEntity>>() {});
-            slots = entities.stream().map(SlotJsonEntity::toDomain).toList();
+            var entities = objectMapper.readValue(json, new TypeReference<List<SlotJsonEntity>>() {});
+            return entities.stream().map(SlotJsonEntity::toDomain).toList();
         } catch (IOException e) {
-            slots = Collections.emptyList();
+            return Collections.emptyList();
         }
-        return slots;
     }
 
-    public void setSlots(List<Slot> slots) {
+    public static String serializeSlots(List<Slot> slots) {
         try {
             var entities = slots.stream().map(SlotJsonEntity::fromDomain).toList();
-            this.slotsRaw = objectMapper.writeValueAsString(entities);
+            return objectMapper.writeValueAsString(entities);
         } catch (IOException e) {
-            this.slotsRaw = "[]";
+            return "[]";
         }
     }
 
-    public List<Registration> getRegistrations() {
-        if (registrations != null) {
-            return registrations;
-        }
+    public static List<Registration> deserializeRegistrations(String json) {
         try {
-            var entities = objectMapper.readValue(registrationsRaw, new TypeReference<List<RegistrationJsonEntity>>() {});
-            registrations = entities.stream().map(RegistrationJsonEntity::toDomain).toList();
+            var entities = objectMapper.readValue(json, new TypeReference<List<RegistrationJsonEntity>>() {});
+            return entities.stream().map(RegistrationJsonEntity::toDomain).toList();
         } catch (IOException e) {
-            registrations = Collections.emptyList();
+            return Collections.emptyList();
         }
-        return registrations;
     }
 
-    public void setRegistrations(List<Registration> registrations) {
+    public static String serializeRegistrations(List<Registration> registrations) {
         try {
             var entities = registrations.stream().map(RegistrationJsonEntity::fromDomain).toList();
-            this.registrationsRaw = objectMapper.writeValueAsString(entities);
+            return objectMapper.writeValueAsString(entities);
         } catch (IOException e) {
-            this.registrationsRaw = "[]";
+            return "[]";
         }
     }
 
@@ -165,9 +144,9 @@ public class EventJpaEntity {
             description != null ? description : "",
             ZonedDateTime.parse(start),
             ZonedDateTime.parse(end),
-            getLocations(),
-            getSlots(),
-            getRegistrations()
+            deserializeLocations(locationsRaw),
+            deserializeSlots(slotsRaw),
+            deserializeRegistrations(registrationsRaw)
         );
     }
 }
