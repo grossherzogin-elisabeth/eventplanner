@@ -27,6 +27,11 @@ security:
 spring:
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    url: jdbc:sqlite:data/eventplanner.db
   security:
     oauth2:
       client:
