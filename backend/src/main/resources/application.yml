@@ -11,8 +11,7 @@ custom:
   users-excel-password: ${USERS_EXCEL_PASSWORD:}
   logout-success-url: ${frontend.domain}/login
   login-success-url: ${frontend.domain}
-  admins: >
-    admin@grossherzogin-elisabeth.de
+  admins: ${ADMIN_EMAILS:}
   generate-test-data: false
 
 auth:
