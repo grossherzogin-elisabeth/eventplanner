@@ -64,11 +64,14 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat, Month } from '@/common/date';
-import type { Event } from '@/domain';
+import type { Event} from '@/domain';
+import { Role } from '@/domain';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
+import { Routes } from '@/ui/views/Routes';
 import EventCard from '@/ui/views/home/EventCard.vue';
 
 interface RouteEmits {
@@ -77,6 +80,7 @@ interface RouteEmits {
 
 const emit = defineEmits<RouteEmits>();
 
+const router = useRouter();
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
@@ -125,7 +129,11 @@ function isNextMonth(date: Date): boolean {
 
 function init(): void {
     emit('update:title', 'Meine nächsten Reisen');
-    fetchEvents();
+    if (user.roles.includes(Role.TEAM_MEMBER)) {
+        fetchEvents();
+    } else {
+        router.push({ name: Routes.Onboarding });
+    }
 }
 
 async function fetchEvents(): Promise<void> {

@@ -199,7 +199,6 @@ import { useRoute, useRouter } from 'vue-router';
 import type { Event } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VInputCheckBox } from '@/ui/components/common';
 import { ContextMenuButton, VInputText, VTable, VTabs } from '@/ui/components/common';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';

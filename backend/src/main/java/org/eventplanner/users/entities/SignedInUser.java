@@ -36,39 +36,12 @@ public record SignedInUser(
         );
     }
 
-    public static @NonNull SignedInUser technicalUser(Permission... permissions) {
-        return new SignedInUser(
-            new UserKey("technical-user"),
-            new AuthKey("technical-user"),
-            List.of(Role.TECHNICAL_USER),
-            List.of(permissions),
-            "technical-user"
-        );
-    }
-
-    public static @NonNull SignedInUser anonymoUser() {
-        return new SignedInUser(
-            new UserKey("anonymous"),
-            new AuthKey("anonymous"),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            "anonymous"
-        );
-    }
-
-    public boolean isAnonymousUser() {
-        return authKey.value().equals("anonymous");
-    }
-
     public boolean hasPermission(@NonNull Permission permission) {
         return permissions.contains(permission);
     }
 
     public void assertHasPermission(@NonNull Permission permission)
         throws UnauthorizedException, MissingPermissionException {
-        if (isAnonymousUser()) {
-            throw new UnauthorizedException();
-        }
         if (!hasPermission(permission)) {
             throw new MissingPermissionException();
         }
@@ -76,9 +49,6 @@ public record SignedInUser(
 
     public void assertHasAnyPermission(@NonNull Permission... permissions)
         throws UnauthorizedException, MissingPermissionException {
-        if (isAnonymousUser()) {
-            throw new UnauthorizedException();
-        }
         for (Permission permission : permissions) {
             if (hasPermission(permission)) {
                 return;

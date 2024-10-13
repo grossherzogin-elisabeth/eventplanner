@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="enableLoginView">
         <div
             class="fixed bottom-0 left-0 right-0 top-0 overflow-y-auto bg-gradient-to-t from-primary-800 to-primary-700"
         >
@@ -112,16 +112,21 @@ const emit = defineEmits<RouteEmits>();
 const authUseCase = useAuthUseCase();
 const router = useRouter();
 
+const enableLoginView = localStorage.getItem('flag.login-show-any') === 'true';
 const enableDirectLogin = localStorage.getItem('flag.login-show-fields') === 'true';
 const username = ref<string>('');
 const password = ref<string>('');
 
 async function init(): Promise<void> {
-    emit('update:title', 'Login');
-    if (!authUseCase.isLoggedIn()) {
-        await authUseCase.onLogin();
+    if (!enableLoginView) {
+        await authUseCase.loginWithCredentials('', '');
+    } else {
+        emit('update:title', 'Login');
+        if (!authUseCase.isLoggedIn()) {
+            await authUseCase.onLogin();
+        }
+        router.push('/');
     }
-    router.push('/');
 }
 
 init();

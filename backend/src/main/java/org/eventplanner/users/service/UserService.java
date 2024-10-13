@@ -94,9 +94,11 @@ public class UserService {
             if (userFirstName.equalsIgnoreCase(firstName)) {
                 return Optional.of(userEncryptionService.decrypt(user));
             }
-            var userNickName = userEncryptionService.decrypt(user.getNickName());
-            if (userNickName.equalsIgnoreCase(firstName)) {
-                return Optional.of(userEncryptionService.decrypt(user));
+            if (user.getNickName() != null) {
+                var userNickName = userEncryptionService.decrypt(user.getNickName());
+                if (userNickName.equalsIgnoreCase(firstName)) {
+                    return Optional.of(userEncryptionService.decrypt(user));
+                }
             }
             var userSecondName = userEncryptionService.decryptNullable(user.getSecondName());
             if (userSecondName != null && (userFirstName + " " + userSecondName).equalsIgnoreCase(firstName)) {

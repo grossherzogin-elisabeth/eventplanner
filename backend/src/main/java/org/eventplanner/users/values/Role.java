@@ -38,7 +38,9 @@ public enum Role {
             case ADMIN -> Stream.of(Permission.values());
             case NONE -> Stream.of(
                 Permission.READ_OWN_USER_DETAILS,
-                Permission.WRITE_OWN_USER_DETAILS
+                Permission.WRITE_OWN_USER_DETAILS,
+                Permission.READ_QUALIFICATIONS,
+                Permission.READ_POSITIONS
             );
             case TEAM_MEMBER -> Stream.of(
                 Permission.READ_OWN_USER_DETAILS,

@@ -10,6 +10,7 @@ import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.spec.UpdateUserSpec;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Permission;
+import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,10 +59,10 @@ public class UserUseCase {
                     .withPermissionsFromAuthentication(authentication);
             }
 
-            var firstName = oidcUser.getAttributes().get("given_name");
-            var lastName = oidcUser.getAttributes().get("family_name");
+            var firstName = oidcUser.getAttributes().get("given_name").toString();
+            var lastName = oidcUser.getAttributes().get("family_name").toString();
             if (firstName != null && lastName != null) {
-                maybeUser = userService.getUserByName(firstName.toString(), lastName.toString());
+                maybeUser = userService.getUserByName(firstName, lastName);
                 if (maybeUser.isPresent()) {
                     var user = maybeUser.get();
                     user.setAuthKey(authkey);
@@ -70,8 +71,17 @@ public class UserUseCase {
                         .fromUser(user)
                         .withPermissionsFromAuthentication(authentication);
                 }
+
+                var newUser = new UserDetails(new UserKey(firstName + " " + lastName), firstName, lastName);
+                newUser.setEmail(oidcUser.getEmail());
+                newUser.setAuthKey(authkey);
+                newUser = userService.createUser(newUser);
+                return SignedInUser
+                    .fromUser(newUser)
+                    .withPermissionsFromAuthentication(authentication);
             }
 
+            // this should not happen
             return new SignedInUser(
                 new UserKey("unknown"),
                 authkey,

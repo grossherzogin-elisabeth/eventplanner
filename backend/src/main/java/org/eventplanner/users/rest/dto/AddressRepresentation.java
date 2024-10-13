@@ -14,7 +14,7 @@ public record AddressRepresentation(
 ) implements Serializable {
     public static @Nullable AddressRepresentation fromDomain(@Nullable Address address) {
         if (address == null) {
-            return null;
+            return new AddressRepresentation("", null, "", "");
         }
         return new AddressRepresentation(
             address.addressLine1(),
