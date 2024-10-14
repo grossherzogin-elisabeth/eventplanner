@@ -1,4 +1,5 @@
 import type { AuthService, EventRepository } from '@/application';
+import { AsyncDebouncer } from '@/application/utils/AsyncDebouncer';
 import { type Cache, DateUtils } from '@/common';
 import type { Event, EventKey, Registration } from '@/domain';
 import { EventState } from '@/domain';
@@ -64,8 +65,10 @@ export class EventCachingService {
     }
 
     private async fetchEvents(year: number): Promise<Event[]> {
-        const events = await this.eventRepository.findAll(year);
-        await this.cache.saveAll(events.map((evt) => this.updateComputedValues(evt)));
-        return events;
+        return AsyncDebouncer.debounce('fetchEvents' + year, async () => {
+            const events = await this.eventRepository.findAll(year);
+            await this.cache.saveAll(events.map((evt) => this.updateComputedValues(evt)));
+            return events;
+        });
     }
 }

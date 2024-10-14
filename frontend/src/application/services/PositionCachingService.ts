@@ -1,4 +1,5 @@
 import type { PositionRepository } from '@/application';
+import { AsyncDebouncer } from '@/application/utils/AsyncDebouncer';
 import type { Cache } from '@/common';
 import type { Position, PositionKey } from '@/domain';
 
@@ -20,8 +21,10 @@ export class PositionCachingService {
     }
 
     private async fetchPositions(): Promise<Position[]> {
-        const positions = await this.positionRepository.findAll();
-        await this.cache.saveAll(positions);
-        return positions;
+        return AsyncDebouncer.debounce('fetchPositions', async () => {
+            const positions = await this.positionRepository.findAll();
+            await this.cache.saveAll(positions);
+            return positions;
+        });
     }
 }

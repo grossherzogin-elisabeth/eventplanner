@@ -1,4 +1,5 @@
 import type { UserRepository } from '@/application';
+import { AsyncDebouncer } from '@/application/utils/AsyncDebouncer';
 import type { Cache } from '@/common';
 import type { User, UserKey } from '@/domain';
 
@@ -32,8 +33,10 @@ export class UserCachingService {
     }
 
     private async fetchUsers(): Promise<User[]> {
-        const users = await this.userRepository.findAll();
-        await this.cache.saveAll(users);
-        return users;
+        return AsyncDebouncer.debounce('fetchUsers', async () => {
+            const users = await this.userRepository.findAll();
+            await this.cache.saveAll(users);
+            return users;
+        });
     }
 }
