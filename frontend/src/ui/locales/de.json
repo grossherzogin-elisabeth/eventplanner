@@ -63,5 +63,11 @@
     "app.edit-event.tab.positions": "Crew",
     "app.account.tab.data": "Stammdaten",
     "app.account.tab.contact": "Kontaktdaten",
-    "app.account.tab.credentials": "Zugangsdaten"
+    "app.account.tab.credentials": "Zugangsdaten",
+    "app.role.ROLE_ADMIN": "Admin",
+    "app.role.ROLE_EVENT_PLANNER": "Reiseplaner:in",
+    "app.role.ROLE_EVENT_LEADER": "Reiseleiter:in",
+    "app.role.ROLE_TEAM_PLANNER": "Crewplaner:in",
+    "app.role.ROLE_USER_MANAGER": "Nutzerverwalter:in",
+    "app.role.ROLE_TEAM_MEMBER": "Stammcrew Mitglied"
 }

@@ -32,6 +32,10 @@ export class UserCachingService {
         return user;
     }
 
+    public async removeFromCache(userkey: UserKey): Promise<void> {
+        return await this.cache.deleteByKey(userkey);
+    }
+
     private async fetchUsers(): Promise<User[]> {
         return AsyncDebouncer.debounce('fetchUsers', async () => {
             const users = await this.userRepository.findAll();

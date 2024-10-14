@@ -1,5 +1,4 @@
 import { ObjectUtils } from '@/common';
-import { caller } from 'tailwindcss';
 
 /**
  * Utility class that can be used to prevent multiple async calls to the same promise. E.g. when calling a lazy fetch

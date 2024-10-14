@@ -3,6 +3,7 @@ export { default as ContextMenuButton } from './buttons/ContextMenuButton.vue';
 export { default as VCollapsiblePane } from './collapsible/VCollapsiblePane.vue';
 export { default as VDialog } from './dialog/VDialog.vue';
 export { default as VErrorDialog } from './dialog/VErrorDialog.vue';
+export { default as VConfirmationDialog } from './dialog/VConfirmationDialog.vue';
 export type { Dialog } from './dialog/Dialog';
 export type { ErrorDialogMessage } from './dialog/ErrorDialog';
 export { default as VDropdownWrapper } from './dropdown/VDropdownWrapper.vue';

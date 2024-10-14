@@ -40,6 +40,11 @@ export class UserAdministrationUseCase {
         return updated;
     }
 
+    public async deleteUserByKey(key: UserKey): Promise<void> {
+        await this.userRepository.deleteUser(key);
+        await this.userCachingService.removeFromCache(key);
+    }
+
     public async getUserDetailsByKey(key: UserKey): Promise<UserDetails> {
         return await this.userRepository.findByKey(key);
     }

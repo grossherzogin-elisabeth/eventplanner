@@ -39,7 +39,9 @@
                 <template #row="{ item }">
                     <td class="w-1/4 whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.firstName }} {{ item.lastName }}</p>
-                        <p class="text-sm">Stammcrew</p>
+                        <p class="max-w-96 truncate text-sm">
+                            {{ item.roles.map((k) => $t(`app.role.${k}`)).join(', ') }}
+                        </p>
                     </td>
                     <td class="w-1/4">
                         <div class="flex max-w-64 flex-wrap">
@@ -127,11 +129,11 @@
                                     <i class="fa-solid fa-calendar-plus" />
                                     <span>Anmeldung hinzufügen</span>
                                 </li>
-                                <li class="context-menu-item disabled">
-                                    <i class="fa-solid fa-key" />
-                                    <span>Passwort zurücksetzen</span>
-                                </li>
-                                <li class="context-menu-item disabled text-red-700">
+                                <li
+                                    v-if="signedInUser.roles.includes(Role.ADMIN)"
+                                    class="context-menu-item text-red-700"
+                                    @click="deleteUser(item)"
+                                >
                                     <i class="fa-solid fa-trash" />
                                     <span>Nutzer löschen</span>
                                 </li>
@@ -190,6 +192,15 @@
         </div>
 
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
+        <VConfirmationDialog ref="deleteUserDialog">
+            <template #title>Nutzer löschen?</template>
+            <template #message>
+                Bist du sicher, das du den Nutzer löschen möchtest? Wenn der Nutzer sich schon zu Reisen angemeldet hat,
+                wird dies dazu führen, das in den Crew oder Wartelisten ein ungültiger Eintrag existiert. Löschen von
+                Nutzern sollte darum nur nach reichlicher Überlegung passieren.
+            </template>
+            <template #submit>Löschen</template>
+        </VConfirmationDialog>
         <ImportUsersDlg ref="importUsersDialog" />
     </div>
 </template>
@@ -198,12 +209,23 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ArrayUtils } from '@/common';
 import type { Position, User } from '@/domain';
-import { EventType } from '@/domain';
+import { EventType, Role } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VTabs } from '@/ui/components/common';
-import { ContextMenuButton, VInputCheckBox, VInputText, VTable } from '@/ui/components/common';
+import {
+    ContextMenuButton,
+    VConfirmationDialog,
+    VInputCheckBox,
+    VInputText,
+    VTable,
+    VTabs,
+} from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
+import {
+    useAuthUseCase,
+    useEventUseCase,
+    useUserAdministrationUseCase,
+    useUsersUseCase,
+} from '@/ui/composables/Application';
 import { useEventService, useUserService } from '@/ui/composables/Domain';
 import type { Selectable } from '@/ui/model/Selectable';
 import { Routes } from '@/ui/views/Routes';
@@ -229,7 +251,9 @@ const eventService = useEventService();
 const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
 const authUseCase = useAuthUseCase();
+const userAdministrationUseCase = useUserAdministrationUseCase();
 const router = useRouter();
+const signedInUser = authUseCase.getSignedInUser();
 
 const tab = ref<string>('Alle Nutzer');
 const tabs = ref<string[]>(['Alle Nutzer']);
@@ -239,6 +263,7 @@ const users = ref<UserRegistrations[] | undefined>(undefined);
 
 const importUsersDialog = ref<Dialog | null>(null);
 const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
+const deleteUserDialog = ref<Dialog<User> | null>(null);
 
 const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
     users.value?.filter(
@@ -273,6 +298,18 @@ async function createRegistration(user: UserRegistrations): Promise<void> {
     await createRegistrationForUserDialog.value
         ?.open(user)
         .then(() => (user.waitingListCount = user.waitingListCount + 1))
+        .catch(() => {
+            // ignore
+        });
+}
+
+async function deleteUser(user: UserRegistrations): Promise<void> {
+    await deleteUserDialog.value
+        ?.open()
+        .then(async () => {
+            await userAdministrationUseCase.deleteUserByKey(user.key);
+            await fetchUsers();
+        })
         .catch(() => {
             // ignore
         });

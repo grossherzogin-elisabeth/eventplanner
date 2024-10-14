@@ -40,7 +40,8 @@
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { InputSelectOption, Role, UserDetails } from '@/domain';
+import type { InputSelectOption, UserDetails } from '@/domain';
+import { Role } from '@/domain';
 import { VInputDate, VInputLabel, VInputSelect, VInputText } from '@/ui/components/common';
 import { useAuthUseCase } from '@/ui/composables/Application';
 

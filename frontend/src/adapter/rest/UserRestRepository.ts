@@ -235,6 +235,20 @@ export class UserRestRepository implements UserRepository {
         return UserRestRepository.mapUserDetailsToDomain(representation);
     }
 
+    public async deleteUser(userKey: UserKey): Promise<void> {
+        const response = await fetch(`/api/v1/users/${userKey}`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': getCsrfToken(),
+            },
+        });
+        if (!response.ok) {
+            throw response;
+        }
+    }
+
     public async updateSignedInUser(user: Partial<UserDetails>): Promise<UserDetails> {
         const requestBody: SignedInUserUpdateRequest = {
             gender: user.gender,

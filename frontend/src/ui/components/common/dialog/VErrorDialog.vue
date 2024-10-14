@@ -12,7 +12,7 @@
                 </p>
                 <p v-else>
                     Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut. Sollte der Fehler wiederholt
-                    auftreten, melde ihne gerne an admin@grossherzogin-elisabeth.de.
+                    auftreten, melde ihn gerne an admin@grossherzogin-elisabeth.de.
                 </p>
                 <div v-if="error.error" class="mt-8">
                     <h2 class="mb-4 text-red-600">Details</h2>
