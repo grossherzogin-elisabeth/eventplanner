@@ -33,8 +33,8 @@ export interface UserDetails {
     email: string;
     phone?: string;
     mobile?: string;
-    dateOfBirth: Date;
-    placeOfBirth: string;
+    dateOfBirth?: Date;
+    placeOfBirth?: string;
     passNr?: string;
     comment?: string;
     address: Address;

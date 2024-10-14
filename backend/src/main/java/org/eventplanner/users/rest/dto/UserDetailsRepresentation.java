@@ -12,6 +12,7 @@ import java.util.List;
 
 public record UserDetailsRepresentation(
     @NonNull String key,
+    @Nullable String authKey,
     @Nullable String gender,
     @NonNull String firstName,
     @Nullable String nickName,
@@ -32,6 +33,7 @@ public record UserDetailsRepresentation(
     public static UserDetailsRepresentation fromDomain(@NonNull UserDetails user) {
         return new UserDetailsRepresentation(
             user.getKey().value(),
+            user.getAuthKey() == null ? null : user.getAuthKey().value(),
             user.getGender(),
             user.getFirstName(),
             user.getNickName(),

@@ -28,11 +28,19 @@
                                 </div>
                                 <div class="-mx-4 mb-4">
                                     <VInputLabel>Geboren am</VInputLabel>
-                                    <VInputDate v-model="userDetails.dateOfBirth" required disabled />
+                                    <VInputDate
+                                        v-model="userDetails.dateOfBirth"
+                                        required
+                                        :disabled="!enableEditingDateOfBirth"
+                                    />
                                 </div>
                                 <div class="-mx-4 mb-4">
                                     <VInputLabel>Geburtsort</VInputLabel>
-                                    <VInputText v-model="userDetails.placeOfBirth" required disabled />
+                                    <VInputText
+                                        v-model="userDetails.placeOfBirth"
+                                        required
+                                        :disabled="!enableEditingPlaceOfBirth"
+                                    />
                                 </div>
                                 <div class="-mx-4 mb-4">
                                     <VInputLabel>Personalausweis Nummer</VInputLabel>
@@ -161,6 +169,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { ObjectUtils } from '@/common';
 import type { InputSelectOption, UserDetails } from '@/domain';
 import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
@@ -184,6 +193,7 @@ const authUseCase = useAuthUseCase();
 const usersUseCase = useUsersUseCase();
 const user = ref(authUseCase.getSignedInUser());
 const userDetails = ref<UserDetails | null>(null);
+const userDetailsOriginal = ref<UserDetails | null>(null);
 
 const genderOptions: InputSelectOption[] = [
     { value: 'm', label: 'männlich' },
@@ -193,13 +203,22 @@ const genderOptions: InputSelectOption[] = [
 
 const tabs = [Tab.ACCOUNT_CREDENTIALS, Tab.ACCOUNT_DATA, Tab.ACCOUNT_CONTACT_DATA, Tab.QUALIFICATIONS];
 const tab = ref<Tab>(Tab.ACCOUNT_CREDENTIALS);
+const enableEditingDateOfBirth = ref<boolean>(false);
+const enableEditingPlaceOfBirth = ref<boolean>(false);
 
 async function fetchUserDetails() {
-    userDetails.value = await usersUseCase.getUserDetailsForSignedInUser();
+    userDetailsOriginal.value = await usersUseCase.getUserDetailsForSignedInUser();
+    userDetails.value = ObjectUtils.deepCopy(userDetailsOriginal.value);
+    enableEditingDateOfBirth.value = userDetails.value.dateOfBirth === undefined;
+    enableEditingPlaceOfBirth.value = userDetails.value.placeOfBirth === undefined;
 }
 
 async function save(): Promise<void> {
-    await usersUseCase.updateUserDetailsForSignedInUser(userDetails.value!);
+    userDetailsOriginal.value = await usersUseCase.updateUserDetailsForSignedInUser(
+        userDetailsOriginal.value,
+        userDetails.value!
+    );
+    userDetails.value = ObjectUtils.deepCopy(userDetailsOriginal.value);
 }
 
 function init() {

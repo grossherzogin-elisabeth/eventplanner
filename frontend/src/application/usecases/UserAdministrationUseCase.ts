@@ -1,6 +1,7 @@
 import type { NotificationService, UserRepository } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
+import { ObjectUtils } from '@/common';
 import type { UserDetails, UserKey } from '@/domain';
 
 export class UserAdministrationUseCase {
@@ -21,18 +22,22 @@ export class UserAdministrationUseCase {
         this.errorHandlingService = params.errorHandlingService;
     }
 
-    public async updateUser(user: UserDetails): Promise<UserDetails> {
-        const savedUser = await this.userRepository.updateUser(user.key, user);
-        await this.userCachingService.updateCache({
-            key: savedUser.key,
-            firstName: savedUser.firstName,
-            lastName: savedUser.lastName,
-            positionKeys: savedUser.positionKeys,
-            roles: savedUser.roles,
-            email: savedUser.email,
-        });
-        this.notificationService.success('Änderungen gespeichert');
-        return savedUser;
+    public async updateUser(original: UserDetails, updated: UserDetails): Promise<UserDetails> {
+        const diff = ObjectUtils.diff(original, updated);
+        if (Object.keys(diff).length > 0) {
+            const savedUser = await this.userRepository.updateUser(updated.key, diff);
+            await this.userCachingService.updateCache({
+                key: savedUser.key,
+                firstName: savedUser.firstName,
+                lastName: savedUser.lastName,
+                positionKeys: savedUser.positionKeys,
+                roles: savedUser.roles,
+                email: savedUser.email,
+            });
+            this.notificationService.success('Änderungen gespeichert');
+            return savedUser;
+        }
+        return updated;
     }
 
     public async getUserDetailsByKey(key: UserKey): Promise<UserDetails> {

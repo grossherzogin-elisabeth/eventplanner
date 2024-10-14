@@ -72,7 +72,7 @@ public class UserUseCase {
                         .withPermissionsFromAuthentication(authentication);
                 }
 
-                var newUser = new UserDetails(new UserKey(firstName + " " + lastName), firstName, lastName);
+                var newUser = new UserDetails(UserKey.fromName(firstName + " " + lastName), firstName, lastName);
                 newUser.setEmail(oidcUser.getEmail());
                 newUser.setAuthKey(authkey);
                 newUser = userService.createUser(newUser);

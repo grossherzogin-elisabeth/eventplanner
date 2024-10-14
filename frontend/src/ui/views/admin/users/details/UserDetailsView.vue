@@ -109,6 +109,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { ObjectUtils } from '@/common';
 import type { Event, Position, PositionKey, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -154,6 +155,7 @@ const signedInUser = authUseCase.getSignedInUser();
 
 const tabs = [Tab.USER_EVENTS, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_CERTIFICATES, Tab.USER_ROLES];
 const tab = ref<Tab>(Tab.USER_EVENTS);
+const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);
 const eventsByYear = ref<Map<number, Event[] | undefined>>(new Map<number, Event[] | undefined>());
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
@@ -170,7 +172,8 @@ function init(): void {
 }
 
 async function fetchUser(): Promise<void> {
-    user.value = await userAdministrationUseCase.getUserDetailsByKey(userKey.value);
+    userOriginal.value = await userAdministrationUseCase.getUserDetailsByKey(userKey.value);
+    user.value = ObjectUtils.deepCopy(userOriginal.value);
     emit('update:title', `${user.value.firstName} ${user.value.lastName}`);
 }
 
@@ -208,7 +211,8 @@ async function fetchPositions(): Promise<void> {
 async function save(): Promise<void> {
     if (user.value) {
         try {
-            await userAdministrationUseCase.updateUser(user.value);
+            userOriginal.value = await userAdministrationUseCase.updateUser(userOriginal.value, user.value);
+            user.value = ObjectUtils.deepCopy(userOriginal.value);
         } catch (e) {
             errorHandlingUseCase.handleError({
                 title: 'Speichern fehlgeschlagen',

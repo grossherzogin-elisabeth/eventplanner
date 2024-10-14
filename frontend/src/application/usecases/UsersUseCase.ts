@@ -4,6 +4,7 @@ import type { ErrorHandlingService } from '@/application/services/ErrorHandlingS
 import type { PositionCachingService } from '@/application/services/PositionCachingService';
 import type { QualificationCachingService } from '@/application/services/QualificationCachingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
+import { ObjectUtils } from '@/common';
 import type {
     Event,
     Position,
@@ -56,20 +57,27 @@ export class UsersUseCase {
         return await this.userRepository.findBySignedInUser();
     }
 
-    public async updateUserDetailsForSignedInUser(details: UserDetails): Promise<UserDetails> {
+    public async updateUserDetailsForSignedInUser(
+        originalUser: UserDetails,
+        updatedUser: UserDetails
+    ): Promise<UserDetails> {
         try {
-            const savedUser = await this.userRepository.updateSignedInUser({
-                gender: details.gender,
-                title: details.title,
-                nickName: details.nickName,
-                phone: details.phone,
-                mobile: details.mobile,
-                address: details.address,
-                passNr: details.passNr,
-                email: details.email,
-            });
-            this.notificationService.success('Deine Angaben wurden gespeichert');
-            return savedUser;
+            const diff = ObjectUtils.diff(originalUser, updatedUser);
+            if (Object.keys(diff).length === 0) {
+                const savedUser = await this.userRepository.updateSignedInUser({
+                    gender: diff.gender,
+                    title: diff.title,
+                    nickName: diff.nickName,
+                    phone: diff.phone,
+                    mobile: diff.mobile,
+                    address: diff.address,
+                    passNr: diff.passNr,
+                    email: diff.email,
+                });
+                this.notificationService.success('Deine Angaben wurden gespeichert');
+                return savedUser;
+            }
+            return updatedUser;
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;

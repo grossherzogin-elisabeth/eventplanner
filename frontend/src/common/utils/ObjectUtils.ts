@@ -1,3 +1,5 @@
+import { ArrayUtils } from '@/common';
+
 /**
  * A collection of utility functions for objects
  */
@@ -98,5 +100,44 @@ export class ObjectUtils {
             return undefined;
         }
         return value;
+    }
+
+    public static diff<T>(oldValue: T, newValue: T): Partial<T> {
+        const diff: Partial<T> = {};
+        Object.keys(oldValue)
+            .concat(Object.keys(newValue))
+            .filter(ArrayUtils.filterDuplicates)
+            .filter((key) => !ObjectUtils.deepEquals(oldValue[key], newValue[key]))
+            .forEach((key) => (diff[key] = newValue[key]));
+        console.log(ObjectUtils.deepCopy(oldValue));
+        console.log(ObjectUtils.deepCopy(newValue));
+        console.log(ObjectUtils.deepCopy(diff));
+        return diff;
+    }
+
+    private static deepEquals(a: unknown, b: unknown): boolean {
+        if (Array.isArray(a) || Array.isArray(b)) {
+            if (!Array.isArray(a) || !Array.isArray(b)) return false;
+            if (a.length !== b.length) return false;
+            for (let i = 0; i < a.length; i++) {
+                if (!ObjectUtils.deepEquals(a[i], b[i])) return false;
+            }
+            return true;
+        }
+        if (a instanceof Date || b instanceof Date) {
+            if (!(a instanceof Date) || !(b instanceof Date)) return false;
+            return a.getTime() === b.getTime();
+        }
+        if (typeof a === 'object' || typeof b === 'object') {
+            if (typeof a !== 'object' || typeof b !== 'object') return false;
+            const keys = Object.keys(a).concat(Object.keys(b)).filter(ArrayUtils.filterDuplicates);
+            for (const key of keys) {
+                const a2 = a[key];
+                const b2 = b[key];
+                if (!ObjectUtils.deepEquals(a2, b2)) return false;
+            }
+            return true;
+        }
+        return a === b;
     }
 }
