@@ -79,7 +79,7 @@ init();
 
 <style>
 .notification {
-    @apply flex h-full items-center gap-4 overflow-hidden px-4 py-4;
+    @apply flex h-full items-center gap-4 overflow-hidden px-6 py-0;
 }
 
 .fixed .notification {
