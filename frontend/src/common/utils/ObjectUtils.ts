@@ -102,20 +102,27 @@ export class ObjectUtils {
         return value;
     }
 
-    public static diff<T>(oldValue: T, newValue: T): Partial<T> {
+    public static diff<T extends object>(oldValue: T, newValue: T): Partial<T> {
         const diff: Partial<T> = {};
         Object.keys(oldValue)
             .concat(Object.keys(newValue))
             .filter(ArrayUtils.filterDuplicates)
-            .filter((key) => !ObjectUtils.deepEquals(oldValue[key], newValue[key]))
-            .forEach((key) => (diff[key] = newValue[key]));
-        console.log(ObjectUtils.deepCopy(oldValue));
-        console.log(ObjectUtils.deepCopy(newValue));
-        console.log(ObjectUtils.deepCopy(diff));
+            .filter((key) => {
+                const a = (oldValue as Record<string, unknown>)[key];
+                const b = (newValue as Record<string, unknown>)[key];
+                return !ObjectUtils.deepEquals(a, b);
+            })
+            .forEach((key) => ((diff as Record<string, unknown>)[key] = (newValue as Record<string, unknown>)[key]));
         return diff;
     }
 
     private static deepEquals(a: unknown, b: unknown): boolean {
+        if (a === undefined || b === undefined) {
+            return a === undefined && b === undefined;
+        }
+        if (a === null || b === null) {
+            return a === null && b === null;
+        }
         if (Array.isArray(a) || Array.isArray(b)) {
             if (!Array.isArray(a) || !Array.isArray(b)) return false;
             if (a.length !== b.length) return false;
@@ -132,8 +139,8 @@ export class ObjectUtils {
             if (typeof a !== 'object' || typeof b !== 'object') return false;
             const keys = Object.keys(a).concat(Object.keys(b)).filter(ArrayUtils.filterDuplicates);
             for (const key of keys) {
-                const a2 = a[key];
-                const b2 = b[key];
+                const a2 = (a as Record<string, unknown>)[key];
+                const b2 = (b as Record<string, unknown>)[key];
                 if (!ObjectUtils.deepEquals(a2, b2)) return false;
             }
             return true;

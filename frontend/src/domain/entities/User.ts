@@ -20,7 +20,7 @@ export interface User {
 
 export interface UserDetails {
     key: UserKey;
-    authKey: AuthKey;
+    authKey?: AuthKey;
     gender?: string;
     title?: string;
     firstName: string;

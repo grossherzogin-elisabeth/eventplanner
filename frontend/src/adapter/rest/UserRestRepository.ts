@@ -200,7 +200,7 @@ export class UserRestRepository implements UserRepository {
             nickName: user.nickName,
             secondName: user.secondName,
             lastName: user.lastName,
-            dateOfBirth: user.dateOfBirth.toISOString(),
+            dateOfBirth: user.dateOfBirth?.toISOString(),
             placeOfBirth: user.placeOfBirth,
             positions: user.positionKeys,
             email: user.email,
@@ -301,7 +301,7 @@ export class UserRestRepository implements UserRepository {
         return {
             gender: representation.gender || undefined,
             title: representation.title || undefined,
-            key: representation.key || undefined,
+            key: representation.key,
             authKey: representation.authKey || undefined,
             firstName: representation.firstName,
             nickName: representation.nickName || undefined,
@@ -321,10 +321,10 @@ export class UserRestRepository implements UserRepository {
             passNr: representation.passNr || undefined,
             comment: representation.comment || undefined,
             address: {
-                addressLine1: representation.address?.addressLine1 || undefined,
+                addressLine1: representation.address?.addressLine1 || '',
                 addressLine2: representation.address?.addressLine2 || undefined,
-                town: representation.address?.town || undefined,
-                zipcode: representation.address?.zipCode || undefined,
+                town: representation.address?.town || '',
+                zipcode: representation.address?.zipCode || '',
             },
         };
     }
