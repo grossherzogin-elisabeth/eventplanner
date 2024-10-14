@@ -68,7 +68,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat, Month } from '@/common/date';
 import type { Event } from '@/domain';
-import { Role } from '@/domain';
+import { Permission } from '@/domain';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
@@ -129,7 +129,7 @@ function isNextMonth(date: Date): boolean {
 
 function init(): void {
     emit('update:title', 'Meine nächsten Reisen');
-    if (user.roles.includes(Role.TEAM_MEMBER)) {
+    if (user.permissions.includes(Permission.READ_EVENTS)) {
         fetchEvents();
     } else {
         router.push({ name: Routes.Onboarding });
