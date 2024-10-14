@@ -14,7 +14,7 @@ public enum Role {
     TEAM_PLANNER("ROLE_TEAM_PLANNER"),
     TEAM_MEMBER("ROLE_TEAM_MEMBER"),
     USER_MANAGER("ROLE_USER_MANAGER"),
-    TECHNICAL_USER("ROLE_TECHNICAL_USER");
+    EVENT_LEADER("ROLE_EVENT_LEADER");
 
     private final String value;
 
@@ -34,7 +34,6 @@ public enum Role {
 
     public @NonNull Stream<Permission> getPermissions() {
         return switch (this) {
-            case TECHNICAL_USER -> Stream.empty();
             case ADMIN -> Stream.of(Permission.values());
             case NONE -> Stream.of(
                 Permission.READ_OWN_USER_DETAILS,
@@ -81,6 +80,17 @@ public enum Role {
                 Permission.WRITE_USERS,
                 Permission.WRITE_POSITIONS,
                 Permission.WRITE_QUALIFICATIONS
+            );
+            case EVENT_LEADER -> Stream.of(
+                Permission.READ_OWN_USER_DETAILS,
+                Permission.WRITE_OWN_USER_DETAILS,
+                Permission.READ_EVENTS,
+                Permission.READ_USERS,
+                Permission.READ_POSITIONS,
+                Permission.READ_QUALIFICATIONS,
+                Permission.READ_USER_DETAILS,
+                Permission.WRITE_EVENTS,
+                Permission.WRITE_EVENT_TEAM
             );
         };
     }

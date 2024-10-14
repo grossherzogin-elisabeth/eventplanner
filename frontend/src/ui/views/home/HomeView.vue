@@ -67,7 +67,7 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat, Month } from '@/common/date';
-import type { Event} from '@/domain';
+import type { Event } from '@/domain';
 import { Role } from '@/domain';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';

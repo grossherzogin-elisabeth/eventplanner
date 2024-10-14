@@ -1,5 +1,5 @@
 <template>
-    <VTable :items="userPermissions" class="scrollbar-invisible no-header overflow-x-auto px-8 md:px-16 xl:px-20">
+    <VTable :items="userRoles" class="scrollbar-invisible no-header overflow-x-auto px-8 md:px-16 xl:px-20">
         <template #row="{ item }">
             <td class="w-0">
                 <i class="fa-solid" :class="item.icon"></i>
@@ -17,14 +17,14 @@
                         class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
                     >
                         <i class="fa-solid fa-check-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">Berechtigung aktiv</span>
+                        <span class="whitespace-nowrap font-semibold">zugewiesen</span>
                     </div>
                     <div
                         v-else
                         class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
                     >
                         <i class="fa-solid fa-xmark-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">Berechtigung inaktiv</span>
+                        <span class="whitespace-nowrap font-semibold">nicht zugewiesen</span>
                     </div>
                 </div>
             </td>
@@ -33,11 +33,11 @@
                     <ul>
                         <li v-if="!item.enabled" class="context-menu-item" @click="toggleRole(item.role)">
                             <i class="fa-solid fa-plus" />
-                            <span>Berechtigung hinzufügen</span>
+                            <span>Rolle hinzufügen</span>
                         </li>
                         <li v-else class="context-menu-item text-red-700" @click="toggleRole(item.role)">
                             <i class="fa-solid fa-xmark" />
-                            <span>Berechtigung entfernen</span>
+                            <span>Rolle entfernen</span>
                         </li>
                     </ul>
                 </ContextMenuButton>
@@ -59,7 +59,7 @@ interface Emit {
     (e: 'update:modelValue', user: UserDetails): void;
 }
 
-interface PermissionTableEntry {
+interface RoleTableEntry {
     role: Role;
     icon: string;
     name: string;
@@ -70,34 +70,42 @@ interface PermissionTableEntry {
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
-const permissions = ref<PermissionTableEntry[]>([
+const roles = ref<RoleTableEntry[]>([
     {
         role: Role.TEAM_MEMBER,
-        name: 'Crewmitglied',
-        icon: 'fa-user',
+        name: 'Stammcrewmitglied',
+        icon: 'fa-sailboat',
         description:
             'Der Nutzer kann sich eigenständig zu Reisen an- und abmelden und alle Reisen sowie verknüpfte andere Nutzer sehen',
         enabled: false,
     },
     {
         role: Role.EVENT_PLANNER,
-        name: 'Reiseplanung',
+        name: 'Reiseplaner:in',
         icon: 'fa-map',
         description: 'Der Nutzer kann Reisen bearbeiten und neue Reisen erstellen.',
         enabled: false,
     },
     {
         role: Role.TEAM_PLANNER,
-        name: 'Crewplanung',
+        name: 'Crewplaner:in',
         icon: 'fa-compass-drafting',
         description: 'Der Nutzer kann die Crew einer Reise bearbeiten',
         enabled: false,
     },
     {
         role: Role.USER_MANAGER,
-        name: 'Nutzerverwaltung',
+        name: 'Nutzerverwalter:in',
         icon: 'fa-people-group',
         description: 'Der Nutzer kann Nutzer bearbeiten, Qualifikationen pflegen und neue Nutzer erstellen',
+        enabled: false,
+    },
+    {
+        role: Role.EVENT_LEADER,
+        name: 'Reiseleiter:in',
+        icon: 'fa-life-ring',
+        description:
+            'Der Nutzer kann die aktuelle Reise bearbeiten um Last-Minute Änderungen an der Crewliste vornehmen zu können',
         enabled: false,
     },
     {
@@ -108,18 +116,10 @@ const permissions = ref<PermissionTableEntry[]>([
             'Der Nutzer kann alle Funktionen der App vollumfänglich nutzen und darf alle Daten sehen und bearbeiten',
         enabled: false,
     },
-    {
-        role: Role.EVENT_LEADER,
-        name: 'Reiseleiter',
-        icon: 'fa-anchor',
-        description:
-            'Der Nutzer kann die aktuelle Reise bearbeiten um Last-Minute Änderungen an der Crewliste vornehmen zu können',
-        enabled: false,
-    },
 ]);
 
-const userPermissions = computed<PermissionTableEntry[]>(() => {
-    return permissions.value.map((p) => ({
+const userRoles = computed<RoleTableEntry[]>(() => {
+    return roles.value.map((p) => ({
         ...p,
         enabled: props.modelValue.roles.includes(p.role),
     }));

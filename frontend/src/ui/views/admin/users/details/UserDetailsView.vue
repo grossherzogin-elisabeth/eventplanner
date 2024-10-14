@@ -54,10 +54,10 @@
                             </div>
                         </div>
                     </template>
-                    <template #[Tab.USER_PERMISSIONS]>
+                    <template #[Tab.USER_ROLES]>
                         <div class="xl:max-w-5xl">
                             <div class="-mx-8 md:-mx-16 xl:-mx-20">
-                                <UserPermissionsTable v-if="user" v-model="user" />
+                                <UserRolesTable v-if="user" v-model="user" />
                             </div>
                         </div>
                     </template>
@@ -127,15 +127,15 @@ import QualificationEditDlg from '@/ui/views/admin/users/details/QualificationEd
 import UserContactForm from '@/ui/views/admin/users/details/UserContactForm.vue';
 import UserDataForm from '@/ui/views/admin/users/details/UserDataForm.vue';
 import UserEventsTable from '@/ui/views/admin/users/details/UserEventsTable.vue';
-import UserPermissionsTable from '@/ui/views/admin/users/details/UserPermissionsTable.vue';
 import UserQualificationsTable from '@/ui/views/admin/users/details/UserQualificationsTable.vue';
+import UserRolesTable from '@/ui/views/admin/users/details/UserRolesTable.vue';
 
 enum Tab {
     USER_DATA = 'app.user-details.tab.data',
     USER_CONTACT_DATA = 'app.user-details.tab.contact',
     USER_CERTIFICATES = 'app.user-details.tab.certificates',
     USER_EVENTS = 'app.user-details.tab.events',
-    USER_PERMISSIONS = 'app.user-details.tab.permissions',
+    USER_ROLES = 'app.user-details.tab.roles',
 }
 
 interface RouteEmits {
@@ -152,7 +152,7 @@ const authUseCase = useAuthUseCase();
 const errorHandlingUseCase = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
 
-const tabs = [Tab.USER_EVENTS, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_CERTIFICATES, Tab.USER_PERMISSIONS];
+const tabs = [Tab.USER_EVENTS, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_CERTIFICATES, Tab.USER_ROLES];
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const user = ref<UserDetails | null>(null);
 const eventsByYear = ref<Map<number, Event[] | undefined>>(new Map<number, Event[] | undefined>());

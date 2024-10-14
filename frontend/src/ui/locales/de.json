@@ -58,7 +58,7 @@
     "app.user-details.tab.contact": "Kontakt",
     "app.user-details.tab.certificates": "Qualifikationen",
     "app.user-details.tab.events": "Reisen",
-    "app.user-details.tab.permissions": "Berechtigungen",
+    "app.user-details.tab.roles": "Anwendungsrollen",
     "app.edit-event.tab.data": "Reisedaten",
     "app.edit-event.tab.positions": "Crew",
     "app.account.tab.data": "Stammdaten",
