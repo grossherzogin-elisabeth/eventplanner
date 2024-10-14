@@ -209,7 +209,7 @@ async function fetchPositions(): Promise<void> {
 }
 
 async function save(): Promise<void> {
-    if (user.value) {
+    if (userOriginal.value && user.value) {
         try {
             userOriginal.value = await userAdministrationUseCase.updateUser(userOriginal.value, user.value);
             user.value = ObjectUtils.deepCopy(userOriginal.value);

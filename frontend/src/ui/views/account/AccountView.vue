@@ -214,11 +214,13 @@ async function fetchUserDetails() {
 }
 
 async function save(): Promise<void> {
-    userDetailsOriginal.value = await usersUseCase.updateUserDetailsForSignedInUser(
-        userDetailsOriginal.value,
-        userDetails.value!
-    );
-    userDetails.value = ObjectUtils.deepCopy(userDetailsOriginal.value);
+    if (userDetailsOriginal.value && userDetails.value) {
+        userDetailsOriginal.value = await usersUseCase.updateUserDetailsForSignedInUser(
+            userDetailsOriginal.value,
+            userDetails.value
+        );
+        userDetails.value = ObjectUtils.deepCopy(userDetailsOriginal.value);
+    }
 }
 
 function init() {

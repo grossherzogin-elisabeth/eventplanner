@@ -40,7 +40,7 @@
                     <td class="w-1/4 whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.firstName }} {{ item.lastName }}</p>
                         <p class="max-w-96 truncate text-sm">
-                            {{ item.roles.map((k) => $t(`app.role.${k}`)).join(', ') }}
+                            {{ item.roles?.map((k) => $t(`app.role.${k}`)).join(', ') }}
                         </p>
                     </td>
                     <td class="w-1/4">
