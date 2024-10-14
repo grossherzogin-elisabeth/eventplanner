@@ -125,4 +125,12 @@ public class UserService {
         }
         return userEncryptionService.decrypt(encrypted);
     }
+
+    public void deleteUser(UserKey userKey) {
+        // TODO should this be a soft delete?
+        userRepository.deleteByKey(userKey);
+        if (!cache.isEmpty()) {
+            cache.remove(userKey);
+        }
+    }
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.eventplanner.users.adapter.UserRepository;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.values.UserKey;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +19,7 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public List<EncryptedUserDetails> findAll() {
+    public @NonNull List<EncryptedUserDetails> findAll() {
         return encrypedUserDetailsJpaRepository.findAll()
             .stream()
             .map(EncryptedUserDetailsJpaEntity::toDomain)
@@ -26,19 +27,19 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public Optional<EncryptedUserDetails> findByKey(final UserKey key) {
+    public @NonNull Optional<EncryptedUserDetails> findByKey(@NonNull final UserKey key) {
         return encrypedUserDetailsJpaRepository.findByKey(key.value()).map(EncryptedUserDetailsJpaEntity::toDomain);
     }
 
     @Override
-    public EncryptedUserDetails create(final EncryptedUserDetails user) {
+    public @NonNull EncryptedUserDetails create(@NonNull final EncryptedUserDetails user) {
         var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
         entity = encrypedUserDetailsJpaRepository.save(entity);
         return entity.toDomain();
     }
 
     @Override
-    public EncryptedUserDetails update(final EncryptedUserDetails user) {
+    public @NonNull EncryptedUserDetails update(@NonNull final EncryptedUserDetails user) {
         var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
         entity = this.encrypedUserDetailsJpaRepository.save(entity);
         return entity.toDomain();
@@ -47,5 +48,10 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
     @Override
     public void deleteAll() {
         encrypedUserDetailsJpaRepository.deleteAll();
+    }
+
+    @Override
+    public void deleteByKey(@NonNull final UserKey key) {
+        encrypedUserDetailsJpaRepository.deleteById(key.value());
     }
 }

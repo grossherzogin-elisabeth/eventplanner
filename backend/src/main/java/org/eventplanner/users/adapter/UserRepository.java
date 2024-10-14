@@ -21,4 +21,6 @@ public interface UserRepository {
     EncryptedUserDetails update(@NonNull EncryptedUserDetails user);
 
     void deleteAll();
+
+    void deleteByKey(@NonNull UserKey key);
 }

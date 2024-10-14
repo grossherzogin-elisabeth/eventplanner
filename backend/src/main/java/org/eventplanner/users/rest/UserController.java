@@ -79,4 +79,13 @@ public class UserController {
         var user = userUseCase.updateUser(signedInUser, signedInUser.key(), spec.toDomain());
         return ResponseEntity.ok(UserDetailsRepresentation.fromDomain(user));
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{key}")
+    public ResponseEntity<Void> updateUser(
+            @PathVariable("key") String userKey
+    ) {
+        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        userUseCase.deleteUser(signedInUser, new UserKey(userKey));
+        return ResponseEntity.ok().build();
+    }
 }

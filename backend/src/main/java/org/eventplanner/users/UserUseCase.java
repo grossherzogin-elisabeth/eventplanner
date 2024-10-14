@@ -140,4 +140,10 @@ public class UserUseCase {
 
         return userService.updateUser(user);
     }
+
+    public void deleteUser(@NonNull SignedInUser signedInUser, @NonNull UserKey userKey) {
+        signedInUser.assertHasPermission(Permission.WRITE_USERS);
+
+        userService.deleteUser(userKey);
+    }
 }
