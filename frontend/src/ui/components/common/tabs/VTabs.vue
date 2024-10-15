@@ -28,6 +28,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useQueryStateSync } from '@/ui/composables/QueryState';
+
 interface Props {
     // the active tab, bind with v-model
     modelValue?: string;
@@ -41,4 +43,10 @@ interface Emits {
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+
+useQueryStateSync<string>(
+    'tab',
+    () => props.modelValue || '',
+    (v) => emit('update:modelValue', v)
+);
 </script>

@@ -49,6 +49,7 @@
 import { computed, ref, useSlots, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { ObjectUtils } from '@/common';
+import { useQueryStateSync } from '@/ui/composables/QueryState';
 import VPagination from './VPagination.vue';
 
 /**
@@ -149,6 +150,22 @@ const sortDir = ref<number>(1);
 const loading = computed<boolean>(() => props.items === undefined);
 const empty = computed<boolean>(() => props.items !== undefined && props.items.length === 0);
 
+useQueryStateSync<number>(
+    'page',
+    () => page.value,
+    (v) => (page.value = v)
+);
+useQueryStateSync<string>(
+    'sort',
+    () => sortCol.value,
+    (v) => (sortCol.value = v)
+);
+useQueryStateSync<number>(
+    'direction',
+    () => sortDir.value,
+    (v) => (sortDir.value = v)
+);
+
 const classes = computed<string[]>(() => {
     const result: string[] = [];
     if (loading.value) {
@@ -236,40 +253,6 @@ function registerSortListeners(): void {
     }
 }
 
-async function updateQuery(prop: string, value: number | string): Promise<void> {
-    if (props.query) {
-        const route = router.currentRoute.value;
-        if (route.query[prop] === value) {
-            // nothing to do
-            return;
-        }
-        if (value !== undefined) {
-            // update the query param
-            route.query[prop] = value.toString();
-        } else {
-            // remove the query param
-            delete route.query[prop];
-        }
-
-        if (route.name) {
-            await router.push({
-                name: route.name || undefined,
-                hash: route.hash,
-                params: route.params,
-                query: route.query,
-                force: true,
-            });
-        } else {
-            await router.push({
-                hash: route.hash,
-                path: route.path,
-                query: route.query,
-                force: true,
-            });
-        }
-    }
-}
-
 function setSortingIndicators(): void {
     if (head.value && sortCol.value) {
         const th = head.value.querySelector(`th[data-sortby=${sortCol.value}]`);
@@ -280,36 +263,6 @@ function setSortingIndicators(): void {
     }
 }
 
-function readFromQuery(): void {
-    if (props.query) {
-        const route = router.currentRoute.value;
-        const qPage = parseInt(route.query.page as string, 10);
-        const qSort = route.query.sort as string;
-        const qDirection = parseInt(route.query.direction as string, 10);
-        if (!Number.isNaN(qPage)) {
-            page.value = qPage - 1;
-        }
-        if (qSort) {
-            sortCol.value = qSort;
-        }
-        if (!Number.isNaN(qDirection)) {
-            sortDir.value = qDirection;
-        }
-
-        setSortingIndicators();
-    }
-}
-
-function setDefaultSorting(): void {
-    const sortByQuery = !!router.currentRoute.value.query.sort || !!router.currentRoute.value.query.direction;
-    if (!sortByQuery) {
-        sortCol.value = props.sortBy || '';
-        sortDir.value = (props.sortDirection || '').toLowerCase() === 'asc' ? 1 : -1;
-
-        setSortingIndicators();
-    }
-}
-
 async function init(): Promise<void> {
     registerSortListeners();
     watch(() => slots.head, registerSortListeners);
@@ -317,11 +270,7 @@ async function init(): Promise<void> {
     watch(page, () => emit('update:page', page.value));
 
     await router.isReady();
-    watch(page, () => updateQuery('page', page.value + 1));
-    watch(sortCol, () => updateQuery('sort', sortCol.value));
-    watch(sortDir, () => updateQuery('direction', sortDir.value));
-    setDefaultSorting();
-    readFromQuery();
+    setSortingIndicators();
 }
 
 init();
