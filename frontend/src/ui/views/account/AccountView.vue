@@ -180,7 +180,7 @@ enum Tab {
     ACCOUNT_DATA = 'app.account.tab.data',
     ACCOUNT_CONTACT_DATA = 'app.account.tab.contact',
     ACCOUNT_CREDENTIALS = 'app.account.tab.credentials',
-    QUALIFICATIONS = 'Qualifikationen',
+    QUALIFICATIONS = 'app.account.tab.qualifications',
 }
 
 interface RouteEmits {

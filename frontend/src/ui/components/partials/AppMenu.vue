@@ -4,13 +4,13 @@
 
         <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-red-100 pl-4 text-red-800 xl:mx-8 xl:pl-6">
             <div class="flex items-center">
-                <i class="fa-solid fa-warning" />
-                <p class="ml-4 mr-2 w-0 flex-grow py-4 text-sm font-bold sm:ml-8">
+                <p class="mr-2 w-0 flex-grow py-4 text-sm font-bold">
                     Du siehst die Anwendung aus Sicht von
                     <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
                 </p>
                 <button
                     class="mr-2 block h-10 w-10 rounded-full hover:bg-red-200"
+                    title="Impersonate Modus beenden"
                     @click="authUseCase.impersonateUser(null)"
                 >
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
