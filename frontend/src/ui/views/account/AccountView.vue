@@ -202,7 +202,7 @@ const genderOptions: InputSelectOption[] = [
 ];
 
 const tabs = [Tab.ACCOUNT_CREDENTIALS, Tab.ACCOUNT_DATA, Tab.ACCOUNT_CONTACT_DATA, Tab.QUALIFICATIONS];
-const tab = ref<Tab>(Tab.ACCOUNT_CREDENTIALS);
+const tab = ref<Tab>(tabs[0]);
 const enableEditingDateOfBirth = ref<boolean>(false);
 const enableEditingPlaceOfBirth = ref<boolean>(false);
 

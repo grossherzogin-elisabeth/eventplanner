@@ -10,7 +10,6 @@
                         <i class="fa-solid fa-magnifying-glass ml-4 text-primary-900 text-opacity-25" />
                     </template>
                 </VInputText>
-                <VInputCheckBox v-model="filterOnlyActive" label="Nur Stammcrew mit Anmeldungen" />
                 <div class="hidden flex-grow md:block"></div>
                 <div class="hidden items-stretch justify-end space-x-2 md:flex">
                     <button class="btn-primary flex-grow whitespace-nowrap" @click="importUsers()">
@@ -39,9 +38,10 @@
                 <template #row="{ item }">
                     <td class="w-1/4 whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.firstName }} {{ item.lastName }}</p>
-                        <p class="max-w-96 truncate text-sm">
-                            {{ item.roles?.map((k) => $t(`app.role.${k}`)).join(', ') }}
+                        <p v-if="item.roles && item.roles.length > 0" class="max-w-96 truncate text-sm">
+                            {{ item.roles.map((k) => $t(`app.role.${k}`)).join(', ') }}
                         </p>
+                        <p v-else class="max-w-96 truncate text-sm italic">Keine Rolle zugewiesen</p>
                     </td>
                     <td class="w-1/4">
                         <div class="flex max-w-64 flex-wrap">
@@ -211,14 +211,7 @@ import { ArrayUtils } from '@/common';
 import type { Position, User } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import {
-    ContextMenuButton,
-    VConfirmationDialog,
-    VInputCheckBox,
-    VInputText,
-    VTable,
-    VTabs,
-} from '@/ui/components/common';
+import { ContextMenuButton, VConfirmationDialog, VInputText, VTable, VTabs } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import {
     useAuthUseCase,
@@ -231,6 +224,13 @@ import type { Selectable } from '@/ui/model/Selectable';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/CreateRegistrationForUserDlg.vue';
 import ImportUsersDlg from '@/ui/views/admin/users/list/ImportUsersDlg.vue';
+
+enum Tab {
+    ACTIVE_TEAM_MEMBERS = 'Stammcrew (aktive)',
+    TEAM_MEMBERS = 'Stammcrew',
+    ADMINS = 'Verwalter',
+    UNMATCHED_USERS = 'Nutzer ohne Rolle',
+}
 
 interface UserRegistrations extends User, Selectable {
     positions: Position[];
@@ -255,10 +255,9 @@ const userAdministrationUseCase = useUserAdministrationUseCase();
 const router = useRouter();
 const signedInUser = authUseCase.getSignedInUser();
 
-const tab = ref<string>('Alle Nutzer');
-const tabs = ref<string[]>(['Alle Nutzer']);
+const tabs = [Tab.TEAM_MEMBERS, Tab.ACTIVE_TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS];
+const tab = ref<string>(tabs[0]);
 const filter = ref<string>('');
-const filterOnlyActive = ref<boolean>(false);
 const users = ref<UserRegistrations[] | undefined>(undefined);
 
 const importUsersDialog = ref<Dialog | null>(null);
@@ -266,20 +265,42 @@ const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
 const deleteUserDialog = ref<Dialog<User> | null>(null);
 
 const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
-    users.value?.filter(
-        (it) =>
-            usersService.doesUserMatchFilter(it, filter.value) &&
-            (!filterOnlyActive.value ||
-                it.waitingListCount ||
-                it.multiDayEventsCount ||
-                it.weekendEventsCount ||
-                it.singleDayEventsCount)
-    )
+    users.value?.filter((it) => matchesActiveCategory(it) && usersService.doesUserMatchFilter(it, filter.value))
 );
 
 function init(): void {
     emit('update:title', 'Nutzer verwalten');
     fetchUsers();
+}
+
+function hasAnyEvents(user: UserRegistrations): boolean {
+    return (
+        user.waitingListCount > 0 ||
+        user.multiDayEventsCount > 0 ||
+        user.weekendEventsCount > 0 ||
+        user.singleDayEventsCount > 0
+    );
+}
+
+function matchesActiveCategory(user: UserRegistrations): boolean {
+    switch (tab.value) {
+        case Tab.ACTIVE_TEAM_MEMBERS:
+            return user.roles !== undefined && user.roles.includes(Role.TEAM_MEMBER) && hasAnyEvents(user);
+        case Tab.TEAM_MEMBERS:
+            return user.roles !== undefined && user.roles.includes(Role.TEAM_MEMBER);
+        case Tab.UNMATCHED_USERS:
+            return user.roles === undefined || !user.roles.includes(Role.TEAM_MEMBER);
+        case Tab.ADMINS:
+            return (
+                user.roles !== undefined &&
+                (user.roles.includes(Role.ADMIN) ||
+                    user.roles.includes(Role.USER_MANAGER) ||
+                    user.roles.includes(Role.TEAM_PLANNER) ||
+                    user.roles.includes(Role.EVENT_PLANNER) ||
+                    user.roles.includes(Role.EVENT_LEADER))
+            );
+    }
+    return true;
 }
 
 function importUsers(): void {
