@@ -12,6 +12,7 @@ import type {
     RouteRecordSingleViewWithChildren,
 } from 'vue-router';
 import { useRouter } from 'vue-router';
+import { useRouterStack } from '@/ui/composables/RouterStack';
 
 interface Props {
     to:
@@ -23,26 +24,15 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
+const routerStack = useRouterStack();
 const router = useRouter();
 
 async function back() {
-    if (!router.options.history.state.back) {
-        router.push(props.to);
+    const backTo = routerStack.getLastOther();
+    if (backTo) {
+        await router.push(backTo);
+    } else {
+        await router.push(props.to);
     }
-    const origin = window.location.origin;
-    let previous = new URL(origin + String(router.options.history.state.back));
-    let current = new URL(origin + String(router.options.history.state.current));
-
-    const max = 10;
-    while (previous.origin === current.origin && previous.pathname === current.pathname) {
-        router.back();
-        previous = new URL(String(router.options.history.state.back));
-        current = new URL(String(router.options.history.state.current));
-        if (max < 0) {
-            return;
-        }
-    }
-    router.back();
 }
 </script>

@@ -24,6 +24,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import type { SignedInUser } from '@/domain';
 import { VErrorDialog } from '@/ui/components/common';
 import AppFooter from '@/ui/components/partials/AppFooter.vue';
@@ -31,10 +32,13 @@ import AppMenu from '@/ui/components/partials/AppMenu.vue';
 import AppNavbar from '@/ui/components/partials/AppNavbar.vue';
 import VNotifications from '@/ui/components/partials/VNotifications.vue';
 import { useAuthUseCase } from '@/ui/composables/Application';
+import { useRouterStack } from '@/ui/composables/RouterStack';
 import { useViewportSize } from '@/ui/composables/ViewportSize';
 
 useViewportSize();
+const routerStack = useRouterStack();
 const authUseCase = useAuthUseCase();
+const router = useRouter();
 
 const signedInUser = ref<SignedInUser | null>(null);
 const title = ref<string>('');
@@ -45,6 +49,7 @@ async function init(): Promise<void> {
     watch(title, setTitle);
     authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
     authUseCase.onLogout().then(() => (signedInUser.value = null));
+    router.afterEach((to) => routerStack.push(to));
 }
 
 function setTitle(): void {

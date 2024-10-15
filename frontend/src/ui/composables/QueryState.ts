@@ -2,7 +2,6 @@ import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 export function useQueryStateSync<T>(prop: string, get: () => T, set: (t: T) => void) {
-    console.log('useQueryStateSync', prop, get);
     const router = useRouter();
 
     async function updateQuery(): Promise<void> {

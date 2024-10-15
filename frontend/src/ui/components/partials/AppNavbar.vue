@@ -61,6 +61,7 @@ import type { RouteLocationRaw } from 'vue-router';
 import { useRoute, useRouter } from 'vue-router';
 import type { SignedInUser } from '@/domain';
 import { useAuthUseCase } from '@/ui/composables/Application';
+import { useRouterStack } from '@/ui/composables/RouterStack';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import AppMenu from './AppMenu.vue';
 import SlideMenu from './SlideMenu.vue';
@@ -73,6 +74,7 @@ const props = defineProps<Props>();
 
 const router = useRouter();
 const route = useRoute();
+const routerStack = useRouterStack();
 
 const authUseCase = useAuthUseCase();
 
@@ -90,7 +92,7 @@ async function init(): Promise<void> {
 function onRouteChanged() {
     const meta = route.meta as RouteMetaData;
     if (meta.backTo) {
-        backTo.value = { name: meta.backTo };
+        backTo.value = routerStack.getLastOther() || { name: meta.backTo };
     } else {
         backTo.value = '';
     }
