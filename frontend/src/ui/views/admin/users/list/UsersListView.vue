@@ -38,10 +38,10 @@
                 <template #row="{ item }">
                     <td class="w-1/4 whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.firstName }} {{ item.lastName }}</p>
-                        <p v-if="item.roles && item.roles.length > 0" class="max-w-96 truncate text-sm">
-                            {{ item.roles.map((k) => $t(`app.role.${k}`)).join(', ') }}
+                        <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
+                            {{ item.rolesStr }}
                         </p>
-                        <p v-else class="max-w-96 truncate text-sm italic">Keine Rolle zugewiesen</p>
+                        <p v-else class="max-w-64 truncate text-sm italic">Keine Rolle zugewiesen</p>
                     </td>
                     <td class="w-1/4">
                         <div class="flex max-w-64 flex-wrap">
@@ -207,6 +207,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { ArrayUtils } from '@/common';
 import type { Position, User } from '@/domain';
 import { EventType, Role } from '@/domain';
@@ -234,6 +235,7 @@ enum Tab {
 
 interface UserRegistrations extends User, Selectable {
     positions: Position[];
+    rolesStr: string;
     singleDayEventsCount: number;
     weekendEventsCount: number;
     multiDayEventsCount: number;
@@ -246,6 +248,7 @@ interface RouteEmits {
 
 const emit = defineEmits<RouteEmits>();
 
+const i18n = useI18n();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 const usersUseCase = useUsersUseCase();
@@ -354,6 +357,7 @@ async function fetchUsers(): Promise<void> {
     users.value = userlist.map((user: User) => {
         return {
             ...user,
+            rolesStr: user.roles?.map((k) => i18n.t(`app.role.${k}`)).join(', ') || '',
             waitingListCount: registrationsWaitinglist.filter((it) => it.userKey === user.key).length,
             multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,
