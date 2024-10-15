@@ -122,6 +122,7 @@ export class EventAdministrationUseCase {
     }
 
     public async contactTeam(event: Event): Promise<void> {
+        console.log('Contact team of event ' + event.key);
         this.errorHandlingService.handleError({
             title: 'TODO',
             message: 'Diese Funktion ist derzeit noch nicht implementiert',

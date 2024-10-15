@@ -59,7 +59,7 @@
                                 </button>
                                 <button
                                     class="btn-primary sm:mb-0"
-                                    @click="authUseCase.loginWithCredentials(username, password)"
+                                    @click="authUseCase.loginWithIdentityProvider('default')"
                                 >
                                     <span class="mx-auto py-2"> Anmelden </span>
                                 </button>
@@ -68,7 +68,7 @@
                         <button
                             v-else
                             class="btn-primary mb-4"
-                            @click="authUseCase.loginWithCredentials(username, password)"
+                            @click="authUseCase.loginWithIdentityProvider('default')"
                         >
                             <i class="fa-solid fa-user text-xl sm:mx-4" />
                             <span class="mx-auto py-2"> Anmelden mit Lissi Account </span>
@@ -119,13 +119,13 @@ const password = ref<string>('');
 
 async function init(): Promise<void> {
     if (!enableLoginView) {
-        await authUseCase.loginWithCredentials('', '');
+        await authUseCase.loginWithIdentityProvider('default');
     } else {
         emit('update:title', 'Login');
         if (!authUseCase.isLoggedIn()) {
             await authUseCase.onLogin();
         }
-        router.push('/');
+        await router.push('/');
     }
 }
 

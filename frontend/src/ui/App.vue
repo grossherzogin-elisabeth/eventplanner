@@ -9,7 +9,7 @@
         <VNotifications />
         <div class="flex flex-1 items-stretch">
             <div class="relative hidden h-screen w-96 flex-col pt-4 text-white xl:flex">
-                <AppMenu v-if="signedInUser" class="relative z-10" />
+                <AppMenu class="relative z-10" />
             </div>
             <div
                 class="relative flex h-full w-0 flex-grow flex-col bg-primary-50 xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl"

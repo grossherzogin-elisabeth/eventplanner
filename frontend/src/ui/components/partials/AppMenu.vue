@@ -1,5 +1,5 @@
 <template>
-    <div class="menu flex-1 overflow-y-auto">
+    <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
         <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">Segelschulschiff Großherzogin Elisabeth</h1>
 
         <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-red-100 pl-4 text-red-800 xl:mx-8 xl:pl-6">
@@ -96,19 +96,32 @@
             </li>
         </ul>
     </div>
+    <div v-else class="menu">
+        <div class="mx-12 my-4 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-12 h-6 w-1/2 rounded-full bg-current opacity-10"></div>
+
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+    </div>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import type { SignedInUser } from '@/domain';
 import { Permission } from '@/domain';
 import { useAuthUseCase } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 
 const authUseCase = useAuthUseCase();
 
-const signedInUser = authUseCase.getSignedInUser();
+const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1];
-
 const eventsExpanded = ref<boolean>(false);
+
+authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
 </script>
 
 <style>
