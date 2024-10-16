@@ -15,15 +15,15 @@ public record SettingsRepresentation(
     public static SettingsRepresentation fromDomain(Settings domain) {
         return new SettingsRepresentation(
             new Email(
-                domain.emailSettings().from(),
-                domain.emailSettings().fromDisplayName(),
-                domain.emailSettings().replyTo(),
-                domain.emailSettings().replyToDisplayName(),
-                domain.emailSettings().host(),
-                domain.emailSettings().port(),
-                domain.emailSettings().enableSSL(),
-                domain.emailSettings().enableStartTls(),
-                domain.emailSettings().username()
+                domain.emailSettings().getFrom(),
+                domain.emailSettings().getFromDisplayName(),
+                domain.emailSettings().getReplyTo(),
+                domain.emailSettings().getReplyToDisplayName(),
+                domain.emailSettings().getHost(),
+                domain.emailSettings().getPort(),
+                domain.emailSettings().getEnableSSL(),
+                domain.emailSettings().getEnableStartTls(),
+                domain.emailSettings().getUsername()
             ),
             Ui.fromDomain(domain.uiSettings())
         );

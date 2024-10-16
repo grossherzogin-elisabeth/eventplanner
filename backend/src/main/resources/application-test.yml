@@ -1,6 +1,4 @@
 data:
   generate-test-data: true
-  directory: data
+  db-url: jdbc:sqlite:eventplanner-test.db
 
-database:
-  url: jdbc:sqlite:${custom.data-directory}/eventplanner-test.db

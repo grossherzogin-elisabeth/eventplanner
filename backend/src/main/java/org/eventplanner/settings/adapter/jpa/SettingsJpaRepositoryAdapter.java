@@ -22,10 +22,10 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
 
     public SettingsJpaRepositoryAdapter(
             @Autowired SettingsJpaRepository settingsJpaRepository,
-            @Value("${data.encryption-password}") String password
+            @Value("${data.encryption-password}") String dataEncryptionPassword
     ) {
         this.settingsJpaRepository = settingsJpaRepository;
-        this.crypto = new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password);
+        this.crypto = new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", dataEncryptionPassword);
     }
 
     @Override
@@ -59,7 +59,8 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
             Boolean.valueOf(settingsMap.get("email.enableSSL")),
             Boolean.valueOf(settingsMap.get("email.enableStartTLS")),
             settingsMap.get("email.username"),
-            emailPassword
+            emailPassword,
+            settingsMap.get("email.footer")
         );
 
         var uiSettings = new UiSettings(
@@ -75,21 +76,22 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
     @Override
     public Settings updateSettings(Settings settings) {
         var entities = new ArrayList<SettingsJpaEntity>();
-        entities.add(new SettingsJpaEntity("email.from", settings.emailSettings().from()));
-        entities.add(new SettingsJpaEntity("email.fromDisplayName", settings.emailSettings().fromDisplayName()));
-        entities.add(new SettingsJpaEntity("email.replyTo", settings.emailSettings().replyTo()));
-        entities.add(new SettingsJpaEntity("email.replyToDisplayName", settings.emailSettings().replyToDisplayName()));
-        entities.add(new SettingsJpaEntity("email.host", settings.emailSettings().host()));
-        entities.add(new SettingsJpaEntity("email.port", String.valueOf(settings.emailSettings().port())));
-        entities.add(new SettingsJpaEntity("email.enableSSL", String.valueOf(settings.emailSettings().enableSSL())));
-        entities.add(new SettingsJpaEntity("email.enableStartTLS", String.valueOf(settings.emailSettings().enableStartTls())));
-        entities.add(new SettingsJpaEntity("email.username", settings.emailSettings().username()));
-        if (settings.emailSettings().password() != null) {
-            var encryptedPassword = crypto.encrypt(settings.emailSettings().password()).value();
+        entities.add(new SettingsJpaEntity("email.from", settings.emailSettings().getFrom()));
+        entities.add(new SettingsJpaEntity("email.fromDisplayName", settings.emailSettings().getFromDisplayName()));
+        entities.add(new SettingsJpaEntity("email.replyTo", settings.emailSettings().getReplyTo()));
+        entities.add(new SettingsJpaEntity("email.replyToDisplayName", settings.emailSettings().getReplyToDisplayName()));
+        entities.add(new SettingsJpaEntity("email.host", settings.emailSettings().getHost()));
+        entities.add(new SettingsJpaEntity("email.port", String.valueOf(settings.emailSettings().getPort())));
+        entities.add(new SettingsJpaEntity("email.enableSSL", String.valueOf(settings.emailSettings().getEnableSSL())));
+        entities.add(new SettingsJpaEntity("email.enableStartTLS", String.valueOf(settings.emailSettings().getEnableStartTls())));
+        entities.add(new SettingsJpaEntity("email.username", settings.emailSettings().getUsername()));
+        if (settings.emailSettings().getPassword() != null) {
+            var encryptedPassword = crypto.encrypt(settings.emailSettings().getPassword()).value();
             entities.add(new SettingsJpaEntity("email.password", encryptedPassword));
         } else {
             entities.add(new SettingsJpaEntity("email.password", null));
         }
+        entities.add(new SettingsJpaEntity("email.footer", settings.emailSettings().getFooter()));
 
         entities.add(new SettingsJpaEntity("ui.menuTitle", settings.uiSettings().menuTitle()));
         entities.add(new SettingsJpaEntity("ui.tabTitle", settings.uiSettings().tabTitle()));

@@ -10,9 +10,6 @@
             </td>
         </tr>
         <tr>
-<#--            <td class="content-block powered-by">-->
-<#--                Powered by <a href="http://htmlemail.io">HTMLemail.io</a>-->
-<#--            </td>-->
         </tr>
     </table>
 </div>

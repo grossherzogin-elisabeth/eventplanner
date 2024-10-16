@@ -1,6 +1,7 @@
 package org.eventplanner.settings;
 
 import org.eventplanner.settings.adapter.SettingsRepository;
+import org.eventplanner.settings.service.SettingsService;
 import org.eventplanner.settings.values.Settings;
 import org.eventplanner.settings.values.UiSettings;
 import org.eventplanner.users.entities.SignedInUser;
@@ -13,27 +14,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class SettingsUseCase {
 
-    private final SettingsRepository settingsRepository;
+    private final SettingsService settingsService;
 
     public SettingsUseCase(
-        @Autowired SettingsRepository settingsRepository
+        @Autowired SettingsService settingsService
     ) {
-        this.settingsRepository = settingsRepository;
+        this.settingsService = settingsService;
     }
 
     public @NonNull Settings getSettings(@NonNull SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_APP_SETTINGS);
 
-        return settingsRepository.getSettings();
+        return settingsService.getSettings();
     }
 
     public @NonNull Settings updateSettings(@NonNull SignedInUser signedInUser, @NonNull Settings settings) {
         signedInUser.assertHasPermission(Permission.WRITE_APP_SETTINGS);
 
-        return settingsRepository.updateSettings(settings);
+        return settingsService.updateSettings(settings);
     }
 
     public @NonNull UiSettings getUiSettings() {
-        return settingsRepository.getSettings().uiSettings();
+        return settingsService.getSettings().uiSettings();
     }
 }

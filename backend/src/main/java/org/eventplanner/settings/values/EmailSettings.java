@@ -1,18 +1,22 @@
 package org.eventplanner.settings.values;
 
-import org.eventplanner.common.EncryptedString;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
-public record EmailSettings(
-    @Nullable String from,
-    @Nullable String fromDisplayName,
-    @Nullable String replyTo,
-    @Nullable String replyToDisplayName,
-    @Nullable String host,
-    @Nullable Integer port,
-    @Nullable Boolean enableSSL,
-    @Nullable Boolean enableStartTls,
-    @Nullable String username,
-    @Nullable String password
-) {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class EmailSettings {
+    private @Nullable String from;
+    private @Nullable String fromDisplayName;
+    private @Nullable String replyTo;
+    private @Nullable String replyToDisplayName;
+    private @Nullable String host;
+    private @Nullable Integer port;
+    private @Nullable Boolean enableSSL;
+    private @Nullable Boolean enableStartTls;
+    private @Nullable String username;
+    private @Nullable String password;
+    private @Nullable String footer;
 }

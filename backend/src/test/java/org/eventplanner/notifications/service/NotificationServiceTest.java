@@ -12,14 +12,14 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 @SpringBootTest
-@ActiveProfiles(profiles = "test")
-public class NotificationServiceTest {
+@ActiveProfiles(profiles = { "test", "local" })
+class NotificationServiceTest {
 
     @Autowired
     private NotificationService notificationService;
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         var user = new UserDetails(new UserKey(""), "Max", "Mustermann");
         user.setEmail("malte.schwitters@outlook.de");
 

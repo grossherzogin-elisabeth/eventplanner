@@ -6,12 +6,21 @@ build:
   branch: ${BUILD_BRANCH:main}
 
 email:
+  from: ${EMAIL_FROM:}
+  from-display-name: ${EMAIL_FROM_DISPLAY_NAME:}
+  reply-to: ${EMAIL_REPLY_TO:}
+  reply-to-display-name: ${EMAIL_REPLY_TO_DISPLAY_NAME:}
   host: ${EMAIL_HOST:}
   port: ${EMAIL_PORT:587}
   protocol: ${EMAIL_PROTOCOL:smtp}
   username: ${EMAIL_USERNAME:}
   password: ${EMAIL_PASSWORD:}
-  starttls: ${EMAIL_START_TLS:true}
+  enable-starttls: ${EMAIL_ENABLE_START_TLS:true}
+  enable-ssl: ${EMAIL_ENABLE_SSL:false}
+  footer: >
+    Schulschiffverein Großherzogin Elisabeth e.V. <br>
+    Rathausplatz 5, 26931 Elsfleth <br>
+    Sitz: Elsfleth / Weser  Vereinsregister Oldenburg 100123
 
 auth:
   logout-success-url: ${frontend.domain}/login
