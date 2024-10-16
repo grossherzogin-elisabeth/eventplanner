@@ -1,0 +1,6 @@
+custom:
+  data-directory: data-test
+
+spring:
+  flyway:
+    url: jdbc:sqlite:${custom.data-directory}/eventplanner-test.db
