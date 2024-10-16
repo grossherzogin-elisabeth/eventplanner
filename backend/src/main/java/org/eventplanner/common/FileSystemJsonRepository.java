@@ -1,4 +1,4 @@
-package org.eventplanner.utils;
+package org.eventplanner.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

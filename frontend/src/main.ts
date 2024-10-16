@@ -6,6 +6,7 @@ import {
     QualificationRestRepository,
     UserRestRepository,
 } from '@/adapter';
+import { SettingsRestRepository } from '@/adapter/rest/SettingsRestRepository';
 import type {
     AccountRepository,
     Application,
@@ -13,6 +14,7 @@ import type {
     EventRepository,
     PositionRepository,
     QualificationRepository,
+    SettingsRepository,
     UserRepository,
 } from '@/application';
 import { NotificationService } from '@/application';
@@ -29,6 +31,7 @@ import {
 } from '@/application';
 import { AuthService } from '@/application/services/AuthService';
 import { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
+import { AppSettingsUseCase } from '@/application/usecases/AppSettingsUseCase';
 import { IndexedDB, IndexedDBRepository } from '@/common';
 import type { Domain } from '@/domain';
 import { EventService, RegistrationService, UserService } from '@/domain';
@@ -67,90 +70,105 @@ const userRepository: UserRepository = new UserRestRepository();
 const eventRepository: EventRepository = new EventRestRepository();
 const eventRegistrationsRepository: EventRegistrationsRepository = new EventRegistrationRestRepository();
 const qualificationRepository: QualificationRepository = new QualificationRestRepository();
+const settingsRepository: SettingsRepository = new SettingsRestRepository();
 
-// -----------------------------------------------------
-// initialize use cases and application services
-// -----------------------------------------------------
-const authService = new AuthService({
-    config: config,
-});
-const eventCachingService = new EventCachingService({
-    cache: new IndexedDBRepository(indexedDB, StoreNames.Events, { invalidateOnReload: true }),
-    eventRepository: eventRepository,
-    authService: authService,
-});
-const userCachingService = new UserCachingService({
-    cache: new IndexedDBRepository(indexedDB, StoreNames.Users, {
-        invalidateOnReload: true,
-    }),
-    userRepository: userRepository,
-});
-const positionCachingService = new PositionCachingService({
-    cache: new IndexedDBRepository(indexedDB, StoreNames.Positions, {
-        invalidateOnReload: true,
-    }),
-    positionRepository: positionRepository,
-});
-const qualificationCachingService = new QualificationCachingService({
-    cache: new IndexedDBRepository(indexedDB, StoreNames.Qualifications, {
-        invalidateOnReload: true,
-    }),
-    qualificationRepository: qualificationRepository,
-});
-const notificationService = new NotificationService();
-const errorHandlingService = new ErrorHandlingService();
+async function init(): Promise<void> {
+    const serverConfig = await settingsRepository.readConfig();
+    config.menuTitle = serverConfig.menuTitle || 'Reiseplaner';
+    config.tabTitle = serverConfig.tabTitle || 'Reiseplaner';
+    config.supportEmail = serverConfig.supportEmail || 'support@example.de';
+    config.technicalSupportEmail = serverConfig.technicalSupportEmail || 'support@example.de';
 
-const application: Application = {
-    config: config,
-    services: {
-        eventCache: eventCachingService,
-        userCache: userCachingService,
-        positionCache: positionCachingService,
-        notifications: notificationService,
-        errorHandling: errorHandlingService,
-    },
-    usecases: {
-        auth: new AuthUseCase({
-            config: config,
-            accountRepository: accountRepository,
-            authService: authService,
-            userRepository: userRepository,
+    // -----------------------------------------------------
+    // initialize use cases and application services
+    // -----------------------------------------------------
+    const authService = new AuthService({
+        config: config,
+    });
+    const eventCachingService = new EventCachingService({
+        cache: new IndexedDBRepository(indexedDB, StoreNames.Events, { invalidateOnReload: true }),
+        eventRepository: eventRepository,
+        authService: authService,
+    });
+    const userCachingService = new UserCachingService({
+        cache: new IndexedDBRepository(indexedDB, StoreNames.Users, {
+            invalidateOnReload: true,
         }),
-        events: new EventUseCase({
-            authService: authService,
-            notificationService: notificationService,
-            errorHandlingService: errorHandlingService,
-            eventRepository: eventRepository,
-            eventCachingService: eventCachingService,
-            eventRegistrationsRepository: eventRegistrationsRepository,
+        userRepository: userRepository,
+    });
+    const positionCachingService = new PositionCachingService({
+        cache: new IndexedDBRepository(indexedDB, StoreNames.Positions, {
+            invalidateOnReload: true,
         }),
-        users: new UsersUseCase({
-            config: config,
-            notificationService: notificationService,
-            errorHandlingService: errorHandlingService,
-            registrationService: domain.services.registrations,
-            userRepository: userRepository,
-            positionCachingService: positionCachingService,
-            userCachingService: userCachingService,
-            qualificationCachingService: qualificationCachingService,
+        positionRepository: positionRepository,
+    });
+    const qualificationCachingService = new QualificationCachingService({
+        cache: new IndexedDBRepository(indexedDB, StoreNames.Qualifications, {
+            invalidateOnReload: true,
         }),
-        userAdmin: new UserAdministrationUseCase({
-            notificationService: notificationService,
-            errorHandlingService: errorHandlingService,
-            userRepository: userRepository,
-            userCachingService: userCachingService,
-        }),
-        eventAdmin: new EventAdministrationUseCase({
-            notificationService: notificationService,
-            errorHandlingService: errorHandlingService,
-            eventRepository: eventRepository,
-            eventCachingService: eventCachingService,
-            eventRegistrationsRepository: eventRegistrationsRepository,
-        }),
-    },
-};
+        qualificationRepository: qualificationRepository,
+    });
+    const notificationService = new NotificationService();
+    const errorHandlingService = new ErrorHandlingService();
 
-// -----------------------------------------------------
-// initialize ui
-// -----------------------------------------------------
-setupVue({ domain, application });
+    const application: Application = {
+        config: config,
+        services: {
+            eventCache: eventCachingService,
+            userCache: userCachingService,
+            positionCache: positionCachingService,
+            notifications: notificationService,
+            errorHandling: errorHandlingService,
+        },
+        usecases: {
+            auth: new AuthUseCase({
+                config: config,
+                accountRepository: accountRepository,
+                authService: authService,
+                userRepository: userRepository,
+            }),
+            events: new EventUseCase({
+                authService: authService,
+                notificationService: notificationService,
+                errorHandlingService: errorHandlingService,
+                eventRepository: eventRepository,
+                eventCachingService: eventCachingService,
+                eventRegistrationsRepository: eventRegistrationsRepository,
+            }),
+            users: new UsersUseCase({
+                config: config,
+                notificationService: notificationService,
+                errorHandlingService: errorHandlingService,
+                registrationService: domain.services.registrations,
+                userRepository: userRepository,
+                positionCachingService: positionCachingService,
+                userCachingService: userCachingService,
+                qualificationCachingService: qualificationCachingService,
+            }),
+            userAdmin: new UserAdministrationUseCase({
+                notificationService: notificationService,
+                errorHandlingService: errorHandlingService,
+                userRepository: userRepository,
+                userCachingService: userCachingService,
+            }),
+            eventAdmin: new EventAdministrationUseCase({
+                notificationService: notificationService,
+                errorHandlingService: errorHandlingService,
+                eventRepository: eventRepository,
+                eventCachingService: eventCachingService,
+                eventRegistrationsRepository: eventRegistrationsRepository,
+            }),
+            appSettings: new AppSettingsUseCase({
+                notificationService: notificationService,
+                errorHandlingService: errorHandlingService,
+                settingsRepository: settingsRepository,
+            }),
+        },
+    };
+
+    // -----------------------------------------------------
+    // initialize ui
+    // -----------------------------------------------------
+    setupVue({ domain, application });
+}
+init();

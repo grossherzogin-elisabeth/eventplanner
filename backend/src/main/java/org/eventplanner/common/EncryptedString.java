@@ -1,6 +1,5 @@
-package org.eventplanner.users.values;
+package org.eventplanner.common;
 
-import org.eventplanner.users.Crypto;
 import org.springframework.lang.NonNull;
 
 public record EncryptedString(

@@ -2,9 +2,9 @@ package org.eventplanner.users.entities;
 
 import lombok.*;
 import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.users.Crypto;
-import org.eventplanner.users.values.Encryptable;
-import org.eventplanner.users.values.EncryptedString;
+import org.eventplanner.common.Crypto;
+import org.eventplanner.common.Encryptable;
+import org.eventplanner.common.EncryptedString;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

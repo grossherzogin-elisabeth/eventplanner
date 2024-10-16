@@ -2,7 +2,9 @@ import { createApp } from 'vue';
 import type { Application } from '@/application';
 import type { Domain } from '@/domain';
 import {
+    APP_SETTINGS_USE_CASE,
     AUTH_USE_CASE,
+    CONFIG,
     ERROR_HANDLING_SERVICE,
     EVENT_ADMIN_USE_CASE,
     EVENT_USE_CASE,
@@ -26,11 +28,13 @@ export function setupVue(context: { domain: Domain; application: Application }) 
     app.provide(REGISTRATION_SERVICE, context.domain.services.registrations);
     app.provide(EVENT_SERVICE, context.domain.services.events);
 
+    app.provide(CONFIG, context.application.config);
     app.provide(AUTH_USE_CASE, context.application.usecases.auth);
     app.provide(EVENT_USE_CASE, context.application.usecases.events);
     app.provide(EVENT_ADMIN_USE_CASE, context.application.usecases.eventAdmin);
     app.provide(USER_USE_CASE, context.application.usecases.users);
     app.provide(USER_ADMIN_USE_CASE, context.application.usecases.userAdmin);
+    app.provide(APP_SETTINGS_USE_CASE, context.application.usecases.appSettings);
     app.provide(NOTIFICATION_SERVICE, context.application.services.notifications);
     app.provide(ERROR_HANDLING_SERVICE, context.application.services.errorHandling);
     app.mount('#app');

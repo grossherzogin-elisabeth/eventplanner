@@ -1,4 +1,4 @@
-package org.eventplanner.utils;
+package org.eventplanner.common;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

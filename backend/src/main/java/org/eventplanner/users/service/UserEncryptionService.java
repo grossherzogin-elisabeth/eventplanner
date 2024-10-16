@@ -1,8 +1,9 @@
 package org.eventplanner.users.service;
 
+import org.eventplanner.common.EncryptedString;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.users.Crypto;
+import org.eventplanner.common.Crypto;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.EncryptedUserQualification;
 import org.eventplanner.users.entities.UserDetails;
@@ -23,8 +24,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
-import static org.eventplanner.utils.ObjectUtils.streamNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.streamNullable;
 
 @Service
 public class UserEncryptionService {

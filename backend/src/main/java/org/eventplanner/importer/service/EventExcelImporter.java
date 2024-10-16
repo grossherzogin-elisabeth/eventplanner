@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public class EventExcelImporter {
 

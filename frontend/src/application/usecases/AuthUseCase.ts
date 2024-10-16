@@ -1,5 +1,4 @@
-import type { AuthService, Config, UserRepository } from '@/application';
-import type { AccountRepository } from '@/application/ports/AccountRepository';
+import type { AccountRepository, AuthService, Config, UserRepository } from '@/application';
 import { Timer } from '@/common';
 import type { SignedInUser, UserKey } from '@/domain';
 

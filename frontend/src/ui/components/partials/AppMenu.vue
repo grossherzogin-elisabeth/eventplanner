@@ -1,6 +1,6 @@
 <template>
     <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
-        <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">Segelschulschiff Großherzogin Elisabeth</h1>
+        <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
 
         <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-red-100 pl-4 text-red-800 xl:mx-8 xl:pl-6">
             <div class="flex items-center">
@@ -61,6 +61,12 @@
                     <span>Nutzer verwalten</span>
                 </RouterLink>
             </li>
+            <li v-if="signedInUser.permissions.includes(Permission.WRITE_SETTINGS)" class="menu-item">
+                <RouterLink :to="{ name: Routes.AppSettings }">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Einstellungen</span>
+                </RouterLink>
+            </li>
             <li class="menu-item hidden">
                 <RouterLink :to="{ name: Routes.Wiki }">
                     <i class="fa-solid fa-book"></i>
@@ -96,7 +102,7 @@
             </li>
         </ul>
     </div>
-    <div v-else class="menu">
+    <div v-else class="menu animate-pulse">
         <div class="mx-12 my-4 h-6 rounded-full bg-current opacity-10"></div>
         <div class="mx-12 mb-12 h-6 w-1/2 rounded-full bg-current opacity-10"></div>
 
@@ -112,9 +118,10 @@
 import { ref } from 'vue';
 import type { SignedInUser } from '@/domain';
 import { Permission } from '@/domain';
-import { useAuthUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase, useConfig } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 
+const config = useConfig();
 const authUseCase = useAuthUseCase();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());

@@ -1,7 +1,7 @@
 import type { Role } from '@/domain';
+import type { QualificationKey } from '@/domain';
 import type { Address } from '../values/Address';
 import type { PositionKey } from './Position';
-import type { UserQualification } from './UserQualification';
 
 export type UserKey = string;
 export type AuthKey = string;
@@ -38,4 +38,10 @@ export interface UserDetails {
     passNr?: string;
     comment?: string;
     address: Address;
+}
+
+export interface UserQualification {
+    qualificationKey: QualificationKey;
+    expiresAt?: Date;
+    note?: string;
 }

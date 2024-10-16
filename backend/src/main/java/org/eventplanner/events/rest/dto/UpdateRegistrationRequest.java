@@ -8,7 +8,7 @@ import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UpdateRegistrationRequest(
     @NonNull String positionKey,

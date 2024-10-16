@@ -11,4 +11,5 @@ export enum Permission {
     EVENT_TEAM_WRITE_SELF = 'event-team:write-self',
     EVENT_TEAM_WRITE = 'event-team:write',
     BETA_FEATURES = 'beta-features',
+    WRITE_SETTINGS = 'application-settings:write',
 }

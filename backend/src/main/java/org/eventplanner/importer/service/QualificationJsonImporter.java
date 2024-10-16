@@ -2,7 +2,7 @@ package org.eventplanner.importer.service;
 
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.utils.FileSystemJsonRepository;
+import org.eventplanner.common.FileSystemJsonRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

@@ -7,7 +7,7 @@ import java.util.List;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.EncryptedUserQualification;
 import org.eventplanner.users.values.EncryptedAddress;
-import org.eventplanner.users.values.EncryptedString;
+import org.eventplanner.common.EncryptedString;
 import org.eventplanner.users.values.UserKey;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

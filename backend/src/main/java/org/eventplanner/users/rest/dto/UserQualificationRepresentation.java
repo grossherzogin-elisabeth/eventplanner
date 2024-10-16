@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UserQualificationRepresentation(
     @NonNull String qualificationKey,

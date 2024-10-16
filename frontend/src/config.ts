@@ -10,6 +10,10 @@ export const config: Config = {
     authLogoutEndpoint: import.meta.env.VITE_AUTH_LOGOUT_ENDPOINT || '',
     overrideSignedInUserKey: localStorage.getItem('eventplanner.overrideSignedInUserKey') || undefined,
     askBeforeLogin: import.meta.env.VITE_AUTH_ASK_BEFORE_LOGIN === 'true',
+    menuTitle: '',
+    tabTitle: '',
+    technicalSupportEmail: '',
+    supportEmail: '',
 };
 
 export default config;

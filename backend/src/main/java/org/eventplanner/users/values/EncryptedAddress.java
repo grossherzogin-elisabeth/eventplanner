@@ -1,5 +1,6 @@
 package org.eventplanner.users.values;
 
+import org.eventplanner.common.EncryptedString;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

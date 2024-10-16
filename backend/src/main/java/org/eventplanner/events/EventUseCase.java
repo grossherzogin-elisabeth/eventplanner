@@ -19,11 +19,10 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
-import static org.eventplanner.utils.ObjectUtils.applyNullable;
-import static org.eventplanner.utils.ObjectUtils.orElse;
+import static org.eventplanner.common.ObjectUtils.applyNullable;
+import static org.eventplanner.common.ObjectUtils.orElse;
 
 @Service
 public class EventUseCase {

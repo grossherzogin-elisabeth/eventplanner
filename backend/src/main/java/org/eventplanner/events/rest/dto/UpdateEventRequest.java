@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UpdateEventRequest(
     @Nullable String name,

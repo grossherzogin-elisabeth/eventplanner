@@ -10,7 +10,7 @@ import org.springframework.lang.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-import static org.eventplanner.utils.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record SlotJsonEntity(
         @NonNull String key,

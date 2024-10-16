@@ -42,7 +42,8 @@ public class DatabaseConfig {
             "org.eventplanner.events.adapter.jpa",
             "org.eventplanner.positions.adapter.jpa",
             "org.eventplanner.qualifications.adapter.jpa",
-            "org.eventplanner.users.adapter.jpa"
+            "org.eventplanner.users.adapter.jpa",
+            "org.eventplanner.settings.adapter.jpa"
         );
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();

@@ -2,7 +2,7 @@ package org.eventplanner.users.entities;
 
 import lombok.*;
 import org.eventplanner.users.values.EncryptedAddress;
-import org.eventplanner.users.values.EncryptedString;
+import org.eventplanner.common.EncryptedString;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

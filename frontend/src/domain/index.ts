@@ -3,7 +3,7 @@ export * from './entities/Event';
 export * from './entities/Slot';
 export * from './entities/Registration';
 export * from './entities/Position';
-export * from './entities/UserQualification';
+export * from './entities/AppSettings';
 export * from './aggregates/ResolvedSlot';
 export * from './aggregates/ResolvedRegistration';
 export * from './aggregates/ResolvedUserQualification';

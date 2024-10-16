@@ -10,7 +10,6 @@ import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.spec.UpdateUserSpec;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Permission;
-import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static org.eventplanner.utils.ObjectUtils.applyNullable;
+import static org.eventplanner.common.ObjectUtils.applyNullable;
 
 @Service
 public class UserUseCase {

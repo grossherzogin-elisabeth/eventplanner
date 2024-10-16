@@ -1,6 +1,7 @@
 import { inject } from 'vue';
 import type {
     AuthUseCase,
+    Config,
     EventAdministrationUseCase,
     EventUseCase,
     NotificationService,
@@ -8,14 +9,25 @@ import type {
     UsersUseCase,
 } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
+import type { AppSettingsUseCase } from '@/application/usecases/AppSettingsUseCase';
 
+export const CONFIG = 'application.config';
 export const AUTH_USE_CASE = 'application.usecase.auth';
 export const EVENT_USE_CASE = 'application.usecase.events';
 export const USER_USE_CASE = 'application.usecase.users';
 export const USER_ADMIN_USE_CASE = 'application.usecase.useradmin';
 export const EVENT_ADMIN_USE_CASE = 'application.usecase.eventadmin';
+export const APP_SETTINGS_USE_CASE = 'application.usecase.settings';
 export const ERROR_HANDLING_SERVICE = 'application.usecase.errorhandling';
 export const NOTIFICATION_SERVICE = 'application.service.notifications';
+
+export function useConfig(): Config {
+    const config = inject<Config>(CONFIG);
+    if (!config) {
+        throw new Error('Config not found!');
+    }
+    return config;
+}
 
 export function useAuthUseCase(): AuthUseCase {
     const useCase = inject<AuthUseCase>(AUTH_USE_CASE);
@@ -53,6 +65,14 @@ export function useUserAdministrationUseCase(): UserAdministrationUseCase {
     const useCase = inject<UserAdministrationUseCase>(USER_ADMIN_USE_CASE);
     if (!useCase) {
         throw new Error('User admin usecase not found!');
+    }
+    return useCase;
+}
+
+export function useAppSettingsUseCase(): AppSettingsUseCase {
+    const useCase = inject<AppSettingsUseCase>(APP_SETTINGS_USE_CASE);
+    if (!useCase) {
+        throw new Error('App settings usecase not found!');
     }
     return useCase;
 }

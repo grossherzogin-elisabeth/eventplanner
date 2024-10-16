@@ -16,4 +16,10 @@ export interface Config {
 
     overrideSignedInUserKey?: string;
     askBeforeLogin?: boolean;
+
+    // config from service
+    menuTitle: string;
+    tabTitle: string;
+    supportEmail: string;
+    technicalSupportEmail: string;
 }

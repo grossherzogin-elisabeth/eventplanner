@@ -3,6 +3,7 @@ import type { EventCachingService } from './services/EventCachingService';
 import type { NotificationService } from './services/NotificationService';
 import type { PositionCachingService } from './services/PositionCachingService';
 import type { UserCachingService } from './services/UserCachingService';
+import type { AppSettingsUseCase } from './usecases/AppSettingsUseCase';
 import type { AuthUseCase } from './usecases/AuthUseCase';
 import type { EventAdministrationUseCase } from './usecases/EventAdministrationUseCase';
 import type { EventUseCase } from './usecases/EventUseCase';
@@ -23,6 +24,7 @@ export interface Application {
         auth: AuthUseCase;
         events: EventUseCase;
         eventAdmin: EventAdministrationUseCase;
+        appSettings: AppSettingsUseCase;
         users: UsersUseCase;
         userAdmin: UserAdministrationUseCase;
     };

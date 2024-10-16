@@ -31,11 +31,12 @@ import AppFooter from '@/ui/components/partials/AppFooter.vue';
 import AppMenu from '@/ui/components/partials/AppMenu.vue';
 import AppNavbar from '@/ui/components/partials/AppNavbar.vue';
 import VNotifications from '@/ui/components/partials/VNotifications.vue';
-import { useAuthUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase, useConfig } from '@/ui/composables/Application';
 import { useRouterStack } from '@/ui/composables/RouterStack';
 import { useViewportSize } from '@/ui/composables/ViewportSize';
 
 useViewportSize();
+const config = useConfig();
 const routerStack = useRouterStack();
 const authUseCase = useAuthUseCase();
 const router = useRouter();
@@ -54,9 +55,9 @@ async function init(): Promise<void> {
 
 function setTitle(): void {
     if (title.value) {
-        document.title = `Lissi App | ${title.value}`;
+        document.title = `${config.tabTitle} | ${title.value}`;
     } else {
-        document.title = 'Lissi App';
+        document.title = config.tabTitle;
     }
 }
 
