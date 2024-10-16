@@ -23,7 +23,7 @@ public class TestDataGenerationService {
         @Autowired EventRepository eventRepository,
         @Autowired UserRepository userRepository,
         @Autowired UserService userService,
-        @Value("${custom.generate-test-data}") boolean generateTestData
+        @Value("${data.generate-test-data}") boolean generateTestData
     ) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;

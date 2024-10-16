@@ -1,7 +1,6 @@
 package org.eventplanner.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -13,7 +12,6 @@ import java.util.*;
 
 public class FileSystemJsonRepository<E> {
 
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final String directory;
     private final Class<E> entityClass;
@@ -127,10 +125,18 @@ public class FileSystemJsonRepository<E> {
     }
 
     protected String toJson(E entity) {
-        return gson.toJson(entity);
+        try {
+            return new ObjectMapper().writeValueAsString(entity);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to convert to json", e);
+        }
     }
 
     protected E fromJson(String json) {
-        return gson.fromJson(json, entityClass);
+        try {
+            return new ObjectMapper().readValue(json, entityClass);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse json", e);
+        }
     }
 }

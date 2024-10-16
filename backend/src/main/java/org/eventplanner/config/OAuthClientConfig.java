@@ -17,8 +17,8 @@ public class OAuthClientConfig {
     private final OAuthLogoutHandler oAuthLogoutHandler;
 
     public OAuthClientConfig(
-        @Value("${custom.login-success-url}") String loginSuccessUrl,
-        @Value("${custom.admins}") String admins,
+        @Value("${auth.login-success-url}") String loginSuccessUrl,
+        @Value("${auth.admins}") String admins,
         OAuthLogoutHandler oAuthLogoutHandler
     ) {
         this.loginSuccessUrl = loginSuccessUrl;

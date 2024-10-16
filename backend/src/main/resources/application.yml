@@ -5,23 +5,34 @@ build:
   commit: ${BUILD_COMMIT:local}
   branch: ${BUILD_BRANCH:main}
 
-custom:
-  data-directory: data
-  data-encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
-  users-excel-password: ${USERS_EXCEL_PASSWORD:}
+email:
+  host: ${EMAIL_HOST:}
+  port: ${EMAIL_PORT:587}
+  protocol: ${EMAIL_PROTOCOL:smtp}
+  username: ${EMAIL_USERNAME:}
+  password: ${EMAIL_PASSWORD:}
+  starttls: ${EMAIL_START_TLS:true}
+
+auth:
   logout-success-url: ${frontend.domain}/login
   login-success-url: ${frontend.domain}
   admins: ${ADMIN_EMAILS:}
-  generate-test-data: false
-
-auth:
-  # 60 * 60 * 24 * 30
+  # 60 * 60 * 24 * 30 seconds
   session-timout: 2592000
 
 security:
   # TODO csrf protection currently blocks all post requests even if the xsrf token is present
   # temporary disabled until further investigation
   enable-csrf: false
+
+data:
+  directory: ${DATA_DIRECTORY:data}
+  encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
+  db-url: jdbc:sqlite:${data.directory}/eventplanner.db
+  generate-test-data: false
+  import:
+    users-excel-password: ${USERS_EXCEL_PASSWORD:}
+    directory: ${DATA_IMPORT_DIRECTORY:${data.directory}/import}
 
 spring:
   jpa:
@@ -30,7 +41,7 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    url: jdbc:sqlite:${custom.data-directory}/eventplanner.db
+    url: ${data.db-url}
   security:
     oauth2:
       client:

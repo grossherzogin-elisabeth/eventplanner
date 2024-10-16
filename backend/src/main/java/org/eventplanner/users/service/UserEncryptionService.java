@@ -32,7 +32,7 @@ public class UserEncryptionService {
     private final Crypto crypto;
 
     public UserEncryptionService(
-        @Value("${custom.data-encryption-password}") String password
+        @Value("${data.encryption-password}") String password
     ) {
         this.crypto = new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password);
     }

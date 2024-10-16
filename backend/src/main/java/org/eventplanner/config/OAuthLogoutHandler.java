@@ -27,7 +27,7 @@ public class OAuthLogoutHandler implements LogoutHandler {
     public OAuthLogoutHandler(
         final ClientRegistrationRepository clientRegistrationRepository,
         final OAuth2ClientProperties oAuth2ClientProperties,
-        @Value("${custom.logout-success-url}") String logoutSuccessUrl
+        @Value("${auth.logout-success-url}") String logoutSuccessUrl
     ) {
         this.clientRegistrationRepository = clientRegistrationRepository;
         this.knownClientRegistrationIds = Set.copyOf(oAuth2ClientProperties.getRegistration().keySet());

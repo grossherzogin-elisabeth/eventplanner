@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -17,16 +18,19 @@ import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@AllArgsConstructor
 @EnableTransactionManagement
 public class DatabaseConfig {
-    private final Environment env;
+    private final String databaseUrl;
+
+    public DatabaseConfig(@Value("${data.db-url}") String databaseUrl) {
+        this.databaseUrl = databaseUrl;
+    }
 
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.sqlite.JDBC");
-        dataSource.setUrl("jdbc:sqlite:data/eventplanner.db");
+        dataSource.setUrl(databaseUrl);
         return dataSource;
     }
 

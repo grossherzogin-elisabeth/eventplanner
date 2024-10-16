@@ -40,7 +40,7 @@ public class ImporterUseCase {
     private final PositionRepository positionRepository;
     private final QualificationRepository qualificationRepository;
     private final UserService userService;
-    private final String dataDirectory;
+    private final String dataImportDirectory;
     private final String password;
 
     public ImporterUseCase(
@@ -49,16 +49,16 @@ public class ImporterUseCase {
             @Autowired UserService userService,
             PositionRepository positionRepository,
             QualificationRepository qualificationRepository,
-            @Value("${custom.data-directory}") String dataDirectory,
-            @Value("${custom.users-excel-password}") String password,
-            @Value("${custom.generate-test-data}") boolean generateTestData
+            @Value("${data.import.directory}") String dataImportDirectory,
+            @Value("${data.import.users-excel-password}") String password,
+            @Value("${data.generate-test-data}") boolean generateTestData
     ) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.positionRepository = positionRepository;
         this.qualificationRepository = qualificationRepository;
         this.userService = userService;
-        this.dataDirectory = dataDirectory;
+        this.dataImportDirectory = dataImportDirectory;
         this.password = password;
         if (!generateTestData) {
             importOnStartup();
@@ -66,19 +66,19 @@ public class ImporterUseCase {
     }
 
     private void importOnStartup() {
-        var positions = new File(dataDirectory + "/import/positions");
+        var positions = new File(dataImportDirectory + "/positions");
         if (positions.exists()) {
             log.info("Importing positions from {}", positions.getAbsolutePath());
             importPositionsFromDirectory(positions);
         }
 
-        var qualifications = new File(dataDirectory + "/import/qualifications");
+        var qualifications = new File(dataImportDirectory + "/qualifications");
         if (qualifications.exists()) {
             log.info("Importing qualifications from {}", qualifications.getAbsolutePath());
             importQualificationsFromDirectory(qualifications);
         }
 
-        var users = new File(dataDirectory + "/import/users.encrypted.xlsx");
+        var users = new File(dataImportDirectory + "/users.encrypted.xlsx");
         if (users.exists()) {
             log.info("Importing users from {}", users.getAbsolutePath());
             try {
@@ -88,7 +88,7 @@ public class ImporterUseCase {
             }
         }
 
-        var events2023 = new File(dataDirectory + "/import/events-2023.xlsx");
+        var events2023 = new File(dataImportDirectory + "/events-2023.xlsx");
         if (events2023.exists()) {
             log.info("Importing events 2023 from {}", events2023.getAbsolutePath());
             try {
@@ -98,7 +98,7 @@ public class ImporterUseCase {
             }
         }
 
-        var events2024 = new File(dataDirectory + "/import/events-2024.xlsx");
+        var events2024 = new File(dataImportDirectory + "/events-2024.xlsx");
         if (events2024.exists()) {
             log.info("Importing events 2024 from {}", events2024.getAbsolutePath());
             try {
@@ -112,7 +112,7 @@ public class ImporterUseCase {
     public List<ImportError> importEvents(@NonNull SignedInUser signedInUser, int year, InputStream stream) {
         signedInUser.assertHasPermission(Permission.WRITE_EVENTS);
 
-        var tempFile = new File(dataDirectory + "/import/events-" + year + ".tmp.xlsx");
+        var tempFile = new File(dataImportDirectory + "/events-" + year + ".tmp.xlsx");
         try {
             new File(tempFile.getParent()).mkdirs();
             Files.copy(stream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -123,7 +123,7 @@ public class ImporterUseCase {
         var errors = importEventsFromFile(year, tempFile);
 
         try {
-            var file = new File(dataDirectory + "/import/events-" + year + ".xlsx");
+            var file = new File(dataImportDirectory + "/events-" + year + ".xlsx");
             Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("Failed to save events import file", e);
@@ -146,7 +146,7 @@ public class ImporterUseCase {
     public void importUsers(@NonNull SignedInUser signedInUser, InputStream stream) {
         signedInUser.assertHasPermission(Permission.WRITE_USERS);
 
-        var tempFile = new File(dataDirectory + "/import/users.tmp.xlsx");
+        var tempFile = new File(dataImportDirectory + "/users.tmp.xlsx");
         try {
             new File(tempFile.getParent()).mkdirs();
             Files.copy(stream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -157,7 +157,7 @@ public class ImporterUseCase {
         importUsersFromFile(tempFile);
 
         try {
-            var file = new File(dataDirectory + "/import/users.xlsx");
+            var file = new File(dataImportDirectory + "/users.encrypted.xlsx");
             Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("Failed to save users import file", e);
