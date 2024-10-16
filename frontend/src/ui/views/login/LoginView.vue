@@ -57,19 +57,12 @@
                                 <button class="btn-ghost">
                                     <span class="mx-auto"> Passwort vergessen? </span>
                                 </button>
-                                <button
-                                    class="btn-primary sm:mb-0"
-                                    @click="authUseCase.loginWithIdentityProvider('default')"
-                                >
+                                <button class="btn-primary sm:mb-0" @click="authUseCase.login()">
                                     <span class="mx-auto py-2"> Anmelden </span>
                                 </button>
                             </div>
                         </div>
-                        <button
-                            v-else
-                            class="btn-primary mb-4"
-                            @click="authUseCase.loginWithIdentityProvider('default')"
-                        >
+                        <button v-else class="btn-primary mb-4" @click="authUseCase.login()">
                             <i class="fa-solid fa-user text-xl sm:mx-4" />
                             <span class="mx-auto py-2"> Anmelden mit Lissi Account </span>
                         </button>
@@ -77,15 +70,15 @@
                         <div class="flex justify-center py-8">
                             <p>oder</p>
                         </div>
-                        <button class="btn-secondary mb-4" @click="authUseCase.loginWithIdentityProvider('google')">
+                        <button class="btn-secondary mb-4" @click="authUseCase.login()">
                             <i class="fa-brands fa-google text-xl sm:mx-4" />
                             <span class="mx-auto py-2"> Anmelden mit Google </span>
                         </button>
-                        <button class="btn-secondary mb-4" @click="authUseCase.loginWithIdentityProvider('apple')">
+                        <button class="btn-secondary mb-4" @click="authUseCase.login()">
                             <i class="fa-brands fa-apple text-xl sm:mx-4" />
                             <span class="mx-auto py-2"> Anmelden mit Apple </span>
                         </button>
-                        <button class="btn-secondary mb-4" @click="authUseCase.loginWithIdentityProvider('microsoft')">
+                        <button class="btn-secondary mb-4" @click="authUseCase.login()">
                             <i class="fa-brands fa-microsoft text-xl sm:mx-4" />
                             <span class="mx-auto py-2"> Anmelden mit Microsoft </span>
                         </button>
@@ -119,7 +112,7 @@ const password = ref<string>('');
 
 async function init(): Promise<void> {
     if (!enableLoginView) {
-        await authUseCase.loginWithIdentityProvider('default');
+        await authUseCase.login();
     } else {
         emit('update:title', 'Login');
         if (!authUseCase.isLoggedIn()) {

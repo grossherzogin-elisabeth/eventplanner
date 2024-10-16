@@ -50,15 +50,8 @@ export class AuthUseCase {
         return undefined;
     }
 
-    /**
-     * Starts the login flow
-     */
-    public async loginWithIdentityProvider(provider: string): Promise<void> {
-        if (provider != 'google') {
-            alert(`Der Login mit ${provider} ist noch nicht implementiert.`);
-            return;
-        }
-        window.location.href = `${this.config.authLoginEndpoint}/${provider}`;
+    public async login(): Promise<void> {
+        window.location.href = `${this.config.authLoginEndpoint}/default`;
         await Timer.wait(500);
     }
 
