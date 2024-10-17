@@ -18,6 +18,7 @@ email:
   enable-starttls: ${EMAIL_ENABLE_START_TLS:true}
   enable-ssl: ${EMAIL_ENABLE_SSL:false}
   footer: ${EMAIL_FOOTER:}
+  recipients-whitelist:
 
 auth:
   logout-success-url: ${frontend.domain}/login
