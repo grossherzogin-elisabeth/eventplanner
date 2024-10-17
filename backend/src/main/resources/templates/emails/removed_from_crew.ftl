@@ -6,15 +6,8 @@
                 Moin ${user.firstName},
             </p>
             <p>
-                Du bist füt die Reise <b>${event.name}</b> vom <b>${event_start_date}</b> bis zum
-                <b>${event_end_date}</b> als Crew eingeplant. Bitte bestätige deine Teilnahme <b>bis spätestens
-                ${deadline}</b> durch Klick auf den unten stehenden Link. Wir wünschen dir eine schöne Reise!
-            </p>
-            <p>
-                <a href="${confirm_link}">Ja, ich nehme teil!</a>
-            </p>
-            <p>
-                <a href="${deny_link}">Ich kann leider nicht teilnehmen und muss die Reise absagen.</a>
+                Du bist nun nicht mehr für die Reise <b>${event.name}</b> vom <b>${event_start_date}</b> bis zum
+                <b>${event_end_date}</b> als Crew eingeplant.
             </p>
             <p>
                 Tipp: Du kannst den Status deiner Reisen jederzeit in der App unter

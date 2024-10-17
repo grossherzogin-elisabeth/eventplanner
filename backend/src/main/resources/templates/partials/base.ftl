@@ -78,8 +78,8 @@
 
         .footer {
             clear: both;
-            padding-top: 24px;
-            text-align: center;
+            padding: 24px;
+            text-align: left;
             width: 100%;
         }
 
@@ -88,8 +88,8 @@
         .footer span,
         .footer a {
             color: #9a9ea6;
-            font-size: 16px;
-            text-align: center;
+            font-size: 12px;
+            text-align: left;
         }
         /* -------------------------------------
         TYPOGRAPHY
@@ -260,6 +260,10 @@
                 max-width: 100% !important;
                 width: 100% !important;
             }
+            .footer {
+                padding-left: 0;
+                padding-right: 0;
+            }
         }
         /* -------------------------------------
         PRESERVE THESE STYLES IN THE HEAD
@@ -309,6 +313,12 @@
                     <tr>
                         <td class="content-block">
                             ${footer}
+                            <p>
+                                Dies ist eine automatisch generierte Email. Du erhältst diese Email, weil mit deiner
+                                Email Adresse ein Nutzer beim Schulschiffverein Großherzogin Elisabeth e.V.
+                                registriert ist. Wenn du keine weiteren Emails erhalten möchtest, gib gerne kurz per
+                                Email an admin@großherzogin-elisabeth.de Bescheid.
+                            </p>
                         </td>
                     </tr>
                     <tr>

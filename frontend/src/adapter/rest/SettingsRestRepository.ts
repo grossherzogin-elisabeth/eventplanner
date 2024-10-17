@@ -53,7 +53,7 @@ export class SettingsRestRepository implements SettingsRepository {
                 enableStartTls: representation.email.enableStartTls,
                 enableSSL: representation.email.enableSSL,
                 username: representation.email.username,
-                password: '**************',
+                password: undefined,
             },
             ui: {
                 tabTitle: representation.ui.tabTitle,

@@ -1,8 +1,10 @@
 package org.eventplanner.events;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
+import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.spec.CreateEventSpec;
 import org.eventplanner.events.spec.CreateRegistrationSpec;
 import org.eventplanner.events.spec.UpdateEventSpec;
@@ -10,7 +12,11 @@ import org.eventplanner.events.spec.UpdateRegistrationSpec;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.RegistrationKey;
+import org.eventplanner.notifications.service.NotificationService;
 import org.eventplanner.users.entities.SignedInUser;
+import org.eventplanner.users.entities.User;
+import org.eventplanner.users.entities.UserDetails;
+import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -18,8 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.eventplanner.common.ObjectUtils.applyNullable;
 import static org.eventplanner.common.ObjectUtils.orElse;
@@ -27,9 +32,17 @@ import static org.eventplanner.common.ObjectUtils.orElse;
 @Service
 public class EventUseCase {
     private final EventRepository eventRepository;
+    private final NotificationService notificationService;
+    private final UserService userService;
 
-    public EventUseCase(@Autowired EventRepository eventRepository) {
+    public EventUseCase(
+        @Autowired EventRepository eventRepository,
+        @Autowired NotificationService notificationService,
+        @Autowired UserService userService
+    ) {
         this.eventRepository = eventRepository;
+        this.notificationService = notificationService;
+        this.userService = userService;
     }
 
     public @NonNull List<Event> getEvents(@NonNull SignedInUser signedInUser, int year) {
@@ -75,6 +88,27 @@ public class EventUseCase {
         signedInUser.assertHasAnyPermission(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_TEAM);
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+
+        var updatedSlots = spec.slots();
+        List<UserDetails> usersAddedToCrew = new LinkedList<>();
+        List<UserDetails> usersRemovedFromCrew = new LinkedList<>();
+        if (updatedSlots != null) {
+            var registrationsWithSlotBefore = event.getSlots().stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
+            var registrationsWithSlotAfter = updatedSlots.stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
+
+            var registrationsAddedToCrew = registrationsWithSlotAfter.stream()
+                    .filter((key -> !registrationsWithSlotBefore.contains(key)))
+                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                    .toList();
+            usersAddedToCrew = mapRegistrationsToUsers(registrationsAddedToCrew);
+
+            var registrationsRemovedFromCrew = registrationsWithSlotBefore.stream()
+                    .filter((key -> !registrationsWithSlotAfter.contains(key)))
+                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                    .toList();
+            usersRemovedFromCrew = mapRegistrationsToUsers(registrationsRemovedFromCrew);
+        }
+
         if (signedInUser.hasPermission(Permission.WRITE_EVENTS)) {
             applyNullable(spec.name(), event::setName);
             applyNullable(spec.description(), event::setDescription);
@@ -88,7 +122,10 @@ public class EventUseCase {
             applyNullable(spec.slots(), event::setSlots);
         }
 
-        return this.eventRepository.update(event);
+        var updatedEvent = this.eventRepository.update(event);
+        usersAddedToCrew.forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
+        usersRemovedFromCrew.forEach(user -> notificationService.sendRemovedFromCrewNotification(user, updatedEvent));
+        return updatedEvent;
     }
 
     public void deleteEvent(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) {
@@ -104,18 +141,21 @@ public class EventUseCase {
         @NonNull CreateRegistrationSpec spec
     ) {
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
-
-        if (spec.userKey() != null) {
+        var userKey = spec.userKey();
+        if (userKey != null) {
             // validate permission and request for user registration
-            if (spec.userKey().equals(signedInUser.key())) {
+            if (userKey.equals(signedInUser.key())) {
                 signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
             } else {
                 signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
             }
             if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUser()))) {
-                throw new IllegalArgumentException("Registration for " + spec.userKey().value() + " already exists");
+                throw new IllegalArgumentException("Registration for " + userKey.value() + " already exists");
             }
-            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), spec.userKey(), null, spec.note()));
+            var user = userService.getUserByKey(userKey)
+                    .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not exist"));
+            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), userKey, null, spec.note()));
+            notificationService.sendAddedToWaitingListNotification(user, event);
         } else if (spec.name() != null) {
             // validate permission and request for guest registration
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
@@ -146,8 +186,22 @@ public class EventUseCase {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
         }
 
+        var hasAssignedSlot = event.getSlots().stream().anyMatch(slot -> registration.getKey().equals(slot.getAssignedRegistration()));
         event.removeRegistration(registrationKey);
-        return this.eventRepository.update(event);
+        event = this.eventRepository.update(event);
+
+        var userKey = registration.getUser();
+        if (userKey != null) {
+            var maybeUser = userService.getUserByKey(userKey);
+            if (maybeUser.isPresent()) {
+                if (hasAssignedSlot) {
+                    notificationService.sendRemovedFromCrewNotification(maybeUser.get(), event);
+                } else {
+                    notificationService.sendRemovedFromWaitingListNotification(maybeUser.get(), event);
+                }
+            }
+        }
+        return event;
     }
 
     public @NonNull Event updateRegistration(
@@ -165,7 +219,7 @@ public class EventUseCase {
         if (signedInUser.key().equals(registration.getUser())) {
             signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
             registration.setPosition(spec.positionKey());
-
+            registration.setNote(spec.note());
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
             registration.setPosition(spec.positionKey());
@@ -175,5 +229,14 @@ public class EventUseCase {
 
         event.updateRegistration(registrationKey, registration);
         return this.eventRepository.update(event);
+    }
+
+    private List<UserDetails> mapRegistrationsToUsers(List<Registration> registrations) {
+        return registrations.stream().map(Registration::getUser)
+                .filter(Objects::nonNull)
+                .map(userService::getUserByKey)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
     }
 }

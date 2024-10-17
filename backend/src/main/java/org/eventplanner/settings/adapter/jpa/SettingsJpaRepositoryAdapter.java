@@ -76,27 +76,57 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
     @Override
     public Settings updateSettings(Settings settings) {
         var entities = new ArrayList<SettingsJpaEntity>();
-        entities.add(new SettingsJpaEntity("email.from", settings.emailSettings().getFrom()));
-        entities.add(new SettingsJpaEntity("email.fromDisplayName", settings.emailSettings().getFromDisplayName()));
-        entities.add(new SettingsJpaEntity("email.replyTo", settings.emailSettings().getReplyTo()));
-        entities.add(new SettingsJpaEntity("email.replyToDisplayName", settings.emailSettings().getReplyToDisplayName()));
-        entities.add(new SettingsJpaEntity("email.host", settings.emailSettings().getHost()));
-        entities.add(new SettingsJpaEntity("email.port", String.valueOf(settings.emailSettings().getPort())));
-        entities.add(new SettingsJpaEntity("email.enableSSL", String.valueOf(settings.emailSettings().getEnableSSL())));
-        entities.add(new SettingsJpaEntity("email.enableStartTLS", String.valueOf(settings.emailSettings().getEnableStartTls())));
-        entities.add(new SettingsJpaEntity("email.username", settings.emailSettings().getUsername()));
-        if (settings.emailSettings().getPassword() != null) {
-            var encryptedPassword = crypto.encrypt(settings.emailSettings().getPassword()).value();
-            entities.add(new SettingsJpaEntity("email.password", encryptedPassword));
-        } else {
-            entities.add(new SettingsJpaEntity("email.password", null));
+        if (settings.emailSettings().getFrom() != null) {
+            entities.add(new SettingsJpaEntity("email.from", settings.emailSettings().getFrom()));
         }
-        entities.add(new SettingsJpaEntity("email.footer", settings.emailSettings().getFooter()));
+        if (settings.emailSettings().getFromDisplayName() != null) {
+            entities.add(new SettingsJpaEntity("email.fromDisplayName", settings.emailSettings().getFromDisplayName()));
+        }
+        if (settings.emailSettings().getReplyTo() != null) {
+            entities.add(new SettingsJpaEntity("email.replyTo", settings.emailSettings().getReplyTo()));
+        }
+        if (settings.emailSettings().getReplyToDisplayName() != null) {
+            entities.add(new SettingsJpaEntity("email.replyToDisplayName", settings.emailSettings().getReplyToDisplayName()));
+        }
+        if (settings.emailSettings().getHost() != null) {
+            entities.add(new SettingsJpaEntity("email.host", settings.emailSettings().getHost()));
+        }
+        if (settings.emailSettings().getPort() != null) {
+            entities.add(new SettingsJpaEntity("email.port", String.valueOf(settings.emailSettings().getPort())));
+        }
+        if (settings.emailSettings().getEnableSSL() != null) {
+            entities.add(new SettingsJpaEntity("email.enableSSL", String.valueOf(settings.emailSettings().getEnableSSL())));
+        }
+        if (settings.emailSettings().getEnableStartTls() != null) {
+            entities.add(new SettingsJpaEntity("email.enableStartTLS", String.valueOf(settings.emailSettings().getEnableStartTls())));
+        }
+        if (settings.emailSettings().getUsername() != null) {
+            entities.add(new SettingsJpaEntity("email.username", settings.emailSettings().getUsername()));
+        }
+        if (settings.emailSettings().getPassword() != null) {
+            if (settings.emailSettings().getPassword().isBlank()) {
+                entities.add(new SettingsJpaEntity("email.password", null));
+            } else {
+                var encryptedPassword = crypto.encrypt(settings.emailSettings().getPassword()).value();
+                entities.add(new SettingsJpaEntity("email.password", encryptedPassword));
+            }
+        }
+        if (settings.emailSettings().getFooter() != null) {
+            entities.add(new SettingsJpaEntity("email.footer", settings.emailSettings().getFooter()));
+        }
 
-        entities.add(new SettingsJpaEntity("ui.menuTitle", settings.uiSettings().menuTitle()));
-        entities.add(new SettingsJpaEntity("ui.tabTitle", settings.uiSettings().tabTitle()));
-        entities.add(new SettingsJpaEntity("ui.technicalSupportEmail", settings.uiSettings().technicalSupportEmail()));
-        entities.add(new SettingsJpaEntity("ui.supportEmail", settings.uiSettings().supportEmail()));
+        if (settings.uiSettings().menuTitle() != null) {
+            entities.add(new SettingsJpaEntity("ui.menuTitle", settings.uiSettings().menuTitle()));
+        }
+        if (settings.uiSettings().tabTitle() != null) {
+            entities.add(new SettingsJpaEntity("ui.tabTitle", settings.uiSettings().tabTitle()));
+        }
+        if (settings.uiSettings().technicalSupportEmail() != null) {
+            entities.add(new SettingsJpaEntity("ui.technicalSupportEmail", settings.uiSettings().technicalSupportEmail()));
+        }
+        if (settings.uiSettings().supportEmail() != null) {
+            entities.add(new SettingsJpaEntity("ui.supportEmail", settings.uiSettings().supportEmail()));
+        }
 
         settingsJpaRepository.saveAll(entities);
         return getSettings();

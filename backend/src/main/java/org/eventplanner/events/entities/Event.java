@@ -37,6 +37,12 @@ public class Event {
 
     public void removeRegistration(RegistrationKey registrationKey) {
         registrations = registrations.stream().filter(r -> !registrationKey.equals(r.getKey())).toList();
+        slots = slots.stream().map(s -> {
+            if (registrationKey.equals(s.getAssignedRegistration())) {
+                s.setAssignedRegistration(null);
+            }
+            return s;
+        }).toList();
     }
 
     public void updateRegistration(RegistrationKey registrationKey, Registration registration) {

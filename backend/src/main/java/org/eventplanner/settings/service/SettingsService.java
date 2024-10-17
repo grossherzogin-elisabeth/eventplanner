@@ -33,6 +33,9 @@ public class SettingsService {
             settings.emailSettings().setUsername(defaultEmailSettings.getUsername());
             settings.emailSettings().setPassword(defaultEmailSettings.getPassword());
         }
+        if (settings.emailSettings().getFooter() == null) {
+            settings.emailSettings().setFooter(defaultEmailSettings.getFooter());
+        }
         return settings;
     }
     public Settings updateSettings(Settings settings) {

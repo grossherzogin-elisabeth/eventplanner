@@ -25,7 +25,8 @@ public record UpdateSettingsRequest(
                 email.enableSSL(),
                 email.enableStartTls(),
                 email.username(),
-                email.password()
+                email.password(),
+                email.footer()
             ),
             new UiSettings(
                 ui.menuTitle(),
@@ -46,7 +47,8 @@ public record UpdateSettingsRequest(
         @Nullable Boolean enableSSL,
         @Nullable Boolean enableStartTls,
         @Nullable String username,
-        @Nullable String password
+        @Nullable String password,
+        @Nullable String footer
     ) implements Serializable {
     }
 

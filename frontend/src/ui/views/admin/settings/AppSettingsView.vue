@@ -73,7 +73,12 @@
                                 </div>
                                 <div class="-mx-4 mb-4">
                                     <VInputLabel>Password</VInputLabel>
-                                    <VInputText v-model="settings.email.password" type="password" required />
+                                    <VInputText
+                                        v-model="settings.email.password"
+                                        type="password"
+                                        placeholder="****************"
+                                        required
+                                    />
                                 </div>
                             </section>
                         </div>
@@ -98,7 +103,7 @@ import { ref } from 'vue';
 import type { AppSettings } from '@/domain';
 import { AsyncButton, VInputCheckBox, VInputLabel, VInputNumber, VInputText, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import { useAppSettingsUseCase, useAuthUseCase } from '@/ui/composables/Application';
+import { useAppSettingsUseCase } from '@/ui/composables/Application';
 
 enum Tab {
     GENERAL_SETTINGS = 'Allgemein',
@@ -112,7 +117,6 @@ interface RouteEmits {
 const emit = defineEmits<RouteEmits>();
 
 const appSettingsUseCase = useAppSettingsUseCase();
-const authUseCase = useAuthUseCase();
 
 const tabs = [Tab.GENERAL_SETTINGS, Tab.EMAIL];
 const tab = ref<Tab>(tabs[0]);

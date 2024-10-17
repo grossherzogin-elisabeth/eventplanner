@@ -17,10 +17,7 @@ email:
   password: ${EMAIL_PASSWORD:}
   enable-starttls: ${EMAIL_ENABLE_START_TLS:true}
   enable-ssl: ${EMAIL_ENABLE_SSL:false}
-  footer: >
-    Schulschiffverein Großherzogin Elisabeth e.V. <br>
-    Rathausplatz 5, 26931 Elsfleth <br>
-    Sitz: Elsfleth / Weser  Vereinsregister Oldenburg 100123
+  footer: ${EMAIL_FOOTER:}
 
 auth:
   logout-success-url: ${frontend.domain}/login

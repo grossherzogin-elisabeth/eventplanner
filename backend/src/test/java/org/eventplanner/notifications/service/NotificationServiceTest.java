@@ -1,18 +1,18 @@
 package org.eventplanner.notifications.service;
 
-import org.eventplanner.notifications.entities.Notification;
-import org.eventplanner.notifications.entities.NotificationType;
+import org.eventplanner.notifications.values.Notification;
+import org.eventplanner.notifications.values.NotificationType;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.values.UserKey;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-
 @SpringBootTest
 @ActiveProfiles(profiles = { "test", "local" })
+@Disabled("need to configure env for tests")
 class NotificationServiceTest {
 
     @Autowired
@@ -21,11 +21,11 @@ class NotificationServiceTest {
     @Test
     void test() throws Exception {
         var user = new UserDetails(new UserKey(""), "Max", "Mustermann");
-        user.setEmail("malte.schwitters@outlook.de");
-
-        var notification = new Notification();
-        notification.setType(NotificationType.ADDED_TO_WAITING_LIST);
-        notification.setTitle("Du wurdest zur Warteliste hinzugefügt");
-        notificationService.sendNotification(notification, List.of(user));
+        var notification = new Notification(NotificationType.ADDED_TO_WAITING_LIST);
+        notification.setTitle("Deine Anmeldung zu 'Sommerreise 1'");
+        notification.getProps().put("event_name", "Sommerreise 1");
+        notification.getProps().put("event_start_date", "21.08.2024");
+        notification.getProps().put("event_end_date", "27.08.2024");
+        notificationService.sendNotification(notification, user);
     }
 }
