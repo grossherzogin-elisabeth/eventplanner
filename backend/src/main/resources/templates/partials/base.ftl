@@ -312,7 +312,16 @@
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td class="content-block">
-                            ${footer}
+                            <p>
+                                Schulschiffverein Großherzogin Elisabeth e.V.<br>
+                                Rathausplatz 5, 26931 Elsfleth<br>
+                                Sitz Elsfleth / Weser Vereinsregister Oldenburg 100123
+                            </p>
+                            <p>
+                                Email: <a href="mailto:office@grossherzogin-elisabeth.de">office@grossherzogin-elisabeth.de</a><br>
+                                Tel. <a href="tel:+49 4404 988672">04404 - 988672</a><br>
+                                Bürozeiten: Mo. - Do. 09:00 - 12:00 Uhr und 14:00 - 16:30 Uhr, Fr. 09:00 - 12:00 Uhr
+                            </p>
                             <p>
                                 Dies ist eine automatisch generierte Email. Du erhältst diese Email, weil mit deiner
                                 Email Adresse ein Nutzer beim Schulschiffverein Großherzogin Elisabeth e.V.
