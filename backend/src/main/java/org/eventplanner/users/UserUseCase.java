@@ -141,7 +141,7 @@ public class UserUseCase {
     }
 
     public void deleteUser(@NonNull SignedInUser signedInUser, @NonNull UserKey userKey) {
-        signedInUser.assertHasPermission(Permission.WRITE_USERS);
+        signedInUser.assertHasPermission(Permission.DELETE_USERS);
 
         userService.deleteUser(userKey);
     }

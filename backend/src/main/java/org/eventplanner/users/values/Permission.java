@@ -13,6 +13,7 @@ public enum Permission {
     WRITE_OWN_USER_DETAILS("user-details:write-self"),
     READ_USER_DETAILS("user-details:read"),
     WRITE_USERS("user-details:write"),
+    DELETE_USERS("user:delete"),
     READ_POSITIONS("positions:read"),
     WRITE_POSITIONS("positions:write"),
     READ_QUALIFICATIONS("qualifications:read"),

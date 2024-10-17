@@ -130,7 +130,7 @@
                                     <span>Anmeldung hinzufügen</span>
                                 </li>
                                 <li
-                                    v-if="signedInUser.roles.includes(Role.ADMIN)"
+                                    v-if="signedInUser.permissions.includes(Permission.DELETE_USERS)"
                                     class="context-menu-item text-red-700"
                                     @click="deleteUser(item)"
                                 >
@@ -210,6 +210,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { ArrayUtils } from '@/common';
 import type { Position, User } from '@/domain';
+import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VInputText, VTable, VTabs } from '@/ui/components/common';
