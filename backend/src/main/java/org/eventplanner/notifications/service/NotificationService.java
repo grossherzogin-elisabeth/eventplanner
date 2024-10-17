@@ -47,7 +47,10 @@ public class NotificationService {
         this.freemarkerConfig = freemarkerConfig;
         this.settingsService = settingsService;
         this.frontendDomain = frontendDomain;
-        this.recipientsWhitelist = Arrays.stream(recipientsWhitelist.split(",")).map(String::trim).toList();
+        this.recipientsWhitelist = Arrays.stream(recipientsWhitelist.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .toList();
     }
 
     private EmailSettings getEmailSettings() {
@@ -207,7 +210,7 @@ public class NotificationService {
         if (!recipientsWhitelist.isEmpty() && !recipientsWhitelist.contains(toUser.getEmail())) {
             log.warn("Skipped sending email to {} because notifications are configured to only be sent to whitelisted users", toUser.getEmail());
         } else if (toUser.getAuthKey() != null) {
-            log.info("Sending {} email to {}", notification.getType(), toUser.getEmail());
+            log.debug("Sending {} email to {}", notification.getType(), toUser.getEmail());
             mailSender.send(message);
         } else {
             log.warn("Skipped sending email to {} because notifications are configured to only be sent to beta users", toUser.getEmail());
