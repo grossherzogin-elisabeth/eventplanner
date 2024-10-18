@@ -17,6 +17,7 @@
                     :value="displayValue"
                     aria-haspopup="true"
                     class="input-field w-full overflow-ellipsis pr-10"
+                    maxlength="7"
                     @blur="onBlur()"
                     @input="onInput($event)"
                     @focus="inputValue = displayValue"
@@ -98,8 +99,13 @@ function onBlur() {
 
 function onInput(inputEvent: Event) {
     visited.value = true;
-    inputValue.value = (inputEvent.target as HTMLInputElement).value;
-    if (inputValue.value.length === 2 && !inputValue.value.includes(':')) {
+    const oldValue = inputValue.value;
+    inputValue.value = (inputEvent.target as HTMLInputElement).value.replace(/[^0-9 :]/g, '');
+    if (
+        inputValue.value.length === 2 &&
+        !inputValue.value.includes(':') &&
+        oldValue?.length < inputValue.value.length
+    ) {
         inputValue.value = inputValue.value + ' : ';
     }
     const [hourRaw, minuteRaw] = inputValue.value.split(':').map((it) => it.trim());
