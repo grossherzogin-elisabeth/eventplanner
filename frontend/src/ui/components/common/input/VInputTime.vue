@@ -99,13 +99,9 @@ function onBlur() {
 
 function onInput(inputEvent: Event) {
     visited.value = true;
-    const oldValue = inputValue.value;
+    const oldValue = inputValue.value || '';
     inputValue.value = (inputEvent.target as HTMLInputElement).value.replace(/[^0-9 :]/g, '');
-    if (
-        inputValue.value.length === 2 &&
-        !inputValue.value.includes(':') &&
-        oldValue?.length < inputValue.value.length
-    ) {
+    if (inputValue.value.length === 2 && !inputValue.value.includes(':') && oldValue.length < inputValue.value.length) {
         inputValue.value = inputValue.value + ' : ';
     }
     const [hourRaw, minuteRaw] = inputValue.value.split(':').map((it) => it.trim());
