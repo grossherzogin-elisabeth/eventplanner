@@ -315,7 +315,7 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
         }
 
         // check if event ends in next month and split into two events
-        if (dayIndex + calendarDayEvent.durationInMonth >= month.length) {
+        if (dayIndex + calendarDayEvent.durationInMonth > month.length) {
             calendarDayEvent.durationInMonth = month.length - dayIndex;
             const nextMonth = months.value.get(event.start.getMonth() + 1);
             if (!nextMonth) {
