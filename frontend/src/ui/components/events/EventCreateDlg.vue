@@ -187,7 +187,7 @@ async function open(partialEvent?: Partial<Event>): Promise<Event> {
     event.value.description = partialEvent?.description || '';
     event.value.locations = partialEvent?.locations || [];
     event.value.state = partialEvent?.state || EventState.Draft;
-    event.value.type = partialEvent?.type || EventType.WeekendEvent;
+    event.value.type = partialEvent?.type || event.value.type || EventType.WeekendEvent;
     const start = DateUtils.cropToPrecision(new Date(partialEvent?.start?.getTime() || new Date().getTime()), 'days');
     start.setHours(16);
     event.value.start = start;
