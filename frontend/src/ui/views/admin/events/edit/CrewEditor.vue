@@ -231,7 +231,7 @@
                 </div>
             </div>
         </div>
-        <RegistrationEditDlg ref="editRegistrationDialog" />
+        <RegistrationEditDlg ref="editRegistrationDialog" :event="event" />
     </div>
 </template>
 
