@@ -37,7 +37,7 @@
                 </template>
                 <template #row="{ item }">
                     <td class="w-1/4 whitespace-nowrap font-semibold">
-                        <p class="mb-2">{{ item.firstName }} {{ item.lastName }}</p>
+                        <p class="mb-2">{{ item.nickName || item.firstName }} {{ item.lastName }}</p>
                         <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
                             {{ item.rolesStr }}
                         </p>
@@ -81,26 +81,28 @@
                     </td>
                     <td class="w-1/12">
                         <div
-                            v-if="item.expiredQualificationCount"
+                            v-if="item.expiredQualifications.length > 0"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
+                            :title="item.expiredQualifications.join(', ')"
                         >
                             <i class="fa-solid fa-ban"></i>
                             <span class="whitespace-nowrap font-semibold"
-                                >{{ item.expiredQualificationCount }} abgelaufen</span
+                                >{{ item.expiredQualifications.length }} abgelaufen</span
                             >
                         </div>
                         <div
-                            v-else-if="item.soonExpiringQualificationCount"
+                            v-else-if="item.soonExpiringQualifications.length > 0"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
+                            :title="item.soonExpiringQualifications.join(', ')"
                         >
                             <i class="fa-solid fa-warning"></i>
                             <span class="whitespace-nowrap font-semibold">
-                                <template v-if="item.soonExpiringQualificationCount === 1">1 läuft bald ab</template>
-                                <template v-else>{{ item.soonExpiringQualificationCount }} laufen bald ab</template>
+                                <template v-if="item.soonExpiringQualifications.length === 1">1 läuft bald ab</template>
+                                <template v-else>{{ item.soonExpiringQualifications.length }} laufen bald ab</template>
                             </span>
                         </div>
                         <div
-                            v-else-if="item.soonExpiringQualificationCount === 0"
+                            v-else-if="item.soonExpiringQualifications.length === 0"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
                         >
                             <i class="fa-solid fa-check-circle"></i>
@@ -209,7 +211,7 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { ArrayUtils } from '@/common';
-import type { Position, User } from '@/domain';
+import type { Position, QualificationKey, User } from '@/domain';
 import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -241,6 +243,8 @@ interface UserRegistrations extends User, Selectable {
     weekendEventsCount: number;
     multiDayEventsCount: number;
     waitingListCount: number;
+    expiredQualifications: QualificationKey[];
+    soonExpiringQualifications: QualificationKey[];
 }
 
 interface RouteEmits {
@@ -293,7 +297,7 @@ function matchesActiveCategory(user: UserRegistrations): boolean {
         case Tab.TEAM_MEMBERS:
             return user.roles !== undefined && user.roles.includes(Role.TEAM_MEMBER);
         case Tab.UNMATCHED_USERS:
-            return user.roles === undefined || !user.roles.includes(Role.TEAM_MEMBER);
+            return user.roles === undefined || user.roles.length === 0;
         case Tab.ADMINS:
             return (
                 user.roles !== undefined &&
@@ -364,6 +368,8 @@ async function fetchUsers(): Promise<void> {
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,
             singleDayEventsCount: registrationsSingleDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             positions: user.positionKeys.map((key) => positions.get(key)).filter(ArrayUtils.filterUndefined),
+            expiredQualifications: usersService.getExpiredQualifications(user),
+            soonExpiringQualifications: usersService.getSoonExpiringQualifications(user),
         };
     });
 }

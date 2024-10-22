@@ -52,4 +52,19 @@ export class UserService {
             };
         });
     }
+
+    public getExpiredQualifications(user?: User, at: Date = new Date()): QualificationKey[] {
+        if (!user?.qualifications) {
+            return [];
+        }
+        const referenceTime = at.getTime();
+        return user.qualifications
+            .filter((it) => it.expiresAt !== undefined && it.expiresAt.getTime() <= referenceTime)
+            .map((it) => it.qualificationKey);
+    }
+
+    public getSoonExpiringQualifications(user?: User, at: Date = new Date()): QualificationKey[] {
+        const referenceTime = DateUtils.add(at, { months: 3 });
+        return this.getExpiredQualifications(user, referenceTime);
+    }
 }

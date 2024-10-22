@@ -9,8 +9,7 @@ interface UserRepresentation {
     lastName: string;
     positions: string[];
     roles?: string[];
-    expiredQualificationCount?: number;
-    soonExpiringQualificationCount?: number;
+    qualifications?: UserQualificationRepresentation[];
 }
 
 interface UserDetailsRepresentation {
@@ -121,8 +120,10 @@ export class UserRestRepository implements UserRepository {
             lastName: it.lastName,
             positionKeys: it.positions as PositionKey[],
             roles: it.roles?.map((r) => r as Role),
-            expiredQualificationCount: it.expiredQualificationCount,
-            soonExpiringQualificationCount: it.soonExpiringQualificationCount,
+            qualifications: it.qualifications?.map((it) => ({
+                qualificationKey: it.qualificationKey,
+                expiresAt: UserRestRepository.parseDate(it.expiresAt),
+            })),
         }));
     }
 

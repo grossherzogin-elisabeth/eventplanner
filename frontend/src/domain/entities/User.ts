@@ -14,8 +14,7 @@ export interface User {
     roles?: Role[];
     positionKeys: PositionKey[];
     email?: string;
-    expiredQualificationCount?: number;
-    soonExpiringQualificationCount?: number;
+    qualifications?: UserQualification[];
 }
 
 export interface UserDetails {
