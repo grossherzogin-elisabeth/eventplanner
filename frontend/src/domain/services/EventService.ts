@@ -1,5 +1,5 @@
 import { ArrayUtils, DateUtils } from '@/common';
-import type { Event, Registration, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
+import type { Event, Registration, RegistrationKey, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
 
 export class EventService {
     public doEventsHaveOverlappingDays(a?: Event, b?: Event): boolean {
@@ -108,34 +108,62 @@ export class EventService {
      */
     private optimizeSlots(event: Event): Event {
         this.debugSlots(event);
+        // move all filled slots up as far as possible
         for (let i = 0; i < event.slots.length; i++) {
             const slot = event.slots[i];
-            if (!slot.assignedRegistrationKey) {
-                // try to fill slot with a registration from a slot with lesser prio
-                for (let j = i + 1; j < event.slots.length; j++) {
-                    const lowerPrioSlot = event.slots[j];
-                    if (!lowerPrioSlot.assignedRegistrationKey) {
-                        continue;
-                    }
-                    const registration = event.registrations.find(
-                        (r) => r.key === lowerPrioSlot.assignedRegistrationKey
-                    );
-                    if (registration && slot.positionKeys.includes(registration.positionKey)) {
-                        // the registration of a lower prio slot can also be assigned to this slot, move it up
-                        slot.assignedRegistrationKey = lowerPrioSlot.assignedRegistrationKey;
-                        lowerPrioSlot.assignedRegistrationKey = undefined;
-                        break;
-                    }
+            if (slot.assignedRegistrationKey) {
+                continue;
+            }
+            // try to fill slot with a registration from a slot with lesser prio
+            for (let j = i + 1; j < event.slots.length; j++) {
+                const lowerPrioSlot = event.slots[j];
+                if (!lowerPrioSlot.assignedRegistrationKey) {
+                    continue;
+                }
+                const registration = event.registrations.find((r) => r.key === lowerPrioSlot.assignedRegistrationKey);
+                if (registration && slot.positionKeys.includes(registration.positionKey)) {
+                    // the registration of a lower prio slot can also be assigned to this slot, move it up
+                    slot.assignedRegistrationKey = lowerPrioSlot.assignedRegistrationKey;
+                    lowerPrioSlot.assignedRegistrationKey = undefined;
+                    break;
                 }
             }
         }
+        this.debugSlots(event);
+        // move filled slots down to fill high criticality slots
+        // for (let i = event.slots.length - 1; i >= 0; i--) {
+        //     const slot = event.slots[i];
+        //     if (slot.assignedRegistrationKey) {
+        //         continue;
+        //     }
+        //     if (slot.criticality !== SlotCriticality.Security) {
+        //         continue;
+        //     }
+        //     for (let j = i - 1; j >= 0; j--) {
+        //         const higherPrioSlot = event.slots[j];
+        //         if (!higherPrioSlot.assignedRegistrationKey) {
+        //             continue;
+        //         }
+        //         if (higherPrioSlot.criticality >= slot.criticality) {
+        //             continue;
+        //         }
+        //         const registration = event.registrations.find((r) => r.key === higherPrioSlot.assignedRegistrationKey);
+        //         if (registration && slot.positionKeys.includes(registration.positionKey)) {
+        //             // the registration of a lower prio slot can also be assigned to this slot, move it up
+        //             slot.assignedRegistrationKey = higherPrioSlot.assignedRegistrationKey;
+        //             higherPrioSlot.assignedRegistrationKey = undefined;
+        //             break;
+        //         }
+        //     }
+        // }
         this.debugSlots(event);
         return event;
     }
 
     private debugSlots(event: Event): void {
+        console.log('--------------------------');
         event.slots.forEach((s) => {
-            console.log(s.order, s.positionKeys, s.assignedRegistrationKey);
+            console.log(s.order + ' | ' + s.criticality + ' | ' + (s.assignedRegistrationKey || ''));
         });
     }
 
@@ -167,6 +195,13 @@ export class EventService {
     public getAssignedRegistrations(event: Event): Registration[] {
         return event.slots
             .map((slt) => event.registrations.find((reg) => reg.key === slt.assignedRegistrationKey))
+            .filter(ArrayUtils.filterUndefined);
+    }
+
+    public getAssignedUsers(event: Event): UserKey[] {
+        return this.getAssignedRegistrations(event)
+            .map((registration) => registration.userKey)
+            .filter(ArrayUtils.filterDuplicates)
             .filter(ArrayUtils.filterUndefined);
     }
 

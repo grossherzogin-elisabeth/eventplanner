@@ -5,7 +5,7 @@
             <div
                 class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap 2xl:flex-col"
             >
-                <div class="flex cursor-pointer items-center rounded-2xl bg-gray-500 p-1">
+                <div class="flex items-center rounded-2xl bg-gray-500 p-1">
                     <span class="px-2"> Alle </span>
                     <span
                         class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
@@ -13,11 +13,19 @@
                         {{ props.event?.assignedUserCount }}
                     </span>
                 </div>
+                <div class="flex items-center rounded-2xl bg-blue-600 p-1">
+                    <span class="px-2"> Seediensttauglichkeit </span>
+                    <span
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                    >
+                        {{ team.filter((it) => it.hasFitnessForSeaService).length }}
+                    </span>
+                </div>
                 <div
                     v-for="pos in positions"
                     :key="pos.key"
                     :style="{ 'background-color': pos.color }"
-                    class="flex cursor-pointer items-center rounded-2xl p-1"
+                    class="flex items-center rounded-2xl p-1"
                 >
                     <span class="px-2">
                         {{ pos.name }}
@@ -84,8 +92,11 @@
                     <ul>
                         <template v-for="it in team" :key="it.key + it.userKey + it.userName + it.positionName">
                             <VDraggable
-                                class="flex items-center rounded-xl px-4 py-2 hover:bg-primary-100 md:space-x-4"
-                                :class="{ 'cursor-move': it.userName !== undefined }"
+                                class="my-1 flex items-center rounded-xl px-4 py-1.5 md:space-x-4"
+                                :class="{
+                                    'cursor-move hover:bg-primary-100 hover:text-primary-950':
+                                        it.userName !== undefined,
+                                }"
                                 component="li"
                                 :value="it.userKey || it.userName ? it : undefined"
                                 @dragend="dragSource = null"
@@ -93,16 +104,47 @@
                                 @click="editSlotRegistration(it)"
                             >
                                 <i class="fa-solid fa-grip-vertical hidden text-sm opacity-25 lg:inline"></i>
-                                <span v-if="it.userName && !it.confirmed" class="">
-                                    <i class="fa-solid fa-user-clock text-gray-400"></i>
+
+                                <!-- fitness for sea service y/n-->
+                                <span v-if="!it.userName" class="w-4">
+                                    <i class="fa-solid fa-anchor-circle-xmark text-red-300"> </i>
                                 </span>
-                                <span v-else-if="it.userName && it.confirmed">
-                                    <i class="fa-solid fa-user-check text-green-600"></i>
+                                <span
+                                    v-else-if="it.hasFitnessForSeaService"
+                                    class="w-4"
+                                    title="Seediensttauglichkeit vorhanden"
+                                >
+                                    <i class="fa-solid fa-anchor-circle-check text-green-700"> </i>
                                 </span>
-                                <span v-else>
-                                    <i class="fa-solid fa-user-xmark text-red-500"></i>
+                                <span v-else class="w-4" title="keine Seediensttauglichkeit vorhanden">
+                                    <i class="fa-solid fa-anchor-circle-xmark text-gray-300"> </i>
                                 </span>
-                                <span v-if="it.userName" class="mx-2 w-0 flex-grow truncate">
+
+                                <!--                                <span v-if="it.userName && !it.userKey" class="w-4">-->
+                                <!--                                    <i class="fa-solid fa-question-circle text-gray-500"> </i>-->
+                                <!--                                </span>-->
+                                <!--                                <span-->
+                                <!--                                    v-else-if="-->
+                                <!--                                        it.userName &&-->
+                                <!--                                        (it.hasOverwrittenPosition || it.expiredQualifications.length > 0)-->
+                                <!--                                    "-->
+                                <!--                                    class="w-4"-->
+                                <!--                                >-->
+                                <!--                                    <i class="fa-solid fa-warning mx-0.5 text-yellow-500"> </i>-->
+                                <!--                                </span>-->
+                                <!--                                <span v-else-if="it.userName && it.hasFitnessForSeaService" class="w-4">-->
+                                <!--                                    <i class="fa-solid fa-anchor-circle-check text-green-700"> </i>-->
+                                <!--                                </span>-->
+                                <!--                                <span v-else-if="it.userName" class="w-4"> </span>-->
+                                <!--                                <span v-else class="w-4">-->
+                                <!--                                    <i class="fa-solid fa-user-xmark text-red-500"></i>-->
+                                <!--                                </span>-->
+
+                                <span
+                                    v-if="it.userName"
+                                    class="mx-2 w-0 flex-grow truncate"
+                                    :class="{ 'font-bold text-green-700': it.hasFitnessForSeaService }"
+                                >
                                     {{ it.userName }}
                                     <template v-if="it.userName && !it.userKey"> (Gastcrew) </template>
                                 </span>
@@ -112,9 +154,27 @@
                                 <span v-else class="mx-2 w-0 flex-grow truncate italic text-red-500">
                                     Noch nicht besetzt
                                 </span>
+                                <span
+                                    v-if="it.hasOverwrittenPosition || it.expiredQualifications.length > 0"
+                                    class="w-4"
+                                >
+                                    <i class="fa-solid fa-warning text-yellow-600"> </i>
+                                </span>
                                 <span :style="{ background: it.position.color }" class="position">
                                     {{ it.positionName }}
                                 </span>
+                                <!-- confirmed y/n-->
+                                <template v-if="false">
+                                    <span v-if="it.userName && !it.confirmed" class="">
+                                        <i class="fa-solid fa-clock text-gray-400"></i>
+                                    </span>
+                                    <span v-else-if="it.userName && it.confirmed">
+                                        <i class="fa-solid fa-check-circle text-green-700"></i>
+                                    </span>
+                                    <span v-else>
+                                        <i class="fa-solid fa-question-circle text-gray-300"></i>
+                                    </span>
+                                </template>
                             </VDraggable>
                         </template>
                     </ul>
@@ -183,9 +243,33 @@
                                 @click="editWaitinglistRegistration(it)"
                             >
                                 <i class="fa-solid fa-grip-vertical mr-2 hidden text-sm opacity-25 lg:inline"></i>
-                                <span v-if="it.name" class="w-0 flex-grow truncate">{{ it.name }}</span>
+                                <span v-if="it.hasFitnessForSeaService" class="w-4">
+                                    <i class="fa-solid fa-anchor-circle-check text-green-700"> </i>
+                                </span>
+                                <span v-else class="w-4">
+                                    <i class="fa-solid fa-anchor-circle-xmark text-gray-300"> </i>
+                                </span>
+                                <span
+                                    v-if="it.name"
+                                    class="w-0 flex-grow truncate"
+                                    :class="{ 'font-bold text-green-700': it.hasFitnessForSeaService }"
+                                >
+                                    {{ it.name }}
+                                </span>
                                 <span v-else-if="it.userKey" class="w-0 flex-grow italic text-red-500">
                                     err: {{ it.userKey }}
+                                </span>
+                                <!--                                <span v-if="it.hasFitnessForSeaService" class="w-4">-->
+                                <!--                                    <i class="fa-solid fa-anchor-circle-check text-blue-700"> </i>-->
+                                <!--                                </span>-->
+                                <!--                                <span v-else class="w-4">-->
+                                <!--                                    <i class="fa-solid fa-anchor-circle-xmark text-red-500"> </i>-->
+                                <!--                                </span>-->
+                                <span
+                                    v-if="it.hasOverwrittenPosition || it.expiredQualifications.length > 0"
+                                    class="w-4"
+                                >
+                                    <i class="fa-solid fa-warning text-yellow-600"> </i>
                                 </span>
                                 <div>
                                     <ContextMenuButton>
@@ -255,6 +339,8 @@ interface Props {
 
 interface Emits {
     (e: 'update:event', value: Event): void;
+    (e: 'update:expired-qualifications', value: number): void;
+    (e: 'update:fitness-for-sea-service', value: number): void;
 }
 
 const props = defineProps<Props>();
@@ -376,10 +462,11 @@ async function fetchPositions(): Promise<void> {
 }
 
 async function fetchTeam(): Promise<void> {
-    console.log('fetch team');
     const resolvedSlots = await usersUseCase.resolveEventSlots(props.event);
     team.value = resolvedSlots.filter((it) => it.userName || it.userKey || it.criticality >= 1);
     registrations.value = await usersUseCase.resolveWaitingList(props.event);
+    emit('update:expired-qualifications', team.value.filter((t) => t.expiredQualifications.length > 0).length);
+    emit('update:fitness-for-sea-service', team.value.filter((t) => t.hasFitnessForSeaService).length);
 }
 
 init();

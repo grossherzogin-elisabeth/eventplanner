@@ -3,7 +3,7 @@
         <DetailsPage :back-to="{ name: Routes.UsersList }">
             <template #header>
                 <div class="hidden pt-8 xl:block">
-                    <h1>{{ user?.firstName }} {{ user?.lastName }} bearbeiten</h1>
+                    <h1>{{ user?.nickName || user?.firstName }} {{ user?.lastName }} bearbeiten</h1>
                     <p v-if="user && signedInUser.key === user.key" class="mt-1 text-sm">Das bist du!</p>
                 </div>
             </template>

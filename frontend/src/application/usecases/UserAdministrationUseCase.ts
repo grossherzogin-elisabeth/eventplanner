@@ -2,13 +2,17 @@ import type { NotificationService, UserRepository } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
 import { ObjectUtils } from '@/common';
-import type { UserDetails, UserKey } from '@/domain';
+import type { Event, UserDetails, UserKey } from '@/domain';
+import { UserService } from '@/domain';
+import { EventService } from '@/domain';
 
 export class UserAdministrationUseCase {
     private readonly userRepository: UserRepository;
     private readonly userCachingService: UserCachingService;
     private readonly notificationService: NotificationService;
     private readonly errorHandlingService: ErrorHandlingService;
+    private readonly eventService: EventService = new EventService();
+    private readonly userService: UserService = new UserService();
 
     constructor(params: {
         userRepository: UserRepository;
@@ -51,5 +55,14 @@ export class UserAdministrationUseCase {
 
     public async importUsers(file: Blob): Promise<void> {
         return this.userRepository.importUsers(file);
+    }
+
+    public async getCrewMembersWithExpiredQualificationsCount(event: Event): Promise<number> {
+        const assignedUserKeys = this.eventService.getAssignedUsers(event);
+        const assignedUsers = await this.userCachingService.getUsers(assignedUserKeys);
+        const usersWithExpiredQualifications = assignedUsers.filter(
+            (user) => this.userService.getExpiredQualifications(user, event.end).length > 0
+        );
+        return usersWithExpiredQualifications.length;
     }
 }

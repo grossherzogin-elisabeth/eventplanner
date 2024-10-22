@@ -1,5 +1,5 @@
 <template>
-    <DetailsPage :back-to="{ name: Routes.EventsAdmin }">
+    <DetailsPage :back-to="{ name: Routes.EventsAdmin }" :class="$attrs.class">
         <template #header>
             <div v-if="event" class="pt-8">
                 <h1 class="mb-1 truncate">{{ event.name || 'Err' }}</h1>
@@ -11,8 +11,19 @@
                 <div class="-mx-4 flex flex-wrap items-start font-semibold">
                     <div class="w-full">
                         <VWarning v-if="hasEmptyRequiredSlots" class="mr-2 mt-2">
-                            Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht
-                            erfüllt!
+                            Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind nicht erfüllt!
+                        </VWarning>
+                        <VWarning v-if="crewMembersWithExpiredQualificationsCount === 1" class="mr-2 mt-2">
+                            1 Crew Mitglied hat Qualifikationen, die abgelaufen sind, oder vor Ende der Reise ablaufen
+                            werden!
+                        </VWarning>
+                        <VWarning v-if="crewMembersWithExpiredQualificationsCount > 1" class="mr-2 mt-2">
+                            {{ crewMembersWithExpiredQualificationsCount }} Crew Mitglieder haben Qualifikationen, die
+                            abgelaufen sind, oder vor Ende der Reise ablaufen werden!
+                        </VWarning>
+                        <VWarning v-if="crewMembersWithFitnessForSeaserviceCount < 8" class="mr-2 mt-2">
+                            Nur {{ crewMembersWithFitnessForSeaserviceCount }} Crew Mitglieder haben eine gültige
+                            Seediensttauglichkeit!
                         </VWarning>
                     </div>
                 </div>
@@ -36,6 +47,7 @@
                                     :errors="validation.errors.value['state']"
                                     :errors-visible="true"
                                     required
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                                 />
                             </div>
                             <div class="mb-4">
@@ -45,6 +57,7 @@
                                     :errors="validation.errors.value['name']"
                                     :errors-visible="true"
                                     required
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                                 />
                             </div>
                             <div class="mb-4">
@@ -60,6 +73,7 @@
                                     :errors="validation.errors.value['type']"
                                     :errors-visible="true"
                                     required
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                                 />
                             </div>
                             <div class="mb-4">
@@ -68,6 +82,7 @@
                                     v-model="event.description"
                                     :errors="validation.errors.value['description']"
                                     :errors-visible="true"
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                                 />
                             </div>
                             <div class="mb-4 flex space-x-4">
@@ -78,6 +93,7 @@
                                         :errors="validation.errors.value['start']"
                                         :errors-visible="true"
                                         required
+                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                                     />
                                 </div>
                                 <div class="w-2/5">
@@ -87,6 +103,7 @@
                                         required
                                         :errors="validation.errors.value['start']"
                                         :errors-visible="true"
+                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                                     />
                                 </div>
                             </div>
@@ -99,6 +116,7 @@
                                         :errors="validation.errors.value['end']"
                                         :errors-visible="true"
                                         required
+                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                                     />
                                 </div>
                                 <div class="w-2/5">
@@ -108,18 +126,29 @@
                                         :errors="validation.errors.value['end']"
                                         :errors-visible="true"
                                         required
+                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                                     />
                                 </div>
                             </div>
                         </section>
                     </div>
                 </template>
-                <template #[Tab.EVENT_POSITIONS]>
-                    <CrewEditor v-if="event" v-model:event="event" />
+                <template #[Tab.CREW_EDITOR]>
+                    <CrewEditor
+                        v-if="event"
+                        v-model:event="event"
+                        v-model:expired-qualifications="crewMembersWithExpiredQualificationsCount"
+                        v-model:fitness-for-sea-service="crewMembersWithFitnessForSeaserviceCount"
+                    />
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
                     <div class="-mx-8 overflow-y-auto px-8">
-                        <VTable :items="slots" :page-size="-1" class="interactive-table" @click="editSlot($event.key)">
+                        <VTable
+                            :items="slots"
+                            :page-size="-1"
+                            class="no-header interactive-table"
+                            @click="editSlot($event.key)"
+                        >
                             <template #head>
                                 <th class="hidden w-0 md:table-cell"></th>
                                 <th class="w-0"></th>
@@ -158,32 +187,54 @@
                                     </div>
                                 </td>
                                 <td class="">
-                                    <span
-                                        v-if="item.filled"
-                                        class="inline-flex w-auto items-center rounded-full bg-green-100 py-1 pl-3 pr-4 text-green-700"
-                                    >
-                                        <i class="fa-solid fa-circle-check"></i>
-                                        <span class="ml-2 whitespace-nowrap font-semibold">Besetzt</span>
-                                    </span>
-                                    <span
-                                        v-else-if="item.required"
-                                        class="inline-flex w-auto items-center rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                                    >
-                                        <i class="fa-solid fa-warning"></i>
-                                        <span class="ml-2 whitespace-nowrap font-semibold">Nicht besetzt</span>
-                                    </span>
-                                    <span
-                                        v-else
-                                        class="inline-flex w-auto items-center rounded-full bg-blue-100 py-1 pl-3 pr-4 text-blue-700"
-                                    >
-                                        <i class="fa-solid fa-circle-info"></i>
-                                        <span class="ml-2 whitespace-nowrap font-semibold">Optional</span>
-                                    </span>
+                                    <div class="flex justify-end">
+                                        <span
+                                            v-if="item.criticality >= 2"
+                                            class="inline-flex w-auto items-center rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
+                                        >
+                                            <i class="fa-solid fa-warning"></i>
+                                            <span class="ml-2 whitespace-nowrap font-semibold">Mindestbesatzung</span>
+                                        </span>
+                                        <span
+                                            v-else-if="item.required >= 1"
+                                            class="inline-flex w-auto items-center rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
+                                        >
+                                            <i class="fa-solid fa-warning"></i>
+                                            <span class="ml-2 whitespace-nowrap font-semibold">Erforderlich</span>
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="inline-flex w-auto items-center rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
+                                        >
+                                            <i class="fa-solid fa-question-circle"></i>
+                                            <span class="ml-2 whitespace-nowrap font-semibold">Optional</span>
+                                        </span>
+                                    </div>
                                 </td>
                             </template>
                         </VTable>
                     </div>
                     <SlotEditDlg ref="editSlotDialog" />
+                </template>
+                <template #[Tab.CREW_LIST]>
+                    <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                        <RegistrationList
+                            v-if="event"
+                            :event="event"
+                            show="team"
+                            class="w-full overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
+                        />
+                    </div>
+                </template>
+                <template #[Tab.WAITING_LIST]>
+                    <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                        <RegistrationList
+                            v-if="event"
+                            :event="event"
+                            show="waitinglist"
+                            class="w-full overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
+                        />
+                    </div>
                 </template>
             </VTabs>
         </template>
@@ -199,7 +250,7 @@
         </template>
         <template #secondary-buttons>
             <div class="hidden items-stretch space-x-2 lg:flex">
-                <button v-if="tab === Tab.EVENT_POSITIONS" class="btn-secondary" @click="addRegistration()">
+                <button v-if="tab === Tab.CREW_EDITOR" class="btn-secondary" @click="addRegistration()">
                     <i class="fa-solid fa-user-plus" />
                     <span>Anmeldung hinzufügen</span>
                 </button>
@@ -247,8 +298,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { ArrayUtils } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, PositionKey, Slot, SlotCriticality, SlotKey } from '@/domain';
-import { EventState } from '@/domain';
-import { EventType, Permission } from '@/domain';
+import { EventState, EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import {
     AsyncButton,
@@ -274,14 +324,17 @@ import { useEventService } from '@/ui/composables/Domain';
 import { useValidation } from '@/ui/composables/Validation';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationDlg from '@/ui/views/admin/events/components/CreateRegistrationDlg.vue';
-import CrewEditor from './CrewEditor.vue';
+import RegistrationList from './RegistrationList.vue';
 import SlotCreateDlg from './SlotCreateDlg.vue';
 import SlotEditDlg from './SlotEditDlg.vue';
+import CrewEditor from './TeamEditor.vue';
 
 enum Tab {
     EVENT_DATA = 'app.edit-event.tab.data',
-    EVENT_POSITIONS = 'Crew verwalten',
+    CREW_EDITOR = 'Crewplanung',
     EVENT_SLOTS = 'Slots',
+    CREW_LIST = 'Crewliste',
+    WAITING_LIST = 'Warteliste',
 }
 
 interface SlotTableItem {
@@ -310,10 +363,12 @@ const authUseCase = useAuthUseCase();
 const signedInUser = authUseCase.getSignedInUser();
 
 const event = ref<Event | null>(null);
+const crewMembersWithExpiredQualificationsCount = ref<number>(0);
+const crewMembersWithFitnessForSeaserviceCount = ref<number>(0);
 const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
 
-const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_SLOTS];
-const tab = ref<Tab>(Tab.EVENT_POSITIONS);
+const tabs = [Tab.CREW_LIST, Tab.WAITING_LIST, Tab.CREW_EDITOR, Tab.EVENT_DATA, Tab.EVENT_SLOTS];
+const tab = ref<Tab>(tabs[0]);
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 
 const createSlotDialog = ref<Dialog<Event, Event> | null>(null);
