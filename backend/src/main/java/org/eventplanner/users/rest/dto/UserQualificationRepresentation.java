@@ -22,7 +22,7 @@ public record UserQualificationRepresentation(
         }
         return new UserQualificationRepresentation(
             userQualification.getQualificationKey().value(),
-            mapNullable(userQualification.getExpiresAt(), (d) -> d.format(DateTimeFormatter.ISO_DATE_TIME))
+            mapNullable(userQualification.getExpiresAt(), d -> d.format(DateTimeFormatter.ISO_DATE_TIME))
         );
     }
 
