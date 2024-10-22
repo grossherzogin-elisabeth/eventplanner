@@ -20,6 +20,17 @@ export class PositionCachingService {
         return this.fetchPositions();
     }
 
+    public async removeFromCache(positionkey: PositionKey): Promise<void> {
+        return await this.cache.deleteByKey(positionkey);
+    }
+
+    public async updateCache(position: Position): Promise<Position> {
+        if ((await this.cache.count()) > 0) {
+            return await this.cache.save(position);
+        }
+        return position;
+    }
+
     private async fetchPositions(): Promise<Position[]> {
         return AsyncDebouncer.debounce('fetchPositions', async () => {
             const positions = await this.positionRepository.findAll();

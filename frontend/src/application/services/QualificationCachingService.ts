@@ -23,6 +23,17 @@ export class QualificationCachingService {
         return this.fetchQualifications();
     }
 
+    public async removeFromCache(qualificationKey: QualificationKey): Promise<void> {
+        return await this.cache.deleteByKey(qualificationKey);
+    }
+
+    public async updateCache(qualification: Qualification): Promise<Qualification> {
+        if ((await this.cache.count()) > 0) {
+            return await this.cache.save(qualification);
+        }
+        return qualification;
+    }
+
     private async fetchQualifications(): Promise<Qualification[]> {
         return AsyncDebouncer.debounce('fetchQualifications', async () => {
             const qualifications = await this.qualificationRepository.findAll();

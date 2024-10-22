@@ -1,5 +1,6 @@
 package org.eventplanner.importer.service;
 
+import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.common.FileSystemJsonRepository;
@@ -9,6 +10,8 @@ import org.springframework.lang.Nullable;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public class QualificationJsonImporter {
 
@@ -24,10 +27,18 @@ public class QualificationJsonImporter {
             @NonNull String name,
             @Nullable String icon,
             @Nullable String description,
-            boolean expires
+            boolean expires,
+            @Nullable String grantsPosition
     ) implements Serializable {
         public Qualification toDomain() {
-            return new Qualification(new QualificationKey(key), name, icon, description, expires);
+            return new Qualification(
+                new QualificationKey(key),
+                name,
+                icon,
+                description,
+                expires,
+                mapNullable(grantsPosition, PositionKey::new)
+            );
         }
     }
 }

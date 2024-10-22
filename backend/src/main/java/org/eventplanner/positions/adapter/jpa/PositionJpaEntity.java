@@ -37,10 +37,10 @@ public class PositionJpaEntity implements Serializable {
 
     public static PositionJpaEntity fromDomain(Position position) {
         return new PositionJpaEntity(
-            position.key().value(),
-            position.name(),
-            position.color(),
-            position.priority()
+            position.getKey().value(),
+            position.getName(),
+            position.getColor(),
+            position.getPriority()
         );
     }
 

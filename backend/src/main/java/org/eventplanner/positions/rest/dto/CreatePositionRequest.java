@@ -8,19 +8,18 @@ import java.io.Serializable;
 
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
-public record PositionRepresentation(
-    @NonNull String key,
+public record CreatePositionRequest(
     @NonNull String name,
     @NonNull String color,
     int prio
 ) implements Serializable {
 
-    public static PositionRepresentation fromDomain(@NonNull Position position) {
-        return new PositionRepresentation(
-            position.getKey().value(),
-            position.getName(),
-            position.getColor(),
-            position.getPriority()
+    public Position toDomain() {
+        return new Position(
+            new PositionKey(""),
+            name,
+            color,
+            prio
         );
     }
 }

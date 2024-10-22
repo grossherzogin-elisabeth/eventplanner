@@ -23,8 +23,8 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
 
     @Override
     public void create(Position position) {
-        if (positionJpaRepository.existsById(position.key().value())) {
-            throw new IllegalArgumentException("Position with key " + position.key().value() + " already exists");
+        if (positionJpaRepository.existsById(position.getKey().value())) {
+            throw new IllegalArgumentException("Position with key " + position.getKey().value() + " already exists");
         }
         positionJpaRepository.save(PositionJpaEntity.fromDomain(position));
     }

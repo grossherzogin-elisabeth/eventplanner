@@ -48,7 +48,7 @@
                             <span
                                 v-for="position in item.positions"
                                 :key="position.key"
-                                class="position my-0.5 mr-1 bg-gray-500 opacity-75"
+                                class="position my-0.5 mr-1 bg-gray-500 text-xs opacity-75"
                                 :style="{ background: position.color }"
                             >
                                 {{ position.name }}

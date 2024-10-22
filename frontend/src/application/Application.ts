@@ -7,6 +7,10 @@ import type { AppSettingsUseCase } from './usecases/AppSettingsUseCase';
 import type { AuthUseCase } from './usecases/AuthUseCase';
 import type { EventAdministrationUseCase } from './usecases/EventAdministrationUseCase';
 import type { EventUseCase } from './usecases/EventUseCase';
+import type { PositionAdministrationUseCase } from './usecases/PositionAdministrationUseCase';
+import type { PositionUseCase } from './usecases/PositionUseCase';
+import type { QualificationAdministrationUseCase } from './usecases/QualificationAdministrationUseCase';
+import type { QualificationUseCase } from './usecases/QualificationUseCase';
 import type { UserAdministrationUseCase } from './usecases/UserAdministrationUseCase';
 import type { UsersUseCase } from './usecases/UsersUseCase';
 import type { Config } from './values/Config';
@@ -27,5 +31,9 @@ export interface Application {
         appSettings: AppSettingsUseCase;
         users: UsersUseCase;
         userAdmin: UserAdministrationUseCase;
+        positions: PositionUseCase;
+        positionAdmin: PositionAdministrationUseCase;
+        qualifications: QualificationUseCase;
+        qualificationAdmin: QualificationAdministrationUseCase;
     };
 }

@@ -2,7 +2,9 @@ package org.eventplanner.qualifications.rest;
 
 import org.eventplanner.qualifications.QualificationUseCase;
 import org.eventplanner.qualifications.entities.Qualification;
+import org.eventplanner.qualifications.rest.dto.CreateQualificationRequest;
 import org.eventplanner.qualifications.rest.dto.QualificationRepresentation;
+import org.eventplanner.qualifications.rest.dto.UpdateQualificationRequest;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.users.UserUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +32,18 @@ public class QualificationController {
         this.qualificationUseCase = qualificationUseCase;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "")
-    public ResponseEntity<QualificationRepresentation> createQualification(@RequestBody QualificationRepresentation spec) {
+    @PostMapping(path = "")
+    public ResponseEntity<QualificationRepresentation> createQualification(
+        @RequestBody CreateQualificationRequest spec
+    ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
-        var qualificationSpec = new Qualification(new QualificationKey(""), spec.name(), spec.icon(), spec.description(), spec.expires());
+        var qualificationSpec = spec.toDomain();
         var qualification = qualificationUseCase.createQualification(signedInUser, qualificationSpec);
         return ResponseEntity.status(HttpStatus.CREATED).body(QualificationRepresentation.fromDomain(qualification));
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "")
+    @GetMapping(path = "")
     public ResponseEntity<List<QualificationRepresentation>> getQualifications() {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
@@ -49,19 +53,19 @@ public class QualificationController {
         return ResponseEntity.ok(qualifications);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, path = "/{qualificationKey}")
+    @PutMapping(path = "/{qualificationKey}")
     public ResponseEntity<QualificationRepresentation> updateQualification(
         @PathVariable String qualificationKey,
-        @RequestBody QualificationRepresentation spec
+        @RequestBody UpdateQualificationRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
-        var qualificationSpec = new Qualification(new QualificationKey(qualificationKey), spec.name(), spec.icon(), spec.description(), spec.expires());
+        var qualificationSpec = spec.toDomain(qualificationKey);
         var qualification = qualificationUseCase.updateQualification(signedInUser, qualificationSpec.getKey(), qualificationSpec);
         return ResponseEntity.ok(QualificationRepresentation.fromDomain(qualification));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path = "/{qualificationKey}")
+    @DeleteMapping(path = "/{qualificationKey}")
     public ResponseEntity<Void> deleteQualification(@PathVariable String qualificationKey) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 

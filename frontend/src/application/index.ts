@@ -22,3 +22,7 @@ export * from './usecases/UsersUseCase';
 export * from './usecases/AuthUseCase';
 export * from './usecases/EventAdministrationUseCase';
 export * from './usecases/UserAdministrationUseCase';
+export * from './usecases/QualificationUseCase';
+export * from './usecases/QualificationAdministrationUseCase';
+export * from './usecases/PositionUseCase';
+export * from './usecases/PositionAdministrationUseCase';

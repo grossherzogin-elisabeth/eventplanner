@@ -9,6 +9,8 @@ export enum Permission {
     DELETE_USERS = 'user:delete',
     READ_POSITIONS = 'positions:read',
     WRITE_POSITIONS = 'positions:write',
+    READ_QUALIFICATIONS = 'qualifications:read',
+    WRITE_QUALIFICATIONS = 'qualifications:write',
     EVENT_TEAM_WRITE_SELF = 'event-team:write-self',
     EVENT_TEAM_WRITE = 'event-team:write',
     BETA_FEATURES = 'beta-features',

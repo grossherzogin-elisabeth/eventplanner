@@ -11,6 +11,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+
+import static org.eventplanner.common.ObjectUtils.applyNullable;
 
 @Service
 public class QualificationUseCase {
@@ -30,6 +33,7 @@ public class QualificationUseCase {
     public Qualification createQualification(@NonNull SignedInUser signedInUser, Qualification qualification) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
+        qualification.setKey(new QualificationKey(UUID.randomUUID().toString()));
         qualificationRepository.create(qualification);
         return qualification;
     }
@@ -44,6 +48,8 @@ public class QualificationUseCase {
     public void deleteQualification(@NonNull SignedInUser signedInUser, QualificationKey qualificationKey) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
+        // TODO remove qualification from all users
+        // TODO might want soft delete here
         qualificationRepository.deleteByKey(qualificationKey);
     }
 }

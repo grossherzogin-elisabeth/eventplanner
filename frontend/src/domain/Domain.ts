@@ -1,5 +1,6 @@
-import type { RegistrationService } from '@/domain/services/RegistrationService';
 import type { EventService } from './services/EventService';
+import type { QualificationService } from './services/QualificationService';
+import type { RegistrationService } from './services/RegistrationService';
 import type { UserService } from './services/UserService';
 
 export interface Domain {
@@ -7,5 +8,6 @@ export interface Domain {
         events: EventService;
         users: UserService;
         registrations: RegistrationService;
+        qualifications: QualificationService;
     };
 }

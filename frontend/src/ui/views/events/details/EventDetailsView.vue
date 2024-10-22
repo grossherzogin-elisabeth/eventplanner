@@ -182,7 +182,10 @@
                                         <span v-else class="truncate italic text-red-500">Noch nicht besetzt</span>
                                         <span v-if="it.userName && !it.userKey" class="">(Gastcrew)</span>
                                         <span class="flex-grow"></span>
-                                        <span :style="{ background: it.position.color }" class="position ml-auto">
+                                        <span
+                                            :style="{ background: it.position.color }"
+                                            class="position ml-auto text-xs"
+                                        >
                                             {{ it.positionName }}
                                         </span>
                                     </li>
@@ -198,7 +201,7 @@
                                 >
                                     <i class="fa-solid fa-user-circle text-gray-500" />
                                     <span class="flex-grow">{{ it.name }}</span>
-                                    <span :style="{ background: it.position.color }" class="position">
+                                    <span :style="{ background: it.position.color }" class="position text-xs">
                                         {{ it.position.name }}
                                     </span>
                                 </li>

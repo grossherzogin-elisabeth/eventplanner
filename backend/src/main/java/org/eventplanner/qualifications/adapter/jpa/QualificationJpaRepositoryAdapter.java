@@ -1,6 +1,7 @@
 package org.eventplanner.qualifications.adapter.jpa;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eventplanner.qualifications.adapter.QualificationRepository;
 import org.eventplanner.qualifications.entities.Qualification;
@@ -14,6 +15,11 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
 
     public QualificationJpaRepositoryAdapter(final QualificationJpaRepository qualificationJpaRepository) {
         this.qualificationJpaRepository = qualificationJpaRepository;
+    }
+
+    @Override
+    public Optional<Qualification> findByKey(QualificationKey qualificationKey) {
+        return qualificationJpaRepository.findById(qualificationKey.value()).map(QualificationJpaEntity::toDomain);
     }
 
     @Override

@@ -9,10 +9,14 @@ import {
     EVENT_ADMIN_USE_CASE,
     EVENT_USE_CASE,
     NOTIFICATION_SERVICE,
+    POSITION_ADMIN_USE_CASE,
+    POSITION_USE_CASE,
+    QUALIFICATION_ADMIN_USE_CASE,
+    QUALIFICATION_USE_CASE,
     USER_ADMIN_USE_CASE,
     USER_USE_CASE,
 } from '@/ui/composables/Application';
-import { EVENT_SERVICE, REGISTRATION_SERVICE, USER_SERVICE } from '@/ui/composables/Domain';
+import { EVENT_SERVICE, QUALIFICATION_SERVICE, REGISTRATION_SERVICE, USER_SERVICE } from '@/ui/composables/Domain';
 import App from './App.vue';
 import './assets/css/main.css';
 import './plugins/fontawesome';
@@ -27,6 +31,7 @@ export function setupVue(context: { domain: Domain; application: Application }) 
     app.provide(USER_SERVICE, context.domain.services.users);
     app.provide(REGISTRATION_SERVICE, context.domain.services.registrations);
     app.provide(EVENT_SERVICE, context.domain.services.events);
+    app.provide(QUALIFICATION_SERVICE, context.domain.services.qualifications);
 
     app.provide(CONFIG, context.application.config);
     app.provide(AUTH_USE_CASE, context.application.usecases.auth);
@@ -35,6 +40,10 @@ export function setupVue(context: { domain: Domain; application: Application }) 
     app.provide(USER_USE_CASE, context.application.usecases.users);
     app.provide(USER_ADMIN_USE_CASE, context.application.usecases.userAdmin);
     app.provide(APP_SETTINGS_USE_CASE, context.application.usecases.appSettings);
+    app.provide(QUALIFICATION_USE_CASE, context.application.usecases.qualifications);
+    app.provide(QUALIFICATION_ADMIN_USE_CASE, context.application.usecases.qualificationAdmin);
+    app.provide(POSITION_USE_CASE, context.application.usecases.positions);
+    app.provide(POSITION_ADMIN_USE_CASE, context.application.usecases.positionAdmin);
     app.provide(NOTIFICATION_SERVICE, context.application.services.notifications);
     app.provide(ERROR_HANDLING_SERVICE, context.application.services.errorHandling);
     app.mount('#app');

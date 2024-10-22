@@ -151,7 +151,7 @@
                                             v-for="position in item.alternativePositions"
                                             :key="position.key"
                                             :style="{ background: position.color }"
-                                            class="position mb-1 mr-1"
+                                            class="position mb-1 mr-1 text-xs"
                                         >
                                             <span>{{ position.name }}</span>
                                         </div>

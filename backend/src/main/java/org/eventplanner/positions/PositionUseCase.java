@@ -1,6 +1,5 @@
 package org.eventplanner.positions;
 
-import org.eventplanner.exceptions.NotImplementedException;
 import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
@@ -11,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PositionUseCase {
@@ -30,6 +30,7 @@ public class PositionUseCase {
     public Position createPosition(@NonNull SignedInUser signedInUser, Position position) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
+        position.setKey(new PositionKey(UUID.randomUUID().toString()));
         positionRepository.create(position);
         return position;
     }
@@ -44,6 +45,8 @@ public class PositionUseCase {
     public void deletePosition(@NonNull SignedInUser signedInUser, PositionKey positionKey) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
+        // TODO remove position from all qualifications and events
+        // TODO might want soft delete here
         positionRepository.deleteByKey(positionKey);
     }
 }

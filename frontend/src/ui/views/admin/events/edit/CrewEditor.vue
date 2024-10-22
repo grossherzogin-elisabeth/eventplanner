@@ -112,7 +112,7 @@
                                 <span v-else class="mx-2 w-0 flex-grow truncate italic text-red-500">
                                     Noch nicht besetzt
                                 </span>
-                                <span :style="{ background: it.position.color }" class="position">
+                                <span :style="{ background: it.position.color }" class="position text-xs">
                                     {{ it.positionName }}
                                 </span>
                             </VDraggable>
@@ -192,7 +192,7 @@
                                         <template #icon>
                                             <span
                                                 :style="{ background: it.position.color }"
-                                                class="position cursor-pointer"
+                                                class="position cursor-pointer text-xs"
                                             >
                                                 {{ it.position.name }}
                                                 <i class="fa-solid fa-chevron-down"> </i>

@@ -4,29 +4,31 @@
             {{ props.label }}
         </label>
         <div class="relative w-1/2 flex-grow">
-            <div class="input-field-wrapper h-full">
-                <textarea
-                    :id="id"
-                    :value="props.modelValue"
-                    :placeholder="props.placeholder"
-                    :disabled="props.disabled"
-                    :readonly="props.readonly"
-                    :required="props.required"
-                    rows="5"
-                    :maxlength="props.maxLength"
-                    :class="{
-                        invalid: showErrors && hasErrors,
-                        readonly: props.readonly,
-                        disabled: props.disabled,
-                    }"
-                    class="input-field h-full"
-                    aria-multiline="true"
-                    @input="onInput"
-                    @blur="visited = true"
-                />
-                <span v-if="maxLength && props.modelValue" class="input-character-counter">
-                    {{ props.modelValue.length }}/{{ maxLength }}
-                </span>
+            <div>
+                <div class="input-field-wrapper h-full">
+                    <textarea
+                        :id="id"
+                        :value="props.modelValue"
+                        :placeholder="props.placeholder"
+                        :disabled="props.disabled"
+                        :readonly="props.readonly"
+                        :required="props.required"
+                        rows="5"
+                        :maxlength="props.maxLength"
+                        :class="{
+                            invalid: showErrors && hasErrors,
+                            readonly: props.readonly,
+                            disabled: props.disabled,
+                        }"
+                        class="input-field h-full"
+                        aria-multiline="true"
+                        @input="onInput"
+                        @blur="visited = true"
+                    />
+                    <span v-if="maxLength && props.modelValue" class="input-character-counter">
+                        {{ props.modelValue.length }}/{{ maxLength }}
+                    </span>
+                </div>
             </div>
             <div v-if="showErrors && hasErrors" class="input-errors">
                 <p v-for="err in errors" :key="err.key" class="input-error">

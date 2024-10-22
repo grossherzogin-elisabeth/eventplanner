@@ -1,0 +1,1 @@
+ALTER TABLE qualifications ADD column grants_position TEXT NULL;

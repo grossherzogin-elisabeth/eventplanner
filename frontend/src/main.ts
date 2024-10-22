@@ -17,6 +17,8 @@ import type {
     SettingsRepository,
     UserRepository,
 } from '@/application';
+import { QualificationUseCase } from '@/application';
+import { PositionAdministrationUseCase, PositionUseCase, QualificationAdministrationUseCase } from '@/application';
 import { NotificationService } from '@/application';
 import {
     AuthUseCase,
@@ -34,6 +36,7 @@ import { ErrorHandlingService } from '@/application/services/ErrorHandlingServic
 import { AppSettingsUseCase } from '@/application/usecases/AppSettingsUseCase';
 import { IndexedDB, IndexedDBRepository } from '@/common';
 import type { Domain } from '@/domain';
+import { QualificationService } from '@/domain';
 import { EventService, RegistrationService, UserService } from '@/domain';
 import { setupVue } from '@/ui';
 import { config } from './config';
@@ -58,6 +61,7 @@ const domain: Domain = {
         users: new UserService(),
         events: new EventService(),
         registrations: new RegistrationService(),
+        qualifications: new QualificationService(),
     },
 };
 
@@ -162,6 +166,26 @@ async function init(): Promise<void> {
                 notificationService: notificationService,
                 errorHandlingService: errorHandlingService,
                 settingsRepository: settingsRepository,
+            }),
+            positions: new PositionUseCase({
+                errorHandlingService: errorHandlingService,
+                positionCachingService: positionCachingService,
+            }),
+            positionAdmin: new PositionAdministrationUseCase({
+                notificationService: notificationService,
+                errorHandlingService: errorHandlingService,
+                positionRepository: positionRepository,
+                positionCachingService: positionCachingService,
+            }),
+            qualifications: new QualificationUseCase({
+                errorHandlingService: errorHandlingService,
+                qualificationCachingService: qualificationCachingService,
+            }),
+            qualificationAdmin: new QualificationAdministrationUseCase({
+                notificationService: notificationService,
+                errorHandlingService: errorHandlingService,
+                qualificationRepository: qualificationRepository,
+                qualificationCachingService: qualificationCachingService,
             }),
         },
     };

@@ -19,6 +19,7 @@ export enum Routes {
     UserDetails = 'app_user-details',
 
     AppSettings = 'app_settings',
+    Basedata = 'app_basedata',
 
     Wiki = 'app_wiki',
 }

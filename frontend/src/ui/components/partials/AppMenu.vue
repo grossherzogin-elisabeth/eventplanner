@@ -61,6 +61,12 @@
                     <span>Nutzer verwalten</span>
                 </RouterLink>
             </li>
+            <li v-if="signedInUser.permissions.includes(Permission.WRITE_QUALIFICATIONS)" class="menu-item">
+                <RouterLink :to="{ name: Routes.Basedata }">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Stammdaten</span>
+                </RouterLink>
+            </li>
             <li v-if="signedInUser.permissions.includes(Permission.WRITE_SETTINGS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>

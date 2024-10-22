@@ -2,6 +2,7 @@ package org.eventplanner.qualifications.adapter.jpa;
 
 import java.io.Serializable;
 
+import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
 
@@ -13,6 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
+
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 @Entity
 @Table(name = "qualifications")
@@ -38,17 +42,28 @@ public class QualificationJpaEntity implements Serializable {
     @Column(name = "expires", nullable = false)
     private boolean expires;
 
+    @Column(name = "grants_position")
+    private String grantsPosition;
+
     public static QualificationJpaEntity fromDomain(Qualification qualification) {
         return new QualificationJpaEntity(
             qualification.getKey().value(),
             qualification.getName(),
             qualification.getIcon(),
             qualification.getDescription(),
-            qualification.isExpires()
+            qualification.isExpires(),
+            mapNullable(qualification.getGrantsPosition(), PositionKey::value)
         );
     }
 
     public Qualification toDomain() {
-        return new Qualification(new QualificationKey(key), name, icon, description, expires);
+        return new Qualification(
+            new QualificationKey(key),
+            name,
+            icon,
+            description,
+            expires,
+            mapNullable(grantsPosition, PositionKey::new)
+        );
     }
 }

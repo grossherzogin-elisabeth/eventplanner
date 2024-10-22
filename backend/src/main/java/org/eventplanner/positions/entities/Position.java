@@ -1,12 +1,16 @@
 package org.eventplanner.positions.entities;
 
+import lombok.*;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
 
-public record Position(
-    @NonNull PositionKey key,
-    @NonNull String name,
-    @NonNull String color,
-    int priority
-) {
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class Position {
+    @NonNull PositionKey key;
+    @NonNull String name;
+    @NonNull String color;
+    int priority;
 }

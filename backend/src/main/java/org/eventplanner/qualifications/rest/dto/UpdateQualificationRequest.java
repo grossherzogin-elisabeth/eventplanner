@@ -10,8 +10,7 @@ import java.io.Serializable;
 
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
-public record QualificationRepresentation(
-        @NonNull String key,
+public record UpdateQualificationRequest(
         @NonNull String name,
         @Nullable String icon,
         @Nullable String description,
@@ -19,14 +18,14 @@ public record QualificationRepresentation(
         @Nullable String grantsPosition
 ) implements Serializable {
 
-    public static QualificationRepresentation fromDomain(@NonNull Qualification qualification) {
-        return new QualificationRepresentation(
-            qualification.getKey().value(),
-            qualification.getName(),
-            qualification.getIcon(),
-            qualification.getDescription(),
-            qualification.isExpires(),
-            mapNullable(qualification.getGrantsPosition(), PositionKey::value)
+    public Qualification toDomain(String key) {
+        return new Qualification(
+            new QualificationKey(key),
+            name,
+            icon,
+            description,
+            expires,
+            mapNullable(grantsPosition, PositionKey::new)
         );
     }
 }

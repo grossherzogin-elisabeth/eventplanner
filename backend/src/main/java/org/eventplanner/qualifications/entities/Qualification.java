@@ -1,6 +1,8 @@
 package org.eventplanner.qualifications.entities;
 
 import lombok.*;
+import org.eventplanner.positions.entities.Position;
+import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -16,4 +18,5 @@ public class Qualification {
     private @Nullable String icon;
     private @Nullable String description;
     private boolean expires;
+    private @Nullable PositionKey grantsPosition;
 }
