@@ -184,7 +184,10 @@ public class UserExcelImporter {
         parseQualificationWithOptionalExpirationDate(usr, data[COL_FUNK], data[COL_FUNK_EXPIRATION_DATE]);
         parseQualificationWithOptionalExpirationDate(usr, "STCW-" + data[COL_STCW], data[COL_STCW_EXPIRATION_DATE]);
         parseQualificationWithMandatoryExpirationDate(usr, new QualificationKey("medical-care"), data[COL_MEDICAL_CARE]);
-        parseQualificationWithMandatoryExpirationDate(usr, new QualificationKey("first-aid"), data[COL_FIRST_AID]);
+        var fistAid = data[COL_FIRST_AID].trim();
+        if (!fistAid.isBlank() && !fistAid.equals("-")) {
+            user.addQualification(new QualificationKey("first-aid"));
+        }
 
         var unhandledQualifications = parseOtherQualifications(user, data[COL_OTHER_QUALIFICATIONS]);
         if (Pattern.compile("[a-z]+").matcher(unhandledQualifications).find()) {
