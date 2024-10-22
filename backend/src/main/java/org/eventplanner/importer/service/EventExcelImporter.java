@@ -369,15 +369,15 @@ public class EventExcelImporter {
 
         slots.add(Slot.of(Pos.KOCH).withCriticality(1));
         slots.add(Slot.of(Pos.AUSBILDER, Pos.STM).withName("Ausbilder").withCriticality(1));
-        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
-        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
-        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
-        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
 
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
 
         slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
         slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
