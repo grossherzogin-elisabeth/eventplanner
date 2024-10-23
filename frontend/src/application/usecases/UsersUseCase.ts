@@ -63,7 +63,7 @@ export class UsersUseCase {
     ): Promise<UserDetails> {
         try {
             const diff = ObjectUtils.diff(originalUser, updatedUser);
-            if (Object.keys(diff).length === 0) {
+            if (Object.keys(diff).length > 0) {
                 const savedUser = await this.userRepository.updateSignedInUser({
                     gender: diff.gender,
                     title: diff.title,
@@ -73,6 +73,16 @@ export class UsersUseCase {
                     address: diff.address,
                     passNr: diff.passNr,
                     email: diff.email,
+                });
+                await this.userCachingService.updateCache({
+                    key: savedUser.key,
+                    firstName: savedUser.firstName,
+                    nickName: savedUser.nickName,
+                    lastName: savedUser.lastName,
+                    positionKeys: savedUser.positionKeys,
+                    roles: savedUser.roles,
+                    email: savedUser.email,
+                    qualifications: savedUser.qualifications,
                 });
                 this.notificationService.success('Deine Angaben wurden gespeichert');
                 return savedUser;

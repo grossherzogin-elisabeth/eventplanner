@@ -29,10 +29,12 @@ export class UserAdministrationUseCase {
             await this.userCachingService.updateCache({
                 key: savedUser.key,
                 firstName: savedUser.firstName,
+                nickName: savedUser.nickName,
                 lastName: savedUser.lastName,
                 positionKeys: savedUser.positionKeys,
                 roles: savedUser.roles,
                 email: savedUser.email,
+                qualifications: savedUser.qualifications,
             });
             this.notificationService.success('Änderungen gespeichert');
             return savedUser;

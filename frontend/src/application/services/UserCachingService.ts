@@ -28,6 +28,7 @@ export class UserCachingService {
     public async updateCache(user: User): Promise<User> {
         const cached = await this.cache.findByKey(user.key);
         if (cached) {
+            // make sure we don't forget any data
             return await this.cache.save(Object.assign(cached, user));
         } else if ((await this.cache.count()) > 0) {
             return await this.cache.save(user);

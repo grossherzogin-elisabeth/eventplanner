@@ -1,7 +1,7 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Qualifikation hinzufügen</h1>
+            <h1>Qualifikation bearbeiten</h1>
         </template>
         <template #default>
             <div class="p-8 lg:px-16">

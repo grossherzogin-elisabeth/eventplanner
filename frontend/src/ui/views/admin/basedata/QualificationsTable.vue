@@ -1,12 +1,16 @@
 <template>
-    <VTable :items="qualifications" class="scrollbar-invisible no-header overflow-x-auto px-8 md:px-16 xl:px-20">
+    <VTable
+        :items="qualifications"
+        class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+        @click="editQualification($event)"
+    >
         <template #row="{ item }">
             <td :key="item.icon" class="text-xl">
                 <i class="fa-solid" :class="item.icon" />
             </td>
             <td class="w-full min-w-80">
-                <p class="mb-1 font-semibold">{{ item.name }}</p>
-                <p class="text-sm">
+                <p class="mb-1 line-clamp-2 font-semibold">{{ item.name }}</p>
+                <p class="line-clamp-2 text-sm">
                     {{ item.description }}
                 </p>
             </td>
