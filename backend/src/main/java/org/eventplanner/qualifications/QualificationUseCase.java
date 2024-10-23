@@ -41,6 +41,10 @@ public class QualificationUseCase {
     public Qualification updateQualification(@NonNull SignedInUser signedInUser, QualificationKey qualificationKey, Qualification qualification) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
+        if (!qualificationKey.equals(qualification.getKey())) {
+            throw new IllegalArgumentException("Keys cannot be changed");
+        }
+
         qualificationRepository.update(qualification);
         return qualification;
     }

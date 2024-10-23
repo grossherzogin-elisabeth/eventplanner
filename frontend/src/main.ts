@@ -36,6 +36,7 @@ import { ErrorHandlingService } from '@/application/services/ErrorHandlingServic
 import { AppSettingsUseCase } from '@/application/usecases/AppSettingsUseCase';
 import { IndexedDB, IndexedDBRepository } from '@/common';
 import type { Domain } from '@/domain';
+import { PositionService } from '@/domain';
 import { QualificationService } from '@/domain';
 import { EventService, RegistrationService, UserService } from '@/domain';
 import { setupVue } from '@/ui';
@@ -62,6 +63,7 @@ const domain: Domain = {
         events: new EventService(),
         registrations: new RegistrationService(),
         qualifications: new QualificationService(),
+        positions: new PositionService(),
     },
 };
 

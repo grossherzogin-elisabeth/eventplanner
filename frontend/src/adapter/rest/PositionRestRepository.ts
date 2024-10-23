@@ -47,7 +47,7 @@ export class PositionRestRepository implements PositionRepository {
             color: position.color,
             prio: position.prio,
         };
-        const response = await fetch('/api/v1/position', {
+        const response = await fetch('/api/v1/positions', {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -69,7 +69,7 @@ export class PositionRestRepository implements PositionRepository {
             color: position.color,
             prio: position.prio,
         };
-        const response = await fetch(`/api/v1/Positions/${positionKey}`, {
+        const response = await fetch(`/api/v1/positions/${positionKey}`, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -86,7 +86,7 @@ export class PositionRestRepository implements PositionRepository {
     }
 
     public async deleteByKey(positionKey: PositionKey): Promise<void> {
-        const response = await fetch(`/api/v1/Positions/${positionKey}`, {
+        const response = await fetch(`/api/v1/positions/${positionKey}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

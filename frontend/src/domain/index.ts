@@ -25,3 +25,4 @@ export * from './services/EventService';
 export * from './services/RegistrationService';
 export * from './services/UserService';
 export * from './services/QualificationService';
+export * from './services/PositionService';

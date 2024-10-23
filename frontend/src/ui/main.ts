@@ -16,7 +16,13 @@ import {
     USER_ADMIN_USE_CASE,
     USER_USE_CASE,
 } from '@/ui/composables/Application';
-import { EVENT_SERVICE, QUALIFICATION_SERVICE, REGISTRATION_SERVICE, USER_SERVICE } from '@/ui/composables/Domain';
+import {
+    EVENT_SERVICE,
+    POSITION_SERVICE,
+    QUALIFICATION_SERVICE,
+    REGISTRATION_SERVICE,
+    USER_SERVICE,
+} from '@/ui/composables/Domain';
 import App from './App.vue';
 import './assets/css/main.css';
 import './plugins/fontawesome';
@@ -32,6 +38,7 @@ export function setupVue(context: { domain: Domain; application: Application }) 
     app.provide(REGISTRATION_SERVICE, context.domain.services.registrations);
     app.provide(EVENT_SERVICE, context.domain.services.events);
     app.provide(QUALIFICATION_SERVICE, context.domain.services.qualifications);
+    app.provide(POSITION_SERVICE, context.domain.services.positions);
 
     app.provide(CONFIG, context.application.config);
     app.provide(AUTH_USE_CASE, context.application.usecases.auth);

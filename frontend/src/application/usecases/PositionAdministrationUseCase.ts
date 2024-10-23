@@ -24,9 +24,15 @@ export class PositionAdministrationUseCase {
         this.errorHandlingService = params.errorHandlingService;
     }
 
-    public async getPositions(): Promise<Position[]> {
+    public async getPositions(filter?: string): Promise<Position[]> {
         try {
-            return await this.positionCachingService.getPositions();
+            const filterLc = filter?.trim().toLowerCase();
+            let positions = await this.positionCachingService.getPositions();
+            if (filterLc) {
+                positions = positions.filter((it) => it.name.toLowerCase().includes(filterLc));
+            }
+            positions = positions.sort((a, b) => b.prio - a.prio || a.name.localeCompare(b.name));
+            return positions;
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;

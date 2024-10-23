@@ -38,6 +38,10 @@ public class PositionUseCase {
     public Position updatePosition(@NonNull SignedInUser signedInUser, PositionKey positionKey, Position position) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
+        if (!positionKey.equals(position.getKey())) {
+            throw new IllegalArgumentException("Keys cannot be changed");
+        }
+
         positionRepository.update(position);
         return position;
     }

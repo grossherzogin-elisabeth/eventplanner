@@ -6,6 +6,10 @@
         <template #default>
             <div class="p-8 lg:px-16">
                 <div class="-mx-4 mb-4">
+                    <VInputLabel>Id</VInputLabel>
+                    <VInputText v-model="qualification.key" required disabled />
+                </div>
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Name</VInputLabel>
                     <VInputText
                         v-model="qualification.name"

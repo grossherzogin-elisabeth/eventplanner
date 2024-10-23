@@ -12,9 +12,9 @@ public record UpdatePositionRequest(
     int prio
 ) implements Serializable {
 
-    public Position toDomain() {
+    public Position toDomain(String key) {
         return new Position(
-            new PositionKey(""),
+            new PositionKey(key),
             name,
             color,
             prio

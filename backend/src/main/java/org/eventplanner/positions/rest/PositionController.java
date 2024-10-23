@@ -58,8 +58,8 @@ public class PositionController {
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
-        var positionSpec = spec.toDomain();
-        var position = positionUseCase.updatePosition(signedInUser, new PositionKey(positionKey), positionSpec);
+        var positionSpec = spec.toDomain(positionKey);
+        var position = positionUseCase.updatePosition(signedInUser, positionSpec.getKey(), positionSpec);
         return ResponseEntity.ok(PositionRepresentation.fromDomain(position));
     }
 
