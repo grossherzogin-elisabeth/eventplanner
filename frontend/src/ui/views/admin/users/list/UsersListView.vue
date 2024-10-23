@@ -81,7 +81,14 @@
                     </td>
                     <td class="w-1/12">
                         <div
-                            v-if="item.expiredQualifications.length > 0"
+                            v-if="item.qualifications.length === 0"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
+                        >
+                            <i class="fa-solid fa-question-circle"></i>
+                            <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
+                        </div>
+                        <div
+                            v-else-if="item.expiredQualifications.length > 0"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
                             :title="item.expiredQualifications.join(', ')"
                         >
@@ -102,18 +109,11 @@
                             </span>
                         </div>
                         <div
-                            v-else-if="item.soonExpiringQualifications.length === 0"
+                            v-else
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
                         >
                             <i class="fa-solid fa-check-circle"></i>
                             <span class="whitespace-nowrap font-semibold">Alle gültig</span>
-                        </div>
-                        <div
-                            v-else
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
-                        >
-                            <i class="fa-solid fa-question-circle"></i>
-                            <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
                         </div>
                     </td>
                     <td class="w-0">
