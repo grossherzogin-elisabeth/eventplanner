@@ -1,6 +1,6 @@
 <template>
     <section v-if="user" class="-mx-4">
-        <div v-if="signedInUser.roles.includes(Role.ADMIN)" class="mb-4">
+        <div class="mb-4">
             <VInputLabel>OpenID Connect Subject ID</VInputLabel>
             <VInputText v-model="user.authKey" />
         </div>
@@ -41,9 +41,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { InputSelectOption, UserDetails } from '@/domain';
-import { Role } from '@/domain';
 import { VInputDate, VInputLabel, VInputSelect, VInputText } from '@/ui/components/common';
-import { useAuthUseCase } from '@/ui/composables/Application';
 
 interface Props {
     modelValue: UserDetails;
@@ -55,9 +53,6 @@ interface Emits {
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
-
-const auth = useAuthUseCase();
-const signedInUser = auth.getSignedInUser();
 
 const user = ref<UserDetails>(props.modelValue);
 const genderOptions: InputSelectOption[] = [
