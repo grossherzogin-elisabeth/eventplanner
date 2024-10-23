@@ -46,6 +46,7 @@ interface SignedInUserUpdateRequest {
 }
 
 interface UserDetailsUpdateRequest {
+    authKey?: string;
     gender?: string;
     title?: string;
     firstName?: string;
@@ -151,6 +152,7 @@ export class UserRestRepository implements UserRepository {
 
     public async updateUser(userKey: UserKey, user: Partial<UserDetails>): Promise<UserDetails> {
         const requestBody: UserDetailsUpdateRequest = {
+            authKey: user.authKey,
             gender: user.gender,
             title: user.title,
             firstName: user.firstName,

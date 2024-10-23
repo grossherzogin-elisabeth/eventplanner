@@ -118,6 +118,7 @@ public class UserUseCase {
         signedInUser.assertHasPermission(Permission.WRITE_USERS);
 
         var user = userService.getUserByKey(key).orElseThrow();
+        applyNullable(spec.authKey(), user::setAuthKey);
         applyNullable(spec.gender(), user::setGender);
         applyNullable(spec.title(), user::setTitle);
         applyNullable(spec.firstName(), user::setFirstName);

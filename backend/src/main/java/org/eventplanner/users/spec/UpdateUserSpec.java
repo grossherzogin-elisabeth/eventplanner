@@ -3,6 +3,7 @@ package org.eventplanner.users.spec;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserQualification;
 import org.eventplanner.users.values.Address;
+import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Role;
 import org.springframework.lang.Nullable;
 
@@ -10,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public record UpdateUserSpec(
+    @Nullable AuthKey authKey,
     @Nullable String gender,
     @Nullable String title,
     @Nullable String firstName,

@@ -2,6 +2,7 @@ package org.eventplanner.users.rest.dto;
 
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.spec.UpdateUserSpec;
+import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -13,6 +14,7 @@ import java.util.List;
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UpdateUserRequest(
+    @Nullable String authKey,
     @Nullable String gender,
     @Nullable String title,
     @Nullable String firstName,
@@ -35,6 +37,7 @@ public record UpdateUserRequest(
 
     public @NonNull UpdateUserSpec toDomain() {
         return new UpdateUserSpec(
+            mapNullable(authKey, AuthKey::new),
             gender,
             title,
             firstName,
