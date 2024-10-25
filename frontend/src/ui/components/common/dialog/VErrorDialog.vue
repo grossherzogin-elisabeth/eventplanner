@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg" height="max-h-screen h-auto error-dialog modal">
+    <VDialog ref="dlg" height="max-h-screen h-auto" class="error-dialog modal">
         <template #title>
             <h1 class="text-red-600">
                 {{ error.title || 'Unwerwarteter Fehler' }}

@@ -10,8 +10,8 @@
         anchor-align-x="right"
         anchor-align-y="top"
         dropdown-position-x="left"
-        max-width="18rem"
-        min-width="18rem"
+        max-width="20rem"
+        min-width="20rem"
         @close="open = false"
     >
         <div class="mt-2 rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl" @click="open = false">

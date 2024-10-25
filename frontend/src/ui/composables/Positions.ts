@@ -35,7 +35,7 @@ export function usePositions() {
                 key: positonKey,
                 color: '',
                 prio: 0,
-                name: 'Err',
+                name: positonKey,
             }
         );
     }

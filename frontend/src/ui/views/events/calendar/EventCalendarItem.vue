@@ -48,14 +48,22 @@
                         class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-green-100 px-4 py-3 text-green-800"
                     >
                         <i class="fa-solid fa-check" />
-                        <p class="text-sm font-bold">{{ $t('app.event-details.note-assigned') }}</p>
+                        <p class="text-sm font-bold">
+                            Du bist für diese Reise als
+                            {{ positions.get(props.event.signedInUserAssignedPosition).name }}
+                            eingeplant
+                        </p>
                     </div>
                     <div
                         v-else-if="props.event.signedInUserWaitingListPosition"
                         class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-blue-100 px-4 py-3 text-blue-800"
                     >
                         <i class="fa-solid fa-clock" />
-                        <p class="text-sm font-bold">{{ $t('app.event-details.note-waitinglist') }}</p>
+                        <p class="text-sm font-bold">
+                            Du stehst für diese Reise als
+                            {{ positions.get(props.event.signedInUserWaitingListPosition).name }}
+                            auf der Warteliste
+                        </p>
                     </div>
 
                     <!-- info -->
@@ -99,13 +107,34 @@
                         </p>
                     </div>
 
+                    <div
+                        v-if="
+                            signedInUserPositions.length > 1 &&
+                            !props.event.signedInUserAssignedPosition &&
+                            !props.event.signedInUserWaitingListPosition
+                        "
+                        class="-mx-4 my-4 flex items-center space-x-4 rounded-xl bg-blue-100 px-4 py-3 text-blue-800"
+                    >
+                        <i class="fa-solid fa-info-circle" />
+                        <div class="text-sm font-bold">
+                            <p class="mb-2">
+                                Anmeldungen werden mit deiner aktuellen Standardposition
+                                <i>{{ positions.get(signedInUserPositions[0]).name }}</i> angelegt.
+                            </p>
+                            <button class="" @click="choosePositionAndJoinEvent(props.event)">
+                                <!--                                <i class="fa-solid fa-search"></i>-->
+                                <span class="underline"> Mit einer andere Position anmelden? </span>
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- primary button -->
-                    <div class="mt-4 flex justify-end space-x-2 xl:-mr-4">
+                    <div class="-mx-4 mt-4 flex flex-wrap justify-end xl:-mr-4">
+                        <div class="flex-grow"></div>
                         <button
                             v-if="props.event.signedInUserAssignedPosition"
                             class="btn-ghost-danger"
                             title="Event absagen"
-                            :disabled="!props.event.canSignedInUserLeave"
                             @click="leaveEvent()"
                         >
                             <i class="fa-solid fa-ban"></i>
@@ -122,12 +151,14 @@
                         </button>
                         <button
                             v-else-if="props.event.canSignedInUserJoin"
-                            class="btn-ghost"
+                            class="btn-ghost max-w-80"
                             title="Anmelden"
-                            @click="joinEvent()"
+                            @click="joinEvent(props.event)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
-                            <span class="ml-2">Anmelden</span>
+                            <span class="ml-2 truncate">
+                                Anmelden als {{ positions.get(signedInUserPositions[0]).name }}</span
+                            >
                         </button>
                         <RouterLink
                             :to="{ name: Routes.EventDetails, params: { key: props.event.key } }"
@@ -141,17 +172,21 @@
                 </div>
             </div>
         </VDropdownWrapper>
+
+        <PositionSelectDlg ref="positionSelectDialog" />
     </div>
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event } from '@/domain';
-import { VDropdownWrapper } from '@/ui/components/common';
+import type { Event, PositionKey } from '@/domain';
+import { type Dialog, VDropdownWrapper } from '@/ui/components/common';
+import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
-import { useEventUseCase } from '@/ui/composables/Application';
+import { useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
+import { usePositions } from '@/ui/composables/Positions';
 import { Routes } from '@/ui/views/Routes';
 
 interface Props {
@@ -170,15 +205,26 @@ const emit = defineEmits<Emits>();
 
 const route = useRoute();
 const router = useRouter();
+const positions = usePositions();
 const eventUseCase = useEventUseCase();
+const usersUseCase = useUsersUseCase();
 
+const signedInUserPositions = ref<PositionKey[]>([]);
 const showDropdown = ref<boolean>(false);
 
+const positionSelectDialog = ref<Dialog<void, PositionKey> | null>(null);
+
 function init(): void {
+    fetchSignedInUserPositions();
     watch(
         () => route.fullPath,
         () => (showDropdown.value = false)
     );
+}
+
+async function fetchSignedInUserPositions(): Promise<void> {
+    const user = await usersUseCase.getUserDetailsForSignedInUser();
+    signedInUserPositions.value = user.positionKeys;
 }
 
 function showDetails(): void {
@@ -192,8 +238,24 @@ function showDetails(): void {
     }
 }
 
-async function joinEvent(): Promise<void> {
-    const updatedEvent = await eventUseCase.joinEvent(props.event);
+async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
+    if (!positionSelectDialog.value) {
+        return;
+    }
+    showDropdown.value = false;
+    try {
+        const position = await positionSelectDialog.value.open();
+        // default position might have changed
+        await fetchSignedInUserPositions();
+        const updatedEvent = await eventUseCase.joinEvent(evt, position);
+        emit('update:event', updatedEvent);
+    } catch (e) {
+        // ignore
+    }
+}
+
+async function joinEvent(evt: Event): Promise<void> {
+    const updatedEvent = await eventUseCase.joinEvent(evt, signedInUserPositions.value[0]);
     emit('update:event', updatedEvent);
     showDropdown.value = false;
 }

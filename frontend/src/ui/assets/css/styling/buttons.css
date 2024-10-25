@@ -19,7 +19,7 @@ button:disabled {
 
 a.btn-primary,
 .btn-primary:enabled {
-    @apply bg-primary-200 hover:bg-primary-300 hover:shadow;
+    @apply bg-primary-200 hover:bg-primary-300;
 }
 
 .btn-primary:disabled {
@@ -32,7 +32,7 @@ a.btn-primary,
 
 a.btn-secondary,
 .btn-secondary:enabled {
-    @apply bg-gray-200 hover:bg-gray-300 hover:shadow;
+    @apply bg-gray-200 hover:bg-gray-300;
 }
 
 .btn-secondary:disabled {
@@ -45,7 +45,7 @@ a.btn-secondary,
 
 a.btn-danger,
 .btn-danger:enabled {
-    @apply bg-red-400 bg-opacity-75 hover:bg-opacity-100 hover:shadow;
+    @apply bg-red-400 bg-opacity-75 hover:bg-opacity-100;
 }
 
 .btn-danger:disabled {
@@ -142,4 +142,28 @@ a.btn-danger,
 
 .btn-back:hover:before {
     @apply bottom-0 left-0 right-0 top-0;
+}
+
+.btn-split {
+    @apply flex items-stretch;
+}
+
+.btn-split > button:not(:first-child) {
+    @apply rounded-l-none border-l border-opacity-25 pl-3;
+}
+
+.btn-split > button:not(:last-child) {
+    @apply rounded-r-none pr-3;
+}
+
+.btn-split > .btn-primary {
+    @apply border-primary-900;
+}
+
+.btn-split > .btn-secondary {
+    @apply border-gray-700;
+}
+
+.btn-split > .btn-danger {
+    @apply border-white;
 }

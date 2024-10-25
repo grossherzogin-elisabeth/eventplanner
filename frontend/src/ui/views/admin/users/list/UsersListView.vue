@@ -81,7 +81,7 @@
                     </td>
                     <td class="w-1/12">
                         <div
-                            v-if="item.qualifications.length === 0"
+                            v-if="item.qualifications?.length === 0"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
                         >
                             <i class="fa-solid fa-question-circle"></i>

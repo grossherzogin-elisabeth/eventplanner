@@ -17,6 +17,7 @@ import type {
     User,
     UserDetails,
     UserKey,
+    UserSettings,
 } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
@@ -51,10 +52,24 @@ export class UsersUseCase {
     }
 
     public async getUserDetailsForSignedInUser(): Promise<UserDetails> {
-        if (this.config.overrideSignedInUserKey) {
-            return await this.userRepository.findByKey(this.config.overrideSignedInUserKey);
+        try {
+            let user: UserDetails;
+            if (this.config.overrideSignedInUserKey) {
+                user = await this.userRepository.findByKey(this.config.overrideSignedInUserKey);
+            } else {
+                user = await this.userRepository.findBySignedInUser();
+            }
+            const userSettings = await this.getUserSettings();
+            user.positionKeys = user.positionKeys.sort((a, b) => {
+                if (userSettings.preferredPosition === a) return -1;
+                if (userSettings.preferredPosition === b) return 1;
+                return 0;
+            });
+            return user;
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
         }
-        return await this.userRepository.findBySignedInUser();
     }
 
     public async updateUserDetailsForSignedInUser(
@@ -143,5 +158,21 @@ export class UsersUseCase {
         }
         const users = await this.userCachingService.getUsers();
         return users.find((it) => it.key === registration.userKey);
+    }
+
+    public async getUserSettings(): Promise<UserSettings> {
+        let settings: UserSettings = {};
+        const settingsJson = localStorage.getItem('settings') || '{}';
+        if (settingsJson) {
+            settings = Object.assign(settings, JSON.parse(settingsJson));
+        }
+        return settings;
+    }
+
+    public async saveUserSettings(patch: Partial<UserSettings>): Promise<UserSettings> {
+        let settings = await this.getUserSettings();
+        settings = Object.assign(settings, patch);
+        localStorage.setItem('settings', JSON.stringify(settings));
+        return settings;
     }
 }

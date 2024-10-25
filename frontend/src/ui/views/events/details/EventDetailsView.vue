@@ -1,10 +1,10 @@
 <template>
-    <DetailsPage :back-to="{ name: Routes.Events }">
+    <DetailsPage :back-to="{ name: Routes.Events }" :class="$attrs.class">
         <template #header>
             <h1 class="mb-2 hidden w-full truncate pt-8 xl:block">
                 {{ event?.name }}
             </h1>
-            <p>{{ event?.description }}</p>
+            <!--            <p>{{ event?.description }}</p>-->
         </template>
         <template #content>
             <div
@@ -30,7 +30,11 @@
                     <div class="overflow-hidden rounded-2xl bg-green-100 text-green-800">
                         <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
                             <i class="fa-solid fa-check" />
-                            <p class="text-sm font-bold">Du bist für diese Reise eingeplant</p>
+                            <p class="text-sm font-bold">
+                                Du bist für diese Reise als
+                                {{ positions.get(event.signedInUserAssignedPosition).name }}
+                                eingeplant
+                            </p>
                         </div>
                     </div>
                 </section>
@@ -41,7 +45,11 @@
                     <div class="overflow-hidden rounded-2xl bg-yellow-100 text-yellow-800">
                         <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
                             <i class="fa-solid fa-hourglass-half" />
-                            <p class="text-sm font-bold">Du stehst für diese Reise auf der Warteliste</p>
+                            <p class="text-sm font-bold">
+                                Du stehst für diese Reise als
+                                {{ positions.get(event.signedInUserWaitingListPosition).name }}
+                                auf der Warteliste
+                            </p>
                         </div>
                     </div>
                 </section>
@@ -168,7 +176,8 @@
                                         <i v-else class="fa-solid fa-user-circle text-red-500" />
                                         <RouterLink
                                             v-if="
-                                                it.userName && user.permissions.includes(Permission.READ_USER_DETAILS)
+                                                it.userName &&
+                                                signedInUser.permissions.includes(Permission.READ_USER_DETAILS)
                                             "
                                             :to="{ name: Routes.UserDetails, params: { key: it.userKey } }"
                                             class="truncate"
@@ -221,7 +230,7 @@
 
                 <!-- documents -->
                 <section
-                    v-if="user.permissions.includes(Permission.BETA_FEATURES)"
+                    v-if="signedInUser.permissions.includes(Permission.BETA_FEATURES)"
                     class="-mx-4 md:col-start-2 xl:mx-0"
                 >
                     <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">Dokumente</h2>
@@ -234,13 +243,8 @@
                 </section>
             </div>
         </template>
-        <template v-if="event && user.permissions.includes(Permission.EVENT_TEAM_WRITE_SELF)" #primary-button>
-            <button
-                v-if="event.signedInUserAssignedPosition"
-                class="btn-danger"
-                :disabled="!event.canSignedInUserLeave"
-                @click="leaveEvent(event)"
-            >
+        <template v-if="event && signedInUser.permissions.includes(Permission.EVENT_TEAM_WRITE_SELF)" #primary-button>
+            <button v-if="event.signedInUserAssignedPosition" class="btn-danger" @click="leaveEvent(event)">
                 <i class="fa-solid fa-cancel" />
                 <span>Reise absagen</span>
             </button>
@@ -253,85 +257,90 @@
                 <i class="fa-solid fa-user-minus" />
                 <span>Warteliste verlassen</span>
             </button>
-            <button v-else class="btn-primary" :disabled="!event.canSignedInUserJoin" @click="joinEvent(event)">
+            <div v-else-if="event.canSignedInUserJoin && signedInUserPositions.length > 1" class="btn-split">
+                <button class="btn-primary max-w-64 sm:max-w-80" @click="joinEvent(event)">
+                    <i class="fa-solid fa-user-plus" />
+                    <span class="truncate text-left">
+                        Anmelden als {{ positions.get(signedInUserPositions[0]).name }}
+                    </span>
+                </button>
+                <button
+                    v-if="signedInUserPositions.length > 1"
+                    class="btn-primary"
+                    @click="choosePositionAndJoinEvent(event)"
+                >
+                    <i class="fa-solid fa-chevron-down" />
+                </button>
+            </div>
+            <button
+                v-else
+                class="btn-primary max-w-80"
+                :disabled="!event.canSignedInUserJoin"
+                @click="joinEvent(event)"
+            >
                 <i class="fa-solid fa-user-plus" />
-                <span>Anmelden</span>
+                <span class="truncate text-left">Anmelden als {{ positions.get(signedInUserPositions[0]).name }}</span>
             </button>
         </template>
         <template v-if="event" #secondary-buttons>
-            <button class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
-                <i class="fa-solid fa-calendar-alt" />
-                <span>In Kalender speichern</span>
-            </button>
             <RouterLink
-                v-if="user.permissions.includes(Permission.WRITE_EVENTS)"
+                v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                 :to="{ name: Routes.EventEdit }"
                 class="btn-secondary"
             >
                 <i class="fa-solid fa-edit" />
                 <span>Reise bearbeiten</span>
             </RouterLink>
+            <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
+                <i class="fa-solid fa-calendar-alt" />
+                <span>In Kalender speichern</span>
+            </button>
         </template>
         <template v-if="event" #actions-menu>
             <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
                 <span>Kalendereintrag erstellen</span>
             </li>
-            <li v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
+            <li class="context-menu-item disabled">
+                <i class="fa-solid fa-note-sticky" />
+                <span>Notiz fürs Büro hinzufügen</span>
+            </li>
+            <li
+                v-if="signedInUser.permissions.includes(Permission.READ_USER_DETAILS)"
+                class="context-menu-item disabled"
+            >
+                <i class="fa-solid fa-clipboard-user" />
+                <span>IMO Liste generieren</span>
+            </li>
+            <li class="context-menu-item disabled">
+                <i class="fa-solid fa-beer-mug-empty" />
+                <span>Getränkeliste generieren</span>
+            </li>
+            <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-edit" />
                     <span>Reise bearbeiten</span>
                 </RouterLink>
             </li>
-            <li
-                v-if="event.signedInUserAssignedPosition"
-                class="context-menu-item"
-                :class="{ disabled: !event.canSignedInUserLeave }"
-                @click="leaveEvent(event)"
-            >
-                <i class="fa-solid fa-cancel" />
-                <span>Reise absagen</span>
-            </li>
-            <li
-                v-else-if="event.signedInUserWaitingListPosition"
-                class="context-menu-item"
-                :class="{ disabled: !event.canSignedInUserLeave }"
-                @click="leaveEvent(event)"
-            >
-                <i class="fa-solid fa-user-minus" />
-                <span>Warteliste verlassen</span>
-            </li>
-            <li
-                v-else
-                class="context-menu-item"
-                :class="{ disabled: !event.canSignedInUserJoin }"
-                @click="joinEvent(event)"
-            >
-                <i class="fa-solid fa-user-plus" />
-                <span>Anmelden</span>
-            </li>
         </template>
     </DetailsPage>
+    <PositionSelectDlg ref="positionSelectDialog" />
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, Position, PositionKey, ResolvedRegistration, ResolvedSlot } from '@/domain';
+import type { Event, PositionKey, ResolvedRegistration, ResolvedSlot } from '@/domain';
 import { EventState, Permission } from '@/domain';
+import type { Dialog } from '@/ui/components/common';
+import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
 import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
+import { usePositions } from '@/ui/composables/Positions';
 import { Routes } from '@/ui/views/Routes';
-
-interface State {
-    text: string;
-    icon: string;
-    color?: string;
-}
 
 enum Tab {
     Team = 'team',
@@ -344,23 +353,22 @@ interface RouteEmits {
 
 const emit = defineEmits<RouteEmits>();
 
-const i18n = useI18n();
 const route = useRoute();
+const positions = usePositions();
 const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
 const usersUseCase = useUsersUseCase();
-const user = authUseCase.getSignedInUser();
+const signedInUser = authUseCase.getSignedInUser();
 
+const signedInUserPositions = ref<PositionKey[]>([]);
 const event = ref<Event | null>(null);
 const tab = ref<Tab>(Tab.Team);
-const ownPosition = ref<Position | null>(null);
 const documentsMock = ['Kammerplan', 'Wachplan', 'Getränkeliste Crew'];
 
-const position = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const waitingList = ref<ResolvedRegistration[]>([]);
 const team = ref<ResolvedSlot[]>([]);
 
-const state = ref<State | null>(null);
+const positionSelectDialog = ref<Dialog<void, PositionKey> | null>(null);
 
 const waitingListCount = computed<number>(() => {
     if (!event.value) return 0;
@@ -368,19 +376,20 @@ const waitingListCount = computed<number>(() => {
 });
 
 function init(): void {
-    fetchPositions();
     fetchEvent();
+    fetchSignedInUserPositions();
     watch(event, onEventChanged);
-}
-
-async function fetchPositions(): Promise<void> {
-    position.value = await usersUseCase.resolvePositionNames();
 }
 
 async function fetchEvent(): Promise<void> {
     const key = route.params.key as string;
     const year = parseInt(route.params.year as string, 10) || new Date().getFullYear();
     event.value = await eventUseCase.getEventByKey(year, key);
+}
+
+async function fetchSignedInUserPositions(): Promise<void> {
+    const user = await usersUseCase.getUserDetailsForSignedInUser();
+    signedInUserPositions.value = user.positionKeys;
 }
 
 async function onEventChanged() {
@@ -392,25 +401,6 @@ async function onEventChanged() {
     if (event.value.state === EventState.OpenForSignup || event.value.assignedUserCount === 0) {
         tab.value = Tab.WaitingList;
     }
-
-    if (event.value?.signedInUserAssignedPosition !== undefined) {
-        state.value = {
-            text: ownPosition.value
-                ? i18n.t('app.event-details.note-assigned-position', { position: ownPosition.value.name })
-                : i18n.t('app.event-details.note-assigned'),
-            icon: 'fa-check',
-            color: 'bg-green-100 text-green-800',
-        };
-    } else if (event.value?.signedInUserWaitingListPosition) {
-        state.value = {
-            text: ownPosition.value
-                ? i18n.t('app.event-details.note-waitinglist-position', { position: ownPosition.value.name })
-                : i18n.t('app.event-details.note-waitinglist'),
-            icon: 'fa-clock',
-            color: 'bg-yellow-100 text-yellow-900',
-        };
-    }
-
     await fetchTeam(event.value);
 }
 
@@ -420,18 +410,22 @@ async function fetchTeam(event: Event): Promise<void> {
     waitingList.value = await usersUseCase.resolveWaitingList(event);
 }
 
-async function joinEvent(evt: Event, position?: PositionKey): Promise<void> {
-    let signupPosition = position;
-    if (!position) {
-        const userDetails = await usersUseCase.getUserDetailsForSignedInUser();
-        if (userDetails.positionKeys.length === 1) {
-            signupPosition = userDetails.positionKeys[0];
-        } else {
-            signupPosition = userDetails.positionKeys[0];
-            alert(`Du hast mehrere mögliche Rollen. Wir nehmen erstmal ${signupPosition}`);
-        }
+async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
+    if (!positionSelectDialog.value) {
+        return;
     }
-    event.value = await eventUseCase.joinEvent(evt, signupPosition);
+    try {
+        const position = await positionSelectDialog.value.open();
+        // default position might have changed
+        await fetchSignedInUserPositions();
+        event.value = await eventUseCase.joinEvent(evt, position);
+    } catch (e) {
+        // ignore
+    }
+}
+
+async function joinEvent(evt: Event): Promise<void> {
+    event.value = await eventUseCase.joinEvent(evt, signedInUserPositions.value[0]);
 }
 
 async function leaveEvent(evt: Event): Promise<void> {

@@ -99,7 +99,7 @@ export class EventUseCase {
         }
     }
 
-    public async joinEvent(event: Event, positionKey?: PositionKey): Promise<Event> {
+    public async joinEvent(event: Event, positionKey: PositionKey): Promise<Event> {
         try {
             const user = this.authService.getSignedInUser();
             if (!user) {
@@ -107,7 +107,7 @@ export class EventUseCase {
             }
             let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
                 key: '',
-                positionKey: positionKey || 'deckshand', // TODO where can we best define the default?
+                positionKey: positionKey,
                 userKey: user.key,
             });
             savedEvent = await this.eventCachingService.updateCache(savedEvent);
@@ -134,6 +134,17 @@ export class EventUseCase {
                 throw new Error('Anmeldung nicht gefunden');
             }
             const hasSlot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
+            if (!event.canSignedInUserLeave) {
+                this.errorHandlingService.handleError({
+                    title: 'Absage über die App nicht möglich',
+                    message: `
+                        Du kannst diese Reise nicht mehr über die App absagen, da sie in weniger als 7 Tagen starten
+                        wird. Bitte melde dich im Büro ab und versuche kurzfristige Absagen soweit möglich zu vermeiden,
+                        da es dann schwierig ist noch einen Ersatz für dich zu finden.
+                    `,
+                });
+                return event;
+            }
             let savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
             savedEvent = await this.eventCachingService.updateCache(savedEvent);
             if (hasSlot) {

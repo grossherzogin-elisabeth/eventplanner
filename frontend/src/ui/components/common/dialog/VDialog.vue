@@ -1,34 +1,44 @@
 <template>
-    <div v-if="renderContent" :class="dialogOpen ? 'open' : 'closed'" class="dialog-background" @click="reject()">
-        <div class="dialog-wrapper" @click.stop="">
-            <slot name="dialog">
-                <div
-                    :class="`
-                        ${props.width || 'w-screen max-w-xl'}
-                        ${props.height || 'h-auto max-h-screen'}
-                    `"
-                    class="dialog"
-                >
-                    <div class="dialog-header pl-8 lg:pl-16">
-                        <div class="flex flex-grow items-center pt-4">
-                            <slot name="title"></slot>
+    <div>
+        <teleport to="body">
+            <div
+                v-if="renderContent"
+                :class="dialogOpen ? 'open' : 'closed'"
+                class="dialog-background"
+                @click="reject()"
+            >
+                <div class="dialog-wrapper" @click.stop="">
+                    <slot name="dialog">
+                        <div
+                            :class="`
+                            ${props.width || 'w-screen max-w-xl'}
+                            ${props.height || 'h-auto max-h-screen'}
+                            ${$attrs.class}
+                        `"
+                            class="dialog"
+                        >
+                            <div class="dialog-header pl-8 lg:pl-16">
+                                <div class="flex flex-grow items-center pt-4">
+                                    <slot name="title"></slot>
+                                </div>
+                                <div class="flex w-20 items-center justify-center lg:w-16">
+                                    <button class="dialog-close-button" @click="reject()">
+                                        <i class="fa-solid fa-close"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="dialog-content flex flex-1 flex-col overflow-y-auto">
+                                <slot name="content"></slot>
+                                <slot name="default"></slot>
+                            </div>
+                            <div v-if="$slots.buttons" class="dialog-buttons">
+                                <slot :close="reject" :reject="reject" :submit="submit" name="buttons"></slot>
+                            </div>
                         </div>
-                        <div class="flex w-20 items-center justify-center lg:w-16">
-                            <button class="dialog-close-button" @click="reject()">
-                                <i class="fa-solid fa-close"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="dialog-content flex flex-1 flex-col overflow-y-auto">
-                        <slot name="content"></slot>
-                        <slot name="default"></slot>
-                    </div>
-                    <div v-if="$slots.buttons" class="dialog-buttons">
-                        <slot :close="reject" :reject="reject" :submit="submit" name="buttons"></slot>
-                    </div>
+                    </slot>
                 </div>
-            </slot>
-        </div>
+            </div>
+        </teleport>
     </div>
 </template>
 
