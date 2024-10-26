@@ -1,12 +1,5 @@
 <template>
-    <ViewToolbar>
-        <template #breadcrumps>
-            <span class="text-gray-400">Fehler</span>
-            <i class="fa-solid fa-chevron-right mx-4 h-3 text-gray-400"></i>
-            <span>404 </span>
-        </template>
-    </ViewToolbar>
-    <div class="h-full overflow-y-auto px-8 pb-8 pt-4 md:px-16 xl:px-20">
+    <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
         <div class="max-w-2xl">
             <h1 class="mb-4">Die verlorene Seite</h1>
             <p class="mb-4">
@@ -33,8 +26,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import ViewToolbar from '@/ui/components/partials/ViewToolbar.vue';
-
 interface RouteEmits {
     (e: 'update:title', value: string): void;
 }

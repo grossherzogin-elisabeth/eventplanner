@@ -13,6 +13,7 @@ export enum Routes {
     Events = 'app_events',
     EventsAdmin = 'app_events-admin',
     EventDetails = 'app_event-details',
+    EventConfirmParticipation = 'app_event-confirm-participation',
     EventEdit = 'app_event-edit',
 
     UsersList = 'app_users',

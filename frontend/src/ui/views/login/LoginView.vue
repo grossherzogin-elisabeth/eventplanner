@@ -88,6 +88,14 @@
             </div>
         </div>
     </div>
+    <div v-else class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
+        <div class="-mx-4 flex max-w-2xl items-center gap-4 rounded-2xl bg-blue-200 p-4 text-blue-700">
+            <i class="fa-solid fa-info-circle"></i>
+            <span class="font-bold">
+                Diese Seite ist nur für angemeldete Nutzer sichtbar. Du wirst in Kürze zum Login weitergeleitet...
+            </span>
+        </div>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -111,10 +119,10 @@ const username = ref<string>('');
 const password = ref<string>('');
 
 async function init(): Promise<void> {
+    emit('update:title', 'Login');
     if (!enableLoginView) {
         await authUseCase.login();
     } else {
-        emit('update:title', 'Login');
         if (!authUseCase.isLoggedIn()) {
             await authUseCase.onLogin();
         }

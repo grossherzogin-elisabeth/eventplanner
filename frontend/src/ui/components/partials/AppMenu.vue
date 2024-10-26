@@ -114,7 +114,7 @@
             </li>
         </ul>
     </div>
-    <div v-else class="menu animate-pulse">
+    <div v-else-if="loading || route.name === Routes.Login" class="menu animate-pulse">
         <div class="mx-12 my-4 h-6 rounded-full bg-current opacity-10"></div>
         <div class="mx-12 mb-12 h-6 w-1/2 rounded-full bg-current opacity-10"></div>
 
@@ -125,9 +125,37 @@
         <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
         <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
     </div>
+    <div v-else>
+        <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
+        <div class="mx-4 rounded-2xl bg-blue-100 bg-opacity-25 px-4 py-4 font-bold backdrop-blur-2xl xl:mx-8 xl:pl-6">
+            <p class="mb-2 text-base">
+                <i class="fa-solid fa-info-circle"></i>
+                <span class="ml-4">Noch kein Account?</span>
+            </p>
+            <p class="text-sm">
+                Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Reisen einsehen und dich zu
+                Reisen an und abmelden.
+            </p>
+        </div>
+        <ul class="menu-list my-4">
+            <li class="menu-item">
+                <RouterLink :to="{ name: Routes.Login }">
+                    <i class="fa-solid fa-sign-in-alt"></i>
+                    <span>Zum Login</span>
+                </RouterLink>
+            </li>
+            <li class="menu-item">
+                <RouterLink :to="{ name: Routes.Login }">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span>Jetzt registrieren</span>
+                </RouterLink>
+            </li>
+        </ul>
+    </div>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import type { SignedInUser } from '@/domain';
 import { Permission } from '@/domain';
 import { useAuthUseCase, useConfig } from '@/ui/composables/Application';
@@ -135,12 +163,15 @@ import { Routes } from '@/ui/views/Routes';
 
 const config = useConfig();
 const authUseCase = useAuthUseCase();
+const route = useRoute();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
+const loading = ref<boolean>(true);
 const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1];
 const eventsExpanded = ref<boolean>(false);
 
 authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
+setTimeout(() => (loading.value = false), 1000);
 </script>
 
 <style>

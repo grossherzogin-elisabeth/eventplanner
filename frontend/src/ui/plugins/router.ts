@@ -36,18 +36,18 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
             return;
         }
         if (meta?.authenticated && !authUseCase.isLoggedIn()) {
-            console.warn(`🛤️ Login required for route '${to.fullPath}'!`);
+            console.warn(`🛤️ Login required for route '${String(to.name)}'!`);
             next({ path: '/login' });
             return;
         }
         const user = authUseCase.getSignedInUser();
         // permission guard
         if (meta?.permissions && meta.permissions.find((it) => !user.permissions.includes(it as Permission))) {
-            console.warn(`🛤️ Missing permission for route '${to.fullPath}'!`);
+            console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
             next({ path: '/' });
             return;
         }
-        console.log(`🛤️ Entering route '${to.fullPath}'`);
+        console.log(`🛤️ Entering route '${String(to.name)}'`);
         next();
     });
     return router;

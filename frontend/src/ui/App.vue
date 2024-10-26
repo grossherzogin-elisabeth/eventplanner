@@ -3,7 +3,7 @@
         class="flex min-h-screen flex-col bg-primary-50 from-primary-900 to-primary-800 to-50% xl:bg-gradient-to-r"
         :class="{ impersonated: signedInUser?.impersonated }"
     >
-        <div v-if="signedInUser" class="xl:hidden">
+        <div class="xl:hidden">
             <AppNavbar :title="title" />
         </div>
         <VNotifications />
