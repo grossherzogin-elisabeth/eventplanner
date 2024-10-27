@@ -218,7 +218,7 @@
         <EventCancelDlg ref="deleteEventDialog" />
         <ImportEventsDlg ref="importEventsDialog" />
 
-        <div class="sticky bottom-0 right-0 z-10 mt-8 flex justify-end pb-4 pr-3 md:pr-14 xl:hidden">
+        <div class="sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-14 xl:hidden">
             <button class="btn-primary btn-floating" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Event erstellen</span>
@@ -291,7 +291,6 @@ const tabs = computed<string[]>(() => {
 
 function init(): void {
     emit('update:title', 'Events verwalten');
-    fetchEvents();
     watch(route, () => fetchEvents());
     watch(tab, () => fetchEvents());
 }
