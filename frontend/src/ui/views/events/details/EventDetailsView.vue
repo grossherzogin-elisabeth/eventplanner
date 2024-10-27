@@ -114,7 +114,13 @@
                 <!-- crew -->
                 <section class="col-start-1 row-span-6 -mx-4 md:row-start-1 md:mx-0">
                     <h2
-                        v-if="event.state !== EventState.OpenForSignup && event.assignedUserCount > 0"
+                        v-if="statesWithHiddenCrew.includes(event.state)"
+                        class="mb-2 ml-4 flex space-x-4 font-bold text-primary-800 text-opacity-50 md:mb-6 md:ml-0"
+                    >
+                        <span>Anmeldungen</span>
+                    </h2>
+                    <h2
+                        v-else
                         class="mb-2 ml-4 flex space-x-4 font-bold text-primary-800 text-opacity-50 md:mb-6 md:ml-0"
                     >
                         <button
@@ -131,12 +137,6 @@
                         >
                             Warteliste ({{ waitingListCount }})
                         </button>
-                    </h2>
-                    <h2
-                        v-else
-                        class="mb-2 ml-4 flex space-x-4 font-bold text-primary-800 text-opacity-50 md:mb-6 md:ml-0"
-                    >
-                        <span>Anmeldungen</span>
                     </h2>
                     <div
                         v-if="event.assignedUserCount === 0 && waitingListCount === 0"
@@ -218,7 +218,7 @@
                                 v-if="waitingList.length === 0"
                                 class="-mx-4 -mt-4 rounded-xl bg-primary-100 p-4 text-sm lg:-mx-8 lg:px-8"
                             >
-                                <p v-if="event.state === EventState.OpenForSignup">
+                                <p v-if="statesWithHiddenCrew.includes(event.state)">
                                     Für diesen Termin gibt es noch keine Anmeldungen.
                                 </p>
                                 <p v-else>Für diesen Termin gibt es keine Anmeldungen auf der Warteliste.</p>
@@ -360,6 +360,7 @@ const eventUseCase = useEventUseCase();
 const usersUseCase = useUsersUseCase();
 const signedInUser = authUseCase.getSignedInUser();
 
+const statesWithHiddenCrew = [EventState.OpenForSignup, EventState.Draft];
 const signedInUserPositions = ref<PositionKey[]>([]);
 const event = ref<Event | null>(null);
 const tab = ref<Tab>(Tab.Team);
@@ -398,7 +399,7 @@ async function onEventChanged() {
         return;
     }
 
-    if (event.value.state === EventState.OpenForSignup || event.value.assignedUserCount === 0) {
+    if (statesWithHiddenCrew.includes(event.value.state)) {
         tab.value = Tab.WaitingList;
     }
     await fetchTeam(event.value);

@@ -143,8 +143,7 @@
                                             <span>Reise bearbeiten</span>
                                         </RouterLink>
                                     </li>
-                                    <li v-if="item.state === EventState.Draft">
-                                        class="context-menu-item disabled">
+                                    <li v-if="item.state === EventState.Draft" class="context-menu-item disabled">
                                         <i class="fa-solid fa-unlock-alt" />
                                         <span>Anmeldungen freischalten</span>
                                     </li>
