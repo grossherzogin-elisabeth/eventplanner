@@ -16,7 +16,7 @@ export class ErrorHandlingService {
     }
 
     public handleError(error: ErrorDetails): void {
-        console.error(error.error);
+        console.error(error.error || error);
         if (this.errorHandler) {
             this.errorHandler(error);
         }

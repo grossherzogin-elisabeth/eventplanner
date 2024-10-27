@@ -56,8 +56,12 @@
                             <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
                             {{ item.name }}
                         </p>
-                        <p v-if="item.locations.length === 0" class="text-sm font-light">keine Reiseroute angegeben</p>
-                        <p v-else class="text-sm font-light">{{ item.locations.map((it) => it.name).join(' - ') }}</p>
+                        <p v-if="item.locations.length === 0" class="truncate text-sm font-light">
+                            keine Reiseroute angegeben
+                        </p>
+                        <p v-else class="truncate text-sm font-light">
+                            {{ item.locations.map((it) => it.name).join(' - ') }}
+                        </p>
                     </td>
                     <td>
                         <div
@@ -214,7 +218,7 @@
         <EventCancelDlg ref="deleteEventDialog" />
         <ImportEventsDlg ref="importEventsDialog" />
 
-        <div class="sticky bottom-0 right-0 z-10 flex justify-end pb-4 pr-3 md:pr-14 xl:hidden">
+        <div class="sticky bottom-0 right-0 z-10 mt-8 flex justify-end pb-4 pr-3 md:pr-14 xl:hidden">
             <button class="btn-primary btn-floating" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Event erstellen</span>

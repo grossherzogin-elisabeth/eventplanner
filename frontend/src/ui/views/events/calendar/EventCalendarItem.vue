@@ -8,8 +8,9 @@
         class="calendar-event-wrapper"
     >
         <div :class="`${$attrs.class}`" class="calendar-event-entry" @click="showDetails()">
-            <div class="flex items-center space-x-2">
-                <span :title="props.event.name" class="block w-full truncate">
+            <div class="w-full truncate" :title="props.event.name">
+                <span v-if="event.state === EventState.Draft" class="opacity-50"> Entwurf: </span>
+                <span class="">
                     {{ props.event.name }}
                 </span>
             </div>
@@ -181,6 +182,7 @@ import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, PositionKey } from '@/domain';
+import { EventState } from '@/domain';
 import { type Dialog, VDropdownWrapper } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
@@ -297,7 +299,7 @@ init();
 
 .calendar-event-entry {
     @apply border-l-8 border-blue-400 bg-blue-200 bg-opacity-75 hover:bg-opacity-100;
-    @apply text-blue-800;
+    @apply font-bold text-blue-800;
 }
 
 .calendar-event-entry:not(.in-past).full {
@@ -306,7 +308,7 @@ init();
 
 .calendar-event-entry.assigned {
     @apply border-l-8 border-green-700 bg-green-200 bg-opacity-75 hover:bg-opacity-100;
-    @apply font-bold;
+    @apply text-green-800;
 }
 
 .calendar-event-entry.waiting-list {
@@ -320,8 +322,14 @@ init();
     font-size: 0.6rem;
 }
 
-.calendar-event-entry.in-past {
-    @apply border-l-8 border-gray-400 bg-gray-200 bg-opacity-75 hover:bg-opacity-100;
+.calendar-event-entry.draft {
+    @apply border-l-8 border-gray-300 bg-gray-200 bg-opacity-75 hover:bg-opacity-100;
     @apply text-gray-800;
+    background-image: var(--pattern);
+}
+
+.calendar-event-entry.in-past {
+    @apply border-opacity-10 bg-opacity-50 hover:bg-opacity-75;
+    @apply text-opacity-30 hover:text-opacity-75;
 }
 </style>

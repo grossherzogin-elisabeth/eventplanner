@@ -313,6 +313,9 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
         if (calendarDayEvent.durationInMonth < 1) {
             calendarDayEvent.class += ' small';
         }
+        if (event.state === EventState.Draft) {
+            calendarDayEvent.class += ' draft';
+        }
 
         // check if event ends in next month and split into two events
         if (dayIndex + calendarDayEvent.durationInMonth > month.length) {

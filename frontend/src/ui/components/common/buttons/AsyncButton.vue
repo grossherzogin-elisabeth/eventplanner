@@ -15,7 +15,7 @@
         <span v-else class="block w-4">
             <slot name="icon"></slot>
         </span>
-        <span>
+        <span class="truncate text-left">
             <slot :failed="success === false" :loading="loading" :success="success === true" name="label" />
         </span>
     </button>

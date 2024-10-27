@@ -55,7 +55,9 @@ export class EventCachingService {
             }
         } else {
             event.canSignedInUserLeave = false;
-            event.canSignedInUserJoin = event.start.getTime() > new Date().getTime();
+            event.canSignedInUserJoin =
+                event.start.getTime() > new Date().getTime() &&
+                ![EventState.Draft, EventState.Canceled].includes(event.state);
         }
         if (event.state === EventState.Canceled) {
             event.canSignedInUserJoin = false;

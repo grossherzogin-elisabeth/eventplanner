@@ -243,26 +243,28 @@
             </div>
         </template>
         <template v-if="event && signedInUser.permissions.includes(Permission.EVENT_TEAM_WRITE_SELF)" #primary-button>
-            <button v-if="event.signedInUserAssignedPosition" class="btn-danger" @click="leaveEvent(event)">
-                <i class="fa-solid fa-cancel" />
-                <span>Reise absagen</span>
-            </button>
-            <button
+            <AsyncButton v-if="event.signedInUserAssignedPosition" class="btn-danger" :action="() => leaveEvent()">
+                <template #icon><i class="fa-solid fa-cancel" /></template>
+                <template #label>Reise absagen</template>
+            </AsyncButton>
+            <AsyncButton
                 v-else-if="event.signedInUserWaitingListPosition"
                 class="btn-danger"
                 :disabled="!event.canSignedInUserLeave"
-                @click="leaveEvent(event)"
+                :action="() => leaveEvent()"
             >
-                <i class="fa-solid fa-user-minus" />
-                <span>Warteliste verlassen</span>
-            </button>
+                <template #icon>
+                    <i class="fa-solid fa-user-minus" />
+                </template>
+                <template #label> Warteliste verlassen </template>
+            </AsyncButton>
             <div v-else-if="event.canSignedInUserJoin && signedInUserPositions.length > 1" class="btn-split">
-                <button class="btn-primary max-w-64 sm:max-w-80" @click="joinEvent(event)">
-                    <i class="fa-solid fa-user-plus" />
-                    <span class="truncate text-left">
-                        Anmelden als {{ positions.get(signedInUserPositions[0]).name }}
-                    </span>
-                </button>
+                <AsyncButton class="btn-primary max-w-64 sm:max-w-80" :action="() => joinEvent()">
+                    <template #icon>
+                        <i class="fa-solid fa-user-plus" />
+                    </template>
+                    <template #label> Anmelden als {{ positions.get(signedInUserPositions[0]).name }} </template>
+                </AsyncButton>
                 <button
                     v-if="signedInUserPositions.length > 1"
                     class="btn-primary"
@@ -271,15 +273,21 @@
                     <i class="fa-solid fa-chevron-down" />
                 </button>
             </div>
-            <button
+            <AsyncButton
                 v-else
                 class="btn-primary max-w-80"
                 :disabled="!event.canSignedInUserJoin"
-                @click="joinEvent(event)"
+                :action="() => joinEvent()"
             >
-                <i class="fa-solid fa-user-plus" />
-                <span class="truncate text-left">Anmelden als {{ positions.get(signedInUserPositions[0]).name }}</span>
-            </button>
+                <template #icon>
+                    <i class="fa-solid fa-user-plus" />
+                </template>
+                <template #label>
+                    <span class="truncate text-left">
+                        Anmelden als {{ positions.get(signedInUserPositions[0]).name }}
+                    </span>
+                </template>
+            </AsyncButton>
         </template>
         <template v-if="event" #secondary-buttons>
             <RouterLink
@@ -334,6 +342,7 @@ import type { Event, PositionKey } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 import type { Dialog } from '@/ui/components/common';
+import { AsyncButton } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
@@ -428,12 +437,16 @@ async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
     }
 }
 
-async function joinEvent(evt: Event): Promise<void> {
-    event.value = await eventUseCase.joinEvent(evt, signedInUserPositions.value[0]);
+async function joinEvent(): Promise<void> {
+    if (event.value) {
+        event.value = await eventUseCase.joinEvent(event.value, signedInUserPositions.value[0]);
+    }
 }
 
-async function leaveEvent(evt: Event): Promise<void> {
-    event.value = await eventUseCase.leaveEvent(evt);
+async function leaveEvent(): Promise<void> {
+    if (event.value) {
+        event.value = await eventUseCase.leaveEvent(event.value);
+    }
 }
 
 init();

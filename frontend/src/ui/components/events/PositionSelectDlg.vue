@@ -23,8 +23,14 @@
             </div>
         </template>
         <template #buttons="{ submit, close }">
-            <button class="btn-secondary" @click="close">Abbrechen</button>
-            <button class="btn-primary" @click="submit">Anmelden</button>
+            <button class="btn-secondary" @click="close">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Abbrechen</span>
+            </button>
+            <AsyncButton class="btn-primary" :action="() => submit()">
+                <template #icon><i class="fa-solid fa-check"></i></template>
+                <template #label>Anmelden</template>
+            </AsyncButton>
         </template>
     </VDialog>
 </template>
@@ -32,6 +38,7 @@
 import { computed, ref } from 'vue';
 import type { InputSelectOption, PositionKey, UserDetails } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
+import { AsyncButton } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
 import { VDialog, VInputLabel } from '@/ui/components/common';

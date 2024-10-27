@@ -51,7 +51,7 @@
             </li>
             <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.EventsAdmin }">
-                    <i class="fa-solid fa-compass"></i>
+                    <i class="fa-solid fa-compass-drafting"></i>
                     <span>Reisen verwalten</span>
                 </RouterLink>
             </li>
