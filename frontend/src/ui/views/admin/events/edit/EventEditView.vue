@@ -1,16 +1,16 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.EventsAdmin }">
         <template #header>
-            <div v-if="event" class="pt-8">
-                <h1 class="mb-1 truncate">{{ event.name || 'Err' }}</h1>
-                <p class="mb-4 text-sm">
+            <div v-if="event" class="">
+                <h1 class="mb-1 mt-4 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>
+                <p class="mb-4 hidden text-sm">
                     {{ $d(event.start, DateTimeFormat.DDD_DD_MM) }}
                     -
                     {{ $d(event.end, DateTimeFormat.DDD_DD_MM) }}
                 </p>
                 <div class="-mx-4 flex flex-wrap items-start font-semibold">
                     <div class="w-full">
-                        <VWarning v-if="hasEmptyRequiredSlots" class="mr-2 mt-2">
+                        <VWarning v-if="hasEmptyRequiredSlots" class="mr-2 mt-4">
                             Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht
                             erfüllt!
                         </VWarning>
