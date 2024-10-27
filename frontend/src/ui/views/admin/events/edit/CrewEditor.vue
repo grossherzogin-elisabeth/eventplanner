@@ -36,7 +36,7 @@
                 <!-- slot list dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute z-10 w-full" :class="{ hidden: dragSource !== DragSource.FROM_WAITING_LIST }">
-                        <VDropzone class="h-96" @drop="addToTeam($event as ResolvedRegistration)">
+                        <VDropzone class="h-96" @drop="addToTeam($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-add">
                                 <i class="fa-regular fa-calendar-plus text-3xl opacity-75"></i>
                                 <span>Zur Crew hinzufügen</span>
@@ -82,38 +82,41 @@
                     </div>
                     <!-- slot list -->
                     <ul>
-                        <template v-for="it in team" :key="it.key + it.userKey + it.userName + it.positionName">
+                        <template
+                            v-for="it in team"
+                            :key="it.registration?.key + it.user?.key + it.name + it.position.key"
+                        >
                             <VDraggable
                                 class="flex items-center rounded-xl px-4 py-2 hover:bg-primary-100 md:space-x-4"
-                                :class="{ 'cursor-move': it.userName !== undefined }"
+                                :class="{ 'cursor-move': it.name !== undefined }"
                                 component="li"
-                                :value="it.userKey || it.userName ? it : undefined"
+                                :value="it.user?.key || it.name ? it : undefined"
                                 @dragend="dragSource = null"
                                 @dragstart="dragSource = DragSource.FROM_TEAM"
                                 @click="editSlotRegistration(it)"
                             >
                                 <i class="fa-solid fa-grip-vertical hidden text-sm opacity-25 lg:inline"></i>
-                                <span v-if="it.userName && !it.confirmed" class="">
+                                <span v-if="it.name && !it.registration?.confirmed" class="">
                                     <i class="fa-solid fa-user-clock text-gray-400"></i>
                                 </span>
-                                <span v-else-if="it.userName && it.confirmed">
+                                <span v-else-if="it.name && it.registration?.confirmed">
                                     <i class="fa-solid fa-user-check text-green-600"></i>
                                 </span>
                                 <span v-else>
                                     <i class="fa-solid fa-user-xmark text-red-500"></i>
                                 </span>
-                                <span v-if="it.userName" class="mx-2 w-0 flex-grow truncate">
-                                    {{ it.userName }}
-                                    <template v-if="it.userName && !it.userKey"> (Gastcrew) </template>
+                                <span v-if="it.name" class="mx-2 w-0 flex-grow truncate">
+                                    {{ it.name }}
+                                    <template v-if="it.name && !it.user"> (Gastcrew) </template>
                                 </span>
-                                <span v-else-if="it.userKey" class="mx-2 w-0 flex-grow truncate italic text-red-500">
-                                    err: {{ it.userKey }}
+                                <span v-else-if="it.user" class="mx-2 w-0 flex-grow truncate italic text-red-500">
+                                    Unbekannt
                                 </span>
                                 <span v-else class="mx-2 w-0 flex-grow truncate italic text-red-500">
                                     Noch nicht besetzt
                                 </span>
                                 <span :style="{ background: it.position.color }" class="position text-xs">
-                                    {{ it.positionName }}
+                                    {{ it.position.name }}
                                 </span>
                             </VDraggable>
                         </template>
@@ -126,13 +129,13 @@
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute w-full space-y-8" :class="{ hidden: dragSource !== DragSource.FROM_TEAM }">
-                        <VDropzone class="h-44" @drop="removeFromTeam($event as ResolvedSlot)">
+                        <VDropzone class="h-44" @drop="removeFromTeam($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-remove">
                                 <i class="fa-regular fa-calendar-minus text-3xl opacity-75"></i>
                                 <span>Auf Warteliste verschieben</span>
                             </div>
                         </VDropzone>
-                        <VDropzone class="h-44" @drop="cancelRegistration($event as ResolvedSlot)">
+                        <VDropzone class="h-44" @drop="cancelRegistration($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-delete">
                                 <i class="fa-regular fa-calendar-xmark text-3xl opacity-75"></i>
                                 <span>Anmeldung löschen</span>
@@ -183,10 +186,11 @@
                                 @click="editWaitinglistRegistration(it)"
                             >
                                 <i class="fa-solid fa-grip-vertical mr-2 hidden text-sm opacity-25 lg:inline"></i>
-                                <span v-if="it.name" class="w-0 flex-grow truncate">{{ it.name }}</span>
-                                <span v-else-if="it.userKey" class="w-0 flex-grow italic text-red-500">
-                                    err: {{ it.userKey }}
+                                <span v-if="it.name" class="w-0 flex-grow truncate">
+                                    {{ it.name }}
+                                    <template v-if="it.name && !it.user"> (Gastcrew) </template>
                                 </span>
+                                <span v-else-if="it.user" class="w-0 flex-grow italic text-red-500"> Unbekannt </span>
                                 <div>
                                     <ContextMenuButton>
                                         <template #icon>
@@ -202,7 +206,7 @@
                                             <ul>
                                                 <template v-for="pos in position.values()" :key="pos.key">
                                                     <li
-                                                        v-if="it.user?.positionKeys.includes(pos.key)"
+                                                        v-if="!it.user || it.user.positionKeys.includes(pos.key)"
                                                         class="-mx-4 flex cursor-pointer items-center justify-between px-4 py-1 hover:bg-primary-200"
                                                         @click="changePosition(it, pos.key)"
                                                     >
@@ -210,16 +214,18 @@
                                                     </li>
                                                 </template>
                                                 <!-- show also non matching positions ??? -->
-                                                <hr />
-                                                <template v-for="pos in position.values()" :key="pos.key">
-                                                    <li
-                                                        v-if="!it.user?.positionKeys.includes(pos.key)"
-                                                        class="-mx-4 flex cursor-pointer items-center justify-between px-4 py-1 hover:bg-primary-200"
-                                                        @click="changePosition(it, pos.key)"
-                                                    >
-                                                        <span>{{ pos.name }}</span>
-                                                        <i class="fa-solid fa-warning text-yellow-500"></i>
-                                                    </li>
+                                                <template v-if="it.user">
+                                                    <hr />
+                                                    <template v-for="pos in position.values()" :key="pos.key">
+                                                        <li
+                                                            v-if="!it.user.positionKeys.includes(pos.key)"
+                                                            class="-mx-4 flex cursor-pointer items-center justify-between px-4 py-1 hover:bg-primary-200"
+                                                            @click="changePosition(it, pos.key)"
+                                                        >
+                                                            <span>{{ pos.name }}</span>
+                                                            <i class="fa-solid fa-warning text-yellow-500"></i>
+                                                        </li>
+                                                    </template>
                                                 </template>
                                             </ul>
                                         </template>
@@ -237,10 +243,11 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import type { Event, Position, PositionKey, Registration, ResolvedRegistration, ResolvedSlot } from '@/domain';
+import type { Event, Position, PositionKey, Registration } from '@/domain';
+import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VDraggable, VDropzone } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application';
+import { useEventAdministrationUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import RegistrationEditDlg from './RegistrationEditDlg.vue';
 
@@ -261,11 +268,13 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const usersUseCase = useUsersUseCase();
+const eventUseCase = useEventUseCase();
+const eventAdminUseCase = useEventAdministrationUseCase();
 const eventService = useEventService();
 
 const position = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
-const registrations = ref<ResolvedRegistration[]>([]);
-const team = ref<ResolvedSlot[]>([]);
+const registrations = ref<ResolvedRegistrationSlot[]>([]);
+const team = ref<ResolvedRegistrationSlot[]>([]);
 const dragSource = ref<DragSource | null>(null);
 const loading = ref<boolean>(true);
 
@@ -274,7 +283,7 @@ const editRegistrationDialog = ref<Dialog<Registration, Registration> | null>(nu
 const summary = computed<Record<PositionKey, number>>(() => {
     const sum: Record<PositionKey, number> = {};
     team.value
-        .filter((it) => it.userName)
+        .filter((it) => it.name)
         .forEach((it) => {
             let count = sum[it.position.key] || 0;
             count++;
@@ -295,42 +304,36 @@ async function init(): Promise<void> {
     loading.value = false;
 }
 
-async function addToTeam(registration: ResolvedRegistration): Promise<void> {
-    const user = await usersUseCase.resolveRegistrationUser(registration);
-
-    const slot = eventService
-        .getOpenSlots(props.event)
-        .find((it) => it.positionKeys.includes(registration.positionKey));
+async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
+    const slot = eventService.getOpenSlots(props.event).find((it) => it.positionKeys.includes(aggregate.position.key));
     if (!slot) {
         // TODO handle error
         alert('Das geht nicht');
-    } else if (user) {
-        emit('update:event', eventService.assignUserToSlot(props.event, user, slot.key));
+    } else if (aggregate.user) {
+        emit('update:event', eventService.assignUserToSlot(props.event, aggregate.user, slot.key));
     } else {
-        emit('update:event', eventService.assignGuestToSlot(props.event, registration.name, slot.key));
+        emit('update:event', eventService.assignGuestToSlot(props.event, aggregate.name, slot.key));
     }
 }
 
-async function removeFromTeam(slot: ResolvedSlot) {
-    emit('update:event', eventService.unassignSlot(props.event, slot.key));
+async function removeFromTeam(aggregate: ResolvedRegistrationSlot) {
+    if (aggregate.slot) {
+        emit('update:event', eventService.unassignSlot(props.event, aggregate.slot.key));
+    }
 }
 
-async function cancelRegistration(slot: ResolvedSlot) {
-    if (slot.userKey) {
-        emit('update:event', eventService.cancelUserRegistration(props.event, slot.userKey));
-    } else if (slot.userName) {
-        emit('update:event', eventService.cancelGuestRegistration(props.event, slot.userName));
+async function cancelRegistration(aggregate: ResolvedRegistrationSlot) {
+    if (aggregate.user) {
+        emit('update:event', eventService.cancelUserRegistration(props.event, aggregate.user?.key));
+    } else if (aggregate.name) {
+        emit('update:event', eventService.cancelGuestRegistration(props.event, aggregate.name));
     }
     await fetchTeam();
 }
 
-async function editWaitinglistRegistration(resolvedRegistration: ResolvedRegistration): Promise<void> {
-    if (editRegistrationDialog.value && (resolvedRegistration.userKey || resolvedRegistration.name)) {
-        const registration = eventService.findRegistration(
-            props.event,
-            resolvedRegistration.userKey,
-            resolvedRegistration.name
-        );
+async function editWaitinglistRegistration(aggregate: ResolvedRegistrationSlot): Promise<void> {
+    if (editRegistrationDialog.value && (aggregate.user || aggregate.name)) {
+        const registration = eventService.findRegistration(props.event, aggregate.user?.key, aggregate.name);
         if (registration) {
             try {
                 const edited = await editRegistrationDialog.value.open(registration);
@@ -344,9 +347,9 @@ async function editWaitinglistRegistration(resolvedRegistration: ResolvedRegistr
     }
 }
 
-async function editSlotRegistration(resolvedslot: ResolvedSlot): Promise<void> {
-    if (editRegistrationDialog.value && (resolvedslot.userKey || resolvedslot.userName)) {
-        const registration = eventService.findRegistration(props.event, resolvedslot.userKey, resolvedslot.userName);
+async function editSlotRegistration(aggregate: ResolvedRegistrationSlot): Promise<void> {
+    if (editRegistrationDialog.value && (aggregate.user || aggregate.name)) {
+        const registration = eventService.findRegistration(props.event, aggregate.user?.key, aggregate.name);
         if (registration) {
             try {
                 const edited = await editRegistrationDialog.value.open(registration);
@@ -360,10 +363,10 @@ async function editSlotRegistration(resolvedslot: ResolvedSlot): Promise<void> {
     }
 }
 
-function changePosition(resolvedRegistration: ResolvedRegistration, newPositionKey: PositionKey): void {
+function changePosition(resolvedRegistration: ResolvedRegistrationSlot, newPositionKey: PositionKey): void {
     const registration = eventService.findRegistration(
         props.event,
-        resolvedRegistration.userKey,
+        resolvedRegistration.user?.key,
         resolvedRegistration.name
     );
     if (registration) {
@@ -377,9 +380,9 @@ async function fetchPositions(): Promise<void> {
 
 async function fetchTeam(): Promise<void> {
     console.log('fetch team');
-    const resolvedSlots = await usersUseCase.resolveEventSlots(props.event);
-    team.value = resolvedSlots.filter((it) => it.userName || it.userKey || it.criticality >= 1);
-    registrations.value = await usersUseCase.resolveWaitingList(props.event);
+    const all = await eventUseCase.resolveRegistrations(props.event);
+    team.value = eventAdminUseCase.filterForCrew(props.event, all);
+    registrations.value = eventAdminUseCase.filterForWaitingList(props.event, all);
 }
 
 init();

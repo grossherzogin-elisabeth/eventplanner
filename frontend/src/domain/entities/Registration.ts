@@ -8,4 +8,5 @@ export interface Registration {
     userKey?: UserKey;
     name?: string;
     note?: string;
+    confirmed?: boolean;
 }

@@ -3,6 +3,7 @@ import type { ErrorHandlingService } from '@/application/services/ErrorHandlingS
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import type { Event, EventKey, ImportError, Registration } from '@/domain';
 import { EventState } from '@/domain';
+import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class EventAdministrationUseCase {
     private readonly eventCachingService: EventCachingService;
@@ -127,6 +128,14 @@ export class EventAdministrationUseCase {
             title: 'TODO',
             message: 'Diese Funktion ist derzeit noch nicht implementiert',
         });
+    }
+
+    public filterForWaitingList(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
+        return registrations.filter((it) => it.registration !== undefined && it.slot === undefined);
+    }
+
+    public filterForCrew(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
+        return registrations.filter((it) => it.slot !== undefined);
     }
 
     public async addRegistration(eventKey: EventKey, registration: Registration): Promise<void> {

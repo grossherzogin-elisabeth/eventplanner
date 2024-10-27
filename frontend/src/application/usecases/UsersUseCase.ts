@@ -6,14 +6,10 @@ import type { QualificationCachingService } from '@/application/services/Qualifi
 import type { UserCachingService } from '@/application/services/UserCachingService';
 import { ObjectUtils } from '@/common';
 import type {
-    Event,
     Position,
     PositionKey,
     Qualification,
     QualificationKey,
-    Registration,
-    ResolvedRegistration,
-    ResolvedSlot,
     User,
     UserDetails,
     UserKey,
@@ -138,26 +134,6 @@ export class UsersUseCase {
         const users = await this.getUsers(keys);
         users.forEach((it) => map.set(it.key, `${it.firstName} ${it.lastName}`));
         return map;
-    }
-
-    public async resolveEventSlots(event: Event): Promise<ResolvedSlot[]> {
-        const users = await this.getUsers();
-        const positions = await this.resolvePositionNames();
-        return this.registrationService.resolveRegistrationsWithAssignedSlots(event, users, positions);
-    }
-
-    public async resolveWaitingList(event: Event): Promise<ResolvedRegistration[]> {
-        const users = await this.getUsers();
-        const positions = await this.resolvePositionNames();
-        return this.registrationService.resolveRegistrationsOnWaitingList(event, users, positions);
-    }
-
-    public async resolveRegistrationUser(registration: Registration): Promise<User | undefined> {
-        if (!registration.userKey) {
-            return undefined;
-        }
-        const users = await this.userCachingService.getUsers();
-        return users.find((it) => it.key === registration.userKey);
     }
 
     public async getUserSettings(): Promise<UserSettings> {

@@ -1,125 +1,89 @@
-import { ArrayUtils } from '@/common';
 import type {
     Event,
     Position,
+    PositionKey,
     QualificationKey,
     Registration,
-    ResolvedRegistration,
-    ResolvedSlot,
+    RegistrationKey,
+    Slot,
     User,
+    UserKey,
 } from '@/domain';
+import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class RegistrationService {
-    public resolveRegistrationsWithAssignedSlots(
-        event: Event,
-        users: User[],
-        positions: Map<string, Position>
-    ): ResolvedSlot[] {
-        return event.slots
-            .map((slot) => {
-                const registration = event.registrations.find((it) => it.key === slot.assignedRegistrationKey);
-                if (registration) {
-                    const user = this.resolveRegistrationUser(registration, users);
-                    const position = positions.get(registration.positionKey) || this.unknownPosition();
-                    return {
-                        ...slot,
-                        userName: user
-                            ? `${user.nickName || user.firstName} ${user.lastName}`
-                            : registration.name || '',
-                        userKey: registration.userKey,
-                        registration: registration,
-                        position: position,
-                        positionName: slot.positionName || position.name,
-                        confirmed: Math.random() > 0.5,
-                        expiredQualifications: this.filterExpiredQualifications(user, event.end),
-                        hasOverwrittenPosition:
-                            user !== undefined && !user.positionKeys.includes(registration.positionKey),
-                        hasFitnessForSeaService:
-                            user?.qualifications?.find(
-                                (q) =>
-                                    q.qualificationKey === 'fitness-for-seaservice' &&
-                                    q.expiresAt &&
-                                    q.expiresAt.getTime() > event.end.getTime()
-                            ) !== undefined,
-                    };
-                }
-                const position = positions.get(slot.positionKeys[0]) || this.unknownPosition();
-                return {
-                    ...slot,
-                    userName: undefined,
-                    userKey: undefined,
-                    registration: registration,
-                    position: position,
-                    positionName: slot.positionName || position.name,
-                    confirmed: false,
+    public resolveRegistrations(event: Event, users: User[], positions: Position[]): ResolvedRegistrationSlot[] {
+        const positionMap = new Map<PositionKey, Position>();
+        positions.forEach((position) => positionMap.set(position.key, position));
+        const userMap = new Map<UserKey, User>();
+        users.forEach((user: User) => userMap.set(user.key, user));
+        const slotMap = new Map<RegistrationKey, Slot>();
+        event.slots
+            .filter((slot) => slot.assignedRegistrationKey !== undefined)
+            .forEach((slot) => slotMap.set(slot.assignedRegistrationKey || '', slot));
+
+        const resolved: ResolvedRegistrationSlot[] = [];
+        // add registrations
+        event.registrations.forEach((registration: Registration) => {
+            const user = userMap.get(registration.userKey || 'none');
+            resolved.push({
+                position: positionMap.get(registration.positionKey) || {
+                    key: registration.positionKey,
+                    name: registration.positionKey,
+                    prio: 0,
+                    color: '',
+                },
+                name: user ? `${user.nickName || user.firstName} ${user.lastName}` : registration.name || '',
+                registration: registration,
+                user: user,
+                slot: slotMap.get(registration.key),
+                expiredQualifications: this.filterExpiredQualifications(user, event.end),
+                hasFitnessForSeaService: this.hasFitnessForSeaService(user, event.end),
+                hasOverwrittenPosition: this.hasOverwrittenPosition(registration, user),
+            });
+        });
+        // add empty slots
+        event.slots
+            .filter((slot) => !slot.assignedRegistrationKey)
+            .forEach((slot) =>
+                resolved.push({
+                    position: positionMap.get(slot.positionKeys[0]) || {
+                        key: slot.positionKeys[0],
+                        name: slot.positionKeys[0],
+                        prio: 0,
+                        color: '',
+                    },
+                    name: '',
+                    registration: undefined,
+                    user: undefined,
+                    slot: slot,
                     expiredQualifications: [],
-                    hasOverwrittenPosition: false,
                     hasFitnessForSeaService: false,
-                };
-            })
-            .sort(
-                (a, b) =>
-                    b.position.prio - a.position.prio ||
-                    a.order - b.order ||
-                    a.userName?.localeCompare(b.userName || '') ||
-                    0
+                    hasOverwrittenPosition: false,
+                })
             );
+        return resolved.sort(
+            (a, b) =>
+                b.position.prio - a.position.prio ||
+                (!a.name && b.name ? 1 : 0) ||
+                (!b.name && a.name ? -1 : 0) ||
+                a.name.localeCompare(b.name)
+        );
     }
 
-    public resolveRegistrationsOnWaitingList(
-        event: Event,
-        users: User[],
-        positions: Map<string, Position>
-    ): ResolvedRegistration[] {
-        const assignedRegistrationKeys = event.slots
-            .map((it) => it.assignedRegistrationKey)
-            .filter(ArrayUtils.filterUndefined);
-        return event.registrations
-            .filter((registration) => !assignedRegistrationKeys.includes(registration.key))
-            .map((registration) => {
-                const user = this.resolveRegistrationUser(registration, users);
-                return {
-                    ...registration,
-                    name: this.resolveRegistrationUserName(registration, users),
-                    position: positions.get(registration.positionKey) || this.unknownPosition(),
-                    user: user,
-                    expiredQualifications: this.filterExpiredQualifications(user, event.end),
-                    hasOverwrittenPosition: user !== undefined && !user.positionKeys.includes(registration.positionKey),
-                    hasFitnessForSeaService:
-                        user?.qualifications?.find(
-                            (q) =>
-                                q.qualificationKey === 'fitness-for-seaservice' &&
-                                q.expiresAt &&
-                                q.expiresAt.getTime() > event.end.getTime()
-                        ) !== undefined,
-                };
-            })
-            .filter(ArrayUtils.filterUndefined)
-            .sort(
-                (a, b) =>
-                    b.position.prio - a.position.prio ||
-                    (b.hasFitnessForSeaService ? 1 : 0) - (a.hasFitnessForSeaService ? 1 : 0) ||
-                    a.name.localeCompare(b.name)
-            );
+    private hasFitnessForSeaService(user?: User, atTime: Date = new Date()): boolean {
+        return (
+            user?.qualifications?.find(
+                (q) =>
+                    q.qualificationKey === 'fitness-for-seaservice' &&
+                    q.expiresAt &&
+                    q.expiresAt.getTime() > atTime.getTime()
+            ) !== undefined
+        );
     }
 
-    private resolveRegistrationUser(registration: Registration, users: User[]): User | undefined {
-        if (!registration.userKey) {
-            return undefined;
-        }
-        return users.find((user) => user.key === registration.userKey);
-    }
-
-    private resolveRegistrationUserName(registration: Registration, users: User[]): string {
-        const user = this.resolveRegistrationUser(registration, users);
-        if (!user) {
-            return registration.name || '';
-        }
-        return `${user.nickName || user.firstName} ${user.lastName}`.trim();
-    }
-
-    private unknownPosition(): Position {
-        return { key: '', name: '?', prio: 0, color: '' };
+    private hasOverwrittenPosition(registration: Registration, user?: User): boolean {
+        return user !== undefined && !user.positionKeys.includes(registration.positionKey);
     }
 
     private filterExpiredQualifications(user?: User, date: Date = new Date()): QualificationKey[] {

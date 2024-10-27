@@ -61,24 +61,45 @@
                     </td>
                     <td>
                         <div
-                            v-if="item.hasOpenRequiredSlots"
+                            v-if="item.state === EventState.Draft"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
+                        >
+                            <i class="fa-solid fa-compass-drafting w-4"></i>
+                            <span class="whitespace-nowrap font-semibold">Entwurf</span>
+                        </div>
+                        <div
+                            v-else-if="item.state === EventState.Canceled"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-200 py-1 pl-3 pr-4 text-red-700"
+                        >
+                            <i class="fa-solid fa-xmark w-4"></i>
+                            <span class="whitespace-nowrap font-semibold">Abgesagt</span>
+                        </div>
+                        <div
+                            v-else-if="item.state === EventState.OpenForSignup"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
+                        >
+                            <i class="fa-solid fa-unlock w-4"></i>
+                            <span class="whitespace-nowrap font-semibold">Anmeldung</span>
+                        </div>
+                        <div
+                            v-else-if="item.hasOpenRequiredSlots"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
                         >
-                            <i class="fa-solid fa-warning"></i>
+                            <i class="fa-solid fa-warning w-4"></i>
                             <span class="whitespace-nowrap font-semibold">Fehlende Crew</span>
                         </div>
                         <div
                             v-else-if="item.hasOpenSlots"
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-100 py-1 pl-3 pr-4 text-green-700"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-blue-200 py-1 pl-3 pr-4 text-blue-700"
                         >
-                            <i class="fa-solid fa-check-circle"></i>
+                            <i class="fa-solid fa-info-circle w-4"></i>
                             <span class="whitespace-nowrap font-semibold">Freie Plätze</span>
                         </div>
                         <div
                             v-else
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-100 py-1 pl-3 pr-4 text-green-700"
+                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
                         >
-                            <i class="fa-solid fa-check-circle"></i>
+                            <i class="fa-solid fa-check-circle w-4"></i>
                             <span class="whitespace-nowrap font-semibold">Voll belegt</span>
                         </div>
                     </td>
@@ -109,22 +130,32 @@
                                         <span>Reise anzeigen</span>
                                     </RouterLink>
                                 </li>
-                                <li v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
-                                    <RouterLink
-                                        :to="{
-                                            name: Routes.EventEdit,
-                                            params: { year: item.start.getFullYear(), key: item.key },
-                                        }"
-                                        class="context-menu-item"
+                                <template v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
+                                    <li>
+                                        <RouterLink
+                                            :to="{
+                                                name: Routes.EventEdit,
+                                                params: { year: item.start.getFullYear(), key: item.key },
+                                            }"
+                                            class="context-menu-item"
+                                        >
+                                            <i class="fa-solid fa-edit" />
+                                            <span>Reise bearbeiten</span>
+                                        </RouterLink>
+                                    </li>
+                                    <li v-if="item.state === EventState.Draft">
+                                        class="context-menu-item disabled">
+                                        <i class="fa-solid fa-unlock-alt" />
+                                        <span>Anmeldungen freischalten</span>
+                                    </li>
+                                    <li
+                                        v-else-if="item.state === EventState.OpenForSignup"
+                                        class="context-menu-item disabled"
                                     >
-                                        <i class="fa-solid fa-edit" />
-                                        <span>Reise bearbeiten</span>
-                                    </RouterLink>
-                                </li>
-                                <li class="context-menu-item disabled">
-                                    <i class="fa-solid fa-unlock-alt" />
-                                    <span>Anmeldungen freischalten</span>
-                                </li>
+                                        <i class="fa-solid fa-earth-europe" />
+                                        <span>Crew veröffentlichen</span>
+                                    </li>
+                                </template>
                                 <li class="context-menu-item disabled">
                                     <i class="fa-solid fa-users" />
                                     <span>Fehlende Crew anfragen</span>

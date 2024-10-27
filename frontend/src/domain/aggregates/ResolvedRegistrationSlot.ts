@@ -1,9 +1,11 @@
-import type { Position, QualificationKey, Registration, User } from '@/domain';
+import type { Position, QualificationKey, Registration, Slot, User } from '@/domain';
 
-export interface ResolvedRegistration extends Registration {
+export interface ResolvedRegistrationSlot {
     name: string;
     position: Position;
+    registration?: Registration;
     user?: User;
+    slot?: Slot;
     expiredQualifications: QualificationKey[];
     hasOverwrittenPosition: boolean;
     hasFitnessForSeaService: boolean;

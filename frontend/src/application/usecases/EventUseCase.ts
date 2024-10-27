@@ -1,33 +1,50 @@
-import type { AuthService, EventRegistrationsRepository, NotificationService } from '@/application';
+import type {
+    AuthService,
+    EventRegistrationsRepository,
+    NotificationService,
+    PositionCachingService,
+    UserCachingService,
+} from '@/application';
 import type { EventRepository } from '@/application/ports/EventRepository';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { DateFormatter } from '@/common/date';
-import type { Event, EventKey, PositionKey, UserKey } from '@/domain';
+import type { Event, EventKey, PositionKey, RegistrationService, UserKey } from '@/domain';
+import { EventState } from '@/domain';
 import { EventType } from '@/domain';
+import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class EventUseCase {
-    private readonly eventCachingService: EventCachingService;
-    private readonly eventRepository: EventRepository;
-    private readonly authService: AuthService;
-    private readonly eventRegistrationsRepository: EventRegistrationsRepository;
     private readonly notificationService: NotificationService;
     private readonly errorHandlingService: ErrorHandlingService;
+    private readonly authService: AuthService;
+    private readonly eventCachingService: EventCachingService;
+    private readonly userCachingService: UserCachingService;
+    private readonly positionCachingService: PositionCachingService;
+    private readonly registrationService: RegistrationService;
+    private readonly eventRepository: EventRepository;
+    private readonly eventRegistrationsRepository: EventRegistrationsRepository;
 
     constructor(params: {
-        eventCachingService: EventCachingService;
-        eventRepository: EventRepository;
-        authService: AuthService;
-        eventRegistrationsRepository: EventRegistrationsRepository;
         notificationService: NotificationService;
         errorHandlingService: ErrorHandlingService;
+        authService: AuthService;
+        eventCachingService: EventCachingService;
+        userCachingService: UserCachingService;
+        positionCachingService: PositionCachingService;
+        registrationService: RegistrationService;
+        eventRepository: EventRepository;
+        eventRegistrationsRepository: EventRegistrationsRepository;
     }) {
-        this.eventCachingService = params.eventCachingService;
-        this.eventRepository = params.eventRepository;
-        this.authService = params.authService;
-        this.eventRegistrationsRepository = params.eventRegistrationsRepository;
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
+        this.authService = params.authService;
+        this.eventCachingService = params.eventCachingService;
+        this.userCachingService = params.userCachingService;
+        this.positionCachingService = params.positionCachingService;
+        this.registrationService = params.registrationService;
+        this.eventRegistrationsRepository = params.eventRegistrationsRepository;
+        this.eventRepository = params.eventRepository;
     }
 
     public async getEvents(year: number): Promise<Event[]> {
@@ -121,6 +138,28 @@ export class EventUseCase {
             this.errorHandlingService.handleRawError(e);
             throw e;
         }
+    }
+
+    public async resolveRegistrations(event: Event): Promise<ResolvedRegistrationSlot[]> {
+        const users = await this.userCachingService.getUsers();
+        const positions = await this.positionCachingService.getPositions();
+        return this.registrationService.resolveRegistrations(event, users, positions);
+    }
+
+    public filterForWaitingList(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
+        if ([EventState.Draft, EventState.OpenForSignup].includes(event.state)) {
+            // crew is not public yet, so all registrations are on the waiting list
+            return registrations.filter((it) => it.registration !== undefined);
+        }
+        return registrations.filter((it) => it.registration !== undefined && it.slot === undefined);
+    }
+
+    public filterForCrew(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
+        if ([EventState.Draft, EventState.OpenForSignup].includes(event.state)) {
+            // crew is not public yet, so all registrations are on the waiting list
+            return [];
+        }
+        return registrations.filter((it) => it.slot !== undefined);
     }
 
     public async leaveEvent(event: Event): Promise<Event> {

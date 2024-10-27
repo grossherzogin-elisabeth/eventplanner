@@ -140,6 +140,9 @@ async function init(): Promise<void> {
                 eventRepository: eventRepository,
                 eventCachingService: eventCachingService,
                 eventRegistrationsRepository: eventRegistrationsRepository,
+                userCachingService: userCachingService,
+                positionCachingService: positionCachingService,
+                registrationService: domain.services.registrations,
             }),
             users: new UsersUseCase({
                 config: config,

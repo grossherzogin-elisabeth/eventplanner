@@ -172,30 +172,29 @@
                             <ul class="space-y-2">
                                 <template v-for="(it, index) in team" :key="index">
                                     <li class="flex items-center space-x-2 md:space-x-4">
-                                        <i v-if="it.userName" class="fa-solid fa-user-circle text-gray-500" />
+                                        <i v-if="it.name" class="fa-solid fa-user-circle text-gray-500" />
                                         <i v-else class="fa-solid fa-user-circle text-red-500" />
                                         <RouterLink
                                             v-if="
-                                                it.userName &&
+                                                it.user &&
                                                 signedInUser.permissions.includes(Permission.READ_USER_DETAILS)
                                             "
-                                            :to="{ name: Routes.UserDetails, params: { key: it.userKey } }"
+                                            :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
                                             class="truncate"
                                         >
-                                            {{ it.userName }}
+                                            {{ it.name }}
                                         </RouterLink>
-                                        <span v-else-if="it.userName" class="truncate">{{ it.userName }}</span>
-                                        <span v-else-if="it.userKey" class="italic text-red-500"
-                                            >err: {{ it.userKey }}</span
-                                        >
+                                        <span v-else-if="it.name" class="truncate">{{ it.name }}</span>
+                                        <span v-else-if="it.user?.key" class="italic text-red-500">
+                                            Unbekannter Nutzer
+                                        </span>
                                         <span v-else class="truncate italic text-red-500">Noch nicht besetzt</span>
-                                        <span v-if="it.userName && !it.userKey" class="">(Gastcrew)</span>
                                         <span class="flex-grow"></span>
                                         <span
                                             :style="{ background: it.position.color }"
                                             class="position ml-auto text-xs"
                                         >
-                                            {{ it.positionName }}
+                                            {{ it.position.name }}
                                         </span>
                                     </li>
                                 </template>
@@ -331,8 +330,9 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey, ResolvedRegistration, ResolvedSlot } from '@/domain';
+import type { Event, PositionKey } from '@/domain';
 import { EventState, Permission } from '@/domain';
+import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 import type { Dialog } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
@@ -365,8 +365,8 @@ const event = ref<Event | null>(null);
 const tab = ref<Tab>(Tab.Team);
 const documentsMock = ['Kammerplan', 'Wachplan', 'Getränkeliste Crew'];
 
-const waitingList = ref<ResolvedRegistration[]>([]);
-const team = ref<ResolvedSlot[]>([]);
+const waitingList = ref<ResolvedRegistrationSlot[]>([]);
+const team = ref<ResolvedRegistrationSlot[]>([]);
 
 const positionSelectDialog = ref<Dialog<void, PositionKey> | null>(null);
 
@@ -405,9 +405,12 @@ async function onEventChanged() {
 }
 
 async function fetchTeam(event: Event): Promise<void> {
-    const slots = await usersUseCase.resolveEventSlots(event);
-    team.value = slots.filter((it) => it.criticality >= 1 || it.userName);
-    waitingList.value = await usersUseCase.resolveWaitingList(event);
+    const registrations = await eventUseCase.resolveRegistrations(event);
+    team.value = eventUseCase.filterForCrew(event, registrations);
+    waitingList.value = eventUseCase.filterForWaitingList(event, registrations);
+    // const slots = await usersUseCase.resolveEventSlots(event);
+    // team.value = slots.filter((it) => it.criticality >= 1 || it.userName);
+    // waitingList.value = await usersUseCase.resolveWaitingList(event);
 }
 
 async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
