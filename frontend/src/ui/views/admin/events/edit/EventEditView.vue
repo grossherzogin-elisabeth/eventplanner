@@ -10,7 +10,14 @@
                 </p>
                 <div class="-mx-4 flex flex-wrap items-start font-semibold">
                     <div class="w-full">
-                        <VWarning v-if="hasEmptyRequiredSlots" class="mr-2 mt-4">
+                        <VInfo v-if="event.state === EventState.Draft" class="mr-2 mt-4">
+                            Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen
+                            freigegeben.
+                        </VInfo>
+                        <VWarning
+                            v-else-if="event.state === EventState.Planned && hasEmptyRequiredSlots"
+                            class="mr-2 mt-4"
+                        >
                             Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht
                             erfüllt!
                         </VWarning>
@@ -246,10 +253,10 @@ import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, Position, PositionKey, Slot, SlotCriticality, SlotKey } from '@/domain';
+import type { Event, Position, Slot, SlotCriticality, SlotKey } from '@/domain';
 import { EventState } from '@/domain';
 import { EventType, Permission } from '@/domain';
-import type { Dialog } from '@/ui/components/common';
+import { Dialog, VInfo } from '@/ui/components/common';
 import {
     AsyncButton,
     VInputDate,
@@ -264,13 +271,9 @@ import {
 import VWarning from '@/ui/components/common/alerts/VWarning.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import {
-    useAuthUseCase,
-    useEventAdministrationUseCase,
-    useEventUseCase,
-    useUsersUseCase,
-} from '@/ui/composables/Application';
+import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
+import { usePositions } from '@/ui/composables/Positions.ts';
 import { useValidation } from '@/ui/composables/Validation';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationDlg from '@/ui/views/admin/events/components/CreateRegistrationDlg.vue';
@@ -303,16 +306,15 @@ const route = useRoute();
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
-const usersUseCase = useUsersUseCase();
 const authUseCase = useAuthUseCase();
 const signedInUser = authUseCase.getSignedInUser();
+const positions = usePositions();
 
 const event = ref<Event | null>(null);
 const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
 
 const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_SLOTS];
 const tab = ref<Tab>(Tab.EVENT_POSITIONS);
-const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 
 const createSlotDialog = ref<Dialog<Event, Event> | null>(null);
 const editSlotDialog = ref<Dialog<Slot, Slot> | null>(null);
@@ -328,8 +330,8 @@ const slots = computed<SlotTableItem[]>(() => {
         name: slot.positionName,
         required: slot.criticality >= 1,
         criticality: slot.criticality,
-        position: positions.value.get(slot.positionKeys[0]),
-        alternativePositions: slot.positionKeys.map((it) => positions.value.get(it)).filter(filterUndefined),
+        position: positions.get(slot.positionKeys[0]),
+        alternativePositions: slot.positionKeys.map((it) => positions.get(it)).filter(filterUndefined),
         filled: eventService.isSlotFilled(event.value, slot.key),
     }));
 });
@@ -339,12 +341,7 @@ const hasEmptyRequiredSlots = computed<boolean>(() => {
 });
 
 async function init(): Promise<void> {
-    await fetchPositions();
     await fetchEvent();
-}
-
-async function fetchPositions(): Promise<void> {
-    positions.value = await usersUseCase.resolvePositionNames();
 }
 
 async function fetchEvent(): Promise<void> {

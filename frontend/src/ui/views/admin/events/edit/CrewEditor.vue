@@ -49,7 +49,7 @@
                     :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_WAITING_LIST }"
                 >
                     <!-- empty slot list placeholder -->
-                    <div v-if="event.assignedUserCount === 0" class="rounded-xl bg-primary-100">
+                    <div v-if="team.length === 0" class="rounded-xl bg-primary-100">
                         <div class="flex items-center py-8 pl-4 pr-8">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">

@@ -162,6 +162,19 @@
                             >
                         </button>
                         <RouterLink
+                            v-if="
+                                event.state === EventState.Draft &&
+                                signedInUser.permissions.includes(Permission.WRITE_EVENTS)
+                            "
+                            :to="{ name: Routes.EventEdit, params: { key: props.event.key } }"
+                            class="btn-ghost"
+                            title="Detailansicht"
+                        >
+                            <i class="fa-solid fa-edit"></i>
+                            <span class="ml-2">Bearbeiten</span>
+                        </RouterLink>
+                        <RouterLink
+                            v-else
                             :to="{ name: Routes.EventDetails, params: { key: props.event.key } }"
                             class="btn-ghost"
                             title="Detailansicht"
@@ -181,12 +194,11 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey } from '@/domain';
-import { EventState } from '@/domain';
+import { Event, EventState, Permission, PositionKey } from '@/domain';
 import { type Dialog, VDropdownWrapper } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
-import { useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { usePositions } from '@/ui/composables/Positions';
 import { Routes } from '@/ui/views/Routes';
@@ -208,6 +220,8 @@ const router = useRouter();
 const positions = usePositions();
 const eventUseCase = useEventUseCase();
 const usersUseCase = useUsersUseCase();
+const authUseCase = useAuthUseCase();
+const signedInUser = authUseCase.getSignedInUser();
 
 const signedInUserPositions = ref<PositionKey[]>([]);
 const showDropdown = ref<boolean>(false);

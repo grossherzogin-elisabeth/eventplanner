@@ -224,28 +224,32 @@ function updateEvent(event: Event): void {
 }
 
 function startCreateEventDrag(date: Date): void {
-    createEventFromDate.value = date;
-    calendarStyle.value['--create-event-days'] = 1;
+    if (signedInUser.permissions.includes(Permission.WRITE_EVENTS)) {
+        createEventFromDate.value = date;
+        calendarStyle.value['--create-event-days'] = 1;
+    }
 }
 
 async function stopCreateEventDrag(date: Date): Promise<void> {
-    const from = createEventFromDate.value;
-    const to = date;
-    if (from && to && createEventDialog.value) {
-        await createEventDialog.value
-            .open({ start: from, end: to })
-            .then((evt) => eventAdministrationService.createEvent(evt))
-            .then(() => fetchEvents())
-            .catch(() => console.debug('dialog was canceled'))
-            .finally(() => {
-                createEventFromDate.value = null;
-                calendarStyle.value['--create-event-days'] = 1;
-            });
+    if (signedInUser.permissions.includes(Permission.WRITE_EVENTS)) {
+        const from = createEventFromDate.value;
+        const to = date;
+        if (from && to && createEventDialog.value) {
+            await createEventDialog.value
+                .open({ start: from, end: to })
+                .then((evt) => eventAdministrationService.createEvent(evt))
+                .then(() => fetchEvents())
+                .catch(() => console.debug('dialog was canceled'))
+                .finally(() => {
+                    createEventFromDate.value = null;
+                    calendarStyle.value['--create-event-days'] = 1;
+                });
+        }
     }
 }
 
 function updateCreateEventDrag(date: Date): void {
-    if (createEventFromDate.value !== null) {
+    if (signedInUser.permissions.includes(Permission.WRITE_EVENTS) && createEventFromDate.value !== null) {
         const durationMillis = date.getTime() - createEventFromDate.value.getTime();
         if (durationMillis >= 0) {
             calendarStyle.value['--create-event-days'] = new Date(durationMillis).getDate();

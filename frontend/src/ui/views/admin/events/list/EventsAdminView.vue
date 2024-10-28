@@ -63,7 +63,7 @@
                             {{ item.locations.map((it) => it.name).join(' - ') }}
                         </p>
                     </td>
-                    <td>
+                    <td class="float-right">
                         <div
                             v-if="item.state === EventState.Draft"
                             class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
@@ -147,13 +147,18 @@
                                             <span>Reise bearbeiten</span>
                                         </RouterLink>
                                     </li>
-                                    <li v-if="item.state === EventState.Draft" class="context-menu-item disabled">
+                                    <li
+                                        v-if="item.state === EventState.Draft"
+                                        class="context-menu-item"
+                                        @click="openEventForSignup(item)"
+                                    >
                                         <i class="fa-solid fa-unlock-alt" />
                                         <span>Anmeldungen freischalten</span>
                                     </li>
                                     <li
                                         v-else-if="item.state === EventState.OpenForSignup"
-                                        class="context-menu-item disabled"
+                                        class="context-menu-item"
+                                        @click="publishCrewPlanning(item)"
                                     >
                                         <i class="fa-solid fa-earth-europe" />
                                         <span>Crew veröffentlichen</span>
@@ -228,10 +233,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { Event } from '@/domain';
-import { EventState, Permission } from '@/domain';
+import { Event, EventState, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VInputText, VTable, VTabs } from '@/ui/components/common';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
@@ -256,7 +260,7 @@ type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
-const eventAdministrationUseCase = useEventAdministrationUseCase();
+const eventAdminUseCase = useEventAdministrationUseCase();
 const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
 const eventService = useEventService();
@@ -291,6 +295,11 @@ function init(): void {
     emit('update:title', 'Events verwalten');
     watch(route, () => fetchEvents());
     watch(tab, () => fetchEvents());
+    onMounted(() => {
+        if (tab.value === tabs.value[0]) {
+            fetchEvents();
+        }
+    });
 }
 
 async function fetchEvents(): Promise<void> {
@@ -337,7 +346,7 @@ async function editEvent(evt: EventTableViewItem): Promise<void> {
 async function createEvent(): Promise<void> {
     const event = await createEventDialog.value?.open().catch();
     if (event) {
-        await eventAdministrationUseCase.createEvent(event);
+        await eventAdminUseCase.createEvent(event);
     }
 }
 
@@ -345,7 +354,7 @@ async function deleteEvent(evt: Event): Promise<void> {
     if (deleteEventDialog.value) {
         await deleteEventDialog.value
             .open(evt)
-            .then((message) => eventAdministrationUseCase.cancelEvent(evt, message))
+            .then((message) => eventAdminUseCase.cancelEvent(evt, message))
             .then(() => fetchEvents())
             .catch(() => console.debug('dialog was canceled'));
     }
@@ -353,6 +362,20 @@ async function deleteEvent(evt: Event): Promise<void> {
 
 async function importEvents(): Promise<void> {
     await importEventsDialog.value?.open().catch();
+}
+
+async function openEventForSignup(event: Event): Promise<void> {
+    await eventAdminUseCase.updateEvent(event.key, {
+        state: EventState.OpenForSignup,
+    });
+    await fetchEvents();
+}
+
+async function publishCrewPlanning(event: Event): Promise<void> {
+    await eventAdminUseCase.updateEvent(event.key, {
+        state: EventState.Planned,
+    });
+    await fetchEvents();
 }
 
 init();

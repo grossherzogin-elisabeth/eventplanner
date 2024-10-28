@@ -26,3 +26,4 @@ export { default as VTabs } from './tabs/VTabs.vue';
 export { default as VDraggable } from './drag-n-drop/VDraggable.vue';
 export { default as VDropzone } from './drag-n-drop/VDropzone.vue';
 export { default as VWarning } from './alerts/VWarning.vue';
+export { default as VInfo } from './alerts/VInfo.vue';
