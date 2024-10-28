@@ -51,9 +51,7 @@
 import { VInputText } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 

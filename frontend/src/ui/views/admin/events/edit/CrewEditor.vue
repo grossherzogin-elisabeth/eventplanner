@@ -260,9 +260,7 @@ interface Props {
     event: Event;
 }
 
-interface Emits {
-    (e: 'update:event', value: Event): void;
-}
+type Emits = (e: 'update:event', value: Event) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
@@ -335,12 +333,10 @@ async function editWaitinglistRegistration(aggregate: ResolvedRegistrationSlot):
     if (editRegistrationDialog.value && (aggregate.user || aggregate.name)) {
         const registration = eventService.findRegistration(props.event, aggregate.user?.key, aggregate.name);
         if (registration) {
-            try {
-                const edited = await editRegistrationDialog.value.open(registration);
-                registration.positionKey = edited.positionKey;
-            } catch (e) {
-                // canceled
-            }
+            await editRegistrationDialog.value
+                .open(registration)
+                .then((edited) => (registration.positionKey = edited.positionKey))
+                .catch(() => console.debug('dialog was canceled'));
         } else {
             console.error('Registration not found');
         }
@@ -351,12 +347,10 @@ async function editSlotRegistration(aggregate: ResolvedRegistrationSlot): Promis
     if (editRegistrationDialog.value && (aggregate.user || aggregate.name)) {
         const registration = eventService.findRegistration(props.event, aggregate.user?.key, aggregate.name);
         if (registration) {
-            try {
-                const edited = await editRegistrationDialog.value.open(registration);
-                registration.positionKey = edited.positionKey;
-            } catch (e) {
-                // canceled
-            }
+            await editRegistrationDialog.value
+                .open(registration)
+                .then((edited) => (registration.positionKey = edited.positionKey))
+                .catch(() => console.debug('dialog was canceled'));
         } else {
             console.error('Registration not found');
         }

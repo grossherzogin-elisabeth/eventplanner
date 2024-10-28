@@ -119,7 +119,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { DateTimeFormat, DateUtils } from '@/common/date';
+import { DateTimeFormat, cropToPrecision } from '@/common/date';
 import type { Event } from '@/domain';
 import { EventState, EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -188,10 +188,10 @@ async function open(partialEvent?: Partial<Event>): Promise<Event> {
     event.value.locations = partialEvent?.locations || [];
     event.value.state = partialEvent?.state || EventState.Draft;
     event.value.type = partialEvent?.type || event.value.type || EventType.WeekendEvent;
-    const start = DateUtils.cropToPrecision(new Date(partialEvent?.start?.getTime() || new Date().getTime()), 'days');
+    const start = cropToPrecision(new Date(partialEvent?.start?.getTime() || new Date().getTime()), 'days');
     start.setHours(16);
     event.value.start = start;
-    const end = DateUtils.cropToPrecision(new Date(partialEvent?.end?.getTime() || new Date().getTime()), 'days');
+    const end = cropToPrecision(new Date(partialEvent?.end?.getTime() || new Date().getTime()), 'days');
     end.setHours(18);
     event.value.end = end;
 
@@ -211,7 +211,7 @@ defineExpose<Dialog<Partial<Event>, Event>>({
     open: (event?: Partial<Event>) => open(event),
     close: () => dlg.value?.reject(),
     submit: (result: Event) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 
 init();

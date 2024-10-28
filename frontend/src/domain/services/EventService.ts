@@ -1,4 +1,4 @@
-import { ArrayUtils, DateUtils } from '@/common';
+import { cropToPrecision, filterUndefined } from '@/common';
 import type { Event, Registration, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
 
 export class EventService {
@@ -7,10 +7,10 @@ export class EventService {
             return false;
         }
 
-        const aStart = DateUtils.cropToPrecision(a.start, 'days').getTime();
-        const aEnd = DateUtils.cropToPrecision(a.end, 'days').getTime();
-        const bStart = DateUtils.cropToPrecision(b.start, 'days').getTime();
-        const bEnd = DateUtils.cropToPrecision(b.end, 'days').getTime();
+        const aStart = cropToPrecision(a.start, 'days').getTime();
+        const aEnd = cropToPrecision(a.end, 'days').getTime();
+        const bStart = cropToPrecision(b.start, 'days').getTime();
+        const bEnd = cropToPrecision(b.end, 'days').getTime();
 
         return (aEnd >= bStart && aEnd <= bEnd) || (bEnd >= aStart && bEnd <= aEnd);
     }
@@ -167,7 +167,7 @@ export class EventService {
     public getAssignedRegistrations(event: Event): Registration[] {
         return event.slots
             .map((slt) => event.registrations.find((reg) => reg.key === slt.assignedRegistrationKey))
-            .filter(ArrayUtils.filterUndefined);
+            .filter(filterUndefined);
     }
 
     public getRegistrationsOnWaitinglist(event: Event): Registration[] {

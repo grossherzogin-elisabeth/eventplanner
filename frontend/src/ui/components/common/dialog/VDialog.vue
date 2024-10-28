@@ -45,7 +45,7 @@
 <script lang="ts" setup>
 import type { Ref } from 'vue';
 import { nextTick, ref } from 'vue';
-import { WindowUtils } from '@/common';
+import { disableScrolling, enableScrolling } from '@/common';
 import type { Dialog } from './Dialog';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,7 +96,7 @@ let promiseReject: ((reason: T) => void) | null = null;
 let closeTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
 async function open(): Promise<T> {
-    WindowUtils.disableScrolling();
+    disableScrolling();
     clearTimeout(closeTimeout);
     emit('opening');
     renderContent.value = true;
@@ -132,7 +132,7 @@ async function close(): Promise<void> {
     closeTimeout = setTimeout(() => {
         renderContent.value = false;
         emit('closed');
-        WindowUtils.enableScrolling();
+        enableScrolling();
     }, 400);
 }
 </script>

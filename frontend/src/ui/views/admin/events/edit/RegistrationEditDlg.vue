@@ -52,7 +52,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { ArrayUtils, ObjectUtils } from '@/common';
+import { deepCopy, filterUndefined } from '@/common';
 import type { Position } from '@/domain';
 import type {
     Event,
@@ -122,7 +122,7 @@ const expiredQualifications = computed<string[]>(() => {
     return usersService
         .getExpiredQualifications(selectedUser.value, props.event.end)
         .map((key) => qualifications.value.get(key))
-        .filter(ArrayUtils.filterUndefined)
+        .filter(filterUndefined)
         .map((qualification) => qualification.name);
 });
 
@@ -153,7 +153,7 @@ async function fetchQualifications(): Promise<void> {
 }
 
 async function open(eventRegistration: Registration): Promise<Registration> {
-    registration.value = ObjectUtils.deepCopy(eventRegistration);
+    registration.value = deepCopy(eventRegistration);
     // wait until user submits
     await dlg.value?.open();
     if (!registration.value.userKey) {
@@ -168,7 +168,7 @@ defineExpose<Dialog<Registration, Registration>>({
     open: (eventRegistration: Registration) => open(eventRegistration),
     close: () => dlg.value?.reject(),
     submit: (result: Registration) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 
 init();

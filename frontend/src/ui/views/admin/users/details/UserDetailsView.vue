@@ -109,7 +109,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { ObjectUtils } from '@/common';
+import { deepCopy } from '@/common';
 import type { Event, Position, PositionKey, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -139,9 +139,7 @@ enum Tab {
     USER_ROLES = 'app.user-details.tab.roles',
 }
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -173,7 +171,7 @@ function init(): void {
 
 async function fetchUser(): Promise<void> {
     userOriginal.value = await userAdministrationUseCase.getUserDetailsByKey(userKey.value);
-    user.value = ObjectUtils.deepCopy(userOriginal.value);
+    user.value = deepCopy(userOriginal.value);
     emit('update:title', `${user.value.firstName} ${user.value.lastName}`);
 }
 
@@ -212,7 +210,7 @@ async function save(): Promise<void> {
     if (userOriginal.value && user.value) {
         try {
             userOriginal.value = await userAdministrationUseCase.updateUser(userOriginal.value, user.value);
-            user.value = ObjectUtils.deepCopy(userOriginal.value);
+            user.value = deepCopy(userOriginal.value);
         } catch (e) {
             errorHandlingUseCase.handleError({
                 title: 'Speichern fehlgeschlagen',

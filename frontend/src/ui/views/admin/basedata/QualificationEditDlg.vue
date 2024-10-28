@@ -71,7 +71,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { ObjectUtils } from '@/common';
+import { deepCopy } from '@/common';
 import type { Qualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
@@ -95,10 +95,8 @@ const qualification = ref<Qualification>({
 });
 const validation = useValidation(qualification, (qualification) => qualificationService.validate(qualification));
 
-function init(): void {}
-
 async function open(value: Qualification): Promise<Qualification> {
-    qualification.value = ObjectUtils.deepCopy(value);
+    qualification.value = deepCopy(value);
     // wait until user submits
     await dlg.value?.open();
 
@@ -109,8 +107,6 @@ defineExpose<Dialog<Qualification, Qualification>>({
     open: (value: Qualification) => open(value),
     close: () => dlg.value?.reject(),
     submit: (result: Qualification) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
-
-init();
 </script>

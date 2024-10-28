@@ -57,7 +57,7 @@ const saveAsDefaultPosition = ref<boolean>(false);
 const availablePositions = computed<InputSelectOption<PositionKey>[]>(() => {
     return positions.options.value
         .filter((it) => it.value)
-        .map((it) => ({ ...it, value: it.value! }))
+        .map((it) => ({ ...it, value: it.value || '' }))
         .filter((it) => user.value?.positionKeys.includes(it.value));
 });
 
@@ -77,6 +77,6 @@ defineExpose<Dialog<void, PositionKey>>({
     open: () => open(),
     close: () => dlg.value?.reject(),
     submit: (result: PositionKey) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 </script>

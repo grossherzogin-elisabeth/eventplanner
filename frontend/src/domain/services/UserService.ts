@@ -1,4 +1,4 @@
-import { DateUtils } from '@/common';
+import { addToDate } from '@/common';
 import type { Qualification, QualificationKey, User, UserDetails } from '@/domain';
 import type { ResolvedUserQualification } from '@/domain/aggregates/ResolvedUserQualification';
 
@@ -24,7 +24,7 @@ export class UserService {
         qualifications: Map<QualificationKey, Qualification>
     ): ResolvedUserQualification[] {
         const now = new Date();
-        const expiresSoonDate = DateUtils.add(now, { months: 3 });
+        const expiresSoonDate = addToDate(now, { months: 3 });
 
         return user.qualifications.map((it) => {
             const qualification = qualifications.get(it.qualificationKey);
@@ -64,7 +64,7 @@ export class UserService {
     }
 
     public getSoonExpiringQualifications(user?: User, at: Date = new Date()): QualificationKey[] {
-        const referenceTime = DateUtils.add(at, { months: 3 });
+        const referenceTime = addToDate(at, { months: 3 });
         return this.getExpiredQualifications(user, referenceTime);
     }
 }

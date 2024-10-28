@@ -69,9 +69,7 @@ interface Props {
     options: InputRadioOption<T>[];
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: T): void;
-}
+type Emits = (e: 'update:modelValue', value: T) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

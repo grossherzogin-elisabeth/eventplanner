@@ -66,7 +66,7 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import { DateUtils } from '@/common/date/DateUtils';
+import { addToDate, subtractFromDate } from '@/common/date/DateUtils';
 import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
 import Datepicker from 'vuejs3-datepicker';
@@ -91,9 +91,7 @@ interface Props {
     type?: 'text' | 'passwort' | 'email' | 'time' | 'number';
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: Date): void;
-}
+type Emits = (e: 'update:modelValue', value: Date) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------
@@ -135,13 +133,13 @@ function openDropdown(): void {
 
 function onArrowLeft(): void {
     let date = props.modelValue || new Date();
-    date = DateUtils.subtract(date, { days: 1 });
+    date = subtractFromDate(date, { days: 1 });
     emit('update:modelValue', date);
 }
 
 function onArrowRight(): void {
     let date = props.modelValue || new Date();
-    date = DateUtils.add(date, { days: 1 });
+    date = addToDate(date, { days: 1 });
     emit('update:modelValue', date);
 }
 
@@ -149,10 +147,10 @@ function onArrowUp(): void {
     let date = props.modelValue || new Date();
     if (showDropdown.value) {
         // if the datepicker is open, select the previous row (= week)
-        date = DateUtils.subtract(date, { days: 7 });
+        date = subtractFromDate(date, { days: 7 });
     } else {
         // if the datepicker is not currently open, selecting the previous day feels more natural
-        date = DateUtils.subtract(date, { days: 1 });
+        date = subtractFromDate(date, { days: 1 });
     }
     emit('update:modelValue', date);
 }
@@ -161,10 +159,10 @@ function onArrowDown(): void {
     let date = props.modelValue || new Date();
     if (showDropdown.value) {
         // if the datepicker is open, select the next row (= week)
-        date = DateUtils.add(date, { days: 7 });
+        date = addToDate(date, { days: 7 });
     } else {
         // if the datepicker is not currently open, selecting the next day feels more natural
-        date = DateUtils.add(date, { days: 1 });
+        date = addToDate(date, { days: 1 });
     }
     emit('update:modelValue', date);
 }

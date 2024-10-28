@@ -1,6 +1,6 @@
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
-import { DateUtils } from '@/common';
+import { cropToPrecision } from '@/common';
 import type { Event, EventKey, EventState, ImportError, PositionKey } from '@/domain';
 import { EventType } from '@/domain';
 
@@ -103,8 +103,8 @@ export class EventRestRepository implements EventRepository {
     }
 
     private static mapEventType(event: Event): EventType {
-        const start = DateUtils.cropToPrecision(event.start, 'days');
-        const end = DateUtils.cropToPrecision(event.end, 'days');
+        const start = cropToPrecision(event.start, 'days');
+        const end = cropToPrecision(event.end, 'days');
         const durationDays = new Date(event.end.getTime() - event.start.getTime()).getDate();
 
         if (start.getTime() === end.getTime()) {

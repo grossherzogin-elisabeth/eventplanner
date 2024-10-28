@@ -108,6 +108,6 @@ defineExpose<Dialog>({
     open: () => open(),
     close: () => dlg.value?.reject(),
     submit: () => dlg.value?.submit(),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 </script>

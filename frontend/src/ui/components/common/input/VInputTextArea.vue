@@ -67,9 +67,7 @@ interface Props {
     maxLength?: number;
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: string): void;
-}
+type Emits = (e: 'update:modelValue', value: string) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

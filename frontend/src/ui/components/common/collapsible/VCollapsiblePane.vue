@@ -43,9 +43,7 @@ interface Props {
     collapsed?: boolean;
 }
 
-interface Emits {
-    (e: 'update:collapsed', value: boolean): void;
-}
+type Emits = (e: 'update:collapsed', value: boolean) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------
@@ -71,7 +69,7 @@ function resetPreferredHeight(): void {
     preferredHeight.value = '100vh';
 }
 
-function setCollapsed(collapse: boolean, animateCollapse: boolean = false): void {
+function setCollapsed(collapse: boolean, animateCollapse = false): void {
     if (isCollapsed.value === collapse || blocked.value === true) {
         return;
     }

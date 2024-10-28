@@ -244,7 +244,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ArrayUtils } from '@/common';
+import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, PositionKey, Slot, SlotCriticality, SlotKey } from '@/domain';
 import { EventState } from '@/domain';
@@ -294,9 +294,7 @@ interface SlotTableItem {
     filled: boolean;
 }
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -330,8 +328,8 @@ const slots = computed<SlotTableItem[]>(() => {
         name: slot.positionName,
         required: slot.criticality >= 1,
         criticality: slot.criticality,
-        position: positions.value.get(slot.positionKeys[0])!,
-        alternativePositions: slot.positionKeys.map((it) => positions.value.get(it)).filter(ArrayUtils.filterUndefined),
+        position: positions.value.get(slot.positionKeys[0]),
+        alternativePositions: slot.positionKeys.map((it) => positions.value.get(it)).filter(filterUndefined),
         filled: eventService.isSlotFilled(event.value, slot.key),
     }));
 });
@@ -370,19 +368,19 @@ async function deleteEvent(): Promise<void> {
             .open(evt)
             .then((message) => eventAdministrationUseCase.cancelEvent(evt, message))
             .then(() => router.push({ name: Routes.EventsAdmin }))
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 
 async function addRegistration(): Promise<void> {
     if (createRegistrationDialog.value && event.value) {
-        await createRegistrationDialog.value.open(event.value).catch(() => {});
+        await createRegistrationDialog.value.open(event.value).catch(() => console.debug('dialog was canceled'));
     }
 }
 
 async function addSlot(): Promise<void> {
     if (createSlotDialog.value && event.value) {
-        await createSlotDialog.value.open(event.value).catch(() => {});
+        await createSlotDialog.value.open(event.value).catch(() => console.debug('dialog was canceled'));
     }
 }
 
@@ -399,7 +397,7 @@ async function editSlot(slotkey: SlotKey): Promise<void> {
         await editSlotDialog.value
             ?.open(slot)
             .then((s) => (event.value = eventService.updateSlot(evt, s)))
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 

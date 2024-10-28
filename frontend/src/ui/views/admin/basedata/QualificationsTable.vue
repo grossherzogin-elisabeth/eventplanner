@@ -109,7 +109,7 @@ function createQualification(): void {
             .open()
             .then((it) => qualificationAdministrationUseCase.createQualification(it))
             .then(() => fetchQualifications())
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 
@@ -119,7 +119,7 @@ function editQualification(qualification: Qualification): void {
             .open(qualification)
             .then((it) => qualificationAdministrationUseCase.updateQualification(it))
             .then(() => fetchQualifications())
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 
@@ -129,7 +129,7 @@ function deleteQualification(qualification: Qualification): void {
             .open(qualification)
             .then(() => qualificationAdministrationUseCase.deleteQualification(qualification))
             .then(() => fetchQualifications())
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 

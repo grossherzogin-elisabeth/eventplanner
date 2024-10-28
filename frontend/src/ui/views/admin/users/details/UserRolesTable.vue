@@ -55,9 +55,7 @@ interface Props {
     modelValue: UserDetails;
 }
 
-interface Emit {
-    (e: 'update:modelValue', user: UserDetails): void;
-}
+type Emit = (e: 'update:modelValue', user: UserDetails) => void;
 
 interface RoleTableEntry {
     role: Role;

@@ -252,9 +252,7 @@ interface EventTableViewItem extends Event {
     hasOpenRequiredSlots: boolean;
 }
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -349,7 +347,7 @@ async function deleteEvent(evt: Event): Promise<void> {
             .open(evt)
             .then((message) => eventAdministrationUseCase.cancelEvent(evt, message))
             .then(() => fetchEvents())
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 

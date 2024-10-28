@@ -134,7 +134,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { ArrayUtils } from '@/common';
+import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, PositionKey, UserDetails } from '@/domain';
 import { Permission } from '@/domain';
@@ -199,7 +199,7 @@ const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
             console.warn('Failed to get users position');
             return undefined;
         })
-        .filter(ArrayUtils.filterUndefined);
+        .filter(filterUndefined);
 });
 
 async function addUserToCrew(item: EventTableViewItem): Promise<void> {

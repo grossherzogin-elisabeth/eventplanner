@@ -72,9 +72,7 @@ interface Props<T> {
     modelValue?: T[];
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: string[]): void;
-}
+type Emits = (e: 'update:modelValue', value: string[]) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

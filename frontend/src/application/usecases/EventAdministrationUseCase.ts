@@ -57,15 +57,12 @@ export class EventAdministrationUseCase {
                 });
 
                 for (const r of newRegistrations) {
-                    // eslint-disable-next-line no-await-in-loop
                     await this.eventRegistrationsRepository.createRegistration(eventKey, r);
                 }
                 for (const r of changedRegistrations) {
-                    // eslint-disable-next-line no-await-in-loop
                     await this.eventRegistrationsRepository.updateRegistration(eventKey, r);
                 }
                 for (const r of deletedRegistrations) {
-                    // eslint-disable-next-line no-await-in-loop
                     await this.eventRegistrationsRepository.deleteRegistration(eventKey, r);
                 }
 

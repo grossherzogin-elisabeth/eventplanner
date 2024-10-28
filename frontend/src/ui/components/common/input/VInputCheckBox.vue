@@ -61,9 +61,7 @@ interface Props {
     errorsVisible?: boolean;
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: boolean): void;
-}
+type Emits = (e: 'update:modelValue', value: boolean) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

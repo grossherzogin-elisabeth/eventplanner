@@ -1,5 +1,5 @@
 import type { AccountRepository, AuthService, Config, UserRepository } from '@/application';
-import { Timer } from '@/common';
+import { wait } from '@/common';
 import type { SignedInUser, UserKey } from '@/domain';
 
 export class AuthUseCase {
@@ -51,7 +51,7 @@ export class AuthUseCase {
 
     public async login(): Promise<void> {
         window.location.href = `${this.config.authLoginEndpoint}/default`;
-        await Timer.wait(500);
+        await wait(500);
     }
 
     /**

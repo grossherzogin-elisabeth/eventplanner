@@ -90,8 +90,6 @@ const qualification = ref<Qualification>({
 });
 const validation = useValidation(qualification, (qualification) => qualificationService.validate(qualification));
 
-function init(): void {}
-
 async function open(): Promise<Qualification> {
     qualification.value = {
         key: '',
@@ -120,8 +118,6 @@ defineExpose<Dialog<void, Qualification>>({
     open: () => open(),
     close: () => dlg.value?.reject(),
     submit: (result: Qualification) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
-
-init();
 </script>

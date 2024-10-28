@@ -169,7 +169,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { ObjectUtils } from '@/common';
+import { deepCopy } from '@/common';
 import type { InputSelectOption, UserDetails } from '@/domain';
 import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
@@ -183,9 +183,7 @@ enum Tab {
     QUALIFICATIONS = 'app.account.tab.qualifications',
 }
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -208,7 +206,7 @@ const enableEditingPlaceOfBirth = ref<boolean>(false);
 
 async function fetchUserDetails() {
     userDetailsOriginal.value = await usersUseCase.getUserDetailsForSignedInUser();
-    userDetails.value = ObjectUtils.deepCopy(userDetailsOriginal.value);
+    userDetails.value = deepCopy(userDetailsOriginal.value);
     enableEditingDateOfBirth.value = userDetails.value.dateOfBirth === undefined;
     enableEditingPlaceOfBirth.value = userDetails.value.placeOfBirth === undefined;
 }
@@ -219,7 +217,7 @@ async function save(): Promise<void> {
             userDetailsOriginal.value,
             userDetails.value
         );
-        userDetails.value = ObjectUtils.deepCopy(userDetailsOriginal.value);
+        userDetails.value = deepCopy(userDetailsOriginal.value);
     }
 }
 

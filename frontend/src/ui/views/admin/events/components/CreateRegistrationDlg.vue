@@ -61,7 +61,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { ArrayUtils } from '@/common';
+import { filterUndefined } from '@/common';
 import type { Event, Qualification, QualificationKey, Registration, User } from '@/domain';
 import { type InputSelectOption, type Position, type PositionKey } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -125,7 +125,7 @@ const expiredQualifications = computed<string[]>(() => {
     return usersService
         .getExpiredQualifications(selectedUser.value, event.value?.end)
         .map((key) => qualifications.value.get(key))
-        .filter(ArrayUtils.filterUndefined)
+        .filter(filterUndefined)
         .map((qualification) => qualification.name);
 });
 
@@ -163,7 +163,7 @@ async function open(evt: Event): Promise<Event> {
         name: undefined,
         note: '',
     };
-    hiddenUsers.value = evt.registrations.map((it) => it.userKey).filter(ArrayUtils.filterUndefined);
+    hiddenUsers.value = evt.registrations.map((it) => it.userKey).filter(filterUndefined);
 
     // wait until user submits
     await dlg.value?.open();
@@ -179,7 +179,7 @@ defineExpose<Dialog<Event, Event>>({
     open: (evt: Event) => open(evt),
     close: () => dlg.value?.reject(),
     submit: (result: Event) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 
 init();

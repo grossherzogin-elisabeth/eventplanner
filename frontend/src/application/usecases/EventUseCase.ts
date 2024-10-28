@@ -8,7 +8,7 @@ import type {
 import type { EventRepository } from '@/application/ports/EventRepository';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
-import { DateFormatter } from '@/common/date';
+import { formatIcsDate } from '@/common/date';
 import type { Event, EventKey, PositionKey, RegistrationService, UserKey } from '@/domain';
 import { EventState } from '@/domain';
 import { EventType } from '@/domain';
@@ -207,10 +207,10 @@ export class EventUseCase {
             'BEGIN:VEVENT',
             `UID:${event.key}@großherzogin-elisabeth.de`,
             `LOCATION:${event.locations[0]?.address || event.locations[0]?.name}`,
-            `DTSTAMP:${DateFormatter.formatIcsDate(new Date())}`,
+            `DTSTAMP:${formatIcsDate(new Date())}`,
             'ORGANIZER;CN=Grossherzogin Elisabeth e.V.:MAILTO:office@grossherzogin-elisabeth.de',
-            `DTSTART:${DateFormatter.formatIcsDate(event.start)}`,
-            `DTEND:${DateFormatter.formatIcsDate(event.end)}`,
+            `DTSTART:${formatIcsDate(event.start)}`,
+            `DTEND:${formatIcsDate(event.end)}`,
             `SUMMARY:${event.name}`,
             `DESCRIPTION:${event.description}`,
             'END:VEVENT',
@@ -234,7 +234,7 @@ export class EventUseCase {
             downloadElement.click();
             document.body.removeChild(document);
         } catch (e) {
-            // ignore
+            console.error(e);
         }
     }
 

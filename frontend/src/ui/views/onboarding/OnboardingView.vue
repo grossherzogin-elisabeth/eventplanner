@@ -24,9 +24,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 

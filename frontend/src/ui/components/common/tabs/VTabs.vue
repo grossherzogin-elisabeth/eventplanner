@@ -37,9 +37,7 @@ interface Props {
     tabs?: string[];
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: string): void;
-}
+type Emits = (e: 'update:modelValue', value: string) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();

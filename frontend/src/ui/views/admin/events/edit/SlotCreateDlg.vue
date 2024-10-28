@@ -58,7 +58,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { ArrayUtils } from '@/common';
+import { filterDuplicates } from '@/common';
 import type { Event, Position, PositionKey, Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -92,7 +92,7 @@ async function open(event: Event): Promise<Event> {
     await dlg.value?.open();
     if (eventSlot.value && primaryPosition.value) {
         eventSlot.value.positionKeys.unshift(primaryPosition.value.key);
-        eventSlot.value.positionKeys = eventSlot.value.positionKeys.filter(ArrayUtils.filterDuplicates);
+        eventSlot.value.positionKeys = eventSlot.value.positionKeys.filter(filterDuplicates);
     }
     event.slots.push(eventSlot.value);
     return event;
@@ -113,7 +113,7 @@ defineExpose<Dialog<Event, Event>>({
     open: (event: Event) => open(event),
     close: () => dlg.value?.reject(),
     submit: (result: Event) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 
 init();

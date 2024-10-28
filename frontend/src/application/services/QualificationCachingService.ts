@@ -1,5 +1,5 @@
 import type { QualificationRepository } from '@/application';
-import { AsyncDebouncer } from '@/application/utils/AsyncDebouncer';
+import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Cache } from '@/common';
 import type { Qualification, QualificationKey } from '@/domain';
 
@@ -35,7 +35,7 @@ export class QualificationCachingService {
     }
 
     private async fetchQualifications(): Promise<Qualification[]> {
-        return AsyncDebouncer.debounce('fetchQualifications', async () => {
+        return debounce('fetchQualifications', async () => {
             const qualifications = await this.qualificationRepository.findAll();
             await this.cache.saveAll(qualifications);
             return qualifications;

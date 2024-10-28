@@ -198,9 +198,7 @@ interface Props {
     start: number;
 }
 
-interface Emits {
-    (e: 'update:event', value: Event): void;
-}
+type Emits = (e: 'update:event', value: Event) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
@@ -245,15 +243,15 @@ async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
         return;
     }
     showDropdown.value = false;
-    try {
-        const position = await positionSelectDialog.value.open();
-        // default position might have changed
-        await fetchSignedInUserPositions();
-        const updatedEvent = await eventUseCase.joinEvent(evt, position);
-        emit('update:event', updatedEvent);
-    } catch (e) {
-        // ignore
-    }
+    await positionSelectDialog.value
+        .open()
+        .then(async (position) => {
+            // default position might have changed
+            await fetchSignedInUserPositions();
+            const updatedEvent = await eventUseCase.joinEvent(evt, position);
+            emit('update:event', updatedEvent);
+        })
+        .catch(() => console.debug('dialog was canceled'));
 }
 
 async function joinEvent(evt: Event): Promise<void> {

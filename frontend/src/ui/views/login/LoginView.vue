@@ -104,9 +104,7 @@ import { useRouter } from 'vue-router';
 import { VInputLabel, VInputText } from '@/ui/components/common';
 import { useAuthUseCase } from '@/ui/composables/Application';
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 

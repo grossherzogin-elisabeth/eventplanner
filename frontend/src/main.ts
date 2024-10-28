@@ -34,7 +34,7 @@ import {
 import { AuthService } from '@/application/services/AuthService';
 import { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import { AppSettingsUseCase } from '@/application/usecases/AppSettingsUseCase';
-import { IndexedDB, IndexedDBRepository } from '@/common';
+import { IndexedDBRepository, getConnection } from '@/common';
 import type { Domain } from '@/domain';
 import { PositionService } from '@/domain';
 import { QualificationService } from '@/domain';
@@ -52,7 +52,7 @@ enum StoreNames {
 // -----------------------------------------------------
 // initialize indexed db
 // -----------------------------------------------------
-const indexedDB = IndexedDB.getConnection('lissi', Object.values(StoreNames), 3);
+const indexedDB = getConnection('lissi', Object.values(StoreNames), 3);
 
 // -----------------------------------------------------
 // initialize domain services

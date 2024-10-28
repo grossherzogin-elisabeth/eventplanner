@@ -19,6 +19,7 @@ export class AccountRestRepository implements AccountRepository {
             const account = (await response.clone().json()) as AccountRepresentation;
             return this.mapAccountToSignedInUser(account);
         } catch (e) {
+            console.error(e);
             return undefined;
         }
     }

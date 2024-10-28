@@ -42,6 +42,7 @@ async function onClick(): Promise<void> {
             await props.action();
             success.value = true;
         } catch (e) {
+            console.debug(e);
             success.value = false;
         } finally {
             loading.value = false;

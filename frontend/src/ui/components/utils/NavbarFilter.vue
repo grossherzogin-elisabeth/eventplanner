@@ -23,16 +23,14 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { Timer } from '@/common';
+import { wait } from '@/common';
 
 interface Props {
     modelValue?: string;
     placeholder?: string;
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: string): void;
-}
+type Emits = (e: 'update:modelValue', value: string) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
@@ -42,7 +40,7 @@ const input = ref<HTMLInputElement | null>(null);
 
 async function openSearch(): Promise<void> {
     showSearch.value = true;
-    await Timer.wait(200);
+    await wait(200);
     input.value?.focus();
 }
 

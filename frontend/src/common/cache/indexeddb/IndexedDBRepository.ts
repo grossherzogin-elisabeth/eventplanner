@@ -1,4 +1,4 @@
-import { ObjectUtils } from '@/common';
+import { deepCopy } from '@/common';
 import type { Cache, CacheableEntity } from '../Cache';
 
 export interface StoreChangedEvent<K extends string | number = string> {
@@ -124,7 +124,7 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
      * @param entity
      */
     public async save(entity: T): Promise<T> {
-        const clone = ObjectUtils.deepCopy(entity);
+        const clone = deepCopy(entity);
         const database = await this.database;
         return new Promise<T>((resolve, reject) => {
             const transaction = database.transaction(this.store, 'readwrite');

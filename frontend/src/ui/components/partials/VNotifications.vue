@@ -18,7 +18,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Timer } from '@/common';
+import { wait } from '@/common';
 import { useNotifications } from '@/ui/composables/Application';
 
 interface Notification {
@@ -60,9 +60,9 @@ async function showNotification(
         hidden: false,
     };
     const index = notifications.value.push(notification) - 1;
-    await Timer.wait(5000);
+    await wait(5000);
     notifications.value[index].class = `${type} animate-disappear`;
-    await Timer.wait(5000);
+    await wait(5000);
     notifications.value[index].hidden = true;
 }
 

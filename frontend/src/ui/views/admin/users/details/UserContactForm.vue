@@ -41,9 +41,7 @@ interface Props {
     modelValue: UserDetails;
 }
 
-interface Emits {
-    (e: 'update:modelValue', user: UserDetails): void;
-}
+type Emits = (e: 'update:modelValue', user: UserDetails) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();

@@ -8,9 +8,7 @@ import { useRouter } from 'vue-router';
 import { useAuthUseCase } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 

@@ -29,10 +29,8 @@ interface Props {
     maxHeight?: string;
 }
 
-interface Emits {
-    // dropdown is closed
-    (e: 'close'): void;
-}
+// dropdown is closed
+type Emits = (e: 'close') => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

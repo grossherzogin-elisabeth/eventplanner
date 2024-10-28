@@ -30,8 +30,8 @@ hr {
     @apply my-4 border-primary-300;
 }
 
-a {
-    @apply hover:underline;
+a.link {
+    @apply font-bold text-primary-600 hover:underline;
 }
 
 code {

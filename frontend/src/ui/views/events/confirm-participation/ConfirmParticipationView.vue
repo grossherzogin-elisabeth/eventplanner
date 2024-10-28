@@ -133,14 +133,11 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { DateTimeFormat, DateUtils } from '@/common/date';
+import { DateTimeFormat, addToDate } from '@/common/date';
 import type { Event } from '@/domain';
 import { EventState, EventType } from '@/domain';
-import { Routes } from '@/ui/views/Routes';
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -148,8 +145,8 @@ const state = ref<boolean | null>(null);
 const showDetails = ref<boolean>(true);
 const event = ref<Event>({
     key: '',
-    start: DateUtils.add(new Date(), { days: 14 }),
-    end: DateUtils.add(new Date(), { days: 20 }),
+    start: addToDate(new Date(), { days: 14 }),
+    end: addToDate(new Date(), { days: 20 }),
     name: 'Sommerreise 2',
     type: EventType.MultiDayEvent,
     assignedUserCount: 0,

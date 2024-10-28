@@ -12,9 +12,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-interface Emits {
-    (e: 'dismiss'): void;
-}
+type Emits = (e: 'dismiss') => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

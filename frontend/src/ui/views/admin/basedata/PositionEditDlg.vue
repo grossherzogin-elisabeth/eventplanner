@@ -55,7 +55,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { ObjectUtils } from '@/common';
+import { deepCopy } from '@/common';
 import type { Position } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputNumber } from '@/ui/components/common';
@@ -74,10 +74,8 @@ const position = ref<Position>({
 });
 const validation = useValidation(position, (position) => positionService.validate(position));
 
-function init(): void {}
-
 async function open(value: Position): Promise<Position> {
-    position.value = ObjectUtils.deepCopy(value);
+    position.value = deepCopy(value);
     // wait until user submits
     await dlg.value?.open();
 
@@ -88,8 +86,6 @@ defineExpose<Dialog<Position, Position>>({
     open: (value: Position) => open(value),
     close: () => dlg.value?.reject(),
     submit: (result: Position) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
-
-init();
 </script>

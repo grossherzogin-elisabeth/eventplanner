@@ -16,15 +16,13 @@
 <script setup lang="ts">
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { WindowUtils } from '@/common';
+import { disableScrolling, enableScrolling } from '@/common';
 
 interface Props {
     open: boolean;
 }
 
-interface Emits {
-    (e: 'update:open', value: boolean): void;
-}
+type Emits = (e: 'update:open', value: boolean) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------
@@ -39,8 +37,8 @@ const emit = defineEmits<Emits>();
 watch(
     () => props.open,
     (open) => {
-        if (open) WindowUtils.disableScrolling();
-        else WindowUtils.enableScrolling();
+        if (open) disableScrolling();
+        else enableScrolling();
     }
 );
 

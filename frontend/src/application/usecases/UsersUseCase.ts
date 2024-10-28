@@ -4,7 +4,7 @@ import type { ErrorHandlingService } from '@/application/services/ErrorHandlingS
 import type { PositionCachingService } from '@/application/services/PositionCachingService';
 import type { QualificationCachingService } from '@/application/services/QualificationCachingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
-import { ObjectUtils } from '@/common';
+import { diff } from '@/common';
 import type {
     Position,
     PositionKey,
@@ -73,17 +73,17 @@ export class UsersUseCase {
         updatedUser: UserDetails
     ): Promise<UserDetails> {
         try {
-            const diff = ObjectUtils.diff(originalUser, updatedUser);
-            if (Object.keys(diff).length > 0) {
+            const changes = diff(originalUser, updatedUser);
+            if (Object.keys(changes).length > 0) {
                 const savedUser = await this.userRepository.updateSignedInUser({
-                    gender: diff.gender,
-                    title: diff.title,
-                    nickName: diff.nickName,
-                    phone: diff.phone,
-                    mobile: diff.mobile,
-                    address: diff.address,
-                    passNr: diff.passNr,
-                    email: diff.email,
+                    gender: changes.gender,
+                    title: changes.title,
+                    nickName: changes.nickName,
+                    phone: changes.phone,
+                    mobile: changes.mobile,
+                    address: changes.address,
+                    passNr: changes.passNr,
+                    email: changes.email,
                 });
                 await this.userCachingService.updateCache({
                     key: savedUser.key,

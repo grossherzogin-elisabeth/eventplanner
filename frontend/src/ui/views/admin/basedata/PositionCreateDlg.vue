@@ -69,8 +69,6 @@ const position = ref<Position>({
 });
 const validation = useValidation(position, (position) => positionService.validate(position));
 
-function init(): void {}
-
 async function open(): Promise<Position> {
     position.value = {
         key: '',
@@ -97,8 +95,6 @@ defineExpose<Dialog<void, Position>>({
     open: () => open(),
     close: () => dlg.value?.reject(),
     submit: (result: Position) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
-
-init();
 </script>

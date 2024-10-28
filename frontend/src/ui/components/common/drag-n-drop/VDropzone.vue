@@ -13,9 +13,7 @@
 <script lang="ts" setup generic="T extends object">
 import { ref } from 'vue';
 
-interface Emits {
-    (e: 'drop', t: T): void;
-}
+type Emits = (e: 'drop', t: T) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

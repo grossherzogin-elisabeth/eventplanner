@@ -1,6 +1,6 @@
 import type { AuthService, EventRepository } from '@/application';
-import { AsyncDebouncer } from '@/application/utils/AsyncDebouncer';
-import { type Cache, DateUtils } from '@/common';
+import { debounce } from '@/application/utils/AsyncDebouncer';
+import { type Cache, addToDate } from '@/common';
 import type { Event, EventKey, Registration } from '@/domain';
 import { EventState } from '@/domain';
 
@@ -48,7 +48,7 @@ export class EventCachingService {
             const slot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
             if (slot) {
                 event.signedInUserAssignedPosition = registration.positionKey;
-                event.canSignedInUserLeave = event.start.getTime() > DateUtils.add(new Date(), { days: 7 }).getTime();
+                event.canSignedInUserLeave = event.start.getTime() > addToDate(new Date(), { days: 7 }).getTime();
             } else {
                 event.signedInUserWaitingListPosition = registration.positionKey;
                 event.canSignedInUserLeave = event.start.getTime() > new Date().getTime();
@@ -67,7 +67,7 @@ export class EventCachingService {
     }
 
     private async fetchEvents(year: number): Promise<Event[]> {
-        return AsyncDebouncer.debounce('fetchEvents' + year, async () => {
+        return debounce('fetchEvents' + year, async () => {
             const events = await this.eventRepository.findAll(year);
             await this.cache.saveAll(events.map((evt) => this.updateComputedValues(evt)));
             return events;

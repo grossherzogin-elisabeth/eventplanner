@@ -356,9 +356,7 @@ enum Tab {
     WaitingList = 'waitinglist',
 }
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -378,7 +376,7 @@ const documentsMock = ['Kammerplan', 'Wachplan', 'Getränkeliste Crew'];
 const waitingList = ref<ResolvedRegistrationSlot[]>([]);
 const team = ref<ResolvedRegistrationSlot[]>([]);
 
-const positionSelectDialog = ref<Dialog<void, PositionKey> | null>(null);
+const positionSelectDialog = ref<Dialog<unknown, PositionKey> | null>(null);
 
 const waitingListCount = computed<number>(() => {
     if (!event.value) return 0;
@@ -427,14 +425,14 @@ async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
     if (!positionSelectDialog.value) {
         return;
     }
-    try {
-        const position = await positionSelectDialog.value.open();
-        // default position might have changed
-        await fetchSignedInUserPositions();
-        event.value = await eventUseCase.joinEvent(evt, position);
-    } catch (e) {
-        // ignore
-    }
+    await positionSelectDialog.value
+        .open()
+        .then(async (position) => {
+            // default position might have changed
+            await fetchSignedInUserPositions();
+            event.value = await eventUseCase.joinEvent(evt, position);
+        })
+        .catch(() => console.debug('dialog was canceled'));
 }
 
 async function joinEvent(): Promise<void> {

@@ -57,9 +57,7 @@ interface Props {
     decimal?: boolean | undefined;
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: number | string): void;
-}
+type Emits = (e: 'update:modelValue', value: number | string) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

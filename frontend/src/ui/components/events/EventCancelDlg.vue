@@ -67,6 +67,6 @@ defineExpose<Dialog<Event, string>>({
     open: (evt: Event) => open(evt),
     close: () => dlg.value?.reject(),
     submit: (msg: string) => dlg.value?.submit(msg),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 </script>

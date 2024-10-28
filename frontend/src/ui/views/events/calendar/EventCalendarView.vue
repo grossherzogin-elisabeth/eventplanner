@@ -70,7 +70,7 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { DateTimeFormat, DateUtils, Month } from '@/common/date';
+import { DateTimeFormat, Month, addToDate } from '@/common/date';
 import { type Event, EventState, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import CreateEventDlg from '@/ui/components/events/EventCreateDlg.vue';
@@ -98,9 +98,7 @@ interface CalendarDayEvent {
     offset: number;
 }
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -216,7 +214,7 @@ function buildCalender(year: number): Map<Month, CalendarDay[]> {
                 date.getFullYear() === today.getFullYear(),
             events: [],
         });
-        date = DateUtils.add(date, { days: 1 });
+        date = addToDate(date, { days: 1 });
     }
     return temp;
 }
@@ -238,7 +236,7 @@ async function stopCreateEventDrag(date: Date): Promise<void> {
             .open({ start: from, end: to })
             .then((evt) => eventAdministrationService.createEvent(evt))
             .then(() => fetchEvents())
-            .catch(() => {})
+            .catch(() => console.debug('dialog was canceled'))
             .finally(() => {
                 createEventFromDate.value = null;
                 calendarStyle.value['--create-event-days'] = 1;

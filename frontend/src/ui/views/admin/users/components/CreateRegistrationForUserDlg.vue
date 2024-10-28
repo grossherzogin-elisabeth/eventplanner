@@ -110,31 +110,26 @@ async function open(user: User): Promise<void> {
     const eventsByUser = await eventsUseCase.getFutureEventsByUser(user.key);
     hiddenEvents.value = eventsByUser.map((it) => it.key);
 
-    // wait until user submits
-    try {
-        await dlg.value?.open();
-    } catch (e) {
-        return;
-    }
-
-    if (selectedEventKey.value) {
-        try {
-            await eventAdministrationUseCase.addRegistration(selectedEventKey.value, {
-                key: '',
-                userKey: user.key,
-                positionKey: selectedPositionKey.value,
-            });
-        } catch (e) {
-            errorHandling.handleRawError(e);
+    dlg.value?.open().then(async () => {
+        if (selectedEventKey.value && selectedPositionKey.value) {
+            try {
+                await eventAdministrationUseCase.addRegistration(selectedEventKey.value, {
+                    key: '',
+                    userKey: user.key,
+                    positionKey: selectedPositionKey.value,
+                });
+            } catch (e) {
+                errorHandling.handleRawError(e);
+            }
         }
-    }
+    });
 }
 
 defineExpose<Dialog<User, void>>({
     open: (user: User) => open(user),
     close: () => dlg.value?.reject(),
     submit: () => dlg.value?.submit(),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 
 init();

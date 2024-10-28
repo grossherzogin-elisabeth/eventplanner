@@ -21,9 +21,7 @@ interface SiteLink {
     name: string;
 }
 
-interface Emits {
-    (e: 'update:hasItems', value: boolean): void;
-}
+type Emits = (e: 'update:hasItems', value: boolean) => void;
 
 const emit = defineEmits<Emits>();
 defineExpose({

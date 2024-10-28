@@ -4,7 +4,7 @@ import type { Config } from '@/application/values/Config';
 import { DateTimeFormat } from '@/common/date';
 import messagesDe from '@/ui/locales/de.json';
 
-const datetimeFormatsDe: { [key: string]: DateTimeOptions } = {};
+const datetimeFormatsDe: Record<string, DateTimeOptions> = {};
 datetimeFormatsDe[DateTimeFormat.DD_MM_YYYY] = {
     year: 'numeric',
     month: '2-digit',

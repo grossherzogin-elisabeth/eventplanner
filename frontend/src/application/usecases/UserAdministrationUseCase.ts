@@ -1,7 +1,7 @@
 import type { NotificationService, UserRepository } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
-import { ObjectUtils } from '@/common';
+import { diff } from '@/common';
 import type { UserDetails, UserKey } from '@/domain';
 
 export class UserAdministrationUseCase {
@@ -23,9 +23,9 @@ export class UserAdministrationUseCase {
     }
 
     public async updateUser(original: UserDetails, updated: UserDetails): Promise<UserDetails> {
-        const diff = ObjectUtils.diff(original, updated);
-        if (Object.keys(diff).length > 0) {
-            const savedUser = await this.userRepository.updateUser(updated.key, diff);
+        const changes = diff(original, updated);
+        if (Object.keys(changes).length > 0) {
+            const savedUser = await this.userRepository.updateUser(updated.key, changes);
             await this.userCachingService.updateCache({
                 key: savedUser.key,
                 firstName: savedUser.firstName,

@@ -48,7 +48,7 @@
 <script setup generic="T extends {}" lang="ts">
 import { computed, ref, useSlots, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { ObjectUtils } from '@/common';
+import { deepCopy, extractValue } from '@/common';
 import { useQueryStateSync } from '@/ui/composables/QueryState';
 import VPagination from './VPagination.vue';
 
@@ -180,9 +180,9 @@ const sortedItems = computed<T[]>(() => {
     if (sortCol.value === '') {
         return props.items;
     }
-    return ObjectUtils.deepCopy(props.items).sort((a, b) => {
-        const va = ObjectUtils.extractValue(a, sortCol.value);
-        const vb = ObjectUtils.extractValue(b, sortCol.value);
+    return deepCopy(props.items).sort((a, b) => {
+        const va = extractValue(a, sortCol.value);
+        const vb = extractValue(b, sortCol.value);
 
         // Compare numbers
         if (typeof va === 'number' && typeof vb === 'number') {

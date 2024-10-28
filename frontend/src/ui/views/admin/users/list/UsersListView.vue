@@ -210,7 +210,7 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { ArrayUtils } from '@/common';
+import { filterUndefined } from '@/common';
 import type { Position, QualificationKey, User } from '@/domain';
 import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
@@ -247,9 +247,7 @@ interface UserRegistrations extends User, Selectable {
     soonExpiringQualifications: QualificationKey[];
 }
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -367,7 +365,7 @@ async function fetchUsers(): Promise<void> {
             multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,
             singleDayEventsCount: registrationsSingleDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
-            positions: user.positionKeys.map((key) => positions.get(key)).filter(ArrayUtils.filterUndefined),
+            positions: user.positionKeys.map((key) => positions.get(key)).filter(filterUndefined),
             expiredQualifications: usersService.getExpiredQualifications(user),
             soonExpiringQualifications: usersService.getSoonExpiringQualifications(user),
         };

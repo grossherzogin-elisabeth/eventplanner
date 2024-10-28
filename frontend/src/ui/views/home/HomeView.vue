@@ -74,9 +74,7 @@ import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
 import EventCard from '@/ui/views/home/EventCard.vue';
 
-interface RouteEmits {
-    (e: 'update:title', value: string): void;
-}
+type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 

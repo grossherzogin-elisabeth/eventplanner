@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { ObjectUtils } from '@/common';
+import { deepCopy } from '@/common';
 import type { InputSelectOption, Qualification, QualificationKey, UserQualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputDate, VInputLabel, VInputTextArea } from '@/ui/components/common';
@@ -68,7 +68,7 @@ async function fetchQualifications(): Promise<void> {
 async function open(value?: UserQualification): Promise<UserQualification> {
     if (value) {
         editing.value = true;
-        userQualification.value = ObjectUtils.deepCopy(value);
+        userQualification.value = deepCopy(value);
     } else {
         editing.value = false;
         userQualification.value = {
@@ -85,7 +85,7 @@ defineExpose<Dialog<UserQualification, UserQualification>>({
     open: (eventSlot: UserQualification) => open(eventSlot),
     close: () => dlg.value?.reject(),
     submit: (result: UserQualification) => dlg.value?.submit(result),
-    reject: (reason?: void) => dlg.value?.reject(reason),
+    reject: () => dlg.value?.reject(),
 });
 
 init();

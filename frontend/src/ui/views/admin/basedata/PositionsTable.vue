@@ -98,7 +98,7 @@ function createPosition(): void {
             .open()
             .then((it) => positionAdministrationUseCase.createPosition(it))
             .then(() => fetchPositions())
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 
@@ -108,7 +108,7 @@ function editPosition(position: Position): void {
             .open(position)
             .then((it) => positionAdministrationUseCase.updatePosition(it))
             .then(() => fetchPositions())
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 
@@ -118,7 +118,7 @@ function deletePosition(position: Position): void {
             .open(position)
             .then(() => positionAdministrationUseCase.deletePosition(position))
             .then(() => fetchPositions())
-            .catch(() => {});
+            .catch(() => console.debug('dialog was canceled'));
     }
 }
 

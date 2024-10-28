@@ -164,9 +164,7 @@ interface Props {
     lastUsed?: T[];
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: T): void;
-}
+type Emits = (e: 'update:modelValue', value: T) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------
@@ -227,7 +225,7 @@ function onBlur(evt: FocusEvent): void {
     }
 }
 
-function hideDropdown(focusInput: boolean = false): void {
+function hideDropdown(focusInput = false): void {
     setTimeout(() => {
         focusOptionIndex.value = null;
         visited.value = true;

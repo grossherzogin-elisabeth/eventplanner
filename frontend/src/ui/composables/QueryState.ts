@@ -16,6 +16,7 @@ export function useQueryStateSync<T>(prop: string, get: () => T, set: (t: T) => 
             route.query[prop] = value.toString();
         } else {
             // remove the query param
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete route.query[prop];
         }
 

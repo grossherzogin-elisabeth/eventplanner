@@ -40,9 +40,7 @@ interface Props {
     pageSize?: number;
 }
 
-interface Emits {
-    (e: 'update:page', value: number): void;
-}
+type Emits = (e: 'update:page', value: number) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------

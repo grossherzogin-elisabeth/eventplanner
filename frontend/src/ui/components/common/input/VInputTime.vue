@@ -38,7 +38,7 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import { DateUtils } from '@/common/date/DateUtils';
+import { addToDate, subtractFromDate } from '@/common/date/DateUtils';
 import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -61,9 +61,7 @@ interface Props {
     type?: 'text' | 'passwort' | 'email' | 'time' | 'number';
 }
 
-interface Emits {
-    (e: 'update:modelValue', value: Date): void;
-}
+type Emits = (e: 'update:modelValue', value: Date) => void;
 
 /**
  * --------------------------------------------------------------------------------------------------------
@@ -125,14 +123,14 @@ function onInput(inputEvent: Event) {
 
 function onArrowUp(): void {
     let date = props.modelValue || new Date();
-    date = DateUtils.add(date, { hours: 1 });
+    date = addToDate(date, { hours: 1 });
     inputValue.value = i18n.d(date, DateTimeFormat.hh_mm).replace(':', ' : ');
     emit('update:modelValue', date);
 }
 
 function onArrowDown(): void {
     let date = props.modelValue || new Date();
-    date = DateUtils.subtract(date, { hours: 1 });
+    date = subtractFromDate(date, { hours: 1 });
     inputValue.value = i18n.d(date, DateTimeFormat.hh_mm).replace(':', ' : ');
     emit('update:modelValue', date);
 }
