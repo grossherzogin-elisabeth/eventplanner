@@ -78,15 +78,30 @@
                     <i class="fa-solid fa-user-plus"></i>
                     <span>Reise hinzufügen</span>
                 </button>
-                <button v-if="tab === Tab.USER_CERTIFICATES" class="btn-secondary" @click="addUserQualification()">
+                <button v-else-if="tab === Tab.USER_CERTIFICATES" class="btn-secondary" @click="addUserQualification()">
                     <i class="fa-solid fa-file-circle-plus"></i>
                     <span>Qualifikation hinzufügen</span>
                 </button>
+                <a
+                    v-else-if="tab === Tab.USER_CONTACT_DATA && user?.email"
+                    class="btn-secondary"
+                    :href="`mailto:${user.email}`"
+                    target="_blank"
+                >
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Email schreiben</span>
+                </a>
             </template>
             <template #actions-menu>
                 <li class="context-menu-item" @click="impersonateUser()">
                     <i class="fa-solid fa-user-secret" />
                     <span>Impersonate</span>
+                </li>
+                <li>
+                    <a v-if="user?.email" class="context-menu-item" :href="`mailto:${user.email}`" target="_blank">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>Email schreiben</span>
+                    </a>
                 </li>
                 <li class="context-menu-item" @click="createRegistration()">
                     <i class="fa-solid fa-user-plus" />
@@ -96,7 +111,7 @@
                     <i class="fa-solid fa-file-circle-plus" />
                     <span>Qualifikation hinzufügen</span>
                 </li>
-                <li class="context-menu-item">
+                <li class="context-menu-item disabled">
                     <i class="fa-solid fa-key" />
                     <span>Passwort zurücksetzen</span>
                 </li>

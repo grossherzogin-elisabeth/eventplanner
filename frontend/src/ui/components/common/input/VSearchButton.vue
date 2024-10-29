@@ -1,6 +1,7 @@
 <template>
     <div
-        class="hidden w-44 cursor-pointer items-center gap-4 rounded-lg px-4 py-2 text-primary-700 transition-all duration-100 focus-within:w-64 focus-within:cursor-text focus-within:bg-primary-100 focus-within:text-primary-300 hover:bg-primary-100 lg:flex xxl:focus-within:w-80"
+        class="hidden cursor-pointer items-center gap-4 rounded-lg px-4 py-2 text-primary-700 transition-all duration-100 focus-within:w-64 focus-within:cursor-text focus-within:bg-primary-100 focus-within:text-primary-300 hover:bg-primary-100 lg:flex xxl:focus-within:w-80"
+        :class="$attrs.class || 'w-44'"
         @click="$refs.input.focus()"
     >
         <i class="fa-solid fa-search text-inherit" />

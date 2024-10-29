@@ -251,7 +251,7 @@
                 class="context-menu-item text-red-700"
                 @click="cancelEvent()"
             >
-                <i class="fa-solid fa-trash" />
+                <i class="fa-solid fa-ban" />
                 <span>Reise absagen</span>
             </li>
         </template>

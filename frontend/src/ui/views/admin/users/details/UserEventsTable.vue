@@ -76,7 +76,7 @@
                                 :class="{ disabled: item.inPast }"
                                 @click="deleteRegistration(item)"
                             >
-                                <i class="fa-solid fa-trash" />
+                                <i class="fa-solid fa-trash-alt" />
                                 <span>Anmeldung löschen</span>
                             </li>
                         </ul>

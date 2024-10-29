@@ -1,45 +1,23 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
-            <NavbarFilter v-model="filter" placeholder="Nutzer filtern" />
+            <div class="h-full lg:hidden">
+                <NavbarFilter v-model="filter" placeholder="Nutzer filtern" />
+            </div>
         </teleport>
-        <div v-if="false" class="z-20 hidden bg-primary-50 px-4 pb-16 pt-4 md:px-16 md:pt-8 xl:top-0 xl:block xl:px-20">
-            <div class="-ml-6 flex items-center space-x-4">
-                <VInputText v-model="filter" class="input-search w-96" placeholder="Nutzer filtern">
-                    <template #before>
-                        <i class="fa-solid fa-magnifying-glass ml-4 text-primary-900 text-opacity-25" />
-                    </template>
-                </VInputText>
-                <!--                <VInputCheckBox v-model="filterOnlyActive" label="Nur Stammcrew mit Anmeldungen" />-->
-                <div class="hidden flex-grow md:block"></div>
-                <div class="hidden items-stretch justify-end space-x-2 md:flex">
-                    <button class="btn-primary flex-grow whitespace-nowrap" @click="importUsers()">
-                        <i class="fa-solid fa-upload"></i>
-                        <span>Nutzer importieren</span>
-                    </button>
-                </div>
-            </div>
-            <div class="flex items-center">
-                <span></span>
-            </div>
-        </div>
 
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
             <template #end>
                 <div class="flex items-stretch gap-2 pb-2">
                     <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
-                    <button
-                        v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)"
-                        class="btn-ghost"
-                        @click="importUsers()"
-                    >
-                        <i class="fa-solid fa-upload"></i>
-                        <span class="text-base">Importieren</span>
-                    </button>
                     <div class="hidden 2xl:block">
-                        <button class="btn-primary ml-2">
-                            <i class="fa-solid fa-user-plus"></i>
-                            <span class="">Hinzufügen</span>
+                        <button
+                            v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)"
+                            class="btn-primary"
+                            @click="importUsers()"
+                        >
+                            <i class="fa-solid fa-upload"></i>
+                            <span class="text-base">Importieren</span>
                         </button>
                     </div>
                 </div>
@@ -56,7 +34,7 @@
                 @click-ctrl="selectUser($event)"
             >
                 <template #row="{ item }">
-                    <td @click.stop="item.selected = !item.selected">
+                    <td v-if="selectedUsers && selectedUsers.length > 0" @click.stop="item.selected = !item.selected">
                         <span v-if="item.selected">
                             <i class="fa-solid fa-check-square text-2xl text-primary-600"></i>
                         </span>
@@ -170,7 +148,7 @@
                                     class="context-menu-item text-red-700"
                                     @click="deleteUser(item)"
                                 >
-                                    <i class="fa-solid fa-trash" />
+                                    <i class="fa-solid fa-trash-alt" />
                                     <span>Nutzer löschen</span>
                                 </li>
                             </ul>
@@ -183,45 +161,48 @@
             </VTable>
         </div>
 
-        <div class="sticky bottom-0 right-0 z-10 flex justify-end pb-4 pr-3 md:pr-14 2xl:hidden">
-            <button class="btn-primary btn-floating">
-                <i class="fa-solid fa-calendar-plus"></i>
-                <span>Hinzufügen</span>
-            </button>
-        </div>
-
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
         <VConfirmationDialog ref="deleteUserDialog" />
         <ImportUsersDlg ref="importUsersDialog" />
 
         <div class="flex-1"></div>
 
-        <div v-if="selectedCount > 0" class="sticky bottom-0 z-20">
+        <div v-if="selectedUsers && selectedUsers.length > 0" class="sticky bottom-0 z-20">
             <div
                 class="h-full border-t border-primary-200 bg-primary-50 px-4 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
             >
-                <div class="flex h-full items-stretch gap-2 py-2">
+                <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
-                        <i class="fa-solid fa-xmark text-base"></i>
+                        <i class="fa-solid fa-xmark w-6 text-base" />
                     </button>
-                    <span class="self-center text-base font-bold">{{ selectedCount }} Nutzer ausgewählt</span>
+                    <span class="self-center text-base font-bold">{{ selectedUsers.length }} Nutzer ausgewählt</span>
                     <div class="flex-grow"></div>
-                    <button class="btn-ghost">
+                    <button class="btn-ghost" disabled>
                         <i class="fa-solid fa-envelope"></i>
                         <span class="text-base">Email schreiben</span>
                     </button>
-                    <button class="btn-ghost">
-                        <i class="fa-solid fa-wrench"></i>
-                        <span class="text-base">Arbeitsdienst eintragen</span>
-                    </button>
+                    <div class="hidden lg:block xl:hidden 2xl:block">
+                        <button class="btn-ghost" disabled>
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <span class="text-base">Arbeitsdienst eintragen</span>
+                        </button>
+                    </div>
                     <ContextMenuButton class="btn-ghost">
                         <template #default>
-                            <li class="context-menu-item">
-                                <i class="fa-solid fa-wrench" />
+                            <li class="context-menu-item" @click="selectAll">
+                                <i class="fa-solid fa-list-check" />
+                                <span>Alle auswählen</span>
+                            </li>
+                            <li class="context-menu-item disabled">
+                                <i class="fa-solid fa-screwdriver-wrench" />
                                 <span>Arbeitsdienst eintragen</span>
                             </li>
+                            <li class="context-menu-item disabled">
+                                <i class="fa-solid fa-envelope" />
+                                <span>Email schreiben</span>
+                            </li>
                             <template v-if="signedInUser.permissions.includes(Permission.DELETE_USERS)">
-                                <li class="context-menu-item text-red-700">
+                                <li class="context-menu-item disabled text-red-700">
                                     <i class="fa-solid fa-trash-alt" />
                                     <span>Nutzer löschen</span>
                                 </li>
@@ -242,7 +223,7 @@ import type { Position, QualificationKey, User } from '@/domain';
 import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { ContextMenuButton, VConfirmationDialog, VInputText, VTable, VTabs } from '@/ui/components/common';
+import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import {
@@ -303,8 +284,8 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
     users.value?.filter((it) => matchesActiveCategory(it) && usersService.doesUserMatchFilter(it, filter.value))
 );
 
-const selectedCount = computed<number>(() => {
-    return filteredUsers.value?.filter((it) => it.selected).length || 0;
+const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
+    return filteredUsers.value?.filter((it) => it.selected);
 });
 
 function init(): void {
@@ -351,7 +332,7 @@ function selectUser(user: UserRegistrations): void {
 }
 
 async function editUser(user: UserRegistrations): Promise<void> {
-    if (selectedCount.value > 0) {
+    if (selectedUsers.value && selectedUsers.value.length > 0) {
         user.selected = !user.selected;
     } else if (signedInUser.permissions.includes(Permission.WRITE_USERS)) {
         await router.push({ name: Routes.UserDetails, params: { key: user.key } });
@@ -388,6 +369,10 @@ async function deleteUser(user: UserRegistrations): Promise<void> {
 
 function selectNone(): void {
     users.value?.forEach((it) => (it.selected = false));
+}
+
+function selectAll(): void {
+    users.value?.forEach((it) => (it.selected = true));
 }
 
 async function fetchUsers(): Promise<void> {

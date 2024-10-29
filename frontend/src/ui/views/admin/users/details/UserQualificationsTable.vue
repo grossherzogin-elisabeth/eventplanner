@@ -54,7 +54,7 @@
                             <span>Qualification bearbeiten</span>
                         </li>
                         <li class="context-menu-item text-red-700" @click="deleteUserQualification(item)">
-                            <i class="fa-solid fa-trash" />
+                            <i class="fa-solid fa-trash-alt" />
                             <span>Qualifikation löschen</span>
                         </li>
                     </ul>
