@@ -10,6 +10,7 @@ interface UserRepresentation {
     positions: string[];
     roles?: string[];
     qualifications?: UserQualificationRepresentation[];
+    email?: string;
 }
 
 interface UserDetailsRepresentation {
@@ -125,6 +126,7 @@ export class UserRestRepository implements UserRepository {
                 qualificationKey: it.qualificationKey,
                 expiresAt: UserRestRepository.parseDate(it.expiresAt),
             })),
+            email: it.email,
         }));
     }
 

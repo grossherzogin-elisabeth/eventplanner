@@ -30,7 +30,15 @@
             </tbody>
             <!-- data -->
             <tbody v-else>
-                <tr v-for="(row, index) in pagedItems" :key="index" @click="emit('click', row)">
+                <tr
+                    v-for="(row, index) in pagedItems"
+                    :key="index"
+                    @click.exact="emit('click', row)"
+                    @click.ctrl="emit('click-ctrl', row)"
+                    @click.shift.exact.prevent="emit('click-shift', row)"
+                    @click.meta.exact.prevent="emit('click-ctrl', row)"
+                    @click.alt.exact.prevent="emit('click-ctrl', row)"
+                >
                     <td></td>
                     <slot name="row" :item="row" :index="index">
                         <td v-for="(val, colIndex) in Object.values(row)" :key="colIndex">
@@ -116,6 +124,10 @@ interface Props<T> {
 
 interface Emits {
     (e: 'click', value: T): void;
+
+    (e: 'click-shift', value: T): void;
+
+    (e: 'click-ctrl', value: T): void;
 
     (e: 'update:page', value: number): void;
 }

@@ -1,57 +1,27 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
-            <NavbarFilter v-model="filter" placeholder="Events durchsuchen" />
-        </teleport>
-        <div
-            v-if="false"
-            class="z-20 hidden bg-primary-50 px-4 pb-8 pt-4 md:px-16 md:pt-8 xl:static xl:top-0 xl:block xl:px-20"
-        >
-            <div class="-ml-6 flex items-center space-x-4">
-                <!--                <VInputText v-model="filter" class="input-search w-96" placeholder="Reisen filtern">-->
-                <!--                    <template #before>-->
-                <!--                        <i class="fa-solid fa-magnifying-glass ml-4 text-primary-900 text-opacity-25" />-->
-                <!--                    </template>-->
-                <!--                </VInputText>-->
-                <div class="hidden flex-grow md:block"></div>
-                <button class="btn-primary" @click="createEvent()">
-                    <i class="fa-solid fa-calendar-plus"></i>
-                    <span>Reise erstellen</span>
-                </button>
-                <button
-                    v-if="user.permissions.includes(Permission.WRITE_EVENTS)"
-                    class="btn-secondary"
-                    @click="importEvents()"
-                >
-                    <i class="fa-solid fa-upload"></i>
-                    <span>Reisen importieren</span>
-                </button>
+            <div class="h-full lg:hidden">
+                <NavbarFilter v-model="filter" placeholder="Events durchsuchen" />
             </div>
-        </div>
+        </teleport>
 
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
-            <!--            <template #before>-->
-            <!--                <button class="btn-ghost">-->
-            <!--                    <i class="fa-solid fa-search"></i>-->
-            <!--                </button>-->
-            <!--            </template>-->
-            <template #after>
-                <div class="flex items-center gap-2 pb-2">
-                    <div class="hidden w-64 items-center gap-2 rounded-lg bg-primary-100 px-4 py-2 xl:flex">
-                        <i class="fa-solid fa-search text-primary-300"></i>
+            <template #end>
+                <div class="flex items-stretch gap-2 pb-2">
+                    <div
+                        class="hidden w-44 cursor-pointer items-center gap-2 rounded-lg px-4 py-2 transition-all duration-100 focus-within:w-64 focus-within:cursor-text focus-within:bg-primary-100 hover:bg-primary-100 lg:flex xxl:focus-within:w-80"
+                    >
+                        <i class="fa-solid fa-search text-primary-700"></i>
                         <input
                             v-model="filter"
-                            class="bg-transparent placeholder-primary-300"
+                            class="w-0 flex-grow cursor-pointer bg-transparent placeholder-primary-700 focus-within:cursor-text focus-within:placeholder-primary-300"
                             placeholder="Reisen filtern"
                         />
                         <button v-if="filter !== ''" @click="filter = ''">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
-                    <!--                    <button class="btn-ghost">-->
-                    <!--                        <i class="fa-solid fa-lock-open"></i>-->
-                    <!--                        <span class="text-base">Freigeben</span>-->
-                    <!--                    </button>-->
                     <button
                         v-if="user.permissions.includes(Permission.WRITE_EVENTS)"
                         class="btn-ghost"
@@ -63,62 +33,59 @@
                     <div class="hidden 2xl:block">
                         <button class="btn-primary ml-2" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
-                            <span class="">Erstellen</span>
+                            <span class="">Hinzufügen</span>
                         </button>
                     </div>
                 </div>
             </template>
         </VTabs>
 
-        <div
-            class="scrollbar-invisible flex min-h-20 w-full items-center gap-2 overflow-x-auto bg-primary-50 pl-4 pt-4 text-sm md:pl-12 xl:pl-16"
-        >
-            <div class="flex cursor-pointer gap-2 text-sm">
-                <div
-                    v-if="filter"
-                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1"
-                >
-                    <span class="mr-2">Suchergebnisse für '{{ filter }}'</span>
-                    <button @click="filter = ''">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                    </button>
-                </div>
-                <VInputSelect
-                    v-model="filterCategory"
-                    class="filter-chip"
-                    placeholder="Alle Kategorien"
-                    :options="[
-                        { label: 'Alle Kategorien', value: null },
-                        { label: 'Tagesfahrten', value: EventType.SingleDayEvent },
-                        { label: 'Wochenendfahrten', value: EventType.WeekendEvent },
-                        { label: 'Sommerreisen', value: EventType.MultiDayEvent },
-                        { label: 'Arbeitsdienste', value: EventType.WorkEvent },
-                    ]"
-                />
-                <VInputSelect
-                    v-model="filterStatus"
-                    class="filter-chip"
-                    placeholder="Alle Status"
-                    :options="[
-                        { label: 'Alle Status', value: null },
-                        { label: 'Entwürfe', value: EventState.Draft },
-                        { label: 'Freigegebene', value: EventState.OpenForSignup },
-                        { label: 'Geplante', value: EventState.Planned },
-                        { label: 'Abgesagte', value: EventState.Canceled },
-                    ]"
-                />
-                <VInputSelect
-                    v-model="filterCrew"
-                    class="filter-chip"
-                    placeholder="Alle Crewstatus"
-                    :options="[
-                        { label: 'Alle Crewstatus', value: null },
-                        { label: 'Fehlende Crew', value: 1 },
-                        { label: 'Freie Plätze', value: 2 },
-                    ]"
-                />
-            </div>
-        </div>
+        <!--        <div-->
+        <!--            class="scrollbar-invisible flex min-h-16 w-full items-center gap-2 overflow-x-auto bg-primary-50 py-2 pl-4 text-sm md:pl-12 xl:pl-16"-->
+        <!--        >-->
+        <!--            <div class="flex cursor-pointer gap-2 py-2">-->
+        <!--                <div-->
+        <!--                    v-if="filter"-->
+        <!--                    class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1"-->
+        <!--                >-->
+        <!--                    <span class="mr-2">Suchergebnisse für '{{ filter }}'</span>-->
+        <!--                    <button @click="filter = ''">-->
+        <!--                        <i class="fa-solid fa-xmark text-xs"></i>-->
+        <!--                    </button>-->
+        <!--                </div>-->
+        <!--                <VInputSelect-->
+        <!--                    class="filter-chip"-->
+        <!--                    placeholder="Alle Kategorien"-->
+        <!--                    :options="[-->
+        <!--                        { label: 'Alle Kategorien', value: null },-->
+        <!--                        { label: 'Tagesfahrten', value: EventType.SingleDayEvent },-->
+        <!--                        { label: 'Wochenendfahrten', value: EventType.WeekendEvent },-->
+        <!--                        { label: 'Sommerreisen', value: EventType.MultiDayEvent },-->
+        <!--                        { label: 'Arbeitsdienste', value: EventType.WorkEvent },-->
+        <!--                    ]"-->
+        <!--                />-->
+        <!--                <VInputSelect-->
+        <!--                    class="filter-chip"-->
+        <!--                    placeholder="Alle Status"-->
+        <!--                    :options="[-->
+        <!--                        { label: 'Alle Status', value: null },-->
+        <!--                        { label: 'Entwürfe', value: EventState.Draft },-->
+        <!--                        { label: 'Freigegebene', value: EventState.OpenForSignup },-->
+        <!--                        { label: 'Geplante', value: EventState.Planned },-->
+        <!--                        { label: 'Abgesagte', value: EventState.Canceled },-->
+        <!--                    ]"-->
+        <!--                />-->
+        <!--                <VInputSelect-->
+        <!--                    class="filter-chip"-->
+        <!--                    placeholder="Alle Crewstatus"-->
+        <!--                    :options="[-->
+        <!--                        { label: 'Alle Crewstatus', value: null },-->
+        <!--                        { label: 'Fehlende Crew', value: 1 },-->
+        <!--                        { label: 'Freie Plätze', value: 2 },-->
+        <!--                    ]"-->
+        <!--                />-->
+        <!--            </div>-->
+        <!--        </div>-->
 
         <div class="w-full">
             <VTable
@@ -126,20 +93,18 @@
                 :page-size="20"
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
                 @click="editEvent($event)"
+                @click-ctrl="selectEvent($event)"
             >
-                <template #head>
-                    <!--                    <th class="hidden lg:table-cell">-->
-                    <!--                        <VInputCheckBox />-->
-                    <!--                    </th>-->
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Crew</th>
-                    <th>Datum</th>
-                </template>
                 <template #row="{ item }">
-                    <!--                    <td class="hidden lg:table-cell" @click.stop="">-->
-                    <!--                        <VInputCheckBox v-model="item.selected" />-->
-                    <!--                    </td>-->
+                    <td @click.stop="item.selected = !item.selected">
+                        <span v-if="item.selected">
+                            <i class="fa-solid fa-check-square text-2xl text-primary-600"></i>
+                        </span>
+                        <span v-else>
+                            <i class="fa-solid fa-square text-2xl text-primary-200"></i>
+                        </span>
+                        <!--                        <VInputCheckBox v-model="item.selected" class="-ml-2" />-->
+                    </td>
                     <td class="w-1/2 max-w-[65vw] whitespace-nowrap font-semibold">
                         <p
                             class="mb-1 truncate"
@@ -254,7 +219,7 @@
                                         @click="publishCrewPlanning(item)"
                                     >
                                         <i class="fa-solid fa-earth-europe" />
-                                        <span>Crew veröffentlichen</span>
+                                        <span>Crewplanung veröffentlichen</span>
                                     </li>
                                 </template>
                                 <li class="context-menu-item disabled">
@@ -315,8 +280,61 @@
         <EventCreateDlg ref="createEventDialog" />
         <EventCancelDlg ref="deleteEventDialog" />
         <ImportEventsDlg ref="importEventsDialog" />
+        <div class="flex-1"></div>
 
-        <div class="sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden">
+        <div v-if="selectedCount > 0" class="sticky bottom-0 z-20">
+            <div
+                class="h-full border-t border-primary-200 bg-primary-50 px-4 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
+            >
+                <div class="flex h-full items-stretch gap-2 py-2">
+                    <button class="btn-ghost" @click="selectNone()">
+                        <i class="fa-solid fa-xmark text-base"></i>
+                    </button>
+                    <span class="self-center text-base font-bold">{{ selectedCount }} Reisen ausgewählt</span>
+                    <div class="flex-grow"></div>
+                    <button class="btn-ghost">
+                        <i class="fa-solid fa-lock-open"></i>
+                        <span class="text-base">Anmeldungen freischalten</span>
+                    </button>
+                    <button class="btn-ghost">
+                        <i class="fa-solid fa-earth-europe"></i>
+                        <span class="text-base">Crewplanung veröffentlichen</span>
+                    </button>
+                    <ContextMenuButton class="btn-ghost">
+                        <template #default>
+                            <template v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
+                                <li class="context-menu-item">
+                                    <i class="fa-solid fa-edit" />
+                                    <span>Reisen bearbeiten</span>
+                                </li>
+                                <li class="context-menu-item">
+                                    <i class="fa-solid fa-unlock-alt" />
+                                    <span>Anmeldungen freischalten</span>
+                                </li>
+                                <li class="context-menu-item">
+                                    <i class="fa-solid fa-earth-europe" />
+                                    <span>Crewplanung veröffentlichen</span>
+                                </li>
+                            </template>
+                            <li class="context-menu-item disabled">
+                                <i class="fa-solid fa-users" />
+                                <span>Fehlende Crew anfragen</span>
+                            </li>
+                            <li class="context-menu-item disabled">
+                                <i class="fa-solid fa-envelope" />
+                                <span>Crew kontaktieren</span>
+                            </li>
+                            <li class="context-menu-item text-red-700">
+                                <i class="fa-solid fa-ban" />
+                                <span>Reisen absagen</span>
+                            </li>
+                        </template>
+                    </ContextMenuButton>
+                </div>
+            </div>
+        </div>
+        <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
+        <div v-else class="sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden">
             <button class="btn-primary btn-floating" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Event erstellen</span>
@@ -328,9 +346,8 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Event, EventState, EventType, Permission } from '@/domain';
-import type { Dialog } from '@/ui/components/common';
-import { ContextMenuButton, VInputSelect, VTable, VTabs } from '@/ui/components/common';
+import { Event, EventState, Permission } from '@/domain';
+import { ContextMenuButton, Dialog, VTable, VTabs } from '@/ui/components/common';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
@@ -362,12 +379,8 @@ const router = useRouter();
 const user = authUseCase.getSignedInUser();
 
 const events = ref<EventTableViewItem[] | null>(null);
-const showSearch = ref<boolean>(false);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
-const filterCategory = ref<EventType | null>(null);
-const filterStatus = ref<EventState | null>(null);
-const filterCrew = ref<number | null>(null);
 const createEventDialog = ref<Dialog<Event> | null>(null);
 const deleteEventDialog = ref<Dialog<Event, string> | null>(null);
 const importEventsDialog = ref<Dialog<Event> | null>(null);
@@ -375,6 +388,10 @@ const importEventsDialog = ref<Dialog<Event> | null>(null);
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
     return events.value?.filter((it) => it.name.toLowerCase().includes(f));
+});
+
+const selectedCount = computed<number>(() => {
+    return filteredEvents.value?.filter((it) => it.selected).length || 0;
 });
 
 const tabs = computed<string[]>(() => {
@@ -397,6 +414,10 @@ function init(): void {
             fetchEvents();
         }
     });
+}
+
+function selectNone(): void {
+    events.value?.forEach((it) => (it.selected = false));
 }
 
 async function fetchEvents(): Promise<void> {
@@ -433,11 +454,24 @@ function hasOpenSlots(event: Event): boolean {
     return event.slots.filter((slt) => !slt.assignedRegistrationKey).length > 0;
 }
 
+async function selectEvent(evt: EventTableViewItem): Promise<void> {
+    evt.selected = !evt.selected;
+}
+
 async function editEvent(evt: EventTableViewItem): Promise<void> {
-    await router.push({
-        name: Routes.EventEdit,
-        params: { year: evt.start.getFullYear(), key: evt.key },
-    });
+    if (selectedCount.value > 0) {
+        evt.selected = !evt.selected;
+    } else if (user.permissions.includes(Permission.WRITE_EVENTS)) {
+        await router.push({
+            name: Routes.EventEdit,
+            params: { year: evt.start.getFullYear(), key: evt.key },
+        });
+    } else {
+        await router.push({
+            name: Routes.EventDetails,
+            params: { year: evt.start.getFullYear(), key: evt.key },
+        });
+    }
 }
 
 async function createEvent(): Promise<void> {

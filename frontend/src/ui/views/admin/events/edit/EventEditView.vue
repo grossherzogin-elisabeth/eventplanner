@@ -2,12 +2,13 @@
     <DetailsPage :back-to="{ name: Routes.EventsAdmin }">
         <template #header>
             <div v-if="event" class="">
-                <h1 class="mb-1 mt-4 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>
-                <p class="mb-4 hidden text-sm">
-                    {{ $d(event.start, DateTimeFormat.DDD_DD_MM) }}
-                    -
-                    {{ $d(event.end, DateTimeFormat.DDD_DD_MM) }}
-                </p>
+                <h1 class="mb-1 mt-8 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>
+                <!--                <h1 class="mb-1 mt-4 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>-->
+                <!--                <p class="mb-4 text-sm">-->
+                <!--                    {{ $d(event.start, DateTimeFormat.DDD_DD_MM) }}-->
+                <!--                    - -->
+                <!--                    {{ $d(event.end, DateTimeFormat.DDD_DD_MM) }}-->
+                <!--                </p>-->
                 <div class="-mx-4 flex flex-wrap items-start font-semibold">
                     <div class="w-full">
                         <VInfo v-if="event.state === EventState.Draft" class="mr-2 mt-4">
@@ -252,7 +253,6 @@
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
-import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, Slot, SlotCriticality, SlotKey } from '@/domain';
 import { EventState } from '@/domain';
 import { EventType, Permission } from '@/domain';

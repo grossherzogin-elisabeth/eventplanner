@@ -25,56 +25,38 @@
         </div>
 
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
-            <template #after>
-                <div class="self-stretch pb-2">
-                    <button class="btn-ghost h-full">
-                        <i class="fa-solid fa-search"></i>
-                    </button>
-                </div>
-                <div class="pb-2">
-                    <button class="btn-ghost" @click="importUsers()">
+            <template #end>
+                <div class="flex items-stretch gap-2 pb-2">
+                    <div
+                        class="hidden w-44 cursor-pointer items-center gap-2 rounded-lg px-4 py-2 transition-all duration-100 focus-within:w-64 focus-within:cursor-text focus-within:bg-primary-100 hover:bg-primary-100 lg:flex xxl:focus-within:w-80"
+                    >
+                        <i class="fa-solid fa-search text-primary-700"></i>
+                        <input
+                            v-model="filter"
+                            class="w-0 flex-grow cursor-pointer bg-transparent placeholder-primary-700 focus-within:cursor-text focus-within:placeholder-primary-300"
+                            placeholder="Nutzer filtern"
+                        />
+                        <button v-if="filter !== ''" @click="filter = ''">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <button
+                        v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)"
+                        class="btn-ghost"
+                        @click="importUsers()"
+                    >
                         <i class="fa-solid fa-upload"></i>
                         <span class="text-base">Importieren</span>
                     </button>
-                </div>
-                <div class="hidden pb-2 2xl:block">
-                    <button class="btn-primary" @click="importUsers()">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <span>Hinzufügen</span>
-                    </button>
+                    <div class="hidden 2xl:block">
+                        <button class="btn-primary ml-2">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span class="">Hinzufügen</span>
+                        </button>
+                    </div>
                 </div>
             </template>
         </VTabs>
-        <div
-            class="scrollbar-invisible flex h-12 min-h-12 w-full items-center gap-2 overflow-x-auto bg-primary-50 pl-8 pt-4 text-sm xl:pl-16"
-        >
-            <div
-                v-if="filter"
-                class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1"
-            >
-                <span class="mr-2">Name enthält '{{ filter }}'</span>
-                <button @click="filter = ''">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-            <div class="whitespace-nowrap rounded-full border border-primary-300 bg-primary-200 px-4 py-1">
-                <span class="mr-2">Matrose:in</span>
-                <i class="fa-solid fa-chevron-down text-xs"></i>
-            </div>
-            <div class="whitespace-nowrap rounded-full border border-primary-300 px-4 py-1 hover:bg-primary-100">
-                <span class="mr-2">Qualifikationen</span>
-                <i class="fa-solid fa-chevron-down text-xs"></i>
-            </div>
-            <div class="whitespace-nowrap rounded-full border border-primary-300 px-4 py-1 hover:bg-primary-100">
-                <span class="mr-2">Mit/ohne Reisen</span>
-                <i class="fa-solid fa-chevron-down text-xs"></i>
-            </div>
-            <div class="sticky right-0 h-full bg-primary-50 pr-4">
-                <button class="btn-ghost h-full">
-                    <i class="fa-solid fa-sliders"></i>
-                </button>
-            </div>
-        </div>
 
         <div class="w-full">
             <VTable
@@ -83,15 +65,17 @@
                 :query="true"
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
                 @click="editUser($event)"
+                @click-ctrl="selectUser($event)"
             >
-                <template #head>
-                    <th>Name</th>
-                    <th>Positionen</th>
-                    <th>Reisen</th>
-                    <th>Arbeitsdienst</th>
-                    <th>Zertifikate</th>
-                </template>
                 <template #row="{ item }">
+                    <td @click.stop="item.selected = !item.selected">
+                        <span v-if="item.selected">
+                            <i class="fa-solid fa-check-square text-2xl text-primary-600"></i>
+                        </span>
+                        <span v-else>
+                            <i class="fa-solid fa-square text-2xl text-primary-200"></i>
+                        </span>
+                    </td>
                     <td class="w-1/3 whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.nickName || item.firstName }} {{ item.lastName }}</p>
                         <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
@@ -183,6 +167,12 @@
                                     <i class="fa-solid fa-user-secret" />
                                     <span>Impersonate</span>
                                 </li>
+                                <li v-if="item.email">
+                                    <a :href="`mailto:${item.email}`" class="context-menu-item">
+                                        <i class="fa-solid fa-envelope" />
+                                        <span>Email schreiben</span>
+                                    </a>
+                                </li>
                                 <li class="context-menu-item" @click="createRegistration(item)">
                                     <i class="fa-solid fa-calendar-plus" />
                                     <span>Anmeldung hinzufügen</span>
@@ -223,6 +213,44 @@
             <template #submit>Löschen</template>
         </VConfirmationDialog>
         <ImportUsersDlg ref="importUsersDialog" />
+
+        <div class="flex-1"></div>
+
+        <div v-if="selectedCount > 0" class="sticky bottom-0 z-20">
+            <div
+                class="h-full border-t border-primary-200 bg-primary-50 px-4 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
+            >
+                <div class="flex h-full items-stretch gap-2 py-2">
+                    <button class="btn-ghost" @click="selectNone()">
+                        <i class="fa-solid fa-xmark text-base"></i>
+                    </button>
+                    <span class="self-center text-base font-bold">{{ selectedCount }} Nutzer ausgewählt</span>
+                    <div class="flex-grow"></div>
+                    <button class="btn-ghost">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span class="text-base">Email schreiben</span>
+                    </button>
+                    <button class="btn-ghost">
+                        <i class="fa-solid fa-wrench"></i>
+                        <span class="text-base">Arbeitsdienst eintragen</span>
+                    </button>
+                    <ContextMenuButton class="btn-ghost">
+                        <template #default>
+                            <li class="context-menu-item">
+                                <i class="fa-solid fa-wrench" />
+                                <span>Arbeitsdienst eintragen</span>
+                            </li>
+                            <template v-if="signedInUser.permissions.includes(Permission.DELETE_USERS)">
+                                <li class="context-menu-item text-red-700">
+                                    <i class="fa-solid fa-trash-alt" />
+                                    <span>Nutzer löschen</span>
+                                </li>
+                            </template>
+                        </template>
+                    </ContextMenuButton>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -294,6 +322,10 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
     users.value?.filter((it) => matchesActiveCategory(it) && usersService.doesUserMatchFilter(it, filter.value))
 );
 
+const selectedCount = computed<number>(() => {
+    return filteredUsers.value?.filter((it) => it.selected).length || 0;
+});
+
 function init(): void {
     emit('update:title', 'Nutzer verwalten');
     fetchUsers();
@@ -333,8 +365,16 @@ function importUsers(): void {
     importUsersDialog.value?.open().catch();
 }
 
-function editUser(user: UserRegistrations): void {
-    router.push({ name: Routes.UserDetails, params: { key: user.key } });
+function selectUser(user: UserRegistrations): void {
+    user.selected = !user.selected;
+}
+
+async function editUser(user: UserRegistrations): Promise<void> {
+    if (selectedCount.value > 0) {
+        user.selected = !user.selected;
+    } else if (signedInUser.permissions.includes(Permission.WRITE_USERS)) {
+        await router.push({ name: Routes.UserDetails, params: { key: user.key } });
+    }
 }
 
 function impersonateUser(user: UserRegistrations): void {
@@ -360,6 +400,10 @@ async function deleteUser(user: UserRegistrations): Promise<void> {
         .catch(() => {
             // ignore
         });
+}
+
+function selectNone(): void {
+    users.value?.forEach((it) => (it.selected = false));
 }
 
 async function fetchUsers(): Promise<void> {

@@ -1,18 +1,26 @@
 <template>
     <div :class="$attrs.class">
         <h2
-            class="scrollbar-invisible flex gap-x-8 overflow-x-auto border-b border-primary-200 px-8 text-base font-semibold md:px-16 xl:px-20"
+            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-primary-200 px-8 text-base font-semibold md:px-16 xl:px-20"
         >
             <slot name="before" />
-            <div v-for="tab in props.tabs" :key="tab" class="tab" :class="{ active: tab === props.modelValue }">
-                <button class="btn-tab" @click="emit('update:modelValue', tab)">
-                    <slot name="tab" :tab="tab">
-                        {{ $t(tab) }}
-                    </slot>
-                </button>
+            <div class="flex gap-x-8">
+                <div
+                    v-for="tab in props.tabs"
+                    :key="tab"
+                    class="tab"
+                    :class="{ active: tab === props.modelValue && !showSearch }"
+                >
+                    <button class="btn-tab" @click="emit('update:modelValue', tab)">
+                        <slot name="tab" :tab="tab">
+                            {{ $t(tab) }}
+                        </slot>
+                    </button>
+                </div>
             </div>
-            <span class="flex-grow"></span>
             <slot name="after" />
+            <span class="flex-grow"></span>
+            <slot name="end" />
         </h2>
     </div>
     <!-- tab pane -->
@@ -26,6 +34,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { useQueryStateSync } from '@/ui/composables/QueryState';
 
 interface Props {
@@ -39,6 +48,8 @@ type Emits = (e: 'update:modelValue', value: string) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+
+const showSearch = ref<boolean>(false);
 
 useQueryStateSync<string>(
     'tab',

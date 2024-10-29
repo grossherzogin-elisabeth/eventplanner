@@ -7,3 +7,13 @@
 .filter-chip .input-field {
     @apply px-4 py-1 text-sm;
 }
+
+.btn-secondary .input-field-wrapper {
+    @apply bg-transparent !important;
+    @apply border-none;
+}
+
+.btn-secondary .input-field {
+    @apply bg-transparent !important;
+    @apply px-0 py-0;
+}
