@@ -59,19 +59,12 @@
     </VTable>
     <QualificationCreateDlg ref="createQualificationDialog" />
     <QualificationEditDlg ref="editQualificationDialog" />
-    <VConfirmationDialog ref="deleteQualificationDialog">
-        <template #title>Qualifikation löschen?</template>
-        <template #message>
-            Bist du sicher, das du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern, bei
-            denen sie assoziert ist, entfernt.
-        </template>
-        <template #submit>Löschen</template>
-    </VConfirmationDialog>
+    <VConfirmationDialog ref="deleteQualificationDialog" />
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import type { Qualification } from '@/domain';
-import type { Dialog } from '@/ui/components/common';
+import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import { ContextMenuButton, VTable } from '@/ui/components/common';
 import { useQualificationsAdministrationUseCase } from '@/ui/composables/Application';
@@ -92,7 +85,7 @@ const qualifications = ref<Qualification[] | undefined>(undefined);
 
 const createQualificationDialog = ref<Dialog<void, Qualification> | null>(null);
 const editQualificationDialog = ref<Dialog<Qualification, Qualification> | null>(null);
-const deleteQualificationDialog = ref<Dialog<Qualification> | null>(null);
+const deleteQualificationDialog = ref<ConfirmationDialog | null>(null);
 
 function init(): void {
     fetchQualifications();
@@ -123,13 +116,17 @@ function editQualification(qualification: Qualification): void {
     }
 }
 
-function deleteQualification(qualification: Qualification): void {
-    if (deleteQualificationDialog.value) {
-        deleteQualificationDialog.value
-            .open(qualification)
-            .then(() => qualificationAdministrationUseCase.deleteQualification(qualification))
-            .then(() => fetchQualifications())
-            .catch(() => console.debug('dialog was canceled'));
+async function deleteQualification(qualification: Qualification): Promise<void> {
+    const confirmed = await deleteQualificationDialog.value?.open({
+        title: 'Qualifikation löschen',
+        message: `Bist du sicher, das du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern,
+            bei denen sie assoziert ist, entfernt.`,
+        submit: 'Löschen',
+        danger: true,
+    });
+    if (confirmed) {
+        await qualificationAdministrationUseCase.deleteQualification(qualification);
+        await fetchQualifications();
     }
 }
 

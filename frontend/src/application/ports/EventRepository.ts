@@ -5,6 +5,8 @@ export interface EventRepository {
 
     updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event>;
 
+    deleteEvent(eventKey: EventKey): Promise<void>;
+
     createEvent(event: Event): Promise<Event>;
 
     importEvents(year: number, file: Blob): Promise<ImportError[]>;

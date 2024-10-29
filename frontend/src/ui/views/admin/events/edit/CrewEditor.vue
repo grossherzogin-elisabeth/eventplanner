@@ -375,8 +375,8 @@ async function fetchPositions(): Promise<void> {
 async function fetchTeam(): Promise<void> {
     console.log('fetch team');
     const all = await eventUseCase.resolveRegistrations(props.event);
-    team.value = eventAdminUseCase.filterForCrew(props.event, all);
-    registrations.value = eventAdminUseCase.filterForWaitingList(props.event, all);
+    team.value = eventAdminUseCase.filterForCrew(all);
+    registrations.value = eventAdminUseCase.filterForWaitingList(all);
 }
 
 init();

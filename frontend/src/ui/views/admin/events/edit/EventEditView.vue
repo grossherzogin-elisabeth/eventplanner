@@ -1,5 +1,5 @@
 <template>
-    <DetailsPage :back-to="{ name: Routes.EventsAdmin }">
+    <DetailsPage :back-to="{ name: Routes.EventsAdmin }" :class="$attrs.class">
         <template #header>
             <div v-if="event" class="">
                 <h1 class="mb-1 mt-8 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>
@@ -37,8 +37,8 @@
                                     v-model="event.state"
                                     :options="[
                                         { value: EventState.Draft, label: 'Entwurf' },
-                                        { value: EventState.OpenForSignup, label: 'Anmeldungen freigegeben' },
-                                        { value: EventState.Planned, label: 'Crew geplant' },
+                                        { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
+                                        { value: EventState.Planned, label: 'Crewplanung verlöffentlicht' },
                                         { value: EventState.Canceled, label: 'Reise ist abgesagt', hidden: true },
                                     ]"
                                     :errors="validation.errors.value['state']"
@@ -226,6 +226,18 @@
                 <i class="fa-solid fa-paper-plane" />
                 <span>Crew kontaktieren</span>
             </li>
+            <li v-if="event?.state === EventState.Draft" class="context-menu-item" @click="openEventForCrewSignup()">
+                <i class="fa-solid fa-lock-open" />
+                <span>Anmeldungen freischalten</span>
+            </li>
+            <li
+                v-if="event?.state === EventState.OpenForSignup"
+                class="context-menu-item"
+                @click="publishPlannedCrew()"
+            >
+                <i class="fa-solid fa-earth-europe" />
+                <span>Crewplanung veröffentlichen</span>
+            </li>
             <li
                 v-if="signedInUser.permissions.includes(Permission.EVENT_TEAM_WRITE)"
                 class="context-menu-item"
@@ -237,7 +249,7 @@
             <li
                 v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                 class="context-menu-item text-red-700"
-                @click="deleteEvent()"
+                @click="cancelEvent()"
             >
                 <i class="fa-solid fa-trash" />
                 <span>Reise absagen</span>
@@ -246,19 +258,18 @@
     </DetailsPage>
     <CreateRegistrationDlg ref="createRegistrationDialog" />
     <SlotCreateDlg ref="createSlotDialog" />
-    <EventCancelDlg ref="deleteEventDialog" />
+    <EventCancelDlg ref="cancelEventDialog" />
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
-import type { Event, Position, Slot, SlotCriticality, SlotKey } from '@/domain';
-import { EventState } from '@/domain';
-import { EventType, Permission } from '@/domain';
-import { Dialog, VInfo } from '@/ui/components/common';
+import { Event, EventState, EventType, Permission, Position, Slot, SlotCriticality, SlotKey } from '@/domain';
 import {
     AsyncButton,
+    Dialog,
+    VInfo,
     VInputDate,
     VInputLabel,
     VInputSelect,
@@ -319,7 +330,7 @@ const tab = ref<Tab>(Tab.EVENT_POSITIONS);
 const createSlotDialog = ref<Dialog<Event, Event> | null>(null);
 const editSlotDialog = ref<Dialog<Slot, Slot> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event, Event> | null>(null);
-const deleteEventDialog = ref<Dialog<Event, string> | null>(null);
+const cancelEventDialog = ref<Dialog<Event, string | undefined> | null>(null);
 
 const slots = computed<SlotTableItem[]>(() => {
     if (!event.value) {
@@ -358,14 +369,13 @@ function resetTeam(): void {
     }
 }
 
-async function deleteEvent(): Promise<void> {
-    if (event.value && deleteEventDialog.value) {
-        const evt = event.value;
-        await deleteEventDialog.value
-            .open(evt)
-            .then((message) => eventAdministrationUseCase.cancelEvent(evt, message))
-            .then(() => router.push({ name: Routes.EventsAdmin }))
-            .catch(() => console.debug('dialog was canceled'));
+async function cancelEvent(): Promise<void> {
+    if (event.value) {
+        const message = await cancelEventDialog.value?.open(event.value);
+        if (message !== undefined) {
+            event.value = await eventAdministrationUseCase.cancelEvent(event.value, message);
+            await router.push({ name: Routes.EventsAdmin });
+        }
     }
 }
 
@@ -384,6 +394,20 @@ async function addSlot(): Promise<void> {
 async function contactTeam(): Promise<void> {
     if (event.value) {
         await eventAdministrationUseCase.contactTeam(event.value);
+    }
+}
+
+async function openEventForCrewSignup(): Promise<void> {
+    if (event.value) {
+        event.value = await eventAdministrationUseCase.updateEvent(event.value.key, {
+            state: EventState.OpenForSignup,
+        });
+    }
+}
+
+async function publishPlannedCrew(): Promise<void> {
+    if (event.value) {
+        event.value = await eventAdministrationUseCase.updateEvent(event.value.key, { state: EventState.Planned });
     }
 }
 

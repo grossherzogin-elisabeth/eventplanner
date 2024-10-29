@@ -70,7 +70,7 @@
                 @keydown.enter="selectOption(option)"
             >
                 <slot :item="option" name="item">
-                    {{ option.label }}
+                    {{ option.label || props.placeholder }}
                 </slot>
             </li>
         </ul>

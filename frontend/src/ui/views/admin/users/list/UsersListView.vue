@@ -27,19 +27,7 @@
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
             <template #end>
                 <div class="flex items-stretch gap-2 pb-2">
-                    <div
-                        class="hidden w-44 cursor-pointer items-center gap-2 rounded-lg px-4 py-2 transition-all duration-100 focus-within:w-64 focus-within:cursor-text focus-within:bg-primary-100 hover:bg-primary-100 lg:flex xxl:focus-within:w-80"
-                    >
-                        <i class="fa-solid fa-search text-primary-700"></i>
-                        <input
-                            v-model="filter"
-                            class="w-0 flex-grow cursor-pointer bg-transparent placeholder-primary-700 focus-within:cursor-text focus-within:placeholder-primary-300"
-                            placeholder="Nutzer filtern"
-                        />
-                        <button v-if="filter !== ''" @click="filter = ''">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
+                    <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
                     <button
                         v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)"
                         class="btn-ghost"
@@ -203,15 +191,7 @@
         </div>
 
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
-        <VConfirmationDialog ref="deleteUserDialog">
-            <template #title>Nutzer löschen?</template>
-            <template #message>
-                Bist du sicher, das du den Nutzer löschen möchtest? Wenn der Nutzer sich schon zu Reisen angemeldet hat,
-                wird dies dazu führen, das in den Crew oder Wartelisten ein ungültiger Eintrag existiert. Löschen von
-                Nutzern sollte darum nur nach reichlicher Überlegung passieren.
-            </template>
-            <template #submit>Löschen</template>
-        </VConfirmationDialog>
+        <VConfirmationDialog ref="deleteUserDialog" />
         <ImportUsersDlg ref="importUsersDialog" />
 
         <div class="flex-1"></div>
@@ -261,8 +241,9 @@ import { filterUndefined } from '@/common';
 import type { Position, QualificationKey, User } from '@/domain';
 import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
-import type { Dialog } from '@/ui/components/common';
+import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VInputText, VTable, VTabs } from '@/ui/components/common';
+import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import {
     useAuthUseCase,
@@ -316,7 +297,7 @@ const users = ref<UserRegistrations[] | undefined>(undefined);
 
 const importUsersDialog = ref<Dialog | null>(null);
 const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
-const deleteUserDialog = ref<Dialog<User> | null>(null);
+const deleteUserDialog = ref<ConfirmationDialog | null>(null);
 
 const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
     users.value?.filter((it) => matchesActiveCategory(it) && usersService.doesUserMatchFilter(it, filter.value))
@@ -391,15 +372,18 @@ async function createRegistration(user: UserRegistrations): Promise<void> {
 }
 
 async function deleteUser(user: UserRegistrations): Promise<void> {
-    await deleteUserDialog.value
-        ?.open()
-        .then(async () => {
-            await userAdministrationUseCase.deleteUserByKey(user.key);
-            await fetchUsers();
-        })
-        .catch(() => {
-            // ignore
-        });
+    const confirmed = await deleteUserDialog.value?.open({
+        title: 'Nutzer löschen',
+        message: `Bist du sicher, das du den Nutzer löschen möchtest? Wenn der Nutzer sich schon zu Reisen angemeldet
+            hat, wird dies dazu führen, das in den Crew oder Wartelisten ein ungültiger Eintrag existiert. Löschen von
+            Nutzern sollte darum nur nach reichlicher Überlegung passieren`,
+        submit: 'Löschen',
+        danger: true,
+    });
+    if (confirmed) {
+        await userAdministrationUseCase.deleteUserByKey(user.key);
+        await fetchUsers();
+    }
 }
 
 function selectNone(): void {

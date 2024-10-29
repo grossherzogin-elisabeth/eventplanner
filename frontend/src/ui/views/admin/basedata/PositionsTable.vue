@@ -50,19 +50,12 @@
     </VTable>
     <PositionCreateDlg ref="createPositionDialog" />
     <PositionEditDlg ref="editPositionDialog" />
-    <VConfirmationDialog ref="deletePositionDialog">
-        <template #title>Position löschen?</template>
-        <template #message>
-            Bist du sicher, das du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei denen sie
-            assoziert ist, entfernt.
-        </template>
-        <template #submit>Löschen</template>
-    </VConfirmationDialog>
+    <VConfirmationDialog ref="deletePositionDialog" />
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import type { Position } from '@/domain';
-import type { Dialog } from '@/ui/components/common';
+import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import { ContextMenuButton, VTable } from '@/ui/components/common';
 import { usePositionAdministrationUseCase } from '@/ui/composables/Application';
@@ -81,7 +74,7 @@ const positions = ref<Position[] | undefined>(undefined);
 
 const createPositionDialog = ref<Dialog<void, Position> | null>(null);
 const editPositionDialog = ref<Dialog<Position, Position> | null>(null);
-const deletePositionDialog = ref<Dialog<Position> | null>(null);
+const deletePositionDialog = ref<ConfirmationDialog | null>(null);
 
 function init(): void {
     fetchPositions();
@@ -112,13 +105,17 @@ function editPosition(position: Position): void {
     }
 }
 
-function deletePosition(position: Position): void {
-    if (deletePositionDialog.value) {
-        deletePositionDialog.value
-            .open(position)
-            .then(() => positionAdministrationUseCase.deletePosition(position))
-            .then(() => fetchPositions())
-            .catch(() => console.debug('dialog was canceled'));
+async function deletePosition(position: Position): Promise<void> {
+    const confirmed = await deletePositionDialog.value?.open({
+        title: 'Position löschen',
+        message: `Bist du sicher, das du die Position löschen möchtest? Die Position wird bei allen
+            Nutzern, bei denen sie assoziert ist, entfernt.`,
+        submit: 'Löschen',
+        danger: true,
+    });
+    if (confirmed) {
+        await positionAdministrationUseCase.deletePosition(position);
+        await fetchPositions();
     }
 }
 

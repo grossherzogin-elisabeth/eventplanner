@@ -224,6 +224,19 @@ export class EventRestRepository implements EventRepository {
         return EventRestRepository.mapEventToDomain(responseData);
     }
 
+    public async deleteEvent(eventKey: EventKey): Promise<void> {
+        const response = await fetch(`/api/v1/events/${eventKey}`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'X-XSRF-TOKEN': getCsrfToken(),
+            },
+        });
+        if (!response.ok) {
+            throw response;
+        }
+    }
+
     private static parseDate(date: string): Date {
         // js cannot parse an ISO date time like 2024-06-25T00:00+02:00[Europe/Berlin]
         if (date.includes('[')) {

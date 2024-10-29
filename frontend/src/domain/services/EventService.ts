@@ -192,4 +192,16 @@ export class EventService {
         }
         return errors;
     }
+
+    public validatePartial(event: Partial<Event>): Record<string, ValidationHint[]> {
+        const errors: Record<string, ValidationHint[]> = {};
+        if (event.end && event.start && event.end.getTime() < event.start.getTime()) {
+            errors.end = errors.end || [];
+            errors.end.push({
+                key: 'Das Enddatum muss nach dem Startdatum sein',
+                params: {},
+            });
+        }
+        return errors;
+    }
 }

@@ -1,50 +1,55 @@
 <template>
-    <VDialog ref="dlg" height="max-h-screen h-auto error-dialog modal">
+    <VDialog ref="dlg" height="max-h-screen h-auto modal" :class="{ 'error-dialog': content?.danger }">
         <template #title>
-            <h1 class="text-red-600">
-                <slot name="title"></slot>
+            <h1 class="">
+                <slot name="title">{{ content?.title }}</slot>
             </h1>
         </template>
         <template #content>
             <div class="px-8 py-8 lg:px-16">
                 <p>
-                    <slot name="message"></slot>
+                    <slot name="message">{{ content?.message }}</slot>
                 </p>
             </div>
         </template>
         <template #buttons>
             <button class="btn-secondary" @click="cancel()">
-                <slot name="cancel">Abbrechen</slot>
+                <slot name="cancel">{{ content?.cancel || 'Abbrechen' }}</slot>
             </button>
-            <button class="btn-danger" @click="submit()">
-                <slot name="submit">Ja</slot>
+            <button :class="content?.danger ? 'btn-danger' : 'btn-primary'" @click="submit()">
+                <slot name="submit">{{ content?.submit || 'Ja' }}</slot>
             </button>
         </template>
     </VDialog>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
-import type { Dialog } from '@/ui/components/common';
-import { VDialog } from '@/ui/components/common';
+import type { ConfirmationDialog, ConfirmationDialogContent } from './ConfirmationDialog.ts';
+import VDialog from './VDialog.vue';
 
-const dlg = ref<Dialog | null>(null);
+const content = ref<ConfirmationDialogContent | undefined>(undefined);
+const dlg = ref<ConfirmationDialog | null>(null);
 
-function submit() {
-    dlg.value?.submit();
+async function open(dialogContent?: ConfirmationDialogContent): Promise<boolean | undefined> {
+    content.value = dialogContent;
+    if (!dlg.value) {
+        return undefined;
+    }
+    return await dlg.value.open().catch(() => undefined);
 }
 
-async function open(): Promise<void> {
-    await dlg.value?.open().catch();
+function submit() {
+    dlg.value?.submit(true);
 }
 
 function cancel(): void {
-    dlg.value?.close();
+    dlg.value?.submit(false);
 }
 
-defineExpose<Dialog>({
-    open: async () => open(),
+defineExpose<ConfirmationDialog>({
+    open: async (dialogContent: ConfirmationDialogContent) => open(dialogContent),
     close: () => dlg.value?.reject(),
-    submit: () => dlg.value?.submit(),
+    submit: (confirm?: boolean) => dlg.value?.submit(confirm),
     reject: () => dlg.value?.reject(),
 });
 </script>
@@ -60,5 +65,9 @@ defineExpose<Dialog>({
 
 .error-dialog .dialog-close-button {
     @apply hover:bg-red-200 hover:text-red-700;
+}
+
+.error-dialog h1 {
+    @apply text-red-600;
 }
 </style>

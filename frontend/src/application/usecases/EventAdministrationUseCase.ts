@@ -26,65 +26,67 @@ export class EventAdministrationUseCase {
         this.errorHandlingService = params.errorHandlingService;
     }
 
-    public async cancelEvent(event: Event, message: string): Promise<void> {
+    public async deleteEvent(event: Event): Promise<void> {
         try {
-            await this.eventRepository.updateEvent(event.key, {
-                state: EventState.Canceled,
-                description: message, // TODO is this the right place to put the message?
-            });
+            await this.eventRepository.deleteEvent(event.key);
             await this.eventCachingService.removeFromCache(event.key);
-            this.notificationService.success('Reise wurde abgesagt');
+            this.notificationService.success('Reise wurde gelöscht');
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;
         }
     }
 
+    public async cancelEvent(event: Event, message: string): Promise<Event> {
+        try {
+            let savedEvent = await this.eventRepository.updateEvent(event.key, {
+                state: EventState.Canceled,
+                description: message, // TODO is this the right place to put the message?
+            });
+            savedEvent = await this.eventCachingService.updateCache(savedEvent);
+            this.notificationService.success('Reise wurde abgesagt');
+            return savedEvent;
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
+    public async updateEvents(eventKeys: EventKey[], patch: Partial<Event>): Promise<void> {
+        try {
+            // make sure all non batch updatable fields are unset
+            delete patch.key;
+            delete patch.start;
+            delete patch.end;
+            delete patch.registrations;
+            delete patch.slots;
+            delete patch.signedInUserAssignedPosition;
+            delete patch.signedInUserWaitingListPosition;
+            delete patch.canSignedInUserJoin;
+            delete patch.canSignedInUserLeave;
+            delete patch.assignedUserCount;
+
+            for (const eventKey of eventKeys) {
+                await this.updateEventInternal(eventKey, patch);
+            }
+            this.notificationService.success('Deine Änderungen wurden gespeichert');
+        } catch (e) {
+            this.errorHandlingService.handleError({
+                title: 'Speichern fehlgeschlagen',
+                message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
+                wiederholt auftreten, melde ihn gerne.`,
+                error: e,
+                retry: () => this.updateEvents(eventKeys, patch),
+            });
+            throw e;
+        }
+    }
+
     public async updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event> {
         try {
-            const original = await this.eventCachingService.getEventByKey(eventKey);
-            if (original && event.registrations) {
-                const originalRegistrationKeys = original.registrations.map((r) => r.key);
-                const newRegistrationKeys = event.registrations.map((r) => r.key);
-
-                const newRegistrations = event.registrations.filter((r) => !originalRegistrationKeys.includes(r.key));
-                const deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
-                const changedRegistrations = event.registrations.filter((a) => {
-                    const b = original.registrations.find((it) => it.key === a.key);
-                    return (
-                        b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey || a.note !== b.note)
-                    );
-                });
-
-                for (const r of newRegistrations) {
-                    await this.eventRegistrationsRepository.createRegistration(eventKey, r);
-                }
-                for (const r of changedRegistrations) {
-                    await this.eventRegistrationsRepository.updateRegistration(eventKey, r);
-                }
-                for (const r of deletedRegistrations) {
-                    await this.eventRegistrationsRepository.deleteRegistration(eventKey, r);
-                }
-
-                // TODO the backend cannot handle these in parallel at the moment, because all requests write to
-                // the event resource
-                // const requests: Promise<Event>[] = [];
-                // newRegistrations
-                //     .map((r) => this.eventRegistrationsRepository.createRegistration(eventKey, r))
-                //     .forEach((r) => requests.push(r));
-                // deletedRegistrations
-                //     .map((r) => this.eventRegistrationsRepository.deleteRegistration(eventKey, r))
-                //     .forEach((r) => requests.push(r));
-                // changedRegistrations
-                //     .map((r) => this.eventRegistrationsRepository.updateRegistration(eventKey, r))
-                //     .forEach((r) => requests.push(r));
-                // await Promise.all(requests);
-            }
-
-            let savedEvent = await this.eventRepository.updateEvent(eventKey, event);
-            savedEvent = await this.eventCachingService.updateCache(savedEvent);
+            const updatedEvent = await this.updateEventInternal(eventKey, event);
             this.notificationService.success('Deine Änderungen wurden gespeichert');
-            return savedEvent;
+            return updatedEvent;
         } catch (e) {
             this.errorHandlingService.handleError({
                 title: 'Speichern fehlgeschlagen',
@@ -95,6 +97,35 @@ export class EventAdministrationUseCase {
             });
             throw e;
         }
+    }
+
+    private async updateEventInternal(eventKey: EventKey, event: Partial<Event>): Promise<Event> {
+        const original = await this.eventCachingService.getEventByKey(eventKey);
+        if (original && event.registrations) {
+            const originalRegistrationKeys = original.registrations.map((r) => r.key);
+            const newRegistrationKeys = event.registrations.map((r) => r.key);
+
+            const newRegistrations = event.registrations.filter((r) => !originalRegistrationKeys.includes(r.key));
+            const deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
+            const changedRegistrations = event.registrations.filter((a) => {
+                const b = original.registrations.find((it) => it.key === a.key);
+                return b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey || a.note !== b.note);
+            });
+
+            for (const r of newRegistrations) {
+                await this.eventRegistrationsRepository.createRegistration(eventKey, r);
+            }
+            for (const r of changedRegistrations) {
+                await this.eventRegistrationsRepository.updateRegistration(eventKey, r);
+            }
+            for (const r of deletedRegistrations) {
+                await this.eventRegistrationsRepository.deleteRegistration(eventKey, r);
+            }
+        }
+
+        let savedEvent = await this.eventRepository.updateEvent(eventKey, event);
+        savedEvent = await this.eventCachingService.updateCache(savedEvent);
+        return savedEvent;
     }
 
     public async createEvent(event: Event): Promise<Event> {
@@ -127,11 +158,11 @@ export class EventAdministrationUseCase {
         });
     }
 
-    public filterForWaitingList(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
+    public filterForWaitingList(registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
         return registrations.filter((it) => it.registration !== undefined && it.slot === undefined);
     }
 
-    public filterForCrew(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
+    public filterForCrew(registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
         return registrations.filter((it) => it.slot !== undefined);
     }
 

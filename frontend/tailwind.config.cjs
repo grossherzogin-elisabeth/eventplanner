@@ -8,6 +8,7 @@ module.exports = {
             transparent: 'transparent',
             black: '#000000',
             white: '#ffffff',
+            inherit: 'inherit',
 
             gray: colors.stone,
             blue: {

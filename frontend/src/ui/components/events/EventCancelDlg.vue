@@ -15,8 +15,8 @@
                 </div>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">
                 <i class="fa-solid fa-xmark"></i>
                 <span>Nicht absagen</span>
             </button>
@@ -59,14 +59,21 @@ async function open(evt: Event): Promise<string> {
         .map((l) => (l.length === 0 ? '\n' : `${l} `))
         .join('')
         .trim();
-    await dlg.value?.open();
-    return message.value;
+    return await dlg.value?.open().catch(() => undefined);
 }
 
-defineExpose<Dialog<Event, string>>({
+function submit() {
+    dlg.value?.submit(message.value);
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
+}
+
+defineExpose<Dialog<Event, string | undefined>>({
     open: (evt: Event) => open(evt),
     close: () => dlg.value?.reject(),
-    submit: (msg: string) => dlg.value?.submit(msg),
+    submit: (msg?: string) => dlg.value?.submit(msg),
     reject: () => dlg.value?.reject(),
 });
 </script>
