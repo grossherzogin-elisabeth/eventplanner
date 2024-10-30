@@ -1,0 +1,8 @@
+{
+  "key": "masch-750",
+  "icon": "fa-id-card",
+  "name": "Schiffsmaschinist 750 kW",
+  "description": "",
+  "expires": false,
+  "grantsPositions": ["maschinist"]
+}

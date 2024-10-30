@@ -1,0 +1,8 @@
+{
+  "key": "stcw-iii-1",
+  "icon": "fa-screwdriver-wrench",
+  "name": "STCW-III/1",
+  "description": "Technischer Wachoffizier",
+  "expires": true,
+  "grantsPositions": ["maschinist"]
+}

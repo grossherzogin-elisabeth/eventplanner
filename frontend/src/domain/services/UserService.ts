@@ -49,6 +49,7 @@ export class UserService {
                 expiresAt: it.expiresAt,
                 isExpired,
                 willExpireSoon,
+                grantsPositions: [],
             };
         });
     }

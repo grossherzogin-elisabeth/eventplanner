@@ -12,7 +12,7 @@
                         <div
                             :class="`
                             ${props.width || 'w-screen max-w-xl'}
-                            ${props.height || 'h-auto max-h-screen'}
+                            ${props.height || 'h-auto max-h-[95vh]'}
                             ${$attrs.class}
                         `"
                             class="dialog"

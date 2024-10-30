@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,10 +71,6 @@ public class UserEncryptionService {
             encryptNullable(user.getNickName()),
             encryptNullable(user.getSecondName()),
             encrypt(user.getLastName()),
-            streamNullable(user.getPositions(), Stream.empty())
-                .map(PositionKey::value)
-                .map(crypto::encrypt)
-                .collect(Collectors.toCollection(LinkedList::new)),
             streamNullable(user.getRoles(), Stream.empty())
                 .map(Role::value)
                 .map(crypto::encrypt)
@@ -107,10 +104,7 @@ public class UserEncryptionService {
             decryptNullable(user.getNickName()),
             decryptNullable(user.getSecondName()),
             decrypt(user.getLastName()),
-            streamNullable(user.getPositions(), Stream.empty())
-                .map(this::decrypt)
-                .map(PositionKey::new)
-                .collect(Collectors.toCollection(LinkedList::new)),
+            Collections.emptyList(),
             streamNullable(user.getRoles(), Stream.empty())
                 .map(this::decrypt)
                 .map(Role::fromString)

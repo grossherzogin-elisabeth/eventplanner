@@ -7,6 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
+import java.util.List;
 
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
@@ -16,7 +17,7 @@ public record QualificationRepresentation(
         @Nullable String icon,
         @Nullable String description,
         boolean expires,
-        @Nullable String grantsPosition
+        @Nullable List<String> grantsPositions
 ) implements Serializable {
 
     public static QualificationRepresentation fromDomain(@NonNull Qualification qualification) {
@@ -26,7 +27,7 @@ public record QualificationRepresentation(
             qualification.getIcon(),
             qualification.getDescription(),
             qualification.isExpires(),
-            mapNullable(qualification.getGrantsPosition(), PositionKey::value)
+            qualification.getGrantsPositions().stream().map(PositionKey::value).toList()
         );
     }
 }

@@ -3,5 +3,6 @@
   "icon": "fa-id-card",
   "name": "Traditionsschifferschein (TRAD)",
   "description": "Befähigungsnachweis zum Führen von Traditionsschiffen bis zu einer Rumpflänge von 55 Metern",
-  "expires": false
+  "expires": false,
+  "grantsPositions": ["steuermann", "matrose"]
 }

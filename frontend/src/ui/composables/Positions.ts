@@ -29,6 +29,10 @@ export function usePositions() {
         return positionOptions;
     });
 
+    const all = computed<Position[]>(() => {
+        return [...positions.value.values()].sort((a, b) => b.prio - a.prio);
+    });
+
     function get(positonKey: PositionKey): Position {
         return (
             positions.value.get(positonKey) || {
@@ -42,5 +46,5 @@ export function usePositions() {
 
     update();
 
-    return { positions, options, optionsIncludingNone, get, update };
+    return { positions, options, optionsIncludingNone, get, update, all };
 }

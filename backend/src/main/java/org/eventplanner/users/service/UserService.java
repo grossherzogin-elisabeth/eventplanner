@@ -1,5 +1,7 @@
 package org.eventplanner.users.service;
 
+import org.eventplanner.qualifications.adapter.QualificationRepository;
+import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.users.adapter.UserRepository;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.User;
@@ -14,24 +16,31 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserRepository userRepository;
+    private final QualificationRepository qualificationRepository;
     private final UserEncryptionService userEncryptionService;
     private final Map<UserKey, EncryptedUserDetails> cache = new HashMap<>();
 
     public UserService(
-        @Autowired UserRepository userRepository, UserEncryptionService userEncryptionService
+        @Autowired UserRepository userRepository,
+        @Autowired QualificationRepository qualificationRepository,
+        @Autowired UserEncryptionService userEncryptionService
     ) {
         this.userRepository = userRepository;
+        this.qualificationRepository = qualificationRepository;
         this.userEncryptionService = userEncryptionService;
     }
 
     public @NonNull List<User> getUsers() {
         return getEncryptedUsers().stream()
             .map(userEncryptionService::decrypt)
+            .map(this::resolvePositions)
             .sorted(Comparator.comparing(UserDetails::getFullName))
             .map(UserDetails::cropToUser)
             .toList();
@@ -43,6 +52,7 @@ public class UserService {
         }
         return cache.values().stream()
             .map(userEncryptionService::decrypt)
+            .map(this::resolvePositions)
             .sorted(Comparator.comparing(UserDetails::getFullName))
             .toList();
     }
@@ -60,17 +70,17 @@ public class UserService {
             encryptedUserDetails = userRepository.findByKey(key);
         }
 
-        return encryptedUserDetails.map(userEncryptionService::decrypt);
+        return encryptedUserDetails.map(userEncryptionService::decrypt).map(this::resolvePositions);
     }
 
     public @NonNull Optional<UserDetails> getUserByAuthKey(@Nullable AuthKey authKey) {
-        // TODO every inefficient
         if (authKey == null) {
             return Optional.empty();
         }
         return getEncryptedUsers().stream()
             .filter(it -> authKey.value().equals(userEncryptionService.decryptNullable(it.getAuthKey())))
             .map(userEncryptionService::decrypt)
+            .map(this::resolvePositions)
             .findFirst();
     }
 
@@ -81,6 +91,7 @@ public class UserService {
         return getEncryptedUsers().stream()
             .filter(it -> email.equals(userEncryptionService.decryptNullable(it.getEmail())))
             .map(userEncryptionService::decrypt)
+            .map(this::resolvePositions)
             .findFirst();
     }
 
@@ -92,17 +103,17 @@ public class UserService {
             }
             var userFirstName = userEncryptionService.decrypt(user.getFirstName());
             if (userFirstName.equalsIgnoreCase(firstName)) {
-                return Optional.of(userEncryptionService.decrypt(user));
+                return Optional.of(resolvePositions(userEncryptionService.decrypt(user)));
             }
             if (user.getNickName() != null) {
                 var userNickName = userEncryptionService.decrypt(user.getNickName());
                 if (userNickName.equalsIgnoreCase(firstName)) {
-                    return Optional.of(userEncryptionService.decrypt(user));
+                    return Optional.of(resolvePositions(userEncryptionService.decrypt(user)));
                 }
             }
             var userSecondName = userEncryptionService.decryptNullable(user.getSecondName());
             if (userSecondName != null && (userFirstName + " " + userSecondName).equalsIgnoreCase(firstName)) {
-                return Optional.of(userEncryptionService.decrypt(user));
+                return Optional.of(resolvePositions(userEncryptionService.decrypt(user)));
             }
         }
         return Optional.empty();
@@ -123,7 +134,7 @@ public class UserService {
         if (!cache.isEmpty()) {
             cache.put(encrypted.getKey(), encrypted);
         }
-        return userEncryptionService.decrypt(encrypted);
+        return resolvePositions(userEncryptionService.decrypt(encrypted));
     }
 
     public void deleteUser(UserKey userKey) {
@@ -132,5 +143,20 @@ public class UserService {
         if (!cache.isEmpty()) {
             cache.remove(userKey);
         }
+    }
+
+    private UserDetails resolvePositions(UserDetails userDetails) {
+        var qualificationPositionsMap = qualificationRepository.findAll()
+                .stream()
+                .filter(qualification -> !qualification.getGrantsPositions().isEmpty())
+                .collect(Collectors.toMap(Qualification::getKey, Qualification::getGrantsPositions));
+
+        userDetails.getQualifications().forEach(userQualification -> {
+            var positions = qualificationPositionsMap.get(userQualification.getQualificationKey());
+            if (positions != null) {
+                positions.forEach(userDetails::addPosition);
+            }
+        });
+        return userDetails;
     }
 }

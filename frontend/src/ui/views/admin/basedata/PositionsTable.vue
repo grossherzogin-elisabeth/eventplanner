@@ -85,23 +85,19 @@ async function fetchPositions(): Promise<void> {
     positions.value = await positionAdministrationUseCase.getPositions(props.filter);
 }
 
-function createPosition(): void {
-    if (createPositionDialog.value) {
-        createPositionDialog.value
-            .open()
-            .then((it) => positionAdministrationUseCase.createPosition(it))
-            .then(() => fetchPositions())
-            .catch(() => console.debug('dialog was canceled'));
+async function createPosition(): Promise<void> {
+    const newPosition = await createPositionDialog.value?.open();
+    if (newPosition) {
+        await positionAdministrationUseCase.createPosition(newPosition);
+        await fetchPositions();
     }
 }
 
-function editPosition(position: Position): void {
-    if (editPositionDialog.value) {
-        editPositionDialog.value
-            .open(position)
-            .then((it) => positionAdministrationUseCase.updatePosition(it))
-            .then(() => fetchPositions())
-            .catch(() => console.debug('dialog was canceled'));
+async function editPosition(position: Position): Promise<void> {
+    const editedPosition = await editPositionDialog.value?.open(position);
+    if (editedPosition) {
+        await positionAdministrationUseCase.updatePosition(editedPosition);
+        await fetchPositions();
     }
 }
 

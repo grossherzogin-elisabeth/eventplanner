@@ -7,7 +7,7 @@ interface CreateQualificationRequest {
     icon: string;
     description: string;
     expires: boolean;
-    grantsPosition?: string;
+    grantsPositions?: string[];
 }
 
 interface UpdateQualificationRequest {
@@ -15,7 +15,7 @@ interface UpdateQualificationRequest {
     icon: string;
     description: string;
     expires: boolean;
-    grantsPosition?: string;
+    grantsPositions?: string[];
 }
 
 interface QualificationRepresentation {
@@ -24,7 +24,7 @@ interface QualificationRepresentation {
     icon: string;
     description: string;
     expires: boolean;
-    grantsPosition?: string;
+    grantsPositions?: string[];
 }
 
 export class QualificationRestRepository implements QualificationRepository {
@@ -35,7 +35,7 @@ export class QualificationRestRepository implements QualificationRepository {
             icon: representation.icon,
             description: representation.description,
             expires: representation.expires,
-            grantsPosition: representation.grantsPosition,
+            grantsPositions: representation.grantsPositions || [],
         };
     }
 
@@ -54,7 +54,7 @@ export class QualificationRestRepository implements QualificationRepository {
             icon: qualification.icon,
             description: qualification.description,
             expires: qualification.expires,
-            grantsPosition: qualification.grantsPosition,
+            grantsPositions: qualification.grantsPositions,
         };
         const response = await fetch('/api/v1/qualifications', {
             method: 'POST',
@@ -78,7 +78,7 @@ export class QualificationRestRepository implements QualificationRepository {
             icon: qualification.icon,
             description: qualification.description,
             expires: qualification.expires,
-            grantsPosition: qualification.grantsPosition,
+            grantsPositions: qualification.grantsPositions,
         };
         const response = await fetch(`/api/v1/qualifications/${qualificationKey}`, {
             method: 'PUT',

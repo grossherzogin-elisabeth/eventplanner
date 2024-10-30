@@ -79,6 +79,9 @@ public class ExcelUtils {
     }
 
     public static Optional<ZonedDateTime> parseExcelDate(String value) {
+        if (value == null || value.isBlank()) {
+            return Optional.empty();
+        }
         try {
             var daysSince1900 = (int) Double.parseDouble(value.trim());
             var date = DateUtil.getJavaDate(daysSince1900, false).toInstant().atZone(ZoneId.of("Europe/Berlin"));

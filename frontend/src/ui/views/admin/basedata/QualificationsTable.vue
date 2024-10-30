@@ -16,11 +16,12 @@
             </td>
             <td class="w-96">
                 <span
-                    v-if="item.grantsPosition"
-                    class="position text-sm"
-                    :style="{ background: positions.get(item.grantsPosition).color }"
+                    v-for="positionKey in item.grantsPositions"
+                    :key="positionKey"
+                    class="position my-0.5 mr-1 bg-gray-500 text-xs opacity-75"
+                    :style="{ background: positions.get(positionKey).color }"
                 >
-                    {{ positions.get(item.grantsPosition).name }}
+                    {{ positions.get(positionKey).name }}
                 </span>
             </td>
             <td class="w-80">
@@ -96,23 +97,19 @@ async function fetchQualifications(): Promise<void> {
     qualifications.value = await qualificationAdministrationUseCase.getQualifications(props.filter);
 }
 
-function createQualification(): void {
-    if (createQualificationDialog.value) {
-        createQualificationDialog.value
-            .open()
-            .then((it) => qualificationAdministrationUseCase.createQualification(it))
-            .then(() => fetchQualifications())
-            .catch(() => console.debug('dialog was canceled'));
+async function createQualification(): Promise<void> {
+    const newQualification = await createQualificationDialog.value?.open();
+    if (newQualification) {
+        await qualificationAdministrationUseCase.createQualification(newQualification);
+        await fetchQualifications();
     }
 }
 
-function editQualification(qualification: Qualification): void {
-    if (editQualificationDialog.value) {
-        editQualificationDialog.value
-            .open(qualification)
-            .then((it) => qualificationAdministrationUseCase.updateQualification(it))
-            .then(() => fetchQualifications())
-            .catch(() => console.debug('dialog was canceled'));
+async function editQualification(qualification: Qualification): Promise<void> {
+    const editedQualification = await editQualificationDialog.value?.open(qualification);
+    if (editedQualification) {
+        await qualificationAdministrationUseCase.updateQualification(editedQualification);
+        await fetchQualifications();
     }
 }
 

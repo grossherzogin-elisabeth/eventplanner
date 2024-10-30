@@ -66,7 +66,6 @@ public class UserExcelImporter {
             final var rowIndex = r;
             var row = Arrays.stream(data).map((col) -> col[rowIndex]).toArray(String[]::new);
             UserDetails user = parseBaseData(users, row);
-            user = addPositions(user, row);
             user = addQualifications(user, row);
             users.put(user.getKey(), user);
         }
@@ -161,28 +160,18 @@ public class UserExcelImporter {
         return user;
     }
 
-    private static UserDetails addPositions(UserDetails user, String[] data) {
-        var position = mapPosition(data[COL_POSITION]);
-        var positions = new HashSet<>(user.getPositions());
-        positions.add(position);
-        if (position.equals(Pos.STM)) {
-            positions.add(Pos.MATROSE);
-        }
-        user.setPositions(positions.stream().toList());
-        return user;
-    }
-
     private static UserDetails addQualifications(UserDetails user, String[] data) {
         final var usr = user;
 
         if (data[COL_RIGG_SUITABLE].trim().equalsIgnoreCase("ja")) {
-            usr.addQualification(new QualificationKey("rigg-suitable"));
+            usr.addQualification(new QualificationKey("lissi-rigg-suitable"));
         }
 
         parseQualificationWithMandatoryExpirationDate(usr, new QualificationKey("fitness-for-seaservice"), data[COL_FITNESS_FOR_SEA_SERVICE_EXPIRATION_DATE]);
+        parseQualificationWithOptionalExpirationDate(usr, data[COL_POSITION], null);
         parseQualificationWithOptionalExpirationDate(usr, data[COL_QUALIFICATION], data[COL_QUALIFICATION_EXPIRATION_DATE]);
         parseQualificationWithOptionalExpirationDate(usr, data[COL_FUNK], data[COL_FUNK_EXPIRATION_DATE]);
-        parseQualificationWithOptionalExpirationDate(usr, "STCW-" + data[COL_STCW], data[COL_STCW_EXPIRATION_DATE]);
+        parseQualificationWithOptionalExpirationDate(usr, data[COL_STCW], data[COL_STCW_EXPIRATION_DATE]);
         parseQualificationWithMandatoryExpirationDate(usr, new QualificationKey("medical-care"), data[COL_MEDICAL_CARE]);
         var fistAid = data[COL_FIRST_AID].trim();
         if (!fistAid.isBlank() && !fistAid.equals("-")) {
@@ -200,7 +189,6 @@ public class UserExcelImporter {
 
     private static String parseOtherQualifications(UserDetails usr, String otherQualifications) {
         var raw = otherQualifications.toLowerCase().replaceAll("[&|\\-|\\+]+", " ").replaceAll(" +", " ").trim();
-        raw = addQualificationWhenPresent("stcw 95", raw, usr, "stcw-95");
         raw = addQualificationWhenPresent("stcw ii/1 (nwo)", raw, usr, "stcw-ii-1");
         raw = addQualificationWhenPresent("stcw ii/1 wachoffizier", raw, usr, "stcw-ii-1");
         raw = addQualificationWhenPresent("stcw vi/5 gefahrenabwehr", raw, usr, "stcw-vi-5");
@@ -298,7 +286,7 @@ public class UserExcelImporter {
                 user.addQualification(qualification, expirationDate);
             }
         } catch (Exception e) {
-            log.warn("Could not parse qualification {} with mandatory expiration date set to {}", qualification.value(), expirationDateRaw);
+            log.warn("Could not parse qualification '{}' with mandatory expiration date set to '{}'", qualification.value(), expirationDateRaw);
         }
     }
 
@@ -318,125 +306,61 @@ public class UserExcelImporter {
                 }
             }
         } catch (Exception e) {
-            log.warn("Could not parse qualification {} with optional expiration date set to {}", qualificationRaw, expirationDateRaw);
+            log.warn("Could not parse qualification '{}' with optional expiration date set to '{}'", qualificationRaw, expirationDateRaw);
         }
     }
 
     private static List<QualificationKey> mapQualifications(String value) {
         return Arrays.stream(value.split("\\+"))
             .map(String::trim)
-            .map((it) -> {
-                // TODO
-                // tradi
-                // tradi-maschine
-                // ab
-                // sm
-                // lm
-                // ma
-                // schiffsmechaniker
-                // kuechenmeister
-                // koch
-                // basic-safety
-                return switch (it) {
-                    // Befaehigungen
-                    case "-" -> "";
-                    case "AB" -> "ab";
-                    case "SM" -> "sm";
-                    case "LM" -> "lm";
-                    case "Küchenmeister" -> "kuechenmeister"; // TODO == koch?
-                    case "MA" -> "ma";
-                    case "Matrosenbrief" -> "matrosenbrief";
-                    case "Schiffsmechaniker" -> "schiffsmechaniker";
-                    case "Tradi" -> "tradi";
-                    case "Tradi-Maschinist" -> "tradi-machine";
-                    case "Tradi-Maschinist/M/LM" -> "tradi-machine, lm"; // TODO m?
-                    case "Tradi-SSS in Ausbildung" -> "sss, tradi";
-                    case "Koch" -> "koch";
-                    case "LM STCW-A-VI/6" -> "lm, stcw-a-vi-6";
-                    case "SHS" -> "shs";
-                    case "SSS" -> "sss";
-                    case "STC Basic Safety" -> "stcw-vi-1";
-                    case "STCW 95/ SHS" -> "stcw-ii-4, shs";
-                    case "STCW (NWO)", "STCW-II/1 (NWO)" -> "stcw-ii-1";
-                    case "STCW-II/2 (Kapt)" -> "stcw-ii-2";
-                    case "STCW-II/3", "STCW-II/3 (Kapt)" -> "stcw-ii-3";
-                    case "STCW 95", "STCW 95 (Wachbefähigung)", "STWC 95 (Wachbefähigung)" -> "stcw-95";
-                    case "STCW-II/4 (Wachbefähigung)", "Wachbefähigung" -> "stcw-ii-4";
-                    case "STCW-II/5" -> "stcw-ii-5";
-                    case "STCW-III/2 (Ltd. Ing.)" -> "stcw-iii-2";
-                    case "STCW-IV2 (Kapt.)" -> "stcw-iv-2";
-                    case "STCW-VI/1", "STCW-VI/-1" -> "stcw-vi-1";
-                    case "STCW-VI/1-3", "STCW-VI/1 - 3" -> "stcw-vi-1-3";
-                    case "STCW-VI/1-4", "STCW-VI/1 - 4", "STCW-ja" -> "stcw-vi-1-4";
-                    case "STCW-VI/1-6", "STCW-VI/1 - 6" -> "stcw-vi-1-6";
-                    case "STCW-VI/6-1" -> "stcw-vi-6-1";
+            .map(it -> switch (it) {
+                // Dienstgrade
+                case "AB" -> "lissi-ab";
+                case "Cook" -> "lissi-koch";
+                case "Steward" -> "lissi-backschaft";
+                case "Supernumerary", "Deckshand" -> "lissi-deckshand";
 
-                    // Funkerzeugnisse
-                    case "GOC" -> "goc";
-                    case "LRC" -> "lrc";
-                    case "ROC" -> "roc";
-                    case "SRC" -> "src";
-                    case "UBI" -> "ubi";
-                    case "UBZ" -> "ubz";
-                    case "RAY-SRC" -> "rya-src";
+                // Befaehigungen
+                case "LM" -> "lissi-lm";
+                case "MA" -> "lissi-ma";
+                case "MA-Brief" -> "matrosenbrief";
+                case "Masch 750" -> "masch-750";
+                case "SHS Tradi" -> "shs, tradi";
+                case "SSS Tradi" -> "sss, tradi";
+                case "SHS Masch" -> "shs, tradi-maschine";
+                case "SSS Masch" -> "sss, tradi-maschine";
+                case "SSS/SHS Masch" -> "sss, tradi-maschine";
+                case "Tradi-Masch" -> "tradi-maschine";
+                case "STCW II/1" -> "stcw-ii-1";
+                case "STCW II/2" -> "stcw-ii-2";
+                case "STCW II/3" -> "stcw-ii-3";
+                case "STCW II/4" -> "stcw-ii-4";
+                case "STCW II/5" -> "stcw-ii-5";
+                case "STCW III/1" -> "stcw-iii-1";
+                case "STCW III/2" -> "stcw-iii-2";
 
-                    default -> "";
-                };
+                // Sicherheitslehrgang STCW
+                case "STCW VI/1-4" -> "stcw-vi-1-4";
+                case "STCW VI/1" -> "stcw-vi-1";
+                case "STCW VI/2" -> "stcw-vi-2";
+                case "STCW VI/3" -> "stcw-vi-3";
+                case "STCW VI/4" -> "stcw-vi-4";
+
+                // Funkerzeugnisse
+                case "GOC" -> "goc";
+                case "LRC" -> "lrc";
+                case "ROC" -> "roc";
+                case "SRC" -> "src";
+                case "UBI" -> "ubi";
+                case "UBZ" -> "ubz";
+                case "RAY-SRC" -> "rya-src";
+                case "ABZ" -> "abz";
+
+                default -> "";
             })
             .flatMap(it -> Arrays.stream(it.split(", ")))
             .filter(it -> !it.isBlank())
             .map(QualificationKey::new)
             .toList();
-    }
-
-    private static @NonNull PositionKey mapPosition(@NonNull String value) {
-        var positionNormalized = value.toLowerCase()
-            .replaceAll("[^a-zöäüß]", ""); // keep only a-z characters and a few symbols
-        return switch (positionNormalized) {
-            case "master" -> Pos.KAPITAEN;
-            case "kapitän" -> Pos.KAPITAEN;
-
-            case "mate" -> Pos.STM;
-            case "steuermann" -> Pos.STM;
-
-            case "noa" -> Pos.NOA;
-            case "moa" -> Pos.MOA;
-            case "cadet" -> Pos.NOA;
-
-            case "ab" -> Pos.MATROSE;
-            case "matrose" -> Pos.MATROSE;
-            case "m" -> Pos.MATROSE;
-            case "bosun" -> Pos.MATROSE;
-            case "abtrainer" -> Pos.AUSBILDER;
-            case "cadetab" -> Pos.NOA;
-
-            case "os" -> Pos.LEICHTMATROSE;
-            case "leichtmatrose" -> Pos.LEICHTMATROSE;
-            case "lm" -> Pos.LEICHTMATROSE;
-            case "oslm" -> Pos.LEICHTMATROSE;
-
-            case "engineer" -> Pos.MASCHINIST;
-            case "maschinist" -> Pos.MASCHINIST;
-            case "motorman" -> Pos.MASCHINIST;
-            case "motormann" -> Pos.MASCHINIST;
-
-            case "cook" -> Pos.KOCH;
-            case "koch" -> Pos.KOCH;
-
-            case "steward" -> Pos.BACKSCHAFT;
-
-            case "deckshand" -> Pos.DECKSHAND;
-            case "ostrainee" -> Pos.DECKSHAND;
-            case "ostainee" -> Pos.DECKSHAND;
-
-            // TODO add new position "Mitreisender"
-            case "mitreisender" -> Pos.DECKSHAND;
-            case "supernumerary" -> Pos.DECKSHAND;
-            case "child" -> Pos.DECKSHAND;
-            case "purser" -> Pos.DECKSHAND;
-            case "" -> Pos.DECKSHAND;
-
-            default -> throw new IllegalArgumentException("Unknown position: " + value);
-        };
     }
 }

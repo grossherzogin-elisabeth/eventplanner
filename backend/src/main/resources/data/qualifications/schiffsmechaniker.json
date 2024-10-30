@@ -3,5 +3,6 @@
   "icon": "fa-wrench",
   "name": "Schiffsmechaniker",
   "description": "",
-  "expires": false
+  "expires": false,
+  "grantsPositions": ["leichtmatrose"]
 }

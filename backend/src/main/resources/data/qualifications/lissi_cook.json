@@ -1,0 +1,8 @@
+{
+  "key": "lissi-koch",
+  "icon": "fa-anchor",
+  "name": "Kombüse",
+  "description": "Koch nach vereinsinternem Ausbildungskonzept",
+  "expires": false,
+  "grantsPositions": ["koch"]
+}

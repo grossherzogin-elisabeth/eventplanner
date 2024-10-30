@@ -1,0 +1,8 @@
+{
+  "key": "lissi-ab",
+  "icon": "fa-anchor",
+  "name": "Ausbilder:in",
+  "description": "Ausbilder:in nach vereinsinternem Ausbildungskonzept",
+  "expires": false,
+  "grantsPositions": ["matrose, ausbilder"]
+}

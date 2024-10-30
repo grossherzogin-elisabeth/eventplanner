@@ -54,7 +54,6 @@ interface UserDetailsUpdateRequest {
     nickName?: string;
     secondName?: string;
     lastName?: string;
-    positions?: string[];
     roles?: string[];
     email?: string;
     qualifications?: UserQualificationRepresentation[];
@@ -161,7 +160,6 @@ export class UserRestRepository implements UserRepository {
             nickName: user.nickName,
             secondName: user.secondName,
             lastName: user.lastName,
-            positions: user.positionKeys,
             roles: user.roles,
             email: user.email,
             qualifications: user.qualifications?.map((it) => ({

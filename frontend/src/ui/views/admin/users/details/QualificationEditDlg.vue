@@ -27,8 +27,8 @@
                 </div>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">Abbrechen</button>
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">Abbrechen</button>
             <button class="btn-primary" @click="submit">Übernehmen</button>
         </template>
     </VDialog>
@@ -44,7 +44,7 @@ import { useUsersUseCase } from '@/ui/composables/Application';
 
 const usersUseCase = useUsersUseCase();
 
-const dlg = ref<Dialog<UserQualification, UserQualification> | null>(null);
+const dlg = ref<Dialog<UserQualification, UserQualification | undefined> | null>(null);
 const editing = ref<boolean>(false);
 const qualifications = ref<Map<QualificationKey, Qualification>>(new Map<QualificationKey, Qualification>());
 const userQualification = ref<UserQualification>({ qualificationKey: '' });
@@ -65,7 +65,7 @@ async function fetchQualifications(): Promise<void> {
     qualifications.value = await usersUseCase.resolveQualifications();
 }
 
-async function open(value?: UserQualification): Promise<UserQualification> {
+async function open(value?: UserQualification): Promise<UserQualification | undefined> {
     if (value) {
         editing.value = true;
         userQualification.value = deepCopy(value);
@@ -77,14 +77,21 @@ async function open(value?: UserQualification): Promise<UserQualification> {
             note: undefined,
         };
     }
-    await dlg.value?.open();
-    return userQualification.value;
+    return await dlg.value?.open().catch(() => undefined);
 }
 
-defineExpose<Dialog<UserQualification, UserQualification>>({
+function submit() {
+    dlg.value?.submit(userQualification.value);
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
+}
+
+defineExpose<Dialog<UserQualification, UserQualification | undefined>>({
     open: (eventSlot: UserQualification) => open(eventSlot),
     close: () => dlg.value?.reject(),
-    submit: (result: UserQualification) => dlg.value?.submit(result),
+    submit: (result?: UserQualification) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
 

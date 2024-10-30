@@ -49,7 +49,7 @@
                         </p>
                         <p v-else class="max-w-64 truncate text-sm italic">Keine Rolle zugewiesen</p>
                     </td>
-                    <td class="w-1/4">
+                    <td class="w-1/3">
                         <div class="flex max-w-64 flex-wrap">
                             <span
                                 v-for="position in item.positions"

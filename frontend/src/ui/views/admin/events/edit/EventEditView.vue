@@ -327,8 +327,8 @@ const validation = useValidation(event, (evt) => (evt === null ? {} : eventServi
 const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_SLOTS];
 const tab = ref<Tab>(Tab.EVENT_POSITIONS);
 
-const createSlotDialog = ref<Dialog<Event, Event> | null>(null);
-const editSlotDialog = ref<Dialog<Slot, Slot> | null>(null);
+const createSlotDialog = ref<Dialog<void, Slot | undefined> | null>(null);
+const editSlotDialog = ref<Dialog<Slot, Slot | undefined> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event, Event> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string | undefined> | null>(null);
 
@@ -386,8 +386,9 @@ async function addRegistration(): Promise<void> {
 }
 
 async function addSlot(): Promise<void> {
-    if (createSlotDialog.value && event.value) {
-        await createSlotDialog.value.open(event.value).catch(() => console.debug('dialog was canceled'));
+    const newSlot = await createSlotDialog.value?.open();
+    if (event.value && newSlot) {
+        event.value.slots.push(newSlot);
     }
 }
 
@@ -413,12 +414,11 @@ async function publishPlannedCrew(): Promise<void> {
 
 async function editSlot(slotkey: SlotKey): Promise<void> {
     const slot = event.value?.slots.find((it) => it.key === slotkey);
-    const evt = event.value;
-    if (slot && evt) {
-        await editSlotDialog.value
-            ?.open(slot)
-            .then((s) => (event.value = eventService.updateSlot(evt, s)))
-            .catch(() => console.debug('dialog was canceled'));
+    if (slot) {
+        const editedSlot = await editSlotDialog.value?.open(slot);
+        if (editedSlot && event.value) {
+            event.value = eventService.updateSlot(event.value, editedSlot);
+        }
     }
 }
 

@@ -43,23 +43,28 @@
                         required
                     />
                 </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Verknüpfte Position</VInputLabel>
-                    <VInputCombobox
-                        v-model="qualification.grantsPosition"
-                        :options="positions.optionsIncludingNone.value"
-                    />
-                </div>
                 <div class="mb-4">
                     <VInputCheckBox
                         v-model="qualification.expires"
                         label="Gültigkeit der Qualifikation ist zeitlich begrenzt"
                     />
                 </div>
+                <div class="-mx-4 mt-8 rounded-xl bg-primary-100 p-4 pr-8 text-sm">
+                    <h2 class="mb-4 text-xs font-bold text-primary-700 text-opacity-50">Positionen</h2>
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-2">
+                        <div v-for="position in positions.all.value" :key="position.key">
+                            <VInputCheckBox
+                                :model-value="qualification.grantsPositions?.includes(position.key)"
+                                :label="position.name"
+                                @update:model-value="togglePosition(position.key, $event)"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" :disabled="!validation.isValid.value" @click="submit">
@@ -72,10 +77,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { deepCopy } from '@/common';
-import type { Qualification } from '@/domain';
+import type { PositionKey, Qualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useQualificationService } from '@/ui/composables/Domain';
 import { usePositions } from '@/ui/composables/Positions';
 import { useValidation } from '@/ui/composables/Validation';
@@ -84,29 +89,46 @@ const qualificationService = useQualificationService();
 
 const positions = usePositions();
 
-const dlg = ref<Dialog<Qualification, Qualification> | null>(null);
+const dlg = ref<Dialog<Qualification, Qualification | undefined> | null>(null);
 const qualification = ref<Qualification>({
     key: '',
     icon: 'fa-id-card',
     expires: false,
     name: '',
     description: '',
-    grantsPosition: undefined,
+    grantsPositions: [],
 });
 const validation = useValidation(qualification, (qualification) => qualificationService.validate(qualification));
 
-async function open(value: Qualification): Promise<Qualification> {
+async function open(value: Qualification): Promise<Qualification | undefined> {
     qualification.value = deepCopy(value);
-    // wait until user submits
-    await dlg.value?.open();
-
-    return qualification.value;
+    return await dlg.value?.open().catch(() => undefined);
 }
 
-defineExpose<Dialog<Qualification, Qualification>>({
+function togglePosition(position: PositionKey, enabled: boolean): void {
+    if (!enabled) {
+        qualification.value.grantsPositions = qualification.value.grantsPositions.filter((it) => it !== position);
+    } else if (!qualification.value.grantsPositions.includes(position)) {
+        qualification.value.grantsPositions.push(position);
+    }
+}
+
+function submit() {
+    if (validation.isValid.value) {
+        dlg.value?.submit(qualification.value);
+    } else {
+        validation.showErrors.value = true;
+    }
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
+}
+
+defineExpose<Dialog<Qualification, Qualification | undefined>>({
     open: (value: Qualification) => open(value),
     close: () => dlg.value?.reject(),
-    submit: (result: Qualification) => dlg.value?.submit(result),
+    submit: (result?: Qualification) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
 </script>

@@ -7,5 +7,5 @@ export interface Qualification {
     icon: string;
     description: string;
     expires: boolean;
-    grantsPosition?: PositionKey;
+    grantsPositions: PositionKey[];
 }

@@ -18,7 +18,6 @@ public record UpdateUserSpec(
     @Nullable String nickName,
     @Nullable String secondName,
     @Nullable String lastName,
-    @Nullable List<PositionKey> positions,
     @Nullable List<Role> roles,
     @Nullable List<UserQualification> qualifications,
     @Nullable Address address,

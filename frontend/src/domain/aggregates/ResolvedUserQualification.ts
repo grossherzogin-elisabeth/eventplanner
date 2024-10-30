@@ -1,3 +1,4 @@
+import { PositionKey } from '@/domain';
 import type { QualificationKey } from '../entities/Qualification';
 
 export interface ResolvedUserQualification {
@@ -10,4 +11,5 @@ export interface ResolvedUserQualification {
     note?: string;
     isExpired: boolean;
     willExpireSoon: boolean;
+    grantsPositions: PositionKey[];
 }

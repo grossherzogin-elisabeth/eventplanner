@@ -1,5 +1,9 @@
 <template>
-    <VTable :items="userQualifications" class="scrollbar-invisible no-header overflow-x-auto px-8 md:px-16 xl:px-20">
+    <VTable
+        :items="userQualifications"
+        class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+        @click="editUserQualification($event)"
+    >
         <template #row="{ item }">
             <td :key="item.icon" class="text-xl">
                 <i class="fa-solid" :class="item.icon" />
@@ -9,6 +13,19 @@
                 <p class="text-sm">
                     {{ item.description }}
                 </p>
+            </td>
+
+            <td class="w-1/6">
+                <div class="flex flex-wrap items-center justify-end">
+                    <span
+                        v-for="positionKey in item.grantsPositions"
+                        :key="positionKey"
+                        class="position my-0.5 mr-1 bg-gray-500 text-xs opacity-75"
+                        :style="{ background: positions.get(positionKey).color }"
+                    >
+                        {{ positions.get(positionKey).name }}
+                    </span>
+                </div>
             </td>
             <td class="w-1/6">
                 <template v-if="item.expiresAt">
@@ -78,6 +95,7 @@ import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VTable } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application';
 import { useUserService } from '@/ui/composables/Domain';
+import { usePositions } from '@/ui/composables/Positions.ts';
 import QualificationEditDlg from '@/ui/views/admin/users/details/QualificationEditDlg.vue';
 
 interface Props {
@@ -91,6 +109,7 @@ const emit = defineEmits<Emit>();
 
 const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
+const positions = usePositions();
 
 const qualifications = ref<Map<QualificationKey, Qualification> | undefined>(undefined);
 const editQualificationDialog = ref<Dialog<UserQualification, UserQualification> | null>(null);
@@ -114,12 +133,12 @@ function deleteUserQualification(userQualification: ResolvedUserQualification): 
 
 async function editUserQualification(userQualification: ResolvedUserQualification): Promise<void> {
     const user = props.modelValue;
-    if (editQualificationDialog.value) {
-        const editedQualification = await editQualificationDialog.value.open({
-            qualificationKey: userQualification.key,
-            note: userQualification.note,
-            expiresAt: userQualification.expiresAt,
-        });
+    const editedQualification = await editQualificationDialog.value?.open({
+        qualificationKey: userQualification.key,
+        note: userQualification.note,
+        expiresAt: userQualification.expiresAt,
+    });
+    if (editedQualification) {
         user.qualifications = user.qualifications.map((oldQualification) => {
             return oldQualification.qualificationKey === editedQualification?.qualificationKey
                 ? {

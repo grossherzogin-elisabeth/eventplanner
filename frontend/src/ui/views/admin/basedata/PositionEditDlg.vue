@@ -42,8 +42,8 @@
                 </div>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" :disabled="!validation.isValid.value" @click="submit">
@@ -65,7 +65,7 @@ import { useValidation } from '@/ui/composables/Validation';
 
 const positionService = usePositionService();
 
-const dlg = ref<Dialog<Position, Position> | null>(null);
+const dlg = ref<Dialog<Position, Position | undefined> | null>(null);
 const position = ref<Position>({
     key: '',
     name: '',
@@ -74,18 +74,27 @@ const position = ref<Position>({
 });
 const validation = useValidation(position, (position) => positionService.validate(position));
 
-async function open(value: Position): Promise<Position> {
+async function open(value: Position): Promise<Position | undefined> {
     position.value = deepCopy(value);
-    // wait until user submits
-    await dlg.value?.open();
-
-    return position.value;
+    return await dlg.value?.open().catch(() => undefined);
 }
 
-defineExpose<Dialog<Position, Position>>({
+function submit() {
+    if (validation.isValid.value) {
+        dlg.value?.submit(position.value);
+    } else {
+        validation.showErrors.value = true;
+    }
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
+}
+
+defineExpose<Dialog<Position, Position | undefined>>({
     open: (value: Position) => open(value),
     close: () => dlg.value?.reject(),
-    submit: (result: Position) => dlg.value?.submit(result),
+    submit: (result?: Position) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
 </script>

@@ -1,6 +1,8 @@
 package org.eventplanner.qualifications.adapter.jpa;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.entities.Qualification;
@@ -43,7 +45,7 @@ public class QualificationJpaEntity implements Serializable {
     private boolean expires;
 
     @Column(name = "grants_position")
-    private String grantsPosition;
+    private String grantsPositions;
 
     public static QualificationJpaEntity fromDomain(Qualification qualification) {
         return new QualificationJpaEntity(
@@ -52,7 +54,7 @@ public class QualificationJpaEntity implements Serializable {
             qualification.getIcon(),
             qualification.getDescription(),
             qualification.isExpires(),
-            mapNullable(qualification.getGrantsPosition(), PositionKey::value)
+            String.join(", ", qualification.getGrantsPositions().stream().map(PositionKey::value).toList())
         );
     }
 
@@ -63,7 +65,13 @@ public class QualificationJpaEntity implements Serializable {
             icon,
             description,
             expires,
-            mapNullable(grantsPosition, PositionKey::new)
+            grantsPositions != null
+                ? Arrays.stream(grantsPositions.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isBlank())
+                    .map(PositionKey::new)
+                    .toList()
+                : Collections.emptyList()
         );
     }
 }

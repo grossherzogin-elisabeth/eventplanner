@@ -74,6 +74,7 @@
 }
 
 .dialog-wrapper {
+    @apply xl:ml-20;
     animation: anim-dialog-close var(--open-close-animation-duration) ease;
     opacity: 0;
 }

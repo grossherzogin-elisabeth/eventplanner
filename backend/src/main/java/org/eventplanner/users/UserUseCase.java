@@ -2,6 +2,8 @@ package org.eventplanner.users;
 
 import io.micrometer.common.lang.Nullable;
 import org.eventplanner.exceptions.UnauthorizedException;
+import org.eventplanner.qualifications.adapter.QualificationRepository;
+import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.entities.User;
@@ -30,7 +32,6 @@ public class UserUseCase {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
-    private final Map<UserKey, EncryptedUserDetails> cache = new HashMap<>();
 
     public UserUseCase(@Autowired UserService userService) {
         this.userService = userService;
@@ -135,7 +136,6 @@ public class UserUseCase {
         applyNullable(spec.mobile(), user::setMobile);
         applyNullable(spec.comment(), user::setComment);
         applyNullable(spec.qualifications(), user::setQualifications);
-        applyNullable(spec.positions(), user::setPositions);
         applyNullable(spec.roles(), user::setRoles);
 
         return userService.updateUser(user);

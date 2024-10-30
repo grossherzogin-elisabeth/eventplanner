@@ -4,5 +4,5 @@
   "name": "STCW-II/4",
   "description": "Wachoffiziere auf Schiffen bis 500 BRZ im Küstenseeverkehr",
   "expires": true,
-  "grantsPosition": "leichtmatrose"
+  "grantsPositions": ["steuermann", "matrose"]
 }

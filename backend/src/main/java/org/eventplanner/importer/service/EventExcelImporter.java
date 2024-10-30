@@ -6,6 +6,7 @@ import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
+import org.eventplanner.events.values.SlotKey;
 import org.eventplanner.importer.entities.ImportError;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
@@ -26,6 +27,7 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 public class EventExcelImporter {
 
     private static final Logger log = LoggerFactory.getLogger(EventExcelImporter.class);
+    private static final List<String> loggedUserErrors = new LinkedList<>();
 
     public static @NonNull List<Event> readFromFile(@NonNull File file, int year, List<UserDetails> knownUsers) {
         return readFromFile(file, year, knownUsers, new ArrayList<>());
@@ -52,6 +54,7 @@ public class EventExcelImporter {
         List<UserDetails> knownUsers,
         List<ImportError> errors
     ) {
+        loggedUserErrors.clear();
         if (knownUsers.isEmpty()) {
             log.warn("Userlist is empty, cannot resolve any username!");
         }
@@ -91,11 +94,6 @@ public class EventExcelImporter {
                     }
                     var userKey = mapNullable(user, UserDetails::getKey);
                     var positionKey = mapPosition(data[0][r]);
-                    if (user != null && !user.getPositions().contains(positionKey)) {
-                        var message = "'" + name + "' hat nicht die Position '" + positionKey.value() + "'.";
-                        errors.add(new ImportError(eventKey, eventName, start, end, message));
-                        positionKey = user.getPositions().getFirst();
-                    }
                     var registration = userKey != null
                         ? Registration.ofUser(userKey, positionKey)
                         : Registration.ofPerson(name, positionKey);
@@ -103,8 +101,13 @@ public class EventExcelImporter {
                         try {
                             slots = assignToFirstMatchingSlot(registration, slots);
                         } catch (Exception e) {
-                            log.warn("Failed to find matching " + positionKey.value() + " slot for " + name + " at " +
-                                "event " + eventName + " starting on " + start);
+                            // but the excel is the best truth we have, so just add a slot...
+                            var newSlot = new Slot();
+                            newSlot.setKey(new SlotKey());
+                            newSlot.setPositions(List.of(positionKey));
+                            newSlot.setAssignedRegistration(registration.getKey());
+                            newSlot.setOrder(slots.size());
+                            slots.add(newSlot);
                         }
                     }
                     registrations.add(registration);
@@ -202,7 +205,10 @@ public class EventExcelImporter {
                 // reverseAllPartsContainedMatch.get().fullName());
                 return reverseAllPartsContainedMatch;
             }
-            log.warn("Could not find a matching user for " + name);
+            if (!loggedUserErrors.contains(name)) {
+                loggedUserErrors.add(name);
+                log.warn("Could not find a matching user for " + name);
+            }
         } catch (Exception e) {
             log.error("Failed to find a matching user for " + name, e);
         }
@@ -215,7 +221,16 @@ public class EventExcelImporter {
 
     private static @NonNull String normalizeName(@NonNull String fullName, boolean reverse) {
         var normalizedName = fullName.trim()
+            .replace("Gellert. Lothar", "Gellert, Lothar")
+            .replace("Weiser, Philine", "Weiser, Philipp")
+            .replace("Staffeldt, Thorsten", "Staffeldt, Torsten")
+            .replace("Lüdecke", "Lüdeke")
+            .replace("Meinecke", "Meinicke")
+            .replace("Siggi", "Siegfried")
+            .replace("Geper", "Gesper")
             .replace("HaWe", "Hans-Werner")
+            .replace("Kalle", "Karl-Heinz")
+            .replace("K.-H.", "Karl-Heinz")
             .replace("H.U.", "Hans-Ulrich")
             .replace("H.-U.", "Hans-Ulrich")
             .replace("Rudi", "Rudolf")
@@ -293,14 +308,15 @@ public class EventExcelImporter {
             case "Kapitän" -> Pos.KAPITAEN;
             case "Stm.", "Steuermann" -> Pos.STM;
             case "NOA" -> Pos.NOA;
-            case "1. Maschinist", "2. Maschinist", "3. Maschinist (Ausb.)" -> Pos.MASCHINIST;
+            case "1. Maschinist", "2. Maschinist" -> Pos.MASCHINIST;
+            case "3. Maschinist (Ausb.)" -> Pos.MOA;
             case "Koch" -> Pos.KOCH;
             case "Ausbilder" -> Pos.MATROSE;
             case "Matrose" -> Pos.MATROSE;
             case "Leichtmatrose" -> Pos.LEICHTMATROSE;
             case "Decksmann / -frau" -> Pos.DECKSHAND;
             case "Backschaft" -> Pos.BACKSCHAFT;
-            default -> throw new IllegalArgumentException("Unknown position");
+            default -> throw new IllegalArgumentException("Unknown position: " + value);
         };
     }
 

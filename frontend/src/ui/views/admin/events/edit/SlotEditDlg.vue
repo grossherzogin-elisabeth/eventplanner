@@ -11,14 +11,14 @@
                 </p>
                 <div class="-mx-4 mb-4">
                     <VInputLabel>Position</VInputLabel>
-                    <VInputCombobox
-                        v-model="primaryPosition"
-                        :options="(positions || []).map((it) => ({ label: it.name, value: it }))"
-                    />
+                    <VInputCombobox v-model="primaryPositionKey" :options="positions.options.value" />
                 </div>
                 <div class="-mx-4 mb-4">
                     <VInputLabel>Anzeigename</VInputLabel>
-                    <VInputText v-model="eventSlot.positionName" :placeholder="primaryPosition?.name" />
+                    <VInputText
+                        v-model="eventSlot.positionName"
+                        :placeholder="positions.get(primaryPositionKey).name"
+                    />
                 </div>
                 <div class="-mx-4 mb-4">
                     <VInputLabel>Kritikaliät</VInputLabel>
@@ -32,16 +32,15 @@
                     />
                 </div>
                 <div class="-mx-4 mt-8 rounded-xl bg-primary-100 p-4 pr-8 text-sm">
-                    <h2 class="mb-4">Alternative Positionen</h2>
+                    <h2 class="mb-4 text-xs font-bold text-primary-700 text-opacity-50">Alternative Positionen</h2>
                     <div class="grid grid-cols-2 gap-x-8 gap-y-2">
-                        <div v-for="position in positions" :key="position.key">
+                        <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox
                                 :model-value="
-                                    eventSlot.positionKeys.includes(position.key) ||
-                                    position.key === primaryPosition?.key
+                                    eventSlot.positionKeys.includes(position.key) || position.key === primaryPositionKey
                                 "
                                 :label="position.name"
-                                :disabled="position.key === primaryPosition?.key"
+                                :disabled="position.key === primaryPositionKey"
                                 @update:model-value="togglePosition(position.key, $event)"
                             />
                         </div>
@@ -49,8 +48,8 @@
                 </div>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">Abbrechen</button>
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">Abbrechen</button>
             <button class="btn-primary" @click="submit">Übernehmen</button>
         </template>
     </VDialog>
@@ -59,37 +58,33 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { deepCopy, filterDuplicates } from '@/common';
-import type { Position, PositionKey, Slot } from '@/domain';
+import type { PositionKey, Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCheckBox, VInputCombobox, VInputLabel, VInputSelect, VInputText } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application';
+import { usePositions } from '@/ui/composables/Positions.ts';
 
-const usersUseCase = useUsersUseCase();
+const positions = usePositions();
 
-const dlg = ref<Dialog<Slot, Slot> | null>(null);
-const eventSlot = ref<Slot>();
-const positions = ref<Position[]>([]);
-const primaryPosition = ref<Position | null>(null);
+const dlg = ref<Dialog<Slot, Slot | undefined> | null>(null);
+const eventSlot = ref<Slot | undefined>(undefined);
+const primaryPositionKey = ref<PositionKey>('');
 
-async function init(): Promise<void> {
-    await fetchPositions();
-}
-
-async function fetchPositions(): Promise<void> {
-    const positionsMap = await usersUseCase.resolvePositionNames();
-    positions.value = [...positionsMap.values()].sort((a, b) => a.prio - b.prio);
-}
-
-async function open(slot: Slot): Promise<Slot> {
+async function open(slot: Slot): Promise<Slot | undefined> {
     eventSlot.value = deepCopy(slot);
-    primaryPosition.value = positions.value.find((it) => it.key === eventSlot.value?.positionKeys[0]) || null;
-    await dlg.value?.open();
-    if (eventSlot.value && primaryPosition.value) {
-        eventSlot.value.positionKeys.unshift(primaryPosition.value.key);
-        eventSlot.value.positionKeys = eventSlot.value.positionKeys.filter(filterDuplicates);
-    }
-    return eventSlot.value;
+    primaryPositionKey.value = eventSlot.value?.positionKeys[0] || '';
+    return await dlg.value
+        ?.open()
+        .then((slot) => {
+            if (slot) {
+                if (primaryPositionKey.value) {
+                    slot.positionKeys.unshift(primaryPositionKey.value);
+                }
+                slot.positionKeys = slot.positionKeys.filter(filterDuplicates);
+            }
+            return slot;
+        })
+        .catch(() => undefined);
 }
 
 function togglePosition(position: PositionKey, enabled: boolean): void {
@@ -103,12 +98,18 @@ function togglePosition(position: PositionKey, enabled: boolean): void {
     }
 }
 
-defineExpose<Dialog<Slot, Slot>>({
+function submit() {
+    dlg.value?.submit(eventSlot.value);
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
+}
+
+defineExpose<Dialog<Slot, Slot | undefined>>({
     open: (eventSlot: Slot) => open(eventSlot),
     close: () => dlg.value?.reject(),
-    submit: (result: Slot) => dlg.value?.submit(result),
+    submit: (result?: Slot) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
-
-init();
 </script>

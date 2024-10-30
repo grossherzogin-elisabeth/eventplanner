@@ -10,8 +10,9 @@ import org.springframework.lang.Nullable;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.streamNullable;
 
 public class QualificationJsonImporter {
 
@@ -28,7 +29,7 @@ public class QualificationJsonImporter {
             @Nullable String icon,
             @Nullable String description,
             boolean expires,
-            @Nullable String grantsPosition
+            @Nullable List<String> grantsPositions
     ) implements Serializable {
         public Qualification toDomain() {
             return new Qualification(
@@ -37,7 +38,7 @@ public class QualificationJsonImporter {
                 icon,
                 description,
                 expires,
-                mapNullable(grantsPosition, PositionKey::new)
+                streamNullable(grantsPositions, Stream.empty()).map(PositionKey::new).toList()
             );
         }
     }

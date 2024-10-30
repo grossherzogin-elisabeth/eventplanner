@@ -57,9 +57,6 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "positions", nullable = false)
-    private String positionsRaw;
-
     @Column(name = "roles", nullable = false)
     private String rolesRaw;
 
@@ -103,7 +100,6 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             domain.getNickName() != null ? domain.getNickName().value() : null,
             domain.getSecondName() != null ? domain.getSecondName().value() : null,
             domain.getLastName().value(),
-            serializeEncryptedStringList(domain.getPositions()),
             serializeEncryptedStringList(domain.getRoles()),
             serializeQualifications(domain.getQualifications()),
             domain.getAddress() != null ? serializeAddress(domain.getAddress()) : null,
@@ -181,7 +177,6 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             nickName != null ? new EncryptedString(nickName) : null,
             secondName != null ? new EncryptedString(secondName) : null,
             new EncryptedString(lastName),
-            deserializeEncryptedStringList(positionsRaw),
             deserializeEncryptedStringList(rolesRaw),
             deserializeQualifications(qualificationsRaw),
             addressRaw != null ? deserializeAddress(addressRaw) : null,

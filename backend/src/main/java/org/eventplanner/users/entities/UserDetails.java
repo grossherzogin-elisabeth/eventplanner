@@ -58,6 +58,14 @@ public class UserDetails {
         return new User(key, firstName, lastName, positions);
     }
 
+    public void addPosition(PositionKey positionKey) {
+        if (!positions.contains(positionKey)) {
+            var mutableList = new LinkedList<>(positions);
+            mutableList.add(positionKey);
+            positions = mutableList;
+        }
+    }
+
     public void addQualification(QualificationKey qualificationKey, ZonedDateTime expirationDate) {
         var maybeExistingQualification = qualifications.stream().filter(it -> it.getQualificationKey().equals(qualificationKey)).findFirst();
         if (maybeExistingQualification.isPresent()) {

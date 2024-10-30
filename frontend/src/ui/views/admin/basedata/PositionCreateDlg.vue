@@ -38,8 +38,8 @@
                 </div>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submitIfValid(submit)">
@@ -60,7 +60,7 @@ import { useValidation } from '@/ui/composables/Validation';
 
 const positionService = usePositionService();
 
-const dlg = ref<Dialog<void, Position> | null>(null);
+const dlg = ref<Dialog<void, Position | undefined> | null>(null);
 const position = ref<Position>({
     key: '',
     name: '',
@@ -69,17 +69,26 @@ const position = ref<Position>({
 });
 const validation = useValidation(position, (position) => positionService.validate(position));
 
-async function open(): Promise<Position> {
+async function open(): Promise<Position | undefined> {
     position.value = {
         key: '',
         name: '',
         color: '',
         prio: 0,
     };
-    // wait until user submits
-    await dlg.value?.open();
+    return await dlg.value?.open().catch(() => undefined);
+}
 
-    return position.value;
+function submit() {
+    if (validation.isValid.value) {
+        dlg.value?.submit(position.value);
+    } else {
+        validation.showErrors.value = true;
+    }
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
 }
 
 async function submitIfValid(submitFun: () => void) {
@@ -91,10 +100,10 @@ async function submitIfValid(submitFun: () => void) {
     }
 }
 
-defineExpose<Dialog<void, Position>>({
+defineExpose<Dialog<void, Position | undefined>>({
     open: () => open(),
     close: () => dlg.value?.reject(),
-    submit: (result: Position) => dlg.value?.submit(result),
+    submit: (result?: Position) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
 </script>
