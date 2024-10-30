@@ -2,10 +2,17 @@ export interface ErrorDetails {
     title?: string;
     message?: string;
     error?: unknown | Error | Response;
+    retryText?: string;
     retry?: () => void;
 }
 
 export class ErrorHandlingService {
+    private readonly login: () => void;
+
+    public constructor(login: () => void) {
+        this.login = login;
+    }
+
     private errorHandler: (error: ErrorDetails) => void = (error: ErrorDetails) => {
         alert(error.message || error.error);
         console.log(error.error);
@@ -27,18 +34,16 @@ export class ErrorHandlingService {
     }
 
     public handleRawError(e: unknown | Error | Response): void {
-        this.handleError({
-            error: e,
-        });
-
-        // throw again for the async button to handle error state
-        throw e;
-    }
-
-    public handleUnexpectedError(e: unknown | Error | Response): void {
-        this.handleError({
-            error: e,
-        });
+        if (e instanceof Response) {
+            const response = e as Response;
+            if (response.status === 401) {
+                this.login();
+            } else {
+                this.handleError({ error: e });
+            }
+        } else {
+            this.handleError({ error: e });
+        }
 
         // throw again for the async button to handle error state
         throw e;

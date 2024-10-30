@@ -115,7 +115,7 @@ async function init(): Promise<void> {
         qualificationRepository: qualificationRepository,
     });
     const notificationService = new NotificationService();
-    const errorHandlingService = new ErrorHandlingService();
+    const errorHandlingService = new ErrorHandlingService(() => accountRepository.login(location.pathname));
 
     const application: Application = {
         config: config,

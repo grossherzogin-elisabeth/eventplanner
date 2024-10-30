@@ -1,4 +1,5 @@
 import type { AccountRepository } from '@/application';
+import { wait } from '@/common';
 import type { SignedInUser } from '@/domain';
 import type { Permission, Role } from '@/domain';
 
@@ -22,6 +23,19 @@ export class AccountRestRepository implements AccountRepository {
             console.error(e);
             return undefined;
         }
+    }
+
+    public async login(redirectTo?: string): Promise<void> {
+        if (redirectTo) {
+            localStorage.setItem('auth.redirect', redirectTo);
+        }
+        window.location.href = `/auth/login/default`;
+        await wait(500);
+    }
+
+    public async logout(): Promise<void> {
+        window.location.href = `/auth/logout`;
+        await wait(500);
     }
 
     private mapAccountToSignedInUser(user: AccountRepresentation): SignedInUser {

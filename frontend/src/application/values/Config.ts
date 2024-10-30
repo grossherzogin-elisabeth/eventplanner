@@ -10,10 +10,6 @@ export interface Config {
     i18nFallbackLocale: string;
     i18nAvailableLocales: string[];
 
-    // service urls
-    authLoginEndpoint: string;
-    authLogoutEndpoint: string;
-
     overrideSignedInUserKey?: string;
     askBeforeLogin?: boolean;
 

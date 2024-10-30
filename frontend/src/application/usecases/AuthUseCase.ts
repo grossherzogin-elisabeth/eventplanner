@@ -1,5 +1,4 @@
 import type { AccountRepository, AuthService, Config, UserRepository } from '@/application';
-import { wait } from '@/common';
 import type { SignedInUser, UserKey } from '@/domain';
 
 export class AuthUseCase {
@@ -50,15 +49,14 @@ export class AuthUseCase {
     }
 
     public async login(): Promise<void> {
-        window.location.href = `${this.config.authLoginEndpoint}/default`;
-        await wait(500);
+        await this.accountRepository.login();
     }
 
     /**
      * Starts the logout flow
      */
-    public logout(): void {
-        window.location.href = this.config.authLogoutEndpoint;
+    public async logout(): Promise<void> {
+        await this.accountRepository.logout();
     }
 
     public impersonateUser(userKey: UserKey | null): void {
