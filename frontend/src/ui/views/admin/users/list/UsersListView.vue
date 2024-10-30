@@ -175,12 +175,15 @@
                     <button class="btn-ghost" @click="selectNone()">
                         <i class="fa-solid fa-xmark w-6 text-base" />
                     </button>
-                    <span class="self-center text-base font-bold">{{ selectedUsers.length }} Nutzer ausgewählt</span>
+                    <span class="self-center text-base font-bold">{{ selectedUsers.length }} ausgewählt</span>
                     <div class="flex-grow"></div>
-                    <button class="btn-ghost" disabled>
-                        <i class="fa-solid fa-envelope"></i>
-                        <span class="text-base">Email schreiben</span>
-                    </button>
+
+                    <div class="hidden sm:block">
+                        <button class="btn-ghost" disabled>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span class="text-base">Email schreiben</span>
+                        </button>
+                    </div>
                     <div class="hidden lg:block xl:hidden 2xl:block">
                         <button class="btn-ghost" disabled>
                             <i class="fa-solid fa-screwdriver-wrench"></i>

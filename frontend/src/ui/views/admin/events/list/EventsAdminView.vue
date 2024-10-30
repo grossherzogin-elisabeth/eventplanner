@@ -46,7 +46,7 @@
                         </span>
                         <!--                        <VInputCheckBox v-model="item.selected" class="-ml-2" />-->
                     </td>
-                    <td class="w-1/2 max-w-[65vw] whitespace-nowrap font-semibold">
+                    <td class="w-1/2 whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
                         <p
                             class="mb-1 truncate"
                             :class="{ 'text-red-700 line-through': item.state === EventState.Canceled }"
@@ -55,11 +55,12 @@
                             <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
                             {{ item.name }}
                         </p>
-                        <p v-if="item.locations.length === 0" class="truncate text-sm font-light">
-                            keine Reiseroute angegeben
+                        <p class="hidden truncate text-sm font-light md:block">
+                            <template v-if="item.locations.length === 0">keine Reiseroute angegeben</template>
+                            <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
-                        <p v-else class="truncate text-sm font-light">
-                            {{ item.locations.map((it) => it.name).join(' - ') }}
+                        <p class="truncate text-sm font-light md:hidden">
+                            {{ formatDateRange(item.start, item.end) }}
                         </p>
                     </td>
                     <td class="">
@@ -115,8 +116,9 @@
                         </p>
                         <p class="text-sm">Crew</p>
                     </td>
-                    <td class="w-2/6 whitespace-nowrap">
-                        <p class="mb-1 font-semibold">{{ formatDateRange(item.start, item.end) }}</p>
+                    <td class="hidden w-2/6 whitespace-nowrap md:table-cell">
+                        <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
+                        <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
                         <p class="text-sm">{{ item.duration }} Tage</p>
                     </td>
 
@@ -244,22 +246,26 @@
                     <button class="btn-ghost" @click="selectNone()">
                         <i class="fa-solid fa-xmark w-6 text-base" />
                     </button>
-                    <span class="self-center text-base font-bold">{{ selectedEvents.length }} Reisen ausgewählt</span>
+                    <span class="self-center text-base font-bold">{{ selectedEvents.length }} ausgewählt</span>
                     <div class="flex-grow"></div>
-                    <div v-if="showBatchOpenEventForSignup">
-                        <button class="btn-ghost" @click="openEventsForSignup(selectedEvents)">
+                    <div class="hidden sm:block">
+                        <button
+                            v-if="showBatchOpenEventForSignup"
+                            class="btn-ghost"
+                            @click="openEventsForSignup(selectedEvents)"
+                        >
                             <i class="fa-solid fa-lock-open"></i>
                             <span class="truncate text-base">Anmeldungen freischalten</span>
                         </button>
-                    </div>
-                    <div v-else-if="showBatchPublishPlannedCrew">
-                        <button class="btn-ghost" @click="publishCrewPlanning(selectedEvents)">
+                        <button
+                            v-else-if="showBatchPublishPlannedCrew"
+                            class="btn-ghost"
+                            @click="publishCrewPlanning(selectedEvents)"
+                        >
                             <i class="fa-solid fa-earth-europe"></i>
                             <span class="truncate text-base">Crewplanung veröffentlichen</span>
                         </button>
-                    </div>
-                    <div v-else>
-                        <button class="btn-ghost" @click="editBatch(selectedEvents)">
+                        <button v-else class="btn-ghost" @click="editBatch(selectedEvents)">
                             <i class="fa-solid fa-edit"></i>
                             <span class="truncate text-base">Ausgewählte bearbeiten</span>
                         </button>
@@ -341,6 +347,7 @@ import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
 import EventBatchEditDlg from '@/ui/views/admin/events/list/EventBatchEditDlg.vue';
 import ImportEventsDlg from '@/ui/views/admin/events/list/ImportEventsDlg.vue';
+import { DateTimeFormat } from '../../../../../common/date';
 
 interface EventTableViewItem extends Event {
     selected: boolean;
