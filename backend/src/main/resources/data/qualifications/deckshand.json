@@ -1,0 +1,8 @@
+{
+  "key": "deckshand",
+  "icon": "fa-anchor",
+  "name": "Deckshand",
+  "description": "Deckshand nach vereinsinternem Ausbildungskonzept",
+  "expires": false,
+  "grantsPosition": "deckshand"
+}

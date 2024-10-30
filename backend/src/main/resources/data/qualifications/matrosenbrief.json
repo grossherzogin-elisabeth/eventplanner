@@ -1,7 +1,8 @@
 {
   "key": "matrosenbrief",
-  "icon": "fa-kit-medical",
+  "icon": "fa-anchor",
   "name": "Matrosenbrief",
   "description": "",
-  "expires": false
+  "expires": false,
+  "grantsPosition": "leichtmatrose"
 }

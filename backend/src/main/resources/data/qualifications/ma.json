@@ -1,7 +1,8 @@
 {
   "key": "ma",
   "icon": "fa-anchor",
-  "name": "Matrose",
-  "description": "Matrose nach vereinsinternem Ausbildungskonzept",
-  "expires": false
+  "name": "Matrose:in",
+  "description": "Matrose:in nach vereinsinternem Ausbildungskonzept",
+  "expires": false,
+  "grantsPosition": "matrose"
 }
