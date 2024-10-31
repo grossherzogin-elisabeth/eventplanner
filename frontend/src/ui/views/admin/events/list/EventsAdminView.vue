@@ -262,7 +262,7 @@
                                 <i class="fa-solid fa-envelope" />
                                 <span>Crews kontaktieren</span>
                             </li>
-                            <li class="context-menu-item text-red-700">
+                            <li class="context-menu-item disabled text-red-700">
                                 <i class="fa-solid fa-ban" />
                                 <span>Reisen absagen</span>
                             </li>
@@ -288,15 +288,10 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import { Event, EventState, Permission } from '@/domain';
-import {
-    ConfirmationDialog,
-    ContextMenuButton,
-    Dialog,
-    VConfirmationDialog,
-    VTable,
-    VTabs,
-} from '@/ui/components/common';
+import type { Event } from '@/domain';
+import { EventState, Permission } from '@/domain';
+import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';

@@ -117,8 +117,8 @@
                 </template>
                 <template #context-menu="{ item }">
                     <li class="context-menu-item" @click="editUser(item)">
-                        <i class="fa-solid fa-user-edit" />
-                        <span>Bearbeiten</span>
+                        <i class="fa-solid fa-edit" />
+                        <span>Nutzer bearbeiten</span>
                     </li>
                     <li class="context-menu-item" @click="impersonateUser(item)">
                         <i class="fa-solid fa-user-secret" />

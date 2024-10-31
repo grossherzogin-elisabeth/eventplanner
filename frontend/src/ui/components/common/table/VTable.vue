@@ -109,12 +109,13 @@
 </template>
 
 <script setup generic="T extends {}" lang="ts">
-import { Reactive, computed, ref, useSlots, watch } from 'vue';
+import type { Reactive } from 'vue';
+import { computed, ref, useSlots, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { deepCopy, extractValue } from '@/common';
 import { useQueryStateSync } from '@/ui/composables/QueryState';
 import { useViewportSize } from '@/ui/composables/ViewportSize.ts';
-import { Selectable } from '@/ui/model/Selectable.ts';
+import type { Selectable } from '@/ui/model/Selectable.ts';
 import VDropdownWrapper from '../dropdown/VDropdownWrapper.vue';
 import VPagination from './VPagination.vue';
 

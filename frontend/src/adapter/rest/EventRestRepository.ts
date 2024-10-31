@@ -23,6 +23,8 @@ interface RegistrationRepresentation {
 interface LocationRepresentation {
     name: string;
     icon: string;
+    address?: string;
+    country?: string;
 }
 
 export interface EventRepresentation {
@@ -82,9 +84,12 @@ export class EventRestRepository implements EventRepository {
                 userKey: it.userKey || undefined,
                 name: it.name || undefined,
             })),
-            locations: eventRepresentation.locations.map((locationRepresentation) => ({
+            locations: eventRepresentation.locations.map((locationRepresentation, index) => ({
                 name: locationRepresentation.name,
                 icon: locationRepresentation.icon,
+                address: locationRepresentation.address,
+                country: locationRepresentation.country,
+                order: index + 1,
             })),
             slots: eventRepresentation.slots.map((slotRepresentation) => ({
                 key: slotRepresentation.key,
@@ -165,7 +170,12 @@ export class EventRestRepository implements EventRepository {
             description: event.description,
             start: event.start?.toISOString(),
             end: event.end?.toISOString(),
-            locations: event.locations,
+            locations: event.locations.map((location) => ({
+                icon: location.icon,
+                name: location.name,
+                country: location.country,
+                address: location.address,
+            })),
             slots: event.slots?.map((it) => ({
                 key: it.key,
                 order: it.order,
@@ -198,7 +208,12 @@ export class EventRestRepository implements EventRepository {
             description: updateRequest.description,
             start: updateRequest.start?.toISOString(),
             end: updateRequest.end?.toISOString(),
-            locations: updateRequest.locations,
+            locations: updateRequest.locations?.map((location) => ({
+                icon: location.icon,
+                name: location.name,
+                country: location.country,
+                address: location.address,
+            })),
             slots: updateRequest.slots?.map((it) => ({
                 key: it.key,
                 order: it.order,

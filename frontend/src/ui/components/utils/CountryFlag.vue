@@ -21,7 +21,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const flag = computed(() => {
-    switch (props.country) {
+    switch (props.country.toLowerCase()) {
         case 'de':
             return de;
         case 'en':

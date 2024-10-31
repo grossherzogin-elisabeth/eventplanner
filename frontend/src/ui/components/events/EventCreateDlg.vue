@@ -119,6 +119,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { deepCopy } from '@/common';
 import { DateTimeFormat, cropToPrecision } from '@/common/date';
 import type { Event } from '@/domain';
 import { EventState, EventType } from '@/domain';
@@ -204,6 +205,7 @@ async function open(partialEvent?: Partial<Event>): Promise<Event> {
             positionName: slot.positionName,
             order: slot.order,
         })) || [];
+    event.value.locations = template.value?.locations.map(deepCopy) || [];
     return event.value;
 }
 

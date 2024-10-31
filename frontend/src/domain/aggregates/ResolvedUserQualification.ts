@@ -1,4 +1,4 @@
-import { PositionKey } from '@/domain';
+import type { PositionKey } from '@/domain';
 import type { QualificationKey } from '../entities/Qualification';
 
 export interface ResolvedUserQualification {

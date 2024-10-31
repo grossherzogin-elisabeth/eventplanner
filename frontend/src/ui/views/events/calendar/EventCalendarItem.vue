@@ -194,7 +194,8 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import { Event, EventState, Permission, PositionKey } from '@/domain';
+import type { Event, PositionKey } from '@/domain';
+import { EventState, Permission } from '@/domain';
 import { type Dialog, VDropdownWrapper } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import CountryFlag from '@/ui/components/utils/CountryFlag.vue';

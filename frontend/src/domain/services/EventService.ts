@@ -1,5 +1,5 @@
 import { cropToPrecision, filterUndefined } from '@/common';
-import type { Event, Registration, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
+import type { Event, Location, Registration, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
 
 export class EventService {
     public doEventsHaveOverlappingDays(a?: Event, b?: Event): boolean {
@@ -142,6 +142,74 @@ export class EventService {
     public updateSlot(event: Event, slot: Slot): Event {
         const index = event.slots.findIndex((it) => it.key === slot.key);
         event.slots[index] = slot;
+        return event;
+    }
+
+    public removeSlot(event: Event, slot: Slot): Event {
+        event.slots = event.slots.filter((it) => it.key !== slot.key);
+        return event;
+    }
+
+    public moveSlot(event: Event, slot: Slot, offset: number): Event {
+        if (offset === 0) {
+            return event;
+        }
+        const orderedSlots = event.slots.sort((a, b) => a.order - b.order);
+        const index = orderedSlots.findIndex((it) => it.key === slot.key);
+        let otherIndex = -1;
+        if (offset < 0) {
+            if (index === 0) return event;
+            otherIndex = Math.max(index + offset, 0);
+        } else {
+            if (index === orderedSlots.length - 1) return event;
+            otherIndex = Math.min(index + offset, orderedSlots.length - 1);
+        }
+        const other = orderedSlots[otherIndex];
+        // swap orders
+        const temp = slot.order;
+        slot.order = other.order;
+        other.order = temp;
+        // swap index
+        orderedSlots[otherIndex] = slot;
+        orderedSlots[index] = other;
+        event.slots = orderedSlots;
+        return event;
+    }
+
+    public updateLocation(event: Event, location: Location): Event {
+        const index = event.locations.findIndex((it) => it.order === location.order);
+        event.locations[index] = location;
+        return event;
+    }
+
+    public removeLocation(event: Event, location: Location): Event {
+        event.locations = event.locations.filter((it) => it.order !== location.order);
+        return event;
+    }
+
+    public moveLocation(event: Event, location: Location, offset: number) {
+        if (offset === 0) {
+            return event;
+        }
+        const orderedLocations = event.locations.sort((a, b) => a.order - b.order);
+        const index = orderedLocations.findIndex((it) => it.order === location.order);
+        let otherIndex = -1;
+        if (offset < 0) {
+            if (index === 0) return event;
+            otherIndex = Math.max(index + offset, 0);
+        } else {
+            if (index === orderedLocations.length - 1) return event;
+            otherIndex = Math.min(index + offset, orderedLocations.length - 1);
+        }
+        const other = orderedLocations[otherIndex];
+        // swap order
+        const temp = location.order;
+        location.order = other.order;
+        other.order = temp;
+        // swap index
+        orderedLocations[otherIndex] = location;
+        orderedLocations[index] = other;
+        event.locations = orderedLocations;
         return event;
     }
 

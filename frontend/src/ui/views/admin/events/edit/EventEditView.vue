@@ -126,72 +126,18 @@
                     <CrewEditor v-if="event" v-model:event="event" />
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
-                    <div class="-mx-8 overflow-y-auto px-8">
-                        <VTable :items="slots" :page-size="-1" class="interactive-table" @click="editSlot($event.key)">
-                            <template #head>
-                                <th class="hidden w-0 md:table-cell"></th>
-                                <th class="w-0"></th>
-                                <th class="w-1/3">Name</th>
-                                <th class="w-2/3">Mögliche Positionen</th>
-                                <th class="w-64">Status</th>
-                            </template>
-                            <template #row="{ item, index }">
-                                <td class="hidden md:table-cell">
-                                    <button class="cursor-move">
-                                        <i class="fa-solid fa-grip-vertical text-sm opacity-25"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <span
-                                        class="inline-block rounded-full bg-gray-200 px-2 py-1 text-sm font-semibold text-gray-700"
-                                    >
-                                        #{{ index + 1 }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="whitespace-nowrap font-semibold">
-                                        {{ item.name || item.position.name }}
-                                    </div>
-                                </td>
-                                <td class="">
-                                    <div class="flex items-center">
-                                        <div
-                                            v-for="position in item.alternativePositions"
-                                            :key="position.key"
-                                            :style="{ background: position.color }"
-                                            class="position mb-1 mr-1 text-xs"
-                                        >
-                                            <span>{{ position.name }}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="">
-                                    <span
-                                        v-if="item.filled"
-                                        class="inline-flex w-auto items-center rounded-full bg-green-100 py-1 pl-3 pr-4 text-green-700"
-                                    >
-                                        <i class="fa-solid fa-circle-check"></i>
-                                        <span class="ml-2 whitespace-nowrap font-semibold">Besetzt</span>
-                                    </span>
-                                    <span
-                                        v-else-if="item.required"
-                                        class="inline-flex w-auto items-center rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                                    >
-                                        <i class="fa-solid fa-warning"></i>
-                                        <span class="ml-2 whitespace-nowrap font-semibold">Nicht besetzt</span>
-                                    </span>
-                                    <span
-                                        v-else
-                                        class="inline-flex w-auto items-center rounded-full bg-blue-100 py-1 pl-3 pr-4 text-blue-700"
-                                    >
-                                        <i class="fa-solid fa-circle-info"></i>
-                                        <span class="ml-2 whitespace-nowrap font-semibold">Optional</span>
-                                    </span>
-                                </td>
-                            </template>
-                        </VTable>
+                    <div class="xl:max-w-5xl">
+                        <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                            <SlotsTable v-if="event" :event="event" />
+                        </div>
                     </div>
-                    <SlotEditDlg ref="editSlotDialog" />
+                </template>
+                <template #[Tab.EVENT_LOCATIONS]>
+                    <div class="xl:max-w-5xl">
+                        <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                            <LocationsTable v-if="event" :event="event" />
+                        </div>
+                    </div>
                 </template>
             </VTabs>
         </template>
@@ -264,11 +210,11 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { filterUndefined } from '@/common';
-import { Event, EventState, EventType, Permission, Position, Slot, SlotCriticality, SlotKey } from '@/domain';
+import type { Event, Slot } from '@/domain';
+import { EventState, EventType, Permission } from '@/domain';
+import type { Dialog } from '@/ui/components/common';
 import {
     AsyncButton,
-    Dialog,
     VInfo,
     VInputDate,
     VInputLabel,
@@ -276,7 +222,6 @@ import {
     VInputText,
     VInputTextArea,
     VInputTime,
-    VTable,
     VTabs,
 } from '@/ui/components/common';
 import VWarning from '@/ui/components/common/alerts/VWarning.vue';
@@ -284,28 +229,19 @@ import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
-import { usePositions } from '@/ui/composables/Positions.ts';
 import { useValidation } from '@/ui/composables/Validation';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationDlg from '@/ui/views/admin/events/components/CreateRegistrationDlg.vue';
+import LocationsTable from '@/ui/views/admin/events/edit/LocationsTable.vue';
+import SlotsTable from '@/ui/views/admin/events/edit/SlotsTable.vue';
 import CrewEditor from './CrewEditor.vue';
 import SlotCreateDlg from './SlotCreateDlg.vue';
-import SlotEditDlg from './SlotEditDlg.vue';
 
 enum Tab {
     EVENT_DATA = 'app.edit-event.tab.data',
     EVENT_POSITIONS = 'Crew verwalten',
-    EVENT_SLOTS = 'Slots',
-}
-
-interface SlotTableItem {
-    key: SlotKey;
-    name?: string;
-    required: boolean;
-    criticality: SlotCriticality;
-    position: Position;
-    alternativePositions: Position[];
-    filled: boolean;
+    EVENT_SLOTS = 'Crew Slots',
+    EVENT_LOCATIONS = 'Reiseroute',
 }
 
 type RouteEmits = (e: 'update:title', value: string) => void;
@@ -319,33 +255,16 @@ const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const authUseCase = useAuthUseCase();
 const signedInUser = authUseCase.getSignedInUser();
-const positions = usePositions();
 
 const event = ref<Event | null>(null);
 const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
 
-const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_SLOTS];
+const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_LOCATIONS, Tab.EVENT_SLOTS];
 const tab = ref<Tab>(Tab.EVENT_POSITIONS);
 
 const createSlotDialog = ref<Dialog<void, Slot | undefined> | null>(null);
-const editSlotDialog = ref<Dialog<Slot, Slot | undefined> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event, Event> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string | undefined> | null>(null);
-
-const slots = computed<SlotTableItem[]>(() => {
-    if (!event.value) {
-        return [];
-    }
-    return event.value.slots.map((slot) => ({
-        key: slot.key,
-        name: slot.positionName,
-        required: slot.criticality >= 1,
-        criticality: slot.criticality,
-        position: positions.get(slot.positionKeys[0]),
-        alternativePositions: slot.positionKeys.map((it) => positions.get(it)).filter(filterUndefined),
-        filled: eventService.isSlotFilled(event.value, slot.key),
-    }));
-});
 
 const hasEmptyRequiredSlots = computed<boolean>(() => {
     return event.value !== null && eventService.hasOpenRequiredSlots(event.value);
@@ -409,16 +328,6 @@ async function openEventForCrewSignup(): Promise<void> {
 async function publishPlannedCrew(): Promise<void> {
     if (event.value) {
         event.value = await eventAdministrationUseCase.updateEvent(event.value.key, { state: EventState.Planned });
-    }
-}
-
-async function editSlot(slotkey: SlotKey): Promise<void> {
-    const slot = event.value?.slots.find((it) => it.key === slotkey);
-    if (slot) {
-        const editedSlot = await editSlotDialog.value?.open(slot);
-        if (editedSlot && event.value) {
-            event.value = eventService.updateSlot(event.value, editedSlot);
-        }
     }
 }
 
