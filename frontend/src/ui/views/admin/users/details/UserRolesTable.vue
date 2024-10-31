@@ -28,28 +28,24 @@
                     </div>
                 </div>
             </td>
-            <td class="w-0">
-                <ContextMenuButton class="px-4 py-2">
-                    <ul>
-                        <li v-if="!item.enabled" class="context-menu-item" @click="toggleRole(item.role)">
-                            <i class="fa-solid fa-plus" />
-                            <span>Rolle hinzufügen</span>
-                        </li>
-                        <li v-else class="context-menu-item text-red-700" @click="toggleRole(item.role)">
-                            <i class="fa-solid fa-xmark" />
-                            <span>Rolle entfernen</span>
-                        </li>
-                    </ul>
-                </ContextMenuButton>
-            </td></template
-        >
+        </template>
+        <template #context-menu="{ item }">
+            <li v-if="!item.enabled" class="context-menu-item" @click="toggleRole(item.role)">
+                <i class="fa-solid fa-plus" />
+                <span>Rolle hinzufügen</span>
+            </li>
+            <li v-else class="context-menu-item text-red-700" @click="toggleRole(item.role)">
+                <i class="fa-solid fa-xmark" />
+                <span>Rolle entfernen</span>
+            </li>
+        </template>
     </VTable>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { UserDetails } from '@/domain';
 import { Role } from '@/domain';
-import { ContextMenuButton, VTable } from '@/ui/components/common';
+import { VTable } from '@/ui/components/common';
 
 interface Props {
     modelValue: UserDetails;

@@ -1,7 +1,17 @@
 <template>
     <teleport to="#app">
-        <div class="dropdown-wrapper-background" @click.stop="close" @keydown.esc="close"></div>
-        <div ref="dropdown" class="dropdown-wrapper" :style="dropdownStyle" :class="$attrs.class">
+        <div
+            class="dropdown-wrapper-background"
+            :class="{ 'pointer-events-none': blockAllInput }"
+            @click.stop="close"
+            @keydown.esc="close"
+        ></div>
+        <div
+            ref="dropdown"
+            class="dropdown-wrapper"
+            :style="dropdownStyle"
+            :class="blockAllInput ? `pointer-events-none ${$attrs.class}` : $attrs.class"
+        >
             <slot></slot>
         </div>
     </teleport>
@@ -51,6 +61,8 @@ const dropdownStyle = ref({
     '--max-height': 'unset',
 });
 const resizeObserver = new ResizeObserver(() => moveIntoVisibleArea());
+// block all input events from having any effect until the open animation is finished
+const blockAllInput = ref<boolean>(true);
 
 async function updatePosition(): Promise<void> {
     if (props.anchor) {
@@ -178,4 +190,8 @@ onUnmounted(() => {
     window.removeEventListener('scroll', updatePosition);
     window.removeEventListener('resize', updatePosition);
 });
+
+setTimeout(() => {
+    blockAllInput.value = false;
+}, 150);
 </script>

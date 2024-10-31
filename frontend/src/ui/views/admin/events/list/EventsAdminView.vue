@@ -31,21 +31,14 @@
         <div class="w-full">
             <VTable
                 :items="filteredEvents"
+                multiselection
+                query
                 :page-size="20"
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
                 @click="editEvent($event)"
-                @click-ctrl="selectEvent($event)"
             >
                 <template #row="{ item }">
-                    <td @click.stop="item.selected = !item.selected">
-                        <span v-if="item.selected">
-                            <i class="fa-solid fa-check-square text-2xl text-primary-600"></i>
-                        </span>
-                        <span v-else>
-                            <i class="fa-solid fa-square text-2xl text-primary-200"></i>
-                        </span>
-                        <!--                        <VInputCheckBox v-model="item.selected" class="-ml-2" />-->
-                    </td>
+                    <!-- name -->
                     <td class="w-1/2 whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
                         <p
                             class="mb-1 truncate"
@@ -63,52 +56,19 @@
                             {{ formatDateRange(item.start, item.end) }}
                         </p>
                     </td>
-                    <td class="">
+                    <!-- status -->
+                    <td class="w-1/6">
                         <div class="flex items-center justify-end">
                             <div
-                                v-if="item.state === EventState.Draft"
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
+                                class="inline-flex w-auto items-center space-x-2 rounded-full py-1 pl-3 pr-4"
+                                :class="item.stateDetails.color"
                             >
-                                <i class="fa-solid fa-compass-drafting w-4"></i>
-                                <span class="whitespace-nowrap font-semibold">Entwurf</span>
-                            </div>
-                            <div
-                                v-else-if="item.state === EventState.Canceled"
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-200 py-1 pl-3 pr-4 text-red-700"
-                            >
-                                <i class="fa-solid fa-xmark w-4"></i>
-                                <span class="whitespace-nowrap font-semibold">Abgesagt</span>
-                            </div>
-                            <div
-                                v-else-if="item.state === EventState.OpenForSignup"
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
-                            >
-                                <i class="fa-solid fa-unlock w-4"></i>
-                                <span class="whitespace-nowrap font-semibold">Anmeldung</span>
-                            </div>
-                            <div
-                                v-else-if="item.hasOpenRequiredSlots"
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                            >
-                                <i class="fa-solid fa-warning w-4"></i>
-                                <span class="whitespace-nowrap font-semibold">Fehlende Crew</span>
-                            </div>
-                            <div
-                                v-else-if="item.hasOpenSlots"
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-blue-200 py-1 pl-3 pr-4 text-blue-700"
-                            >
-                                <i class="fa-solid fa-info-circle w-4"></i>
-                                <span class="whitespace-nowrap font-semibold">Freie Plätze</span>
-                            </div>
-                            <div
-                                v-else
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
-                            >
-                                <i class="fa-solid fa-check-circle w-4"></i>
-                                <span class="whitespace-nowrap font-semibold">Voll belegt</span>
+                                <i class="fa-solid w-4" :class="item.stateDetails.icon"></i>
+                                <span class="whitespace-nowrap font-semibold">{{ item.stateDetails.name }}</span>
                             </div>
                         </div>
                     </td>
+                    <!-- crew -->
                     <td class="w-1/6 whitespace-nowrap text-center">
                         <p class="mb-1 font-semibold">
                             {{ item.assignedUserCount }}
@@ -116,79 +76,11 @@
                         </p>
                         <p class="text-sm">Crew</p>
                     </td>
+                    <!-- date -->
                     <td class="hidden w-2/6 whitespace-nowrap md:table-cell">
                         <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
                         <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
                         <p class="text-sm">{{ item.duration }} Tage</p>
-                    </td>
-
-                    <td class="w-0">
-                        <ContextMenuButton class="px-4 py-2">
-                            <ul>
-                                <li>
-                                    <RouterLink
-                                        :to="{
-                                            name: Routes.EventDetails,
-                                            params: { year: item.start.getFullYear(), key: item.key },
-                                        }"
-                                        class="context-menu-item"
-                                    >
-                                        <i class="fa-solid fa-search" />
-                                        <span>Reise anzeigen</span>
-                                    </RouterLink>
-                                </li>
-                                <template v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
-                                    <li>
-                                        <RouterLink
-                                            :to="{
-                                                name: Routes.EventEdit,
-                                                params: { year: item.start.getFullYear(), key: item.key },
-                                            }"
-                                            class="context-menu-item"
-                                        >
-                                            <i class="fa-solid fa-edit" />
-                                            <span>Reise bearbeiten</span>
-                                        </RouterLink>
-                                    </li>
-                                    <li
-                                        v-if="item.state === EventState.Draft"
-                                        class="context-menu-item"
-                                        @click="openEventsForSignup([item])"
-                                    >
-                                        <i class="fa-solid fa-unlock-alt" />
-                                        <span>Anmeldungen freischalten</span>
-                                    </li>
-                                    <li
-                                        v-else-if="item.state === EventState.OpenForSignup"
-                                        class="context-menu-item"
-                                        @click="publishCrewPlanning([item])"
-                                    >
-                                        <i class="fa-solid fa-earth-europe" />
-                                        <span>Crewplanung veröffentlichen</span>
-                                    </li>
-                                </template>
-                                <li class="context-menu-item disabled">
-                                    <i class="fa-solid fa-users" />
-                                    <span>Fehlende Crew anfragen</span>
-                                </li>
-                                <li class="context-menu-item disabled">
-                                    <i class="fa-solid fa-envelope" />
-                                    <span>Crew kontaktieren</span>
-                                </li>
-                                <li
-                                    v-if="item.state === EventState.Canceled"
-                                    class="context-menu-item text-red-700"
-                                    @click="deleteEvent(item)"
-                                >
-                                    <i class="fa-solid fa-trash-alt" />
-                                    <span>Reise löschen</span>
-                                </li>
-                                <li v-else class="context-menu-item text-red-700" @click="cancelEvent(item)">
-                                    <i class="fa-solid fa-ban" />
-                                    <span>Reise absagen</span>
-                                </li>
-                            </ul>
-                        </ContextMenuButton>
                     </td>
                 </template>
                 <template #loading>
@@ -227,6 +119,70 @@
                         <td></td>
                     </tr>
                 </template>
+                <template #context-menu="{ item }">
+                    <li>
+                        <RouterLink
+                            :to="{
+                                name: Routes.EventDetails,
+                                params: { year: item.start.getFullYear(), key: item.key },
+                            }"
+                            class="context-menu-item"
+                        >
+                            <i class="fa-solid fa-search" />
+                            <span>Reise anzeigen</span>
+                        </RouterLink>
+                    </li>
+                    <template v-if="user.permissions.includes(Permission.WRITE_EVENTS)">
+                        <li>
+                            <RouterLink
+                                :to="{
+                                    name: Routes.EventEdit,
+                                    params: { year: item.start.getFullYear(), key: item.key },
+                                }"
+                                class="context-menu-item"
+                            >
+                                <i class="fa-solid fa-edit" />
+                                <span>Reise bearbeiten</span>
+                            </RouterLink>
+                        </li>
+                        <li
+                            v-if="item.state === EventState.Draft"
+                            class="context-menu-item"
+                            @click="openEventsForSignup([item])"
+                        >
+                            <i class="fa-solid fa-unlock-alt" />
+                            <span>Anmeldungen freischalten</span>
+                        </li>
+                        <li
+                            v-else-if="item.state === EventState.OpenForSignup"
+                            class="context-menu-item"
+                            @click="publishCrewPlanning([item])"
+                        >
+                            <i class="fa-solid fa-earth-europe" />
+                            <span>Crewplanung veröffentlichen</span>
+                        </li>
+                    </template>
+                    <li class="context-menu-item disabled">
+                        <i class="fa-solid fa-users" />
+                        <span>Fehlende Crew anfragen</span>
+                    </li>
+                    <li class="context-menu-item disabled">
+                        <i class="fa-solid fa-envelope" />
+                        <span>Crew kontaktieren</span>
+                    </li>
+                    <li
+                        v-if="item.state === EventState.Canceled"
+                        class="context-menu-item text-red-700"
+                        @click="deleteEvent(item)"
+                    >
+                        <i class="fa-solid fa-trash-alt" />
+                        <span>Reise löschen</span>
+                    </li>
+                    <li v-else class="context-menu-item text-red-700" @click="cancelEvent(item)">
+                        <i class="fa-solid fa-ban" />
+                        <span>Reise absagen</span>
+                    </li>
+                </template>
             </VTable>
         </div>
 
@@ -240,11 +196,11 @@
 
         <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
             <div
-                class="h-full border-t border-primary-200 bg-primary-50 px-4 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
+                class="h-full border-t border-primary-200 bg-primary-50 px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
-                        <i class="fa-solid fa-xmark w-6 text-base" />
+                        <i class="fa-solid fa-xmark text-base" />
                     </button>
                     <span class="self-center text-base font-bold">{{ selectedEvents.length }} ausgewählt</span>
                     <div class="flex-grow"></div>
@@ -316,8 +272,11 @@
             </div>
         </div>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
-        <div v-else class="sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden">
-            <button class="btn-primary btn-floating" @click="createEvent()">
+        <div
+            v-else
+            class="pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+        >
+            <button class="btn-primary btn-floating pointer-events-auto" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Event erstellen</span>
             </button>
@@ -328,6 +287,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { DateTimeFormat } from '@/common/date';
 import { Event, EventState, Permission } from '@/domain';
 import {
     ConfirmationDialog,
@@ -347,7 +307,13 @@ import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
 import EventBatchEditDlg from '@/ui/views/admin/events/list/EventBatchEditDlg.vue';
 import ImportEventsDlg from '@/ui/views/admin/events/list/ImportEventsDlg.vue';
-import { DateTimeFormat } from '../../../../../common/date';
+
+interface StateDetails {
+    name: string;
+    color: string;
+    icon: string;
+    iconMobile?: string;
+}
 
 interface EventTableViewItem extends Event {
     selected: boolean;
@@ -356,6 +322,7 @@ interface EventTableViewItem extends Event {
     waitingListCount: number;
     hasOpenSlots: boolean;
     hasOpenRequiredSlots: boolean;
+    stateDetails: StateDetails;
 }
 
 type RouteEmits = (e: 'update:title', value: string) => void;
@@ -450,7 +417,7 @@ async function fetchEvents(): Promise<void> {
 async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
     const evts = await eventUseCase.getEvents(year);
     return evts.map((evt) => {
-        return {
+        const tableItem: EventTableViewItem = {
             ...evt,
             selected: false,
             duration: new Date(evt.end.getTime() - evt.start.getTime()).getDate(),
@@ -458,22 +425,70 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
             hasOpenSlots: hasOpenSlots(evt),
             hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
+            stateDetails: {
+                name: '',
+                icon: '',
+                color: '',
+            },
         };
+        tableItem.stateDetails = getStateDetails(tableItem);
+        return tableItem;
     });
+}
+
+function getStateDetails(event: EventTableViewItem): StateDetails {
+    switch (event.state) {
+        case EventState.Draft:
+            return {
+                name: 'Entwurf',
+                icon: 'fa-compass-drafting',
+                color: 'bg-gray-200 text-gray-700',
+            };
+        case EventState.OpenForSignup:
+            return {
+                name: 'Crew Anmeldung',
+                icon: 'fa-unlock',
+                color: 'bg-gray-200 text-gray-700',
+            };
+        case EventState.Canceled:
+            return {
+                name: 'Abgesagt',
+                icon: 'fa-ban',
+                color: 'bg-red-200 text-red-700',
+            };
+    }
+
+    if (event.hasOpenRequiredSlots) {
+        return {
+            name: 'Fehlende Crew',
+            icon: 'fa-warning',
+            color: 'bg-yellow-100 text-yellow-700',
+        };
+    }
+
+    if (event.hasOpenSlots) {
+        return {
+            name: 'Freie Plätze',
+            icon: 'fa-info-circle',
+            iconMobile: 'fa-info',
+            color: 'bg-blue-200 text-blue-700',
+        };
+    }
+
+    return {
+        name: 'Voll belegt',
+        icon: 'fa-check-circle',
+        iconMobile: 'fa-check',
+        color: 'bg-green-200 text-green-700',
+    };
 }
 
 function hasOpenSlots(event: Event): boolean {
     return event.slots.filter((slt) => !slt.assignedRegistrationKey).length > 0;
 }
 
-async function selectEvent(evt: EventTableViewItem): Promise<void> {
-    evt.selected = !evt.selected;
-}
-
 async function editEvent(evt: EventTableViewItem): Promise<void> {
-    if (selectedEvents.value && selectedEvents.value.length > 0) {
-        evt.selected = !evt.selected;
-    } else if (user.permissions.includes(Permission.WRITE_EVENTS)) {
+    if (user.permissions.includes(Permission.WRITE_EVENTS)) {
         await router.push({
             name: Routes.EventEdit,
             params: { year: evt.start.getFullYear(), key: evt.key },

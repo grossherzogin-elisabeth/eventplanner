@@ -6,7 +6,7 @@
             </div>
         </teleport>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0">
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="flex items-stretch gap-2 pb-2">
                     <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
@@ -28,20 +28,12 @@
             <VTable
                 :items="filteredUsers"
                 :page-size="10"
-                :query="true"
+                query
+                multiselection
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
                 @click="editUser($event)"
-                @click-ctrl="selectUser($event)"
             >
                 <template #row="{ item }">
-                    <td v-if="selectedUsers && selectedUsers.length > 0" @click.stop="item.selected = !item.selected">
-                        <span v-if="item.selected">
-                            <i class="fa-solid fa-check-square text-2xl text-primary-600"></i>
-                        </span>
-                        <span v-else>
-                            <i class="fa-solid fa-square text-2xl text-primary-200"></i>
-                        </span>
-                    </td>
                     <td class="w-1/3 whitespace-nowrap font-semibold">
                         <p class="mb-2">{{ item.nickName || item.firstName }} {{ item.lastName }}</p>
                         <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
@@ -122,38 +114,34 @@
                             <span class="whitespace-nowrap font-semibold">Alle gültig</span>
                         </div>
                     </td>
-                    <td class="w-0">
-                        <ContextMenuButton class="px-4 py-2">
-                            <ul>
-                                <li class="context-menu-item" @click="editUser(item)">
-                                    <i class="fa-solid fa-user-edit" />
-                                    <span>Bearbeiten</span>
-                                </li>
-                                <li class="context-menu-item" @click="impersonateUser(item)">
-                                    <i class="fa-solid fa-user-secret" />
-                                    <span>Impersonate</span>
-                                </li>
-                                <li v-if="item.email">
-                                    <a :href="`mailto:${item.email}`" class="context-menu-item">
-                                        <i class="fa-solid fa-envelope" />
-                                        <span>Email schreiben</span>
-                                    </a>
-                                </li>
-                                <li class="context-menu-item" @click="createRegistration(item)">
-                                    <i class="fa-solid fa-calendar-plus" />
-                                    <span>Anmeldung hinzufügen</span>
-                                </li>
-                                <li
-                                    v-if="signedInUser.permissions.includes(Permission.DELETE_USERS)"
-                                    class="context-menu-item text-red-700"
-                                    @click="deleteUser(item)"
-                                >
-                                    <i class="fa-solid fa-trash-alt" />
-                                    <span>Nutzer löschen</span>
-                                </li>
-                            </ul>
-                        </ContextMenuButton>
-                    </td>
+                </template>
+                <template #context-menu="{ item }">
+                    <li class="context-menu-item" @click="editUser(item)">
+                        <i class="fa-solid fa-user-edit" />
+                        <span>Bearbeiten</span>
+                    </li>
+                    <li class="context-menu-item" @click="impersonateUser(item)">
+                        <i class="fa-solid fa-user-secret" />
+                        <span>Impersonate</span>
+                    </li>
+                    <li v-if="item.email">
+                        <a :href="`mailto:${item.email}`" class="context-menu-item">
+                            <i class="fa-solid fa-envelope" />
+                            <span>Email schreiben</span>
+                        </a>
+                    </li>
+                    <li class="context-menu-item" @click="createRegistration(item)">
+                        <i class="fa-solid fa-calendar-plus" />
+                        <span>Anmeldung hinzufügen</span>
+                    </li>
+                    <li
+                        v-if="signedInUser.permissions.includes(Permission.DELETE_USERS)"
+                        class="context-menu-item text-red-700"
+                        @click="deleteUser(item)"
+                    >
+                        <i class="fa-solid fa-trash-alt" />
+                        <span>Nutzer löschen</span>
+                    </li>
                 </template>
                 <template #loading>
                     <UsersListSkeletonLoader :count="20" />
@@ -330,14 +318,8 @@ function importUsers(): void {
     importUsersDialog.value?.open().catch();
 }
 
-function selectUser(user: UserRegistrations): void {
-    user.selected = !user.selected;
-}
-
 async function editUser(user: UserRegistrations): Promise<void> {
-    if (selectedUsers.value && selectedUsers.value.length > 0) {
-        user.selected = !user.selected;
-    } else if (signedInUser.permissions.includes(Permission.WRITE_USERS)) {
+    if (signedInUser.permissions.includes(Permission.WRITE_USERS)) {
         await router.push({ name: Routes.UserDetails, params: { key: user.key } });
     }
 }

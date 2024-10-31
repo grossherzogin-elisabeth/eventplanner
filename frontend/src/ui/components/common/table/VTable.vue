@@ -32,32 +32,90 @@
             <tbody v-else>
                 <tr
                     v-for="(row, index) in pagedItems"
+                    ref="rows"
                     :key="index"
-                    @click.exact="emit('click', row)"
-                    @click.ctrl="emit('click-ctrl', row)"
-                    @click.shift.exact.prevent="emit('click-shift', row)"
-                    @click.meta.exact.prevent="emit('click-ctrl', row)"
-                    @click.alt.exact.prevent="emit('click-ctrl', row)"
+                    :class="{ selected: row.selected }"
+                    @touchstart="onTouchStart($event)"
+                    @touchend="onTouchEnd($event, row, index)"
+                    @click.stop.prevent="onClick($event, row)"
                 >
                     <td></td>
+                    <td
+                        v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"
+                        @click.stop.prevent="row.selected = !row.selected"
+                    >
+                        <div v-if="row.selected">
+                            <i class="fa-solid fa-check-square text-xl text-primary-600 sm:text-2xl"></i>
+                        </div>
+                        <div v-else>
+                            <i class="fa-solid fa-square text-xl text-primary-200 sm:text-2xl"></i>
+                        </div>
+                    </td>
                     <slot name="row" :item="row" :index="index">
                         <td v-for="(val, colIndex) in Object.values(row)" :key="colIndex">
                             {{ val }}
                         </td>
                     </slot>
+                    <td
+                        v-if="$slots['context-menu']"
+                        ref="contextColumns"
+                        class="w-0"
+                        @click.stop="openContextMenu(contextColumns?.[index], row)"
+                    >
+                        <button class="h-10 w-10 cursor-pointer rounded-full hover:bg-primary-200">
+                            <i class="fa-solid fa-ellipsis-vertical mx-1" />
+                        </button>
+                    </td>
                     <td></td>
                 </tr>
             </tbody>
         </table>
+        <VDropdownWrapper
+            v-if="dropdownAnchor"
+            :anchor="dropdownAnchor"
+            anchor-align-x="right"
+            anchor-align-y="top"
+            dropdown-position-x="left"
+            dropdown-position-y="bottom"
+            min-width="20rem"
+            max-width="20rem"
+            @close="dropdownAnchor = null"
+        >
+            <div
+                class="mt-2 rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl"
+                @click="dropdownAnchor = null"
+            >
+                <ul>
+                    <template v-if="props.multiselection">
+                        <li
+                            v-if="dropdownItem.selected"
+                            class="context-menu-item"
+                            @click="dropdownItem.selected = !dropdownItem.selected"
+                        >
+                            <i class="fa-regular fa-square" />
+                            <span>Abwählen</span>
+                        </li>
+                        <li v-else class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
+                            <i class="fa-solid fa-check-square" />
+                            <span>Auswählen</span>
+                        </li>
+                    </template>
+                    <slot name="context-menu" :item="dropdownItem" />
+                </ul>
+            </div>
+        </VDropdownWrapper>
     </div>
     <VPagination v-if="usePagination" v-model:page="page" :count="sortedItems.length" :page-size="pageSize" />
 </template>
 
 <script setup generic="T extends {}" lang="ts">
-import { computed, ref, useSlots, watch } from 'vue';
+import { Reactive, computed, ref, useSlots, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { deepCopy, extractValue } from '@/common';
 import { useQueryStateSync } from '@/ui/composables/QueryState';
+import { useViewportSize } from '@/ui/composables/ViewportSize.ts';
+import { Selectable } from '@/ui/model/Selectable.ts';
+import VDropdownWrapper from '../dropdown/VDropdownWrapper.vue';
 import VPagination from './VPagination.vue';
 
 /**
@@ -120,22 +178,27 @@ interface Props<T> {
      * Default sort direction
      */
     sortDirection?: string;
+    /**
+     * Should the table offer multi selection? items should be of type Selectable in that case.
+     */
+    multiselection?: boolean;
+    /**
+     * Should the table offer a context menu?
+     */
+    contextMenu?: boolean;
 }
 
 interface Emits {
     (e: 'click', value: T): void;
-
-    (e: 'click-shift', value: T): void;
-
-    (e: 'click-ctrl', value: T): void;
 
     (e: 'update:page', value: number): void;
 }
 
 interface Slots {
     'head'?: (props: { sortBy: string; sortDirection: 'asc' | 'desc' }) => void;
-    'row'?: (props: { item: T; index: number }) => void;
+    'row'?: (props: { item: T & Selectable; index: number }) => void;
     'no-data'?: (props: { colspan: number }) => void;
+    'context-menu'?: (props: { item: T & Selectable }) => void;
     'loading'?: (props: { colspan: number }) => void;
 }
 
@@ -152,15 +215,23 @@ const props = defineProps<Props<T>>();
 const emit = defineEmits<Emits>();
 defineSlots<Slots>();
 
+const viewPortSize = useViewportSize();
+
 const usePagination = computed<boolean>(() => props.pageSize !== -1);
 const usePageSize = computed<number>(() => props.pageSize || 10);
 
 const head = ref<HTMLTableRowElement | null>(null);
+const dropdownAnchor = ref<HTMLElement | null>(null);
+const dropdownItem = ref<(T & Selectable) | null>(null);
+const contextColumns = ref<HTMLTableCellElement[] | null>(null);
+const rows = ref<HTMLTableRowElement[] | null>(null);
 const page = ref<number>(props.page || 0);
 const sortCol = ref<string>('');
 const sortDir = ref<number>(1);
 const loading = computed<boolean>(() => props.items === undefined);
 const empty = computed<boolean>(() => props.items !== undefined && props.items.length === 0);
+
+let touchStartEvent: TouchEvent | undefined = undefined;
 
 useQueryStateSync<number>(
     'page',
@@ -185,7 +256,12 @@ const classes = computed<string[]>(() => {
     }
     return result;
 });
-const sortedItems = computed<T[]>(() => {
+
+const selected = computed<(T & Selectable)[]>(() => {
+    return pagedItems.value.filter((it) => it.selected);
+});
+
+const sortedItems = computed<(T & Selectable)[]>(() => {
     if (!props.items) {
         return [];
     }
@@ -214,7 +290,8 @@ const sortedItems = computed<T[]>(() => {
         return String(va).localeCompare(String(vb)) * sortDir.value;
     });
 });
-const pagedItems = computed<T[]>(() => {
+
+const pagedItems = computed<(T & Selectable)[]>(() => {
     if (sortedItems.value.length <= usePageSize.value || !usePagination.value) {
         return sortedItems.value;
     } else {
@@ -223,6 +300,7 @@ const pagedItems = computed<T[]>(() => {
         return sortedItems.value.slice(start, end);
     }
 });
+
 const columnCount = computed<number>(() => {
     if (slots.head) {
         return slots.head().length;
@@ -272,6 +350,61 @@ function setSortingIndicators(): void {
             th.classList.add('sort');
             th.classList.add(sortDir.value === 1 ? 'asc' : 'desc');
         }
+    }
+}
+
+function onTouchStart(event: TouchEvent): void {
+    touchStartEvent = event;
+}
+
+function onTouchEnd(event: TouchEvent, row: T & Selectable, index: number): void {
+    if (event.target !== touchStartEvent?.target) {
+        touchStartEvent = undefined;
+        return;
+    }
+    const startTouchPoint = touchStartEvent.changedTouches.item(0);
+    const endTouchPoint = event.changedTouches.item(0);
+    const touchTime = event.timeStamp - touchStartEvent.timeStamp;
+    touchStartEvent = undefined;
+    if (startTouchPoint && endTouchPoint) {
+        const diffX = Math.abs(startTouchPoint.clientX - endTouchPoint.clientX);
+        const diffY = Math.abs(startTouchPoint.clientY - endTouchPoint.clientY);
+        if (diffX > 10 || diffY > 10) {
+            // scrolled, do nothing
+            return;
+        }
+    }
+    if (props.multiselection && touchTime > 200) {
+        row.selected = !row.selected;
+        return;
+    }
+    // click event is called right after this one and will handle the selection toggle for when we already have
+    // selected rows
+    if (rows.value && selected.value.length === 0) {
+        openContextMenu(rows.value[index], row);
+    }
+}
+
+function onClick(event: MouseEvent, row: Reactive<T & Selectable>): void {
+    event.stopPropagation();
+    if (touchStartEvent || dropdownAnchor.value) {
+        return;
+    }
+    if (props.multiselection) {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || selected.value.length > 0) {
+            event.preventDefault();
+            event.stopPropagation();
+            row.selected = !row.selected;
+            return;
+        }
+    }
+    emit('click', row);
+}
+
+function openContextMenu(anchor: EventTarget | HTMLElement | undefined, row: T & Selectable): void {
+    if (slots['context-menu'] && anchor instanceof HTMLElement) {
+        dropdownAnchor.value = anchor;
+        dropdownItem.value = row;
     }
 }
 

@@ -36,52 +36,48 @@
                         <span class="px-2 text-sm">{{ item.positionName }}</span>
                     </div>
                 </td>
-                <td class="w-0">
-                    <ContextMenuButton class="px-4 py-2">
-                        <ul>
-                            <li>
-                                <RouterLink
-                                    :to="{
-                                        name: Routes.EventDetails,
-                                        params: { year: item.start.getFullYear(), key: item.eventKey },
-                                    }"
-                                    class="context-menu-item"
-                                >
-                                    <i class="fa-solid fa-search" />
-                                    <span>Reise anzeigen</span>
-                                </RouterLink>
-                            </li>
-                            <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)">
-                                <RouterLink
-                                    :to="{
-                                        name: Routes.EventEdit,
-                                        params: { year: item.start.getFullYear(), key: item.eventKey },
-                                    }"
-                                    class="context-menu-item"
-                                >
-                                    <i class="fa-solid fa-edit" />
-                                    <span>Reise bearbeiten</span>
-                                </RouterLink>
-                            </li>
-                            <li
-                                class="context-menu-item"
-                                :class="{ disabled: item.inPast || !item.waitingList }"
-                                @click="addUserToCrew(item)"
-                            >
-                                <i class="fa-solid fa-user-plus" />
-                                <span>Zur Crew hinzufügen</span>
-                            </li>
-                            <li
-                                class="context-menu-item text-red-700"
-                                :class="{ disabled: item.inPast }"
-                                @click="deleteRegistration(item)"
-                            >
-                                <i class="fa-solid fa-trash-alt" />
-                                <span>Anmeldung löschen</span>
-                            </li>
-                        </ul>
-                    </ContextMenuButton>
-                </td>
+            </template>
+            <template #context-menu="{ item }">
+                <li>
+                    <RouterLink
+                        :to="{
+                            name: Routes.EventDetails,
+                            params: { year: item.start.getFullYear(), key: item.eventKey },
+                        }"
+                        class="context-menu-item"
+                    >
+                        <i class="fa-solid fa-search" />
+                        <span>Reise anzeigen</span>
+                    </RouterLink>
+                </li>
+                <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)">
+                    <RouterLink
+                        :to="{
+                            name: Routes.EventEdit,
+                            params: { year: item.start.getFullYear(), key: item.eventKey },
+                        }"
+                        class="context-menu-item"
+                    >
+                        <i class="fa-solid fa-edit" />
+                        <span>Reise bearbeiten</span>
+                    </RouterLink>
+                </li>
+                <li
+                    class="context-menu-item"
+                    :class="{ disabled: item.inPast || !item.waitingList }"
+                    @click="addUserToCrew(item)"
+                >
+                    <i class="fa-solid fa-user-plus" />
+                    <span>Zur Crew hinzufügen</span>
+                </li>
+                <li
+                    class="context-menu-item text-red-700"
+                    :class="{ disabled: item.inPast }"
+                    @click="deleteRegistration(item)"
+                >
+                    <i class="fa-solid fa-trash-alt" />
+                    <span>Anmeldung löschen</span>
+                </li>
             </template>
             <template #loading>
                 <tr v-for="i in 5" :key="i" class="animate-pulse">
@@ -138,7 +134,7 @@ import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, PositionKey, UserDetails } from '@/domain';
 import { Permission } from '@/domain';
-import { ContextMenuButton, VTable } from '@/ui/components/common';
+import { VTable } from '@/ui/components/common';
 import { useAuthUseCase, useErrorHandling, useEventAdministrationUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { useEventService } from '@/ui/composables/Domain';

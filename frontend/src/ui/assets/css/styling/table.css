@@ -64,7 +64,7 @@ table.v-table {
 }
 
 .v-table td {
-    @apply px-4 py-4 text-left;
+    @apply px-2 py-4 text-left md:px-4;
 }
 
 .v-table tbody td {
@@ -123,4 +123,12 @@ table.v-table {
 
 .interactive-table:not(.loading) .v-table tbody tr:not(.no-data):hover td:first-child::before {
     @apply bg-primary-100 bg-opacity-100;
+}
+
+.v-table tbody tr:not(.no-data).selected td {
+    @apply text-primary-700;
+}
+
+.v-table tbody tr:not(.no-data).selected td::before {
+    @apply bg-primary-700 bg-opacity-10 !important;
 }

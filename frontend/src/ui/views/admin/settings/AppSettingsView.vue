@@ -6,7 +6,7 @@
                     v-if="settings"
                     v-model="tab"
                     :tabs="tabs"
-                    class="sticky top-12 z-20 bg-primary-50 pt-8 xl:top-0"
+                    class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8"
                 >
                     <template #[Tab.GENERAL_SETTINGS]>
                         <div class="items-start gap-32 2xl:flex">

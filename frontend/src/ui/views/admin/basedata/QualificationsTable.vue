@@ -42,20 +42,16 @@
                     </div>
                 </div>
             </td>
-            <td class="w-0">
-                <ContextMenuButton class="px-4 py-2">
-                    <ul>
-                        <li class="context-menu-item" @click="editQualification(item)">
-                            <i class="fa-solid fa-pencil" />
-                            <span>Bearbeiten</span>
-                        </li>
-                        <li class="context-menu-item text-red-700" @click="deleteQualification(item)">
-                            <i class="fa-solid fa-trash-alt" />
-                            <span>Löschen</span>
-                        </li>
-                    </ul>
-                </ContextMenuButton>
-            </td>
+        </template>
+        <template #context-menu="{ item }">
+            <li class="context-menu-item" @click="editQualification(item)">
+                <i class="fa-solid fa-edit" />
+                <span>Bearbeiten</span>
+            </li>
+            <li class="context-menu-item text-red-700" @click="deleteQualification(item)">
+                <i class="fa-solid fa-trash-alt" />
+                <span>Löschen</span>
+            </li>
         </template>
     </VTable>
     <QualificationCreateDlg ref="createQualificationDialog" />
@@ -67,7 +63,7 @@ import { ref, watch } from 'vue';
 import type { Qualification } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
-import { ContextMenuButton, VTable } from '@/ui/components/common';
+import { VTable } from '@/ui/components/common';
 import { useQualificationsAdministrationUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions';
 import QualificationCreateDlg from '@/ui/views/admin/basedata/QualificationCreateDlg.vue';

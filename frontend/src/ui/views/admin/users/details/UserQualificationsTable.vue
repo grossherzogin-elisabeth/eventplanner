@@ -63,20 +63,16 @@
                     <span class="whitespace-nowrap font-semibold">Gültig</span>
                 </div>
             </td>
-            <td class="w-0">
-                <ContextMenuButton class="px-4 py-2">
-                    <ul>
-                        <li class="context-menu-item" @click="editUserQualification(item)">
-                            <i class="fa-solid fa-edit" />
-                            <span>Qualification bearbeiten</span>
-                        </li>
-                        <li class="context-menu-item text-red-700" @click="deleteUserQualification(item)">
-                            <i class="fa-solid fa-trash-alt" />
-                            <span>Qualifikation löschen</span>
-                        </li>
-                    </ul>
-                </ContextMenuButton>
-            </td>
+        </template>
+        <template #context-menu="{ item }">
+            <li class="context-menu-item" @click="editUserQualification(item)">
+                <i class="fa-solid fa-edit" />
+                <span>Qualification bearbeiten</span>
+            </li>
+            <li class="context-menu-item text-red-700" @click="deleteUserQualification(item)">
+                <i class="fa-solid fa-trash-alt" />
+                <span>Qualifikation löschen</span>
+            </li>
         </template>
     </VTable>
     <QualificationEditDlg ref="editQualificationDialog" />
@@ -92,7 +88,7 @@ import type {
     UserQualification,
 } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { ContextMenuButton, VTable } from '@/ui/components/common';
+import { VTable } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application';
 import { useUserService } from '@/ui/composables/Domain';
 import { usePositions } from '@/ui/composables/Positions.ts';

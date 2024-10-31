@@ -27,7 +27,7 @@
             </div>
         </template>
         <template #content>
-            <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-primary-50 pt-8 xl:top-0">
+            <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event" class="-mx-4">

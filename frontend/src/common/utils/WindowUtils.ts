@@ -27,3 +27,7 @@ export function enableScrolling(): void {
     const scrollY = parseInt(document.documentElement.getAttribute('scrollTop') || '0', 10);
     window.scrollTo(0, scrollY);
 }
+
+export function isTouchDevice() {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+}

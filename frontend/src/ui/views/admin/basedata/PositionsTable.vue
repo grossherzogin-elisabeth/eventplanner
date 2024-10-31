@@ -32,20 +32,16 @@
                     {{ item.name }}
                 </span>
             </td>
-            <td class="w-0">
-                <ContextMenuButton class="px-4 py-2">
-                    <ul>
-                        <li class="context-menu-item" @click="editPosition(item)">
-                            <i class="fa-solid fa-pencil" />
-                            <span>Bearbeiten</span>
-                        </li>
-                        <li class="context-menu-item text-red-700" @click="deletePosition(item)">
-                            <i class="fa-solid fa-trash-alt" />
-                            <span>Löschen</span>
-                        </li>
-                    </ul>
-                </ContextMenuButton>
-            </td>
+        </template>
+        <template #context-menu="{ item }">
+            <li class="context-menu-item" @click="editPosition(item)">
+                <i class="fa-solid fa-pencil" />
+                <span>Bearbeiten</span>
+            </li>
+            <li class="context-menu-item text-red-700" @click="deletePosition(item)">
+                <i class="fa-solid fa-trash-alt" />
+                <span>Löschen</span>
+            </li>
         </template>
     </VTable>
     <PositionCreateDlg ref="createPositionDialog" />
@@ -57,7 +53,7 @@ import { ref, watch } from 'vue';
 import type { Position } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
-import { ContextMenuButton, VTable } from '@/ui/components/common';
+import { VTable } from '@/ui/components/common';
 import { usePositionAdministrationUseCase } from '@/ui/composables/Application';
 import PositionCreateDlg from '@/ui/views/admin/basedata/PositionCreateDlg.vue';
 import PositionEditDlg from '@/ui/views/admin/basedata/PositionEditDlg.vue';
