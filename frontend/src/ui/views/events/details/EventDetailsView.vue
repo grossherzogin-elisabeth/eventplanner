@@ -301,7 +301,8 @@
             </li>
             <li
                 v-if="signedInUser.permissions.includes(Permission.READ_USER_DETAILS)"
-                class="context-menu-item disabled"
+                class="context-menu-item"
+                @click="eventUseCase.downloadImoList(event)"
             >
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>

@@ -8,6 +8,7 @@ import type {
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { formatIcsDate } from '@/common/date';
+import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
 import type { Event, EventKey, EventService, PositionKey, RegistrationService, UserKey } from '@/domain';
 import { EventState, EventType, SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
@@ -274,6 +275,11 @@ export class EventUseCase {
         return savedEvent;
     }
 
+    public async downloadImoList(event: Event): Promise<void> {
+        const file = await this.eventRepository.downloadImoList(event);
+        saveBlobToFile(`${event.name.replace('s', '_')}_imolist.txt`, file);
+    }
+
     public downloadCalendarEntry(event: Event): void {
         // create ics file
         const lines = [
@@ -298,19 +304,6 @@ export class EventUseCase {
             'END:VCALENDAR',
         ];
         // download ics file
-        try {
-            const downloadElement = document.createElement('a');
-            downloadElement.setAttribute(
-                'href',
-                'data:text/plain;charset=utf-8,' + encodeURIComponent(lines.join('\n'))
-            );
-            downloadElement.setAttribute('download', 'Event.ics');
-            downloadElement.style.display = 'none';
-            document.body.appendChild(downloadElement);
-            downloadElement.click();
-            document.body.removeChild(document);
-        } catch (e) {
-            console.error(e);
-        }
+        saveStringToFile('Event.ics', lines.join('\n'));
     }
 }

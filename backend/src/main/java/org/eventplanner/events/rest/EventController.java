@@ -3,15 +3,19 @@ package org.eventplanner.events.rest;
 import org.eventplanner.events.EventUseCase;
 import org.eventplanner.events.rest.dto.*;
 import org.eventplanner.events.values.EventKey;
-import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.users.UserUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -71,5 +75,16 @@ public class EventController {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         eventUseCase.deleteEvent(signedInUser, new EventKey(eventKey));
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/{eventKey}/imo-list")
+    public ResponseEntity<Resource> downloadImoList(@PathVariable("eventKey") String eventKey) throws IOException {
+        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var file = eventUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
+        var resource = new InputStreamResource(new FileInputStream(file));
+        return ResponseEntity.ok()
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }
