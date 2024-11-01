@@ -1,6 +1,12 @@
 <template>
     <div class="hidden lg:block" :class="$attrs.class">
-        <ContextMenuButton class="btn-secondary h-full" anchor-align-y="bottom">
+        <ContextMenuButton
+            class="btn-secondary h-full"
+            anchor-align-y="bottom"
+            anchor-align-x="left"
+            dropdown-position-x="right"
+            dropdown-position-y="top"
+        >
             <slot></slot>
         </ContextMenuButton>
     </div>

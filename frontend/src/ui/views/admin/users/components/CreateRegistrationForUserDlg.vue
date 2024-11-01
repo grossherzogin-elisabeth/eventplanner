@@ -43,7 +43,7 @@
                 <span>Abbrechen</span>
             </button>
             <AsyncButton class="btn-primary" :action="submit" :disabled="validation.disableSubmit.value">
-                <template #label>Anmeldung speichern</template>
+                <template #label>Speichern</template>
             </AsyncButton>
         </template>
     </VDialog>

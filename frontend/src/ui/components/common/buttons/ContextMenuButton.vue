@@ -16,7 +16,7 @@
         :max-height="props.maxHeight"
         @close="open = false"
     >
-        <div class="mt-2 rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl" @click="open = false">
+        <div class="rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl" @click="open = false">
             <slot />
         </div>
     </VDropdownWrapper>

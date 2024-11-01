@@ -84,6 +84,7 @@ async function updatePosition(): Promise<void> {
     // render dropdown and then move it up, so everything is visible
     await nextTick();
     moveIntoVisibleArea();
+    await nextTick();
 }
 
 function updatePositionToAnchor(): void {
@@ -131,6 +132,7 @@ function applyDropdownAlignment(): void {
     if (!dropdown.value) {
         return;
     }
+    const anchorRect = props.anchor?.getBoundingClientRect();
     const dropdownRect = dropdown.value.getBoundingClientRect();
     switch (props.dropdownPositionX) {
         case 'left':
@@ -139,18 +141,32 @@ function applyDropdownAlignment(): void {
         case 'center':
             dropdownStyle.value.left = `${dropdownRect.left - dropdownRect.width / 2}px`;
             break;
-        case 'right':
+        case 'right': // default
         default:
     }
 
     switch (props.dropdownPositionY) {
         case 'top':
-            dropdownStyle.value.top = `${dropdownRect.top - dropdownRect.height}px`;
+            if (anchorRect) {
+                switch (props.anchorAlignY) {
+                    case 'top':
+                        dropdownStyle.value.top = `${anchorRect.top - dropdownRect.height}px`;
+                        break;
+                    case 'center':
+                        dropdownStyle.value.top = `${anchorRect.top + anchorRect.height / 2 - dropdownRect.height}px`;
+                        break;
+                    case 'bottom':
+                        dropdownStyle.value.top = `${anchorRect.bottom - dropdownRect.height}px`;
+                        break;
+                }
+            } else {
+                dropdownStyle.value.top = `${dropdownRect.top - dropdownRect.height}px`;
+            }
             break;
         case 'center':
             dropdownStyle.value.top = `${dropdownRect.top - dropdownRect.height / 2}px`;
             break;
-        case 'bottom':
+        case 'bottom': // default
         default:
     }
 }
@@ -159,15 +175,25 @@ function moveIntoVisibleArea(): void {
     if (!dropdown.value) {
         return;
     }
-    const windowPadding = 5;
+    const windowPadding = 10;
     const dropdownRect = dropdown.value.getBoundingClientRect();
-    if (dropdownRect.y + dropdownRect.height + windowPadding > window.innerHeight) {
+    if (dropdownRect.top < windowPadding) {
+        dropdownStyle.value = {
+            ...dropdownStyle.value,
+            top: `${windowPadding}px`,
+        };
+    } else if (dropdownRect.bottom + windowPadding > window.innerHeight) {
         dropdownStyle.value = {
             ...dropdownStyle.value,
             top: `${window.innerHeight - dropdownRect.height - windowPadding}px`,
         };
     }
-    if (dropdownRect.x + dropdownRect.width + windowPadding > window.innerWidth) {
+    if (dropdownRect.left < windowPadding) {
+        dropdownStyle.value = {
+            ...dropdownStyle.value,
+            left: `${windowPadding}px`,
+        };
+    } else if (dropdownRect.right + windowPadding > window.innerWidth) {
         dropdownStyle.value = {
             ...dropdownStyle.value,
             left: `${window.innerWidth - dropdownRect.width - windowPadding}px`,
