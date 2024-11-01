@@ -8,8 +8,12 @@
         >
             <template #row="{ item }">
                 <td class="w-0 text-xl opacity-50">
-                    <i v-if="!item.waitingList" class="fa-solid fa-check-circle text-green-700"></i>
-                    <i v-else class="fa-solid fa-hourglass-half text-gray-500"></i>
+                    <span v-if="!item.waitingList">
+                        <i class="fa-solid fa-check-circle text-green-700"></i>
+                    </span>
+                    <span v-else>
+                        <i class="fa-solid fa-hourglass-half text-gray-500"></i>
+                    </span>
                 </td>
                 <td class="w-1/2 max-w-[65vw] border-none font-semibold">
                     <div class="mb-1 md:flex">
@@ -62,11 +66,7 @@
                         <span>Reise bearbeiten</span>
                     </RouterLink>
                 </li>
-                <li
-                    class="context-menu-item"
-                    :class="{ disabled: item.inPast || !item.waitingList }"
-                    @click="addUserToCrew(item)"
-                >
+                <li v-if="!item.inPast && item.waitingList" class="context-menu-item" @click="addUserToCrew(item)">
                     <i class="fa-solid fa-user-plus" />
                     <span>Zur Crew hinzufügen</span>
                 </li>
@@ -132,12 +132,13 @@ import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, Position, PositionKey, UserDetails } from '@/domain';
+import type { Event, Position, UserDetails } from '@/domain';
 import { Permission } from '@/domain';
 import { VTable } from '@/ui/components/common';
 import { useAuthUseCase, useErrorHandling, useEventAdministrationUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { useEventService } from '@/ui/composables/Domain';
+import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes';
 
 export interface EventTableViewItem {
@@ -157,11 +158,13 @@ export interface EventTableViewItem {
 
 interface Props {
     events?: Event[];
-    positions: Map<PositionKey, Position>;
     user: UserDetails;
 }
 
+type Emits = (e: 'update:events', value: Event[]) => void;
+
 const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 const router = useRouter();
 const authUseCase = useAuthUseCase();
@@ -169,13 +172,14 @@ const eventService = useEventService();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const errorHandling = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
+const positions = usePositions();
 
 const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
     return props.events
         ?.map((evt) => {
             const registration = evt.registrations.find((it) => it.userKey === props.user.key);
             const slot = evt.slots.find((it) => it.assignedRegistrationKey === registration?.key);
-            const position = props.positions.get(registration?.positionKey || '');
+            const position = positions.get(registration?.positionKey || '');
             if (position) {
                 return {
                     eventKey: evt.key,
@@ -226,11 +230,10 @@ async function deleteRegistration(item: EventTableViewItem): Promise<void> {
         }
         event = eventService.cancelUserRegistration(event, props.user.key);
         await eventAdministrationUseCase.updateEvent(event.key, event);
-        if (item.waitingListCount) {
-            item.waitingListCount = item.waitingListCount - 1;
-        } else {
-            item.crewCount = item.crewCount - 1;
-        }
+        const updatedEvents = props.events;
+        const index = updatedEvents.findIndex((it) => it.key === item.eventKey);
+        updatedEvents.splice(index, 1);
+        emit('update:events', updatedEvents);
     } catch (e) {
         errorHandling.handleRawError(e);
     }

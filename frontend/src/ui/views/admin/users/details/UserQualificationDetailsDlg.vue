@@ -14,9 +14,6 @@
                         :disabled="editing"
                     />
                 </div>
-                <!--                <div class="-mx-0 mb-4 mt-2">-->
-                <!--                    <VInputCheckBox label="Qualifikation muss nicht erneuert werden" />-->
-                <!--                </div>-->
                 <div v-if="selectedQualification?.expires" class="-mx-4 mb-2">
                     <VInputLabel>Gültig bis</VInputLabel>
                     <VInputDate v-model="userQualification.expiresAt" />

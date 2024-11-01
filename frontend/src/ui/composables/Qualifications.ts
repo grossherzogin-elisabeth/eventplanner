@@ -3,14 +3,14 @@ import type { InputSelectOption, Qualification, QualificationKey } from '@/domai
 import { useQualificationsUseCase } from '@/ui/composables/Application';
 
 export function useQualifications() {
-    const qualifications = ref<Map<QualificationKey, Qualification>>(new Map<QualificationKey, Qualification>());
+    const map = ref<Map<QualificationKey, Qualification>>(new Map<QualificationKey, Qualification>());
 
     const qualificationsUseCase = useQualificationsUseCase();
 
     async function update(): Promise<void> {
         const pos = await qualificationsUseCase.getQualifications();
-        qualifications.value.clear();
-        pos.forEach((p) => qualifications.value.set(p.key, p));
+        map.value.clear();
+        pos.forEach((p) => map.value.set(p.key, p));
     }
 
     const options = computed<InputSelectOption<string | undefined>[]>(() => {
@@ -28,12 +28,12 @@ export function useQualifications() {
     });
 
     const all = computed<Qualification[]>(() => {
-        return [...qualifications.value.values()].sort((a, b) => a.name.localeCompare(b.name));
+        return [...map.value.values()].sort((a, b) => a.name.localeCompare(b.name));
     });
 
     function get(qualificationKey: QualificationKey): Qualification {
         return (
-            qualifications.value.get(qualificationKey) || {
+            map.value.get(qualificationKey) || {
                 key: qualificationKey,
                 name: qualificationKey,
                 icon: '',
@@ -46,5 +46,5 @@ export function useQualifications() {
 
     update();
 
-    return { qualifications, options, optionsIncludingNone, get, update, all };
+    return { map, options, optionsIncludingNone, get, update, all };
 }

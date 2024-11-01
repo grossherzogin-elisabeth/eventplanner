@@ -75,24 +75,18 @@
             </li>
         </template>
     </VTable>
-    <QualificationEditDlg ref="editQualificationDialog" />
+    <UserQualificationDetailsDlg ref="editUserQualificationDialog" />
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
-import type {
-    Qualification,
-    QualificationKey,
-    ResolvedUserQualification,
-    UserDetails,
-    UserQualification,
-} from '@/domain';
+import type { ResolvedUserQualification, UserDetails, UserQualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application';
 import { useUserService } from '@/ui/composables/Domain';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import QualificationEditDlg from '@/ui/views/admin/users/details/QualificationEditDlg.vue';
+import { useQualifications } from '@/ui/composables/Qualifications.ts';
+import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';
 
 interface Props {
     modelValue: UserDetails;
@@ -103,23 +97,15 @@ type Emit = (e: 'update:modelValue', user: UserDetails) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
-const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
 const positions = usePositions();
+const qualifications = useQualifications();
 
-const qualifications = ref<Map<QualificationKey, Qualification> | undefined>(undefined);
-const editQualificationDialog = ref<Dialog<UserQualification, UserQualification> | null>(null);
+const editUserQualificationDialog = ref<Dialog<UserQualification, UserQualification | undefined> | null>(null);
 
 const userQualifications = computed<ResolvedUserQualification[] | undefined>(() => {
-    if (qualifications.value === undefined) {
-        return undefined;
-    }
-    return usersService.resolveQualifications(props.modelValue, qualifications.value);
+    return usersService.resolveQualifications(props.modelValue, qualifications.map.value);
 });
-
-function init(): void {
-    fetchQualifications();
-}
 
 function deleteUserQualification(userQualification: ResolvedUserQualification): void {
     const user = props.modelValue;
@@ -129,7 +115,7 @@ function deleteUserQualification(userQualification: ResolvedUserQualification): 
 
 async function editUserQualification(userQualification: ResolvedUserQualification): Promise<void> {
     const user = props.modelValue;
-    const editedQualification = await editQualificationDialog.value?.open({
+    const editedQualification = await editUserQualificationDialog.value?.open({
         qualificationKey: userQualification.key,
         note: userQualification.note,
         expiresAt: userQualification.expiresAt,
@@ -147,10 +133,4 @@ async function editUserQualification(userQualification: ResolvedUserQualificatio
         emit('update:modelValue', user);
     }
 }
-
-async function fetchQualifications(): Promise<void> {
-    qualifications.value = await usersUseCase.resolveQualifications();
-}
-
-init();
 </script>

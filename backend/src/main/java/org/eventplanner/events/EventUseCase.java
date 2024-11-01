@@ -5,6 +5,7 @@ import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
+import org.eventplanner.events.service.EventService;
 import org.eventplanner.events.spec.CreateEventSpec;
 import org.eventplanner.events.spec.CreateRegistrationSpec;
 import org.eventplanner.events.spec.UpdateEventSpec;
@@ -34,15 +35,18 @@ public class EventUseCase {
     private final EventRepository eventRepository;
     private final NotificationService notificationService;
     private final UserService userService;
+    private final EventService eventService;
 
     public EventUseCase(
-        @Autowired EventRepository eventRepository,
-        @Autowired NotificationService notificationService,
-        @Autowired UserService userService
+            @Autowired EventRepository eventRepository,
+            @Autowired NotificationService notificationService,
+            @Autowired UserService userService,
+            @Autowired EventService eventService
     ) {
         this.eventRepository = eventRepository;
         this.notificationService = notificationService;
         this.userService = userService;
+        this.eventService = eventService;
     }
 
     public @NonNull List<Event> getEvents(@NonNull SignedInUser signedInUser, int year) {
@@ -53,7 +57,7 @@ public class EventUseCase {
             throw new IllegalArgumentException("Invalid year");
         }
 
-        return this.eventRepository.findAllByYear(year);
+        return this.eventRepository.findAllByYear(year).stream().map(eventService::removeInvalidSlotAssignments).toList();
     }
 
     public @NonNull Event getEventByKey(@NonNull SignedInUser signedInUser, EventKey key) {
@@ -122,7 +126,7 @@ public class EventUseCase {
             applyNullable(spec.slots(), event::setSlots);
         }
 
-        var updatedEvent = this.eventRepository.update(event);
+        var updatedEvent = this.eventRepository.update(this.eventService.removeInvalidSlotAssignments(event));
         usersAddedToCrew.forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
         usersRemovedFromCrew.forEach(user -> notificationService.sendRemovedFromCrewNotification(user, updatedEvent));
         return updatedEvent;
@@ -186,7 +190,14 @@ public class EventUseCase {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
         }
 
-        var hasAssignedSlot = event.getSlots().stream().anyMatch(slot -> registration.getKey().equals(slot.getAssignedRegistration()));
+        var hasAssignedSlot = false;
+        for (Slot slot : event.getSlots()) {
+            if (registrationKey.equals(slot.getAssignedRegistration())) {
+                slot.setAssignedRegistration(null);
+                hasAssignedSlot = true;
+            }
+        }
+
         event.removeRegistration(registrationKey);
         event = this.eventRepository.update(event);
 

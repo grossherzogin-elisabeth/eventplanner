@@ -48,7 +48,7 @@ export class EventService {
             throw new Error('Failed to resolve user registration');
         }
         slot.assignedRegistrationKey = registration.key;
-        event.assignedUserCount++;
+        event.assignedUserCount = event.slots.filter((it) => it.assignedRegistrationKey).length;
         return this.optimizeSlots(event);
     }
 
@@ -62,7 +62,7 @@ export class EventService {
             throw new Error('Failed to resolve guest registration');
         }
         slot.assignedRegistrationKey = registration.key;
-        event.assignedUserCount++;
+        event.assignedUserCount = event.slots.filter((it) => it.assignedRegistrationKey).length;
         return this.optimizeSlots(event);
     }
 
@@ -107,7 +107,7 @@ export class EventService {
      * @param event
      */
     private optimizeSlots(event: Event): Event {
-        this.debugSlots(event);
+        // this.debugSlots(event);
         for (let i = 0; i < event.slots.length; i++) {
             const slot = event.slots[i];
             if (!slot.assignedRegistrationKey) {
@@ -129,7 +129,7 @@ export class EventService {
                 }
             }
         }
-        this.debugSlots(event);
+        // this.debugSlots(event);
         return event;
     }
 

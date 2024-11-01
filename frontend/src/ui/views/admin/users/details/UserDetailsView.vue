@@ -27,10 +27,10 @@
                                     <template v-else>Reisen {{ year }}</template>
                                 </h2>
                                 <UserEventsTable
-                                    v-if="user && positions"
+                                    v-if="user"
                                     :events="events"
-                                    :positions="positions"
                                     :user="user"
+                                    @update:events="year === 0 ? fetchUserFutureEvents() : fetchUserEventsOfYear(year)"
                                 />
                                 <div class="mb-4 mt-8 flex items-center justify-center">
                                     <div v-if="eventsLoadedUntilYear === year">
@@ -76,7 +76,7 @@
             <template #secondary-buttons>
                 <button v-if="tab === Tab.USER_EVENTS" class="btn-secondary" @click="createRegistration()">
                     <i class="fa-solid fa-user-plus"></i>
-                    <span>Reise hinzufügen</span>
+                    <span>Anmeldung hinzufügen</span>
                 </button>
                 <button v-else-if="tab === Tab.USER_CERTIFICATES" class="btn-secondary" @click="addUserQualification()">
                     <i class="fa-solid fa-file-circle-plus"></i>
@@ -105,7 +105,7 @@
                 </li>
                 <li class="context-menu-item" @click="createRegistration()">
                     <i class="fa-solid fa-user-plus" />
-                    <span>Reise hinzufügen</span>
+                    <span>Anmeldung hinzufügen</span>
                 </li>
                 <li class="context-menu-item" @click="addUserQualification()">
                     <i class="fa-solid fa-file-circle-plus" />
@@ -118,14 +118,14 @@
             </template>
         </DetailsPage>
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
-        <QualificationEditDlg ref="addQualificationDialog" />
+        <UserQualificationDetailsDlg ref="addUserQualificationDialog" />
     </div>
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { deepCopy } from '@/common';
-import type { Event, Position, PositionKey, UserDetails, UserQualification } from '@/domain';
+import type { Event, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VTabs } from '@/ui/components/common';
@@ -135,16 +135,15 @@ import {
     useErrorHandling,
     useEventUseCase,
     useUserAdministrationUseCase,
-    useUsersUseCase,
 } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationForUserDlg from '@/ui/views/admin/users/components/CreateRegistrationForUserDlg.vue';
-import QualificationEditDlg from '@/ui/views/admin/users/details/QualificationEditDlg.vue';
-import UserContactForm from '@/ui/views/admin/users/details/UserContactForm.vue';
-import UserDataForm from '@/ui/views/admin/users/details/UserDataForm.vue';
-import UserEventsTable from '@/ui/views/admin/users/details/UserEventsTable.vue';
-import UserQualificationsTable from '@/ui/views/admin/users/details/UserQualificationsTable.vue';
-import UserRolesTable from '@/ui/views/admin/users/details/UserRolesTable.vue';
+import UserContactForm from './UserContactForm.vue';
+import UserDataForm from './UserDataForm.vue';
+import UserEventsTable from './UserEventsTable.vue';
+import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';
+import UserQualificationsTable from './UserQualificationsTable.vue';
+import UserRolesTable from './UserRolesTable.vue';
 
 enum Tab {
     USER_DATA = 'app.user-details.tab.data',
@@ -160,7 +159,6 @@ const emit = defineEmits<RouteEmits>();
 
 const route = useRoute();
 const userAdministrationUseCase = useUserAdministrationUseCase();
-const usersUseCase = useUsersUseCase();
 const eventsUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
 const errorHandlingUseCase = useErrorHandling();
@@ -171,16 +169,14 @@ const tab = ref<Tab>(Tab.USER_EVENTS);
 const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);
 const eventsByYear = ref<Map<number, Event[] | undefined>>(new Map<number, Event[] | undefined>());
-const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const createRegistrationForUserDialog = ref<Dialog<UserDetails> | null>(null);
-const addQualificationDialog = ref<Dialog<UserQualification | undefined, UserQualification | undefined> | null>(null);
+const addUserQualificationDialog = ref<Dialog<void, UserQualification | undefined> | null>(null);
 const eventsLoadedUntilYear = ref<number>(0);
 
 const userKey = computed<string>(() => (route.params.key as string) || '');
 
 function init(): void {
     fetchUser();
-    fetchPositions();
     fetchUserFutureEvents();
 }
 
@@ -217,10 +213,6 @@ async function fetchUserEventsOfYear(year: number): Promise<void> {
     eventsByYear.value.set(year, events);
 }
 
-async function fetchPositions(): Promise<void> {
-    positions.value = await usersUseCase.resolvePositionNames();
-}
-
 async function save(): Promise<void> {
     if (userOriginal.value && user.value) {
         try {
@@ -255,7 +247,7 @@ async function createRegistration() {
 }
 
 async function addUserQualification(): Promise<void> {
-    const result = await addQualificationDialog.value?.open();
+    const result = await addUserQualificationDialog.value?.open();
     if (result && user.value) {
         if (!user.value.qualifications) {
             user.value.qualifications = [];
