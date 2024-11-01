@@ -22,15 +22,13 @@
                 </div>
             </div>
         </template>
-        <template #buttons="{ submit, close }">
-            <button class="btn-secondary" @click="close">
-                <i class="fa-solid fa-xmark"></i>
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <AsyncButton class="btn-primary" :action="() => submit()">
-                <template #icon><i class="fa-solid fa-check"></i></template>
-                <template #label>Anmelden</template>
-            </AsyncButton>
+            <button class="btn-primary" @click="submit">
+                <span>Anmelden</span>
+            </button>
         </template>
     </VDialog>
 </template>
@@ -38,7 +36,6 @@
 import { computed, ref } from 'vue';
 import type { InputSelectOption, PositionKey, UserDetails } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { AsyncButton } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
 import { VDialog, VInputLabel } from '@/ui/components/common';
@@ -48,9 +45,8 @@ import { usePositions } from '@/ui/composables/Positions';
 const positions = usePositions();
 const usersUseCase = useUsersUseCase();
 
+const dlg = ref<Dialog<void, PositionKey | undefined> | null>(null);
 const user = ref<UserDetails | null>(null);
-
-const dlg = ref<Dialog<void, PositionKey> | null>(null);
 const position = ref<PositionKey | undefined>(undefined);
 const saveAsDefaultPosition = ref<boolean>(false);
 
@@ -61,22 +57,32 @@ const availablePositions = computed<InputSelectOption<PositionKey>[]>(() => {
         .filter((it) => user.value?.positionKeys.includes(it.value));
 });
 
-async function open(): Promise<PositionKey> {
+async function open(): Promise<PositionKey | undefined> {
     user.value = await usersUseCase.getUserDetailsForSignedInUser();
     position.value = user.value.positionKeys[0];
 
-    await dlg.value?.open();
-
-    if (saveAsDefaultPosition.value) {
-        await usersUseCase.saveUserSettings({ preferredPosition: position.value });
+    const result = await dlg.value?.open().catch(() => undefined);
+    if (!result) {
+        return undefined;
     }
-    return position.value;
+    if (saveAsDefaultPosition.value) {
+        await usersUseCase.saveUserSettings({ preferredPosition: result });
+    }
+    return result;
 }
 
-defineExpose<Dialog<void, PositionKey>>({
+function submit(): void {
+    dlg.value?.submit(position.value);
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
+}
+
+defineExpose<Dialog<void, PositionKey | undefined>>({
     open: () => open(),
     close: () => dlg.value?.reject(),
-    submit: (result: PositionKey) => dlg.value?.submit(result),
+    submit: (result?: PositionKey) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
 </script>

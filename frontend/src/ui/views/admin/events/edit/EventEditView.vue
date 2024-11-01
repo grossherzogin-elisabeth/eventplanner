@@ -157,9 +157,13 @@
                     <i class="fa-solid fa-user-plus" />
                     <span>Anmeldung hinzufügen</span>
                 </button>
-                <button v-if="tab === Tab.EVENT_SLOTS" class="btn-secondary" @click="addSlot()">
-                    <i class="fa-regular fa-square-plus" />
+                <button v-else-if="tab === Tab.EVENT_SLOTS" class="btn-secondary" @click="addSlot()">
+                    <i class="fa-solid fa-plus" />
                     <span>Slot hinzufügen</span>
+                </button>
+                <button v-else-if="tab === Tab.EVENT_LOCATIONS" class="btn-secondary" @click="addLocation()">
+                    <i class="fa-solid fa-plus" />
+                    <span>Reiseabschnitt hinzufügen</span>
                 </button>
             </div>
         </template>
@@ -203,14 +207,15 @@
         </template>
     </DetailsPage>
     <CreateRegistrationDlg ref="createRegistrationDialog" />
-    <SlotCreateDlg ref="createSlotDialog" />
+    <SlotEditDlg ref="createSlotDialog" />
     <EventCancelDlg ref="cancelEventDialog" />
+    <LocationEditDlg ref="createLocationDialog" />
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { Event, Slot } from '@/domain';
+import type { Event, Location, Slot } from '@/domain';
 import { EventState, EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import {
@@ -232,10 +237,11 @@ import { useEventService } from '@/ui/composables/Domain';
 import { useValidation } from '@/ui/composables/Validation';
 import { Routes } from '@/ui/views/Routes';
 import CreateRegistrationDlg from '@/ui/views/admin/events/components/CreateRegistrationDlg.vue';
-import LocationsTable from '@/ui/views/admin/events/edit/LocationsTable.vue';
-import SlotsTable from '@/ui/views/admin/events/edit/SlotsTable.vue';
 import CrewEditor from './CrewEditor.vue';
-import SlotCreateDlg from './SlotCreateDlg.vue';
+import LocationEditDlg from './LocationEditDlg.vue';
+import LocationsTable from './LocationsTable.vue';
+import SlotEditDlg from './SlotEditDlg.vue';
+import SlotsTable from './SlotsTable.vue';
 
 enum Tab {
     EVENT_DATA = 'app.edit-event.tab.data',
@@ -262,6 +268,7 @@ const validation = useValidation(event, (evt) => (evt === null ? {} : eventServi
 const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_LOCATIONS, Tab.EVENT_SLOTS];
 const tab = ref<Tab>(Tab.EVENT_POSITIONS);
 
+const createLocationDialog = ref<Dialog<void, Location | undefined> | null>(null);
 const createSlotDialog = ref<Dialog<void, Slot | undefined> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event, Event> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string | undefined> | null>(null);
@@ -301,6 +308,14 @@ async function cancelEvent(): Promise<void> {
 async function addRegistration(): Promise<void> {
     if (createRegistrationDialog.value && event.value) {
         await createRegistrationDialog.value.open(event.value).catch(() => console.debug('dialog was canceled'));
+    }
+}
+
+async function addLocation(): Promise<void> {
+    const newLocation = await createLocationDialog.value?.open();
+    if (newLocation && event.value) {
+        newLocation.order = event.value.locations.length + 1;
+        event.value.locations.push(newLocation);
     }
 }
 

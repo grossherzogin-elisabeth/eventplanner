@@ -1,34 +1,34 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Anmeldung für {{ selectedUser?.firstName }} hinzufügen</h1>
+            <h1>Anmeldung für {{ registration?.user.firstName }} hinzufügen</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-16">
+            <div v-if="registration" class="p-8 lg:px-16">
                 <p class="mb-8 max-w-lg">
-                    {{ selectedUser?.firstName }} wird zur Warteliste der ausgewählten Reise hinzugefügt. Wenn
-                    {{ selectedUser?.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die Reise noch
-                    manuell bearbeiten.
+                    {{ registration.user.firstName }} wird zur Warteliste der ausgewählten Reise hinzugefügt. Wenn
+                    {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die Reise
+                    noch manuell bearbeiten.
                 </p>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Reise</VInputLabel>
-                    <VInputCombobox v-model="selectedEventKey" :options="eventOptions" />
+                    <VInputCombobox v-model="registration.eventKey" :options="eventOptions" />
                 </div>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Position</VInputLabel>
-                    <VInputCombobox v-model="selectedPositionKey" :options="positionOptions" />
+                    <VInputCombobox v-model="registration.positionKey" :options="positions.options.value" />
                 </div>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Notiz</VInputLabel>
-                    <VInputTextArea />
+                    <VInputTextArea v-model="registration.note" />
                 </div>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" :disabled="!isValid" @click="submit">
+            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>Anmeldung hinzufügen</span>
             </button>
         </template>
@@ -39,31 +39,47 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, User } from '@/domain';
-import { type InputSelectOption, type Position, type PositionKey } from '@/domain';
+import type { Event, EventKey, InputSelectOption, PositionKey, User, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputTextArea } from '@/ui/components/common';
-import {
-    useErrorHandling,
-    useEventAdministrationUseCase,
-    useEventUseCase,
-    useUsersUseCase,
-} from '@/ui/composables/Application';
+import { useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
+import { usePositions } from '@/ui/composables/Positions.ts';
+import { useValidation } from '@/ui/composables/Validation.ts';
 
-const usersUseCase = useUsersUseCase();
+interface UserRegistration {
+    user: User;
+    eventKey?: EventKey;
+    positionKey: PositionKey;
+    note: string;
+}
+
 const eventsUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
-const errorHandling = useErrorHandling();
 const i18n = useI18n();
+const positions = usePositions();
 
-const dlg = ref<Dialog<User> | null>(null);
+const dlg = ref<Dialog<User, UserRegistration | undefined> | null>(null);
 const events = ref<Event[]>([]);
-const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const hiddenEvents = ref<string[]>([]);
 
-const selectedUser = ref<User | null>(null);
-const selectedEventKey = ref<string | null>(null);
-const selectedPositionKey = ref<string | null>(null);
+const registration = ref<UserRegistration | undefined>(undefined);
+
+const validation = useValidation(registration, (value) => {
+    // TODO extract to service
+    const errors: Record<string, ValidationHint[]> = {};
+    if (!value) {
+        return errors;
+    }
+    if (!value.positionKey) {
+        errors.positionKey = errors.positionKey || [];
+        errors.positionKey.push({ key: 'Bitte wähle eine Position', params: {} });
+    }
+    if (!value.eventKey) {
+        errors.eventKey = errors.eventKey || [];
+        errors.eventKey.push({ key: 'Bitte wähle eine Reise', params: {} });
+    }
+    return errors;
+});
 
 const eventOptions = computed<InputSelectOption<string | undefined>[]>(() => {
     const options: InputSelectOption<string | undefined>[] = events.value
@@ -75,54 +91,47 @@ const eventOptions = computed<InputSelectOption<string | undefined>[]>(() => {
     return options;
 });
 
-const positionOptions = computed<InputSelectOption<string | undefined>[]>(() => {
-    const options: InputSelectOption<string | undefined>[] = [...positions.value.values()]
-        .filter((it) => selectedUser.value?.positionKeys.includes(it.key))
-        .sort((a, b) => b.prio - a.prio)
-        .map((it) => ({
-            label: it.name,
-            value: it.key,
-        }));
-    return options;
-});
-
-const isValid = computed<boolean>(() => {
-    return selectedEventKey.value !== null && selectedPositionKey.value !== null;
-});
-
 async function init(): Promise<void> {
     await fetchEvents();
-    await fetchPositions();
 }
 
 async function fetchEvents(): Promise<void> {
     events.value = await eventsUseCase.getFutureEvents();
 }
 
-async function fetchPositions(): Promise<void> {
-    positions.value = await usersUseCase.resolvePositionNames();
-}
-
 async function open(user: User): Promise<void> {
-    selectedUser.value = user;
-    selectedPositionKey.value = user.positionKeys[0];
+    validation.reset();
+    registration.value = {
+        user: user,
+        positionKey: user.positionKeys[0],
+        eventKey: undefined,
+        note: '',
+    };
 
     const eventsByUser = await eventsUseCase.getFutureEventsByUser(user.key);
     hiddenEvents.value = eventsByUser.map((it) => it.key);
 
-    dlg.value?.open().then(async () => {
-        if (selectedEventKey.value && selectedPositionKey.value) {
-            try {
-                await eventAdministrationUseCase.addRegistration(selectedEventKey.value, {
-                    key: '',
-                    userKey: user.key,
-                    positionKey: selectedPositionKey.value,
-                });
-            } catch (e) {
-                errorHandling.handleRawError(e);
-            }
-        }
-    });
+    const result = await dlg.value?.open().catch(() => undefined);
+    if (result && result.eventKey) {
+        await eventAdministrationUseCase.addRegistration(result.eventKey, {
+            key: '',
+            userKey: result.user.key,
+            positionKey: result.positionKey,
+            note: result.note,
+        });
+    }
+}
+
+function submit() {
+    if (validation.isValid.value) {
+        dlg.value?.submit(registration.value);
+    } else {
+        validation.showErrors.value = true;
+    }
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
 }
 
 defineExpose<Dialog<User, void>>({

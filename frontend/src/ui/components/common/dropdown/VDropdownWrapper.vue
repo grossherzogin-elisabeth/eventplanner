@@ -11,6 +11,8 @@
             class="dropdown-wrapper"
             :style="dropdownStyle"
             :class="blockAllInput ? `pointer-events-none ${$attrs.class}` : $attrs.class"
+            @click.stop="close"
+            @mouseup="close"
         >
             <slot></slot>
         </div>
@@ -174,7 +176,10 @@ function moveIntoVisibleArea(): void {
 }
 
 function close() {
-    emit('close');
+    setTimeout(() => {
+        emit('close');
+        console.log('close dropdown');
+    }, 10);
 }
 
 onMounted(() => {

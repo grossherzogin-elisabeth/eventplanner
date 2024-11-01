@@ -2,6 +2,7 @@
     <VTable
         :items="props.event.slots"
         class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+        :class="$attrs.class"
         :page-size="-1"
         @click="editSlot($event)"
     >

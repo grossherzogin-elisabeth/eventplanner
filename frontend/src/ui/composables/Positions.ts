@@ -33,13 +33,13 @@ export function usePositions() {
         return [...positions.value.values()].sort((a, b) => b.prio - a.prio);
     });
 
-    function get(positonKey: PositionKey): Position {
+    function get(positionKey: PositionKey): Position {
         return (
-            positions.value.get(positonKey) || {
-                key: positonKey,
+            positions.value.get(positionKey) || {
+                key: positionKey,
                 color: '',
                 prio: 0,
-                name: positonKey,
+                name: positionKey,
             }
         );
     }

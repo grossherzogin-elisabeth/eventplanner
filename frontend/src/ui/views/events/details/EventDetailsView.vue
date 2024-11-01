@@ -422,17 +422,12 @@ async function fetchTeam(event: Event): Promise<void> {
 }
 
 async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
-    if (!positionSelectDialog.value) {
-        return;
+    const position = await positionSelectDialog.value?.open();
+    if (position) {
+        // default position might have changed
+        await fetchSignedInUserPositions();
+        event.value = await eventUseCase.joinEvent(evt, position);
     }
-    await positionSelectDialog.value
-        .open()
-        .then(async (position) => {
-            // default position might have changed
-            await fetchSignedInUserPositions();
-            event.value = await eventUseCase.joinEvent(evt, position);
-        })
-        .catch(() => console.debug('dialog was canceled'));
 }
 
 async function joinEvent(): Promise<void> {

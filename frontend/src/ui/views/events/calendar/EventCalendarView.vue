@@ -235,15 +235,13 @@ async function stopCreateEventDrag(date: Date): Promise<void> {
         const from = createEventFromDate.value;
         const to = date;
         if (from && to && createEventDialog.value) {
-            await createEventDialog.value
-                .open({ start: from, end: to })
-                .then((evt) => eventAdministrationService.createEvent(evt))
-                .then(() => fetchEvents())
-                .catch(() => console.debug('dialog was canceled'))
-                .finally(() => {
-                    createEventFromDate.value = null;
-                    calendarStyle.value['--create-event-days'] = 1;
-                });
+            const result = await createEventDialog.value.open({ start: from, end: to });
+            if (result) {
+                await eventAdministrationService.createEvent(result);
+                await fetchEvents();
+            }
+            createEventFromDate.value = null;
+            calendarStyle.value['--create-event-days'] = 1;
         }
     }
 }

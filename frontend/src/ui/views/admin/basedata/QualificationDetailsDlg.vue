@@ -1,7 +1,8 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Qualifikation hinzufügen</h1>
+            <h1 v-if="!qualification.key">Qualifikation hinzufügen</h1>
+            <h1 v-else>Qualifikation bearbeiten</h1>
         </template>
         <template #default>
             <div class="p-8 lg:px-16">
@@ -64,7 +65,7 @@
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Qualifikation hinzufügen</span>
+                <span>Speichern</span>
             </button>
         </template>
     </VDialog>
@@ -72,6 +73,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { deepCopy } from '@/common';
 import type { PositionKey, Qualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
@@ -81,10 +83,9 @@ import { usePositions } from '@/ui/composables/Positions';
 import { useValidation } from '@/ui/composables/Validation';
 
 const qualificationService = useQualificationService();
-
 const positions = usePositions();
 
-const dlg = ref<Dialog<void, Qualification | undefined> | null>(null);
+const dlg = ref<Dialog<Qualification | undefined, Qualification | undefined> | null>(null);
 const qualification = ref<Qualification>({
     key: '',
     icon: 'fa-id-card',
@@ -95,15 +96,18 @@ const qualification = ref<Qualification>({
 });
 const validation = useValidation(qualification, (qualification) => qualificationService.validate(qualification));
 
-async function open(): Promise<Qualification | undefined> {
-    qualification.value = {
-        key: '',
-        icon: 'fa-id-card',
-        expires: false,
-        name: '',
-        description: '',
-        grantsPositions: [],
-    };
+async function open(value?: Qualification): Promise<Qualification | undefined> {
+    validation.reset();
+    qualification.value = value
+        ? deepCopy(value)
+        : {
+              key: '',
+              icon: 'fa-id-card',
+              expires: false,
+              name: '',
+              description: '',
+              grantsPositions: [],
+          };
     // wait until user submits
     return await dlg.value?.open().catch(() => undefined);
 }
@@ -128,8 +132,8 @@ function cancel(): void {
     dlg.value?.submit(undefined);
 }
 
-defineExpose<Dialog<void, Qualification | undefined>>({
-    open: () => open(),
+defineExpose<Dialog<Qualification | undefined, Qualification | undefined>>({
+    open: (value?: Qualification) => open(value),
     close: () => dlg.value?.reject(),
     submit: (result?: Qualification) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),

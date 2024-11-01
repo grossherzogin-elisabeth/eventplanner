@@ -65,7 +65,7 @@ function submit() {
 async function open(message?: ErrorDialogMessage): Promise<void> {
     if (dlg.value && message) {
         error.value = message;
-        await dlg.value?.open(message).catch();
+        await dlg.value?.open(message).catch(() => undefined);
     }
 }
 

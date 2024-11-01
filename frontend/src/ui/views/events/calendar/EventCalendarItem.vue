@@ -100,11 +100,6 @@
                         >
                             <i :class="location.icon" class="fa-solid w-4" />
                             <span class="flex-grow">{{ location.name }}</span>
-                            <CountryFlag
-                                v-if="location.country"
-                                :country="location.country"
-                                class="border border-gray-200"
-                            />
                         </p>
                     </div>
 
@@ -139,7 +134,7 @@
                             @click="leaveEvent()"
                         >
                             <i class="fa-solid fa-ban"></i>
-                            <span class="ml-2">Absagen</span>
+                            <span class="">Absagen</span>
                         </button>
                         <button
                             v-else-if="props.event.signedInUserWaitingListPosition && props.event.canSignedInUserLeave"
@@ -148,7 +143,7 @@
                             @click="leaveEvent()"
                         >
                             <i class="fa-solid fa-user-minus"></i>
-                            <span class="ml-2">Warteliste verlassen</span>
+                            <span class="">Warteliste verlassen</span>
                         </button>
                         <button
                             v-else-if="props.event.canSignedInUserJoin"
@@ -157,7 +152,7 @@
                             @click="joinEvent(props.event)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
-                            <span class="ml-2 truncate">
+                            <span class="truncate">
                                 Anmelden als {{ positions.get(signedInUserPositions[0]).name }}</span
                             >
                         </button>
@@ -171,7 +166,7 @@
                             title="Detailansicht"
                         >
                             <i class="fa-solid fa-edit"></i>
-                            <span class="ml-2">Bearbeiten</span>
+                            <span class="">Bearbeiten</span>
                         </RouterLink>
                         <RouterLink
                             v-else
@@ -180,7 +175,7 @@
                             title="Detailansicht"
                         >
                             <i class="fa-solid fa-up-right-from-square"></i>
-                            <span class="ml-2">Details</span>
+                            <span class="">Details</span>
                         </RouterLink>
                     </div>
                 </div>
@@ -198,7 +193,6 @@ import type { Event, PositionKey } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import { type Dialog, VDropdownWrapper } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
-import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
 import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { usePositions } from '@/ui/composables/Positions';
@@ -254,19 +248,14 @@ function showDetails(): void {
 }
 
 async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
-    if (!positionSelectDialog.value) {
-        return;
-    }
     showDropdown.value = false;
-    await positionSelectDialog.value
-        .open()
-        .then(async (position) => {
-            // default position might have changed
-            await fetchSignedInUserPositions();
-            const updatedEvent = await eventUseCase.joinEvent(evt, position);
-            emit('update:event', updatedEvent);
-        })
-        .catch(() => console.debug('dialog was canceled'));
+    const position = await positionSelectDialog.value?.open();
+    if (position) {
+        // default position might have changed
+        await fetchSignedInUserPositions();
+        const updatedEvent = await eventUseCase.joinEvent(evt, position);
+        emit('update:event', updatedEvent);
+    }
 }
 
 async function joinEvent(evt: Event): Promise<void> {

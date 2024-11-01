@@ -98,21 +98,13 @@
                 </div>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">
-                <i class="fa-solid fa-xmark"></i>
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <AsyncButton
-                class="btn-primary"
-                :action="() => submitIfValid(submit)"
-                :disabled="validation.disableSubmit.value"
-            >
-                <template #icon>
-                    <i class="fa-solid fa-save"></i>
-                </template>
-                <template #label> Reise erstellen </template>
-            </AsyncButton>
+            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+                <span>Speichern</span>
+            </button>
         </template>
     </VDialog>
 </template>
@@ -137,7 +129,6 @@ import {
 import { useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import { useValidation } from '@/ui/composables/Validation';
-import AsyncButton from '../common/buttons/AsyncButton.vue';
 
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
@@ -173,17 +164,9 @@ async function fetchTemplates(year: number): Promise<void> {
     }
 }
 
-async function submitIfValid(submitFun: () => void) {
-    if (validation.isValid.value) {
-        submitFun();
-    } else {
-        validation.showErrors.value = true;
-        throw validation.errors;
-    }
-}
-
-async function open(partialEvent?: Partial<Event>): Promise<Event> {
+async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
     validation.reset();
+
     event.value.name = partialEvent?.name || '';
     event.value.description = partialEvent?.description || '';
     event.value.locations = partialEvent?.locations || [];
@@ -196,8 +179,11 @@ async function open(partialEvent?: Partial<Event>): Promise<Event> {
     end.setHours(18);
     event.value.end = end;
 
-    await dlg.value?.open();
-    event.value.slots =
+    const result = await dlg.value?.open().catch(() => undefined);
+    if (!result) {
+        return undefined;
+    }
+    result.slots =
         template.value?.slots.map((slot) => ({
             key: slot.key,
             criticality: slot.criticality,
@@ -205,14 +191,26 @@ async function open(partialEvent?: Partial<Event>): Promise<Event> {
             positionName: slot.positionName,
             order: slot.order,
         })) || [];
-    event.value.locations = template.value?.locations.map(deepCopy) || [];
-    return event.value;
+    result.locations = template.value?.locations.map(deepCopy) || [];
+    return result;
 }
 
-defineExpose<Dialog<Partial<Event>, Event>>({
+function submit() {
+    if (validation.isValid.value) {
+        dlg.value?.submit(event.value);
+    } else {
+        validation.showErrors.value = true;
+    }
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
+}
+
+defineExpose<Dialog<Partial<Event>, Event | undefined>>({
     open: (event?: Partial<Event>) => open(event),
     close: () => dlg.value?.reject(),
-    submit: (result: Event) => dlg.value?.submit(result),
+    submit: (result?: Event) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
 

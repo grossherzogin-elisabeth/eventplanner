@@ -132,3 +132,25 @@ table.v-table {
 .v-table tbody tr:not(.no-data).selected td::before {
     @apply bg-primary-700 bg-opacity-10 !important;
 }
+
+.v-table td.p-0 {
+    padding: 0 !important;
+}
+
+.v-table td.px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.v-table td.py-0 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.v-table td.pt-0 {
+    padding-top: 0 !important;
+}
+
+.v-table td.pb-0 {
+    padding-bottom: 0 !important;
+}

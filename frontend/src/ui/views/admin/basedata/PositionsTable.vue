@@ -44,8 +44,7 @@
             </li>
         </template>
     </VTable>
-    <PositionCreateDlg ref="createPositionDialog" />
-    <PositionEditDlg ref="editPositionDialog" />
+    <PositionDetailsDlg ref="positionDetailsDialog" />
     <VConfirmationDialog ref="deletePositionDialog" />
 </template>
 <script setup lang="ts">
@@ -55,8 +54,7 @@ import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
 import { usePositionAdministrationUseCase } from '@/ui/composables/Application';
-import PositionCreateDlg from '@/ui/views/admin/basedata/PositionCreateDlg.vue';
-import PositionEditDlg from '@/ui/views/admin/basedata/PositionEditDlg.vue';
+import PositionDetailsDlg from './PositionDetailsDlg.vue';
 
 interface Props {
     filter?: string;
@@ -68,8 +66,7 @@ const positionAdministrationUseCase = usePositionAdministrationUseCase();
 
 const positions = ref<Position[] | undefined>(undefined);
 
-const createPositionDialog = ref<Dialog<void, Position> | null>(null);
-const editPositionDialog = ref<Dialog<Position, Position> | null>(null);
+const positionDetailsDialog = ref<Dialog<Position | undefined, Position | undefined> | null>(null);
 const deletePositionDialog = ref<ConfirmationDialog | null>(null);
 
 function init(): void {
@@ -82,7 +79,7 @@ async function fetchPositions(): Promise<void> {
 }
 
 async function createPosition(): Promise<void> {
-    const newPosition = await createPositionDialog.value?.open();
+    const newPosition = await positionDetailsDialog.value?.open();
     if (newPosition) {
         await positionAdministrationUseCase.createPosition(newPosition);
         await fetchPositions();
@@ -90,7 +87,7 @@ async function createPosition(): Promise<void> {
 }
 
 async function editPosition(position: Position): Promise<void> {
-    const editedPosition = await editPositionDialog.value?.open(position);
+    const editedPosition = await positionDetailsDialog.value?.open(position);
     if (editedPosition) {
         await positionAdministrationUseCase.updatePosition(editedPosition);
         await fetchPositions();

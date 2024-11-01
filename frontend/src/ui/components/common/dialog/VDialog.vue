@@ -1,6 +1,6 @@
 <template>
     <div>
-        <teleport to="body">
+        <teleport to="#app">
             <div
                 v-if="renderContent"
                 :class="dialogOpen ? 'open' : 'closed'"

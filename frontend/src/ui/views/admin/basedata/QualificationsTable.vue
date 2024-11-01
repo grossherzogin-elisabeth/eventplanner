@@ -54,8 +54,7 @@
             </li>
         </template>
     </VTable>
-    <QualificationCreateDlg ref="createQualificationDialog" />
-    <QualificationEditDlg ref="editQualificationDialog" />
+    <QualificationEditDlg ref="qualificationDetailsDialog" />
     <VConfirmationDialog ref="deleteQualificationDialog" />
 </template>
 <script setup lang="ts">
@@ -66,8 +65,7 @@ import { VConfirmationDialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
 import { useQualificationsAdministrationUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions';
-import QualificationCreateDlg from '@/ui/views/admin/basedata/QualificationCreateDlg.vue';
-import QualificationEditDlg from '@/ui/views/admin/basedata/QualificationEditDlg.vue';
+import QualificationEditDlg from './QualificationDetailsDlg.vue';
 
 interface Props {
     filter?: string;
@@ -80,8 +78,7 @@ const qualificationAdministrationUseCase = useQualificationsAdministrationUseCas
 
 const qualifications = ref<Qualification[] | undefined>(undefined);
 
-const createQualificationDialog = ref<Dialog<void, Qualification> | null>(null);
-const editQualificationDialog = ref<Dialog<Qualification, Qualification> | null>(null);
+const qualificationDetailsDialog = ref<Dialog<Qualification | undefined, Qualification | undefined> | null>(null);
 const deleteQualificationDialog = ref<ConfirmationDialog | null>(null);
 
 function init(): void {
@@ -94,7 +91,7 @@ async function fetchQualifications(): Promise<void> {
 }
 
 async function createQualification(): Promise<void> {
-    const newQualification = await createQualificationDialog.value?.open();
+    const newQualification = await qualificationDetailsDialog.value?.open();
     if (newQualification) {
         await qualificationAdministrationUseCase.createQualification(newQualification);
         await fetchQualifications();
@@ -102,7 +99,7 @@ async function createQualification(): Promise<void> {
 }
 
 async function editQualification(qualification: Qualification): Promise<void> {
-    const editedQualification = await editQualificationDialog.value?.open(qualification);
+    const editedQualification = await qualificationDetailsDialog.value?.open(qualification);
     if (editedQualification) {
         await qualificationAdministrationUseCase.updateQualification(editedQualification);
         await fetchQualifications();

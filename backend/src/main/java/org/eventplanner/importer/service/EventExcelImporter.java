@@ -336,7 +336,7 @@ public class EventExcelImporter {
     }
 
     private static List<Location> getLocationsFromText(String text) {
-        var elsfleth = new Location("Elsfleth", "fa-anchor", "An d. Kaje 1, 26931 Elsfleth", "DE");
+        var elsfleth = new Location("Elsfleth", "fa-anchor", "An der Kaje 1, 26931 Elsfleth", "DE");
         var bremerhaven = new Location("Bremerhaven", "fa-anchor", null, "DE");
         var rosstock = new Location("Rosstock", "fa-anchor", null, "DE");
         var mariehamn = new Location("Mariehamn", "fa-anchor", null, "FI");

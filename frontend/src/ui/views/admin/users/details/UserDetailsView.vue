@@ -173,7 +173,7 @@ const user = ref<UserDetails | null>(null);
 const eventsByYear = ref<Map<number, Event[] | undefined>>(new Map<number, Event[] | undefined>());
 const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const createRegistrationForUserDialog = ref<Dialog<UserDetails> | null>(null);
-const addQualificationDialog = ref<Dialog<UserQualification | undefined, UserQualification> | null>(null);
+const addQualificationDialog = ref<Dialog<UserQualification | undefined, UserQualification | undefined> | null>(null);
 const eventsLoadedUntilYear = ref<number>(0);
 
 const userKey = computed<string>(() => (route.params.key as string) || '');
@@ -252,18 +252,13 @@ async function createRegistration() {
     }
 }
 
-function addUserQualification(): void {
-    if (addQualificationDialog.value) {
-        addQualificationDialog.value
-            .open(undefined)
-            .then((newQualification) => {
-                if (user.value?.qualifications) {
-                    user.value.qualifications.push(newQualification);
-                } else if (user.value) {
-                    user.value.qualifications = [newQualification];
-                }
-            })
-            .catch();
+async function addUserQualification(): Promise<void> {
+    const result = await addQualificationDialog.value?.open();
+    if (result && user.value) {
+        if (!user.value.qualifications) {
+            user.value.qualifications = [];
+        }
+        user.value.qualifications.push(result);
     }
 }
 

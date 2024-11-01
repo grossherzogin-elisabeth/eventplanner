@@ -25,6 +25,7 @@ import {
 } from '@/ui/composables/Domain';
 import App from './App.vue';
 import './assets/css/main.css';
+import './plugins/countries';
 import './plugins/fontawesome';
 import { setupI18n } from './plugins/i18n';
 import { setupRouter } from './plugins/router';

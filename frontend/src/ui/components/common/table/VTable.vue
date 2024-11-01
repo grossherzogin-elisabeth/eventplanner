@@ -35,9 +35,10 @@
                     ref="rows"
                     :key="index"
                     :class="{ selected: row.selected }"
-                    @touchstart="onTouchStart($event)"
-                    @touchend="onTouchEnd($event, row, index)"
-                    @click.stop.prevent="onClick($event, row)"
+                    @touchstart="touch.start($event).then(() => onLongTouch(row))"
+                    @touchend="touch.end($event)"
+                    @touchmove="touch.update($event)"
+                    @click.stop.prevent="onClick($event, row, index)"
                 >
                     <td></td>
                     <td
@@ -51,7 +52,13 @@
                             <i class="fa-solid fa-square text-xl text-primary-200 sm:text-2xl"></i>
                         </div>
                     </td>
-                    <slot name="row" :item="row" :index="index">
+                    <slot
+                        name="row"
+                        :item="row"
+                        :index="index"
+                        :first="index === 0"
+                        :last="index === pagedItems.length - 1"
+                    >
                         <td v-for="(val, colIndex) in Object.values(row)" :key="colIndex">
                             {{ val }}
                         </td>
@@ -81,10 +88,7 @@
             max-width="20rem"
             @close="dropdownAnchor = null"
         >
-            <div
-                class="mt-2 rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl"
-                @click="dropdownAnchor = null"
-            >
+            <div class="mt-2 rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl">
                 <ul>
                     <template v-if="props.multiselection">
                         <li
@@ -113,6 +117,7 @@ import type { Reactive } from 'vue';
 import { computed, ref, useSlots, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { deepCopy, extractValue } from '@/common';
+import { useLongTouch } from '@/ui/components/common/table/touch.ts';
 import { useQueryStateSync } from '@/ui/composables/QueryState';
 import { useViewportSize } from '@/ui/composables/ViewportSize.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
@@ -197,7 +202,7 @@ interface Emits {
 
 interface Slots {
     'head'?: (props: { sortBy: string; sortDirection: 'asc' | 'desc' }) => void;
-    'row'?: (props: { item: T & Selectable; index: number }) => void;
+    'row'?: (props: { item: T & Selectable; index: number; first: boolean; last: boolean }) => void;
     'no-data'?: (props: { colspan: number }) => void;
     'context-menu'?: (props: { item: T & Selectable }) => void;
     'loading'?: (props: { colspan: number }) => void;
@@ -217,6 +222,7 @@ const emit = defineEmits<Emits>();
 defineSlots<Slots>();
 
 const viewPortSize = useViewportSize();
+const touch = useLongTouch();
 
 const usePagination = computed<boolean>(() => props.pageSize !== -1);
 const usePageSize = computed<number>(() => props.pageSize || 10);
@@ -231,8 +237,6 @@ const sortCol = ref<string>('');
 const sortDir = ref<number>(1);
 const loading = computed<boolean>(() => props.items === undefined);
 const empty = computed<boolean>(() => props.items !== undefined && props.items.length === 0);
-
-let touchStartEvent: TouchEvent | undefined = undefined;
 
 useQueryStateSync<number>(
     'page',
@@ -354,43 +358,26 @@ function setSortingIndicators(): void {
     }
 }
 
-function onTouchStart(event: TouchEvent): void {
-    touchStartEvent = event;
-}
-
-function onTouchEnd(event: TouchEvent, row: T & Selectable, index: number): void {
-    if (event.target !== touchStartEvent?.target) {
-        touchStartEvent = undefined;
-        return;
-    }
-    const startTouchPoint = touchStartEvent.changedTouches.item(0);
-    const endTouchPoint = event.changedTouches.item(0);
-    const touchTime = event.timeStamp - touchStartEvent.timeStamp;
-    touchStartEvent = undefined;
-    if (startTouchPoint && endTouchPoint) {
-        const diffX = Math.abs(startTouchPoint.clientX - endTouchPoint.clientX);
-        const diffY = Math.abs(startTouchPoint.clientY - endTouchPoint.clientY);
-        if (diffX > 10 || diffY > 10) {
-            // scrolled, do nothing
-            return;
-        }
-    }
-    if (props.multiselection && touchTime > 200) {
+function onLongTouch(row: Reactive<T & Selectable>): void {
+    if (props.multiselection) {
         row.selected = !row.selected;
         return;
     }
-    // click event is called right after this one and will handle the selection toggle for when we already have
-    // selected rows
-    if (rows.value && selected.value.length === 0) {
-        openContextMenu(rows.value[index], row);
-    }
 }
 
-function onClick(event: MouseEvent, row: Reactive<T & Selectable>): void {
-    event.stopPropagation();
-    if (touchStartEvent || dropdownAnchor.value) {
+function onClick(event: MouseEvent, row: Reactive<T & Selectable>, index: number): void {
+    if (touch.isLongTouch()) {
         return;
     }
+    if (touch.isTouch()) {
+        if (selected.value.length > 0) {
+            row.selected = !row.selected;
+        } else {
+            openContextMenu(rows.value[index], row);
+        }
+        return;
+    }
+    event.stopPropagation();
     if (props.multiselection) {
         if (event.ctrlKey || event.metaKey || event.shiftKey || selected.value.length > 0) {
             event.preventDefault();

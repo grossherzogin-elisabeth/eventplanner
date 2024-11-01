@@ -17,11 +17,9 @@
         </template>
         <template #buttons>
             <button class="btn-secondary" @click="cancel">
-                <i class="fa-solid fa-xmark"></i>
                 <span>Nicht absagen</span>
             </button>
             <button class="btn-danger" @click="submit">
-                <i class="fa-solid fa-ban"></i>
                 <span>Reise absagen</span>
             </button>
         </template>
@@ -38,11 +36,11 @@ import { VDialog, VInputLabel, VInputTextArea } from '@/ui/components/common';
 
 const i18n = useI18n();
 
-const dlg = ref<Dialog<Event, string> | null>(null);
+const dlg = ref<Dialog<Event, string | undefined> | null>(null);
 const event = ref<Event | null>(null);
 const message = ref<string>('');
 
-async function open(evt: Event): Promise<string> {
+async function open(evt: Event): Promise<string | undefined> {
     event.value = evt;
     message.value = `
             Moin liebe Lissi Crew, \n

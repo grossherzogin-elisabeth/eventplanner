@@ -11,19 +11,45 @@
                 </p>
                 <div class="-mx-4 mb-4">
                     <VInputLabel>Nutzer</VInputLabel>
-                    <VInputCombobox v-model="registration.userKey" :options="userOptions" />
+                    <VInputCombobox
+                        v-model="registration.userKey"
+                        :options="userOptions"
+                        :errors="validation.errors.value['userKey']"
+                        :errors-visible="validation.showErrors.value"
+                    />
                 </div>
                 <div v-if="!registration.userKey" class="-mx-4 mb-4">
                     <VInputLabel>Name</VInputLabel>
-                    <VInputText v-model="registration.name" />
+                    <VInputText
+                        v-model="registration.name"
+                        :errors="validation.errors.value['name']"
+                        :errors-visible="validation.showErrors.value"
+                    />
                 </div>
                 <div class="-mx-4 mb-4">
                     <VInputLabel>Position</VInputLabel>
-                    <VInputCombobox v-model="registration.positionKey" :options="positionOptions" />
+                    <VInputCombobox
+                        v-model="registration.positionKey"
+                        :options="positions.options.value"
+                        :errors="validation.errors.value['positionKey']"
+                        :errors-visible="validation.showErrors.value"
+                    >
+                        <template #item="{ item }">
+                            <span class="flex-grow">{{ item.label }}</span>
+                            <i
+                                v-if="selectedUser && item.value && !selectedUser.positionKeys.includes(item.value)"
+                                class="fa-solid fa-warning mr-4 text-yellow-500"
+                            />
+                        </template>
+                    </VInputCombobox>
                 </div>
                 <div class="-mx-4 mb-4">
                     <VInputLabel>Notiz</VInputLabel>
-                    <VInputTextArea v-model="registration.note" />
+                    <VInputTextArea
+                        v-model="registration.note"
+                        :errors="validation.errors.value['note']"
+                        :errors-visible="validation.showErrors.value"
+                    />
                 </div>
                 <template v-if="selectedUser !== undefined">
                     <VWarning
@@ -48,12 +74,12 @@
                 </VWarning>
             </div>
         </template>
-        <template #buttons="{ reject, submit }">
-            <button class="btn-secondary" @click="reject">
+        <template #buttons>
+            <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" :disabled="!isValid" @click="submit">
-                <span>Anmeldung hinzufügen</span>
+            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+                <span>Übernehmen</span>
             </button>
         </template>
     </VDialog>
@@ -62,22 +88,24 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { filterUndefined } from '@/common';
-import type { Event, Qualification, QualificationKey, Registration, User } from '@/domain';
-import { type InputSelectOption, type Position, type PositionKey } from '@/domain';
+import type { Event, InputSelectOption, Position, Registration, User, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application';
 import { useUserService } from '@/ui/composables/Domain';
+import { usePositions } from '@/ui/composables/Positions.ts';
+import { useQualifications } from '@/ui/composables/Qualifications.ts';
+import { useValidation } from '@/ui/composables/Validation.ts';
 
 const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
+const positions = usePositions();
+const qualifications = useQualifications();
 
 const dlg = ref<Dialog<Event, Event> | null>(null);
-const event = ref<Event | null>(null);
+const event = ref<Event | undefined>(undefined);
 const users = ref<User[]>([]);
-const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
-const qualifications = ref<Map<QualificationKey, Qualification>>(new Map<QualificationKey, Qualification>());
 const registration = ref<Registration>({
     key: '',
     positionKey: '',
@@ -85,6 +113,20 @@ const registration = ref<Registration>({
     name: undefined,
 });
 const hiddenUsers = ref<string[]>([]);
+
+const validation = useValidation(registration, (value) => {
+    // TODO extract to service
+    const errors: Record<string, ValidationHint[]> = {};
+    if (!value.positionKey) {
+        errors.positionKey = errors.positionKey || [];
+        errors.positionKey.push({ key: 'Bitte wähle eine Position', params: {} });
+    }
+    if (!value.name && !value.userKey) {
+        errors.userKey = errors.userKey || [];
+        errors.userKey.push({ key: 'Bitte wähle eine Stammcrew Mitglied', params: {} });
+    }
+    return errors;
+});
 
 const userOptions = computed<InputSelectOption<string | undefined>[]>(() => {
     const options: InputSelectOption<string | undefined>[] = users.value
@@ -104,18 +146,8 @@ const selectedUser = computed<User | undefined>(() => {
     return users.value.find((u) => u.key === registration.value?.userKey);
 });
 
-const positionOptions = computed<InputSelectOption<string | undefined>[]>(() => {
-    const options: InputSelectOption<string | undefined>[] = [...positions.value.values()]
-        .sort((a, b) => b.prio - a.prio)
-        .map((it) => ({
-            label: it.name,
-            value: it.key,
-        }));
-    return options;
-});
-
 const selectedPosition = computed<Position | undefined>(() => {
-    return positions.value.get(registration.value?.positionKey);
+    return positions.get(registration.value?.positionKey);
 });
 
 const expiredQualifications = computed<string[]>(() => {
@@ -124,21 +156,12 @@ const expiredQualifications = computed<string[]>(() => {
     }
     return usersService
         .getExpiredQualifications(selectedUser.value, event.value?.end)
-        .map((key) => qualifications.value.get(key))
+        .map((key) => qualifications.get(key))
         .filter(filterUndefined)
         .map((qualification) => qualification.name);
 });
 
-const isValid = computed<boolean>(() => {
-    return (
-        (registration.value.name !== undefined || registration.value.userKey !== undefined) &&
-        registration.value.positionKey !== undefined
-    );
-});
-
 async function init(): Promise<void> {
-    await fetchPositions();
-    await fetchQualifications();
     await fetchUsers();
 }
 
@@ -146,15 +169,8 @@ async function fetchUsers(): Promise<void> {
     users.value = await usersUseCase.getUsers();
 }
 
-async function fetchPositions(): Promise<void> {
-    positions.value = await usersUseCase.resolvePositionNames();
-}
-
-async function fetchQualifications(): Promise<void> {
-    qualifications.value = await usersUseCase.resolveQualifications();
-}
-
-async function open(evt: Event): Promise<Event> {
+async function open(evt: Event): Promise<Event | undefined> {
+    validation.reset();
     event.value = evt;
     registration.value = {
         key: '',
@@ -163,19 +179,33 @@ async function open(evt: Event): Promise<Event> {
         name: undefined,
         note: '',
     };
-    hiddenUsers.value = evt.registrations.map((it) => it.userKey).filter(filterUndefined);
+    hiddenUsers.value = event.value.registrations.map((it) => it.userKey).filter(filterUndefined);
 
     // wait until user submits
-    await dlg.value?.open();
-
+    const result = await dlg.value?.open().catch(() => undefined);
+    if (!result) {
+        return undefined;
+    }
     if (registration.value.userKey) {
         registration.value.name = undefined;
     }
-    evt.registrations.push(registration.value);
-    return evt;
+    result.registrations.push(registration.value);
+    return result;
 }
 
-defineExpose<Dialog<Event, Event>>({
+function submit() {
+    if (validation.isValid.value) {
+        dlg.value?.submit(event.value);
+    } else {
+        validation.showErrors.value = true;
+    }
+}
+
+function cancel(): void {
+    dlg.value?.submit(undefined);
+}
+
+defineExpose<Dialog<Event, Event | undefined>>({
     open: (evt: Event) => open(evt),
     close: () => dlg.value?.reject(),
     submit: (result: Event) => dlg.value?.submit(result),

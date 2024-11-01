@@ -1,10 +1,15 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Position hinzufügen</h1>
+            <h1 v-if="position.key">Position bearbeiten</h1>
+            <h1 v-else>Position hinzufügen</h1>
         </template>
         <template #default>
             <div class="p-8 lg:px-16">
+                <div v-if="position.key" class="-mx-4 mb-4">
+                    <VInputLabel>Id</VInputLabel>
+                    <VInputText v-model="position.key" required disabled />
+                </div>
                 <div class="-mx-4 mb-4">
                     <VInputLabel>Name</VInputLabel>
                     <VInputText
@@ -42,8 +47,8 @@
             <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submitIfValid(submit)">
-                <span>Position hinzufügen</span>
+            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+                <span>Speichern</span>
             </button>
         </template>
     </VDialog>
@@ -51,6 +56,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { deepCopy } from '@/common';
 import type { Position } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputNumber } from '@/ui/components/common';
@@ -60,7 +66,7 @@ import { useValidation } from '@/ui/composables/Validation';
 
 const positionService = usePositionService();
 
-const dlg = ref<Dialog<void, Position | undefined> | null>(null);
+const dlg = ref<Dialog<Position | undefined, Position | undefined> | null>(null);
 const position = ref<Position>({
     key: '',
     name: '',
@@ -69,13 +75,16 @@ const position = ref<Position>({
 });
 const validation = useValidation(position, (position) => positionService.validate(position));
 
-async function open(): Promise<Position | undefined> {
-    position.value = {
-        key: '',
-        name: '',
-        color: '',
-        prio: 0,
-    };
+async function open(value?: Position): Promise<Position | undefined> {
+    validation.reset();
+    position.value = value
+        ? deepCopy(value)
+        : {
+              key: '',
+              name: '',
+              color: '',
+              prio: 0,
+          };
     return await dlg.value?.open().catch(() => undefined);
 }
 
@@ -91,17 +100,8 @@ function cancel(): void {
     dlg.value?.submit(undefined);
 }
 
-async function submitIfValid(submitFun: () => void) {
-    if (validation.isValid.value) {
-        submitFun();
-    } else {
-        validation.showErrors.value = true;
-        throw validation.errors;
-    }
-}
-
-defineExpose<Dialog<void, Position | undefined>>({
-    open: () => open(),
+defineExpose<Dialog<Position | undefined, Position | undefined>>({
+    open: (value?: Position) => open(value),
     close: () => dlg.value?.reject(),
     submit: (result?: Position) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
