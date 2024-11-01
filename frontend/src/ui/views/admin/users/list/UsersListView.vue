@@ -329,12 +329,10 @@ function impersonateUser(user: UserRegistrations): void {
 }
 
 async function createRegistration(user: UserRegistrations): Promise<void> {
-    await createRegistrationForUserDialog.value
-        ?.open(user)
-        .then(() => (user.waitingListCount = user.waitingListCount + 1))
-        .catch(() => {
-            // ignore
-        });
+    const created = await createRegistrationForUserDialog.value?.open(user);
+    if (created) {
+        user.waitingListCount = user.waitingListCount + 1;
+    }
 }
 
 async function deleteUser(user: UserRegistrations): Promise<void> {

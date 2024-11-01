@@ -176,10 +176,7 @@ function moveIntoVisibleArea(): void {
 }
 
 function close() {
-    setTimeout(() => {
-        emit('close');
-        console.log('close dropdown');
-    }, 10);
+    setTimeout(() => emit('close'), 10);
 }
 
 onMounted(() => {

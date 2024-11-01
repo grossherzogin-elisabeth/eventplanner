@@ -1,6 +1,7 @@
 import type { EventRegistrationsRepository, EventRepository, NotificationService } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
+import { filterUndefined } from '@/common';
 import type { Event, EventKey, ImportError, Registration } from '@/domain';
 import { EventState } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
@@ -65,6 +66,10 @@ export class EventAdministrationUseCase {
             delete patch.canSignedInUserJoin;
             delete patch.canSignedInUserLeave;
             delete patch.assignedUserCount;
+
+            if (Object.values(patch).filter(filterUndefined).length === 0) {
+                return;
+            }
 
             for (const eventKey of eventKeys) {
                 await this.updateEventInternal(eventKey, patch);

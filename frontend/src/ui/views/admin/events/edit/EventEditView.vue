@@ -168,12 +168,26 @@
             </div>
         </template>
         <template #actions-menu>
-            <li class="context-menu-item" @click="addRegistration()">
-                <i class="fa-solid fa-user-plus" />
-                <span>Anmeldung hinzufügen</span>
+            <li v-if="tab === Tab.EVENT_POSITIONS" class="lg:hidden" @click="addRegistration()">
+                <div class="context-menu-item">
+                    <i class="fa-solid fa-user-plus" />
+                    <span>Anmeldung hinzufügen</span>
+                </div>
             </li>
-            <li class="context-menu-item" @click="contactTeam()">
-                <i class="fa-solid fa-paper-plane" />
+            <li v-else-if="tab === Tab.EVENT_SLOTS" class="lg:hidden" @click="addSlot()">
+                <div class="context-menu-item">
+                    <i class="fa-solid fa-plus" />
+                    <span>Slot hinzufügen</span>
+                </div>
+            </li>
+            <li v-else-if="tab === Tab.EVENT_LOCATIONS" class="lg:hidden" @click="addLocation()">
+                <div class="context-menu-item">
+                    <i class="fa-solid fa-plus" />
+                    <span>Reiseabschnitt hinzufügen</span>
+                </div>
+            </li>
+            <li class="context-menu-item disabled" @click="contactTeam()">
+                <i class="fa-solid fa-envelope" />
                 <span>Crew kontaktieren</span>
             </li>
             <li v-if="event?.state === EventState.Draft" class="context-menu-item" @click="openEventForCrewSignup()">

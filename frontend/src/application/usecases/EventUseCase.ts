@@ -95,7 +95,13 @@ export class EventUseCase {
         try {
             const now = new Date();
             const events = await this.eventCachingService.getEvents(now.getFullYear());
-            return events.filter((evt) => evt.end > now).sort((a, b) => a.start.getTime() - b.start.getTime());
+            const eventsNextYear = await this.eventCachingService.getEvents(now.getFullYear() + 1);
+            const eventsNextNextYear = await this.eventCachingService.getEvents(now.getFullYear() + 2);
+            return events
+                .concat(eventsNextYear)
+                .concat(eventsNextNextYear)
+                .filter((evt) => evt.end > now)
+                .sort((a, b) => a.start.getTime() - b.start.getTime());
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;
@@ -104,10 +110,8 @@ export class EventUseCase {
 
     public async getFutureEventsByUser(userKey: UserKey): Promise<Event[]> {
         try {
-            const now = new Date();
-            const events = await this.eventCachingService.getEvents(now.getFullYear());
+            const events = await this.getFutureEvents();
             return events
-                .filter((evt) => evt.end > now)
                 .filter((evt) => evt.registrations.find((reg) => reg.userKey === userKey))
                 .sort((a, b) => a.start.getTime() - b.start.getTime());
         } catch (e) {

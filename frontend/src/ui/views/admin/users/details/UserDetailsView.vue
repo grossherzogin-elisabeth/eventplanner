@@ -247,8 +247,10 @@ function impersonateUser() {
 
 async function createRegistration() {
     if (createRegistrationForUserDialog.value && user.value) {
-        await createRegistrationForUserDialog.value.open(user.value);
-        // TODO add to buffer and persist on save
+        const created = await createRegistrationForUserDialog.value.open(user.value);
+        if (created) {
+            await fetchUserFutureEvents();
+        }
     }
 }
 

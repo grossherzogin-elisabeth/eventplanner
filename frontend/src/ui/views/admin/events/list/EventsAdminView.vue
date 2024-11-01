@@ -339,7 +339,7 @@ const createEventDialog = ref<Dialog<Event> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string> | null>(null);
 const importEventsDialog = ref<Dialog<Event> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
-const eventBatchEditDialog = ref<Dialog<void, Partial<Event> | undefined> | null>(null);
+const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
@@ -530,13 +530,10 @@ async function importEvents(): Promise<void> {
 }
 
 async function editBatch(events: Event[]): Promise<void> {
-    const patch = await eventBatchEditDialog.value?.open();
-    if (patch === undefined) {
-        return;
+    const changed = await eventBatchEditDialog.value?.open(events);
+    if (changed) {
+        await fetchEvents();
     }
-    const keys = events.map((it) => it.key);
-    await eventAdminUseCase.updateEvents(keys, patch);
-    await fetchEvents();
 }
 
 async function openEventsForSignup(events: Event[]): Promise<void> {

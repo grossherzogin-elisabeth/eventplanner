@@ -63,17 +63,9 @@
         </template>
         <template #buttons>
             <button class="btn-secondary" @click="cancel">
-                <i class="fa-solid fa-xmark"></i>
                 <span>Abbrechen</span>
             </button>
-            <AsyncButton
-                class="btn-primary"
-                :action="() => submitIfValid(submit)"
-                :disabled="validation.disableSubmit.value"
-            >
-                <template #icon>
-                    <i class="fa-solid fa-save"></i>
-                </template>
+            <AsyncButton class="btn-primary" :action="submit" :disabled="validation.disableSubmit.value">
                 <template #label> Alle aktualisieren </template>
             </AsyncButton>
         </template>
@@ -86,42 +78,44 @@ import type { Event } from '@/domain';
 import { EventState, EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VDialog, VInputLabel, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
+import { useEventAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain';
 import { useValidation } from '@/ui/composables/Validation';
 
 const eventService = useEventService();
+const eventAdminUseCase = useEventAdministrationUseCase();
 
-const dlg = ref<Dialog<void, Partial<Event> | undefined> | null>(null);
+const dlg = ref<Dialog<Event[], boolean> | null>(null);
 const patch = ref<Partial<Event>>({});
 const validation = useValidation(patch, eventService.validatePartial);
+let eventsToEdit: Event[] = [];
 
-async function submitIfValid(submitFun: () => void) {
+async function submit(): Promise<void> {
     if (validation.isValid.value) {
-        submitFun();
+        const keys = eventsToEdit.map((it) => it.key);
+        await eventAdminUseCase.updateEvents(keys, patch.value);
+        dlg.value?.submit(patch.value);
     } else {
         validation.showErrors.value = true;
         throw validation.errors;
     }
 }
 
-function submit() {
-    dlg.value?.submit(patch.value);
-}
-
 function cancel(): void {
-    dlg.value?.submit(undefined);
+    dlg.value?.submit(false);
 }
 
-async function open(): Promise<Partial<Event> | undefined> {
+async function open(events: Event[]): Promise<boolean> {
+    eventsToEdit = events;
     validation.reset();
     patch.value = {};
     return await dlg.value?.open().catch(() => undefined);
 }
 
-defineExpose<Dialog<void, Partial<Event> | undefined>>({
-    open: () => open(),
+defineExpose<Dialog<Event[], boolean>>({
+    open: (events: Event[]) => open(events),
     close: () => dlg.value?.reject(),
-    submit: (patch: Partial<Event>) => dlg.value?.submit(patch),
+    submit: (changed: boolean) => dlg.value?.submit(changed),
     reject: () => dlg.value?.reject(),
 });
 </script>

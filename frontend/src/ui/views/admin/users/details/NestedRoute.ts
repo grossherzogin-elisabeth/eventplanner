@@ -6,7 +6,6 @@ import { Routes } from '@/ui/views/Routes';
 const routeMeta: RouteMetaData = {
     authenticated: true,
     permissions: [Permission.READ_USER_DETAILS],
-    breadcrumps: () => ['Admin', 'Nutzerverwaltung', 'Nutzer bearbeiten'],
     backTo: Routes.UsersList,
 };
 

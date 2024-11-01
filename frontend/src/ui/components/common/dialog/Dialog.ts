@@ -2,7 +2,7 @@ export interface Dialog<P = void, T = void, E = void> {
     /**
      * Open this dialog, returning a promise that is resolve when it is closed
      */
-    open(param?: P): Promise<T>;
+    open(param?: P, onSubmit?: (result: T) => Promise<unknown>): Promise<T>;
 
     /**
      * Close this dialog, resulting in the rejection of the open promise

@@ -12,15 +12,29 @@
                 </p>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Reise</VInputLabel>
-                    <VInputCombobox v-model="registration.eventKey" :options="eventOptions" />
+                    <VInputCombobox
+                        v-model="registration.eventKey"
+                        :options="eventOptions"
+                        :errors="validation.errors.value['eventKey']"
+                        :errors-visible="validation.showErrors.value"
+                    />
                 </div>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Position</VInputLabel>
-                    <VInputCombobox v-model="registration.positionKey" :options="positions.options.value" />
+                    <VInputCombobox
+                        v-model="registration.positionKey"
+                        :options="positions.options.value"
+                        :errors="validation.errors.value['positionKey']"
+                        :errors-visible="validation.showErrors.value"
+                    />
                 </div>
                 <div class="-mx-4 mb-2">
                     <VInputLabel>Notiz</VInputLabel>
-                    <VInputTextArea v-model="registration.note" />
+                    <VInputTextArea
+                        v-model="registration.note"
+                        :errors="validation.errors.value['note']"
+                        :errors-visible="validation.showErrors.value"
+                    />
                 </div>
             </div>
         </template>
@@ -28,9 +42,9 @@
             <button class="btn-secondary" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Anmeldung hinzufügen</span>
-            </button>
+            <AsyncButton class="btn-primary" :action="submit" :disabled="validation.disableSubmit.value">
+                <template #label>Anmeldung speichern</template>
+            </AsyncButton>
         </template>
     </VDialog>
 </template>
@@ -41,6 +55,7 @@ import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventKey, InputSelectOption, PositionKey, User, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
+import { AsyncButton } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputTextArea } from '@/ui/components/common';
 import { useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions.ts';
@@ -58,7 +73,7 @@ const eventAdministrationUseCase = useEventAdministrationUseCase();
 const i18n = useI18n();
 const positions = usePositions();
 
-const dlg = ref<Dialog<User, UserRegistration | undefined> | null>(null);
+const dlg = ref<Dialog<User, boolean> | null>(null);
 const events = ref<Event[]>([]);
 const hiddenEvents = ref<string[]>([]);
 
@@ -99,7 +114,7 @@ async function fetchEvents(): Promise<void> {
     events.value = await eventsUseCase.getFutureEvents();
 }
 
-async function open(user: User): Promise<void> {
+async function open(user: User): Promise<boolean> {
     validation.reset();
     registration.value = {
         user: user,
@@ -107,24 +122,20 @@ async function open(user: User): Promise<void> {
         eventKey: undefined,
         note: '',
     };
-
     const eventsByUser = await eventsUseCase.getFutureEventsByUser(user.key);
     hiddenEvents.value = eventsByUser.map((it) => it.key);
-
-    const result = await dlg.value?.open().catch(() => undefined);
-    if (result && result.eventKey) {
-        await eventAdministrationUseCase.addRegistration(result.eventKey, {
-            key: '',
-            userKey: result.user.key,
-            positionKey: result.positionKey,
-            note: result.note,
-        });
-    }
+    return await dlg.value?.open().catch(() => false);
 }
 
-function submit() {
-    if (validation.isValid.value) {
-        dlg.value?.submit(registration.value);
+async function submit(): Promise<void> {
+    if (validation.isValid.value && registration.value) {
+        await eventAdministrationUseCase.addRegistration(registration.value.eventKey, {
+            key: '',
+            userKey: registration.value.user.key,
+            positionKey: registration.value.positionKey,
+            note: registration.value.note,
+        });
+        dlg.value?.submit(true);
     } else {
         validation.showErrors.value = true;
     }
@@ -134,10 +145,10 @@ function cancel(): void {
     dlg.value?.submit(undefined);
 }
 
-defineExpose<Dialog<User, void>>({
+defineExpose<Dialog<User, boolean>>({
     open: (user: User) => open(user),
     close: () => dlg.value?.reject(),
-    submit: () => dlg.value?.submit(),
+    submit: () => dlg.value?.submit(false),
     reject: () => dlg.value?.reject(),
 });
 

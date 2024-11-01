@@ -12,7 +12,7 @@
         <span v-else-if="success === false" class="block w-4">
             <i class="fa-solid fa-warning"></i>
         </span>
-        <span v-else class="block w-4">
+        <span v-else-if="$slots.icon" class="block w-4">
             <slot name="icon"></slot>
         </span>
         <span class="truncate text-left">
@@ -42,7 +42,7 @@ async function onClick(): Promise<void> {
             await props.action();
             success.value = true;
         } catch (e) {
-            console.debug(e);
+            console.error(e);
             success.value = false;
         } finally {
             loading.value = false;

@@ -57,6 +57,8 @@
                 language="de"
                 monday-first
                 @input="onInput($event)"
+                @mouseup.stop=""
+                @click.stop=""
             />
         </VDropdownWrapper>
     </div>
