@@ -9,7 +9,6 @@ import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.RegistrationKey;
-import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.UserKey;
@@ -19,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -38,10 +34,7 @@ public class ImoListService {
         this.userService = userService;
     }
 
-    public @NonNull File generateImoList(@NonNull Event event) throws IOException {
-//        var file = File.createTempFile(event.getKey() + "-imo-list", "txt");
-//        Files.writeString(file.toPath(), "Hello world");
-//        file.deleteOnExit();
+    public @NonNull byte[] generateImoList(@NonNull Event event) throws IOException {
 
         List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
                 .map(Slot::getAssignedRegistration)
@@ -54,10 +47,8 @@ public class ImoListService {
                 .toList();
 
         FileInputStream fileTemplate = new FileInputStream("data/templates/ImoList_template.xlsx");
-        var outputFile = File.createTempFile(event.getKey() + "-imo-list", "xlsx");
-        FileOutputStream out = new FileOutputStream(outputFile);
 
-        try (fileTemplate; out) {
+        try (fileTemplate) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
             XSSFSheet sheet = workbook.getSheetAt(0);
             int crewSize = crewList.size();
@@ -94,16 +85,12 @@ public class ImoListService {
                 // TODO Gastcrew
             }
 
-            workbook.write(out);
+            return getWorkbookBytes(workbook);
         }
         catch (IOException e) {
-            log.error("Failed to save temporary users import file", e);
+            log.error("Failed to generate imo list workbook", e);
         }
-
-
-
-        // TODO generate the excel
-        return outputFile;
+        return null;
     }
 
     private int findFirstEmptyRow(XSSFSheet sheet) {
@@ -126,5 +113,17 @@ public class ImoListService {
             }
         }
         return rowCounter;
+    }
+
+    private byte[] getWorkbookBytes(XSSFWorkbook workbook) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try(bos){
+            workbook.write(bos);
+            bos.flush();
+        }
+        catch (IOException e) {
+            log.error("Failed to get workbook bytes", e);
+        }
+        return bos.toByteArray();
     }
 }

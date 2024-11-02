@@ -5,8 +5,9 @@ import org.eventplanner.events.rest.dto.*;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.users.UserUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 @RestController
@@ -79,11 +79,18 @@ public class EventController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/{eventKey}/imo-list")
     public ResponseEntity<Resource> downloadImoList(@PathVariable("eventKey") String eventKey) throws IOException {
+
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var file = eventUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
-        var resource = new InputStreamResource(new FileInputStream(file));
+        byte[] imoListByteArray = eventUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
+
+        HttpHeaders headers = new HttpHeaders();
+        String fileName = eventKey + "imo-list" + ".xlsx";
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName +"\"");
+        ByteArrayResource resource = new ByteArrayResource(imoListByteArray);
+
         return ResponseEntity.ok()
-                .contentLength(file.length())
+                .headers(headers)
+                .contentLength(imoListByteArray.length)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
