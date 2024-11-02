@@ -105,8 +105,10 @@
                             class="flex items-center space-x-4"
                         >
                             <i :class="stop.icon" class="fa-solid w-4" />
-                            <span class="flex-grow">{{ stop.name }}</span>
-                            <CountryFlag v-if="stop.country" :country="stop.country" class="border border-gray-200" />
+                            <span class="">{{ stop.name }}</span>
+                            <span v-if="stop.country" class="text-sm text-primary-900 text-opacity-50">
+                                ({{ stop.country }})
+                            </span>
                         </div>
                     </div>
                 </section>
@@ -345,7 +347,6 @@ import type { Dialog } from '@/ui/components/common';
 import { AsyncButton } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
 import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { usePositions } from '@/ui/composables/Positions';

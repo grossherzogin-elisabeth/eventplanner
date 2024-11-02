@@ -50,7 +50,6 @@
                         v-model="location.address"
                         :errors="validation.errors.value['address']"
                         :errors-visible="validation.showErrors.value"
-                        required
                     />
                 </div>
                 <div class="-mx-4 mb-4">
@@ -59,7 +58,6 @@
                         v-model="location.country"
                         :errors="validation.errors.value['country']"
                         :errors-visible="validation.showErrors.value"
-                        required
                         :options="countries.options"
                     />
                 </div>
@@ -94,7 +92,7 @@ const dlg = ref<Dialog<Location | undefined, Location | undefined> | null>(null)
 const location = ref<Location>({
     name: '',
     address: '',
-    icon: '',
+    icon: 'fa-anchor',
     country: '',
     order: -1,
 });
@@ -106,6 +104,10 @@ const validation = useValidation(location, (value) => {
         errors.name = errors.name || [];
         errors.name.push({ key: 'Bitte gib einen Namen an', params: {} });
     }
+    if (!value.icon) {
+        errors.icon = errors.icon || [];
+        errors.icon.push({ key: 'Bitte wähle ein Icon', params: {} });
+    }
     return errors;
 });
 
@@ -116,7 +118,7 @@ async function open(value?: Location): Promise<Location | undefined> {
         : {
               name: '',
               address: '',
-              icon: '',
+              icon: 'fa-anchor',
               country: '',
               order: -1,
           };

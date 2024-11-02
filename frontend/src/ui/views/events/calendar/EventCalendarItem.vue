@@ -146,7 +146,7 @@
                             <span class="">Warteliste verlassen</span>
                         </button>
                         <button
-                            v-else-if="props.event.canSignedInUserJoin"
+                            v-else-if="props.event.canSignedInUserJoin && signedInUserPositions.length >= 1"
                             class="btn-ghost max-w-80"
                             title="Anmelden"
                             @click="joinEvent(props.event)"
@@ -174,7 +174,7 @@
                             class="btn-ghost"
                             title="Detailansicht"
                         >
-                            <i class="fa-solid fa-up-right-from-square"></i>
+                            <i class="fa-solid fa-search"></i>
                             <span class="">Details</span>
                         </RouterLink>
                     </div>

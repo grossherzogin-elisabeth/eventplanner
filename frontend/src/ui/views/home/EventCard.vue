@@ -12,7 +12,7 @@
                     <span class="text-3xl">{{ props.event.start.getDate() }}</span>
                     <span class="text-lg">{{ $d(props.event.start, DateTimeFormat.MMM) }}</span>
                 </div>
-                <div class="flex flex-grow flex-col px-4 py-3 sm:px-8">
+                <div class="flex w-0 flex-grow flex-col px-4 py-3 sm:px-8">
                     <h3 class="mb-2 flex items-center space-x-2">
                         <span class="">{{ props.event.name }}</span>
                     </h3>
@@ -30,11 +30,6 @@
                         >
                             <i :class="location.icon" class="fa-solid w-4" />
                             <span class="flex-grow">{{ location.name }}</span>
-                            <CountryFlag
-                                v-if="location.country"
-                                :country="location.country"
-                                class="border border-gray-200"
-                            />
                             <span v-if="index < props.event.locations.length - 1" class="pr-2">↣</span>
                         </div>
                     </div>
@@ -82,7 +77,6 @@
 <script lang="ts" setup>
 import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
-import CountryFlag from '@/ui/components/utils/CountryFlag.vue';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { Routes } from '@/ui/views/Routes';
 
