@@ -57,7 +57,12 @@ public class EventUseCase {
             throw new IllegalArgumentException("Invalid year");
         }
 
-        return this.eventRepository.findAllByYear(year).stream().map(eventService::removeInvalidSlotAssignments).toList();
+        var allEvents = this.eventRepository.findAllByYear(year).stream().map(eventService::removeInvalidSlotAssignments);
+
+        if (signedInUser.hasPermission(Permission.WRITE_EVENTS)) {
+            return allEvents.toList();
+        }
+        return allEvents.filter(it -> !EventState.DRAFT.equals(it.getState())).toList();
     }
 
     public @NonNull Event getEventByKey(@NonNull SignedInUser signedInUser, EventKey key) {

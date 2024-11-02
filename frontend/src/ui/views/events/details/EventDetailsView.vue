@@ -338,7 +338,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, PositionKey } from '@/domain';
 import { EventState, Permission } from '@/domain';
@@ -362,6 +362,7 @@ type RouteEmits = (e: 'update:title', value: string) => void;
 const emit = defineEmits<RouteEmits>();
 
 const route = useRoute();
+const router = useRouter();
 const positions = usePositions();
 const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
@@ -391,9 +392,13 @@ function init(): void {
 }
 
 async function fetchEvent(): Promise<void> {
-    const key = route.params.key as string;
-    const year = parseInt(route.params.year as string, 10) || new Date().getFullYear();
-    event.value = await eventUseCase.getEventByKey(year, key);
+    try {
+        const key = route.params.key as string;
+        const year = parseInt(route.params.year as string, 10) || new Date().getFullYear();
+        event.value = await eventUseCase.getEventByKey(year, key);
+    } catch (e) {
+        await router.push({ name: Routes.Events });
+    }
 }
 
 async function fetchSignedInUserPositions(): Promise<void> {

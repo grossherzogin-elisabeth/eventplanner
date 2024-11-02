@@ -70,7 +70,7 @@ export class EventUseCase {
             }
             this.errorHandlingService.handleError({
                 title: '404 - nicht gefunden',
-                message: 'Hoppla, die Reise oder das Event gibt es anscheinend nicht',
+                message: 'Die angefragte Reise gibt es nicht, oder sie ist nicht sichtbar.',
             });
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
