@@ -6,6 +6,7 @@ import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
+import org.eventplanner.events.services.ConsumptionListService;
 import org.eventplanner.events.services.ImoListService;
 import org.eventplanner.events.service.EventService;
 import org.eventplanner.events.spec.CreateEventSpec;
@@ -39,6 +40,7 @@ public class EventUseCase {
     private final NotificationService notificationService;
     private final UserService userService;
     private final ImoListService imoListService;
+    private final ConsumptionListService consumptionListService;
     private final EventService eventService;
 
     public EventUseCase(
@@ -46,13 +48,15 @@ public class EventUseCase {
             @Autowired NotificationService notificationService,
             @Autowired UserService userService,
             @Autowired ImoListService imoListService,
-            @Autowired EventService eventService
+            @Autowired EventService eventService,
+            @Autowired ConsumptionListService consumptionListService
     ) {
         this.eventRepository = eventRepository;
         this.notificationService = notificationService;
         this.userService = userService;
         this.eventService = eventService;
         this.imoListService = imoListService;
+        this.consumptionListService = consumptionListService;
     }
 
     public @NonNull List<Event> getEvents(@NonNull SignedInUser signedInUser, int year) {
@@ -169,6 +173,14 @@ public class EventUseCase {
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         return imoListService.generateImoList(event);
+    }
+
+    public byte[] downloadConsumptionList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
+        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
+        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+
+        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        return consumptionListService.generateConsumptionList(event);
     }
 
     public @NonNull Event addRegistration(

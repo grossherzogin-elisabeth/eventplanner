@@ -94,4 +94,22 @@ public class EventController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/{eventKey}/consumption-list")
+    public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey) throws IOException {
+
+        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        byte[] consumptionListByteArray = eventUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
+
+        HttpHeaders headers = new HttpHeaders();
+        String fileName = eventKey + "consumption-list" + ".xlsx";
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName +"\"");
+        ByteArrayResource resource = new ByteArrayResource(consumptionListByteArray);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(consumptionListByteArray.length)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
 }

@@ -277,7 +277,12 @@ export class EventUseCase {
 
     public async downloadImoList(event: Event): Promise<void> {
         const file = await this.eventRepository.downloadImoList(event);
-        saveBlobToFile(`${event.name.replace('s', '_')}_imolist.txt`, file);
+        saveBlobToFile(`${event.name.replace('s', '_')}_imo-list.xlsx`, file);
+    }
+
+    public async downloadConsumptionList(event: Event): Promise<void> {
+        const file = await this.eventRepository.downloadConsumptionList(event);
+        saveBlobToFile(`${event.name.replace('s', '_')}_consumption-list.xlsx`, file);
     }
 
     public downloadCalendarEntry(event: Event): void {

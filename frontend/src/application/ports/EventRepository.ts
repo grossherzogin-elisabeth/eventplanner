@@ -12,4 +12,6 @@ export interface EventRepository {
     importEvents(year: number, file: Blob): Promise<ImportError[]>;
 
     downloadImoList(event: Event): Promise<Blob>;
+
+    downloadConsumptionList(event: Event): Promise<Blob>;
 }
