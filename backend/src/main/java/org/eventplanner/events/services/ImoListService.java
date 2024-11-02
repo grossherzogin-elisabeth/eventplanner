@@ -19,6 +19,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,9 @@ public class ImoListService {
         try (fileTemplate) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
             XSSFSheet sheet = workbook.getSheetAt(0);
+
+            addArrivalDepartureDetails(sheet, event);
+
             int crewSize = crewList.size();
             int firstEmptyRow = findFirstEmptyRow(sheet);
 
@@ -101,7 +105,7 @@ public class ImoListService {
             rowCounter++;
             Row row = rowIterator.next();
             Iterator<Cell> cellIterator = row.cellIterator();
-            while (cellIterator.hasNext() && !rowIsEmpty) {
+            while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
                 if (cell != null && cell.getCellType() != CellType.BLANK) {
                     break;
@@ -125,5 +129,34 @@ public class ImoListService {
             log.error("Failed to get workbook bytes", e);
         }
         return bos.toByteArray();
+    }
+
+    private void addArrivalDepartureDetails(XSSFSheet sheet, Event event){
+
+        String arrivalPort = event.getLocations().getFirst().name();
+        String departurePort = event.getLocations().getLast().name();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String arrivalDate = event.getStart().toLocalDate().format(formatter);
+        String departureDate = event.getEnd().toLocalDate().format(formatter);
+
+        Iterator<Row> rowIterator = sheet.iterator();
+        int rowCounter = 0;
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            Iterator<Cell> cellIterator = row.cellIterator();
+            int cellCounter = 0;
+            while (cellIterator.hasNext()) {
+                Cell cell = cellIterator.next();
+                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("2. Port of arrival/departure")) {
+                    sheet.getRow(rowCounter+1).getCell(cellCounter).setCellValue(arrivalPort + " / " + departurePort);
+                }
+                else if ((cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("3. Date of arrival/departure"))){
+                    sheet.getRow(rowCounter+1).getCell(cellCounter).setCellValue(arrivalDate + " / " + departureDate);
+                    return;
+                }
+                cellCounter++;
+            }
+            rowCounter++;
+        }
     }
 }
