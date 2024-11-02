@@ -112,7 +112,7 @@ table.v-table {
     @apply relative z-10;
 }
 
-.interactive-table .v-table:not(.loading) tbody tr:not(.no-data) {
+.interactive-table:not(.loading) .v-table tbody tr:not(.no-data) {
     @apply cursor-pointer hover:text-primary-600;
 }
 
@@ -153,4 +153,9 @@ table.v-table {
 
 .v-table td.pb-0 {
     padding-bottom: 0 !important;
+}
+
+.with-multi-selection .v-table,
+.interactive-table .v-table {
+    @apply select-none;
 }

@@ -188,10 +188,6 @@ interface Props<T> {
      * Should the table offer multi selection? items should be of type Selectable in that case.
      */
     multiselection?: boolean;
-    /**
-     * Should the table offer a context menu?
-     */
-    contextMenu?: boolean;
 }
 
 interface Emits {
@@ -258,6 +254,12 @@ const classes = computed<string[]>(() => {
     const result: string[] = [];
     if (loading.value) {
         result.push('loading');
+    }
+    if (props.multiselection) {
+        result.push('with-multi-selection');
+    }
+    if (slots.contextMenu) {
+        result.push('with-context-menu');
     }
     return result;
 });
