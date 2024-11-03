@@ -2,6 +2,7 @@ import { computed, ref } from 'vue';
 import type { InputSelectOption, Position, PositionKey } from '@/domain';
 import { usePositionUseCase } from '@/ui/composables/Application';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function usePositions() {
     const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 

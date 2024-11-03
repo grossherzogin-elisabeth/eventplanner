@@ -28,7 +28,7 @@ type Emits = (e: 'update:modelValue', value: string) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-function onInput(event: Event) {
+function onInput(event: Event): void {
     const element = event.target as HTMLInputElement;
     emit('update:modelValue', element.value);
 }

@@ -123,7 +123,7 @@ const displayValue = computed<string>(() => {
     return '';
 });
 
-function onInput(date: Date) {
+function onInput(date: Date): void {
     visited.value = true;
     showDropdown.value = false;
     emit('update:modelValue', date);

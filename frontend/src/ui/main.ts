@@ -30,7 +30,7 @@ import './plugins/fontawesome';
 import { setupI18n } from './plugins/i18n';
 import { setupRouter } from './plugins/router';
 
-export function setupVue(context: { domain: Domain; application: Application }) {
+export function setupVue(context: { domain: Domain; application: Application }): void {
     const app = createApp(App);
     app.use(setupI18n(context.application.config));
     app.use(setupRouter(context.application.usecases.auth));

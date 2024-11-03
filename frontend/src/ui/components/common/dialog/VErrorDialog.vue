@@ -54,11 +54,11 @@ const details = computed<string>(() => {
     return '';
 });
 
-function init() {
+function init(): void {
     errorHandlingUseCase.registerErrorHandler((err) => open(err));
 }
 
-function submit() {
+function submit(): void {
     dlg.value?.submit();
 }
 

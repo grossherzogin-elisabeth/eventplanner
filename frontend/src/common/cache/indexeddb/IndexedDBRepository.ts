@@ -77,8 +77,8 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
             const transaction = database.transaction(this.store, 'readonly');
             const store = transaction.objectStore(this.store);
             const query = store.count();
-            query.onsuccess = () => resolve(query.result);
-            query.onerror = () => reject(query.error);
+            query.onsuccess = (): void => resolve(query.result);
+            query.onerror = (): void => reject(query.error);
         });
     }
 
@@ -91,8 +91,8 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
             const transaction = database.transaction(this.store, 'readonly');
             const store = transaction.objectStore(this.store);
             const query = store.getAll();
-            query.onsuccess = () => resolve(query.result.map((it) => it.value));
-            query.onerror = () => reject(query.error);
+            query.onsuccess = (): void => resolve(query.result.map((it) => it.value));
+            query.onerror = (): void => reject(query.error);
         });
     }
 
@@ -109,13 +109,13 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
             const transaction = database.transaction(this.store, 'readonly');
             const store = transaction.objectStore(this.store);
             const query = store.get(key);
-            query.onsuccess = () => {
+            query.onsuccess = (): void => {
                 if (query.result && query.result.value) {
                     resolve(query.result.value);
                 }
                 resolve(undefined);
             };
-            query.onerror = () => reject(query.error);
+            query.onerror = (): void => reject(query.error);
         });
     }
 
@@ -134,11 +134,11 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
                 updated: new Date(),
                 value: clone,
             });
-            query.onsuccess = () => {
+            query.onsuccess = (): void => {
                 resolve(clone);
                 this.emitChangeEvent('update', [clone.key]);
             };
-            query.onerror = () => reject(query.error);
+            query.onerror = (): void => reject(query.error);
         });
     }
 
@@ -161,14 +161,14 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
                     value: entity,
                 });
             });
-            transaction.oncomplete = () => {
+            transaction.oncomplete = (): void => {
                 resolve(entities);
                 this.emitChangeEvent(
                     'update',
                     entities.map((e) => e.key)
                 );
             };
-            transaction.onerror = () => reject(transaction.error);
+            transaction.onerror = (): void => reject(transaction.error);
         });
     }
 
@@ -182,11 +182,11 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
             const transaction = database.transaction(this.store, 'readwrite');
             const store = transaction.objectStore(this.store);
             const query = store.delete(key);
-            query.onsuccess = () => {
+            query.onsuccess = (): void => {
                 resolve();
                 this.emitChangeEvent('remove', [key]);
             };
-            query.onerror = () => reject(query.error);
+            query.onerror = (): void => reject(query.error);
         });
     }
 
@@ -208,14 +208,14 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
             const transaction = database.transaction(this.store, 'readwrite');
             const store = transaction.objectStore(this.store);
             const query = store.clear();
-            query.onsuccess = () => {
+            query.onsuccess = (): void => {
                 resolve();
                 this.emitChangeEvent(
                     'clear',
                     allEntities.map((e) => e.key)
                 );
             };
-            query.onerror = () => reject(query.error);
+            query.onerror = (): void => reject(query.error);
         });
     }
 

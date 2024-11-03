@@ -88,7 +88,7 @@ async function open(value?: Position): Promise<Position | undefined> {
     return await dlg.value?.open().catch(() => undefined);
 }
 
-function submit() {
+function submit(): void {
     if (validation.isValid.value) {
         dlg.value?.submit(position.value);
     } else {

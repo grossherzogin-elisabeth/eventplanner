@@ -81,7 +81,7 @@ interface SystemInfo {
 const config = useConfig();
 const systemInfo = ref<SystemInfo>({});
 
-async function fetchStatus() {
+async function fetchStatus(): Promise<void> {
     const response = await fetch('api/v1/status');
     systemInfo.value = await response.clone().json();
 }

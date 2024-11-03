@@ -194,7 +194,7 @@ async function open(evt: Event): Promise<Event | undefined> {
     return result;
 }
 
-function submit() {
+function submit(): void {
     if (validation.isValid.value) {
         dlg.value?.submit(event.value);
     } else {

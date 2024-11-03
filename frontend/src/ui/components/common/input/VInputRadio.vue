@@ -85,7 +85,7 @@ const visited = ref(false);
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
 
-function onInput(option: T) {
+function onInput(option: T): void {
     visited.value = true;
     if (!props.disabled) {
         emit('update:modelValue', option);

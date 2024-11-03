@@ -2,6 +2,7 @@ import { computed, ref } from 'vue';
 import type { InputSelectOption, Qualification, QualificationKey } from '@/domain';
 import { useQualificationsUseCase } from '@/ui/composables/Application';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useQualifications() {
     const map = ref<Map<QualificationKey, Qualification>>(new Map<QualificationKey, Qualification>());
 

@@ -28,7 +28,7 @@ export function enableScrolling(): void {
     window.scrollTo(0, scrollY);
 }
 
-export function isTouchDevice() {
+export function isTouchDevice(): boolean {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || (navigator as any).msMaxTouchPoints > 0;
 }

@@ -119,7 +119,7 @@ const userRoles = computed<RoleTableEntry[]>(() => {
     }));
 });
 
-function toggleRole(role: Role) {
+function toggleRole(role: Role): void {
     const user = props.modelValue;
     if (user.roles.includes(role)) {
         user.roles = user.roles.filter((r) => r !== role);

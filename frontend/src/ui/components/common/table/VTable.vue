@@ -403,7 +403,7 @@ function onClick(event: MouseEvent, row: T & Selectable, index: number): void {
     emit('click', row);
 }
 
-function onReorder() {
+function onReorder(): void {
     emit('reordered');
 }
 

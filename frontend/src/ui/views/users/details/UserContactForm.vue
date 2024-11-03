@@ -54,7 +54,7 @@ watch(() => user.value.email, emitUpdate);
 watch(() => user.value.phone, emitUpdate);
 watch(() => user.value.mobile, emitUpdate);
 
-function emitUpdate() {
+function emitUpdate(): void {
     emit('update:modelValue', user.value);
 }
 </script>

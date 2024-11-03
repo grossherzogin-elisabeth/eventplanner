@@ -201,7 +201,7 @@ function moveIntoVisibleArea(): void {
     }
 }
 
-function close() {
+function close(): void {
     setTimeout(() => emit('close'), 10);
 }
 

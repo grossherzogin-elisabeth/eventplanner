@@ -180,7 +180,7 @@ async function open(value: Registration): Promise<Registration | undefined> {
     return value;
 }
 
-function submit() {
+function submit(): void {
     if (validation.isValid.value) {
         dlg.value?.submit(registration.value);
     } else {

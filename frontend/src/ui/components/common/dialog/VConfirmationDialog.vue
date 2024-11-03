@@ -38,7 +38,7 @@ async function open(dialogContent?: ConfirmationDialogContent): Promise<boolean 
     return await dlg.value.open().catch(() => undefined);
 }
 
-function submit() {
+function submit(): void {
     dlg.value?.submit(true);
 }
 

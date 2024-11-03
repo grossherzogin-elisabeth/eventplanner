@@ -2,6 +2,7 @@ import type { Ref } from 'vue';
 import { computed, ref } from 'vue';
 import type { ValidationHint } from '@/domain';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useValidation<T>(t: Ref<T>, validationFunction: (t: T) => Record<string, ValidationHint[]>) {
     const showErrors = ref<boolean>(false);
 

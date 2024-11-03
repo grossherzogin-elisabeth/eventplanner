@@ -195,7 +195,7 @@ async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
     return result;
 }
 
-function submit() {
+function submit(): void {
     if (validation.isValid.value) {
         dlg.value?.submit(event.value);
     } else {

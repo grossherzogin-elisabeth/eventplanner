@@ -103,7 +103,7 @@ function onInput(event: Event): void {
     }
 }
 
-function onModelValueChange() {
+function onModelValueChange(): void {
     const modelValueString = `${props.modelValue}`;
     const valueString = `${value.value}`;
 
@@ -112,7 +112,7 @@ function onModelValueChange() {
     }
 }
 
-function init() {
+function init(): void {
     value.value = props.modelValue !== undefined ? props.modelValue : '';
     watch(
         () => props.modelValue,

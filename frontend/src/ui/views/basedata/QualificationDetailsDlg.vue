@@ -120,7 +120,7 @@ function togglePosition(position: PositionKey, enabled: boolean): void {
     }
 }
 
-function submit() {
+function submit(): void {
     if (validation.isValid.value) {
         dlg.value?.submit(qualification.value);
     } else {

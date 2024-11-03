@@ -206,7 +206,7 @@ const tab = ref<Tab>(tabs[0]);
 const enableEditingDateOfBirth = ref<boolean>(false);
 const enableEditingPlaceOfBirth = ref<boolean>(false);
 
-async function fetchUserDetails() {
+async function fetchUserDetails(): Promise<void> {
     userDetailsOriginal.value = await usersUseCase.getUserDetailsForSignedInUser();
     userDetails.value = deepCopy(userDetailsOriginal.value);
     enableEditingDateOfBirth.value = userDetails.value.dateOfBirth === undefined;
@@ -223,7 +223,7 @@ async function save(): Promise<void> {
     }
 }
 
-function init() {
+function init(): void {
     emit('update:title', 'Meine Daten');
     fetchUserDetails();
 }

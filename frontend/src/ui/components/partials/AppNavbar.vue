@@ -94,7 +94,7 @@ async function init(): Promise<void> {
     watch(router.currentRoute, onRouteChanged);
 }
 
-function onRouteChanged() {
+function onRouteChanged(): void {
     const meta = route.meta as RouteMetaData;
     if (meta.backTo) {
         backTo.value = routerStack.getLastOther() || { name: meta.backTo };

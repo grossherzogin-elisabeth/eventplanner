@@ -47,11 +47,11 @@ async function openSearch(): Promise<void> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function onInput(event: any) {
+function onInput(event: any): void {
     emit('update:modelValue', event.target?.value);
 }
 
-function cancel() {
+function cancel(): void {
     if (props.modelValue) {
         emit('update:modelValue', '');
     } else {

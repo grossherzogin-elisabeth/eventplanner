@@ -1,6 +1,7 @@
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useQueryStateSync<T>(prop: string, get: () => T, set: (t: T) => void) {
     const router = useRouter();
 

@@ -64,13 +64,13 @@ const positionsFilter = ref<string>('');
 const qualificationsTable = ref<{ createQualification(): void } | null>(null);
 const positionsTable = ref<{ createPosition(): void } | null>(null);
 
-function createQualification() {
+function createQualification(): void {
     if (qualificationsTable.value) {
         qualificationsTable.value.createQualification();
     }
 }
 
-function createPosition() {
+function createPosition(): void {
     if (positionsTable.value) {
         positionsTable.value.createPosition();
     }

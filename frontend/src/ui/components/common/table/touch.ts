@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useLongTouch(longTouchDelay: number = 500) {
     let touchStartEvent: TouchEvent | undefined = undefined;
     let touchMoveEvent: TouchEvent | undefined = undefined;

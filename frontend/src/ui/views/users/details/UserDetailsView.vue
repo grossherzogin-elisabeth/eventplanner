@@ -231,13 +231,13 @@ async function save(): Promise<void> {
     }
 }
 
-function impersonateUser() {
+function impersonateUser(): void {
     if (user.value) {
         authUseCase.impersonateUser(user.value.key);
     }
 }
 
-async function createRegistration() {
+async function createRegistration(): Promise<void> {
     if (createRegistrationForUserDialog.value && user.value) {
         const created = await createRegistrationForUserDialog.value.open(user.value);
         if (created) {

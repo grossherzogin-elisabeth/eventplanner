@@ -69,7 +69,7 @@ watch(() => user.value.dateOfBirth, emitUpdate);
 watch(() => user.value.placeOfBirth, emitUpdate);
 watch(() => user.value.passNr, emitUpdate);
 
-function emitUpdate() {
+function emitUpdate(): void {
     emit('update:modelValue', user.value);
 }
 </script>

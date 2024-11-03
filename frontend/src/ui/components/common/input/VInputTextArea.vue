@@ -83,7 +83,7 @@ const visited = ref(false);
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
 
-function onInput(event: Event) {
+function onInput(event: Event): void {
     visited.value = true;
     const element = event.target as HTMLInputElement;
     emit('update:modelValue', element.value);

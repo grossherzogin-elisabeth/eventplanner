@@ -27,7 +27,7 @@ const props = defineProps<Props>();
 const routerStack = useRouterStack();
 const router = useRouter();
 
-async function back() {
+async function back(): Promise<void> {
     const backTo = routerStack.getLastOther();
     if (backTo) {
         await router.push(backTo);

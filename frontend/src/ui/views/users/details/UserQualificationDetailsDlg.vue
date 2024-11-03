@@ -77,7 +77,7 @@ async function open(value?: UserQualification): Promise<UserQualification | unde
     return await dlg.value?.open().catch(() => undefined);
 }
 
-function submit() {
+function submit(): void {
     dlg.value?.submit(userQualification.value);
 }
 

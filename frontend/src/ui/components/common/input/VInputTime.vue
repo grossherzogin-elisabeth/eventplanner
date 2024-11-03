@@ -90,12 +90,12 @@ const displayValue = computed<string>(() => {
     return '00 : 00';
 });
 
-function onBlur() {
+function onBlur(): void {
     visited.value = true;
     inputValue.value = null;
 }
 
-function onInput(inputEvent: Event) {
+function onInput(inputEvent: Event): void {
     visited.value = true;
     const oldValue = inputValue.value || '';
     inputValue.value = (inputEvent.target as HTMLInputElement).value.replace(/[^0-9 :]/g, '');

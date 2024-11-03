@@ -60,7 +60,7 @@ async function open(evt: Event): Promise<string | undefined> {
     return await dlg.value?.open().catch(() => undefined);
 }
 
-function submit() {
+function submit(): void {
     dlg.value?.submit(message.value);
 }
 

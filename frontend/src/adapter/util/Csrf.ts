@@ -1,4 +1,4 @@
-export function getCsrfToken() {
+export function getCsrfToken(): string {
     const name = 'XSRF-TOKEN=';
     const decodedCookie = decodeURIComponent(document.cookie);
     const ca = decodedCookie.split(';');

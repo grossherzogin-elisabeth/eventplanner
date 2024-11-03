@@ -8,6 +8,7 @@ import type {
 
 const stack: (RouteLocationNamedRaw | RouteLocationPathRaw)[] = [];
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useRouterStack() {
     function push(route: RouteLocationNormalized): void {
         if (stack.length > 0) {

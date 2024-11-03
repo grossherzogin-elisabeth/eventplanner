@@ -182,7 +182,7 @@ function selectOption(option: InputSelectOption<T>): void {
     hideDropdown(true);
 }
 
-function focusNextOption() {
+function focusNextOption(): void {
     if (focusOptionIndex.value === null) {
         showDropdown();
     } else if (focusOptionIndex.value === props.options.length - 1) {
@@ -194,7 +194,7 @@ function focusNextOption() {
     }
 }
 
-function focusPrevOption() {
+function focusPrevOption(): void {
     if (!props.options || props.options.length === 0) {
         hideDropdown(true);
     }
@@ -209,7 +209,7 @@ function focusPrevOption() {
     }
 }
 
-function selectFocusedOption(e: KeyboardEvent) {
+function selectFocusedOption(e: KeyboardEvent): void {
     if (focusOptionIndex.value !== null) {
         selectOption(props.options[focusOptionIndex.value]);
         hideDropdown(true);

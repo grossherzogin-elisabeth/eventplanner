@@ -18,7 +18,7 @@ export async function getConnection(databaseName: string, storeNames: string[], 
     // console.log(`🗄️ Connecting to IndexedDB ${databaseName}`);
     return new Promise<IDBDatabase>((resolve, reject) => {
         const request = window.indexedDB.open(databaseName, version);
-        request.onsuccess = () => {
+        request.onsuccess = (): void => {
             const db = request.result;
             const missingStores = storeNames.filter((store) => !db.objectStoreNames.contains(store));
             if (missingStores.length === 0) {
@@ -29,12 +29,12 @@ export async function getConnection(databaseName: string, storeNames: string[], 
                 );
             }
         };
-        request.onerror = async () => {
+        request.onerror = async (): Promise<void> => {
             await deleteDatabase(databaseName);
             const retry = await getConnection(databaseName, storeNames, version);
             resolve(retry);
         };
-        request.onupgradeneeded = () => {
+        request.onupgradeneeded = (): void => {
             const database = request.result;
             // drop all stores
             const stores = database.objectStoreNames;
@@ -58,7 +58,7 @@ export async function deleteDatabase(databaseName: string): Promise<void> {
     // console.log(`🗄️ Deleting IndexedDB ${databaseName}`);
     return new Promise((resolve, reject) => {
         const deleteRequest = window.indexedDB.deleteDatabase(databaseName);
-        deleteRequest.onsuccess = () => resolve();
-        deleteRequest.onerror = () => reject();
+        deleteRequest.onsuccess = (): void => resolve();
+        deleteRequest.onerror = (): void => reject();
     });
 }

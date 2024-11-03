@@ -35,7 +35,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 const dragging = ref<boolean>(false);
 
-function handleDragStart(dragEvent: DragEvent) {
+function handleDragStart(dragEvent: DragEvent): void {
     if (dragEvent.dataTransfer && props.value) {
         dragging.value = true;
         emit('dragstart', props.value);
@@ -46,7 +46,7 @@ function handleDragStart(dragEvent: DragEvent) {
     }
 }
 
-function handleDragEnd() {
+function handleDragEnd(): void {
     dragging.value = false;
     if (props.value) {
         emit('dragend', props.value);

@@ -317,13 +317,13 @@ async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
     }
 }
 
-async function removeFromTeam(aggregate: ResolvedRegistrationSlot) {
+async function removeFromTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (aggregate.slot) {
         emit('update:event', eventService.unassignSlot(props.event, aggregate.slot.key));
     }
 }
 
-async function cancelRegistration(aggregate: ResolvedRegistrationSlot) {
+async function cancelRegistration(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (aggregate.user) {
         emit('update:event', eventService.cancelUserRegistration(props.event, aggregate.user?.key));
     } else if (aggregate.name) {

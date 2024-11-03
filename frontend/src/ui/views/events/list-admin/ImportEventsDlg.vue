@@ -93,7 +93,7 @@ async function open(): Promise<void> {
     await dlg.value?.open();
 }
 
-async function upload() {
+async function upload(): Promise<void> {
     if (file.value) {
         errors.value = await eventAdministrationUseCase.importEvents(year.value, file.value);
         uploadComplete.value = true;

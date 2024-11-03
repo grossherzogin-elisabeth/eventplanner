@@ -19,6 +19,7 @@ export default [
             '@typescript-eslint/no-empty-function': 'warn',
             // automatically add type import
             '@typescript-eslint/consistent-type-imports': 'error',
+            '@typescript-eslint/explicit-function-return-type': ['error'],
         },
     },
 ];

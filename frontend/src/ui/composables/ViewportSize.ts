@@ -1,10 +1,11 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useViewportSize() {
     const width = ref<number>(0);
     const height = ref<number>(0);
 
-    function update() {
+    function update(): void {
         width.value = window.visualViewport?.width || window.innerWidth;
         height.value = window.visualViewport?.height || window.innerHeight;
         document.documentElement.style.setProperty('--viewport-width', `${width.value}px`);

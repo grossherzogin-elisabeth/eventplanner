@@ -125,7 +125,7 @@ async function open(value?: Location): Promise<Location | undefined> {
     return await dlg.value?.open().catch(() => undefined);
 }
 
-function submit() {
+function submit(): void {
     if (validation.isValid.value) {
         dlg.value?.submit(location.value);
     } else {
