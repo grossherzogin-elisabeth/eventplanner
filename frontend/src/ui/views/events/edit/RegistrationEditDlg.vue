@@ -89,6 +89,7 @@ import { useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
+import { v4 as uuid } from 'uuid';
 
 interface Props {
     event: Event;
@@ -104,7 +105,7 @@ const qualifications = useQualifications();
 const dlg = ref<Dialog<Registration, Registration | undefined> | null>(null);
 const users = ref<User[]>([]);
 const registration = ref<Registration>({
-    key: '',
+    key: uuid(),
     positionKey: '',
 });
 const validation = useValidation(registration, (value) => {

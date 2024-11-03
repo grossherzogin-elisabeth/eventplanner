@@ -29,7 +29,13 @@
                 </tr>
             </tbody>
             <!-- data -->
-            <tbody v-else>
+            <component
+                :is="props.sortable ? VueDraggableNext : 'tbody'"
+                tag="tbody"
+                :list="props.sortable ? pagedItems : undefined"
+                handle=".cursor-move"
+                @change="onReorder"
+            >
                 <tr
                     v-for="(row, index) in pagedItems"
                     ref="rows"
@@ -41,6 +47,9 @@
                     @click.stop.prevent="onClick($event, row as T & Selectable, index)"
                 >
                     <td></td>
+                    <td v-if="props.sortable && viewPortSize.width.value > 1024" class="w-0">
+                        <i class="fa-solid fa-grip-vertical cursor-move opacity-25"></i>
+                    </td>
                     <td
                         v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"
                         @click.stop.prevent="row.selected = !row.selected"
@@ -75,7 +84,7 @@
                     </td>
                     <td></td>
                 </tr>
-            </tbody>
+            </component>
         </table>
         <VDropdownWrapper
             v-if="dropdownAnchor && dropdownItem"
@@ -121,6 +130,7 @@ import { useLongTouch } from '@/ui/components/common/table/touch.ts';
 import { useQueryStateSync } from '@/ui/composables/QueryState';
 import { useViewportSize } from '@/ui/composables/ViewportSize.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
+import { VueDraggableNext } from 'vue-draggable-next';
 import VDropdownWrapper from '../dropdown/VDropdownWrapper.vue';
 import VPagination from './VPagination.vue';
 
@@ -188,10 +198,13 @@ interface Props<T> {
      * Should the table offer multi selection? items should be of type Selectable in that case.
      */
     multiselection?: boolean;
+
+    sortable?: boolean;
 }
 
 interface Emits {
     (e: 'click', value: T): void;
+    (e: 'reordered'): void;
     (e: 'update:page', value: number): void;
 }
 
@@ -388,6 +401,10 @@ function onClick(event: MouseEvent, row: T & Selectable, index: number): void {
         }
     }
     emit('click', row);
+}
+
+function onReorder() {
+    emit('reordered');
 }
 
 function openContextMenu(anchor: EventTarget | HTMLElement | undefined, row: T & Selectable): void {

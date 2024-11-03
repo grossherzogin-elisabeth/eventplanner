@@ -3,6 +3,8 @@
         :items="props.event.locations"
         class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
         :class="$attrs.class"
+        sortable
+        @reordered="updateOrders"
         @click="editLocation($event)"
     >
         <template #row="{ item, first, last }">
@@ -22,7 +24,7 @@
             <td :key="item.icon" class="text-xl">
                 <i class="fa-solid" :class="item.icon" />
             </td>
-            <td class="w-full lg:w-2/3">
+            <td class="w-full max-w-[50vw] sm:max-w-full">
                 <p class="mb-1 font-semibold">
                     <span>{{ item.name }}</span>
                 </p>
@@ -34,7 +36,6 @@
                     <span v-else-if="item.country">{{ countries.getName(item.country) }}</span>
                 </p>
             </td>
-            <td class="hidden w-1/3 lg:table-cell"></td>
         </template>
         <template #context-menu="{ item }">
             <li class="context-menu-item" @click="editLocation(item)">
@@ -95,6 +96,10 @@ async function moveLocationUp(location: Location): Promise<void> {
 async function moveLocationDown(location: Location): Promise<void> {
     const updatedEvent = eventService.moveLocation(props.event, location, 1);
     emit('update:modelValue', updatedEvent);
+}
+
+async function updateOrders(): Promise<void> {
+    props.event.locations.forEach((location, index) => (location.order = index + 1));
 }
 
 function deleteLocation(location: Location): void {

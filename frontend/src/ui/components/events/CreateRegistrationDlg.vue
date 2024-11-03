@@ -97,6 +97,7 @@ import { useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
+import { v4 as uuid } from 'uuid';
 
 const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
@@ -107,7 +108,7 @@ const dlg = ref<Dialog<Event, Event> | null>(null);
 const event = ref<Event | undefined>(undefined);
 const users = ref<User[]>([]);
 const registration = ref<Registration>({
-    key: '',
+    key: uuid(),
     positionKey: '',
     userKey: undefined,
     name: undefined,
@@ -173,7 +174,7 @@ async function open(evt: Event): Promise<Event | undefined> {
     validation.reset();
     event.value = evt;
     registration.value = {
-        key: '',
+        key: uuid(),
         positionKey: '',
         userKey: undefined,
         name: undefined,

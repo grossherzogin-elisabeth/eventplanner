@@ -61,12 +61,13 @@ import { SlotCriticality } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCheckBox, VInputCombobox, VInputLabel, VInputSelect, VInputText } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
+import { v4 as uuid } from 'uuid';
 
 const positions = usePositions();
 
 const dlg = ref<Dialog<Slot | undefined, Slot | undefined> | null>(null);
 const slot = ref<Slot>({
-    key: '',
+    key: uuid(),
     order: -1,
     criticality: SlotCriticality.Optional,
     positionKeys: [],
@@ -77,7 +78,7 @@ async function open(value?: Slot): Promise<Slot | undefined> {
     slot.value = value
         ? deepCopy(value)
         : {
-              key: '',
+              key: uuid(),
               order: -1,
               criticality: SlotCriticality.Optional,
               positionKeys: [],
@@ -105,7 +106,7 @@ function togglePosition(position: PositionKey, enabled: boolean): void {
     }
 }
 
-function submit() {
+function submit(): void {
     dlg.value?.submit(slot.value);
 }
 

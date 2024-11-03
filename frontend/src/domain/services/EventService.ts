@@ -11,6 +11,7 @@ import type {
     ValidationHint,
 } from '@/domain';
 import { EventState } from '@/domain';
+import { v4 as uuid } from 'uuid';
 
 export class EventService {
     public doEventsHaveOverlappingDays(a?: Event, b?: Event): boolean {
@@ -158,6 +159,21 @@ export class EventService {
 
     public removeSlot(event: Event, slot: Slot): Event {
         event.slots = event.slots.filter((it) => it.key !== slot.key);
+        event.slots.forEach((it, index) => (it.order = index + 1));
+        return event;
+    }
+
+    public duplicateSlot(event: Event, slot: Slot): Event {
+        const index = event.slots.findIndex((it) => it.key === slot.key);
+        event.slots.splice(index, 0, {
+            key: uuid(),
+            order: -1,
+            positionName: slot.positionName,
+            positionKeys: slot.positionKeys,
+            criticality: slot.criticality,
+            assignedRegistrationKey: undefined,
+        });
+        event.slots.forEach((it, index) => (it.order = index + 1));
         return event;
     }
 
@@ -198,7 +214,7 @@ export class EventService {
         return event;
     }
 
-    public moveLocation(event: Event, location: Location, offset: number) {
+    public moveLocation(event: Event, location: Location, offset: number): Event {
         if (offset === 0) {
             return event;
         }

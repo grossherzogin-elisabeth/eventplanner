@@ -4,7 +4,9 @@
         class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
         :class="$attrs.class"
         :page-size="-1"
+        sortable
         @click="editSlot($event)"
+        @reordered="updatePrios"
     >
         <template #row="{ item, index }">
             <td class="w-0">
@@ -60,6 +62,10 @@
                 <i class="fa-solid fa-edit" />
                 <span>Slot bearbeiten</span>
             </li>
+            <li class="context-menu-item" @click="duplicateSlot(item)">
+                <i class="fa-solid fa-clone" />
+                <span>Slot duplizieren</span>
+            </li>
             <li class="context-menu-item" @click="moveSlotUp(item)">
                 <i class="fa-solid fa-arrow-up" />
                 <span>Nach oben verschieben</span>
@@ -107,6 +113,10 @@ async function editSlot(slot: Slot): Promise<void> {
     }
 }
 
+function updatePrios(): void {
+    props.event.slots.forEach((slot, index) => (slot.order = index));
+}
+
 async function moveSlotUp(slot: Slot): Promise<void> {
     const updatedEvent = eventService.moveSlot(props.event, slot, -1);
     emit('update:modelValue', updatedEvent);
@@ -119,6 +129,11 @@ async function moveSlotDown(slot: Slot): Promise<void> {
 
 function deleteSlot(slot: Slot): void {
     const updatedEvent = eventService.removeSlot(props.event, slot);
+    emit('update:modelValue', updatedEvent);
+}
+
+function duplicateSlot(slot: Slot): void {
+    const updatedEvent = eventService.duplicateSlot(props.event, slot);
     emit('update:modelValue', updatedEvent);
 }
 </script>
