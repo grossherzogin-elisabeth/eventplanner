@@ -1,5 +1,6 @@
 package org.eventplanner.importer.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
@@ -23,6 +24,7 @@ public class QualificationJsonImporter {
         return repository.findAll().stream().map(QualificationJsonEntity::toDomain).toList();
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private record QualificationJsonEntity(
             @NonNull String key,
             @NonNull String name,
