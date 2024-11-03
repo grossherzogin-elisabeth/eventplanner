@@ -9,7 +9,8 @@ import java.io.Serializable;
 public record UpdatePositionRequest(
     @NonNull String name,
     @NonNull String color,
-    int prio
+    int prio,
+    @NonNull String imoListRank
 ) implements Serializable {
 
     public Position toDomain(String key) {
@@ -17,7 +18,8 @@ public record UpdatePositionRequest(
             new PositionKey(key),
             name,
             color,
-            prio
+            prio,
+            imoListRank
         );
     }
 }

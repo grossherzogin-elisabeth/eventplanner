@@ -5,10 +5,14 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.eventplanner.common.ObjectUtils;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.RegistrationKey;
+import org.eventplanner.positions.adapter.PositionRepository;
+import org.eventplanner.positions.entities.Position;
+import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.UserKey;
@@ -19,23 +23,28 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ImoListService {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
+    private final PositionRepository positionRepository;
 
-    public ImoListService(@Autowired UserService userService) {
+    public ImoListService(
+            @Autowired UserService userService,
+            @Autowired PositionRepository positionRepository
+    ) {
         this.userService = userService;
+        this.positionRepository = positionRepository;
     }
 
     public @NonNull ByteArrayOutputStream generateImoList(@NonNull Event event) throws IOException {
+        var positionMap = new HashMap<PositionKey, Position>();
+        positionRepository.findAll().forEach(position -> positionMap.put(position.getKey(), position));
 
         List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
                 .map(Slot::getAssignedRegistration)
@@ -61,7 +70,7 @@ public class ImoListService {
             String departureDate = event.getEnd().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             addEventDetailsToImoList(sheet,"{{Date_a/d}}",arrivalDate + "/" + departureDate);
 
-            writeCrewDataToSheet(sheet, crewList);
+            writeCrewDataToSheet(sheet, crewList, positionMap);
 
             return getWorkbookBytes(workbook);
         }catch (IOException e) {
@@ -92,46 +101,45 @@ public class ImoListService {
         return rowCounter;
     }
 
-    private void writeCrewDataToSheet(XSSFSheet sheet, List<Registration> crewList) throws IOException{
+    private void writeCrewDataToSheet(XSSFSheet sheet, List<Registration> crewList, Map<PositionKey, Position> positionMap) throws IOException{
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
 
         for (int crewCounter = 1; crewCounter < crewList.size(); crewCounter++){
             Row currentRow = sheet.getRow(crewCounter+firstEmptyRow-1);
             currentRow.getCell(0).setCellValue(crewCounter);
-
-            UserKey crewMemberKey = crewList.get(crewCounter).getUser();
+            Registration currentRegistration = crewList.get(crewCounter);
+            String imoListRank = ObjectUtils.mapNullable(positionMap.get(currentRegistration.getPosition()),
+                    Position::getImoListRank,
+                    currentRegistration.getPosition().value());
+            UserKey crewMemberKey = currentRegistration.getUser();
             if (crewMemberKey != null) {
-                Optional<UserDetails> crewMemberDetails = userService.getUserByKey(Objects.requireNonNull(crewMemberKey));
+                Optional<UserDetails> crewMemberDetails = userService.getUserByKey(crewMemberKey);
 
                 if (crewMemberDetails.isPresent()) {
                     currentRow.getCell(1).setCellValue(crewMemberDetails.get().getLastName());
                     currentRow.getCell(2).setCellValue(crewMemberDetails.get().getFirstName());
-                    currentRow.getCell(3).setCellValue(crewList.get(crewCounter).getPosition().value());
+                    currentRow.getCell(3).setCellValue(imoListRank);
                     currentRow.getCell(4).setCellValue(crewMemberDetails.get().getNationality());
-                    currentRow.getCell(5).setCellValue(Objects.requireNonNull(crewMemberDetails.get().getDateOfBirth()).toLocalDateTime());
+                    var dateOfBirth = crewMemberDetails.get().getDateOfBirth();
+                    if (dateOfBirth != null) {
+                        currentRow.getCell(5).setCellValue(dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                    } else {
+                        currentRow.getCell(5).setCellValue("");
+                    }
                     currentRow.getCell(6).setCellValue(crewMemberDetails.get().getPlaceOfBirth());
                     currentRow.getCell(7).setCellValue(crewMemberDetails.get().getPassNr());
-                } else {
-                    // found no user for the given user key
-                    currentRow.getCell(1).setCellValue(crewList.get(crewCounter).getName());
-                    currentRow.getCell(2).setCellValue("Gastcrew");
-                    currentRow.getCell(3).setCellValue(crewList.get(crewCounter).getPosition().value());
-                    currentRow.getCell(4).setCellValue("");
-                    currentRow.getCell(5).setCellValue("");
-                    currentRow.getCell(6).setCellValue("");
-                    currentRow.getCell(7).setCellValue("");
+                    continue;
                 }
-            } else {
-                // user not found
-                currentRow.getCell(1).setCellValue("nicht gefunden");
-                currentRow.getCell(2).setCellValue("");
-                currentRow.getCell(3).setCellValue(crewList.get(crewCounter).getPosition().value());
-                currentRow.getCell(4).setCellValue("");
-                currentRow.getCell(5).setCellValue("");
-                currentRow.getCell(6).setCellValue("");
-                currentRow.getCell(7).setCellValue("");
             }
+            // user not found
+            currentRow.getCell(1).setCellValue(currentRegistration.getName());
+            currentRow.getCell(2).setCellValue("");
+            currentRow.getCell(3).setCellValue(imoListRank);
+            currentRow.getCell(4).setCellValue("");
+            currentRow.getCell(5).setCellValue("");
+            currentRow.getCell(6).setCellValue("");
+            currentRow.getCell(7).setCellValue("");
         }
     }
 

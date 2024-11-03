@@ -24,10 +24,11 @@ public class PositionJsonImporter {
             @NonNull String key,
             @NonNull String name,
             @NonNull String color,
-            int prio
+            int prio,
+            @NonNull String imoListRank
     ) implements Serializable {
         public Position toDomain() {
-            return new Position(new PositionKey(key), name, color, prio);
+            return new Position(new PositionKey(key), name, color, prio, imoListRank);
         }
     }
 }

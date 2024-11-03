@@ -11,7 +11,8 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 public record CreatePositionRequest(
     @NonNull String name,
     @NonNull String color,
-    int prio
+    int prio,
+    @NonNull String imoListRank
 ) implements Serializable {
 
     public Position toDomain() {
@@ -19,7 +20,8 @@ public record CreatePositionRequest(
             new PositionKey(""),
             name,
             color,
-            prio
+            prio,
+            imoListRank
         );
     }
 }
