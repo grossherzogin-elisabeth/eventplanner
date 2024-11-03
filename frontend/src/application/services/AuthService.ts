@@ -15,6 +15,7 @@ export class AuthService {
                 email: this.impersonating.email,
                 firstname: this.impersonating.firstName,
                 lastname: this.impersonating.lastName,
+                positions: this.impersonating.positionKeys,
                 impersonated: true,
             };
         }

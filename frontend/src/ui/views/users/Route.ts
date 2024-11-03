@@ -1,19 +1,19 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { Permission } from '@/domain';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData.ts';
-import { Routes } from '@/ui/views/Routes.ts';
+import Details from './details/NestedRoute.ts';
+import List from './list/NestedRoute.ts';
 
 const routeMeta: RouteMetaData = {
     authenticated: true,
-    permissions: [Permission.READ_EVENTS],
-    backTo: Routes.EventsCalendar,
+    permissions: [Permission.READ_USER_DETAILS],
 };
 
 const route: RouteRecordRaw = {
-    path: ':year/details/:key',
-    name: Routes.EventDetails,
-    component: () => import('./EventDetailsView.vue'),
+    path: '/users',
     meta: routeMeta,
+    name: 'app_admin-users-parent',
+    children: [List, Details],
 };
 
 export default route;

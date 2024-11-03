@@ -5,14 +5,14 @@ import { Routes } from '@/ui/views/Routes.ts';
 
 const routeMeta: RouteMetaData = {
     authenticated: true,
-    permissions: [Permission.READ_EVENTS],
-    backTo: Routes.EventsCalendar,
+    permissions: [Permission.WRITE_EVENTS],
+    backTo: Routes.EventsListAdmin,
 };
 
 const route: RouteRecordRaw = {
-    path: ':year/details/:key',
-    name: Routes.EventDetails,
-    component: () => import('./EventDetailsView.vue'),
+    path: ':year/edit/:key',
+    name: Routes.EventEdit,
+    component: () => import('./EventEditView.vue'),
     meta: routeMeta,
 };
 

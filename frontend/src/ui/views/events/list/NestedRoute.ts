@@ -1,18 +1,17 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { Permission } from '@/domain';
-import type { RouteMetaData } from '@/ui/model/RouteMetaData';
-import { Routes } from '@/ui/views/Routes';
+import type { RouteMetaData } from '@/ui/model/RouteMetaData.ts';
+import { Routes } from '@/ui/views/Routes.ts';
 
 const routeMeta: RouteMetaData = {
     authenticated: true,
     permissions: [Permission.READ_EVENTS],
-    hasTransparentHeader: true,
 };
 
 const route: RouteRecordRaw = {
-    path: ':year',
-    name: Routes.EventsCalendar,
-    component: () => import('./EventCalendarView.vue'),
+    path: 'list',
+    name: Routes.EventsList,
+    component: () => import('./EventsListView.vue'),
     meta: routeMeta,
 };
 

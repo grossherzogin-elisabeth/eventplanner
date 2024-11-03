@@ -162,6 +162,8 @@ async function init(): Promise<void> {
                 errorHandlingService: errorHandlingService,
                 eventRepository: eventRepository,
                 eventCachingService: eventCachingService,
+                eventService: domain.services.events,
+                authService: authService,
                 eventRegistrationsRepository: eventRegistrationsRepository,
             }),
             appSettings: new AppSettingsUseCase({

@@ -1,9 +1,12 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { Permission } from '@/domain';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
-import List from '@/ui/views/events/calendar/NestedRoute';
+import Calendar from './calendar/NestedRoute';
 import ConfirmParticipation from './confirm-participation/NestedRoute';
 import Details from './details/NestedRoute';
+import Edit from './edit/NestedRoute';
+import ListAdmin from './list-admin/NestedRoute';
+import List from './list/NestedRoute';
 
 const routeMeta: RouteMetaData = {
     authenticated: true,
@@ -11,10 +14,10 @@ const routeMeta: RouteMetaData = {
 };
 
 const route: RouteRecordRaw = {
-    path: '/events/:year',
+    path: '/events',
     meta: routeMeta,
     name: 'app_event-parent',
-    children: [List, Details, ConfirmParticipation],
+    children: [List, Calendar, Details, ConfirmParticipation, ListAdmin, Edit],
 };
 
 export default route;

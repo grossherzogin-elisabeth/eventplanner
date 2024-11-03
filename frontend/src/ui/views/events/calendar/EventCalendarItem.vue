@@ -103,26 +103,28 @@
                         </p>
                     </div>
 
-                    <div
+                    <VInfo v-if="signedInUser.positions.length === 0" class="-mx-4 my-4 text-sm">
+                        Deinem Benutzerkonto wurde noch keine Position zugewiesen. Du kannst dich deshalb nicht selber
+                        für Reisen anmelden.
+                    </VInfo>
+
+                    <VInfo
                         v-if="
-                            signedInUserPositions.length > 1 &&
+                            signedInUser.positions.length > 1 &&
                             !props.event.signedInUserAssignedPosition &&
                             !props.event.signedInUserWaitingListPosition
                         "
-                        class="-mx-4 my-4 flex items-center space-x-4 rounded-xl bg-blue-100 px-4 py-3 text-blue-800"
+                        class="-mx-4 my-4 text-sm"
                     >
-                        <i class="fa-solid fa-info-circle" />
-                        <div class="text-sm font-bold">
-                            <p class="mb-2">
-                                Anmeldungen werden mit deiner aktuellen Standardposition
-                                <i>{{ positions.get(signedInUserPositions[0]).name }}</i> angelegt.
-                            </p>
-                            <button class="" @click="choosePositionAndJoinEvent(props.event)">
-                                <!--                                <i class="fa-solid fa-search"></i>-->
-                                <span class="underline"> Mit einer andere Position anmelden? </span>
-                            </button>
-                        </div>
-                    </div>
+                        <p class="mb-2">
+                            Anmeldungen werden mit deiner aktuellen Standardposition
+                            <i>{{ positions.get(signedInUser.positions[0]).name }}</i> angelegt.
+                        </p>
+                        <button class="" @click="choosePositionAndJoinEvent(props.event)">
+                            <!--                                <i class="fa-solid fa-search"></i>-->
+                            <span class="underline"> Mit einer andere Position anmelden? </span>
+                        </button>
+                    </VInfo>
 
                     <!-- primary button -->
                     <div class="-mx-4 mt-4 flex flex-wrap justify-end xl:-mr-4">
@@ -146,14 +148,14 @@
                             <span class="">Warteliste verlassen</span>
                         </button>
                         <button
-                            v-else-if="props.event.canSignedInUserJoin && signedInUserPositions.length >= 1"
+                            v-else-if="props.event.canSignedInUserJoin && signedInUser.positions.length >= 1"
                             class="btn-ghost max-w-80"
                             title="Anmelden"
                             @click="joinEvent(props.event)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
                             <span class="truncate">
-                                Anmelden als {{ positions.get(signedInUserPositions[0]).name }}</span
+                                Anmelden als {{ positions.get(signedInUser.positions[0]).name }}</span
                             >
                         </button>
                         <RouterLink
@@ -189,11 +191,11 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey } from '@/domain';
+import type { Event, PositionKey, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
-import { type Dialog, VDropdownWrapper } from '@/ui/components/common';
+import { type Dialog, VDropdownWrapper, VInfo } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
-import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { usePositions } from '@/ui/composables/Positions';
 import { Routes } from '@/ui/views/Routes';
@@ -214,26 +216,18 @@ const route = useRoute();
 const router = useRouter();
 const positions = usePositions();
 const eventUseCase = useEventUseCase();
-const usersUseCase = useUsersUseCase();
 const authUseCase = useAuthUseCase();
-const signedInUser = authUseCase.getSignedInUser();
 
-const signedInUserPositions = ref<PositionKey[]>([]);
+const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const showDropdown = ref<boolean>(false);
 
-const positionSelectDialog = ref<Dialog<void, PositionKey> | null>(null);
+const positionSelectDialog = ref<Dialog<void, PositionKey | undefined> | null>(null);
 
 function init(): void {
-    fetchSignedInUserPositions();
     watch(
         () => route.fullPath,
         () => (showDropdown.value = false)
     );
-}
-
-async function fetchSignedInUserPositions(): Promise<void> {
-    const user = await usersUseCase.getUserDetailsForSignedInUser();
-    signedInUserPositions.value = user.positionKeys;
 }
 
 function showDetails(): void {
@@ -252,14 +246,14 @@ async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
     const position = await positionSelectDialog.value?.open();
     if (position) {
         // default position might have changed
-        await fetchSignedInUserPositions();
+        signedInUser.value = authUseCase.getSignedInUser();
         const updatedEvent = await eventUseCase.joinEvent(evt, position);
         emit('update:event', updatedEvent);
     }
 }
 
 async function joinEvent(evt: Event): Promise<void> {
-    const updatedEvent = await eventUseCase.joinEvent(evt, signedInUserPositions.value[0]);
+    const updatedEvent = await eventUseCase.joinEvent(evt, signedInUser.value.positions[0]);
     emit('update:event', updatedEvent);
     showDropdown.value = false;
 }

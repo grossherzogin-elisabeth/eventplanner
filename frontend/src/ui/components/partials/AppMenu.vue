@@ -31,31 +31,44 @@
                     <span>Start</span>
                 </RouterLink>
             </li>
-            <li
-                v-if="signedInUser.permissions.includes(Permission.READ_EVENTS)"
-                :class="{ expanded: eventsExpanded }"
-                class="menu-item"
-            >
+            <li :class="{ expanded: eventsExpanded }" class="permission-read-events menu-item">
                 <button @click="eventsExpanded = !eventsExpanded">
                     <i class="fa-solid fa-calendar-days"></i>
-                    <span>Alle Reisen</span>
+                    <span>Kalender</span>
                     <i class="menu-chevron fa-solid fa-chevron-right"></i>
                 </button>
                 <ul v-if="eventsExpanded" class="space-y-1 pb-4">
-                    <li v-for="y in years" :key="y" class="menu-item level-2">
-                        <RouterLink :to="{ name: Routes.Events, params: { year: y } }">
+                    <li
+                        v-for="y in years"
+                        :key="y"
+                        class="menu-item level-2"
+                        :class="{ active: eventRouteActive && eventRoute === `${Routes.EventsCalendar}:${y}` }"
+                    >
+                        <RouterLink :to="{ name: Routes.EventsCalendar, params: { year: y } }">
                             <span>{{ y }}</span>
                         </RouterLink>
                     </li>
                 </ul>
             </li>
-            <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)" class="menu-item">
-                <RouterLink :to="{ name: Routes.EventsAdmin }">
+            <li
+                class="permission-read-events menu-item"
+                :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }"
+            >
+                <RouterLink :to="{ name: Routes.EventsList }">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Alle Reisen</span>
+                </RouterLink>
+            </li>
+            <li
+                class="permission-write-events menu-item"
+                :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }"
+            >
+                <RouterLink :to="{ name: Routes.EventsListAdmin }">
                     <i class="fa-solid fa-compass-drafting"></i>
                     <span>Reisen verwalten</span>
                 </RouterLink>
             </li>
-            <li v-if="signedInUser.permissions.includes(Permission.READ_USER_DETAILS)" class="menu-item">
+            <li class="permission-read-user-details menu-item">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
                     <span>Nutzer verwalten</span>
@@ -70,10 +83,10 @@
             >
                 <RouterLink :to="{ name: Routes.Basedata }">
                     <i class="fa-solid fa-database"></i>
-                    <span>Stammdaten</span>
+                    <span>Stammdaten verwalten</span>
                 </RouterLink>
             </li>
-            <li v-if="signedInUser.permissions.includes(Permission.WRITE_SETTINGS)" class="menu-item">
+            <li class="permission-write-application-settings menu-item">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>
                     <span>Einstellungen</span>
@@ -154,7 +167,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { SignedInUser } from '@/domain';
 import { Permission } from '@/domain';
@@ -165,6 +178,9 @@ const config = useConfig();
 const authUseCase = useAuthUseCase();
 const route = useRoute();
 
+const eventRoute = ref<string | undefined>(undefined);
+const eventRouteActive = ref<boolean>(false);
+
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const loading = ref<boolean>(true);
 const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1];
@@ -172,6 +188,16 @@ const eventsExpanded = ref<boolean>(false);
 
 authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
 setTimeout(() => (loading.value = false), 1000);
+watch(route, () => {
+    eventRouteActive.value = route.matched.find((it) => it.name === 'app_event-parent') !== undefined;
+    if (route.name === Routes.EventsCalendar) {
+        eventRoute.value = Routes.EventsCalendar + ':' + route.params.year;
+    } else if (route.name === Routes.EventsListAdmin) {
+        eventRoute.value = Routes.EventsListAdmin;
+    } else if (route.name === Routes.EventsList || eventRoute.value === undefined) {
+        eventRoute.value = Routes.EventsList;
+    }
+});
 </script>
 
 <style>

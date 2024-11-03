@@ -301,7 +301,7 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
         if (event.signedInUserAssignedPosition) {
             calendarDayEvent.class += ' assigned';
         } else if (event.signedInUserWaitingListPosition) {
-            calendarDayEvent.class += ' waiting-list';
+            calendarDayEvent.class += ' waiting-list-admin';
         } else if (event.assignedUserCount >= 23) {
             calendarDayEvent.class += ' full';
         }

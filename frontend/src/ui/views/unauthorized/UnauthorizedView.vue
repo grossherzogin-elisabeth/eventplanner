@@ -18,7 +18,7 @@ const router = useRouter();
 async function init(): Promise<void> {
     emit('update:title', 'Fehlende Berechtigung');
     await authUseCase.onLogin();
-    await router.push({ name: Routes.Events, params: { year: new Date().getFullYear() } });
+    await router.push({ name: Routes.EventsCalendar, params: { year: new Date().getFullYear() } });
 }
 
 init();

@@ -136,6 +136,7 @@ import { computed, ref } from 'vue';
 import { DateTimeFormat, addToDate } from '@/common/date';
 import type { Event } from '@/domain';
 import { EventState, EventType } from '@/domain';
+import { Routes } from '@/ui/views/Routes.ts';
 
 type RouteEmits = (e: 'update:title', value: string) => void;
 
@@ -157,9 +158,9 @@ const event = ref<Event>({
     signedInUserWaitingListPosition: undefined,
     signedInUserAssignedPosition: 'Leichtmatrose:in',
     locations: [
-        { name: 'Mariehamn', icon: '' },
-        { name: 'Ostsee', icon: '' },
-        { name: 'Stettin', icon: '' },
+        { name: 'Mariehamn', icon: '', order: 1 },
+        { name: 'Ostsee', icon: '', order: 2 },
+        { name: 'Stettin', icon: '', order: 3 },
     ],
     registrations: [],
     slots: [],

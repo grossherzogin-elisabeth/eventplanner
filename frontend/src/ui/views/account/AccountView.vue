@@ -114,9 +114,10 @@
                                     <p>
                                         Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login
                                         verwendet. Wenn du die Email Adresse ändern möchtest wende dich bitte an
-                                        <a class="text-primary-600" href="mailto:admin@grossherzogin-elisabeth.de">
-                                            admin@grossherzogin-elisabeth.de </a
-                                        >.
+                                        <a class="text-primary-600" :href="`mailto:${config.supportEmail}`">
+                                            {{ config.supportEmail }}
+                                        </a>
+                                        .
                                     </p>
                                 </div>
                             </div>
@@ -173,7 +174,7 @@ import { deepCopy } from '@/common';
 import type { InputSelectOption, UserDetails } from '@/domain';
 import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import { useAuthUseCase, useUsersUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase, useConfig, useUsersUseCase } from '@/ui/composables/Application';
 import UserQualificationsTable from './UserQualificationsTable.vue';
 
 enum Tab {
@@ -187,6 +188,7 @@ type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const config = useConfig();
 const authUseCase = useAuthUseCase();
 const usersUseCase = useUsersUseCase();
 const user = ref(authUseCase.getSignedInUser());

@@ -1,5 +1,5 @@
 <template>
-    <DetailsPage :back-to="{ name: Routes.Events }" :class="$attrs.class">
+    <DetailsPage :back-to="{ name: Routes.EventsCalendar }" :class="$attrs.class">
         <template #header>
             <h1 class="mb-2 hidden w-full truncate pt-8 xl:block">
                 {{ event?.name }}
@@ -172,7 +172,7 @@
                     <div v-else class="rounded-2xl bg-primary-100 p-4 md:rounded-none md:bg-transparent md:p-0">
                         <template v-if="tab === Tab.Team">
                             <ul class="space-y-2">
-                                <template v-for="(it, index) in team" :key="index">
+                                <template v-for="it in team" :key="it.slot?.key || ''">
                                     <li class="flex items-center space-x-2 md:space-x-4">
                                         <i v-if="it.name" class="fa-solid fa-user-circle text-gray-500" />
                                         <i v-else class="fa-solid fa-user-circle text-red-500" />
@@ -260,15 +260,15 @@
                 </template>
                 <template #label> Warteliste verlassen </template>
             </AsyncButton>
-            <div v-else-if="event.canSignedInUserJoin && signedInUserPositions.length > 1" class="btn-split">
+            <div v-else-if="event.canSignedInUserJoin && signedInUser.positions.length > 1" class="btn-split">
                 <AsyncButton class="btn-primary max-w-64 sm:max-w-80" :action="() => joinEvent()">
                     <template #icon>
                         <i class="fa-solid fa-user-plus" />
                     </template>
-                    <template #label> Anmelden als {{ positions.get(signedInUserPositions[0]).name }} </template>
+                    <template #label> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </template>
                 </AsyncButton>
                 <button
-                    v-if="signedInUserPositions.length > 1"
+                    v-if="signedInUser.positions.length > 1"
                     class="btn-primary"
                     @click="choosePositionAndJoinEvent(event)"
                 >
@@ -286,7 +286,7 @@
                 </template>
                 <template #label>
                     <span class="truncate text-left">
-                        Anmelden als {{ positions.get(signedInUserPositions[0]).name }}
+                        Anmelden als {{ positions.get(signedInUser.positions[0]).name }}
                     </span>
                 </template>
             </AsyncButton>
@@ -338,19 +338,19 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import {useRoute, useRouter} from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey } from '@/domain';
+import type { Event, PositionKey, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
-import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
+import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import { useAuthUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application';
-import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
-import { usePositions } from '@/ui/composables/Positions';
-import { Routes } from '@/ui/views/Routes';
+import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
+import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
+import { usePositions } from '@/ui/composables/Positions.ts';
+import { Routes } from '@/ui/views/Routes.ts';
 
 enum Tab {
     Team = 'team',
@@ -366,11 +366,9 @@ const router = useRouter();
 const positions = usePositions();
 const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
-const usersUseCase = useUsersUseCase();
-const signedInUser = authUseCase.getSignedInUser();
 
+const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const statesWithHiddenCrew = [EventState.OpenForSignup, EventState.Draft];
-const signedInUserPositions = ref<PositionKey[]>([]);
 const event = ref<Event | null>(null);
 const tab = ref<Tab>(Tab.Team);
 const documentsMock = ['Kammerplan', 'Wachplan', 'Getränkeliste Crew'];
@@ -387,7 +385,6 @@ const waitingListCount = computed<number>(() => {
 
 function init(): void {
     fetchEvent();
-    fetchSignedInUserPositions();
     watch(event, onEventChanged);
 }
 
@@ -397,13 +394,9 @@ async function fetchEvent(): Promise<void> {
         const year = parseInt(route.params.year as string, 10) || new Date().getFullYear();
         event.value = await eventUseCase.getEventByKey(year, key);
     } catch (e) {
-        await router.push({ name: Routes.Events });
+        console.error(e);
+        await router.push({ name: Routes.EventsCalendar });
     }
-}
-
-async function fetchSignedInUserPositions(): Promise<void> {
-    const user = await usersUseCase.getUserDetailsForSignedInUser();
-    signedInUserPositions.value = user.positionKeys;
 }
 
 async function onEventChanged() {
@@ -431,14 +424,14 @@ async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
     const position = await positionSelectDialog.value?.open();
     if (position) {
         // default position might have changed
-        await fetchSignedInUserPositions();
+        signedInUser.value = authUseCase.getSignedInUser();
         event.value = await eventUseCase.joinEvent(evt, position);
     }
 }
 
 async function joinEvent(): Promise<void> {
     if (event.value) {
-        event.value = await eventUseCase.joinEvent(event.value, signedInUserPositions.value[0]);
+        event.value = await eventUseCase.joinEvent(event.value, signedInUser.value.positions[0]);
     }
 }
 

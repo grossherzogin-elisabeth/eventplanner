@@ -9,7 +9,7 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
     const router = createRouter({
         history: createWebHistory(import.meta.env.BASE_URL),
         routes,
-        scrollBehavior: (to, from, savedPosition) => {
+        scrollBehavior: (to, _, savedPosition) => {
             if (to.hash) {
                 return {
                     el: to.hash,
@@ -27,7 +27,7 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
      * Add an authentication guard to the router. This guard requires the auth service of app context and therefore
      * must be initialized here instead of within the router plugin
      */
-    router.beforeResolve(async (to, from, next) => {
+    router.beforeResolve(async (to, _, next) => {
         const meta = to.meta as RouteMetaData | undefined;
         // authentication guard
         const redirect = await authUseCase.firstAuthentication(to.fullPath);

@@ -10,8 +10,9 @@ export enum Routes {
     Login = 'app_login',
     Logout = 'app_logout',
 
-    Events = 'app_events',
-    EventsAdmin = 'app_events-admin',
+    EventsCalendar = 'app_events-calendar',
+    EventsListAdmin = 'app_events-list-admin',
+    EventsList = 'app_events-list',
     EventDetails = 'app_event-details',
     EventConfirmParticipation = 'app_event-confirm-participation',
     EventEdit = 'app_event-edit',
