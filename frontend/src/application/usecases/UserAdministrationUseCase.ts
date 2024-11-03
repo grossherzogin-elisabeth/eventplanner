@@ -1,8 +1,8 @@
 import type { NotificationService, UserRepository } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
-import { diff } from '@/common';
-import type { UserDetails, UserKey } from '@/domain';
+import { diff, filterUndefined, wait } from '@/common';
+import type { User, UserDetails, UserKey } from '@/domain';
 
 export class UserAdministrationUseCase {
     private readonly userRepository: UserRepository;
@@ -74,5 +74,47 @@ export class UserAdministrationUseCase {
             this.errorHandlingService.handleRawError(e);
             throw e;
         }
+    }
+
+    public async contactUsers(users: User[], ignoreMissingEmails: boolean = false): Promise<void> {
+        let mailtoLink: string;
+        if (users.length === 1) {
+            const user = users[0];
+            if (!user.email) {
+                this.errorHandlingService.handleError({
+                    title: 'Keine Email Adresse hinterlegt',
+                    message: `Für ${user.nickName || user.firstName} ${user.lastName} haben wir keine
+                        Email Adresse hinterlegt. Du kannst ${user.nickName || user.firstName} deshalb
+                        nicht per Email kontaktieren.`,
+                });
+                return;
+            }
+            mailtoLink = `mailto:${user.email}`;
+        } else {
+            if (!ignoreMissingEmails) {
+                const usersWithoutEmail = users.filter((it) => !it.email).map((it) => `${it.firstName} ${it.lastName}`);
+                if (usersWithoutEmail.length > 0) {
+                    this.errorHandlingService.handleError({
+                        title: `${usersWithoutEmail.length} Nutzer ohne Email`,
+                        message: `Für ${usersWithoutEmail.length} der ${users.length} ausgewählten Nutzer haben wir keine
+                        Email Adresse hinterlegt: ${usersWithoutEmail.join(', ')}`,
+                        retryText: 'Andere kontaktieren',
+                        cancelText: 'Abbrechen',
+                        retry: () => this.contactUsers(users, true),
+                    });
+                    return;
+                }
+            }
+            const emails = users.map((it) => it.email).filter(filterUndefined);
+            mailtoLink = `mailto:?bcc=${emails?.join(',%20')}`;
+        }
+
+        const mailToElement = document.createElement('a');
+        mailToElement.setAttribute('href', mailtoLink);
+        mailToElement.style.display = 'none';
+        document.body.appendChild(mailToElement);
+        mailToElement.click();
+        await wait(1000);
+        document.body.removeChild(mailToElement);
     }
 }

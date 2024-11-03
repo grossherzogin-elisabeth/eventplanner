@@ -116,29 +116,23 @@
                     </td>
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="context-menu-item" @click="editUser(item)">
-                        <i class="fa-solid fa-edit" />
-                        <span>Nutzer bearbeiten</span>
+                    <li class="context-menu-item" :class="{ disabled: !item.email }" @click="contactUsers([item])">
+                        <i class="fa-solid fa-envelope" />
+                        <span>Email schreiben</span>
                     </li>
                     <li class="context-menu-item" @click="impersonateUser(item)">
                         <i class="fa-solid fa-user-secret" />
                         <span>Impersonate</span>
                     </li>
-                    <li v-if="item.email">
-                        <a :href="`mailto:${item.email}`" class="context-menu-item">
-                            <i class="fa-solid fa-envelope" />
-                            <span>Email schreiben</span>
-                        </a>
-                    </li>
                     <li class="context-menu-item" @click="createRegistration(item)">
                         <i class="fa-solid fa-calendar-plus" />
                         <span>Anmeldung hinzufügen</span>
                     </li>
-                    <li
-                        v-if="signedInUser.permissions.includes(Permission.DELETE_USERS)"
-                        class="context-menu-item text-red-700"
-                        @click="deleteUser(item)"
-                    >
+                    <li class="context-menu-item" @click="editUser(item)">
+                        <i class="fa-solid fa-edit" />
+                        <span>Nutzer bearbeiten</span>
+                    </li>
+                    <li class="permission-delete-users context-menu-item text-red-700" @click="deleteUser(item)">
                         <i class="fa-solid fa-trash-alt" />
                         <span>Nutzer löschen</span>
                     </li>
@@ -167,15 +161,15 @@
                     <div class="flex-grow"></div>
 
                     <div class="hidden sm:block">
-                        <button class="btn-ghost" disabled>
-                            <i class="fa-solid fa-envelope"></i>
-                            <span class="text-base">Email schreiben</span>
+                        <button class="btn-ghost" @click="contactUsers(selectedUsers)">
+                            <i class="fa-solid fa-envelope" />
+                            <span class="text-base">Email an alle schreiben</span>
                         </button>
                     </div>
                     <div class="hidden lg:block xl:hidden 2xl:block">
                         <button class="btn-ghost" disabled>
                             <i class="fa-solid fa-screwdriver-wrench"></i>
-                            <span class="text-base">Arbeitsdienst eintragen</span>
+                            <span class="text-base">Arbeitsdienst eintragen*</span>
                         </button>
                     </div>
                     <ContextMenuButton class="btn-ghost">
@@ -184,20 +178,18 @@
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
+                            <li class="context-menu-item" @click="contactUsers(selectedUsers)">
+                                <i class="fa-solid fa-envelope" />
+                                <span>Email an alle schreiben</span>
+                            </li>
                             <li class="context-menu-item disabled">
                                 <i class="fa-solid fa-screwdriver-wrench" />
-                                <span>Arbeitsdienst eintragen</span>
+                                <span>Arbeitsdienst eintragen*</span>
                             </li>
-                            <li class="context-menu-item disabled">
-                                <i class="fa-solid fa-envelope" />
-                                <span>Email schreiben</span>
+                            <li class="permission-delete-users context-menu-item disabled text-red-700">
+                                <i class="fa-solid fa-trash-alt" />
+                                <span>Nutzer löschen*</span>
                             </li>
-                            <template v-if="signedInUser.permissions.includes(Permission.DELETE_USERS)">
-                                <li class="context-menu-item disabled text-red-700">
-                                    <i class="fa-solid fa-trash-alt" />
-                                    <span>Nutzer löschen</span>
-                                </li>
-                            </template>
                         </template>
                     </ContextMenuButton>
                 </div>
@@ -337,10 +329,11 @@ async function createRegistration(user: UserRegistrations): Promise<void> {
 
 async function deleteUser(user: UserRegistrations): Promise<void> {
     const confirmed = await deleteUserDialog.value?.open({
-        title: 'Nutzer löschen',
-        message: `Bist du sicher, das du den Nutzer löschen möchtest? Wenn der Nutzer sich schon zu Reisen angemeldet
-            hat, wird dies dazu führen, das in den Crew oder Wartelisten ein ungültiger Eintrag existiert. Löschen von
-            Nutzern sollte darum nur nach reichlicher Überlegung passieren`,
+        title: `${user.nickName || user.firstName} ${user.lastName} löschen`,
+        message: `Bist du sicher, das du ${user.nickName || user.firstName} ${user.lastName} löschen möchtest? Wenn
+            ${user.nickName || user.firstName} sich schon zu Reisen angemeldet hat, wird dies dazu führen, das in den
+            Crew oder Wartelisten ein ungültiger Eintrag existiert. Löschen von Nutzern sollte darum nur nach
+            reichlicher Überlegung passieren.`,
         submit: 'Löschen',
         danger: true,
     });
@@ -348,6 +341,10 @@ async function deleteUser(user: UserRegistrations): Promise<void> {
         await userAdministrationUseCase.deleteUserByKey(user.key);
         await fetchUsers();
     }
+}
+
+async function contactUsers(users: User[]): Promise<void> {
+    await userAdministrationUseCase.contactUsers(users);
 }
 
 function selectNone(): void {

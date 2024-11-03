@@ -19,7 +19,8 @@ public record UserAdminListRepresentation(
     @NonNull String lastName,
     @NonNull List<String> positions,
     @NonNull List<String> roles,
-    @NonNull List<UserQualificationRepresentation> qualifications
+    @NonNull List<UserQualificationRepresentation> qualifications,
+    @Nullable String email
 ) implements Serializable {
     public static UserAdminListRepresentation fromDomain(@NonNull UserDetails user) {
         return new UserAdminListRepresentation(
@@ -31,7 +32,8 @@ public record UserAdminListRepresentation(
             user.getRoles().stream().map(Role::value).toList(),
             user.getQualifications().stream()
                 .map(UserQualificationRepresentation::fromDomain)
-                .toList()
+                .toList(),
+            user.getEmail()
         );
     }
 }

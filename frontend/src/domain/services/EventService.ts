@@ -244,9 +244,8 @@ export class EventService {
     }
 
     public getAssignedRegistrations(event: Event): Registration[] {
-        return event.slots
-            .map((slt) => event.registrations.find((reg) => reg.key === slt.assignedRegistrationKey))
-            .filter(filterUndefined);
+        const assignedRegistrationKeys = event.slots.map((it) => it.assignedRegistrationKey).filter(filterUndefined);
+        return event.registrations.filter((it) => assignedRegistrationKeys.includes(it.key));
     }
 
     public getRegistrationsOnWaitinglist(event: Event): Registration[] {

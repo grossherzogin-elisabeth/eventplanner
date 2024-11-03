@@ -4,6 +4,7 @@ export interface ErrorDetails {
     error?: unknown | Error | Response;
     retryText?: string;
     retry?: () => void;
+    cancelText?: string;
 }
 
 export class ErrorHandlingService {

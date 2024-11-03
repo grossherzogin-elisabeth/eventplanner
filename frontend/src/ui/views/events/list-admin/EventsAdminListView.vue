@@ -168,9 +168,9 @@
                         <i class="fa-solid fa-users" />
                         <span>Weitere Crew anfragen*</span>
                     </li>
-                    <li class="permission-write-events context-menu-item disabled">
+                    <li class="permission-read-user-details context-menu-item" @click="contactCrew([item])">
                         <i class="fa-solid fa-envelope" />
-                        <span>Crew kontaktieren*</span>
+                        <span>Crew kontaktieren</span>
                     </li>
                     <li
                         v-if="item.state === EventState.Canceled"
@@ -296,6 +296,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, PositionKey } from '@/domain';
 import { EventState, Permission } from '@/domain';
@@ -306,7 +307,13 @@ import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
+import {
+    useAuthUseCase,
+    useEventAdministrationUseCase,
+    useEventUseCase,
+    useUserAdministrationUseCase,
+    useUsersUseCase,
+} from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { Routes } from '@/ui/views/Routes.ts';
@@ -335,6 +342,8 @@ type RouteEmits = (e: 'update:title', value: string) => void;
 const emit = defineEmits<RouteEmits>();
 
 const eventAdminUseCase = useEventAdministrationUseCase();
+const userAdminUseCase = useUserAdministrationUseCase();
+const usersUseCase = useUsersUseCase();
 const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
 const eventService = useEventService();
@@ -548,6 +557,15 @@ async function editBatch(events: Event[]): Promise<void> {
     if (changed) {
         await fetchEvents();
     }
+}
+
+async function contactCrew(events: Event[]): Promise<void> {
+    const userKeys = events
+        .flatMap((event) => eventService.getAssignedRegistrations(event))
+        .map((it) => it.userKey)
+        .filter(filterUndefined);
+    const users = await usersUseCase.getUsers(userKeys);
+    await userAdminUseCase.contactUsers(users);
 }
 
 async function openEventsForSignup(events: Event[]): Promise<void> {
