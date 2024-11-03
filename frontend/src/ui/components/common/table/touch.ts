@@ -15,7 +15,7 @@ export function useLongTouch(longTouchDelay: number = 500) {
                     reject();
                     return;
                 }
-                const startTouchPoint = touchStartEvent.changedTouches.item(0);
+                const startTouchPoint = touchStartEvent?.changedTouches.item(0);
                 const endTouchPoint = touchMoveEvent.changedTouches.item(0);
                 touchStartEvent = undefined;
                 touchMoveEvent = undefined;

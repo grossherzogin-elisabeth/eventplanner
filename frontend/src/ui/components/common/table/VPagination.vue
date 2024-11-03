@@ -4,7 +4,7 @@
             :class="{ enabled: page > 0 }"
             :disabled="page === 0"
             class="pagination-page"
-            @click="$emit('update:page', page - 1)"
+            @click="emit('update:page', page - 1)"
         >
             <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
@@ -14,7 +14,7 @@
                 v-if="typeof p === 'number'"
                 :class="{ active: p === page }"
                 class="pagination-page enabled"
-                @click="$emit('update:page', p)"
+                @click="emit('update:page', p)"
             >
                 <span>{{ p + 1 }}</span>
             </button>
@@ -25,7 +25,7 @@
             :class="{ enabled: page < pageCount - 1 }"
             :disabled="page === pageCount - 1"
             class="pagination-page"
-            @click="$emit('update:page', page + 1)"
+            @click="emit('update:page', page + 1)"
         >
             <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
@@ -49,7 +49,7 @@ type Emits = (e: 'update:page', value: number) => void;
  */
 
 const props = defineProps<Props>();
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const emit = defineEmits<Emits>();
 
 const visiblePagesCount = ref<number>(8);

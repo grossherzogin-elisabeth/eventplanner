@@ -1,7 +1,10 @@
 package org.eventplanner.users.entities;
 
+import org.eventplanner.common.ObjectUtils;
 import org.eventplanner.exceptions.MissingPermissionException;
 import org.eventplanner.exceptions.UnauthorizedException;
+import org.eventplanner.positions.entities.Position;
+import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Permission;
 import org.eventplanner.users.values.Role;
@@ -14,24 +17,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static org.eventplanner.common.ObjectUtils.orElse;
+
 public record SignedInUser(
     @NonNull UserKey key,
     @NonNull AuthKey authKey,
     @NonNull List<Role> roles,
     @NonNull List<Permission> permissions,
-    @NonNull String email
+    @NonNull String email,
+    @NonNull List<PositionKey> positions
 ) {
 
     public static @NonNull SignedInUser fromUser(@NonNull UserDetails user) {
         return new SignedInUser(
             user.getKey(),
-            user.getAuthKey(),
+            orElse(user.getAuthKey(), new AuthKey("")),
             user.getRoles(),
             user.getRoles().stream()
                 .flatMap(Role::getPermissions)
                 .distinct()
                 .toList(),
-            user.getEmail()
+            orElse(user.getEmail(), ""),
+            user.getPositions()
         );
     }
 
@@ -66,7 +73,7 @@ public record SignedInUser(
         var mergedPermissions = Stream.concat(permissions, permissions().stream())
             .distinct()
             .toList();
-        return new SignedInUser(key, authKey, roles, mergedPermissions, email);
+        return new SignedInUser(key, authKey, roles, mergedPermissions, email, positions);
 
     }
 }

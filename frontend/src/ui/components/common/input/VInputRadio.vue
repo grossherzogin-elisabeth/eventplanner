@@ -21,7 +21,7 @@
                     :required="props.required"
                     class="check-box-input hidden"
                     type="radio"
-                    @input="onInput($event, option.value)"
+                    @input="onInput(option.value)"
                 />
                 <span
                     :class="{ invalid: showErrors && hasErrors }"
@@ -85,7 +85,7 @@ const visited = ref(false);
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
 
-function onInput(event: Event, option: T) {
+function onInput(option: T) {
     visited.value = true;
     if (!props.disabled) {
         emit('update:modelValue', option);

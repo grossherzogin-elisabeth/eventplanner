@@ -1,5 +1,16 @@
-import { cropToPrecision, filterUndefined } from '@/common';
-import type { Event, Location, Registration, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
+import { addToDate, cropToPrecision, filterUndefined } from '@/common';
+import type {
+    Event,
+    Location,
+    Registration,
+    SignedInUser,
+    Slot,
+    SlotKey,
+    User,
+    UserKey,
+    ValidationHint,
+} from '@/domain';
+import { EventState } from '@/domain';
 
 export class EventService {
     public doEventsHaveOverlappingDays(a?: Event, b?: Event): boolean {
@@ -133,11 +144,11 @@ export class EventService {
         return event;
     }
 
-    private debugSlots(event: Event): void {
-        event.slots.forEach((s) => {
-            console.log(s.order, s.positionKeys, s.assignedRegistrationKey);
-        });
-    }
+    // private debugSlots(event: Event): void {
+    //     event.slots.forEach((s) => {
+    //         console.log(s.order, s.positionKeys, s.assignedRegistrationKey);
+    //     });
+    // }
 
     public updateSlot(event: Event, slot: Slot): Event {
         const index = event.slots.findIndex((it) => it.key === slot.key);
@@ -271,5 +282,30 @@ export class EventService {
             });
         }
         return errors;
+    }
+
+    public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {
+        const registration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
+        if (registration !== undefined) {
+            event.canSignedInUserJoin = false;
+            const slot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
+            if (slot) {
+                event.signedInUserAssignedPosition = registration.positionKey;
+                event.canSignedInUserLeave = event.start.getTime() > addToDate(new Date(), { days: 7 }).getTime();
+            } else {
+                event.signedInUserWaitingListPosition = registration.positionKey;
+                event.canSignedInUserLeave = event.start.getTime() > new Date().getTime();
+            }
+        } else {
+            event.canSignedInUserLeave = false;
+            event.canSignedInUserJoin =
+                (signedInUser?.positions || []).length > 0 &&
+                event.start.getTime() > new Date().getTime() &&
+                ![EventState.Canceled].includes(event.state);
+        }
+        if (event.state === EventState.Canceled) {
+            event.canSignedInUserJoin = false;
+        }
+        return event;
     }
 }

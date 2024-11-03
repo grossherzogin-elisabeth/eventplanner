@@ -88,13 +88,10 @@ async function init(): Promise<void> {
     // -----------------------------------------------------
     // initialize use cases and application services
     // -----------------------------------------------------
-    const authService = new AuthService({
-        config: config,
-    });
+    const authService = new AuthService();
     const eventCachingService = new EventCachingService({
         cache: new IndexedDBRepository(indexedDB, StoreNames.Events, { invalidateOnReload: true }),
         eventRepository: eventRepository,
-        authService: authService,
     });
     const userCachingService = new UserCachingService({
         cache: new IndexedDBRepository(indexedDB, StoreNames.Users, {
@@ -137,12 +134,12 @@ async function init(): Promise<void> {
                 authService: authService,
                 notificationService: notificationService,
                 errorHandlingService: errorHandlingService,
-                eventRepository: eventRepository,
                 eventCachingService: eventCachingService,
                 eventRegistrationsRepository: eventRegistrationsRepository,
                 userCachingService: userCachingService,
                 positionCachingService: positionCachingService,
                 registrationService: domain.services.registrations,
+                eventService: domain.services.events,
             }),
             users: new UsersUseCase({
                 config: config,

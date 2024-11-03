@@ -20,7 +20,6 @@ import type { RegistrationService } from '@/domain/services/RegistrationService'
 export class UsersUseCase {
     private readonly config: Config;
     private readonly userRepository: UserRepository;
-    private readonly registrationService: RegistrationService;
     private readonly positionCachingService: PositionCachingService;
     private readonly userCachingService: UserCachingService;
     private readonly qualificationCachingService: QualificationCachingService;
@@ -39,7 +38,6 @@ export class UsersUseCase {
     }) {
         this.config = params.config;
         this.userRepository = params.userRepository;
-        this.registrationService = params.registrationService;
         this.positionCachingService = params.positionCachingService;
         this.userCachingService = params.userCachingService;
         this.qualificationCachingService = params.qualificationCachingService;

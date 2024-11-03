@@ -1,13 +1,15 @@
-import type { EventRegistrationsRepository, EventRepository, NotificationService } from '@/application';
+import type { AuthService, EventRegistrationsRepository, EventRepository, NotificationService } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { filterUndefined } from '@/common';
-import type { Event, EventKey, ImportError, Registration } from '@/domain';
+import type { Event, EventKey, EventService, ImportError, Registration } from '@/domain';
 import { EventState } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class EventAdministrationUseCase {
     private readonly eventCachingService: EventCachingService;
+    private readonly eventService: EventService;
+    private readonly authService: AuthService;
     private readonly eventRepository: EventRepository;
     private readonly eventRegistrationsRepository: EventRegistrationsRepository;
     private readonly notificationService: NotificationService;
@@ -15,12 +17,16 @@ export class EventAdministrationUseCase {
 
     constructor(params: {
         eventCachingService: EventCachingService;
+        eventService: EventService;
+        authService: AuthService;
         eventRepository: EventRepository;
         eventRegistrationsRepository: EventRegistrationsRepository;
         notificationService: NotificationService;
         errorHandlingService: ErrorHandlingService;
     }) {
         this.eventCachingService = params.eventCachingService;
+        this.eventService = params.eventService;
+        this.authService = params.authService;
         this.eventRepository = params.eventRepository;
         this.eventRegistrationsRepository = params.eventRegistrationsRepository;
         this.notificationService = params.notificationService;
@@ -44,6 +50,7 @@ export class EventAdministrationUseCase {
                 state: EventState.Canceled,
                 description: message, // TODO is this the right place to put the message?
             });
+            savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());
             savedEvent = await this.eventCachingService.updateCache(savedEvent);
             this.notificationService.success('Reise wurde abgesagt');
             return savedEvent;
@@ -129,6 +136,7 @@ export class EventAdministrationUseCase {
         }
 
         let savedEvent = await this.eventRepository.updateEvent(eventKey, event);
+        savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());
         savedEvent = await this.eventCachingService.updateCache(savedEvent);
         return savedEvent;
     }
@@ -136,6 +144,7 @@ export class EventAdministrationUseCase {
     public async createEvent(event: Event): Promise<Event> {
         try {
             let savedEvent = await this.eventRepository.createEvent(event);
+            savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());
             savedEvent = await this.eventCachingService.updateCache(savedEvent);
             this.notificationService.success('Das neue Event wurde gespeichert');
             return savedEvent;

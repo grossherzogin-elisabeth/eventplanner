@@ -82,6 +82,7 @@ export class AuthUseCase {
                 roles: [],
                 permissions: [],
                 impersonated: false,
+                positions: [],
             }
         );
     }

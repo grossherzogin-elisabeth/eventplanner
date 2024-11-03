@@ -105,8 +105,8 @@
                             :key="String(option.value)"
                             :class="{ 'input-dropdown-option-focus': i === focusOptionIndex }"
                             class="input-dropdown-option"
-                            @click.stop="selectOption(option)"
-                            @keydown.enter="selectOption(option)"
+                            @click.stop="selectOption(option as InputSelectOption<T>)"
+                            @keydown.enter="selectOption(option as InputSelectOption<T>)"
                         >
                             <slot :active="option.value === props.modelValue" :item="option" name="item">
                                 {{ option.label }}
@@ -119,8 +119,8 @@
                             :key="String(option.value)"
                             :class="{ 'input-dropdown-option-focus': i === focusOptionIndex }"
                             class="input-dropdown-option"
-                            @click.stop="selectOption(option)"
-                            @keydown.enter="selectOption(option)"
+                            @click.stop="selectOption(option as InputSelectOption<T>)"
+                            @keydown.enter="selectOption(option as InputSelectOption<T>)"
                         >
                             <slot :active="option.value === props.modelValue" :item="option" name="item">
                                 {{ option.label }}
@@ -134,7 +134,7 @@
     </VDropdownWrapper>
 </template>
 
-<script generic="T extends any = any" lang="ts" setup>
+<script generic="T extends any = string" lang="ts" setup>
 import type { Ref } from 'vue';
 import { computed, nextTick, ref } from 'vue';
 import type { InputSelectOption, ValidationHint } from '@/domain';

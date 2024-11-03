@@ -1,6 +1,7 @@
+import type { PositionKey } from '@/domain';
 import type { UserKey } from '@/domain/entities/User';
-import type { Permission } from '../values/Permission';
-import type { Role } from '../values/Role';
+import type { Permission } from '@/domain/values/Permission';
+import type { Role } from '@/domain/values/Role';
 
 export interface SignedInUser {
     key: UserKey;
@@ -9,5 +10,6 @@ export interface SignedInUser {
     email: string;
     roles: Role[];
     permissions: Permission[];
+    positions: PositionKey[];
     impersonated: boolean;
 }

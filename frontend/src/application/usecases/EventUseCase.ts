@@ -5,11 +5,10 @@ import type {
     PositionCachingService,
     UserCachingService,
 } from '@/application';
-import type { EventRepository } from '@/application/ports/EventRepository';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { formatIcsDate } from '@/common/date';
-import type { Event, EventKey, PositionKey, RegistrationService, UserKey } from '@/domain';
+import type { Event, EventKey, EventService, PositionKey, RegistrationService, UserKey } from '@/domain';
 import { EventState } from '@/domain';
 import { EventType } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
@@ -18,39 +17,41 @@ export class EventUseCase {
     private readonly notificationService: NotificationService;
     private readonly errorHandlingService: ErrorHandlingService;
     private readonly authService: AuthService;
+    private readonly eventService: EventService;
     private readonly eventCachingService: EventCachingService;
     private readonly userCachingService: UserCachingService;
     private readonly positionCachingService: PositionCachingService;
     private readonly registrationService: RegistrationService;
-    private readonly eventRepository: EventRepository;
     private readonly eventRegistrationsRepository: EventRegistrationsRepository;
 
     constructor(params: {
         notificationService: NotificationService;
         errorHandlingService: ErrorHandlingService;
         authService: AuthService;
+        eventService: EventService;
         eventCachingService: EventCachingService;
         userCachingService: UserCachingService;
         positionCachingService: PositionCachingService;
         registrationService: RegistrationService;
-        eventRepository: EventRepository;
         eventRegistrationsRepository: EventRegistrationsRepository;
     }) {
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
         this.authService = params.authService;
+        this.eventService = params.eventService;
         this.eventCachingService = params.eventCachingService;
         this.userCachingService = params.userCachingService;
         this.positionCachingService = params.positionCachingService;
         this.registrationService = params.registrationService;
         this.eventRegistrationsRepository = params.eventRegistrationsRepository;
-        this.eventRepository = params.eventRepository;
     }
 
     public async getEvents(year: number): Promise<Event[]> {
         try {
             const events = await this.eventCachingService.getEvents(year);
-            return events.sort((a, b) => a.start.getTime() - b.start.getTime());
+            return events
+                .map((event) => this.eventService.updateComputedValues(event, this.authService.getSignedInUser()))
+                .sort((a, b) => a.start.getTime() - b.start.getTime());
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;
@@ -59,14 +60,15 @@ export class EventUseCase {
 
     public async getEventByKey(year: number, eventKey: EventKey): Promise<Event> {
         try {
+            const signedInUser = this.authService.getSignedInUser();
             let event = await this.eventCachingService.getEventByKey(eventKey);
             if (event) {
-                return event;
+                return this.eventService.updateComputedValues(event, signedInUser);
             }
             const events = await this.getEvents(year);
             event = events.find((it) => it.key === eventKey);
             if (event) {
-                return event;
+                return this.eventService.updateComputedValues(event, signedInUser);
             }
             this.errorHandlingService.handleError({
                 title: '404 - nicht gefunden',
@@ -83,6 +85,7 @@ export class EventUseCase {
         try {
             const events = await this.eventCachingService.getEvents(year);
             return events
+                .map((event) => this.eventService.updateComputedValues(event, this.authService.getSignedInUser()))
                 .filter((evt) => evt.registrations.find((reg) => reg.userKey === userKey))
                 .sort((a, b) => a.start.getTime() - b.start.getTime());
         } catch (e) {
@@ -93,11 +96,13 @@ export class EventUseCase {
 
     public async getFutureEvents(): Promise<Event[]> {
         try {
+            const signedInUser = this.authService.getSignedInUser();
             const now = new Date();
             const events = await this.eventCachingService.getEvents(now.getFullYear());
             const eventsNextYear = await this.eventCachingService.getEvents(now.getFullYear() + 1);
             const eventsNextNextYear = await this.eventCachingService.getEvents(now.getFullYear() + 2);
             return events
+                .map((event) => this.eventService.updateComputedValues(event, signedInUser))
                 .concat(eventsNextYear)
                 .concat(eventsNextNextYear)
                 .filter((evt) => evt.end > now)
@@ -110,8 +115,10 @@ export class EventUseCase {
 
     public async getFutureEventsByUser(userKey: UserKey): Promise<Event[]> {
         try {
+            const signedInUser = this.authService.getSignedInUser();
             const events = await this.getFutureEvents();
             return events
+                .map((event) => this.eventService.updateComputedValues(event, signedInUser))
                 .filter((evt) => evt.registrations.find((reg) => reg.userKey === userKey))
                 .sort((a, b) => a.start.getTime() - b.start.getTime());
         } catch (e) {
@@ -146,20 +153,19 @@ export class EventUseCase {
     }
 
     private async joinEventInternal(event: Event, positionKey: PositionKey): Promise<Event> {
-        const user = this.authService.getSignedInUser();
-        if (!user) {
-            throw new Error('Authentifizierung erforderlich');
-        }
-        if (event.registrations.find((it) => it.userKey === user.key)) {
+        const signedInUser = this.authService.getSignedInUser();
+        if (event.registrations.find((it) => it.userKey === signedInUser?.key)) {
             // There already is a registration for this user. Nothing to do here to get required state.
-            return event;
+            return this.eventService.updateComputedValues(event, signedInUser);
         }
-        const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
+        let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
             key: '',
             positionKey: positionKey,
-            userKey: user.key,
+            userKey: signedInUser?.key,
         });
-        return await this.eventCachingService.updateCache(savedEvent);
+        savedEvent = this.eventService.updateComputedValues(savedEvent, signedInUser);
+        savedEvent = await this.eventCachingService.updateCache(savedEvent);
+        return savedEvent;
     }
 
     public async resolveRegistrations(event: Event): Promise<ResolvedRegistrationSlot[]> {
@@ -184,9 +190,9 @@ export class EventUseCase {
         return registrations.filter((it) => it.slot !== undefined);
     }
 
-    public async leaveEvents(event: Event[]): Promise<void> {
+    public async leaveEvents(events: Event[]): Promise<void> {
         try {
-            const canLeaveAllEvents = !event.find((it) => !it.canSignedInUserLeave);
+            const canLeaveAllEvents = !events.find((it) => !it.canSignedInUserLeave);
             if (!canLeaveAllEvents) {
                 this.errorHandlingService.handleError({
                     title: 'Absage über die App nicht möglich',
@@ -222,6 +228,11 @@ export class EventUseCase {
 
     public async leaveEvent(event: Event): Promise<Event> {
         try {
+            const signedInUser = this.authService.getSignedInUser();
+            const registration = event.registrations.find((it) => it.userKey === signedInUser?.key);
+            if (!registration) {
+                return this.eventService.updateComputedValues(event, signedInUser);
+            }
             if (!event.canSignedInUserLeave) {
                 this.errorHandlingService.handleError({
                     title: 'Absage über die App nicht möglich',
@@ -233,8 +244,11 @@ export class EventUseCase {
                 });
                 return event;
             }
+
             const hasAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
+
             const savedEvent = await this.leaveEventInternal(event);
+
             if (hasAssignedSlot) {
                 this.notificationService.success('Deine Teilnahme wurde storniert');
             } else {
@@ -248,16 +262,15 @@ export class EventUseCase {
     }
 
     private async leaveEventInternal(event: Event): Promise<Event> {
-        const user = this.authService.getSignedInUser();
-        if (!user) {
-            throw new Error('Authentifizierung erforderlich');
-        }
-        const registration = event.registrations.find((it) => it.userKey === user.key);
+        const signedInUser = this.authService.getSignedInUser();
+        const registration = event.registrations.find((it) => it.userKey === signedInUser?.key);
         if (!registration) {
-            throw new Error('Anmeldung nicht gefunden');
+            return this.eventService.updateComputedValues(event, signedInUser);
         }
-        const savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
-        return await this.eventCachingService.updateCache(savedEvent);
+        let savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
+        savedEvent = this.eventService.updateComputedValues(savedEvent, signedInUser);
+        savedEvent = await this.eventCachingService.updateCache(savedEvent);
+        return savedEvent;
     }
 
     public downloadCalendarEntry(event: Event): void {
@@ -298,10 +311,5 @@ export class EventUseCase {
         } catch (e) {
             console.error(e);
         }
-    }
-
-    private openEmail(subject: string, body: string): void {
-        const email = `mailto:office@grossherzogin-elisabeth.de?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        window.open(email, '_blank');
     }
 }

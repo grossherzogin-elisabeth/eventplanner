@@ -87,7 +87,8 @@ public class UserUseCase {
                 authkey,
                 Collections.emptyList(),
                 Collections.emptyList(),
-                oidcUser.getEmail()
+                oidcUser.getEmail(),
+                Collections.emptyList()
             ).withPermissionsFromAuthentication(authentication);
         }
         if (authentication.getPrincipal() instanceof OAuth2User) {

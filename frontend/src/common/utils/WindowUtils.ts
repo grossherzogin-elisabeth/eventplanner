@@ -29,5 +29,6 @@ export function enableScrolling(): void {
 }
 
 export function isTouchDevice() {
-    return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || (navigator as any).msMaxTouchPoints > 0;
 }

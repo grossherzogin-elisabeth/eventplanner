@@ -1,17 +1,11 @@
-import type { Config } from '@/application';
 import type { SignedInUser, UserDetails } from '@/domain';
 import { Permission, Role } from '@/domain';
 
 export class AuthService {
-    private readonly config: Config;
     private loginListeners: (() => void)[] = [];
     private logoutListeners: (() => void)[] = [];
     private signedInUser: SignedInUser | undefined = undefined;
     private impersonating: UserDetails | null = null;
-
-    constructor(params: { config: Config }) {
-        this.config = params.config;
-    }
 
     public getSignedInUser(): SignedInUser | undefined {
         if (this.signedInUser && this.impersonating) {

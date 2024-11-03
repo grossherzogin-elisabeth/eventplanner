@@ -66,8 +66,8 @@
                 :key="String(option.value)"
                 :class="{ 'input-dropdown-option-focus': i === focusOptionIndex }"
                 class="input-dropdown-option"
-                @click.stop="selectOption(option)"
-                @keydown.enter="selectOption(option)"
+                @click.stop="selectOption(option as InputSelectOption<T>)"
+                @keydown.enter="selectOption(option as InputSelectOption<T>)"
             >
                 <slot :item="option" name="item">
                     {{ option.label || props.placeholder }}
@@ -77,8 +77,8 @@
     </VDropdownWrapper>
 </template>
 
-<script generic="T extends any = any" lang="ts" setup>
-import type { Ref } from 'vue';
+<script generic="T = string" lang="ts" setup>
+import type { ComputedRef, Ref } from 'vue';
 import { computed, nextTick, ref } from 'vue';
 import type { InputSelectOption, ValidationHint } from '@/domain';
 import { VLoadingSpinner } from '@/ui/components/common';
@@ -121,16 +121,20 @@ const props = defineProps<Props>() as Props;
 const emit = defineEmits<Emits>();
 
 const id = uuidv4();
-const visited = ref(false);
-const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
-const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
+const visited: Ref<boolean> = ref(false);
+const showErrors: ComputedRef<boolean> = computed(() => visited.value || props.errorsVisible === true);
+const hasErrors: ComputedRef<boolean> = computed(() => props.errors !== undefined && props.errors.length > 0);
 
-const list = ref<HTMLUListElement | null>(null);
-const dropdownAnchor = ref<HTMLInputElement | null>(null);
+const list: Ref<HTMLUListElement | null> = ref(null);
+const dropdownAnchor: Ref<HTMLInputElement | null> = ref(null);
 const focusOptionIndex: Ref<number | null> = ref(null);
-const selectedOptionIndex = computed<number>(() => props.options.findIndex((opt) => opt.value === props.modelValue));
-const displayValue = computed<string>(() => props.options.find((it) => it.value === props.modelValue)?.label || '');
-const visibleOptions = computed<InputSelectOption<T>[]>(() =>
+const selectedOptionIndex: ComputedRef<number> = computed(() =>
+    props.options.findIndex((opt) => opt.value === props.modelValue)
+);
+const displayValue: ComputedRef<string> = computed(
+    () => props.options.find((it) => it.value === props.modelValue)?.label || ''
+);
+const visibleOptions: ComputedRef<InputSelectOption<T>[]> = computed(() =>
     props.options.filter((it) => !it.hidden || it.value === props.modelValue)
 );
 

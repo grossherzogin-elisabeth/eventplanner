@@ -52,7 +52,7 @@ async function init(): Promise<void> {
     router.afterEach((to) => routerStack.push(to));
     watch(signedInUser, () => {
         Object.values(Permission).forEach((permission) => document.body.classList.remove(permission));
-        signedInUser.value.permissions?.forEach((permission) => document.body.classList.add(permission));
+        signedInUser.value?.permissions.forEach((permission) => document.body.classList.add(permission));
     });
 }
 

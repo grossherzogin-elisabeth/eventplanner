@@ -23,35 +23,56 @@ export class UserAdministrationUseCase {
     }
 
     public async updateUser(original: UserDetails, updated: UserDetails): Promise<UserDetails> {
-        const changes = diff(original, updated);
-        if (Object.keys(changes).length > 0) {
-            const savedUser = await this.userRepository.updateUser(updated.key, changes);
-            await this.userCachingService.updateCache({
-                key: savedUser.key,
-                firstName: savedUser.firstName,
-                nickName: savedUser.nickName,
-                lastName: savedUser.lastName,
-                positionKeys: savedUser.positionKeys,
-                roles: savedUser.roles,
-                email: savedUser.email,
-                qualifications: savedUser.qualifications,
-            });
-            this.notificationService.success('Änderungen gespeichert');
-            return savedUser;
+        try {
+            const changes = diff(original, updated);
+            if (Object.keys(changes).length > 0) {
+                const savedUser = await this.userRepository.updateUser(updated.key, changes);
+                await this.userCachingService.updateCache({
+                    key: savedUser.key,
+                    firstName: savedUser.firstName,
+                    nickName: savedUser.nickName,
+                    lastName: savedUser.lastName,
+                    positionKeys: savedUser.positionKeys,
+                    roles: savedUser.roles,
+                    email: savedUser.email,
+                    qualifications: savedUser.qualifications,
+                });
+                this.notificationService.success('Änderungen gespeichert');
+                return savedUser;
+            }
+            return updated;
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
         }
-        return updated;
     }
 
     public async deleteUserByKey(key: UserKey): Promise<void> {
-        await this.userRepository.deleteUser(key);
-        await this.userCachingService.removeFromCache(key);
+        try {
+            await this.userRepository.deleteUser(key);
+            await this.userCachingService.removeFromCache(key);
+            this.notificationService.success('Nutzer gelöscht');
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async getUserDetailsByKey(key: UserKey): Promise<UserDetails> {
-        return await this.userRepository.findByKey(key);
+        try {
+            return await this.userRepository.findByKey(key);
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async importUsers(file: Blob): Promise<void> {
-        return this.userRepository.importUsers(file);
+        try {
+            return this.userRepository.importUsers(file);
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 }

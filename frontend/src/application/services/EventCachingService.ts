@@ -1,17 +1,14 @@
-import type { AuthService, EventRepository } from '@/application';
+import type { EventRepository } from '@/application';
 import { debounce } from '@/application/utils/AsyncDebouncer';
-import { type Cache, addToDate } from '@/common';
-import type { Event, EventKey, Registration } from '@/domain';
-import { EventState } from '@/domain';
+import { type Cache } from '@/common';
+import type { Event, EventKey } from '@/domain';
 
 export class EventCachingService {
     private readonly eventRepository: EventRepository;
-    private readonly authService: AuthService;
     private readonly cache: Cache<EventKey, Event>;
 
-    constructor(params: { eventRepository: EventRepository; authService: AuthService; cache: Cache<EventKey, Event> }) {
+    constructor(params: { eventRepository: EventRepository; cache: Cache<EventKey, Event> }) {
         this.eventRepository = params.eventRepository;
-        this.authService = params.authService;
         this.cache = params.cache;
     }
 
@@ -33,33 +30,8 @@ export class EventCachingService {
     }
 
     public async updateCache(event: Event): Promise<Event> {
-        const updated = this.updateComputedValues(event);
         if ((await this.cache.count()) > 0) {
-            return await this.cache.save(updated);
-        }
-        return updated;
-    }
-
-    private updateComputedValues(event: Event): Event {
-        const signedInUser = this.authService.getSignedInUser();
-        const registration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
-        if (registration !== undefined) {
-            event.canSignedInUserJoin = false;
-            const slot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
-            if (slot) {
-                event.signedInUserAssignedPosition = registration.positionKey;
-                event.canSignedInUserLeave = event.start.getTime() > addToDate(new Date(), { days: 7 }).getTime();
-            } else {
-                event.signedInUserWaitingListPosition = registration.positionKey;
-                event.canSignedInUserLeave = event.start.getTime() > new Date().getTime();
-            }
-        } else {
-            event.canSignedInUserLeave = false;
-            event.canSignedInUserJoin =
-                event.start.getTime() > new Date().getTime() && ![EventState.Canceled].includes(event.state);
-        }
-        if (event.state === EventState.Canceled) {
-            event.canSignedInUserJoin = false;
+            return await this.cache.save(event);
         }
         return event;
     }
@@ -67,7 +39,7 @@ export class EventCachingService {
     private async fetchEvents(year: number): Promise<Event[]> {
         return debounce('fetchEvents' + year, async () => {
             const events = await this.eventRepository.findAll(year);
-            await this.cache.saveAll(events.map((evt) => this.updateComputedValues(evt)));
+            await this.cache.saveAll(events);
             return events;
         });
     }

@@ -36,9 +36,9 @@
                     :key="index"
                     :class="{ selected: row.selected }"
                     @touchstart="touch.start($event).then(() => onLongTouch(row))"
-                    @touchend="touch.end($event)"
+                    @touchend="touch.end()"
                     @touchmove="touch.update($event)"
-                    @click.stop.prevent="onClick($event, row, index)"
+                    @click.stop.prevent="onClick($event, row as T & Selectable, index)"
                 >
                     <td></td>
                     <td
@@ -54,7 +54,7 @@
                     </td>
                     <slot
                         name="row"
-                        :item="row"
+                        :item="row as T & Selectable"
                         :index="index"
                         :first="index === 0"
                         :last="index === pagedItems.length - 1"
@@ -67,7 +67,7 @@
                         v-if="$slots['context-menu']"
                         ref="contextColumns"
                         class="w-0"
-                        @click.stop="openContextMenu(contextColumns?.[index], row)"
+                        @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
                         <button class="h-10 w-10 cursor-pointer rounded-full hover:bg-primary-200">
                             <i class="fa-solid fa-ellipsis-vertical mx-1" />
@@ -78,7 +78,7 @@
             </tbody>
         </table>
         <VDropdownWrapper
-            v-if="dropdownAnchor"
+            v-if="dropdownAnchor && dropdownItem"
             :anchor="dropdownAnchor"
             anchor-align-x="right"
             anchor-align-y="top"
@@ -113,7 +113,7 @@
 </template>
 
 <script setup generic="T extends {}" lang="ts">
-import type { Reactive } from 'vue';
+import type { ComputedRef, Reactive, Ref } from 'vue';
 import { computed, ref, useSlots, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { deepCopy, extractValue } from '@/common';
@@ -192,7 +192,6 @@ interface Props<T> {
 
 interface Emits {
     (e: 'click', value: T): void;
-
     (e: 'update:page', value: number): void;
 }
 
@@ -220,19 +219,19 @@ defineSlots<Slots>();
 const viewPortSize = useViewportSize();
 const touch = useLongTouch();
 
-const usePagination = computed<boolean>(() => props.pageSize !== -1);
-const usePageSize = computed<number>(() => props.pageSize || 10);
+const usePagination: ComputedRef<boolean> = computed(() => props.pageSize !== -1);
+const usePageSize: ComputedRef<number> = computed(() => props.pageSize || 10);
 
-const head = ref<HTMLTableRowElement | null>(null);
-const dropdownAnchor = ref<HTMLElement | null>(null);
-const dropdownItem = ref<(T & Selectable) | null>(null);
-const contextColumns = ref<HTMLTableCellElement[] | null>(null);
-const rows = ref<HTMLTableRowElement[] | null>(null);
-const page = ref<number>(props.page || 0);
-const sortCol = ref<string>('');
-const sortDir = ref<number>(1);
-const loading = computed<boolean>(() => props.items === undefined);
-const empty = computed<boolean>(() => props.items !== undefined && props.items.length === 0);
+const head: Ref<HTMLTableRowElement | null> = ref(null);
+const dropdownAnchor: Ref<HTMLElement | null> = ref(null);
+const dropdownItem: Ref<(T & Selectable) | null> = ref(null);
+const contextColumns: Ref<HTMLTableCellElement[] | null> = ref(null);
+const rows: Ref<HTMLTableRowElement[] | null> = ref(null);
+const page: Ref<number> = ref(props.page || 0);
+const sortCol: Ref<string> = ref('');
+const sortDir: Ref<number> = ref(1);
+const loading: ComputedRef<boolean> = computed(() => props.items === undefined);
+const empty: ComputedRef<boolean> = computed(() => props.items !== undefined && props.items.length === 0);
 
 useQueryStateSync<number>(
     'page',
@@ -367,7 +366,7 @@ function onLongTouch(row: Reactive<T & Selectable>): void {
     }
 }
 
-function onClick(event: MouseEvent, row: Reactive<T & Selectable>, index: number): void {
+function onClick(event: MouseEvent, row: T & Selectable, index: number): void {
     if (touch.isLongTouch()) {
         return;
     }
@@ -375,7 +374,7 @@ function onClick(event: MouseEvent, row: Reactive<T & Selectable>, index: number
         if (selected.value.length > 0) {
             row.selected = !row.selected;
         } else {
-            openContextMenu(rows.value[index], row);
+            openContextMenu(rows.value?.[index], row);
         }
         return;
     }

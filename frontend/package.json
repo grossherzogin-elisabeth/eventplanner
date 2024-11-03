@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vue-tsc && vite build",
+        "build": "vue-tsc --noEmit -p tsconfig.app.json --composite false && vite build",
         "preview": "vite preview",
         "lint": "npx eslint --fix src",
         "format": "./node_modules/.bin/prettier . --ignore-path .gitignore --write",
