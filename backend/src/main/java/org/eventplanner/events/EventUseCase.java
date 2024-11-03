@@ -176,7 +176,7 @@ public class EventUseCase {
         return imoListService.generateImoList(event);
     }
 
-    public byte[] downloadConsumptionList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
+    public ByteArrayOutputStream downloadConsumptionList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
         signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 

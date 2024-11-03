@@ -100,7 +100,8 @@ public class EventController {
     public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey) throws IOException {
 
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        byte[] consumptionListByteArray = eventUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
+        ByteArrayOutputStream consumptionListStream = eventUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
+        byte[] consumptionListByteArray = consumptionListStream.toByteArray();
 
         HttpHeaders headers = new HttpHeaders();
         String fileName = eventKey + "consumption-list" + ".xlsx";
