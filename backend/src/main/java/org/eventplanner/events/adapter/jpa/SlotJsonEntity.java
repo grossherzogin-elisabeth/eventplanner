@@ -37,7 +37,9 @@ public record SlotJsonEntity(
                 new SlotKey(key),
                 order,
                 criticality,
-                mapNullable(positions, PositionKey::new, Collections.emptyList()),
+                positions != null
+                    ? positions.stream().map(PositionKey::new).toList()
+                    : Collections.emptyList(),
                 name,
                 mapNullable(assignedRegistration, RegistrationKey::new)
         );

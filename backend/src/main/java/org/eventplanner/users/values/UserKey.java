@@ -1,14 +1,16 @@
 package org.eventplanner.users.values;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 public record UserKey(
-    @NonNull String value
+        @NonNull String value
 ) implements Serializable {
     public static UserKey fromName(String name) {
         var normalizedName = name
@@ -38,6 +40,18 @@ public record UserKey(
             return new UserKey(hexString.substring(0, 16));
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException();
+        }
+    }
+
+    public UserKey() {
+        this(null);
+    }
+
+    public UserKey(@Nullable String value) {
+        if (value != null && !value.isBlank()) {
+            this.value = value;
+        } else {
+            this.value = UUID.randomUUID().toString();
         }
     }
 }
