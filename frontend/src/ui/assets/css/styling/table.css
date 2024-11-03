@@ -1,25 +1,14 @@
 table.v-table {
+    --side-padding: 1rem;
     @apply w-full;
-    margin-left: -1rem;
-    margin-right: -1rem;
-    width: calc(100% + 2rem);
+    margin-left: calc(-1 * var(--side-padding));
+    margin-right: calc(-1 * var(--side-padding));
+    width: calc(100% + calc(2 * var(--side-padding)));
 }
 
 @media (min-width: 768px) {
     table.v-table {
-        margin-left: -1.5rem;
-        margin-right: -1.5rem;
-        width: calc(100% + 3rem);
-    }
-
-    .v-table th:first-child,
-    .v-table td:first-child {
-        padding-right: 1.5rem !important;
-    }
-
-    .v-table th:last-child,
-    .v-table td:last-child {
-        padding-left: 1.5rem !important;
+        --side-padding: 1.5rem;
     }
 }
 
@@ -82,6 +71,7 @@ table.v-table {
 
 .v-table th:first-child,
 .v-table td:first-child {
+    padding-right: var(--side-padding) !important;
     @apply w-0 border-none pl-0 pr-4;
 }
 
@@ -91,7 +81,8 @@ table.v-table {
 
 .v-table th:last-child,
 .v-table td:last-child {
-    @apply w-0 border-none pl-4 pr-0;
+    padding-left: var(--side-padding) !important;
+    @apply w-0 border-none pr-0;
 }
 
 .v-table th:nth-child(2),
