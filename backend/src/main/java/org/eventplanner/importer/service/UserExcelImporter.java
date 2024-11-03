@@ -350,7 +350,7 @@ public class UserExcelImporter {
 
     private static void validateRank(int row, UserDetails user, String rank, Map<QualificationKey, Qualification> qualifications) {
         var position = switch (rank) {
-            case "Master" -> Pos.MATROSE;
+            case "Master" -> Pos.KAPITAEN;
             case "Mate" -> Pos.STM;
             case "Naut. Cadet" -> Pos.NOA;
             case "AB" -> Pos.MATROSE;
