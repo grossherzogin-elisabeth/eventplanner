@@ -122,17 +122,8 @@ export class EventUseCase {
 
     public async joinEvent(event: Event, positionKey: PositionKey): Promise<Event> {
         try {
-            const user = this.authService.getSignedInUser();
-            if (!user) {
-                throw new Error('Authentifizierung erforderlich');
-            }
-            let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
-                key: '',
-                positionKey: positionKey,
-                userKey: user.key,
-            });
-            savedEvent = await this.eventCachingService.updateCache(savedEvent);
-            if (event.type === EventType.WorkEvent) {
+            const savedEvent = await this.joinEventInternal(event, positionKey);
+            if (savedEvent.type === EventType.WorkEvent) {
                 this.notificationService.success('Deine Anmeldung wurde gespeichert');
             } else {
                 this.notificationService.success('Du stehst jetzt auf der Warteliste');
@@ -144,6 +135,33 @@ export class EventUseCase {
         }
     }
 
+    public async joinEvents(events: Event[], positionKey: PositionKey): Promise<void> {
+        try {
+            await Promise.all(events.map((event) => this.joinEventInternal(event, positionKey)));
+            this.notificationService.success('Deine Anmeldungen wurde gespeichert');
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
+    private async joinEventInternal(event: Event, positionKey: PositionKey): Promise<Event> {
+        const user = this.authService.getSignedInUser();
+        if (!user) {
+            throw new Error('Authentifizierung erforderlich');
+        }
+        if (event.registrations.find((it) => it.userKey === user.key)) {
+            // There already is a registration for this user. Nothing to do here to get required state.
+            return event;
+        }
+        const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
+            key: '',
+            positionKey: positionKey,
+            userKey: user.key,
+        });
+        return await this.eventCachingService.updateCache(savedEvent);
+    }
+
     public async resolveRegistrations(event: Event): Promise<ResolvedRegistrationSlot[]> {
         const users = await this.userCachingService.getUsers();
         const positions = await this.positionCachingService.getPositions();
@@ -152,7 +170,7 @@ export class EventUseCase {
 
     public filterForWaitingList(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
         if ([EventState.Draft, EventState.OpenForSignup].includes(event.state)) {
-            // crew is not public yet, so all registrations are on the waiting list
+            // crew is not public yet, so all registrations are on the waiting list-admin
             return registrations.filter((it) => it.registration !== undefined);
         }
         return registrations.filter((it) => it.registration !== undefined && it.slot === undefined);
@@ -160,23 +178,50 @@ export class EventUseCase {
 
     public filterForCrew(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
         if ([EventState.Draft, EventState.OpenForSignup].includes(event.state)) {
-            // crew is not public yet, so all registrations are on the waiting list
+            // crew is not public yet, so all registrations are on the waiting list-admin
             return [];
         }
         return registrations.filter((it) => it.slot !== undefined);
     }
 
+    public async leaveEvents(event: Event[]): Promise<void> {
+        try {
+            const canLeaveAllEvents = !event.find((it) => !it.canSignedInUserLeave);
+            if (!canLeaveAllEvents) {
+                this.errorHandlingService.handleError({
+                    title: 'Absage über die App nicht möglich',
+                    message: `
+                            Mindestens eine Reise kann nicht mehr über die App abgesagt werden, da sie in weniger als 7
+                            Tagen starten wird. Bitte melde dich im Büro ab und versuche kurzfristige Absagen soweit möglich
+                            zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.
+                        `,
+                });
+                return;
+            }
+            await Promise.all(events.map((event) => this.leaveEventInternal(event)));
+            this.notificationService.success('Deine Teilnahme an den ausgewählten Reisen wurde storniert');
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
+    public async leaveEventsWaitingListOnly(events: Event[]): Promise<void> {
+        try {
+            await Promise.all(
+                events
+                    .filter((event) => event.signedInUserWaitingListPosition)
+                    .map((event) => this.leaveEventInternal(event))
+            );
+            this.notificationService.success('Du stehst für die ausgewählten Reisen nicht mehr auf der Warteliste');
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
     public async leaveEvent(event: Event): Promise<Event> {
         try {
-            const user = this.authService.getSignedInUser();
-            if (!user) {
-                throw new Error('Authentifizierung erforderlich');
-            }
-            const registration = event.registrations.find((it) => it.userKey === user.key);
-            if (!registration) {
-                throw new Error('Anmeldung nicht gefunden');
-            }
-            const hasSlot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
             if (!event.canSignedInUserLeave) {
                 this.errorHandlingService.handleError({
                     title: 'Absage über die App nicht möglich',
@@ -188,9 +233,9 @@ export class EventUseCase {
                 });
                 return event;
             }
-            let savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
-            savedEvent = await this.eventCachingService.updateCache(savedEvent);
-            if (hasSlot) {
+            const hasAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
+            const savedEvent = await this.leaveEventInternal(event);
+            if (hasAssignedSlot) {
                 this.notificationService.success('Deine Teilnahme wurde storniert');
             } else {
                 this.notificationService.success('Du hast die Warteliste verlassen');
@@ -200,6 +245,19 @@ export class EventUseCase {
             this.errorHandlingService.handleRawError(e);
             throw e;
         }
+    }
+
+    private async leaveEventInternal(event: Event): Promise<Event> {
+        const user = this.authService.getSignedInUser();
+        if (!user) {
+            throw new Error('Authentifizierung erforderlich');
+        }
+        const registration = event.registrations.find((it) => it.userKey === user.key);
+        if (!registration) {
+            throw new Error('Anmeldung nicht gefunden');
+        }
+        const savedEvent = await this.eventRegistrationsRepository.deleteRegistration(event.key, registration);
+        return await this.eventCachingService.updateCache(savedEvent);
     }
 
     public downloadCalendarEntry(event: Event): void {
