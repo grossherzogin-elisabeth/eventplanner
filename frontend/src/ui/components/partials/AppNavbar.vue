@@ -20,7 +20,11 @@
                 </div>
             </div>
             <div class="flex flex-grow">
-                <h1 v-if="!meta.hasTransparentHeader && props.title" class="block w-0 flex-grow truncate xl:hidden">
+                <h1
+                    v-if="props.title"
+                    class="w-0 flex-grow truncate xl:hidden"
+                    :class="meta.hasTransparentHeader ? 'hidden sm:block' : 'block'"
+                >
                     {{ props.title }}
                 </h1>
             </div>
