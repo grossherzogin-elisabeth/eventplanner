@@ -7,7 +7,7 @@
         </teleport>
 
         <div v-if="signedInUser.positions.length === 0" class="px-4 md:px-12 xl:px-16">
-            <VInfo class="mt-8">
+            <VInfo class="mt-4 xl:mt-8">
                 Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht selber
                 für Reisen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.
             </VInfo>
@@ -136,6 +136,7 @@
                     </li>
                     <template v-if="!item.signedInUserWaitingListPosition && !item.signedInUserAssignedPosition">
                         <li
+                            v-if="signedInUser.positions.length === 1"
                             class="permission-write-own-registrations context-menu-item"
                             :class="{ disabled: !item.canSignedInUserJoin }"
                             @click="joinEvents([item])"
@@ -146,7 +147,7 @@
                             </span>
                         </li>
                         <li
-                            v-if="signedInUser.positions.length > 1"
+                            v-else
                             class="permission-write-own-registrations context-menu-item"
                             :class="{ disabled: !item.canSignedInUserJoin }"
                             @click="choosePositionAndJoinEvents([item])"
@@ -201,7 +202,7 @@
                         >
                             <i class="fa-solid fa-user-plus"></i>
                             <span class="truncate text-base">
-                                Anmelden als {{ positions.get(signedInUser.positions[0]).name }}
+                                Anmelden als {{ positions.get(signedInUser.positions[0]).name || '...' }}
                             </span>
                         </button>
                     </div>
@@ -212,7 +213,7 @@
                                 <span>Alle auswählen</span>
                             </li>
                             <li
-                                v-if="signedInUser.positions.length > 0"
+                                v-if="signedInUser.positions.length === 1"
                                 class="permission-write-own-registrations context-menu-item"
                                 :class="{ disabled: !hasAnySelectedEventInFuture }"
                                 @click="joinEvents(selectedEvents)"
@@ -223,7 +224,7 @@
                                 </span>
                             </li>
                             <li
-                                v-if="signedInUser.positions.length > 1"
+                                v-else
                                 class="permission-write-own-registrations context-menu-item"
                                 :class="{ disabled: !hasAnySelectedEventInFuture }"
                                 @click="choosePositionAndJoinEvents(selectedEvents)"
@@ -394,6 +395,9 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 }
 
 function getStateDetails(event: EventTableViewItem): StateDetails {
+    if (event.isPastEvent) {
+        return { name: 'Vergangene', icon: 'fa-check-circle', color: 'bg-gray-200 text-gray-700' };
+    }
     if (event.state === EventState.Canceled) {
         return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-200 text-red-700' };
     }

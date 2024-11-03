@@ -11,17 +11,18 @@
                 <!--                </p>-->
                 <div class="-mx-4 flex flex-wrap items-start font-semibold">
                     <div class="w-full">
-                        <VInfo v-if="event.state === EventState.Draft" class="mr-2 mt-4">
+                        <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable>
                             Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen
                             freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen.
                         </VInfo>
-                        <VWarning v-if="event.state === EventState.Canceled" class="mr-2 mt-4">
+                        <VWarning v-if="event.state === EventState.Canceled" class="mt-4" dismissable>
                             Diese Reise wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im
                             Tab Reisedaten zurücknehmen.
                         </VWarning>
                         <VWarning
                             v-else-if="event.state === EventState.Planned && hasEmptyRequiredSlots"
-                            class="mr-2 mt-4"
+                            class="mt-4"
+                            dismissable
                         >
                             Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht
                             erfüllt!

@@ -1,12 +1,16 @@
 <template>
-    <div class="flex items-center rounded-xl bg-blue-100 p-2 pl-4 text-blue-900" :class="{ hidden: dismissed }">
-        <i class="fa-solid fa-info-circle"></i>
-        <span class="ml-4 mr-1 w-0 flex-grow">
+    <div
+        class="flex items-center overflow-hidden rounded-xl bg-blue-100 text-blue-900"
+        :class="{ hidden: dismissed }"
+        @click="clamp = !clamp"
+    >
+        <i class="fa-solid fa-info-circle my-3 ml-4 self-start text-xl"></i>
+        <span class="my-2 ml-4 mr-1 w-0 flex-grow text-sm lg:text-base" :class="{ 'line-clamp-3': clamp }">
             <slot></slot>
         </span>
         <button
-            v-if="props.dismissable === true"
-            class="h-9 w-9 self-baseline rounded-full hover:bg-blue-300 hover:bg-opacity-75"
+            v-if="props.dismissable !== false"
+            class="m-1 h-9 w-9 self-start rounded-full hover:bg-blue-200 hover:bg-opacity-75"
             @click="dismiss()"
         >
             <i class="fa-solid fa-xmark"></i>
@@ -30,6 +34,7 @@ type Emits = (e: 'dismiss') => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
+const clamp = ref<boolean>(true);
 const dismissed = ref<boolean>(false);
 
 function dismiss(): void {
