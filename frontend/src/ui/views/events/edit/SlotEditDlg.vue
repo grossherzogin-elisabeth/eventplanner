@@ -19,8 +19,8 @@
                     <VInputSelect
                         v-model="slot.criticality"
                         :options="[
-                            { value: SlotCriticality.Security, label: 'Sichere Mindestbesatzung' },
-                            { value: SlotCriticality.Required, label: 'Erforderlich' },
+                            { value: SlotCriticality.Security, label: 'Notwendig' },
+                            { value: SlotCriticality.Required, label: 'Wichtig' },
                             { value: SlotCriticality.Optional, label: 'Optional' },
                         ]"
                     />

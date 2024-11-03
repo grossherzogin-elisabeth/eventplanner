@@ -9,7 +9,7 @@ public class Pos {
     protected static final PositionKey MASCHINIST = new PositionKey("maschinist");
     protected static final PositionKey MOA = new PositionKey("moa");
     protected static final PositionKey KOCH = new PositionKey("koch");
-    protected static final PositionKey AUSBILDER = new PositionKey("matrose");
+    protected static final PositionKey AUSBILDER = new PositionKey("ausbilder");
     protected static final PositionKey MATROSE = new PositionKey("matrose");
     protected static final PositionKey LEICHTMATROSE = new PositionKey("leichtmatrose");
     protected static final PositionKey DECKSHAND = new PositionKey("deckshand");

@@ -84,13 +84,13 @@
                     <ul v-else>
                         <template
                             v-for="it in team"
-                            :key="it.registration?.key + it.user?.key + it.name + it.position.key"
+                            :key="it.slot?.key + it.registration?.key + it.user?.key + it.position.key"
                         >
                             <VDraggable
                                 class="flex items-center rounded-xl px-4 py-2 hover:bg-primary-100 md:space-x-4"
                                 :class="{ 'cursor-move': it.name !== undefined }"
                                 component="li"
-                                :value="it.user?.key || it.name ? it : undefined"
+                                :value="it"
                                 @dragend="dragSource = null"
                                 @dragstart="dragSource = DragSource.FROM_TEAM"
                                 @click="editSlotRegistration(it)"
@@ -116,7 +116,7 @@
                                     Noch nicht besetzt
                                 </span>
                                 <span :style="{ background: it.position.color }" class="position text-xs">
-                                    {{ it.position.name }}
+                                    {{ it.slot?.positionName || it.position.name }}
                                 </span>
                             </VDraggable>
                         </template>
@@ -176,7 +176,10 @@
                     </div>
                     <!-- waitinglist -->
                     <ul>
-                        <template v-for="it in registrations" :key="it.positionKey + it.userKey + it.name">
+                        <template
+                            v-for="it in registrations"
+                            :key="it.registration?.key + it.user?.key + it.name + it.position.key"
+                        >
                             <VDraggable
                                 class="flex cursor-move items-center rounded-xl px-4 py-2 hover:bg-primary-100 md:space-x-4"
                                 component="li"

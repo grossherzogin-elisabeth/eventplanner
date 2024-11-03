@@ -311,7 +311,7 @@ public class EventExcelImporter {
             case "1. Maschinist", "2. Maschinist" -> Pos.MASCHINIST;
             case "3. Maschinist (Ausb.)" -> Pos.MOA;
             case "Koch" -> Pos.KOCH;
-            case "Ausbilder" -> Pos.MATROSE;
+            case "Ausbilder" -> Pos.AUSBILDER;
             case "Matrose" -> Pos.MATROSE;
             case "Leichtmatrose" -> Pos.LEICHTMATROSE;
             case "Decksmann / -frau" -> Pos.DECKSHAND;
@@ -381,36 +381,29 @@ public class EventExcelImporter {
         slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withCriticality(2));
         slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withCriticality(1));
         slots.add(Slot.of(Pos.MASCHINIST).withName("1. Maschinist").withCriticality(2));
-        slots.add(Slot.of(Pos.MASCHINIST).withName("2. Maschinist").withCriticality(2));
+        slots.add(Slot.of(Pos.MASCHINIST).withName("2. Maschinist").withCriticality(1));
 
         slots.add(Slot.of(Pos.KOCH).withCriticality(1));
-        slots.add(Slot.of(Pos.AUSBILDER, Pos.STM).withName("Ausbilder").withCriticality(1));
+        slots.add(Slot.of(Pos.AUSBILDER).withCriticality(2));
         slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
         slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
         slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
         slots.add(Slot.of(Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
 
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(2));
 
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
-
-        if (eventName.equals("Ausbildungsfahrt Crew")) {
-            for (int i = 0; i < 30; i++) {
-                slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE));
-            }
-        }
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE).withCriticality(1));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.MOA, Pos.NOA));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.MOA, Pos.NOA));
+        slots.add(Slot.of(Pos.DECKSHAND, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.MOA, Pos.NOA));
 
         // these slots should be filled last
-        slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.BACKSCHAFT));
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA)
-            .withRequired());
+        slots.add(Slot.of(Pos.BACKSCHAFT, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withCriticality(1));
         slots.add(Slot.of(Pos.KOCH, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withCriticality(1));
 
         for (int i = 0; i < slots.size(); i++) {
