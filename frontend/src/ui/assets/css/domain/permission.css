@@ -1,0 +1,18 @@
+body:not(.events\:read) .permission-read-events,
+body:not(.events\:write) .permission-write-events,
+body:not(.users\:read) .permission-read-users,
+body:not(.users\:read-details-self) .permission-read-own-user-details,
+body:not(.users\:write-self) .permission-write-own-user-details,
+body:not(.users\:read-details) .permission-read-user-details,
+body:not(.users\:write) .permission-write-users,
+body:not(.users\:delete) .permission-delete-users,
+body:not(.positions\:read) .permission-read-positions,
+body:not(.positions\:write) .permission-write-positions,
+body:not(.qualifications\:read) .permission-read-qualifications,
+body:not(.qualifications\:write) .permission-write-qualifications,
+body:not(.event-team\:write-self) .permission-write-own-registrations,
+body:not(.event-team\:write) .permission-write-registrations,
+body:not(.beta-features) .permission-beta-features,
+body:not(.application-settings\:write) .permission-write-application-settings {
+    display: none !important;
+}

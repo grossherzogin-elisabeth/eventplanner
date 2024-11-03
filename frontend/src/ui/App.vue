@@ -25,6 +25,7 @@
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import type { SignedInUser } from '@/domain';
+import { Permission } from '@/domain';
 import { VErrorDialog } from '@/ui/components/common';
 import AppMenu from '@/ui/components/partials/AppMenu.vue';
 import AppNavbar from '@/ui/components/partials/AppNavbar.vue';
@@ -49,6 +50,10 @@ async function init(): Promise<void> {
     authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
     authUseCase.onLogout().then(() => (signedInUser.value = null));
     router.afterEach((to) => routerStack.push(to));
+    watch(signedInUser, () => {
+        Object.values(Permission).forEach((permission) => document.body.classList.remove(permission));
+        signedInUser.value.permissions?.forEach((permission) => document.body.classList.add(permission));
+    });
 }
 
 function setTitle(): void {

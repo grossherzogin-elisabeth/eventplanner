@@ -14,6 +14,7 @@
 
 @import 'domain/role.css';
 @import 'domain/event.css';
+@import 'domain/permission.css';
 
 html {
     box-sizing: border-box;
