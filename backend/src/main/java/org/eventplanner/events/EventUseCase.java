@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -167,7 +168,7 @@ public class EventUseCase {
         eventRepository.deleteByKey(eventKey);
     }
 
-    public byte[] downloadImoList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
+    public ByteArrayOutputStream downloadImoList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
         signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 

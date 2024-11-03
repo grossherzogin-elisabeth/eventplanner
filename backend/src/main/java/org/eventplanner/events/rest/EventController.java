@@ -81,7 +81,8 @@ public class EventController {
     public ResponseEntity<Resource> downloadImoList(@PathVariable("eventKey") String eventKey) throws IOException {
 
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        byte[] imoListByteArray = eventUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
+        ByteArrayOutputStream imoListStream = eventUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
+        byte[] imoListByteArray = imoListStream.toByteArray();
 
         HttpHeaders headers = new HttpHeaders();
         String fileName = eventKey + "imo-list" + ".xlsx";

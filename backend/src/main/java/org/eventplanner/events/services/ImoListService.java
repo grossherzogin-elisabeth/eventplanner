@@ -35,7 +35,7 @@ public class ImoListService {
         this.userService = userService;
     }
 
-    public @NonNull byte[] generateImoList(@NonNull Event event) throws IOException {
+    public @NonNull ByteArrayOutputStream generateImoList(@NonNull Event event) throws IOException {
 
         List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
                 .map(Slot::getAssignedRegistration)
@@ -53,48 +53,21 @@ public class ImoListService {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
             XSSFSheet sheet = workbook.getSheetAt(0);
 
-            addArrivalDepartureDetails(sheet, event);
+            String arrivalPort = event.getLocations().getFirst().name();
+            String departurePort = event.getLocations().getLast().name();
+            addEventDetailsToImoList(sheet,"{{Port_a/d}}",arrivalPort + "/" + departurePort);
 
-            int crewSize = crewList.size();
-            int firstEmptyRow = findFirstEmptyRow(sheet);
+            String arrivalDate = event.getStart().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            String departureDate = event.getEnd().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            addEventDetailsToImoList(sheet,"{{Date_a/d}}",arrivalDate + "/" + departureDate);
 
-            for (int crewCounter = 1; crewCounter < crewSize; crewCounter++){
-                UserKey crewMemberKey = crewList.get(crewCounter).getUser();
-
-                Row currentRow = sheet.getRow(crewCounter+firstEmptyRow-1);
-                currentRow.getCell(0).setCellValue(crewCounter);
-                if (crewMemberKey != null) {
-                    Optional<UserDetails> crewMemberDetails = userService.getUserByKey(Objects.requireNonNull(crewMemberKey));
-
-                    if (crewMemberDetails.isPresent()) {
-                        currentRow.getCell(1).setCellValue(crewMemberDetails.get().getLastName());
-                        currentRow.getCell(2).setCellValue(crewMemberDetails.get().getFirstName());
-                        currentRow.getCell(3).setCellValue(crewList.get(crewCounter).getPosition().value());
-                        currentRow.getCell(4).setCellValue(crewMemberDetails.get().getNationality());
-                        currentRow.getCell(5).setCellValue(Objects.requireNonNull(crewMemberDetails.get().getDateOfBirth()).toLocalDateTime());
-                        currentRow.getCell(6).setCellValue(crewMemberDetails.get().getPlaceOfBirth());
-                        currentRow.getCell(7).setCellValue(crewMemberDetails.get().getPassNr());
-                    }
-                }
-                else {
-                    // found no user for the given user key
-                    currentRow.getCell(2).setCellValue("");
-                    currentRow.getCell(3).setCellValue("");
-                    currentRow.getCell(4).setCellValue(crewList.get(crewCounter).getPosition().value());
-                    currentRow.getCell(5).setCellValue("");
-                    currentRow.getCell(6).setCellValue("");
-                    currentRow.getCell(7).setCellValue("");
-                    currentRow.getCell(8).setCellValue("");
-                }
-                // TODO Gastcrew
-            }
+            writeCrewDataToSheet(sheet, crewList);
 
             return getWorkbookBytes(workbook);
-        }
-        catch (IOException e) {
+        }catch (IOException e) {
             log.error("Failed to generate imo list workbook", e);
+            throw e;
         }
-        return null;
     }
 
     private int findFirstEmptyRow(XSSFSheet sheet) {
@@ -119,26 +92,50 @@ public class ImoListService {
         return rowCounter;
     }
 
-    private byte[] getWorkbookBytes(XSSFWorkbook workbook) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try(bos){
-            workbook.write(bos);
-            bos.flush();
+    private void writeCrewDataToSheet(XSSFSheet sheet, List<Registration> crewList) throws IOException{
+
+        int firstEmptyRow = findFirstEmptyRow(sheet);
+
+        for (int crewCounter = 1; crewCounter < crewList.size(); crewCounter++){
+            Row currentRow = sheet.getRow(crewCounter+firstEmptyRow-1);
+            currentRow.getCell(0).setCellValue(crewCounter);
+
+            UserKey crewMemberKey = crewList.get(crewCounter).getUser();
+            if (crewMemberKey != null) {
+                Optional<UserDetails> crewMemberDetails = userService.getUserByKey(Objects.requireNonNull(crewMemberKey));
+
+                if (crewMemberDetails.isPresent()) {
+                    currentRow.getCell(1).setCellValue(crewMemberDetails.get().getLastName());
+                    currentRow.getCell(2).setCellValue(crewMemberDetails.get().getFirstName());
+                    currentRow.getCell(3).setCellValue(crewList.get(crewCounter).getPosition().value());
+                    currentRow.getCell(4).setCellValue(crewMemberDetails.get().getNationality());
+                    currentRow.getCell(5).setCellValue(Objects.requireNonNull(crewMemberDetails.get().getDateOfBirth()).toLocalDateTime());
+                    currentRow.getCell(6).setCellValue(crewMemberDetails.get().getPlaceOfBirth());
+                    currentRow.getCell(7).setCellValue(crewMemberDetails.get().getPassNr());
+                } else {
+                    // found no user for the given user key
+                    currentRow.getCell(1).setCellValue(crewList.get(crewCounter).getName());
+                    currentRow.getCell(2).setCellValue("Gastcrew");
+                    currentRow.getCell(3).setCellValue(crewList.get(crewCounter).getPosition().value());
+                    currentRow.getCell(4).setCellValue("");
+                    currentRow.getCell(5).setCellValue("");
+                    currentRow.getCell(6).setCellValue("");
+                    currentRow.getCell(7).setCellValue("");
+                }
+            } else {
+                // user not found
+                currentRow.getCell(1).setCellValue("nicht gefunden");
+                currentRow.getCell(2).setCellValue("");
+                currentRow.getCell(3).setCellValue(crewList.get(crewCounter).getPosition().value());
+                currentRow.getCell(4).setCellValue("");
+                currentRow.getCell(5).setCellValue("");
+                currentRow.getCell(6).setCellValue("");
+                currentRow.getCell(7).setCellValue("");
+            }
         }
-        catch (IOException e) {
-            log.error("Failed to get workbook bytes", e);
-        }
-        return bos.toByteArray();
     }
 
-    private void addArrivalDepartureDetails(XSSFSheet sheet, Event event){
-
-        String arrivalPort = event.getLocations().getFirst().name();
-        String departurePort = event.getLocations().getLast().name();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String arrivalDate = event.getStart().toLocalDate().format(formatter);
-        String departureDate = event.getEnd().toLocalDate().format(formatter);
-
+    private void addEventDetailsToImoList(XSSFSheet sheet,String placeHolder, String eventDetail){
         Iterator<Row> rowIterator = sheet.iterator();
         int rowCounter = 0;
         while (rowIterator.hasNext()) {
@@ -147,16 +144,24 @@ public class ImoListService {
             int cellCounter = 0;
             while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
-                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("2. Port of arrival/departure")) {
-                    sheet.getRow(rowCounter+1).getCell(cellCounter).setCellValue(arrivalPort + " / " + departurePort);
-                }
-                else if ((cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains("3. Date of arrival/departure"))){
-                    sheet.getRow(rowCounter+1).getCell(cellCounter).setCellValue(arrivalDate + " / " + departureDate);
-                    return;
+                if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains(placeHolder)) {
+                    sheet.getRow(rowCounter).getCell(cellCounter).setCellValue(Objects.requireNonNullElse(eventDetail, ""));
                 }
                 cellCounter++;
             }
             rowCounter++;
         }
+    }
+
+    private ByteArrayOutputStream getWorkbookBytes(XSSFWorkbook workbook) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try(bos){
+            workbook.write(bos);
+            bos.flush();
+        }
+        catch (IOException e) {
+            log.error("Failed to get workbook bytes", e);
+        }
+        return bos;
     }
 }
