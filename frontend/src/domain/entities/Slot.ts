@@ -13,7 +13,7 @@ export interface Slot {
      */
     criticality: SlotCriticality;
     /**
-     * A list of possible positions required for a user to fill this slot
+     * A list-admin of possible positions required for a user to fill this slot
      */
     positionKeys: PositionKey[];
     /**

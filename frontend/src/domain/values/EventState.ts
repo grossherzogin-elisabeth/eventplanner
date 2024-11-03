@@ -8,11 +8,11 @@ export enum EventState {
      */
     OpenForSignup = 'open-for-signup',
     /**
-     * event team is planned, team members can still sign up to the waiting list
+     * event team is planned, team members can still sign up to the waiting list-admin
      */
     Planned = 'planned',
     /**
-     * event team is planned, team members can still sign up to the waiting list
+     * event team is planned, team members can still sign up to the waiting list-admin
      */
     Canceled = 'canceled',
 }
