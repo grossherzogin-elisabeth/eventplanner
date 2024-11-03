@@ -1,5 +1,6 @@
 package org.eventplanner.events;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
@@ -30,6 +31,7 @@ import java.util.*;
 import static org.eventplanner.common.ObjectUtils.applyNullable;
 import static org.eventplanner.common.ObjectUtils.orElse;
 
+@Slf4j
 @Service
 public class EventUseCase {
     private final EventRepository eventRepository;
@@ -57,12 +59,25 @@ public class EventUseCase {
             throw new IllegalArgumentException("Invalid year");
         }
 
-        var allEvents = this.eventRepository.findAllByYear(year).stream().map(eventService::removeInvalidSlotAssignments);
+        var allEvents = this.eventRepository.findAllByYear(year).stream()
+                .map(eventService::removeInvalidSlotAssignments)
+                .toList();
 
         if (signedInUser.hasPermission(Permission.WRITE_EVENTS)) {
-            return allEvents.toList();
+            return allEvents;
         }
-        return allEvents.filter(it -> !EventState.DRAFT.equals(it.getState())).toList();
+        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_TEAM)) {
+            // clear assigned registrations on slots if crew is not published yet
+            allEvents.stream()
+                    .filter(it -> List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(it.getState()))
+                    .forEach(it -> it.getSlots().forEach(slot -> slot.setAssignedRegistration(null)));
+        }
+        return allEvents.stream()
+                .filter(it -> !EventState.DRAFT.equals(it.getState()))
+                .filter(it -> !EventState.CANCELED.equals(it.getState()) || it.getRegistrations()
+                        .stream()
+                        .anyMatch(reg -> signedInUser.key().equals(reg.getUser())))
+                .toList();
     }
 
     public @NonNull Event getEventByKey(@NonNull SignedInUser signedInUser, EventKey key) {
@@ -159,7 +174,8 @@ public class EventUseCase {
                 signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
             }
             if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUser()))) {
-                throw new IllegalArgumentException("Registration for " + userKey.value() + " already exists");
+                log.info("Registration for {} already exists. Nothing to do to get requested state.", userKey.value());
+                return event;
             }
             var user = userService.getUserByKey(userKey)
                     .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not exist"));
