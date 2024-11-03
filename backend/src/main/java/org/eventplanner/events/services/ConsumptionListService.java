@@ -64,17 +64,17 @@ public class ConsumptionListService {
 
         List<String> nameList = new ArrayList<>();
 
-        for (int crewCounter = 0; crewCounter < crewList.size(); crewCounter++){
+        for (Registration registration : crewList) {
 
-            UserKey crewMemberKey = crewList.get(crewCounter).getUser();
+            UserKey crewMemberKey = registration.getUser();
             if (crewMemberKey != null) {
                 Optional<UserDetails> crewMemberDetails = userService.getUserByKey(Objects.requireNonNull(crewMemberKey));
                 crewMemberDetails.ifPresent(userDetails -> nameList.add(userDetails.getFirstName() + "\n" + userDetails.getLastName()));
             } else {
-                String guestName = Objects.requireNonNull(crewList.get(crewCounter).getName());
+                String guestName = Objects.requireNonNull(registration.getName());
                 if (guestName.contains(",")) {
                     String guestLastName = guestName.substring(0, guestName.indexOf(","));
-                    String guestFirstName = guestName.substring(guestName.indexOf(",")+1).trim();
+                    String guestFirstName = guestName.substring(guestName.indexOf(",") + 1).trim();
                     nameList.add(guestFirstName + "\n" + guestLastName);
                 } else {
                     nameList.add(guestName.replaceFirst("\\s", "\n"));
