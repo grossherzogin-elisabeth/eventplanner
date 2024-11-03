@@ -165,7 +165,7 @@ public class ImporterUseCase {
     }
 
     private void importUsersFromFile(File file) {
-        var users = UserExcelImporter.readFromFile(file, password);
+        var users = UserExcelImporter.readFromFile(file, password, qualificationRepository.findAll());
         userRepository.deleteAll();
         for (UserDetails user : users) {
             userService.createUser(user);

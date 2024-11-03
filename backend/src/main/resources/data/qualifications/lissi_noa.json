@@ -1,0 +1,8 @@
+{
+  "key": "lissi-noa",
+  "icon": "fa-anchor",
+  "name": "N.O.A.",
+  "description": "Nautischer Offiziersanwärter nach vereinsinternem Ausbildungskonzept",
+  "expires": false,
+  "grantsPositions": ["noa"]
+}

@@ -2,9 +2,6 @@ package org.eventplanner.users;
 
 import io.micrometer.common.lang.Nullable;
 import org.eventplanner.exceptions.UnauthorizedException;
-import org.eventplanner.qualifications.adapter.QualificationRepository;
-import org.eventplanner.qualifications.entities.Qualification;
-import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;

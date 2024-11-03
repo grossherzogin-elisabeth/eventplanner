@@ -23,7 +23,8 @@ public class EncryptedUserQualification implements Encryptable<UserQualification
     public @NonNull UserQualification decrypt(@NonNull Crypto crypto) {
         return new UserQualification(
             new QualificationKey(crypto.decrypt(qualificationKey)),
-            expiresAt != null ? ZonedDateTime.parse(crypto.decrypt(expiresAt)) : null
+            expiresAt != null ? ZonedDateTime.parse(crypto.decrypt(expiresAt)) : null,
+            expiresAt != null
         );
     }
 }

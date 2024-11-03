@@ -1,0 +1,8 @@
+{
+  "key": "lissi-moa",
+  "icon": "fa-anchor",
+  "name": "Maschinist i.A.",
+  "description": "Maschinist in Ausbildung nach vereinsinternem Ausbildungskonzept",
+  "expires": false,
+  "grantsPositions": ["moa"]
+}

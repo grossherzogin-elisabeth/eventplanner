@@ -3,5 +3,5 @@
   "icon": "fa-kit-medical",
   "name": "Erste Hilfe Kurs",
   "description": "",
-  "expires": true
+  "expires": false
 }

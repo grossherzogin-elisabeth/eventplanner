@@ -2,7 +2,7 @@
   "key": "stcw-ii-5",
   "icon": "fa-life-ring",
   "name": "STCW-II/5",
-  "description": "Wachoffiziere auf Schiffen von 200 bis 500 BRZ",
+  "description": "Fachkraft Deck",
   "expires": true,
   "grantsPositions": ["matrose"]
 }

@@ -16,4 +16,5 @@ import java.time.ZonedDateTime;
 public class UserQualification implements Serializable {
     private @NonNull QualificationKey qualificationKey;
     private @Nullable ZonedDateTime expiresAt;
+    private boolean expires;
 }

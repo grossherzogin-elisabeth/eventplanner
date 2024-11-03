@@ -2,7 +2,7 @@
   "key": "stcw-ii-4",
   "icon": "fa-life-ring",
   "name": "STCW-II/4",
-  "description": "Wachoffiziere auf Schiffen bis 500 BRZ im Küstenseeverkehr",
-  "expires": true,
-  "grantsPositions": ["steuermann", "matrose"]
+  "description": "Wachbefähigung Deck",
+  "expires": false,
+  "grantsPositions": ["leichtmatrose"]
 }

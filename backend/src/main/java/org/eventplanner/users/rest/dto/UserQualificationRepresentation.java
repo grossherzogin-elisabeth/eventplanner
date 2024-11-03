@@ -13,7 +13,8 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UserQualificationRepresentation(
     @NonNull String qualificationKey,
-    @Nullable String expiresAt
+    @Nullable String expiresAt,
+    boolean expires
 ) implements Serializable {
 
     public static @Nullable UserQualificationRepresentation fromDomain(@Nullable UserQualification userQualification) {
@@ -22,14 +23,16 @@ public record UserQualificationRepresentation(
         }
         return new UserQualificationRepresentation(
             userQualification.getQualificationKey().value(),
-            mapNullable(userQualification.getExpiresAt(), d -> d.format(DateTimeFormatter.ISO_DATE_TIME))
+            mapNullable(userQualification.getExpiresAt(), d -> d.format(DateTimeFormatter.ISO_DATE_TIME)),
+            userQualification.isExpires()
         );
     }
 
     public @NonNull UserQualification toDomain() {
         return new UserQualification(
             new QualificationKey(qualificationKey),
-            mapNullable(expiresAt, ZonedDateTime::parse)
+            mapNullable(expiresAt, ZonedDateTime::parse),
+            expires
         );
     }
 }

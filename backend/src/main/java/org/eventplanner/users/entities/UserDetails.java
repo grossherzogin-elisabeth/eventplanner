@@ -75,14 +75,14 @@ public class UserDetails {
                 && expirationDate.isAfter(existingQualification.getExpiresAt())
             ) {
                 qualifications.remove(existingQualification);
-                qualifications.add(new UserQualification(qualificationKey, expirationDate));
+                qualifications.add(new UserQualification(qualificationKey, expirationDate, true));
             }
             if (existingQualification.getExpiresAt() == null && expirationDate != null) {
                 qualifications.remove(existingQualification);
-                qualifications.add(new UserQualification(qualificationKey, expirationDate));
+                qualifications.add(new UserQualification(qualificationKey, expirationDate, true));
             }
         } else {
-            qualifications.add(new UserQualification(qualificationKey, expirationDate));
+            qualifications.add(new UserQualification(qualificationKey, expirationDate, expirationDate != null));
         }
     }
 

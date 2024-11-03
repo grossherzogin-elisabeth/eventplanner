@@ -163,7 +163,8 @@ public class UserEncryptionService {
             Optional.ofNullable(value.getExpiresAt())
                 .map(this::decrypt)
                 .map(ZonedDateTime::parse)
-                .orElse(null)
+                .orElse(null),
+            value.getExpiresAt() != null
         );
     }
 }

@@ -1,8 +1,10 @@
 package org.eventplanner.importer.service;
 
 import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.users.entities.UserDetails;
+import org.eventplanner.users.entities.UserQualification;
 import org.eventplanner.users.values.Address;
 import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
@@ -13,7 +15,6 @@ import org.springframework.lang.Nullable;
 
 import java.io.File;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class UserExcelImporter {
 
@@ -35,7 +36,7 @@ public class UserExcelImporter {
     private static final int COL_MEMBER = 16;
     private static final int COL_NOTE = 17;
     private static final int COL_RIGG_SUITABLE = 18;
-    private static final int COL_FITNESS_FOR_SEA_SERVICE_EXPIRATION_DATE = 19;
+    private static final int COL_MEDICAL_FITNESS_EXPIRATION_DATE = 19;
     private static final int COL_QUALIFICATION = 20;
     private static final int COL_QUALIFICATION_EXPIRATION_DATE = 21;
     private static final int COL_FUNK = 22;
@@ -48,31 +49,33 @@ public class UserExcelImporter {
 
     private static final Logger log = LoggerFactory.getLogger(UserExcelImporter.class);
 
-    private static final List<String> otherQualifications = new LinkedList<>();
-
-    public static @NonNull List<UserDetails> readFromFile(@NonNull File file, @Nullable String password) {
+    public static @NonNull List<UserDetails> readFromFile(@NonNull File file, @Nullable String password, List<Qualification> qualifications) {
         try {
             var data = ExcelUtils.readExcelFile(file, password);
-            return parseUsers(data);
+            var qualificationMap = new HashMap<QualificationKey, Qualification>();
+            qualifications.stream().forEach(qualification -> qualificationMap.put(qualification.getKey(), qualification));
+            return parseUsers(data, qualificationMap);
         } catch (Exception e) {
             log.error("Failed to read excel file", e);
         }
         return Collections.emptyList();
     }
 
-    private static @NonNull List<UserDetails> parseUsers(@NonNull String[][] data) {
+    private static @NonNull List<UserDetails> parseUsers(@NonNull String[][] data, Map<QualificationKey, Qualification> qualifications) {
         var users = new HashMap<UserKey, UserDetails>();
         for (int r = 1; r < data[0].length; r++) {
             final var rowIndex = r;
-            var row = Arrays.stream(data).map((col) -> col[rowIndex]).toArray(String[]::new);
-            UserDetails user = parseBaseData(users, row);
-            user = addQualifications(user, row);
+            var row = Arrays.stream(data).map(col -> col[rowIndex]).toArray(String[]::new);
+            UserDetails user = parseBaseData(r, users, row);
+            addQualificationsToUser(r, user, row);
+
+            validateRank(r, user, row[COL_POSITION], qualifications);
             users.put(user.getKey(), user);
         }
         return users.values().stream().toList();
     }
 
-    private static UserDetails parseBaseData(Map<UserKey, UserDetails> users, String[] data) {
+    private static UserDetails parseBaseData(int row, Map<UserKey, UserDetails> users, String[] data) {
         var firstName = data[COL_FIRSTNAME].trim();
         var lastName = data[COL_LASTNAME].trim();
         String secondName = null;
@@ -98,13 +101,13 @@ public class UserExcelImporter {
             user.setSecondName(secondName);
             user.getRoles().add(Role.TEAM_MEMBER);
 
-            user = parseDetails(user, data);
+            addDetailsToUser(row, user, data);
         }
 
         return user;
     }
 
-    private static UserDetails parseDetails(UserDetails user, String[] data) {
+    private static void addDetailsToUser(int row, UserDetails user, String[] data) {
         var street = data[COL_STREET].trim();
         var zipcode = data[COL_ZIPCODE].trim();
         if (zipcode.contains(".")) {
@@ -120,6 +123,8 @@ public class UserExcelImporter {
         var email = data[COL_EMAIL].trim().toLowerCase();
         if (!email.isBlank()) {
             user.setEmail(email);
+        } else {
+            log.debug("Row {}: {} has no email address", row, user.getFullName());
         }
 
         var mobile = data[COL_MOBILE].trim();
@@ -133,22 +138,31 @@ public class UserExcelImporter {
         }
 
         var dateOfBirth = ExcelUtils.parseExcelDate(data[COL_DATE_OF_BIRTH]);
-        user.setDateOfBirth(dateOfBirth.orElse(null));
+        if (dateOfBirth.isPresent()) {
+            user.setDateOfBirth(dateOfBirth.get());
+        } else {
+            log.debug("Row {}: {} has no date of birth", row, user.getFullName());
+        }
 
         var placeOfBirth = data[COL_TOWN_OF_BIRTH].trim();
         if (!placeOfBirth.isBlank()) {
             user.setPlaceOfBirth(placeOfBirth);
+        } else {
+            log.debug("Row {}: {} has no place of birth", row, user.getFullName());
         }
 
         var passNr = data[COL_PASS_NR].trim();
         if (!passNr.isBlank()) {
             user.setPassNr(passNr);
+        } else {
+            log.debug("Row {}: {} has no pass nr", row, user.getFullName());
         }
 
         var nationality = data[COL_NATIONALITY].trim();
         if (!nationality.isBlank()) {
             user.setNationality(nationality);
         } else {
+            log.debug("Row {}: {} has no nationality, assuming 'German'", row, user.getFullName());
             user.setNationality("German");
         }
 
@@ -156,52 +170,44 @@ public class UserExcelImporter {
         if (!note.isBlank()) {
             user.setComment(note);
         }
-
-        return user;
     }
 
-    private static UserDetails addQualifications(UserDetails user, String[] data) {
-        final var usr = user;
-
+    private static void addQualificationsToUser(int row, UserDetails user, String[] data) {
         if (data[COL_RIGG_SUITABLE].trim().equalsIgnoreCase("ja")) {
-            usr.addQualification(new QualificationKey("lissi-rigg-suitable"));
+            user.addQualification(new QualificationKey("lissi-rigg-suitable"));
         }
 
-        parseQualificationWithMandatoryExpirationDate(usr, new QualificationKey("fitness-for-seaservice"), data[COL_FITNESS_FOR_SEA_SERVICE_EXPIRATION_DATE]);
-        parseQualificationWithOptionalExpirationDate(usr, data[COL_POSITION], null);
-        parseQualificationWithOptionalExpirationDate(usr, data[COL_QUALIFICATION], data[COL_QUALIFICATION_EXPIRATION_DATE]);
-        parseQualificationWithOptionalExpirationDate(usr, data[COL_FUNK], data[COL_FUNK_EXPIRATION_DATE]);
-        parseQualificationWithOptionalExpirationDate(usr, data[COL_STCW], data[COL_STCW_EXPIRATION_DATE]);
-        parseQualificationWithMandatoryExpirationDate(usr, new QualificationKey("medical-care"), data[COL_MEDICAL_CARE]);
+        var medicalFitness = new QualificationKey("medical-fitness");
+        var added = parseQualificationWithMandatoryExpirationDate(row, user, medicalFitness, data[COL_MEDICAL_FITNESS_EXPIRATION_DATE]);
+        if (!added) {
+            // every user gets an expired medical fitness qualification
+            user.addQualification(medicalFitness);
+        }
+        parseQualificationWithOptionalExpirationDate(row, user, data[COL_POSITION], null);
+        parseQualificationWithOptionalExpirationDate(row, user, data[COL_QUALIFICATION], data[COL_QUALIFICATION_EXPIRATION_DATE]);
+        parseQualificationWithOptionalExpirationDate(row, user, data[COL_FUNK], data[COL_FUNK_EXPIRATION_DATE]);
+        parseQualificationWithOptionalExpirationDate(row, user, data[COL_STCW], data[COL_STCW_EXPIRATION_DATE]);
+        parseQualificationWithMandatoryExpirationDate(row, user, new QualificationKey("medical-care"), data[COL_MEDICAL_CARE]);
         var fistAid = data[COL_FIRST_AID].trim();
         if (!fistAid.isBlank() && !fistAid.equals("-")) {
             user.addQualification(new QualificationKey("first-aid"));
         }
+        parseOtherQualifications(user, data[COL_OTHER_QUALIFICATIONS]);
 
-        var unhandledQualifications = parseOtherQualifications(user, data[COL_OTHER_QUALIFICATIONS]);
-        if (Pattern.compile("[a-z]+").matcher(unhandledQualifications).find()) {
-//            otherQualifications.add(unhandledQualifications);
-            otherQualifications.add(unhandledQualifications + "   <----   (" + data[COL_OTHER_QUALIFICATIONS] + ")");
+        if (user.getComment() == null) {
+            user.setComment(data[COL_OTHER_QUALIFICATIONS]);
+        } else if (!data[COL_OTHER_QUALIFICATIONS].isBlank()) {
+            user.setComment(user.getComment() + "\n" + data[COL_OTHER_QUALIFICATIONS]);
         }
-
-        return usr;
     }
 
-    private static String parseOtherQualifications(UserDetails usr, String otherQualifications) {
+    private static void parseOtherQualifications(UserDetails usr, String otherQualifications) {
         var raw = otherQualifications.toLowerCase().replaceAll("[&|\\-|\\+]+", " ").replaceAll(" +", " ").trim();
         raw = addQualificationWhenPresent("stcw ii/1 (nwo)", raw, usr, "stcw-ii-1");
         raw = addQualificationWhenPresent("stcw ii/1 wachoffizier", raw, usr, "stcw-ii-1");
-        raw = addQualificationWhenPresent("stcw vi/5 gefahrenabwehr", raw, usr, "stcw-vi-5");
-        raw = addQualificationWhenPresent("wachbefähigung brücke (nwb)", raw, usr, "wachbefaehigung-bruecke-nwb");
         raw = addQualificationWhenPresent("schiffsmechanikerbrief", raw, usr, "schiffsmechaniker");
         raw = addQualificationWhenPresent("matrosenbrief", raw, usr, "matrosenbrief");
         raw = addQualificationWhenPresent("basic safety", raw, usr, "stcw-vi-1");
-
-        raw = addQualificationWhenPresent("fkn signalmittel", raw, usr, "fkn");
-        raw = addQualificationWhenPresent("pyro sachkundenachweis", raw, usr, "skn");
-        raw = addQualificationWhenPresent("skn sprengstoff/waffenrecht", raw, usr, "skn");
-        raw = addQualificationWhenPresent("skn für seenotsignalmittel nach §7 waffg", raw, usr, "skn");
-        raw = addQualificationWhenPresent("sprechfunkzeugnis (ubi)", raw, usr, "ubi");
 
         // Sani
         raw = addQualificationWhenPresent("notfallsanitäter", raw, usr, "notfallsanitaeter");
@@ -209,38 +215,25 @@ public class UserExcelImporter {
         raw = addQualificationWhenPresent("rettungssanittäter", raw, usr, "rettungssanitaeter");
 
         // Feuer
-        raw = addQualificationWhenPresent("brandschutzhelfer", raw, usr, "brandschutzhelfer");
-        raw = addQualificationWhenPresent("brandschutzbeauftragter", raw, usr, "brandschutzbeauftragter");
-        raw = addQualificationWhenPresent("adv. firefighter", raw, usr, "stcw-advanced-firefighting");
-        raw = addQualificationWhenPresent("advanced fire fighting", raw, usr, "stcw-advanced-firefighting");
-        raw = addQualificationWhenPresent("feuerwehrausbildung", raw, usr, "feuerwehr");
-        raw = addQualificationWhenPresent("feuerwehrmann", raw, usr, "feuerwehr");
+        raw = addQualificationWhenPresent("adv. firefighter", raw, usr, "stcw-vi-3");
+        raw = addQualificationWhenPresent("advanced fire fighting", raw, usr, "stcw-vi-3");
         raw = addQualificationWhenPresent("atemschutzgeräteträger", raw, usr, "asgt");
         raw = addQualificationWhenPresent("umgang mit pressluftatmern", raw, usr, "asgt");
         raw = addQualificationWhenPresent("asgt", raw, usr, "asgt");
 
-        // Technik
-        raw = addQualificationWhenPresent("ecdis", raw, usr, "ecdis");
-        raw = addQualificationWhenPresent("arpa", raw, usr, "arpa");
-
         // SBF See und Binnen
-        raw = addQualificationWhenPresent("sbf see binnen motor segel", raw, usr, "sbf-see", "sbf-binnen-motor", "sbf-binnen-segel");
-        raw = addQualificationWhenPresent("sportbootführerschein küste und binnen", raw, usr, "sbf-see", "sbf-binnen-motor"); // TODO SBF See oder SKS?
-        raw = addQualificationWhenPresent("sportbootführerscheine see und binnen und binnen unter segel", raw, usr, "sbf-see", "sbf-binnen-motor", "sbf-binnen-segel");
+        raw = addQualificationWhenPresent("sbf see binnen motor segel", raw, usr, "sbf-see");
+        raw = addQualificationWhenPresent("sportbootführerschein küste und binnen", raw, usr, "sbf-see");
+        raw = addQualificationWhenPresent("sportbootführerscheine see und binnen und binnen unter segel", raw, usr, "sbf-see");
         raw = addQualificationWhenPresent("sportbootführerschein see", raw, usr, "sbf-see");
-        raw = addQualificationWhenPresent("sbf binnen motor segel", raw, usr, "sbf-see", "sbf-binnen-motor", "sbf-binnen-segel");
-        raw = addQualificationWhenPresent("sbf binnen motor", raw, usr, "sbf-see", "sbf-binnen-motor");
-        raw = addQualificationWhenPresent("sbf binnen, segel motor", raw, usr, "sbf-binnen-motor", "sbf-binnen-segel");
-        raw = addQualificationWhenPresent("sbf binnen, maschine/segel", raw, usr, "sbf-binnen-motor", "sbf-binnen-segel");
-        raw = addQualificationWhenPresent("sbf see binnen", raw, usr, "sbf-see", "sbf-binnen-motor");
-        raw = addQualificationWhenPresent("sbf s b", raw, usr, "sbf-see", "sbf-binnen-motor");
-        raw = addQualificationWhenPresent("sbf binnen see", raw, usr, "sbf-see", "sbf-binnen-motor");
-        raw = addQualificationWhenPresent("sbs binnen see", raw, usr, "sbf-see", "sbf-binnen-motor"); // typo?
-        raw = addQualificationWhenPresent("sbs binnnen see", raw, usr, "sbf-see", "sbf-binnen-motor"); // typo?
-        raw = addQualificationWhenPresent("sbf binnen", raw, usr, "sbf-binnen-motor");
+        raw = addQualificationWhenPresent("sbf see binnen", raw, usr, "sbf-see");
+        raw = addQualificationWhenPresent("sbf s b", raw, usr, "sbf-see");
+        raw = addQualificationWhenPresent("sbf binnen see", raw, usr, "sbf-see");
+        raw = addQualificationWhenPresent("sbs binnen see", raw, usr, "sbf-see");
+        raw = addQualificationWhenPresent("sbs binnnen see", raw, usr, "sbf-see");
         raw = addQualificationWhenPresent("sbf see", raw, usr, "sbf-see");
-        raw = addQualificationWhenPresent("sbs see", raw, usr, "sbf-see"); // typo?
-        raw = addQualificationWhenPresent("sbf", raw, usr, "sbf-see", "sbf-binnen-motor"); // TODO which one is it?
+        raw = addQualificationWhenPresent("sbs see", raw, usr, "sbf-see");
+        raw = addQualificationWhenPresent("sbf", raw, usr, "sbf-see");
 
         // SKS, SSS, SHS
         raw = addQualificationWhenPresent("sportseeschifferschein", raw, usr, "sss");
@@ -251,21 +244,9 @@ public class UserExcelImporter {
         raw = addQualificationWhenPresent("sks", raw, usr, "sks");
         raw = addQualificationWhenPresent("tradi", raw, usr, "tradi");
 
-        // Pyro
-        raw = addQualificationWhenPresent("pyro", raw, usr, "fkn");
-        raw = addQualificationWhenPresent("fkn", raw, usr, "fkn");
-        raw = addQualificationWhenPresent("skn", raw, usr, "skn");
-
         // Funk
-        raw = addQualificationWhenPresent("ubi", raw, usr, "ubi");
-        raw = addQualificationWhenPresent("ubz", raw, usr, "ubz");
-        raw = addQualificationWhenPresent("src", raw, usr, "src");
-        raw = addQualificationWhenPresent("lrc", raw, usr, "lrc");
-        raw = addQualificationWhenPresent("goc", raw, usr, "goc");
-        raw = addQualificationWhenPresent("rya roc", raw, usr, "rya-roc");
-        raw = addQualificationWhenPresent("rya/roc", raw, usr, "rya-roc");
-
-        return raw.trim();
+        raw = addQualificationWhenPresent("src", raw, usr, "funk-src");
+        raw = addQualificationWhenPresent("lrc", raw, usr, "funk-lrc");
     }
 
     private static String addQualificationWhenPresent(String keyword, String raw, UserDetails user, String... qualifications) {
@@ -279,18 +260,23 @@ public class UserExcelImporter {
         return raw.trim();
     }
 
-    private static void parseQualificationWithMandatoryExpirationDate(UserDetails user, QualificationKey qualification, String expirationDateRaw) {
+    private static boolean parseQualificationWithMandatoryExpirationDate(int row, UserDetails user, QualificationKey qualification, String expirationDateRaw) {
         try {
-            if (!expirationDateRaw.isBlank() && !expirationDateRaw.equals("-") && !expirationDateRaw.equals("nein")) {
+            if (expirationDateRaw.equals("ja")) {
+                user.addQualification(qualification, null);
+                return true;
+            } else if (!expirationDateRaw.isBlank() && !expirationDateRaw.equals("-") && !expirationDateRaw.equals("nein")) {
                 var expirationDate = ExcelUtils.parseExcelDate(expirationDateRaw).orElseThrow();
                 user.addQualification(qualification, expirationDate);
+                return true;
             }
         } catch (Exception e) {
-            log.warn("Could not parse qualification '{}' with mandatory expiration date set to '{}'", qualification.value(), expirationDateRaw);
+            log.warn("Row {}: Could not parse qualification '{}' with mandatory expiration date set to '{}'", row, qualification.value(), expirationDateRaw);
         }
+        return false;
     }
 
-    private static void parseQualificationWithOptionalExpirationDate(UserDetails user, String qualificationRaw, String expirationDateRaw) {
+    private static void parseQualificationWithOptionalExpirationDate(int row, UserDetails user, String qualificationRaw, String expirationDateRaw) {
         try {
             if (qualificationRaw != null
                 && !qualificationRaw.isBlank()
@@ -306,7 +292,7 @@ public class UserExcelImporter {
                 }
             }
         } catch (Exception e) {
-            log.warn("Could not parse qualification '{}' with optional expiration date set to '{}'", qualificationRaw, expirationDateRaw);
+            log.warn("Row {}: Could not parse qualification '{}' with optional expiration date set to '{}'", row, qualificationRaw, expirationDateRaw);
         }
     }
 
@@ -315,9 +301,10 @@ public class UserExcelImporter {
             .map(String::trim)
             .map(it -> switch (it) {
                 // Dienstgrade
-                case "AB" -> "lissi-ab";
                 case "Cook" -> "lissi-koch";
                 case "Steward" -> "lissi-backschaft";
+                case "Eng. Cadet" -> "lissi-moa";
+                case "Naut. Cadet" -> "lissi-noa";
                 case "Supernumerary", "Deckshand" -> "lissi-deckshand";
 
                 // Befaehigungen
@@ -340,21 +327,18 @@ public class UserExcelImporter {
                 case "STCW III/2" -> "stcw-iii-2";
 
                 // Sicherheitslehrgang STCW
-                case "STCW VI/1-4" -> "stcw-vi-1-4";
+                case "STCW VI/1-4" -> "stcw-vi-1, stcw-vi-2, stcw-vi-3, stcw-vi-4";
                 case "STCW VI/1" -> "stcw-vi-1";
                 case "STCW VI/2" -> "stcw-vi-2";
                 case "STCW VI/3" -> "stcw-vi-3";
                 case "STCW VI/4" -> "stcw-vi-4";
 
                 // Funkerzeugnisse
-                case "GOC" -> "goc";
-                case "LRC" -> "lrc";
-                case "ROC" -> "roc";
-                case "SRC" -> "src";
-                case "UBI" -> "ubi";
-                case "UBZ" -> "ubz";
-                case "RAY-SRC" -> "rya-src";
-                case "ABZ" -> "abz";
+                case "ABZ" -> "funk-abz";
+                case "GOC" -> "funk-goc";
+                case "LRC" -> "funk-lrc";
+                case "ROC" -> "funk-roc";
+                case "SRC" -> "funk-src";
 
                 default -> "";
             })
@@ -362,5 +346,41 @@ public class UserExcelImporter {
             .filter(it -> !it.isBlank())
             .map(QualificationKey::new)
             .toList();
+    }
+
+    private static void validateRank(int row, UserDetails user, String rank, Map<QualificationKey, Qualification> qualifications) {
+        var position = switch (rank) {
+            case "Master" -> Pos.MATROSE;
+            case "Mate" -> Pos.STM;
+            case "Naut. Cadet" -> Pos.NOA;
+            case "AB" -> Pos.MATROSE;
+            case "OS" -> Pos.LEICHTMATROSE;
+            case "Engineer" -> Pos.MASCHINIST;
+            case "Eng. Cadet" -> Pos.MOA;
+            case "Cook" -> Pos.KOCH;
+            case "Steward" -> Pos.BACKSCHAFT;
+            default -> Pos.DECKSHAND;
+        };
+
+        if (user.getFirstName().equals("Felix")) {
+            log.debug("Here");
+        }
+
+        var parsedPositions = user.getQualifications().stream()
+                .map(UserQualification::getQualificationKey)
+                .map(qualifications::get)
+                .filter(Objects::nonNull)
+                .flatMap(q -> q.getGrantsPositions().stream())
+                .distinct()
+                .toList();
+        if (parsedPositions.isEmpty()) {
+            user.addQualification(new QualificationKey("lissi-deckshand"));
+            parsedPositions = new LinkedList<>(parsedPositions);
+            parsedPositions.add(Pos.DECKSHAND);
+        }
+        if (!parsedPositions.contains(position)) {
+            var parsedPositionsDisplay = String.join(", ", parsedPositions.stream().map(PositionKey::value).toList());
+            log.warn("Row {}: {} stated position is not granted from parsed qualifications: {} -> {}", row, user.getFullName(), position.value(), parsedPositionsDisplay);
+        }
     }
 }

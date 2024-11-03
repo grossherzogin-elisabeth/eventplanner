@@ -40,7 +40,7 @@ public class UserService {
     public @NonNull List<User> getUsers() {
         return getEncryptedUsers().stream()
             .map(userEncryptionService::decrypt)
-            .map(this::resolvePositions)
+            .map(this::resolvePositionsAndQualificationExpires)
             .sorted(Comparator.comparing(UserDetails::getFullName))
             .map(UserDetails::cropToUser)
             .toList();
@@ -52,7 +52,7 @@ public class UserService {
         }
         return cache.values().stream()
             .map(userEncryptionService::decrypt)
-            .map(this::resolvePositions)
+            .map(this::resolvePositionsAndQualificationExpires)
             .sorted(Comparator.comparing(UserDetails::getFullName))
             .toList();
     }
@@ -70,7 +70,7 @@ public class UserService {
             encryptedUserDetails = userRepository.findByKey(key);
         }
 
-        return encryptedUserDetails.map(userEncryptionService::decrypt).map(this::resolvePositions);
+        return encryptedUserDetails.map(userEncryptionService::decrypt).map(this::resolvePositionsAndQualificationExpires);
     }
 
     public @NonNull Optional<UserDetails> getUserByAuthKey(@Nullable AuthKey authKey) {
@@ -80,7 +80,7 @@ public class UserService {
         return getEncryptedUsers().stream()
             .filter(it -> authKey.value().equals(userEncryptionService.decryptNullable(it.getAuthKey())))
             .map(userEncryptionService::decrypt)
-            .map(this::resolvePositions)
+            .map(this::resolvePositionsAndQualificationExpires)
             .findFirst();
     }
 
@@ -91,7 +91,7 @@ public class UserService {
         return getEncryptedUsers().stream()
             .filter(it -> email.equals(userEncryptionService.decryptNullable(it.getEmail())))
             .map(userEncryptionService::decrypt)
-            .map(this::resolvePositions)
+            .map(this::resolvePositionsAndQualificationExpires)
             .findFirst();
     }
 
@@ -103,17 +103,17 @@ public class UserService {
             }
             var userFirstName = userEncryptionService.decrypt(user.getFirstName());
             if (userFirstName.equalsIgnoreCase(firstName)) {
-                return Optional.of(resolvePositions(userEncryptionService.decrypt(user)));
+                return Optional.of(resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(user)));
             }
             if (user.getNickName() != null) {
                 var userNickName = userEncryptionService.decrypt(user.getNickName());
                 if (userNickName.equalsIgnoreCase(firstName)) {
-                    return Optional.of(resolvePositions(userEncryptionService.decrypt(user)));
+                    return Optional.of(resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(user)));
                 }
             }
             var userSecondName = userEncryptionService.decryptNullable(user.getSecondName());
             if (userSecondName != null && (userFirstName + " " + userSecondName).equalsIgnoreCase(firstName)) {
-                return Optional.of(resolvePositions(userEncryptionService.decrypt(user)));
+                return Optional.of(resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(user)));
             }
         }
         return Optional.empty();
@@ -134,7 +134,7 @@ public class UserService {
         if (!cache.isEmpty()) {
             cache.put(encrypted.getKey(), encrypted);
         }
-        return resolvePositions(userEncryptionService.decrypt(encrypted));
+        return resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(encrypted));
     }
 
     public void deleteUser(UserKey userKey) {
@@ -145,16 +145,16 @@ public class UserService {
         }
     }
 
-    private UserDetails resolvePositions(UserDetails userDetails) {
-        var qualificationPositionsMap = qualificationRepository.findAll()
+    private UserDetails resolvePositionsAndQualificationExpires(UserDetails userDetails) {
+        var qualificationMap = qualificationRepository.findAll()
                 .stream()
-                .filter(qualification -> !qualification.getGrantsPositions().isEmpty())
-                .collect(Collectors.toMap(Qualification::getKey, Qualification::getGrantsPositions));
+                .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
 
         userDetails.getQualifications().forEach(userQualification -> {
-            var positions = qualificationPositionsMap.get(userQualification.getQualificationKey());
-            if (positions != null) {
-                positions.forEach(userDetails::addPosition);
+            var qualification = qualificationMap.get(userQualification.getQualificationKey());
+            if (qualification != null) {
+                qualification.getGrantsPositions().forEach(userDetails::addPosition);
+                userQualification.setExpires(qualification.isExpires());
             }
         });
         return userDetails;
