@@ -96,11 +96,11 @@
                             class="context-menu-item"
                             @click="dropdownItem.selected = !dropdownItem.selected"
                         >
-                            <i class="fa-regular fa-square" />
+                            <i class="fa-solid fa-list-ul" />
                             <span>Abwählen</span>
                         </li>
                         <li v-else class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
-                            <i class="fa-solid fa-check-square" />
+                            <i class="fa-solid fa-list-check" />
                             <span>Auswählen</span>
                         </li>
                     </template>
