@@ -134,6 +134,10 @@
                             <span>Reise anzeigen</span>
                         </RouterLink>
                     </li>
+                    <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(item)">
+                        <i class="fa-solid fa-calendar-alt" />
+                        <span>Kalendereintrag erstellen</span>
+                    </li>
                     <template v-if="!item.signedInUserWaitingListPosition && !item.signedInUserAssignedPosition">
                         <li
                             v-if="signedInUser.positions.length === 1"
@@ -197,7 +201,7 @@
                     <div class="hidden sm:block">
                         <button
                             class="btn-ghost"
-                            :disabled="!hasAnySelectedEventInFuture"
+                            :disabled="!hasAnySelectedEventInFuture || signedInUser.positions.length === 0"
                             @click="joinEvents(selectedEvents)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
@@ -211,6 +215,11 @@
                             <li class="context-menu-item" @click="selectAll">
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
+                            </li>
+                            <!-- TODO -->
+                            <li class="context-menu-item disabled">
+                                <i class="fa-solid fa-calendar-alt" />
+                                <span>Kalendereintrag erstellen*</span>
                             </li>
                             <li
                                 v-if="signedInUser.positions.length === 1"
@@ -226,7 +235,9 @@
                             <li
                                 v-else
                                 class="permission-write-own-registrations context-menu-item"
-                                :class="{ disabled: !hasAnySelectedEventInFuture }"
+                                :class="{
+                                    disabled: !hasAnySelectedEventInFuture || signedInUser.positions.length === 0,
+                                }"
                                 @click="choosePositionAndJoinEvents(selectedEvents)"
                             >
                                 <i class="fa-solid fa-user-plus" />

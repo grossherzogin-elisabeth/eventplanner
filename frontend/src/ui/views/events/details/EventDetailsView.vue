@@ -14,7 +14,7 @@
                 <!-- state info banner -->
                 <section
                     v-if="event.state === EventState.Canceled"
-                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:mx-0"
+                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:ml-0"
                 >
                     <div class="overflow-hidden rounded-2xl bg-red-100 text-red-800">
                         <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
@@ -25,7 +25,7 @@
                 </section>
                 <section
                     v-else-if="event.signedInUserAssignedPosition"
-                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:mx-0"
+                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:ml-0"
                 >
                     <div class="overflow-hidden rounded-2xl bg-green-100 text-green-800">
                         <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
@@ -40,7 +40,7 @@
                 </section>
                 <section
                     v-else-if="event.signedInUserWaitingListPosition"
-                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:mx-0"
+                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:ml-0"
                 >
                     <div class="overflow-hidden rounded-2xl bg-yellow-100 text-yellow-800">
                         <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
@@ -55,7 +55,7 @@
                 </section>
 
                 <!-- details -->
-                <section class="-mx-4 md:col-start-2 xl:mx-0">
+                <section class="-mx-4 md:col-start-2 xl:ml-0">
                     <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">
                         {{ $t('app.event-details.title') }}
                     </h2>
@@ -88,7 +88,7 @@
                 </section>
 
                 <!-- route -->
-                <section class="-mx-4 md:col-start-2 xl:mx-0">
+                <section class="-mx-4 md:col-start-2 xl:ml-0">
                     <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">
                         <template v-if="event.locations.length === 1">Ort</template>
                         <template v-else>Route</template>
@@ -163,9 +163,7 @@
                                 <i class="fa-solid fa-circle text-gray-400"></i>
                                 <span class="mx-2 inline-block h-4 w-64 rounded-full bg-gray-400"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position bg-gray-400">
-                                    <span class="mx-2 inline-block h-2 w-16 rounded-full bg-gray-100"> </span>
-                                </span>
+                                <span class="position h-4 w-16 bg-gray-400"> </span>
                             </li>
                         </ul>
                     </div>
@@ -226,20 +224,6 @@
                                 <p v-else>Für diesen Termin gibt es keine Anmeldungen auf der Warteliste.</p>
                             </div>
                         </template>
-                    </div>
-                </section>
-
-                <!-- documents -->
-                <section
-                    v-if="signedInUser.permissions.includes(Permission.BETA_FEATURES)"
-                    class="-mx-4 md:col-start-2 xl:mx-0"
-                >
-                    <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">Dokumente</h2>
-                    <div class="rounded-2xl bg-primary-100 p-4 lg:px-8">
-                        <p v-for="doc in documentsMock" :key="doc" class="mb-1 flex items-center space-x-4">
-                            <i class="fa-solid fa-file-pdf w-4 text-gray-700" />
-                            <span>{{ doc }}</span>
-                        </p>
                     </div>
                 </section>
             </div>
@@ -310,7 +294,10 @@
                 <i class="fa-solid fa-calendar-alt" />
                 <span>Kalendereintrag erstellen</span>
             </li>
-            <li class="context-menu-item disabled">
+            <li
+                v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition"
+                class="context-menu-item disabled"
+            >
                 <i class="fa-solid fa-note-sticky" />
                 <span>Notiz fürs Büro hinzufügen</span>
             </li>
@@ -321,11 +308,11 @@
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
             </li>
-            <li class="context-menu-item disabled">
+            <li class="permission-read-users context-menu-item disabled">
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Getränkeliste generieren</span>
             </li>
-            <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)">
+            <li class="permission-write-events">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-edit" />
                     <span>Reise bearbeiten</span>
@@ -344,6 +331,7 @@ import type { Event, PositionKey, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
+import { VInfo } from '@/ui/components/common';
 import { AsyncButton } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
@@ -371,7 +359,6 @@ const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const statesWithHiddenCrew = [EventState.OpenForSignup, EventState.Draft];
 const event = ref<Event | null>(null);
 const tab = ref<Tab>(Tab.Team);
-const documentsMock = ['Kammerplan', 'Wachplan', 'Getränkeliste Crew'];
 
 const waitingList = ref<ResolvedRegistrationSlot[]>([]);
 const team = ref<ResolvedRegistrationSlot[]>([]);
