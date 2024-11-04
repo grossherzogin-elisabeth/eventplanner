@@ -78,40 +78,46 @@
                         <p class="text-sm">Stunden</p>
                     </td>
                     <td class="w-1/12">
-                        <div
-                            v-if="item.qualifications?.length === 0"
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
-                        >
-                            <i class="fa-solid fa-question-circle"></i>
-                            <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
-                        </div>
-                        <div
-                            v-else-if="item.expiredQualifications.length > 0"
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
-                            :title="item.expiredQualifications.join(', ')"
-                        >
-                            <i class="fa-solid fa-ban"></i>
-                            <span class="whitespace-nowrap font-semibold"
-                                >{{ item.expiredQualifications.length }} abgelaufen</span
+                        <div class="flex items-center justify-end">
+                            <div
+                                v-if="item.qualifications?.length === 0"
+                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
                             >
-                        </div>
-                        <div
-                            v-else-if="item.soonExpiringQualifications.length > 0"
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                            :title="item.soonExpiringQualifications.join(', ')"
-                        >
-                            <i class="fa-solid fa-warning"></i>
-                            <span class="whitespace-nowrap font-semibold">
-                                <template v-if="item.soonExpiringQualifications.length === 1">1 läuft bald ab</template>
-                                <template v-else>{{ item.soonExpiringQualifications.length }} laufen bald ab</template>
-                            </span>
-                        </div>
-                        <div
-                            v-else
-                            class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
-                        >
-                            <i class="fa-solid fa-check-circle"></i>
-                            <span class="whitespace-nowrap font-semibold">Alle gültig</span>
+                                <i class="fa-solid fa-question-circle"></i>
+                                <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
+                            </div>
+                            <div
+                                v-else-if="item.expiredQualifications.length > 0"
+                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
+                                :title="item.expiredQualifications.join(', ')"
+                            >
+                                <i class="fa-solid fa-ban"></i>
+                                <span class="whitespace-nowrap font-semibold">
+                                    {{ item.expiredQualifications.length }} abgelaufen
+                                </span>
+                            </div>
+                            <div
+                                v-else-if="item.soonExpiringQualifications.length > 0"
+                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
+                                :title="item.soonExpiringQualifications.join(', ')"
+                            >
+                                <i class="fa-solid fa-warning"></i>
+                                <span class="whitespace-nowrap font-semibold">
+                                    <template v-if="item.soonExpiringQualifications.length === 1"
+                                        >1 läuft bald ab</template
+                                    >
+                                    <template v-else
+                                        >{{ item.soonExpiringQualifications.length }} laufen bald ab</template
+                                    >
+                                </span>
+                            </div>
+                            <div
+                                v-else
+                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
+                            >
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span class="whitespace-nowrap font-semibold">Alle gültig</span>
+                            </div>
                         </div>
                     </td>
                 </template>

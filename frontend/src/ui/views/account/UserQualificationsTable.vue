@@ -11,11 +11,11 @@
                 </p>
             </td>
             <td class="w-1/6">
-                <template v-if="item.expiresAt">
+                <template v-if="item.expires">
                     <p v-if="item.expiresAt" class="mb-1 font-semibold">
                         {{ $d(item.expiresAt, DateTimeFormat.DD_MM_YYYY) }}
                     </p>
-                    <p v-else class="mb-1 font-semibold">??.??.????</p>
+                    <p v-else class="mb-1 font-semibold">k.A.</p>
                     <p class="text-sm">Gültig bis</p>
                 </template>
                 <p v-else class="text-sm">
@@ -24,26 +24,28 @@
                 </p>
             </td>
             <td>
-                <div
-                    v-if="item.isExpired"
-                    class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
-                >
-                    <i class="fa-solid fa-ban"></i>
-                    <span class="whitespace-nowrap font-semibold">Abgelaufen</span>
-                </div>
-                <div
-                    v-else-if="item.willExpireSoon"
-                    class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                >
-                    <i class="fa-solid fa-warning"></i>
-                    <span class="whitespace-nowrap font-semibold"> Läuft bald ab</span>
-                </div>
-                <div
-                    v-else
-                    class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
-                >
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span class="whitespace-nowrap font-semibold">Gültig</span>
+                <div class="flex items-center justify-end">
+                    <div
+                        v-if="item.isExpired"
+                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
+                    >
+                        <i class="fa-solid fa-ban"></i>
+                        <span class="whitespace-nowrap font-semibold">Abgelaufen</span>
+                    </div>
+                    <div
+                        v-else-if="item.willExpireSoon"
+                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
+                    >
+                        <i class="fa-solid fa-warning"></i>
+                        <span class="whitespace-nowrap font-semibold"> Läuft bald ab</span>
+                    </div>
+                    <div
+                        v-else
+                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
+                    >
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span class="whitespace-nowrap font-semibold">Gültig</span>
+                    </div>
                 </div>
             </td>
         </template>

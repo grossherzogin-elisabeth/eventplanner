@@ -86,6 +86,8 @@ interface UserDetailsCreateRequest {
 interface UserQualificationRepresentation {
     qualificationKey: string;
     expiresAt?: string;
+    expires?: boolean;
+    note?: string;
 }
 
 interface AddressRepresentation {
@@ -114,18 +116,20 @@ export class UserRestRepository implements UserRepository {
             throw response;
         }
         const representations: UserRepresentation[] = await response.clone().json();
-        return representations.map((it) => ({
-            key: it.key,
-            firstName: it.firstName,
-            nickName: it.nickName,
-            lastName: it.lastName,
-            positionKeys: it.positions as PositionKey[],
-            roles: it.roles?.map((r) => r as Role),
-            qualifications: it.qualifications?.map((it) => ({
+        return representations.map((userRepresentation) => ({
+            key: userRepresentation.key,
+            firstName: userRepresentation.firstName,
+            nickName: userRepresentation.nickName,
+            lastName: userRepresentation.lastName,
+            positionKeys: userRepresentation.positions as PositionKey[],
+            roles: userRepresentation.roles?.map((r) => r as Role),
+            qualifications: userRepresentation.qualifications?.map((it) => ({
                 qualificationKey: it.qualificationKey,
                 expiresAt: UserRestRepository.parseDate(it.expiresAt),
+                expires: it.expires === true,
+                note: it.note,
             })),
-            email: it.email,
+            email: userRepresentation.email,
         }));
     }
 
@@ -165,6 +169,7 @@ export class UserRestRepository implements UserRepository {
             qualifications: user.qualifications?.map((it) => ({
                 qualificationKey: it.qualificationKey,
                 expiresAt: it.expiresAt?.toISOString(),
+                note: it.note,
             })),
             phone: user.phone,
             mobile: user.mobile,
@@ -207,10 +212,7 @@ export class UserRestRepository implements UserRepository {
             placeOfBirth: user.placeOfBirth,
             positions: user.positionKeys,
             email: user.email,
-            qualifications: user.qualifications?.map((it) => ({
-                qualificationKey: it.qualificationKey,
-                expiresAt: it.expiresAt?.toISOString(),
-            })),
+            qualifications: [],
             phone: user.phone,
             mobile: user.mobile,
             passNr: user.passNr,
@@ -315,6 +317,8 @@ export class UserRestRepository implements UserRepository {
             qualifications: representation.qualifications.map((it) => ({
                 qualificationKey: it.qualificationKey,
                 expiresAt: UserRestRepository.parseDate(it.expiresAt),
+                expires: it.expires === true,
+                note: it.note,
             })),
             email: representation.email,
             phone: representation.phone || undefined,

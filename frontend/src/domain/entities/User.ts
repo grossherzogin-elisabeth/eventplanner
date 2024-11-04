@@ -41,6 +41,7 @@ export interface UserDetails {
 
 export interface UserQualification {
     qualificationKey: QualificationKey;
+    expires: boolean;
     expiresAt?: Date;
     note?: string;
 }

@@ -28,13 +28,15 @@ export class UserService {
 
         return user.qualifications.map((it) => {
             const qualification = qualifications.get(it.qualificationKey);
-            const isExpired = it.expiresAt ? it.expiresAt.getTime() < now.getTime() : false;
-            const willExpireSoon = it.expiresAt ? it.expiresAt.getTime() < expiresSoonDate.getTime() : false;
+            const isExpired = it.expires && (!it.expiresAt || it.expiresAt.getTime() < now.getTime());
+            const willExpireSoon =
+                it.expires && (it.expiresAt ? it.expiresAt.getTime() < expiresSoonDate.getTime() : false);
 
             if (qualification) {
                 return {
                     ...qualification,
                     expiresAt: it.expiresAt,
+                    note: it.note,
                     isExpired,
                     willExpireSoon,
                 };
@@ -60,7 +62,8 @@ export class UserService {
         }
         const referenceTime = at.getTime();
         return user.qualifications
-            .filter((it) => it.expiresAt !== undefined && it.expiresAt.getTime() <= referenceTime)
+            .filter((it) => it.expires)
+            .filter((it) => !it.expiresAt || it.expiresAt.getTime() <= referenceTime)
             .map((it) => it.qualificationKey);
     }
 

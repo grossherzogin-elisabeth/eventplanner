@@ -5,14 +5,15 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vue-tsc --noEmit -p tsconfig.app.json --composite false && vite build",
+        "compile": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+        "build": "npm run compile && vite build",
         "preview": "vite preview",
         "lint": "npx eslint --fix src",
         "format": "./node_modules/.bin/prettier . --ignore-path .gitignore --write",
+        "check:fix": "npm run format && npm run lint && npm run compile",
         "check:format": "./node_modules/.bin/prettier --ignore-path .gitignore --check .",
         "check:lint": "npx eslint src",
-        "check:typescript": "vue-tsc",
-        "test": "jest"
+        "check:typescript": "vue-tsc"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.6.0",
