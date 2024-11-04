@@ -1,5 +1,6 @@
 import type { AccountRepository, AuthService, Config, UserRepository } from '@/application';
 import type { SignedInUser, UserKey } from '@/domain';
+import { Permission } from '@/domain';
 
 export class AuthUseCase {
     private readonly config: Config;
@@ -22,7 +23,7 @@ export class AuthUseCase {
 
     public async authenticate(redirectPath?: string): Promise<string | undefined> {
         const user = await this.accountRepository.getAccount();
-        if (user && this.config.overrideSignedInUserKey) {
+        if (user && user.permissions.includes(Permission.READ_USER_DETAILS) && this.config.overrideSignedInUserKey) {
             const impersonatedUser = await this.userRepository.findByKey(this.config.overrideSignedInUserKey);
             if (impersonatedUser) {
                 this.authService.impersonate(impersonatedUser);
