@@ -14,7 +14,7 @@
                     </span>
                 </div>
                 <div
-                    v-for="pos in positions"
+                    v-for="pos in positions.all.value"
                     :key="pos.key"
                     :style="{ 'background-color': pos.color }"
                     class="flex cursor-pointer items-center rounded-2xl p-1"
@@ -207,7 +207,7 @@
                                         </template>
                                         <template #default>
                                             <ul>
-                                                <template v-for="pos in position.values()" :key="pos.key">
+                                                <template v-for="pos in positions.all.value" :key="pos.key">
                                                     <li
                                                         v-if="!it.user || it.user.positionKeys.includes(pos.key)"
                                                         class="-mx-4 flex cursor-pointer items-center justify-between px-4 py-1 hover:bg-primary-200"
@@ -219,7 +219,7 @@
                                                 <!-- show also non matching positions ??? -->
                                                 <template v-if="it.user">
                                                     <hr />
-                                                    <template v-for="pos in position.values()" :key="pos.key">
+                                                    <template v-for="pos in positions.all.value" :key="pos.key">
                                                         <li
                                                             v-if="!it.user.positionKeys.includes(pos.key)"
                                                             class="-mx-4 flex cursor-pointer items-center justify-between px-4 py-1 hover:bg-primary-200"
@@ -246,12 +246,15 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import type { Event, Position, PositionKey, Registration } from '@/domain';
+import type { Event, PositionKey, Registration } from '@/domain';
+import { SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VDraggable, VDropzone } from '@/ui/components/common';
-import { useEventAdministrationUseCase, useEventUseCase, useUsersUseCase } from '@/ui/composables/Application.ts';
+import { useErrorHandling, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
+import { usePositions } from '@/ui/composables/Positions.ts';
+import { v4 as uuid } from 'uuid';
 import RegistrationEditDlg from './RegistrationEditDlg.vue';
 
 enum DragSource {
@@ -268,12 +271,12 @@ type Emits = (e: 'update:event', value: Event) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const usersUseCase = useUsersUseCase();
 const eventUseCase = useEventUseCase();
 const eventAdminUseCase = useEventAdministrationUseCase();
 const eventService = useEventService();
+const errorHandler = useErrorHandling();
+const positions = usePositions();
 
-const position = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 const registrations = ref<ResolvedRegistrationSlot[]>([]);
 const team = ref<ResolvedRegistrationSlot[]>([]);
 const dragSource = ref<DragSource | null>(null);
@@ -293,12 +296,7 @@ const summary = computed<Record<PositionKey, number>>(() => {
     return sum;
 });
 
-const positions = computed<Position[]>(() => {
-    return [...position.value.values()].sort((a, b) => b.prio - a.prio);
-});
-
 async function init(): Promise<void> {
-    await fetchPositions();
     await fetchTeam();
     watch(props.event.registrations, () => fetchTeam(), { deep: true });
     watch(props.event.slots, () => fetchTeam(), { deep: true });
@@ -308,18 +306,40 @@ async function init(): Promise<void> {
 async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
     const slot = eventService.getOpenSlots(props.event).find((it) => it.positionKeys.includes(aggregate.position.key));
     if (!slot) {
-        // TODO handle error
-        alert('Das geht nicht');
+        errorHandler.handleError({
+            title: 'Zuweisung nicht möglich',
+            message: `${aggregate.name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die
+                Position ${aggregate.position.name} gibt. Du kannst entweder einen passenden Slot freigeben, indem du
+                jemand anderes aus der Crew entfernst oder einen neuen Slot für diese Reise hinzufügen.`,
+            cancelText: 'Abbrechen',
+            retryText: 'Slot hinzufügen',
+            retry: async () => {
+                const event = props.event;
+                event.slots.push({
+                    key: uuid(),
+                    positionKeys: [aggregate.position.key],
+                    criticality: SlotCriticality.Optional,
+                    assignedRegistrationKey: aggregate.registration?.key,
+                    order: event.slots.length,
+                });
+                emit('update:event', event);
+                await fetchTeam();
+            },
+        });
     } else if (aggregate.user) {
+        console.log(props.event.slots.map((it) => `${it.key} -> ${it.positionName}`));
         emit('update:event', eventService.assignUserToSlot(props.event, aggregate.user, slot.key));
+        await fetchTeam();
     } else {
         emit('update:event', eventService.assignGuestToSlot(props.event, aggregate.name, slot.key));
+        await fetchTeam();
     }
 }
 
 async function removeFromTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (aggregate.slot) {
         emit('update:event', eventService.unassignSlot(props.event, aggregate.slot.key));
+        await fetchTeam();
     }
 }
 
@@ -369,10 +389,6 @@ function changePosition(resolvedRegistration: ResolvedRegistrationSlot, newPosit
     if (registration) {
         registration.positionKey = newPositionKey;
     }
-}
-
-async function fetchPositions(): Promise<void> {
-    position.value = await usersUseCase.resolvePositionNames();
 }
 
 async function fetchTeam(): Promise<void> {

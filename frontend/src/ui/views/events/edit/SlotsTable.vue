@@ -114,7 +114,9 @@ async function editSlot(slot: Slot): Promise<void> {
 }
 
 function updatePrios(): void {
-    props.event.slots.forEach((slot, index) => (slot.order = index));
+    const updatedEvent = props.event;
+    updatedEvent.slots.forEach((slot, index) => (slot.order = index));
+    emit('update:modelValue', updatedEvent);
 }
 
 async function moveSlotUp(slot: Slot): Promise<void> {
