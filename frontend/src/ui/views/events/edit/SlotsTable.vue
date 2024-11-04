@@ -19,7 +19,7 @@
                     {{ item.positionName || positions.get(item.positionKeys[0]).name }}
                 </div>
             </td>
-            <td class="w-2/3">
+            <td class="w-2/3 min-w-96">
                 <div class="flex flex-wrap items-center">
                     <div
                         v-for="positionKey in item.positionKeys"

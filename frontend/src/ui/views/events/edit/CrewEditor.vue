@@ -19,7 +19,7 @@
                     :style="{ 'background-color': pos.color }"
                     class="flex cursor-pointer items-center rounded-2xl p-1"
                 >
-                    <span class="px-2">
+                    <span class="truncate px-2">
                         {{ pos.name }}
                     </span>
                     <span
