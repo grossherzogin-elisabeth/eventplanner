@@ -33,7 +33,7 @@
                 <template #row="{ item }">
                     <!-- name -->
                     <td
-                        class="w-2/3 min-w-96 font-semibold"
+                        class="w-2/3 max-w-[80vw] font-semibold"
                         style="max-width: min(65vw, 20rem)"
                         :class="{ 'text-primary-900 text-opacity-50': item.isPastEvent }"
                     >
@@ -45,17 +45,17 @@
                             <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
                             {{ item.name }}
                         </p>
-                        <p v-if="item.signedInUserAssignedPosition" class="text-sm font-light">
+                        <p v-if="item.signedInUserAssignedPosition" class="truncate text-sm font-light">
                             Du bist als
                             <i>{{ positions.get(item.signedInUserAssignedPosition).name }}</i>
                             eingeplant.
                         </p>
-                        <p v-else-if="item.signedInUserWaitingListPosition" class="text-sm font-light">
+                        <p v-else-if="item.signedInUserWaitingListPosition" class="truncate text-sm font-light">
                             Du stehst als
                             <i>{{ positions.get(item.signedInUserWaitingListPosition).name }}</i>
                             auf der Warteliste.
                         </p>
-                        <p v-else class="text-sm font-light">
+                        <p v-else class="truncate text-sm font-light">
                             <template v-if="item.locations.length === 0">keine Reiseroute angegeben</template>
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
@@ -65,7 +65,7 @@
                     </td>
                     <!-- status -->
                     <td class="w-1/6">
-                        <div class="flex items-center justify-end">
+                        <div class="flex items-center lg:justify-end">
                             <div
                                 class="inline-flex w-auto items-center space-x-2 rounded-full py-1 pl-3 pr-4"
                                 :class="item.stateDetails.color"
