@@ -73,7 +73,7 @@ public class EventExcelImporter {
                         .replaceAll("  ", " ")
                         .replaceAll(" ", "-")
                         .toLowerCase());
-                var slots = generateDefaultEventSlots(eventName);
+                var slots = generateDefaultEventSlots();
                 var waitingListReached = false;
                 var registrations = new ArrayList<Registration>();
                 for (int r = 4; r < raw.length; r++) {
@@ -375,11 +375,12 @@ public class EventExcelImporter {
         return List.of(elsfleth, nordsee, elsfleth);
     }
 
-    private static List<Slot> generateDefaultEventSlots(String eventName) {
+    private static List<Slot> generateDefaultEventSlots() {
         var slots = new ArrayList<Slot>();
         slots.add(Slot.of(Pos.KAPITAEN).withCriticality(2));
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withCriticality(2));
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withCriticality(1));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withName("1. Steuermann:frau").withCriticality(2));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withName("2. Steuermann:frau").withCriticality(1));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.NOA).withName("3. Steuermann:frau").withCriticality(1));
         slots.add(Slot.of(Pos.MASCHINIST).withName("1. Maschinist").withCriticality(2));
         slots.add(Slot.of(Pos.MASCHINIST).withName("2. Maschinist").withCriticality(1));
 
@@ -403,8 +404,7 @@ public class EventExcelImporter {
 
         // these slots should be filled last
         slots.add(Slot.of(Pos.BACKSCHAFT, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA));
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withCriticality(1));
-        slots.add(Slot.of(Pos.KOCH, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withCriticality(1));
+        slots.add(Slot.of(Pos.KOCH, Pos.BACKSCHAFT).withCriticality(1));
 
         for (int i = 0; i < slots.size(); i++) {
             slots.set(i, slots.get(i).withOrder(i + 1));

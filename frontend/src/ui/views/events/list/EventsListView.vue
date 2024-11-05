@@ -392,8 +392,8 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
             duration: new Date(evt.end.getTime() - evt.start.getTime()).getDate(),
             isPastEvent: evt.start.getTime() < new Date().getTime(),
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
-            hasOpenSlots: hasOpenSlots(evt),
-            hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
+            hasOpenSlots: eventService.hasOpenSlots(evt, signedInUser.value.positions),
+            hasOpenRequiredSlots: eventService.hasOpenImportantSlots(evt, signedInUser.value.positions),
             stateDetails: {
                 name: '',
                 icon: '',
@@ -406,9 +406,9 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 }
 
 function getStateDetails(event: EventTableViewItem): StateDetails {
-    if (event.isPastEvent) {
-        return { name: 'Vergangene', icon: 'fa-check-circle', color: 'bg-gray-200 text-gray-700' };
-    }
+    // if (event.isPastEvent) {
+    //     return { name: 'Vergangene', icon: 'fa-check-circle', color: 'bg-gray-200 text-gray-700' };
+    // }
     if (event.state === EventState.Canceled) {
         return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-200 text-red-700' };
     }
@@ -425,16 +425,12 @@ function getStateDetails(event: EventTableViewItem): StateDetails {
         return { name: 'Crew Anmeldung', icon: 'fa-unlock', color: 'bg-blue-200 text-blue-700' };
     }
     if (event.hasOpenRequiredSlots) {
-        return { name: 'Crew gesucht', icon: 'fa-info-circle', color: 'bg-blue-200 text-blue-700' };
+        return { name: 'Crew gesucht', icon: 'fa-info-circle', color: 'bg-yellow-100 text-yellow-700' };
     }
     if (event.hasOpenSlots) {
         return { name: 'Freie Plätze', icon: 'fa-info-circle', color: 'bg-blue-200 text-blue-700' };
     }
     return { name: 'Voll belegt', icon: 'fa-info-circle', color: 'bg-gray-200 text-gray-700' };
-}
-
-function hasOpenSlots(event: Event): boolean {
-    return event.slots.filter((slt) => !slt.assignedRegistrationKey).length > 0;
 }
 
 async function openEvent(evt: EventTableViewItem): Promise<void> {

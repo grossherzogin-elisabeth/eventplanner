@@ -2,6 +2,7 @@ import { addToDate, cropToPrecision, filterUndefined } from '@/common';
 import type {
     Event,
     Location,
+    PositionKey,
     Registration,
     SignedInUser,
     Slot,
@@ -10,6 +11,7 @@ import type {
     UserKey,
     ValidationHint,
 } from '@/domain';
+import { SlotCriticality } from '@/domain';
 import { EventState } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
@@ -248,11 +250,24 @@ export class EventService {
         return slot !== undefined && slot.assignedRegistrationKey !== undefined;
     }
 
-    public hasOpenRequiredSlots(event: Event): boolean {
-        const openRequiredSlots = event.slots.filter(
-            (it) => it.criticality >= 2 && it.assignedRegistrationKey === undefined
+    public hasOpenRequiredSlots(event: Event, positions?: PositionKey[]): boolean {
+        return this.hasOpenSlots(event, positions, SlotCriticality.Required);
+    }
+
+    public hasOpenImportantSlots(event: Event, positions?: PositionKey[]): boolean {
+        return this.hasOpenSlots(event, positions, SlotCriticality.Important);
+    }
+
+    public hasOpenSlots(event: Event, positions?: PositionKey[], criticality: number = 0): boolean {
+        const openSlots = event.slots.filter(
+            (it) =>
+                it.criticality >= criticality &&
+                it.assignedRegistrationKey === undefined &&
+                (positions === undefined ||
+                    positions.length === 0 ||
+                    positions?.find((p) => it.positionKeys.includes(p)))
         );
-        return openRequiredSlots.length > 0;
+        return openSlots.length > 0;
     }
 
     public findRegistration(event: Event, userKey?: string, name?: string): Registration | undefined {

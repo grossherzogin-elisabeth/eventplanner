@@ -9,8 +9,7 @@ import type { ErrorHandlingService } from '@/application/services/ErrorHandlingS
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { formatIcsDate } from '@/common/date';
 import type { Event, EventKey, EventService, PositionKey, RegistrationService, UserKey } from '@/domain';
-import { EventState } from '@/domain';
-import { EventType } from '@/domain';
+import { EventState, EventType, SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class EventUseCase {
@@ -187,7 +186,9 @@ export class EventUseCase {
             // crew is not public yet, so all registrations are on the waiting list-admin
             return [];
         }
-        return registrations.filter((it) => it.slot !== undefined);
+        return registrations.filter(
+            (it) => it.registration || (it.slot && it.slot.criticality >= SlotCriticality.Important)
+        );
     }
 
     public async leaveEvents(events: Event[]): Promise<void> {

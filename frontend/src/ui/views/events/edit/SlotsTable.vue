@@ -15,9 +15,12 @@
                 </span>
             </td>
             <td class="w-1/3">
-                <div class="whitespace-nowrap font-semibold">
+                <p class="whitespace-nowrap font-semibold">
                     {{ item.positionName || positions.get(item.positionKeys[0]).name }}
-                </div>
+                </p>
+                <p class="truncate text-sm">
+                    {{ item.assignedRegistrationKey || 'frei' }}
+                </p>
             </td>
             <td class="w-2/3 min-w-96">
                 <div class="flex flex-wrap items-center">

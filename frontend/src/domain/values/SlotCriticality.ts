@@ -1,5 +1,5 @@
 export enum SlotCriticality {
     Optional = 0,
-    Required = 1,
-    Security = 2,
+    Important = 1,
+    Required = 2,
 }
