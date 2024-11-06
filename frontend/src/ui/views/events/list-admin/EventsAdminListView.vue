@@ -16,7 +16,7 @@
                         @click="importEvents()"
                     >
                         <i class="fa-solid fa-upload"></i>
-                        <span class="text-base">Importieren</span>
+                        <span class="">Importieren</span>
                     </button>
                     <div class="permission-write-events hidden 2xl:block">
                         <button class="btn-primary ml-2" @click="createEvent()">
@@ -207,9 +207,9 @@
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
-                        <i class="fa-solid fa-xmark text-base" />
+                        <i class="fa-solid fa-xmark" />
                     </button>
-                    <span class="self-center text-base font-bold">{{ selectedEvents.length }} ausgewählt</span>
+                    <span class="self-center font-bold">{{ selectedEvents.length }} ausgewählt</span>
                     <div class="flex-grow"></div>
                     <div class="hidden sm:block">
                         <button
@@ -218,7 +218,7 @@
                             @click="openEventsForSignup(selectedEvents)"
                         >
                             <i class="fa-solid fa-lock-open"></i>
-                            <span class="truncate text-base">Anmeldungen freischalten</span>
+                            <span class="truncate">Anmeldungen freischalten</span>
                         </button>
                         <button
                             v-else-if="showBatchPublishPlannedCrew"
@@ -226,11 +226,11 @@
                             @click="publishCrewPlanning(selectedEvents)"
                         >
                             <i class="fa-solid fa-earth-europe"></i>
-                            <span class="truncate text-base">Crewplanung veröffentlichen</span>
+                            <span class="truncate">Crewplanung veröffentlichen</span>
                         </button>
                         <button v-else class="permission-write-events btn-ghost" @click="editBatch(selectedEvents)">
                             <i class="fa-solid fa-edit"></i>
-                            <span class="truncate text-base">Ausgewählte bearbeiten</span>
+                            <span class="truncate">Ausgewählte bearbeiten</span>
                         </button>
                     </div>
                     <ContextMenuButton class="btn-ghost">

@@ -77,7 +77,7 @@ a.btn-danger,
 .btn-ghost,
 .btn-ghost-danger {
     @apply flex items-center justify-center gap-2;
-    @apply text-sm font-black;
+    @apply font-black;
     @apply rounded-lg px-4 py-2;
     @apply hover:no-underline;
 }

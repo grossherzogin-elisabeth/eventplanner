@@ -194,9 +194,9 @@
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
-                        <i class="fa-solid fa-xmark text-base" />
+                        <i class="fa-solid fa-xmark" />
                     </button>
-                    <span class="self-center text-base font-bold">{{ selectedEvents.length }} ausgewählt</span>
+                    <span class="self-center font-bold">{{ selectedEvents.length }} ausgewählt</span>
                     <div class="flex-grow"></div>
                     <div class="hidden sm:block">
                         <button
@@ -205,7 +205,7 @@
                             @click="joinEvents(selectedEvents)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
-                            <span class="truncate text-base">
+                            <span class="truncate">
                                 Anmelden als {{ positions.get(signedInUser.positions[0]).name || '...' }}
                             </span>
                         </button>

@@ -131,7 +131,7 @@
                         <div class="flex-grow"></div>
                         <button
                             v-if="props.event.signedInUserAssignedPosition"
-                            class="btn-ghost-danger"
+                            class="btn-ghost-danger text-sm"
                             title="Event absagen"
                             @click="leaveEvent()"
                         >
@@ -140,7 +140,7 @@
                         </button>
                         <button
                             v-else-if="props.event.signedInUserWaitingListPosition && props.event.canSignedInUserLeave"
-                            class="btn-ghost-danger"
+                            class="btn-ghost-danger text-sm"
                             title="Warteliste verlassen"
                             @click="leaveEvent()"
                         >
@@ -149,7 +149,7 @@
                         </button>
                         <button
                             v-else-if="props.event.canSignedInUserJoin && signedInUser.positions.length >= 1"
-                            class="btn-ghost max-w-80"
+                            class="btn-ghost max-w-80 text-sm"
                             title="Anmelden"
                             @click="joinEvent(props.event)"
                         >
@@ -164,7 +164,7 @@
                                 signedInUser.permissions.includes(Permission.WRITE_EVENTS)
                             "
                             :to="{ name: Routes.EventEdit, params: { key: props.event.key } }"
-                            class="btn-ghost"
+                            class="btn-ghost text-sm"
                             title="Detailansicht"
                         >
                             <i class="fa-solid fa-edit"></i>
@@ -173,7 +173,7 @@
                         <RouterLink
                             v-else
                             :to="{ name: Routes.EventDetails, params: { key: props.event.key } }"
-                            class="btn-ghost"
+                            class="btn-ghost text-sm"
                             title="Detailansicht"
                         >
                             <i class="fa-solid fa-search"></i>

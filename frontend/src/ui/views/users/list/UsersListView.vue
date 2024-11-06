@@ -17,7 +17,7 @@
                             @click="importUsers()"
                         >
                             <i class="fa-solid fa-upload"></i>
-                            <span class="text-base">Importieren</span>
+                            <span class="">Importieren</span>
                         </button>
                     </div>
                 </div>
@@ -161,21 +161,21 @@
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
-                        <i class="fa-solid fa-xmark w-6 text-base" />
+                        <i class="fa-solid fa-xmark w-6" />
                     </button>
-                    <span class="self-center text-base font-bold">{{ selectedUsers.length }} ausgewählt</span>
+                    <span class="self-center font-bold">{{ selectedUsers.length }} ausgewählt</span>
                     <div class="flex-grow"></div>
 
                     <div class="hidden sm:block">
                         <button class="btn-ghost" @click="contactUsers(selectedUsers)">
                             <i class="fa-solid fa-envelope" />
-                            <span class="text-base">Email an alle schreiben</span>
+                            <span class="">Email an alle schreiben</span>
                         </button>
                     </div>
                     <div class="hidden lg:block xl:hidden 2xl:block">
                         <button class="btn-ghost" disabled>
                             <i class="fa-solid fa-screwdriver-wrench"></i>
-                            <span class="text-base">Arbeitsdienst eintragen*</span>
+                            <span class="">Arbeitsdienst eintragen*</span>
                         </button>
                     </div>
                     <ContextMenuButton class="btn-ghost">
