@@ -59,19 +59,23 @@
                     <div class="w-3/5">
                         <VInputLabel>Startdatum</VInputLabel>
                         <VInputDate
-                            v-model="event.start"
+                            :model-value="event.start"
+                            :highlight-from="event.start"
+                            :highlight-to="event.end"
                             :errors="validation.errors.value['start']"
                             :errors-visible="validation.showErrors.value"
                             required
+                            @update:model-value="event.start = updateDate(event.start, $event)"
                         />
                     </div>
                     <div class="w-2/5">
                         <VInputLabel>Crew an Board</VInputLabel>
                         <VInputTime
-                            v-model="event.start"
+                            :model-value="event.start"
                             :errors="validation.errors.value['start']"
                             :errors-visible="validation.showErrors.value"
                             required
+                            @update:model-value="event.start = updateTime(event.start, $event, 'minutes')"
                         />
                     </div>
                 </div>
@@ -80,19 +84,23 @@
                     <div class="w-3/5">
                         <VInputLabel>Enddatum</VInputLabel>
                         <VInputDate
-                            v-model="event.end"
+                            :model-value="event.end"
+                            :highlight-from="event.start"
+                            :highlight-to="event.end"
                             :errors="validation.errors.value['end']"
                             :errors-visible="validation.showErrors.value"
                             required
+                            @update:model-value="event.end = updateDate(event.end, $event)"
                         />
                     </div>
                     <div class="w-2/5">
                         <VInputLabel>Crew von Board</VInputLabel>
                         <VInputTime
-                            v-model="event.end"
+                            :model-value="event.end"
                             :errors="validation.errors.value['end']"
                             :errors-visible="validation.showErrors.value"
                             required
+                            @update:model-value="event.end = updateTime(event.end, $event, 'minutes')"
                         />
                     </div>
                 </div>
@@ -110,8 +118,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { deepCopy } from '@/common';
+import { ref, watch } from 'vue';
+import { deepCopy, updateDate, updateTime } from '@/common';
 import { DateTimeFormat, cropToPrecision } from '@/common/date';
 import type { Event } from '@/domain';
 import { EventState, EventType } from '@/domain';
@@ -155,6 +163,14 @@ const validation = useValidation(event, eventService.validate);
 
 async function init(): Promise<void> {
     await fetchTemplates(new Date().getFullYear());
+    watch(
+        () => event.value.start,
+        () => {
+            if (event.value.end.getTime() < event.value.start.getTime()) {
+                event.value.end = updateDate(event.value.end, event.value.start);
+            }
+        }
+    );
 }
 
 async function fetchTemplates(year: number): Promise<void> {
@@ -172,6 +188,7 @@ async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
     event.value.locations = partialEvent?.locations || [];
     event.value.state = partialEvent?.state || EventState.Draft;
     event.value.type = partialEvent?.type || event.value.type || EventType.WeekendEvent;
+
     const start = cropToPrecision(new Date(partialEvent?.start?.getTime() || new Date().getTime()), 'days');
     start.setHours(16);
     event.value.start = start;

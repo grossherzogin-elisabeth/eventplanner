@@ -56,6 +56,11 @@
                 :model-value="props.modelValue"
                 language="de"
                 monday-first
+                :open-date="props.modelValue"
+                :highlighted="{
+                    from: props.highlightFrom || props.modelValue,
+                    to: props.highlightTo || props.modelValue,
+                }"
                 @input="onInput($event)"
                 @mouseup.stop=""
                 @click.stop=""
@@ -79,6 +84,8 @@ interface Props {
     label?: string;
     // the value we edit, bind with v-model
     modelValue?: Date;
+    highlightFrom?: Date;
+    highlightTo?: Date;
     // disables this input
     disabled?: boolean;
     // marks this input as required
@@ -89,8 +96,6 @@ interface Props {
     errorsVisible?: boolean;
     // placeholder to display if no value is entered
     placeholder?: string;
-    // input type used, defaults to text
-    type?: 'text' | 'passwort' | 'email' | 'time' | 'number';
 }
 
 type Emits = (e: 'update:modelValue', value: Date) => void;

@@ -47,7 +47,7 @@
                                         { value: EventState.Canceled, label: 'Reise ist abgesagt', hidden: true },
                                     ]"
                                     :errors="validation.errors.value['state']"
-                                    :errors-visible="true"
+                                    :errors-visible="validation.showErrors.value"
                                     required
                                 />
                             </div>
@@ -56,7 +56,7 @@
                                 <VInputText
                                     v-model="event.name"
                                     :errors="validation.errors.value['name']"
-                                    :errors-visible="true"
+                                    :errors-visible="validation.showErrors.value"
                                     required
                                 />
                             </div>
@@ -71,7 +71,7 @@
                                         { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
                                     ]"
                                     :errors="validation.errors.value['type']"
-                                    :errors-visible="true"
+                                    :errors-visible="validation.showErrors.value"
                                     required
                                 />
                             </div>
@@ -80,26 +80,30 @@
                                 <VInputTextArea
                                     v-model="event.description"
                                     :errors="validation.errors.value['description']"
-                                    :errors-visible="true"
+                                    :errors-visible="validation.showErrors.value"
                                 />
                             </div>
                             <div class="mb-4 flex space-x-4">
                                 <div class="w-3/5">
                                     <VInputLabel>Startdatum</VInputLabel>
                                     <VInputDate
-                                        v-model="event.start"
+                                        :model-value="event.start"
+                                        :highlight-from="event.start"
+                                        :highlight-to="event.end"
                                         :errors="validation.errors.value['start']"
-                                        :errors-visible="true"
+                                        :errors-visible="validation.showErrors.value"
                                         required
+                                        @update:model-value="event.start = updateDate(event.start, $event)"
                                     />
                                 </div>
                                 <div class="w-2/5">
                                     <VInputLabel>Crew an Board</VInputLabel>
                                     <VInputTime
-                                        v-model="event.start"
-                                        required
+                                        :model-value="event.start"
                                         :errors="validation.errors.value['start']"
-                                        :errors-visible="true"
+                                        :errors-visible="validation.showErrors.value"
+                                        required
+                                        @update:model-value="event.start = updateTime(event.start, $event, 'minutes')"
                                     />
                                 </div>
                             </div>
@@ -108,19 +112,23 @@
                                 <div class="w-3/5">
                                     <VInputLabel>Enddatum</VInputLabel>
                                     <VInputDate
-                                        v-model="event.end"
+                                        :model-value="event.end"
+                                        :highlight-from="event.start"
+                                        :highlight-to="event.end"
                                         :errors="validation.errors.value['end']"
-                                        :errors-visible="true"
+                                        :errors-visible="validation.showErrors.value"
                                         required
+                                        @update:model-value="event.end = updateDate(event.end, $event)"
                                     />
                                 </div>
                                 <div class="w-2/5">
                                     <VInputLabel>Crew von Board</VInputLabel>
                                     <VInputTime
-                                        v-model="event.end"
+                                        :model-value="event.end"
                                         :errors="validation.errors.value['end']"
-                                        :errors-visible="true"
+                                        :errors-visible="validation.showErrors.value"
                                         required
+                                        @update:model-value="event.end = updateTime(event.end, $event, 'minutes')"
                                     />
                                 </div>
                             </div>
@@ -234,6 +242,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { updateDate, updateTime } from '@/common';
 import type { Event, Location, Slot } from '@/domain';
 import { EventState, EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';

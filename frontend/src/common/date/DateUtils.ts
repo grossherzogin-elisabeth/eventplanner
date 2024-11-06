@@ -22,6 +22,32 @@ export function subtractFromDate(date: Date | number, diff: DateDiff): Date {
     return new Date(year, month, day, hours, minutes, seconds);
 }
 
+export function updateDate(target: Date, date: Date): Date {
+    const result = new Date(target);
+    result.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    return result;
+}
+
+export function updateTime(target: Date, time: Date, precision: 'hours' | 'minutes' | 'seconds' | 'millis'): Date {
+    const result = new Date(target);
+    console.log(time);
+    switch (precision) {
+        case 'hours':
+            result.setHours(time.getHours(), 0, 0, 0);
+            break;
+        case 'minutes':
+            result.setHours(time.getHours(), time.getMinutes(), 0, 0);
+            break;
+        case 'seconds':
+            result.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), 0);
+            break;
+        case 'millis':
+            result.setHours(time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
+            break;
+    }
+    return result;
+}
+
 export function cropToPrecision(
     date: Date,
     precision: 'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds'
