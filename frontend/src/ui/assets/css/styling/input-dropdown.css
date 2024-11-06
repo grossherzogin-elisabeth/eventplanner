@@ -1,6 +1,6 @@
 .input-dropdown,
 .input-datepicker-dropdown {
-    @apply rounded-lg border border-primary-200 bg-primary-100 shadow-xl;
+    @apply rounded-lg border border-primary-200 bg-primary-100 shadow-xl md:border-primary-400;
 }
 
 .input-dropdown li {

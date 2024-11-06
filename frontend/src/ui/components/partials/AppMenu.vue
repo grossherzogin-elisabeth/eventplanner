@@ -1,6 +1,6 @@
 <template>
     <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
-        <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
+        <h1 class="mb-8 mt-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
 
         <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-red-100 pl-4 text-red-800 xl:mx-8 xl:pl-6">
             <div class="flex items-center">

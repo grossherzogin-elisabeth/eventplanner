@@ -8,7 +8,7 @@
         </div>
         <VNotifications id="notifications" />
         <div class="flex flex-1 items-stretch">
-            <div class="relative hidden h-screen w-96 flex-col pt-4 text-white xl:flex">
+            <div class="relative hidden h-screen w-96 flex-col text-white xl:flex">
                 <AppMenu class="relative z-10" />
             </div>
             <div
