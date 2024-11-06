@@ -33,7 +33,6 @@
             </div>
         </div>
     </nav>
-    <div id="nav-overlay" class=""></div>
     <!-- Push the content away from the navbar -->
     <div class="h-nav"></div>
     <div

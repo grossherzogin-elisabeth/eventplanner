@@ -78,7 +78,7 @@ function close(): void {
     @apply flex-grow;
     @apply h-full overflow-hidden rounded-r-xl shadow-xl;
     @apply flex flex-col;
-    @apply bg-primary-200 text-primary-950;
+    @apply bg-primary-300 text-primary-950;
 }
 
 @media (min-width: 30rem) {

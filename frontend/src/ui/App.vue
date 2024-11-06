@@ -3,10 +3,10 @@
         class="flex min-h-screen flex-col bg-primary-50 from-primary-900 to-primary-800 to-50% xl:bg-gradient-to-r"
         :class="{ impersonated: signedInUser?.impersonated }"
     >
-        <div class="xl:hidden">
+        <div id="navbar" class="xl:hidden">
             <AppNavbar :title="title" />
         </div>
-        <VNotifications />
+        <VNotifications id="notifications" />
         <div class="flex flex-1 items-stretch">
             <div class="relative hidden h-screen w-96 flex-col pt-4 text-white xl:flex">
                 <AppMenu class="relative z-10" />
