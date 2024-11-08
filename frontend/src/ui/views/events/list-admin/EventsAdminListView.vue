@@ -144,9 +144,9 @@
                             <span>Reise bearbeiten</span>
                         </RouterLink>
                     </li>
-                    <li class="permission-write-registrations context-menu-item disabled">
+                    <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
                         <i class="fa-solid fa-user-plus" />
-                        <span>Anmeldung hinzufügen*</span>
+                        <span>Anmeldung hinzufügen</span>
                     </li>
                     <li
                         v-if="item.state === EventState.Draft"
@@ -168,9 +168,13 @@
                         <i class="fa-solid fa-users" />
                         <span>Weitere Crew anfragen*</span>
                     </li>
-                    <li class="permission-read-user-details context-menu-item" @click="contactCrew([item])">
+                    <li
+                        class="permission-read-user-details context-menu-item"
+                        :class="{ disabled: item.assignedUserCount === 0 }"
+                        @click="contactCrew([item])"
+                    >
                         <i class="fa-solid fa-envelope" />
-                        <span>Crew kontaktieren</span>
+                        <span>Crew kontaktieren ({{ item.assignedUserCount }} Pers.)</span>
                     </li>
                     <li
                         v-if="item.state === EventState.Canceled"
@@ -198,6 +202,7 @@
         <VConfirmationDialog ref="confirmationDialog" />
         <EventBatchEditDlg ref="eventBatchEditDialog" />
         <PositionSelectDlg ref="positionSelectDialog" />
+        <CreateRegistrationDlg ref="createRegistrationDialog" />
 
         <div class="flex-1"></div>
 
@@ -239,9 +244,12 @@
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
-                            <li class="permission-write-registrations context-menu-item disabled">
+                            <li
+                                class="permission-write-registrations context-menu-item"
+                                @click="addRegistration(selectedEvents)"
+                            >
                                 <i class="fa-solid fa-user-plus" />
-                                <span>Anmeldung hinzufügen*</span>
+                                <span>Anmeldung hinzufügen</span>
                             </li>
                             <li class="permission-write-events context-menu-item" @click="editBatch(selectedEvents)">
                                 <i class="fa-solid fa-edit" />
@@ -298,11 +306,12 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey } from '@/domain';
+import type { Event, PositionKey, Registration } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
+import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
@@ -360,6 +369,7 @@ const cancelEventDialog = ref<Dialog<Event, string> | null>(null);
 const importEventsDialog = ref<Dialog<Event> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
+const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
 const positionSelectDialog = ref<Dialog<void, PositionKey | undefined> | null>(null);
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
@@ -566,6 +576,14 @@ async function contactCrew(events: Event[]): Promise<void> {
         .filter(filterUndefined);
     const users = await usersUseCase.getUsers(userKeys);
     await userAdminUseCase.contactUsers(users);
+}
+
+async function addRegistration(events: Event[]): Promise<void> {
+    const result = await createRegistrationDialog.value?.open(events);
+    if (result) {
+        await eventAdminUseCase.addRegistrations(events, result);
+        await fetchEvents();
+    }
 }
 
 async function openEventsForSignup(events: Event[]): Promise<void> {

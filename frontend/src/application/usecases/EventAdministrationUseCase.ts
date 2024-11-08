@@ -180,6 +180,35 @@ export class EventAdministrationUseCase {
         return registrations.filter((it) => it.slot !== undefined);
     }
 
+    public async addRegistrations(events: Event[], registration: Registration): Promise<void> {
+        try {
+            let eventsToUpdate = events;
+            if (registration.userKey) {
+                eventsToUpdate = eventsToUpdate.filter(
+                    (it) => !it.registrations.find((it) => it.userKey === registration.userKey)
+                );
+            } else if (registration.name) {
+                eventsToUpdate = eventsToUpdate.filter((it) =>
+                    it.registrations.find((it) => it.name === registration.name)
+                );
+            }
+            if (eventsToUpdate.length === 0) {
+                this.notificationService.warning('Keine neue Anmeldung hinzugefügt');
+                return;
+            }
+
+            const updates = eventsToUpdate.map(async (event) => {
+                const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, registration);
+                await this.eventCachingService.updateCache(savedEvent);
+            });
+            await Promise.all(updates);
+            this.notificationService.success('Anmeldungen wurden hinzugefügt');
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
     public async addRegistration(eventKey: EventKey, registration: Registration): Promise<void> {
         try {
             const savedEvent = await this.eventRegistrationsRepository.createRegistration(eventKey, registration);

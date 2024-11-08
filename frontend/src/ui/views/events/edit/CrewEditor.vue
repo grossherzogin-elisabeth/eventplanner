@@ -392,7 +392,6 @@ function changePosition(resolvedRegistration: ResolvedRegistrationSlot, newPosit
 }
 
 async function fetchTeam(): Promise<void> {
-    console.log('fetch team');
     const all = await eventUseCase.resolveRegistrations(props.event);
     team.value = eventAdminUseCase.filterForCrew(all);
     registrations.value = eventAdminUseCase.filterForWaitingList(all);

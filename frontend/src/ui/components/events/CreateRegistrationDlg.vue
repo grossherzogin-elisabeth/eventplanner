@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { filterUndefined } from '@/common';
 import type { Event, InputSelectOption, Position, Registration, User, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -104,8 +104,7 @@ const usersService = useUserService();
 const positions = usePositions();
 const qualifications = useQualifications();
 
-const dlg = ref<Dialog<Event, Event> | null>(null);
-const event = ref<Event | undefined>(undefined);
+const dlg = ref<Dialog<Event[], Registration | undefined> | null>(null);
 const users = ref<User[]>([]);
 const registration = ref<Registration>({
     key: uuid(),
@@ -114,6 +113,7 @@ const registration = ref<Registration>({
     name: undefined,
 });
 const hiddenUsers = ref<string[]>([]);
+let date: Date = new Date();
 
 const validation = useValidation(registration, (value) => {
     // TODO extract to service
@@ -156,7 +156,7 @@ const expiredQualifications = computed<string[]>(() => {
         return [];
     }
     return usersService
-        .getExpiredQualifications(selectedUser.value, event.value?.end)
+        .getExpiredQualifications(selectedUser.value, date)
         .map((key) => qualifications.get(key))
         .filter(filterUndefined)
         .map((qualification) => qualification.name);
@@ -164,15 +164,19 @@ const expiredQualifications = computed<string[]>(() => {
 
 async function init(): Promise<void> {
     await fetchUsers();
+    watch(selectedUser, () => {
+        if (selectedUser.value && !registration.value.positionKey) {
+            registration.value.positionKey = selectedUser.value.positionKeys[0];
+        }
+    });
 }
 
 async function fetchUsers(): Promise<void> {
     users.value = await usersUseCase.getUsers();
 }
 
-async function open(evt: Event): Promise<Event | undefined> {
+async function open(value: Event[]): Promise<Registration | undefined> {
     validation.reset();
-    event.value = evt;
     registration.value = {
         key: uuid(),
         positionKey: '',
@@ -180,23 +184,23 @@ async function open(evt: Event): Promise<Event | undefined> {
         name: undefined,
         note: '',
     };
-    hiddenUsers.value = event.value.registrations.map((it) => it.userKey).filter(filterUndefined);
+    date = value.map((it) => it.end).sort((a, b) => b.getTime() - a.getTime())[0] || new Date();
+    if (value.length === 1) {
+        hiddenUsers.value = value[0].registrations.map((it) => it.userKey).filter(filterUndefined);
+    } else {
+        hiddenUsers.value = [];
+    }
 
     // wait until user submits
-    const result = await dlg.value?.open().catch(() => undefined);
-    if (!result) {
-        return undefined;
-    }
-    if (registration.value.userKey) {
-        registration.value.name = undefined;
-    }
-    result.registrations.push(registration.value);
-    return result;
+    return await dlg.value?.open().catch(() => undefined);
 }
 
 function submit(): void {
     if (validation.isValid.value) {
-        dlg.value?.submit(event.value);
+        if (registration.value.userKey) {
+            registration.value.name = undefined;
+        }
+        dlg.value?.submit(registration.value);
     } else {
         validation.showErrors.value = true;
     }
@@ -206,10 +210,10 @@ function cancel(): void {
     dlg.value?.submit(undefined);
 }
 
-defineExpose<Dialog<Event, Event | undefined>>({
-    open: (evt: Event) => open(evt),
+defineExpose<Dialog<Event[], Registration | undefined>>({
+    open: (value: Event[]) => open(value),
     close: () => dlg.value?.reject(),
-    submit: (result: Event) => dlg.value?.submit(result),
+    submit: (result: Registration) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
 

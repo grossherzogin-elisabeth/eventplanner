@@ -243,7 +243,7 @@
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { updateDate, updateTime } from '@/common';
-import type { Event, Location, Slot } from '@/domain';
+import type { Event, Location, Registration, Slot } from '@/domain';
 import { EventState, EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import {
@@ -298,7 +298,7 @@ const tab = ref<Tab>(Tab.EVENT_POSITIONS);
 
 const createLocationDialog = ref<Dialog<void, Location | undefined> | null>(null);
 const createSlotDialog = ref<Dialog<void, Slot | undefined> | null>(null);
-const createRegistrationDialog = ref<Dialog<Event, Event> | null>(null);
+const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string | undefined> | null>(null);
 
 const hasEmptyRequiredSlots = computed<boolean>(() => {
@@ -334,8 +334,11 @@ async function cancelEvent(): Promise<void> {
 }
 
 async function addRegistration(): Promise<void> {
-    if (createRegistrationDialog.value && event.value) {
-        await createRegistrationDialog.value.open(event.value).catch(() => console.debug('dialog was canceled'));
+    if (event.value) {
+        const result = await createRegistrationDialog.value?.open([event.value]);
+        if (result) {
+            event.value.registrations.push(result);
+        }
     }
 }
 
