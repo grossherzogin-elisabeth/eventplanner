@@ -35,7 +35,7 @@
         </template>
         <template #context-menu="{ item }">
             <li class="context-menu-item" @click="editPosition(item)">
-                <i class="fa-solid fa-pencil" />
+                <i class="fa-solid fa-edit" />
                 <span>Bearbeiten</span>
             </li>
             <li class="context-menu-item text-red-700" @click="deletePosition(item)">

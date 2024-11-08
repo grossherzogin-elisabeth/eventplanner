@@ -24,6 +24,66 @@
             </template>
         </VTabs>
 
+        <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
+            <ContextMenuButton
+                class="btn-tag min-w-44 max-w-80 truncate"
+                :class="{ active: filterPositions.length > 0 }"
+            >
+                <template #icon>
+                    <span v-if="filterPositions.length === 0" class="mr-2">Alle Positionen</span>
+                    <span v-else-if="filterPositions.length > 4" class="mr-2"
+                        >{{ filterPositions.length }} Positionen</span
+                    >
+                    <span v-else class="mr-2">
+                        {{
+                            filterPositions
+                                .map(positions.get)
+                                .map((it) => it.name)
+                                .join(', ')
+                        }}
+                    </span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </template>
+                <template #default>
+                    <ul>
+                        <li v-if="filterPositions.length === 0" class="context-menu-item">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Alle Positionen</span>
+                        </li>
+                        <li v-else class="context-menu-item" @click="filterPositions = []">
+                            <i class="w-4"></i>
+                            <span>Alle Positionen</span>
+                        </li>
+                        <hr />
+                        <template v-for="position in positions.all.value" :key="position.key">
+                            <li
+                                v-if="filterPositions.includes(position.key)"
+                                class="context-menu-item"
+                                @click="filterPositions = filterPositions.filter((it) => it !== position.key)"
+                            >
+                                <i class="fa-solid fa-check w-4"></i>
+                                <span>{{ position.name }}</span>
+                            </li>
+                            <li v-else class="context-menu-item" @click="filterPositions.push(position.key)">
+                                <i class="w-4"></i>
+                                <span>{{ position.name }}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </ContextMenuButton>
+            <button class="btn-tag" :class="{ active: filterOnlyActive }" @click="filterOnlyActive = !filterOnlyActive">
+                <span class="">Aktive Stammcrew</span>
+            </button>
+            <button
+                class="btn-tag"
+                :class="{ active: filterExpiredQualifications }"
+                @click="filterExpiredQualifications = !filterExpiredQualifications"
+            >
+                <span class="">Abgelaufene Qualifikationen</span>
+            </button>
+        </div>
+
         <div class="w-full">
             <VTable
                 :items="filteredUsers"
@@ -157,9 +217,9 @@
 
         <div v-if="selectedUsers && selectedUsers.length > 0" class="sticky bottom-0 z-20">
             <div
-                class="h-full border-t border-primary-200 bg-primary-50 px-4 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
+                class="h-full border-t border-primary-200 bg-primary-50 px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20"
             >
-                <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
+                <div class="flex h-full items-stretch gap-2 whitespace-nowrap">
                     <button class="btn-ghost" @click="selectNone()">
                         <i class="fa-solid fa-xmark w-6" />
                     </button>
@@ -169,7 +229,7 @@
                     <div class="hidden sm:block">
                         <button class="btn-ghost" @click="contactUsers(selectedUsers)">
                             <i class="fa-solid fa-envelope" />
-                            <span class="">Email an alle schreiben</span>
+                            <span class="">Email schreiben</span>
                         </button>
                     </div>
                     <div class="hidden lg:block xl:hidden 2xl:block">
@@ -186,7 +246,7 @@
                             </li>
                             <li class="context-menu-item" @click="contactUsers(selectedUsers)">
                                 <i class="fa-solid fa-envelope" />
-                                <span>Email an alle schreiben</span>
+                                <span>Email schreiben</span>
                             </li>
                             <li class="context-menu-item disabled">
                                 <i class="fa-solid fa-screwdriver-wrench" />
@@ -207,8 +267,8 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { filterUndefined } from '@/common';
-import type { Position, QualificationKey, User } from '@/domain';
+import { filterUndefined, hasAnyOverlap } from '@/common';
+import type { Position, PositionKey, QualificationKey, User } from '@/domain';
 import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -222,6 +282,8 @@ import {
     useUsersUseCase,
 } from '@/ui/composables/Application.ts';
 import { useEventService, useUserService } from '@/ui/composables/Domain.ts';
+import { usePositions } from '@/ui/composables/Positions.ts';
+import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
@@ -229,7 +291,6 @@ import ImportUsersDlg from '@/ui/views/users/list/ImportUsersDlg.vue';
 import UsersListSkeletonLoader from '@/ui/views/users/list/UsersListSkeletonLoader.vue';
 
 enum Tab {
-    ACTIVE_TEAM_MEMBERS = 'Stammcrew (aktive)',
     TEAM_MEMBERS = 'Stammcrew',
     ADMINS = 'Verwalter',
     UNMATCHED_USERS = 'Nutzer ohne Rolle',
@@ -259,18 +320,46 @@ const authUseCase = useAuthUseCase();
 const userAdministrationUseCase = useUserAdministrationUseCase();
 const router = useRouter();
 const signedInUser = authUseCase.getSignedInUser();
+const positions = usePositions();
 
-const tabs = [Tab.TEAM_MEMBERS, Tab.ACTIVE_TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS];
+const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS];
 const tab = ref<string>(tabs[0]);
 const filter = ref<string>('');
+const filterOnlyActive = ref<boolean>(false);
+const filterExpiredQualifications = ref<boolean>(false);
+const filterPositions = ref<PositionKey[]>([]);
+
 const users = ref<UserRegistrations[] | undefined>(undefined);
 
 const importUsersDialog = ref<Dialog | null>(null);
 const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
 const deleteUserDialog = ref<ConfirmationDialog | null>(null);
 
+useQueryStateSync<boolean>(
+    'active',
+    () => filterOnlyActive.value,
+    (v) => (filterOnlyActive.value = v)
+);
+useQueryStateSync<boolean>(
+    'expired',
+    () => filterExpiredQualifications.value,
+    (v) => (filterExpiredQualifications.value = v)
+);
+useQueryStateSync<string>(
+    'positions',
+    () => filterPositions.value.join('_'),
+    (v) => (filterPositions.value = v.split('_'))
+);
+
 const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
-    users.value?.filter((it) => matchesActiveCategory(it) && usersService.doesUserMatchFilter(it, filter.value))
+    users.value?.filter(
+        (it) =>
+            matchesActiveCategory(it) &&
+            (!filterOnlyActive.value || hasAnyEvents(it)) &&
+            (!filterExpiredQualifications.value || it.expiredQualifications.length > 0) &&
+            (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys)) &&
+            usersService.doesUserMatchFilter(it, filter.value)
+    )
 );
 
 const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
@@ -293,8 +382,6 @@ function hasAnyEvents(user: UserRegistrations): boolean {
 
 function matchesActiveCategory(user: UserRegistrations): boolean {
     switch (tab.value) {
-        case Tab.ACTIVE_TEAM_MEMBERS:
-            return user.roles !== undefined && user.roles.includes(Role.TEAM_MEMBER) && hasAnyEvents(user);
         case Tab.TEAM_MEMBERS:
             return user.roles !== undefined && user.roles.includes(Role.TEAM_MEMBER);
         case Tab.UNMATCHED_USERS:

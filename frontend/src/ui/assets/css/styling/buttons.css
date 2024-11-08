@@ -167,3 +167,13 @@ a.btn-danger,
 .btn-split > .btn-danger {
     @apply border-white;
 }
+
+.btn-tag {
+    @apply rounded-full border border-primary-300 text-primary-700;
+    @apply whitespace-nowrap px-4 py-1 text-sm font-bold;
+    @apply hover:bg-primary-200;
+}
+
+.btn-tag.active {
+    @apply border-primary-400 bg-primary-300;
+}

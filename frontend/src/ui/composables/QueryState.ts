@@ -14,7 +14,7 @@ export function useQueryStateSync<T>(prop: string, get: () => T, set: (t: T) => 
         }
         if (value !== undefined && value !== null) {
             // update the query param
-            route.query[prop] = value.toString();
+            route.query[prop] = encodeURIComponent(String(value));
         } else {
             // remove the query param
             // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
@@ -50,7 +50,8 @@ export function useQueryStateSync<T>(prop: string, get: () => T, set: (t: T) => 
         } else {
             const param = route.query[prop] as string;
             if (param) {
-                set(param as T);
+                const decoded = decodeURIComponent(param);
+                set(decoded as T);
             }
         }
     }
