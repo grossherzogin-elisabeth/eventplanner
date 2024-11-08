@@ -5,18 +5,21 @@ import type { Position, PositionKey } from '@/domain';
 interface PositionRepresentation {
     key: string;
     name: string;
+    imoListRank: string;
     color: string;
     prio: number;
 }
 
 interface CreatePositionRequest {
     name: string;
+    imoListRank: string;
     color: string;
     prio: number;
 }
 
 interface UpdatePositionRequest {
     name: string;
+    imoListRank: string;
     color: string;
     prio: number;
 }
@@ -26,6 +29,7 @@ export class PositionRestRepository implements PositionRepository {
         return {
             key: representation.key,
             name: representation.name,
+            imoListRank: representation.imoListRank || '',
             color: representation.color,
             prio: representation.prio,
         };
@@ -44,6 +48,7 @@ export class PositionRestRepository implements PositionRepository {
     public async create(position: Position): Promise<Position> {
         const requestBody: CreatePositionRequest = {
             name: position.name,
+            imoListRank: position.imoListRank,
             color: position.color,
             prio: position.prio,
         };
@@ -66,6 +71,7 @@ export class PositionRestRepository implements PositionRepository {
     public async update(positionKey: PositionKey, position: Position): Promise<Position> {
         const requestBody: UpdatePositionRequest = {
             name: position.name,
+            imoListRank: position.imoListRank,
             color: position.color,
             prio: position.prio,
         };

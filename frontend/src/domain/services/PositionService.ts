@@ -10,6 +10,13 @@ export class PositionService {
                 params: {},
             });
         }
+        if (position.imoListRank.trim().length === 0) {
+            errors.imoListRank = errors.imoListRank || [];
+            errors.imoListRank.push({
+                key: 'Bitte gib einen Anzeigenamen für die IMO Liste an',
+                params: {},
+            });
+        }
         if (position.color.trim().length === 0) {
             errors.description = errors.description || [];
             errors.description.push({

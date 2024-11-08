@@ -41,6 +41,7 @@ export function usePositions() {
                 color: '',
                 prio: 0,
                 name: positionKey,
+                imoListRank: positionKey,
             }
         );
     }

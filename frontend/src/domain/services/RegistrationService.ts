@@ -30,6 +30,7 @@ export class RegistrationService {
                 position: positionMap.get(registration.positionKey) || {
                     key: registration.positionKey,
                     name: registration.positionKey,
+                    imoListRank: registration.positionKey,
                     prio: 0,
                     color: '',
                 },
@@ -50,6 +51,7 @@ export class RegistrationService {
                     position: positionMap.get(slot.positionKeys[0]) || {
                         key: slot.positionKeys[0],
                         name: slot.positionKeys[0],
+                        imoListRank: slot.positionKeys[0],
                         prio: 0,
                         color: '',
                     },

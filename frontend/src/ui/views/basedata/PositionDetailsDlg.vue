@@ -20,6 +20,15 @@
                     />
                 </div>
                 <div class="-mx-4 mb-4">
+                    <VInputLabel>Anzeigename IMO Liste</VInputLabel>
+                    <VInputText
+                        v-model="position.imoListRank"
+                        :errors="validation.errors.value['imoListRank']"
+                        :errors-visible="validation.showErrors.value"
+                        required
+                    />
+                </div>
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Farbe</VInputLabel>
                     <VInputText
                         v-model="position.color"
@@ -70,6 +79,7 @@ const dlg = ref<Dialog<Position | undefined, Position | undefined> | null>(null)
 const position = ref<Position>({
     key: '',
     name: '',
+    imoListRank: '',
     color: '',
     prio: 0,
 });
@@ -82,6 +92,7 @@ async function open(value?: Position): Promise<Position | undefined> {
         : {
               key: '',
               name: '',
+              imoListRank: '',
               color: '',
               prio: 0,
           };
