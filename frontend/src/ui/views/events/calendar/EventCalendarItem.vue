@@ -103,7 +103,7 @@
                         </p>
                     </div>
 
-                    <VInfo v-if="signedInUser.positions.length === 0" class="-mx-4 my-4 text-sm">
+                    <VInfo v-if="signedInUser.positions.length === 0" class="-mx-4 my-4 text-sm" clamp>
                         Deinem Benutzerkonto wurde noch keine Position zugewiesen. Du kannst dich deshalb nicht selber
                         für Reisen anmelden.
                     </VInfo>
@@ -121,7 +121,6 @@
                             <i>{{ positions.get(signedInUser.positions[0]).name }}</i> angelegt.
                         </p>
                         <button class="" @click="choosePositionAndJoinEvent(props.event)">
-                            <!--                                <i class="fa-solid fa-search"></i>-->
                             <span class="underline"> Mit einer andere Position anmelden? </span>
                         </button>
                     </VInfo>

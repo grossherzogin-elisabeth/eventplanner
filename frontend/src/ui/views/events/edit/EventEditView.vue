@@ -11,7 +11,7 @@
                 <!--                </p>-->
                 <div class="-mx-4 flex flex-wrap items-start font-semibold">
                     <div class="w-full">
-                        <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable>
+                        <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable clamp>
                             Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen
                             freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen.
                         </VInfo>

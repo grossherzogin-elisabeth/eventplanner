@@ -7,7 +7,7 @@
         </teleport>
 
         <div v-if="signedInUser.positions.length === 0" class="px-4 md:px-12 xl:px-16">
-            <VInfo class="mt-4 xl:mt-8">
+            <VInfo class="mt-4 xl:mt-8" clamp>
                 Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht selber
                 für Reisen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.
             </VInfo>

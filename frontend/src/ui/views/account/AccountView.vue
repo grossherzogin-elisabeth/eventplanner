@@ -23,6 +23,10 @@
                                     />
                                 </div>
                                 <div class="-mx-4 mb-4">
+                                    <VInputLabel>Zweiter Vornahme</VInputLabel>
+                                    <VInputText v-model="userDetails.secondName" disabled />
+                                </div>
+                                <div class="-mx-4 mb-4">
                                     <VInputLabel>Nachname</VInputLabel>
                                     <VInputText v-model="userDetails.lastName" required disabled />
                                 </div>
@@ -48,7 +52,7 @@
                                 </div>
                             </section>
                             <div class="my-8 max-w-2xl flex-grow 2xl:my-0 2xl:w-0">
-                                <div class="-mx-4 rounded-xl bg-primary-100 p-4 text-sm">
+                                <VInfo class="-mx-4 py-2">
                                     <h2 class="mb-2">Name und Personalausweis Nummer</h2>
                                     <p class="mb-2">
                                         Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen,
@@ -70,7 +74,7 @@
                                             <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                                         </a>
                                     </p>
-                                </div>
+                                </VInfo>
                             </div>
                         </div>
                     </template>
@@ -109,7 +113,7 @@
                                 </div>
                             </section>
                             <div class="my-8 max-w-2xl flex-grow 2xl:my-0 2xl:w-0">
-                                <div class="-mx-4 rounded-xl bg-primary-100 p-4 text-sm">
+                                <VInfo class="-mx-4 py-2">
                                     <h2 class="mb-2">Du möchtest deine Email Adresse ändern?</h2>
                                     <p>
                                         Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login
@@ -119,7 +123,7 @@
                                         </a>
                                         .
                                     </p>
-                                </div>
+                                </VInfo>
                             </div>
                         </div>
                     </template>
@@ -133,7 +137,7 @@
                                 <VInputLabel>Password</VInputLabel>
                                 <VInputText disabled model-value="loremipsumdolorsitamet" required type="password" />
                             </div>
-                            <div class="-mx-4 mt-8 rounded-xl bg-primary-100 p-4 text-sm">
+                            <VInfo class="-mx-4 mt-8 py-2">
                                 <h2 class="mb-2">Hinweis zum Passwort ändern:</h2>
                                 <p>
                                     Aktuell kannst du dein Passwort noch nicht direkt hier in der App ändern. Bitte
@@ -143,7 +147,7 @@
                                         admin@grossherzogin-elisabeth.de </a
                                     >.
                                 </p>
-                            </div>
+                            </VInfo>
                         </section>
                     </template>
                     <template #[Tab.QUALIFICATIONS]>
@@ -172,7 +176,7 @@
 import { ref } from 'vue';
 import { deepCopy } from '@/common';
 import type { InputSelectOption, UserDetails } from '@/domain';
-import { AsyncButton, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
+import { AsyncButton, VInfo, VInputDate, VInputLabel, VInputSelect, VInputText, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useConfig, useUsersUseCase } from '@/ui/composables/Application';
 import UserQualificationsTable from './UserQualificationsTable.vue';
