@@ -4,7 +4,7 @@
         class="fixed bottom-0 left-0 right-0 top-0 z-50 bg-black bg-opacity-50"
         @click="close()"
     ></div>
-    <div class="menu-wrapper" :class="{ open: props.open }" @click="close()">
+    <div class="menu-wrapper text-white" :class="{ open: props.open }" @click="close()">
         <div class="menu" @click.stop>
             <slot />
         </div>
@@ -78,7 +78,7 @@ function close(): void {
     @apply flex-grow;
     @apply h-full overflow-hidden rounded-r-xl shadow-xl;
     @apply flex flex-col;
-    @apply bg-primary-300 text-primary-950;
+    @apply bg-navbar text-white;
 }
 
 @media (min-width: 30rem) {

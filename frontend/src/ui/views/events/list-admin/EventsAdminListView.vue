@@ -8,7 +8,7 @@
 
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
             <template #end>
-                <div class="flex items-stretch gap-2 pb-2">
+                <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
                     <button
                         v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
@@ -201,8 +201,7 @@
         <ImportEventsDlg ref="importEventsDialog" />
         <VConfirmationDialog ref="confirmationDialog" />
         <EventBatchEditDlg ref="eventBatchEditDialog" />
-        <PositionSelectDlg ref="positionSelectDialog" />
-        <CreateRegistrationDlg ref="createRegistrationDialog" />
+        <CreateRegistrationDlg ref="createRegistrationDialog" submit-text="Speichern" />
 
         <div class="flex-1"></div>
 
@@ -306,7 +305,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey, Registration } from '@/domain';
+import type { Event, Registration } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
@@ -314,7 +313,6 @@ import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
-import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import {
     useAuthUseCase,
@@ -370,7 +368,6 @@ const importEventsDialog = ref<Dialog<Event> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
-const positionSelectDialog = ref<Dialog<void, PositionKey | undefined> | null>(null);
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();

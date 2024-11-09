@@ -171,63 +171,53 @@
                     <span>Anmeldung hinzufügen</span>
                 </button>
                 <button v-else-if="tab === Tab.EVENT_SLOTS" class="btn-secondary" @click="addSlot()">
-                    <i class="fa-solid fa-plus" />
-                    <span>Slot hinzufügen</span>
+                    <i class="fa-solid fa-list" />
+                    <span>Crewslot hinzufügen</span>
                 </button>
                 <button v-else-if="tab === Tab.EVENT_LOCATIONS" class="btn-secondary" @click="addLocation()">
-                    <i class="fa-solid fa-plus" />
+                    <i class="fa-solid fa-route" />
                     <span>Reiseabschnitt hinzufügen</span>
                 </button>
             </div>
         </template>
         <template #actions-menu>
-            <li v-if="tab === Tab.EVENT_POSITIONS" class="lg:hidden" @click="addRegistration()">
-                <div class="context-menu-item">
-                    <i class="fa-solid fa-user-plus" />
-                    <span>Anmeldung hinzufügen</span>
-                </div>
+            <li class="context-menu-item permission-write-registrations" @click="addRegistration()">
+                <i class="fa-solid fa-user-plus" />
+                <span>Anmeldung hinzufügen</span>
             </li>
-            <li v-else-if="tab === Tab.EVENT_SLOTS" class="lg:hidden" @click="addSlot()">
-                <div class="context-menu-item">
-                    <i class="fa-solid fa-plus" />
-                    <span>Slot hinzufügen</span>
-                </div>
+            <li class="context-menu-item permission-write-events" @click="addSlot()">
+                <i class="fa-solid fa-list" />
+                <span>Crewslot hinzufügen</span>
             </li>
-            <li v-else-if="tab === Tab.EVENT_LOCATIONS" class="lg:hidden" @click="addLocation()">
-                <div class="context-menu-item">
-                    <i class="fa-solid fa-plus" />
-                    <span>Reiseabschnitt hinzufügen</span>
-                </div>
+            <li class="context-menu-item permission-write-events" @click="addLocation()">
+                <i class="fa-solid fa-route" />
+                <span>Reiseabschnitt hinzufügen</span>
             </li>
-            <li class="context-menu-item disabled" @click="contactTeam()">
+            <li class="context-menu-item permission-read-user-details" @click="contactTeam()">
                 <i class="fa-solid fa-envelope" />
                 <span>Crew kontaktieren</span>
             </li>
-            <li v-if="event?.state === EventState.Draft" class="context-menu-item" @click="openEventForCrewSignup()">
+            <li
+                v-if="event?.state === EventState.Draft"
+                class="permission-write-events context-menu-item"
+                @click="openEventForCrewSignup()"
+            >
                 <i class="fa-solid fa-lock-open" />
                 <span>Anmeldungen freischalten</span>
             </li>
             <li
                 v-if="event?.state === EventState.OpenForSignup"
-                class="context-menu-item"
+                class="permission-write-events context-menu-item"
                 @click="publishPlannedCrew()"
             >
                 <i class="fa-solid fa-earth-europe" />
                 <span>Crewplanung veröffentlichen</span>
             </li>
-            <li
-                v-if="signedInUser.permissions.includes(Permission.EVENT_TEAM_WRITE)"
-                class="context-menu-item"
-                @click="resetTeam()"
-            >
+            <li class="permission-write-events context-menu-item" @click="resetTeam()">
                 <i class="fa-solid fa-rotate" />
                 <span>Crew zurücksetzen</span>
             </li>
-            <li
-                v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
-                class="context-menu-item text-red-700"
-                @click="cancelEvent()"
-            >
+            <li class="permission-write-events context-menu-item text-red-700" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
                 <span>Reise absagen</span>
             </li>
@@ -242,7 +232,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { updateDate, updateTime } from '@/common';
+import { filterUndefined, updateDate, updateTime } from '@/common';
 import type { Event, Location, Registration, Slot } from '@/domain';
 import { EventState, EventType, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -260,7 +250,13 @@ import {
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
+import {
+    useAuthUseCase,
+    useEventAdministrationUseCase,
+    useEventUseCase,
+    useUserAdministrationUseCase,
+    useUsersUseCase,
+} from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
@@ -288,6 +284,8 @@ const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const authUseCase = useAuthUseCase();
+const usersUseCase = useUsersUseCase();
+const usersAdminUseCase = useUserAdministrationUseCase();
 const signedInUser = authUseCase.getSignedInUser();
 
 const event = ref<Event | null>(null);
@@ -359,7 +357,12 @@ async function addSlot(): Promise<void> {
 
 async function contactTeam(): Promise<void> {
     if (event.value) {
-        await eventAdministrationUseCase.contactTeam(event.value);
+        const userKeys = eventService
+            .getAssignedRegistrations(event.value)
+            .map((it) => it.userKey)
+            .filter(filterUndefined);
+        const users = await usersUseCase.getUsers(userKeys);
+        await usersAdminUseCase.contactUsers(users);
     }
 }
 

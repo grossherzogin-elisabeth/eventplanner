@@ -1,16 +1,16 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Anmeldung für {{ registration?.user.firstName }} hinzufügen</h1>
+            <h1 class="truncate">Anmeldung hinzufügen</h1>
         </template>
         <template #default>
-            <div v-if="registration" class="p-8 lg:px-16">
+            <div v-if="registration" class="px-8 py-4 lg:px-16">
                 <p class="mb-8 max-w-lg">
                     {{ registration.user.firstName }} wird zur Warteliste der ausgewählten Reise hinzugefügt. Wenn
                     {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die Reise
                     noch manuell bearbeiten.
                 </p>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Reise</VInputLabel>
                     <VInputCombobox
                         v-model="registration.eventKey"
@@ -19,7 +19,7 @@
                         :errors-visible="validation.showErrors.value"
                     />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Position</VInputLabel>
                     <VInputCombobox
                         v-model="registration.positionKey"
@@ -28,7 +28,7 @@
                         :errors-visible="validation.showErrors.value"
                     />
                 </div>
-                <div class="-mx-4 mb-2">
+                <div class="-mx-4 mb-4">
                     <VInputLabel>Notiz</VInputLabel>
                     <VInputTextArea
                         v-model="registration.note"
@@ -39,11 +39,10 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-secondary" @click="cancel">
+            <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
             <AsyncButton class="btn-primary" :action="submit" :disabled="validation.disableSubmit.value">
-                <template #icon><i class="fa-solid fa-save"></i></template>
                 <template #label>Speichern</template>
             </AsyncButton>
         </template>

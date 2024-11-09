@@ -46,7 +46,7 @@
                 <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
             </p>
             <button
-                class="mr-2 hidden h-10 w-10 rounded-full hover:bg-red-200 sm:block"
+                class="-mr-3 hidden h-10 w-10 rounded-full hover:bg-red-200 sm:block"
                 @click="authUseCase.impersonateUser(null)"
             >
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>

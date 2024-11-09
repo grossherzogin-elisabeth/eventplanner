@@ -53,7 +53,7 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-secondary" @click="cancel">
+            <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">

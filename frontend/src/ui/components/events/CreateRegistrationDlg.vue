@@ -75,11 +75,11 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-secondary" @click="cancel">
+            <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Übernehmen</span>
+                <span>{{ props.submitText || 'Übernehmen' }}</span>
             </button>
         </template>
     </VDialog>
@@ -98,6 +98,12 @@ import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { v4 as uuid } from 'uuid';
+
+interface Props {
+    submitText?: string;
+}
+
+const props = defineProps<Props>();
 
 const usersUseCase = useUsersUseCase();
 const usersService = useUserService();

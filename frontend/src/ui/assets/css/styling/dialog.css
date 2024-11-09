@@ -9,11 +9,8 @@
     max-width: min(calc(100vw - 2rem), 35rem);
 }
 
-@media (max-width: 639px) {
-    .dialog:not(.modal) {
-        @apply fixed bottom-0 left-0 right-0 top-0;
-        @apply h-full max-h-full w-full max-w-full !important;
-    }
+.dialog-back-button-wrapper {
+    @apply hidden;
 }
 
 .dialog-header {
@@ -29,7 +26,9 @@
 }
 
 .dialog-background {
-    --open-close-animation-duration: 0.25s;
+    --open-close-animation-duration: 5s;
+    --open-close-animation-diff-x: 0;
+    --open-close-animation-diff-y: 2rem;
     --dialog-open-background: rgba(0, 0, 0, 0.6);
     @apply fixed bottom-0 left-0 right-0 top-0 z-40;
     @apply flex items-center justify-center;
@@ -82,31 +81,70 @@
 @keyframes anim-dialog-open {
     0% {
         opacity: 0;
-        transform: translateY(1rem);
+        transform: translate(var(--open-close-animation-diff-x), var(--open-close-animation-diff-y));
     }
-    50% {
+    20% {
         opacity: 1;
     }
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate(0, 0);
     }
 }
 
 @keyframes anim-dialog-close {
     0% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate(0, 0);
     }
-    50% {
+    80% {
         opacity: 1;
     }
     100% {
         opacity: 0;
-        transform: translateY(1rem);
+        transform: translate(var(--open-close-animation-diff-x), var(--open-close-animation-diff-y));
     }
 }
 
 .bg-dialog-header {
     @apply bg-gradient-to-r from-primary-50 from-50% to-primary-100;
+}
+
+@media (max-width: 639px) {
+    .dialog-wrapper:not(:has(.modal)) {
+        @apply w-full overflow-hidden;
+        height: var(--viewport-height);
+    }
+
+    .dialog-background:not(:has(.modal)) {
+        --open-close-animation-diff-x: 100vw;
+        --open-close-animation-diff-y: 0;
+    }
+
+    .dialog:not(.modal) {
+        @apply h-full max-h-full w-full max-w-full !important;
+        /*background: none;*/
+    }
+
+    .dialog:not(.modal) .dialog-header {
+        height: var(--nav-height);
+        @apply truncate bg-navbar text-white;
+    }
+
+    .dialog:not(.modal) .dialog-close-button {
+        @apply text-white;
+    }
+
+    .dialog:not(.modal) .dialog-back-button-wrapper {
+        @apply block;
+    }
+
+    .dialog:not(.modal) .dialog-close-button-wrapper {
+        @apply hidden;
+    }
+
+    .dialog:not(.modal) .dialog-content {
+        /*animation: anim-dialog-open var(--open-close-animation-duration) ease-in;*/
+        @apply bg-gradient-to-br from-primary-50 from-50% to-primary-100;
+    }
 }

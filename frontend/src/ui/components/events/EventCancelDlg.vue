@@ -16,8 +16,8 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-secondary" @click="cancel">
-                <span>Nicht absagen</span>
+            <button class="btn-ghost" @click="cancel">
+                <span>Abbrechen</span>
             </button>
             <button class="btn-danger" @click="submit">
                 <span>Reise absagen</span>

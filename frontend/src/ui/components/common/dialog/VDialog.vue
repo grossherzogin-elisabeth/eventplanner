@@ -4,6 +4,9 @@
             <div
                 v-if="renderContent"
                 :class="dialogOpen ? 'open' : 'closed'"
+                :style="{
+                    '--open-close-animation-duration': `${animationDuration}ms`,
+                }"
                 class="dialog-background"
                 @click="reject()"
             >
@@ -18,10 +21,15 @@
                             class="dialog"
                         >
                             <div class="dialog-header pl-8 lg:pl-16">
-                                <div class="flex flex-grow items-center pt-4">
+                                <div class="dialog-back-button-wrapper -ml-4 mr-4">
+                                    <button class="dialog-close-button" @click="reject()">
+                                        <i class="fa-solid fa-arrow-left"></i>
+                                    </button>
+                                </div>
+                                <div class="flex w-0 flex-grow items-center overflow-hidden">
                                     <slot name="title"></slot>
                                 </div>
-                                <div class="flex w-20 items-center justify-center lg:w-16">
+                                <div class="dialog-close-button-wrapper flex w-20 items-center justify-center lg:w-16">
                                     <button class="dialog-close-button" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
@@ -89,6 +97,7 @@ defineExpose<Dialog>({
     reject: (reason?: E) => reject(reason),
 });
 
+const animationDuration = 250;
 const dialogOpen: Ref<boolean> = ref(false);
 const renderContent: Ref<boolean> = ref(false);
 let promiseResolve: ((result: T) => void) | null = null;
@@ -133,6 +142,6 @@ async function close(): Promise<void> {
         renderContent.value = false;
         emit('closed');
         enableScrolling();
-    }, 400);
+    }, animationDuration + 100);
 }
 </script>

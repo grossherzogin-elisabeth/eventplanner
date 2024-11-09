@@ -78,11 +78,11 @@
                         class="w-0"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
-                        <button class="h-10 w-10 cursor-pointer rounded-full hover:bg-primary-200">
+                        <button class="mr-4 h-10 w-10 cursor-pointer rounded-full hover:bg-primary-200">
                             <i class="fa-solid fa-ellipsis-vertical mx-1" />
                         </button>
                     </td>
-                    <td></td>
+                    <td v-else></td>
                 </tr>
             </component>
         </table>

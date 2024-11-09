@@ -4,7 +4,7 @@
             {{ props.label }}
         </label>
         <div class="relative w-1/2 flex-grow">
-            <div>
+            <div class="h-full">
                 <div class="input-field-wrapper h-full">
                     <textarea
                         :id="id"

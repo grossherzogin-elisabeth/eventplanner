@@ -90,12 +90,22 @@ a.btn-danger,
     @apply text-red-700 hover:bg-red-50 hover:text-red-800;
 }
 
+.dialog .btn-ghost,
 .bg-primary-50 .btn-ghost {
     @apply text-primary-700 hover:bg-primary-100;
 }
 
 .bg-primary-50 .btn-ghost-danger {
     @apply text-red-700 hover:bg-red-100 hover:text-red-800;
+}
+
+.dialog .btn-ghost,
+.bg-primary-100 .btn-ghost {
+    @apply text-primary-700 hover:bg-primary-200;
+}
+
+.bg-primary-100 .btn-ghost-danger {
+    @apply text-red-700 hover:bg-red-200 hover:text-red-800;
 }
 
 .bg-primary-200 .btn-ghost {

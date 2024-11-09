@@ -3,7 +3,7 @@
 /* --------------------------------------------------------------- */
 
 textarea.input-field {
-    @apply h-32 pb-6;
+    @apply pb-6;
 }
 
 .input-character-counter {

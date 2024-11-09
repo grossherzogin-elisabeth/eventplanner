@@ -27,7 +27,7 @@
                 </div>
                 <div class="-mx-4 mt-8 rounded-xl bg-primary-100 p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold text-primary-700 text-opacity-50">Alternative Positionen</h2>
-                    <div class="grid grid-cols-2 gap-x-8 gap-y-2">
+                    <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox
                                 :model-value="
@@ -43,7 +43,7 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-secondary" @click="cancel">
+            <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" @click="submit">

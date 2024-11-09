@@ -62,11 +62,11 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-secondary" @click="cancel">
+            <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
             <AsyncButton class="btn-primary" :action="submit" :disabled="validation.disableSubmit.value">
-                <template #label> Alle speichern </template>
+                <template #label>Speichern</template>
             </AsyncButton>
         </template>
     </VDialog>

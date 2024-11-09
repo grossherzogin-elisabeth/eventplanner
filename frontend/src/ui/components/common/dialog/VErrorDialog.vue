@@ -24,7 +24,7 @@
         </template>
         <template #buttons>
             <template v-if="error.retry">
-                <button class="btn-secondary" @click="submit">{{ error.cancelText || 'Schließen' }}</button>
+                <button class="btn-ghost-danger" @click="submit">{{ error.cancelText || 'Schließen' }}</button>
                 <button class="btn-danger" @click="retry()">{{ error.retryText || 'Erneut versuchen' }}</button>
             </template>
             <button v-else class="btn-danger" @click="submit">{{ error.cancelText || 'Schließen' }}</button>

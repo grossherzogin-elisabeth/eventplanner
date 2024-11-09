@@ -13,7 +13,7 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-secondary" @click="cancel()">
+            <button class="btn-ghost" @click="cancel()">
                 <slot name="cancel">{{ content?.cancel || 'Abbrechen' }}</slot>
             </button>
             <button :class="content?.danger ? 'btn-danger' : 'btn-primary'" @click="submit()">

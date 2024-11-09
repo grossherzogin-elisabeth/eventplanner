@@ -34,6 +34,16 @@
     @apply m-0 !important;
     @apply fixed bottom-0 left-0 right-0 top-0;
     @apply z-40;
+    animation: anim-open-dropdown-background 0.15s ease-in-out;
+}
+
+@keyframes anim-open-dropdown-background {
+    0% {
+        opacity: 0;
+    }
+    1000% {
+        opacity: 1;
+    }
 }
 
 .input-dropdown {
