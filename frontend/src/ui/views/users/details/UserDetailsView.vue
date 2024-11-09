@@ -61,6 +61,16 @@
                             </div>
                         </div>
                     </template>
+                    <template #[Tab.USER_EMERGENCY]>
+                        <div class="max-w-2xl space-y-8 xl:space-y-16">
+                            <UserEmergencyForm v-if="user" v-model="user" />
+                        </div>
+                    </template>
+                    <template #[Tab.USER_OTHER]>
+                        <div class="max-w-2xl space-y-8 xl:space-y-16">
+                            <UserOtherForm v-if="user" v-model="user" />
+                        </div>
+                    </template>
                 </VTabs>
             </template>
             <template v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)" #primary-button>
@@ -111,10 +121,6 @@
                     <i class="fa-solid fa-file-circle-plus" />
                     <span>Qualifikation hinzufügen</span>
                 </li>
-                <li class="context-menu-item disabled">
-                    <i class="fa-solid fa-key" />
-                    <span>Passwort zurücksetzen</span>
-                </li>
             </template>
         </DetailsPage>
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
@@ -138,6 +144,8 @@ import {
 } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
+import UserEmergencyForm from '@/ui/views/users/details/UserEmergencyForm.vue';
+import UserOtherForm from '@/ui/views/users/details/UserOtherForm.vue';
 import UserContactForm from './UserContactForm.vue';
 import UserDataForm from './UserDataForm.vue';
 import UserEventsTable from './UserEventsTable.vue';
@@ -151,6 +159,8 @@ enum Tab {
     USER_CERTIFICATES = 'app.user-details.tab.certificates',
     USER_EVENTS = 'app.user-details.tab.events',
     USER_ROLES = 'app.user-details.tab.roles',
+    USER_EMERGENCY = 'app.user-details.tab.emergency',
+    USER_OTHER = 'app.user-details.tab.other',
 }
 
 type RouteEmits = (e: 'update:title', value: string) => void;
@@ -164,7 +174,15 @@ const authUseCase = useAuthUseCase();
 const errorHandlingUseCase = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
 
-const tabs = [Tab.USER_EVENTS, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_CERTIFICATES, Tab.USER_ROLES];
+const tabs = [
+    Tab.USER_EVENTS,
+    Tab.USER_CERTIFICATES,
+    Tab.USER_DATA,
+    Tab.USER_CONTACT_DATA,
+    Tab.USER_EMERGENCY,
+    Tab.USER_OTHER,
+    Tab.USER_ROLES,
+];
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);

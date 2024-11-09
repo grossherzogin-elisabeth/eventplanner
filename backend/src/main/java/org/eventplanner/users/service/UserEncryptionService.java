@@ -4,10 +4,7 @@ import org.eventplanner.common.EncryptedString;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.common.Crypto;
-import org.eventplanner.users.entities.EncryptedUserDetails;
-import org.eventplanner.users.entities.EncryptedUserQualification;
-import org.eventplanner.users.entities.UserDetails;
-import org.eventplanner.users.entities.UserQualification;
+import org.eventplanner.users.entities.*;
 import org.eventplanner.users.values.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +27,6 @@ import static org.eventplanner.common.ObjectUtils.streamNullable;
 
 @Service
 public class UserEncryptionService {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final Crypto crypto;
 
     public UserEncryptionService(
@@ -82,6 +78,7 @@ public class UserEncryptionService {
             mapNullable(user.getAddress(), this::encrypt),
             encryptNullable(user.getEmail()),
             encryptNullable(user.getPhone()),
+            encryptNullable(user.getPhoneWork()),
             encryptNullable(user.getMobile()),
             ofNullable(user.getDateOfBirth())
                 .map((date) -> date.format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
@@ -90,7 +87,17 @@ public class UserEncryptionService {
             encryptNullable(user.getPlaceOfBirth()),
             encryptNullable(user.getPassNr()),
             encryptNullable(user.getComment()),
-            encryptNullable(user.getNationality())
+            encryptNullable(user.getNationality()),
+            ofNullable(user.getEmergencyContact())
+                    .map(this::encrypt)
+                    .orElse(null),
+            encryptNullable(user.getDiseases()),
+            encryptNullable(user.getIntolerances()),
+            encryptNullable(user.getMedication()),
+            ofNullable(user.getDiet())
+                    .map(Diet::value)
+                    .map(this::encrypt)
+                    .orElse(null)
         );
     }
 
@@ -117,6 +124,7 @@ public class UserEncryptionService {
             mapNullable(user.getAddress(), this::decrypt),
             decryptNullable(user.getEmail()),
             decryptNullable(user.getPhone()),
+            decryptNullable(user.getPhoneWork()),
             decryptNullable(user.getMobile()),
             ofNullable(user.getDateOfBirth())
                 .map(this::decrypt)
@@ -125,7 +133,17 @@ public class UserEncryptionService {
             decryptNullable(user.getPlaceOfBirth()),
             decryptNullable(user.getPassNr()),
             decryptNullable(user.getComment()),
-            decryptNullable(user.getNationality())
+            decryptNullable(user.getNationality()),
+            ofNullable(user.getEmergencyContact())
+                    .map(this::decrypt)
+                    .orElse(null),
+            decryptNullable(user.getDiseases()),
+            decryptNullable(user.getIntolerances()),
+            decryptNullable(user.getMedication()),
+            ofNullable(user.getDiet())
+                    .map(this::decrypt)
+                    .flatMap(Diet::fromString)
+                    .orElse(null)
         );
     }
 
@@ -149,11 +167,11 @@ public class UserEncryptionService {
 
     public @NonNull EncryptedUserQualification encrypt(@NonNull UserQualification value) {
         return new EncryptedUserQualification(
-            encrypt(value.getQualificationKey().value()),
-            Optional.ofNullable(value.getExpiresAt())
-                .map(zonedDateTime -> zonedDateTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
-                .map(this::encrypt)
-                .orElse(null)
+                encrypt(value.getQualificationKey().value()),
+                Optional.ofNullable(value.getExpiresAt())
+                        .map(zonedDateTime -> zonedDateTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
+                        .map(this::encrypt)
+                        .orElse(null)
         );
     }
 
@@ -165,6 +183,20 @@ public class UserEncryptionService {
                 .map(ZonedDateTime::parse)
                 .orElse(null),
             value.getExpiresAt() != null
+        );
+    }
+
+    public @NonNull EncryptedEmergencyContact encrypt(@NonNull EmergencyContact value) {
+        return new EncryptedEmergencyContact(
+                encrypt(value.getName()),
+                encrypt(value.getPhone())
+        );
+    }
+
+    public @NonNull EmergencyContact decrypt(@NonNull EncryptedEmergencyContact value) {
+        return new EmergencyContact(
+                decrypt(value.getName()),
+                decrypt(value.getPhone())
         );
     }
 }

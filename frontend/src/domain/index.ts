@@ -21,6 +21,7 @@ export * from './values/ValidationHint';
 export * from './values/InputSelectOption';
 export * from './values/SlotCriticality';
 export * from './values/UserSettings';
+export * from './values/EmergencyContact';
 export * from './services/EventService';
 export * from './services/RegistrationService';
 export * from './services/UserService';

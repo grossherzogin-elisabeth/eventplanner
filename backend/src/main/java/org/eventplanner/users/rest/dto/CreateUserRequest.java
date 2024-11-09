@@ -8,9 +8,9 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 public record CreateUserRequest(
+    @Nullable String gender,
     @Nullable String title,
     @NonNull String firstName,
-    @Nullable String nickName,
     @Nullable String secondName,
     @NonNull String lastName,
     @NonNull AddressRepresentation address,
@@ -20,14 +20,15 @@ public record CreateUserRequest(
     @NonNull String dateOfBirth,
     @NonNull String placeOfBirth,
     @NonNull String passNr,
-    @NonNull String nationality
+    @NonNull String nationality,
+    @NonNull String comment
 ) implements Serializable {
 
     public @NonNull CreateUserSpec toDomain() {
         return new CreateUserSpec(
+            gender,
             title,
             firstName,
-            nickName,
             secondName,
             lastName,
             address.toDomain(),
@@ -37,7 +38,8 @@ public record CreateUserRequest(
             ZonedDateTime.parse(dateOfBirth),
             placeOfBirth,
             passNr,
-            nationality
+            nationality,
+            comment
         );
     }
 }

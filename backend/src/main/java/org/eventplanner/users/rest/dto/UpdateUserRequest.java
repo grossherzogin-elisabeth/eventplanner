@@ -1,8 +1,8 @@
 package org.eventplanner.users.rest.dto;
 
-import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.spec.UpdateUserSpec;
 import org.eventplanner.users.values.AuthKey;
+import org.eventplanner.users.values.Diet;
 import org.eventplanner.users.values.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -26,12 +26,18 @@ public record UpdateUserRequest(
     @Nullable AddressRepresentation address,
     @Nullable String email,
     @Nullable String phone,
+    @Nullable String phoneWork,
     @Nullable String mobile,
     @Nullable String dateOfBirth,
     @Nullable String placeOfBirth,
     @Nullable String passNr,
     @Nullable String comment,
-    @Nullable String nationality
+    @Nullable String nationality,
+    @Nullable EmergencyContactRepresentation emergencyContact,
+    @Nullable String diseases,
+    @Nullable String intolerances,
+    @Nullable String medication,
+    @Nullable String diet
 ) implements Serializable {
 
     public @NonNull UpdateUserSpec toDomain() {
@@ -48,12 +54,18 @@ public record UpdateUserRequest(
             mapNullable(address, AddressRepresentation::toDomain),
             email,
             phone,
+            phoneWork,
             mobile,
             mapNullable(dateOfBirth, ZonedDateTime::parse),
             placeOfBirth,
             passNr,
             comment,
-            nationality
+            nationality,
+            mapNullable(emergencyContact, EmergencyContactRepresentation::toDomain),
+            diseases,
+            intolerances,
+            medication,
+            mapNullable(diet, (String s) -> Diet.fromString(s).orElse(Diet.OMNIVORE))
         );
     }
 }

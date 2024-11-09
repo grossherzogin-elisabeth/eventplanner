@@ -11,29 +11,38 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public record UserDetailsRepresentation(
-    @NonNull String key,
-    @Nullable String authKey,
-    @Nullable String gender,
-    @NonNull String firstName,
-    @Nullable String nickName,
-    @Nullable String secondName,
-    @NonNull String lastName,
-    @NonNull List<String> positions,
-    @NonNull List<String> roles,
-    @NonNull List<UserQualificationRepresentation> qualifications,
-    @Nullable AddressRepresentation address,
-    @Nullable String email,
-    @Nullable String phone,
-    @Nullable String mobile,
-    @Nullable String dateOfBirth,
-    @Nullable String placeOfBirth,
-    @Nullable String passNr,
-    @Nullable String comment
+        @NonNull String key,
+        @Nullable String authKey,
+        @Nullable String title,
+        @Nullable String gender,
+        @NonNull String firstName,
+        @Nullable String nickName,
+        @Nullable String secondName,
+        @NonNull String lastName,
+        @NonNull List<String> positions,
+        @NonNull List<String> roles,
+        @NonNull List<UserQualificationRepresentation> qualifications,
+        @Nullable AddressRepresentation address,
+        @Nullable String email,
+        @Nullable String phone,
+        @Nullable String phoneWork,
+        @Nullable String mobile,
+        @Nullable String dateOfBirth,
+        @Nullable String placeOfBirth,
+        @Nullable String passNr,
+        @Nullable String comment,
+        @Nullable String nationality,
+        @NonNull EmergencyContactRepresentation emergencyContact,
+        @Nullable String diseases,
+        @Nullable String intolerances,
+        @Nullable String medication,
+        @Nullable String diet
 ) implements Serializable {
     public static UserDetailsRepresentation fromDomain(@NonNull UserDetails user) {
         return new UserDetailsRepresentation(
             user.getKey().value(),
             user.getAuthKey() == null ? null : user.getAuthKey().value(),
+            user.getTitle(),
             user.getGender(),
             user.getFirstName(),
             user.getNickName(),
@@ -45,11 +54,18 @@ public record UserDetailsRepresentation(
             AddressRepresentation.fromDomain(user.getAddress()),
             user.getEmail(),
             user.getPhone(),
+            user.getPhoneWork(),
             user.getMobile(),
             user.getDateOfBirth() == null ? null : user.getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE),
             user.getPlaceOfBirth(),
             user.getPassNr(),
-            user.getComment()
+            user.getComment(),
+            user.getNationality(),
+            EmergencyContactRepresentation.fromDomain(user.getEmergencyContact()),
+            user.getDiseases(),
+            user.getIntolerances(),
+            user.getMedication(),
+            user.getDiet () == null ? null : user.getDiet().value()
         );
     }
 }

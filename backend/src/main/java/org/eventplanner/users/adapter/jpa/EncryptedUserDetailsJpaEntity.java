@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+import org.eventplanner.users.entities.EncryptedEmergencyContact;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.EncryptedUserQualification;
 import org.eventplanner.users.values.EncryptedAddress;
@@ -72,6 +73,9 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "phone_work")
+    private String phoneWork;
+
     @Column(name = "mobile")
     private String mobile;
 
@@ -90,6 +94,21 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     @Column(name = "nationality")
     private String nationality;
 
+    @Column(name = "emergency_contact")
+    private String emergencyContactRaw;
+
+    @Column(name = "diseases")
+    private String diseases;
+
+    @Column(name = "intolerances")
+    private String intolerances;
+
+    @Column(name = "medication")
+    private String medication;
+
+    @Column(name = "diet")
+    private String diet;
+
     public static EncryptedUserDetailsJpaEntity fromDomain(EncryptedUserDetails domain) {
         return new EncryptedUserDetailsJpaEntity(
             domain.getKey().value(),
@@ -105,12 +124,18 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             domain.getAddress() != null ? serializeAddress(domain.getAddress()) : null,
             domain.getEmail() != null ? domain.getEmail().value() : null,
             domain.getPhone() != null ? domain.getPhone().value() : null,
+            domain.getPhoneWork() != null ? domain.getPhoneWork().value() : null,
             domain.getMobile() != null ? domain.getMobile().value() : null,
             domain.getDateOfBirth() != null ? domain.getDateOfBirth().value() : null,
             domain.getPlaceOfBirth() != null ? domain.getPlaceOfBirth().value() : null,
             domain.getPassNr() != null ? domain.getPassNr().value() : null,
             domain.getComment() != null ? domain.getComment().value() : null,
-            domain.getNationality() != null ? domain.getNationality().value() : null
+            domain.getNationality() != null ? domain.getNationality().value() : null,
+            domain.getEmergencyContact() != null ? serializeEmergencyContact(domain.getEmergencyContact()) : null,
+            domain.getDiseases() != null ? domain.getDiseases().value() : null,
+            domain.getIntolerances() != null ? domain.getIntolerances().value() : null,
+            domain.getMedication() != null ? domain.getMedication().value() : null,
+            domain.getDiet() != null ? domain.getDiet().value() : null
         );
     }
 
@@ -167,6 +192,24 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         }
     }
 
+    private static String serializeEmergencyContact(EncryptedEmergencyContact address) {
+        try {
+            var entity = EncryptedEmergencyContactJsonEntity.fromDomain(address);
+            return objectMapper.writeValueAsString(entity);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error serializing address", e);
+        }
+    }
+
+    private static EncryptedEmergencyContact deserializeEmergencyContact(String json) {
+        try {
+            var entity = objectMapper.readValue(json, EncryptedEmergencyContactJsonEntity.class);
+            return entity.toDomain();
+        } catch (IOException e) {
+            throw new RuntimeException("Error deserializing address", e);
+        }
+    }
+
     public EncryptedUserDetails toDomain() {
         return new EncryptedUserDetails(
             new UserKey(key),
@@ -182,12 +225,18 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             addressRaw != null ? deserializeAddress(addressRaw) : null,
             email != null ? new EncryptedString(email) : null,
             phone != null ? new EncryptedString(phone) : null,
+            phoneWork != null ? new EncryptedString(phoneWork) : null,
             mobile != null ? new EncryptedString(mobile) : null,
             dateOfBirth != null ? new EncryptedString(dateOfBirth) : null,
             placeOfBirth != null ? new EncryptedString(placeOfBirth) : null,
             passNr != null ? new EncryptedString(passNr) : null,
             comment != null ? new EncryptedString(comment) : null,
-            nationality != null ? new EncryptedString(nationality) : null
+            nationality != null ? new EncryptedString(nationality) : null,
+            emergencyContactRaw!= null ? deserializeEmergencyContact(emergencyContactRaw) : null,
+            diseases != null ? new EncryptedString(diseases) : null,
+            intolerances != null ? new EncryptedString(intolerances) : null,
+            medication != null ? new EncryptedString(medication) : null,
+            diet != null ? new EncryptedString(diet) : null
         );
     }
 }

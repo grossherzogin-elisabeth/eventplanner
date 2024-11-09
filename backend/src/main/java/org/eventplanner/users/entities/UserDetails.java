@@ -3,10 +3,7 @@ package org.eventplanner.users.entities;
 import lombok.*;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.users.values.Address;
-import org.eventplanner.users.values.AuthKey;
-import org.eventplanner.users.values.Role;
-import org.eventplanner.users.values.UserKey;
+import org.eventplanner.users.values.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -34,12 +31,18 @@ public class UserDetails {
     private @Nullable Address address;
     private @Nullable String email;
     private @Nullable String phone;
+    private @Nullable String phoneWork;
     private @Nullable String mobile;
     private @Nullable ZonedDateTime dateOfBirth;
     private @Nullable String placeOfBirth;
     private @Nullable String passNr;
     private @Nullable String comment;
     private @Nullable String nationality;
+    private @Nullable EmergencyContact emergencyContact;
+    private @Nullable String diseases;
+    private @Nullable String intolerances;
+    private @Nullable String medication;
+    private @Nullable Diet diet;
 
     public @NonNull String getFullName() {
         StringBuilder stb = new StringBuilder();

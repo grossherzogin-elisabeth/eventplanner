@@ -7,9 +7,9 @@ import org.springframework.lang.Nullable;
 import java.time.ZonedDateTime;
 
 public record CreateUserSpec(
+    @Nullable String gender,
     @Nullable String title,
     @NonNull String firstName,
-    @Nullable String nickName,
     @Nullable String secondName,
     @NonNull String lastName,
     @NonNull Address address,
@@ -19,6 +19,7 @@ public record CreateUserSpec(
     @NonNull ZonedDateTime dateOfBirth,
     @NonNull String placeOfBirth,
     @NonNull String passNr,
-    @NonNull String nationality
+    @NonNull String nationality,
+    @NonNull String comment
 ) {
 }

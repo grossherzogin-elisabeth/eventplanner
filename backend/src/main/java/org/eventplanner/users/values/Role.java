@@ -1,6 +1,7 @@
 package org.eventplanner.users.values;
 
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.parameters.P;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -79,7 +80,8 @@ public enum Role {
                 Permission.READ_USER_DETAILS,
                 Permission.WRITE_USERS,
                 Permission.WRITE_POSITIONS,
-                Permission.WRITE_QUALIFICATIONS
+                Permission.WRITE_QUALIFICATIONS,
+                Permission.READ_FULL_USER_DETAILS
             );
             case EVENT_LEADER -> Stream.of(
                 Permission.READ_OWN_USER_DETAILS,
@@ -93,5 +95,10 @@ public enum Role {
                 Permission.WRITE_EVENT_TEAM
             );
         };
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

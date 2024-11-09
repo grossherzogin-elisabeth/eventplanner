@@ -27,12 +27,19 @@ interface UserDetailsRepresentation {
     email: string;
     qualifications: UserQualificationRepresentation[];
     phone?: string;
+    phoneWork?: string;
     mobile?: string;
     dateOfBirth: string;
     placeOfBirth: string;
     passNr?: string;
     comment?: string;
     address: AddressRepresentation;
+    nationality?: string;
+    diseases?: string;
+    intolerances?: string;
+    medication?: string;
+    diet?: string;
+    emergencyContact: EmergencyContactRepresentation;
 }
 
 interface SignedInUserUpdateRequest {
@@ -41,9 +48,18 @@ interface SignedInUserUpdateRequest {
     title?: string;
     email?: string;
     phone?: string;
+    phoneWork?: string;
     mobile?: string;
     passNr?: string;
     address?: AddressRepresentation;
+    nationality?: string;
+    diseases?: string;
+    intolerances?: string;
+    medication?: string;
+    diet?: string;
+    emergencyContact?: EmergencyContactRepresentation;
+    dateOfBirth?: string;
+    placeOfBirth?: string;
 }
 
 interface UserDetailsUpdateRequest {
@@ -55,30 +71,37 @@ interface UserDetailsUpdateRequest {
     secondName?: string;
     lastName?: string;
     roles?: string[];
-    email?: string;
     qualifications?: UserQualificationRepresentation[];
+    address?: AddressRepresentation;
+    email?: string;
     phone?: string;
+    phoneWork?: string;
     mobile?: string;
+    dateOfBirth?: string;
+    placeOfBirth?: string;
     passNr?: string;
     comment?: string;
-    address?: AddressRepresentation;
+    nationality?: string;
+    emergencyContact?: EmergencyContactRepresentation;
+    diseases?: string;
+    intolerances?: string;
+    medication?: string;
+    diet?: string;
 }
 
 interface UserDetailsCreateRequest {
     gender?: string;
     title?: string;
     firstName: string;
-    nickName?: string;
     secondName?: string;
     lastName: string;
-    positions: string[];
     email: string;
-    qualifications: UserQualificationRepresentation[];
     phone?: string;
     mobile?: string;
     dateOfBirth?: string;
     placeOfBirth?: string;
     passNr?: string;
+    nationality?: string;
     comment?: string;
     address: AddressRepresentation;
 }
@@ -95,6 +118,11 @@ interface AddressRepresentation {
     addressLine2?: string;
     town: string;
     zipCode: string;
+}
+
+interface EmergencyContactRepresentation {
+    name: string;
+    phone: string;
 }
 
 export class UserRestRepository implements UserRepository {
@@ -165,22 +193,36 @@ export class UserRestRepository implements UserRepository {
             secondName: user.secondName,
             lastName: user.lastName,
             roles: user.roles,
-            email: user.email,
             qualifications: user.qualifications?.map((it) => ({
                 qualificationKey: it.qualificationKey,
                 expiresAt: it.expiresAt?.toISOString(),
                 note: it.note,
             })),
-            phone: user.phone,
-            mobile: user.mobile,
-            passNr: user.passNr,
-            comment: user.comment,
             address: user.address
                 ? {
                       addressLine1: user.address.addressLine1,
                       addressLine2: user.address.addressLine2,
                       town: user.address.town,
                       zipCode: user.address.zipcode,
+                  }
+                : undefined,
+            email: user.email,
+            phone: user.phone,
+            phoneWork: user.phoneWork,
+            mobile: user.mobile,
+            dateOfBirth: user.dateOfBirth?.toISOString(),
+            placeOfBirth: user.placeOfBirth,
+            passNr: user.passNr,
+            nationality: user.nationality,
+            comment: user.comment,
+            diseases: user.diseases,
+            intolerances: user.intolerances,
+            medication: user.medication,
+            diet: user.diet,
+            emergencyContact: user.emergencyContact
+                ? {
+                      name: user.emergencyContact.name,
+                      phone: user.emergencyContact.phone,
                   }
                 : undefined,
         };
@@ -205,17 +247,15 @@ export class UserRestRepository implements UserRepository {
             gender: user.gender,
             title: user.title,
             firstName: user.firstName,
-            nickName: user.nickName,
             secondName: user.secondName,
             lastName: user.lastName,
             dateOfBirth: user.dateOfBirth?.toISOString(),
             placeOfBirth: user.placeOfBirth,
-            positions: user.positionKeys,
             email: user.email,
-            qualifications: [],
             phone: user.phone,
             mobile: user.mobile,
             passNr: user.passNr,
+            nationality: user.nationality,
             comment: user.comment,
             address: {
                 addressLine1: user.address.addressLine1,
@@ -261,8 +301,10 @@ export class UserRestRepository implements UserRepository {
             nickName: user.nickName,
             email: user.email,
             phone: user.phone,
+            phoneWork: user.phoneWork,
             mobile: user.mobile,
             passNr: user.passNr,
+            nationality: user.nationality,
             address: user.address
                 ? {
                       addressLine1: user.address.addressLine1,
@@ -271,6 +313,18 @@ export class UserRestRepository implements UserRepository {
                       zipCode: user.address.zipcode,
                   }
                 : undefined,
+            diet: user.diet,
+            diseases: user.diseases,
+            medication: user.medication,
+            intolerances: user.intolerances,
+            emergencyContact: user.emergencyContact
+                ? {
+                      name: user.emergencyContact?.name,
+                      phone: user.emergencyContact?.phone,
+                  }
+                : undefined,
+            dateOfBirth: user.dateOfBirth?.toISOString(),
+            placeOfBirth: user.placeOfBirth,
         };
         const response = await fetch(`/api/v1/users/self`, {
             method: 'PATCH',
@@ -322,6 +376,7 @@ export class UserRestRepository implements UserRepository {
             })),
             email: representation.email,
             phone: representation.phone || undefined,
+            phoneWork: representation.phoneWork || undefined,
             mobile: representation.mobile || undefined,
             dateOfBirth: UserRestRepository.parseDate(representation.dateOfBirth),
             placeOfBirth: representation.placeOfBirth || undefined,
@@ -333,6 +388,20 @@ export class UserRestRepository implements UserRepository {
                 town: representation.address?.town || '',
                 zipcode: representation.address?.zipCode || '',
             },
+            nationality: representation.nationality,
+            diseases: representation.diseases,
+            intolerances: representation.intolerances,
+            medication: representation.medication,
+            diet: representation.diet,
+            emergencyContact: representation.emergencyContact
+                ? {
+                      name: representation.emergencyContact.name,
+                      phone: representation.emergencyContact.phone,
+                  }
+                : {
+                      name: '',
+                      phone: '',
+                  },
         };
     }
 }

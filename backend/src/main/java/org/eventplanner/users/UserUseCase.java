@@ -102,13 +102,13 @@ public class UserUseCase {
     }
 
     public @NonNull List<UserDetails> getDetailedUsers(@NonNull SignedInUser signedInUser) {
-        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
+        signedInUser.assertHasPermission(Permission.READ_FULL_USER_DETAILS);
         return userService.getDetailedUsers();
     }
 
     public Optional<UserDetails> getUserByKey(@NonNull SignedInUser signedInUser, @NonNull UserKey key) {
         if (!signedInUser.key().equals(key)) {
-            signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
+            signedInUser.assertHasPermission(Permission.READ_FULL_USER_DETAILS);
         }
         return userService.getUserByKey(key);
     }
@@ -130,11 +130,17 @@ public class UserUseCase {
         applyNullable(spec.passNr(), user::setPassNr);
         applyNullable(spec.email(), user::setEmail);
         applyNullable(spec.phone(), user::setPhone);
+        applyNullable(spec.phoneWork(), user::setPhoneWork);
         applyNullable(spec.address(), user::setAddress);
         applyNullable(spec.mobile(), user::setMobile);
         applyNullable(spec.comment(), user::setComment);
         applyNullable(spec.qualifications(), user::setQualifications);
         applyNullable(spec.roles(), user::setRoles);
+        applyNullable(spec.emergencyContact(), user::setEmergencyContact);
+        applyNullable(spec.diseases(), user::setDiseases);
+        applyNullable(spec.intolerances(), user::setIntolerances);
+        applyNullable(spec.medication(), user::setMedication);
+        applyNullable(spec.diet(), user::setDiet);
 
         return userService.updateUser(user);
     }

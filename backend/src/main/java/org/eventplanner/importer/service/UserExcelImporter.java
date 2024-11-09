@@ -3,9 +3,11 @@ package org.eventplanner.importer.service;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
+import org.eventplanner.users.entities.EmergencyContact;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.entities.UserQualification;
 import org.eventplanner.users.values.Address;
+import org.eventplanner.users.values.Diet;
 import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
 import org.slf4j.Logger;
@@ -33,8 +35,8 @@ public class UserExcelImporter {
     private static final int COL_PASS_NR = 13;
     private static final int COL_POSITION = 14;
     private static final int COL_NATIONALITY = 15;
-    private static final int COL_MEMBER = 16;
-    private static final int COL_NOTE = 17;
+    private static final int COL_NOTE = 16;
+    private static final int COL_MEMBER = 17;
     private static final int COL_RIGG_SUITABLE = 18;
     private static final int COL_MEDICAL_FITNESS_EXPIRATION_DATE = 19;
     private static final int COL_QUALIFICATION = 20;
@@ -46,6 +48,13 @@ public class UserExcelImporter {
     private static final int COL_MEDICAL_CARE = 26;
     private static final int COL_FIRST_AID = 27;
     private static final int COL_OTHER_QUALIFICATIONS = 28;
+    private static final int COL_DISEASES = 29;
+    private static final int COL_MEDICATION = 30;
+    private static final int COL_VEGETARIAN = 31;
+    private static final int COL_VEGAN = 32;
+    private static final int COL_INTOLERANCES = 33;
+    private static final int COL_EMERGENCY_CONTACT = 34;
+    private static final int COL_EMERGENCY_CONTACT_PHONE = 35;
 
     private static final Logger log = LoggerFactory.getLogger(UserExcelImporter.class);
 
@@ -99,7 +108,11 @@ public class UserExcelImporter {
             user = new UserDetails(userKey, firstName, lastName);
             user.setTitle(title);
             user.setSecondName(secondName);
-            user.getRoles().add(Role.TEAM_MEMBER);
+
+            if (data[COL_MEMBER].trim().equalsIgnoreCase("ja")) {
+                user.getRoles().add(Role.TEAM_MEMBER);
+            }
+
 
             addDetailsToUser(row, user, data);
         }
@@ -137,6 +150,11 @@ public class UserExcelImporter {
             user.setPhone(phone);
         }
 
+        var phoneWork = data[COL_PHONE_OFFICE].trim();
+        if (!phoneWork.isBlank()) {
+            user.setPhoneWork(phoneWork);
+        }
+
         var dateOfBirth = ExcelUtils.parseExcelDate(data[COL_DATE_OF_BIRTH]);
         if (dateOfBirth.isPresent()) {
             user.setDateOfBirth(dateOfBirth.get());
@@ -160,15 +178,58 @@ public class UserExcelImporter {
 
         var nationality = data[COL_NATIONALITY].trim();
         if (!nationality.isBlank()) {
-            user.setNationality(nationality);
+            if (nationality.equalsIgnoreCase("german")) {
+                user.setNationality("DE");
+            } else if (nationality.equalsIgnoreCase("armenian")) {
+                user.setNationality("AM");
+            } else if (nationality.equalsIgnoreCase("austrian")) {
+                user.setNationality("AU");
+            } else if (nationality.equalsIgnoreCase("swiss")) {
+                user.setNationality("CH");
+            } else if (nationality.equalsIgnoreCase("belgian")) {
+                user.setNationality("BE");
+            } else if (nationality.equalsIgnoreCase("polish")) {
+                user.setNationality("PL");
+            } else if (nationality.equalsIgnoreCase("spanish")) {
+                user.setNationality("ES");
+            }
         } else {
-            log.debug("Row {}: {} has no nationality, assuming 'German'", row, user.getFullName());
-            user.setNationality("German");
+            log.debug("Row {}: {} has no nationality, assuming 'DE'", row, user.getFullName());
+            user.setNationality("DE");
         }
 
         var note = data[COL_NOTE].trim();
         if (!note.isBlank()) {
             user.setComment(note);
+        }
+
+        var diseases = data[COL_DISEASES].trim();
+        if (!diseases.isBlank()) {
+            user.setDiseases(diseases);
+        }
+
+        var medication = data[COL_MEDICATION].trim();
+        if (!medication.isBlank()) {
+            user.setMedication(medication);
+        }
+
+        var intolerances = data[COL_INTOLERANCES].trim();
+        if (!intolerances.isBlank()) {
+            user.setIntolerances(intolerances);
+        }
+
+        var emergencyContactName = data[COL_EMERGENCY_CONTACT].trim();
+        var emergencyContactPhone = data[COL_EMERGENCY_CONTACT_PHONE].trim();
+        if (!emergencyContactName.isBlank() && !emergencyContactPhone.isBlank()) {
+            user.setEmergencyContact(new EmergencyContact(emergencyContactName, emergencyContactPhone));
+        }
+
+        if (!data[COL_VEGAN].trim().isBlank()) {
+            user.setDiet(Diet.VEGAN);
+        } else if (!data[COL_VEGETARIAN].trim().isBlank()) {
+            user.setDiet(Diet.VEGETARIAN);
+        } else {
+            user.setDiet(Diet.OMNIVORE);
         }
     }
 

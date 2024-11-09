@@ -21,10 +21,17 @@ public record UserSelfRepresentation(
     @Nullable AddressRepresentation address,
     @Nullable String email,
     @Nullable String phone,
+    @Nullable String phoneWork,
     @Nullable String mobile,
     @Nullable String dateOfBirth,
     @Nullable String placeOfBirth,
-    @Nullable String passNr
+    @Nullable String passNr,
+    @Nullable String nationality,
+    @NonNull EmergencyContactRepresentation emergencyContact,
+    @Nullable String diseases,
+    @Nullable String intolerances,
+    @Nullable String medication,
+    @Nullable String diet
 ) implements Serializable {
     public static UserSelfRepresentation fromDomain(@NonNull UserDetails user) {
         return new UserSelfRepresentation(
@@ -39,10 +46,17 @@ public record UserSelfRepresentation(
             AddressRepresentation.fromDomain(user.getAddress()),
             user.getEmail(),
             user.getPhone(),
+            user.getPhoneWork(),
             user.getMobile(),
             user.getDateOfBirth() == null ? null : user.getDateOfBirth().format(DateTimeFormatter.ISO_DATE),
             user.getPlaceOfBirth(),
-            user.getPassNr()
+            user.getPassNr(),
+            user.getNationality(),
+            EmergencyContactRepresentation.fromDomain(user.getEmergencyContact()),
+            user.getDiseases(),
+            user.getIntolerances(),
+            user.getMedication(),
+            user.getDiet () == null ? null : user.getDiet().value()
         );
     }
 }

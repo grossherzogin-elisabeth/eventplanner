@@ -12,6 +12,7 @@ public enum Permission {
     READ_OWN_USER_DETAILS("users:read-details-self"),
     WRITE_OWN_USER_DETAILS("users:write-self"),
     READ_USER_DETAILS("users:read-details"),
+    READ_FULL_USER_DETAILS("users:read-full-details"),
     WRITE_USERS("users:write"),
     DELETE_USERS("users:delete"),
     READ_POSITIONS("positions:read"),
@@ -34,6 +35,11 @@ public enum Permission {
     }
 
     public String value() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
         return value;
     }
 }

@@ -1,9 +1,10 @@
 package org.eventplanner.users.spec;
 
-import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.users.entities.EmergencyContact;
 import org.eventplanner.users.entities.UserQualification;
 import org.eventplanner.users.values.Address;
 import org.eventplanner.users.values.AuthKey;
+import org.eventplanner.users.values.Diet;
 import org.eventplanner.users.values.Role;
 import org.springframework.lang.Nullable;
 
@@ -23,11 +24,17 @@ public record UpdateUserSpec(
     @Nullable Address address,
     @Nullable String email,
     @Nullable String phone,
+    @Nullable String phoneWork,
     @Nullable String mobile,
     @Nullable ZonedDateTime dateOfBirth,
     @Nullable String placeOfBirth,
     @Nullable String passNr,
     @Nullable String comment,
-    @Nullable String nationality
+    @Nullable String nationality,
+    @Nullable EmergencyContact emergencyContact,
+    @Nullable String diseases,
+    @Nullable String intolerances,
+    @Nullable String medication,
+    @Nullable Diet diet
 ) {
 }

@@ -1,7 +1,4 @@
-import type { Role } from '@/domain';
-import type { QualificationKey } from '@/domain';
-import type { Address } from '../values/Address';
-import type { PositionKey } from './Position';
+import type { Address, EmergencyContact, PositionKey, QualificationKey, Role } from '@/domain';
 
 export type UserKey = string;
 export type AuthKey = string;
@@ -31,12 +28,19 @@ export interface UserDetails {
     qualifications: UserQualification[];
     email: string;
     phone?: string;
+    phoneWork?: string;
     mobile?: string;
     dateOfBirth?: Date;
     placeOfBirth?: string;
     passNr?: string;
     comment?: string;
     address: Address;
+    nationality?: string;
+    diseases?: string;
+    intolerances?: string;
+    medication?: string;
+    diet?: string;
+    emergencyContact: EmergencyContact;
 }
 
 export interface UserQualification {

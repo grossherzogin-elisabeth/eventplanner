@@ -10,13 +10,6 @@
                 {{ props.modelValue }}
             </slot>
         </span>
-        <button
-            v-if="hint"
-            class="rounded bg-gray-700 px-2 text-sm font-semibold hover:bg-gray-600 hover:text-primary-500"
-            :title="hint"
-        >
-            ?
-        </button>
     </label>
 </template>
 
@@ -26,8 +19,6 @@ import { computed, onMounted, ref, watch } from 'vue';
 interface Props {
     // the label text
     modelValue?: string;
-    // hint to display next to the label
-    hint?: string;
     // related input field
     for?: HTMLElement;
 }

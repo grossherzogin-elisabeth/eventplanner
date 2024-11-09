@@ -29,10 +29,16 @@ public class EncryptedUserDetails implements Serializable {
     private @Nullable EncryptedAddress address;
     private @Nullable EncryptedString email;
     private @Nullable EncryptedString phone;
+    private @Nullable EncryptedString phoneWork;
     private @Nullable EncryptedString mobile;
     private @Nullable EncryptedString dateOfBirth;
     private @Nullable EncryptedString placeOfBirth;
     private @Nullable EncryptedString passNr;
     private @Nullable EncryptedString comment;
     private @Nullable EncryptedString nationality;
+    private @Nullable EncryptedEmergencyContact emergencyContact;
+    private @Nullable EncryptedString diseases;
+    private @Nullable EncryptedString intolerances;
+    private @Nullable EncryptedString medication;
+    private @Nullable EncryptedString diet;
 }
