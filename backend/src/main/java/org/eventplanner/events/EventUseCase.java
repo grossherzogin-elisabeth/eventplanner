@@ -177,7 +177,7 @@ public class EventUseCase {
     }
 
     public ByteArrayOutputStream downloadConsumptionList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
-        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
+        signedInUser.assertHasPermission(Permission.READ_USERS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();

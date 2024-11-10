@@ -306,8 +306,7 @@
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
             </li>
-            <li
-                class="permission-read-user-details context-menu-item"
+            <li class="permission-read-user-details context-menu-item"
                 @click="eventUseCase.downloadConsumptionList(event)"
             >
                 <i class="fa-solid fa-beer-mug-empty" />

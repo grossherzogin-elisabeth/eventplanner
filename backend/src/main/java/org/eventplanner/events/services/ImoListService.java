@@ -1,5 +1,6 @@
 package org.eventplanner.events.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,21 +17,18 @@ import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.UserKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 @Service
 public class ImoListService {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
     private final PositionRepository positionRepository;
 
@@ -56,24 +54,22 @@ public class ImoListService {
                 .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
                 .toList();
 
-        FileInputStream fileTemplate = new FileInputStream("data/templates/ImoList_template.xlsx");
-
-        try (fileTemplate) {
+        try (FileInputStream fileTemplate = new FileInputStream("data/templates/ImoList_template.xlsx")) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
             XSSFSheet sheet = workbook.getSheetAt(0);
 
             String arrivalPort = event.getLocations().getFirst().name();
             String departurePort = event.getLocations().getLast().name();
-            addEventDetailsToImoList(sheet,"{{Port_a/d}}",arrivalPort + "/" + departurePort);
+            replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", arrivalPort + "/" + departurePort);
 
             String arrivalDate = event.getStart().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             String departureDate = event.getEnd().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            addEventDetailsToImoList(sheet,"{{Date_a/d}}",arrivalDate + "/" + departureDate);
+            replacePlaceHolderInSheet(sheet, "{{Date_a/d}}", arrivalDate + "/" + departureDate);
 
             writeCrewDataToSheet(sheet, crewList, positionMap);
 
             return getWorkbookBytes(workbook);
-        }catch (IOException e) {
+        } catch (IOException e) {
             log.error("Failed to generate imo list workbook", e);
             throw e;
         }
@@ -101,12 +97,12 @@ public class ImoListService {
         return rowCounter;
     }
 
-    private void writeCrewDataToSheet(XSSFSheet sheet, List<Registration> crewList, Map<PositionKey, Position> positionMap) throws IOException{
+    private void writeCrewDataToSheet(XSSFSheet sheet, List<Registration> crewList, Map<PositionKey, Position> positionMap) throws IOException {
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
 
-        for (int crewCounter = 1; crewCounter < crewList.size(); crewCounter++){
-            Row currentRow = sheet.getRow(crewCounter+firstEmptyRow-1);
+        for (int crewCounter = 1; crewCounter < crewList.size(); crewCounter++) {
+            Row currentRow = sheet.getRow(crewCounter + firstEmptyRow - 1);
             currentRow.getCell(0).setCellValue(crewCounter);
             Registration currentRegistration = crewList.get(crewCounter);
             String imoListRank = ObjectUtils.mapNullable(positionMap.get(currentRegistration.getPosition()),
@@ -143,7 +139,7 @@ public class ImoListService {
         }
     }
 
-    private void addEventDetailsToImoList(XSSFSheet sheet,String placeHolder, String eventDetail){
+    private void replacePlaceHolderInSheet(XSSFSheet sheet, String placeHolder, @NonNull String eventDetail) {
         Iterator<Row> rowIterator = sheet.iterator();
         int rowCounter = 0;
         while (rowIterator.hasNext()) {
@@ -153,7 +149,7 @@ public class ImoListService {
             while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
                 if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains(placeHolder)) {
-                    sheet.getRow(rowCounter).getCell(cellCounter).setCellValue(Objects.requireNonNullElse(eventDetail, ""));
+                    sheet.getRow(rowCounter).getCell(cellCounter).setCellValue(eventDetail);
                 }
                 cellCounter++;
             }
@@ -163,11 +159,10 @@ public class ImoListService {
 
     private ByteArrayOutputStream getWorkbookBytes(XSSFWorkbook workbook) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try(bos){
+        try (bos) {
             workbook.write(bos);
             bos.flush();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log.error("Failed to get workbook bytes", e);
         }
         return bos;

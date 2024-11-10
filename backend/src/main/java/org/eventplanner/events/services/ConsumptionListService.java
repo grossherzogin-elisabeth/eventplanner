@@ -1,8 +1,6 @@
 package org.eventplanner.events.services;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.events.entities.Event;
@@ -12,8 +10,6 @@ import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.UserKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -21,10 +17,10 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.*;
 
+@Slf4j
 @Service
 public class ConsumptionListService {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
 
     public ConsumptionListService(@Autowired UserService userService) {
@@ -53,14 +49,13 @@ public class ConsumptionListService {
             writeCrewDataToWorkbook(workbook, nameList);
 
             return getWorkbookBytes(workbook);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log.error("Failed to generate consumption list workbook", e);
             throw e;
         }
     }
 
-    private List<String> getNameList(List<Registration> crewList){
+    private List<String> getNameList(List<Registration> crewList) {
 
         List<String> nameList = new ArrayList<>();
 
@@ -70,8 +65,13 @@ public class ConsumptionListService {
             if (crewMemberKey != null) {
                 Optional<UserDetails> crewMemberDetails = userService.getUserByKey(Objects.requireNonNull(crewMemberKey));
                 crewMemberDetails.ifPresent(userDetails -> nameList.add(userDetails.getFirstName() + "\n" + userDetails.getLastName()));
-            } else {
-                String guestName = Objects.requireNonNull(registration.getName());
+                if (crewMemberDetails.isPresent() && crewMemberDetails.get().getNickName() != null) {
+                    crewMemberDetails.ifPresent(userDetails -> nameList.add(userDetails.getNickName() + "\n" + userDetails.getLastName()));
+                } else {
+                    crewMemberDetails.ifPresent(userDetails -> nameList.add(userDetails.getFirstName() + "\n" + userDetails.getLastName()));
+                }
+            } else if (registration.getName() != null) {
+                String guestName = registration.getName();
                 if (guestName.contains(",")) {
                     String guestLastName = guestName.substring(0, guestName.indexOf(","));
                     String guestFirstName = guestName.substring(guestName.indexOf(",") + 1).trim();
@@ -84,21 +84,20 @@ public class ConsumptionListService {
         return nameList;
     }
 
-    private void writeCrewDataToWorkbook(XSSFWorkbook workbook, List<String> nameList) throws IOException{
+    private void writeCrewDataToWorkbook(XSSFWorkbook workbook, List<String> nameList) throws IOException {
 
         XSSFSheet sheet = workbook.getSheetAt(0);
-        for (int i = 1;i< nameList.size(); i++){
-            sheet.getRow(i*2-1).getCell(0).setCellValue(nameList.get(i));
+        for (int i = 1; i < nameList.size(); i++) {
+            sheet.getRow(i * 2 - 1).getCell(0).setCellValue(nameList.get(i));
         }
     }
 
     private ByteArrayOutputStream getWorkbookBytes(XSSFWorkbook workbook) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try(bos){
+        try (bos) {
             workbook.write(bos);
             bos.flush();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log.error("Failed to get workbook bytes", e);
         }
         return bos;

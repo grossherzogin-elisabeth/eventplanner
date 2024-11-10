@@ -1,6 +1,6 @@
 import type {
     AuthService,
-    EventRegistrationsRepository,
+    EventRegistrationsRepository, EventRepository,
     NotificationService,
     PositionCachingService,
     UserCachingService,
@@ -18,6 +18,7 @@ export class EventUseCase {
     private readonly errorHandlingService: ErrorHandlingService;
     private readonly authService: AuthService;
     private readonly eventService: EventService;
+    private readonly eventRepository: EventRepository;
     private readonly eventCachingService: EventCachingService;
     private readonly userCachingService: UserCachingService;
     private readonly positionCachingService: PositionCachingService;
@@ -29,6 +30,7 @@ export class EventUseCase {
         errorHandlingService: ErrorHandlingService;
         authService: AuthService;
         eventService: EventService;
+        eventRepository: EventRepository;
         eventCachingService: EventCachingService;
         userCachingService: UserCachingService;
         positionCachingService: PositionCachingService;
@@ -40,6 +42,7 @@ export class EventUseCase {
         this.authService = params.authService;
         this.eventService = params.eventService;
         this.eventCachingService = params.eventCachingService;
+        this.eventRepository = params.eventRepository;
         this.userCachingService = params.userCachingService;
         this.positionCachingService = params.positionCachingService;
         this.registrationService = params.registrationService;
