@@ -1,6 +1,9 @@
 package org.eventplanner.events.rest;
 
+import lombok.AllArgsConstructor;
 import org.eventplanner.events.EventUseCase;
+import org.eventplanner.events.ParticipationNotificationUseCase;
+import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.rest.dto.CreateRegistrationRequest;
 import org.eventplanner.events.rest.dto.EventRepresentation;
 import org.eventplanner.events.rest.dto.UpdateRegistrationRequest;
@@ -17,18 +20,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/events")
 @EnableMethodSecurity(securedEnabled = true)
+@AllArgsConstructor
 public class RegistrationController {
 
     private final UserUseCase userUseCase;
     private final EventUseCase eventUseCase;
-
-    public RegistrationController(
-        @Autowired UserUseCase userUseCase,
-        @Autowired EventUseCase eventUseCase
-    ) {
-        this.userUseCase = userUseCase;
-        this.eventUseCase = eventUseCase;
-    }
+    private final ParticipationNotificationUseCase participationNotificationUseCase;
 
     @RequestMapping(method = RequestMethod.POST, path = "/{eventKey}/registrations")
     public ResponseEntity<EventRepresentation> createRegistration(
@@ -59,5 +56,25 @@ public class RegistrationController {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var event = eventUseCase.updateRegistration(signedInUser, new EventKey(eventKey), new RegistrationKey(registrationKey), spec.toDomain());
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
+    }
+
+    @GetMapping("/{eventKey}/registrations/{registrationKey}/confirm")
+    public ResponseEntity<Void> confirmRegistration(
+        @PathVariable("eventKey") String eventKey,
+        @PathVariable("registrationKey") String registrationKey,
+        @RequestParam("accessKey") String accessKey
+    ) {
+        participationNotificationUseCase.confirmRegistration(new EventKey(eventKey), new RegistrationKey(registrationKey), accessKey);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{eventKey}/registrations/{registrationKey}/decline")
+    public ResponseEntity<Void> declineRegistration(
+            @PathVariable("eventKey") String eventKey,
+            @PathVariable("registrationKey") String registrationKey,
+            @RequestParam("accessKey") String accessKey
+    ) {
+        participationNotificationUseCase.declineRegistration(new EventKey(eventKey), new RegistrationKey(registrationKey), accessKey);
+        return ResponseEntity.ok().build();
     }
 }

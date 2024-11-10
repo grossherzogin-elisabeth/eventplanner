@@ -84,7 +84,7 @@ public class EventUseCase {
                 .filter(it -> !EventState.DRAFT.equals(it.getState()))
                 .filter(it -> !EventState.CANCELED.equals(it.getState()) || it.getRegistrations()
                         .stream()
-                        .anyMatch(reg -> signedInUser.key().equals(reg.getUser())))
+                        .anyMatch(reg -> signedInUser.key().equals(reg.getUserKey())))
                 .toList();
     }
 
@@ -98,26 +98,27 @@ public class EventUseCase {
         signedInUser.assertHasPermission(Permission.WRITE_EVENTS);
 
         var event = new Event(
-            new EventKey(),
-            spec.name(),
-            EventState.DRAFT,
-            orElse(spec.note(), ""),
-            orElse(spec.description(), ""),
-            spec.start(),
-            spec.end(),
-            orElse(spec.locations(), Collections.emptyList()),
-            orElse(spec.slots(), Collections.emptyList()),
-            Collections.emptyList()
+                new EventKey(),
+                spec.name(),
+                EventState.DRAFT,
+                orElse(spec.note(), ""),
+                orElse(spec.description(), ""),
+                spec.start(),
+                spec.end(),
+                orElse(spec.locations(), Collections.emptyList()),
+                orElse(spec.slots(), Collections.emptyList()),
+                Collections.emptyList(),
+                0
         );
         return this.eventRepository.create(event);
     }
 
     public @NonNull Event updateEvent(
-        @NonNull SignedInUser signedInUser,
-        @NonNull EventKey eventKey,
-        @NonNull UpdateEventSpec spec
+            @NonNull SignedInUser signedInUser,
+            @NonNull EventKey eventKey,
+            @NonNull UpdateEventSpec spec
     ) {
-        signedInUser.assertHasAnyPermission(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_TEAM);
+        signedInUser.assertHasAnyPermission(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_TEAM, Permission.WRITE_EVENT_REGISTRATION);
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
 
@@ -154,6 +155,25 @@ public class EventUseCase {
             applyNullable(spec.slots(), event::setSlots);
         }
 
+        if (signedInUser.hasPermission(Permission.WRITE_EVENT_REGISTRATION) && spec.registrations() != null) {
+            // find registrations confirmations that have changed and send notifications
+
+            event.getRegistrations().stream()
+                    .filter(r -> spec.registrations().stream().noneMatch(r2 -> r.getKey().equals(r2.getKey())))
+                    // map them together
+                    .forEach(existingRegistration -> {
+                        // check if the registration has been confirmed
+                        var userKey = existingRegistration.getUserKey();
+                        if (userKey != null) {
+                            var maybeUser = userService.getUserByKey(userKey);
+                            maybeUser.ifPresent(userDetails -> notificationService.sendRemovedFromCrewNotification(userDetails, event));
+                        }
+                    });
+
+
+            applyNullable(spec.registrations(), event::setRegistrations);
+        }
+
         var updatedEvent = this.eventRepository.update(this.eventService.removeInvalidSlotAssignments(event));
         usersAddedToCrew.forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
         usersRemovedFromCrew.forEach(user -> notificationService.sendRemovedFromCrewNotification(user, updatedEvent));
@@ -184,9 +204,9 @@ public class EventUseCase {
     }
 
     public @NonNull Event addRegistration(
-        @NonNull SignedInUser signedInUser,
-        @NonNull EventKey eventKey,
-        @NonNull CreateRegistrationSpec spec
+            @NonNull SignedInUser signedInUser,
+            @NonNull EventKey eventKey,
+            @NonNull CreateRegistrationSpec spec
     ) {
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         var userKey = spec.userKey();
@@ -197,13 +217,13 @@ public class EventUseCase {
             } else {
                 signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
             }
-            if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUser()))) {
+            if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUserKey()))) {
                 log.info("Registration for {} already exists. Nothing to do to get requested state.", userKey.value());
                 return event;
             }
             var user = userService.getUserByKey(userKey)
                     .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not exist"));
-            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), userKey, null, spec.note()));
+            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), userKey, null, spec.note(), Registration.generateAccessKey(), null));
             notificationService.sendAddedToWaitingListNotification(user, event);
         } else if (spec.name() != null) {
             // validate permission and request for guest registration
@@ -211,7 +231,7 @@ public class EventUseCase {
             if (event.getRegistrations().stream().anyMatch(r -> spec.name().equals(r.getName()))) {
                 throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
             }
-            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), null, spec.name(), spec.note()));
+            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), null, spec.name(), spec.note(), Registration.generateAccessKey(), null));
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
         }
@@ -219,17 +239,17 @@ public class EventUseCase {
     }
 
     public @NonNull Event removeRegistration(
-        @NonNull SignedInUser signedInUser,
-        @NonNull EventKey eventKey,
-        @NonNull RegistrationKey registrationKey
+            @NonNull SignedInUser signedInUser,
+            @NonNull EventKey eventKey,
+            @NonNull RegistrationKey registrationKey
     ) {
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         var registration = event.getRegistrations().stream()
-            .filter(r -> registrationKey.equals(r.getKey()))
-            .findFirst()
-            .orElseThrow();
+                .filter(r -> registrationKey.equals(r.getKey()))
+                .findFirst()
+                .orElseThrow();
 
-        if (signedInUser.key().equals(registration.getUser())) {
+        if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
@@ -246,7 +266,7 @@ public class EventUseCase {
         event.removeRegistration(registrationKey);
         event = this.eventRepository.update(event);
 
-        var userKey = registration.getUser();
+        var userKey = registration.getUserKey();
         if (userKey != null) {
             var maybeUser = userService.getUserByKey(userKey);
             if (maybeUser.isPresent()) {
@@ -261,18 +281,18 @@ public class EventUseCase {
     }
 
     public @NonNull Event updateRegistration(
-        @NonNull SignedInUser signedInUser,
-        @NonNull EventKey eventKey,
-        @NonNull RegistrationKey registrationKey,
-        @NonNull UpdateRegistrationSpec spec
+            @NonNull SignedInUser signedInUser,
+            @NonNull EventKey eventKey,
+            @NonNull RegistrationKey registrationKey,
+            @NonNull UpdateRegistrationSpec spec
     ) {
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         var registration = event.getRegistrations().stream()
-            .filter(r -> registrationKey.equals(r.getKey()))
-            .findFirst()
-            .orElseThrow();
+                .filter(r -> registrationKey.equals(r.getKey()))
+                .findFirst()
+                .orElseThrow();
 
-        if (signedInUser.key().equals(registration.getUser())) {
+        if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
             registration.setPosition(spec.positionKey());
             registration.setNote(spec.note());
@@ -288,7 +308,7 @@ public class EventUseCase {
     }
 
     private List<UserDetails> mapRegistrationsToUsers(List<Registration> registrations) {
-        return registrations.stream().map(Registration::getUser)
+        return registrations.stream().map(Registration::getUserKey)
                 .filter(Objects::nonNull)
                 .map(userService::getUserByKey)
                 .filter(Optional::isPresent)

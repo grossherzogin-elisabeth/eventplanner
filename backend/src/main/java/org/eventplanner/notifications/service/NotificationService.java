@@ -11,11 +11,13 @@ import jakarta.mail.internet.MimeMessage.RecipientType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.entities.Event;
+import org.eventplanner.events.entities.Registration;
 import org.eventplanner.notifications.values.Notification;
 import org.eventplanner.notifications.values.NotificationType;
 import org.eventplanner.settings.service.SettingsService;
 import org.eventplanner.settings.values.EmailSettings;
 import org.eventplanner.users.entities.UserDetails;
+import org.eventplanner.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -40,12 +42,16 @@ public class NotificationService {
     private final SettingsService settingsService;
     private final String frontendDomain;
     private final List<String> recipientsWhitelist;
+    private final List<String> admins;
+    private final UserService userService;
 
     public NotificationService(
-            @Autowired Configuration freemarkerConfig,
-            @Autowired SettingsService settingsService,
+            Configuration freemarkerConfig,
+            SettingsService settingsService,
             @Value("${frontend.domain}") String frontendDomain,
-            @Value("${email.recipients-whitelist}") String recipientsWhitelist
+            @Value("${email.recipients-whitelist}") String recipientsWhitelist,
+            @Value("${auth.admins}") String admins,
+            UserService userService
     ) {
         this.freemarkerConfig = freemarkerConfig;
         this.settingsService = settingsService;
@@ -54,6 +60,11 @@ public class NotificationService {
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .toList();
+        this.admins = Arrays.stream(admins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .toList();
+        this.userService = userService;
     }
 
     private EmailSettings getEmailSettings() {
@@ -153,9 +164,19 @@ public class NotificationService {
         }
     }
 
-    public void sendParticipationConfirmationNotification(UserDetails user, Event event) {
+    public void sendParticipationConfirmationNotification(UserDetails user, Event event, Registration registration) {
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION);
         notification.setTitle("Bitte um Rückmeldung: " + event.getName());
+        sendParticipationNotificationBody(user, event, registration, notification);
+    }
+
+    public void sendParticipationConfirmationNotificationRequest(UserDetails user, Event event, Registration registration) {
+        Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
+        notification.setTitle("Bitte sofortige um Rückmeldung: " + event.getName());
+        sendParticipationNotificationBody(user, event, registration, notification);
+    }
+
+    private void sendParticipationNotificationBody(UserDetails user, Event event, Registration registration, Notification notification) {
         notification.getProps().put("user", user);
         notification.getProps().put("event", event);
         notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
@@ -165,10 +186,9 @@ public class NotificationService {
         notification.getProps().put("deadline", event.getStart().atZone(timezone)
                 .minusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         var eventUrl = frontendDomain + "/events/" + event.getStart().atZone(timezone)
-                .getYear() + "/details/" + event.getKey();
-        // TODO we need some one-time token here for authentication
-        notification.getProps().put("confirm_link", eventUrl + "/confirm?user=" + user.getKey());
-        notification.getProps().put("deny_link", eventUrl + "/deny?user=" + user.getKey());
+                .getYear() + "/details/" + event.getKey() + "/registrations/" + registration.getKey();
+        notification.getProps().put("confirm_link", eventUrl + "/confirm?accessKey=" + registration.getAccessKey());
+        notification.getProps().put("deny_link", eventUrl + "/deny?accessKey=" + registration.getAccessKey());
         try {
             sendNotification(notification, user);
         } catch (Exception e) {
@@ -246,5 +266,24 @@ public class NotificationService {
         Writer writer = new StringWriter();
         content.process(params, writer);
         return writer.toString();
+    }
+
+    public void sendDeclinedRegistrationNotification(Event event, String userName) {
+        Notification notification = new Notification(NotificationType.DECLINED_REGISTRATION_ADMIN);
+
+        notification.setTitle("Absage von " + userName);
+        notification.getProps().put("event", event);
+        notification.getProps().put("userName", userName);
+        try {
+            admins.forEach(admin -> {
+                try {
+                    sendNotification(notification, userService.getUserByEmail(admin).orElseThrow());
+                } catch (Exception e) {
+                    log.error("Failed to send 'declined registration' notification to admin {}", admin, e);
+                }
+            });
+        } catch (Exception e) {
+            log.error("Failed to send 'declined registration' notification to admin", e);
+        }
     }
 }

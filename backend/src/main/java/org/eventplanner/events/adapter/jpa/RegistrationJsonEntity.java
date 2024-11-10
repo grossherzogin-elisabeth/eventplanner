@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
@@ -16,16 +17,20 @@ public record RegistrationJsonEntity(
         @NonNull String positionKey,
         @Nullable String userKey,
         @Nullable String name,
-        @Nullable String note
+        @Nullable String note,
+        @Nullable String accessKey,
+        @Nullable ZonedDateTime confirmedAt
 ) implements Serializable {
 
     public static @NonNull RegistrationJsonEntity fromDomain(@NonNull Registration domain) {
         return new RegistrationJsonEntity(
                 domain.getKey().value(),
                 domain.getPosition().value(),
-                mapNullable(domain.getUser(), UserKey::value),
+                mapNullable(domain.getUserKey(), UserKey::value),
                 domain.getName(),
-                domain.getNote()
+                domain.getNote(),
+                domain.getAccessKey(),
+                domain.getConfirmedAt()
         );
     }
 
@@ -35,7 +40,9 @@ public record RegistrationJsonEntity(
                 new PositionKey(positionKey),
                 mapNullable(userKey, UserKey::new),
                 name,
-                note
+                note,
+                accessKey,
+                confirmedAt
         );
     }
 }

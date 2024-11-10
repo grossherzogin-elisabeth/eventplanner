@@ -8,6 +8,7 @@ public enum Permission {
     WRITE_EVENTS("events:write"),
     JOIN_LEAVE_EVENT_TEAM("event-team:write-self"),
     WRITE_EVENT_TEAM("event-team:write"),
+    WRITE_EVENT_REGISTRATION("event-registration:write"),
     READ_USERS("users:read"),
     READ_OWN_USER_DETAILS("users:read-details-self"),
     WRITE_OWN_USER_DETAILS("users:write-self"),

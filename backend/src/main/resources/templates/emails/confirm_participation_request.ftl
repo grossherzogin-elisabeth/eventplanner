@@ -1,4 +1,4 @@
-<span class="preheader">Du musst deine Teilnahme von ${event.name} am ${event_start_date} bestätigen.</span>
+<span class="preheader">Du musst deine Teilnahme von ${event.name} am ${event_start_date} noch immer bestätigen!</span>
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main">
     <tr>
         <td class="wrapper">
@@ -6,9 +6,9 @@
                 Moin ${user.firstName},
             </p>
             <p>
-                Du bist für die Reise <b>${event.name}</b> vom <b>${event_start_date}</b> bis zum
-                <b>${event_end_date}</b> als Crew eingeplant. Bitte bestätige deine Teilnahme <b>bis spätestens
-                ${deadline}</b> durch Klick auf den unten stehenden Link. Wir wünschen dir eine schöne Reise!
+                Du hast bisher noch nicht deine Teilname an <b>${event.name}</b> vom <b>${event_start_date}</b> bis zum
+                <b>${event_end_date}</b> bestätigt. Bitte bestätige umgehend deine Teilnahme <b>bis spätestens
+                    ${deadline}</b> durch Klick auf den unten stehenden Link. Wir wünschen dir eine schöne Reise!
             </p>
             <p>
                 <a href="${confirm_link}">Ja, ich nehme teil!</a>

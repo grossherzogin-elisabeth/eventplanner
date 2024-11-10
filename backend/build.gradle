@@ -47,6 +47,10 @@ dependencies {
 
     // monitoring
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    // util
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
+
 }
 
 tasks.named('test') {

@@ -28,6 +28,7 @@ public class Event {
     private @NonNull List<Location> locations = Collections.emptyList();
     private @NonNull List<Slot> slots = Collections.emptyList();
     private @NonNull List<Registration> registrations = Collections.emptyList();
+    private @NonNull Integer participationConfirmationsRequestsSent = 0;
 
     public void addRegistration(Registration registration) {
         var mutableList = new LinkedList<>(registrations);
@@ -41,6 +42,7 @@ public class Event {
             if (registrationKey.equals(s.getAssignedRegistration())) {
                 s.setAssignedRegistration(null);
             }
+
             return s;
         }).toList();
     }

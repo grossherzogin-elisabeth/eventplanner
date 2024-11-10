@@ -36,7 +36,7 @@ public class EventController {
         this.eventUseCase = eventUseCase;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "")
+    @GetMapping(path = "")
     public ResponseEntity<List<EventRepresentation>> getEvents(@RequestParam("year") int year) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var events = eventUseCase.getEvents(signedInUser, year)
@@ -46,7 +46,7 @@ public class EventController {
         return ResponseEntity.ok(events);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{eventKey}")
+    @GetMapping(path = "/{eventKey}")
     public ResponseEntity<EventRepresentation> getEventByKey(
         @PathVariable("eventKey") String eventKey
     ) {
@@ -55,14 +55,14 @@ public class EventController {
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "")
+    @PostMapping(path = "")
     public ResponseEntity<EventRepresentation> createEvent(@RequestBody CreateEventRequest spec) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var event = eventUseCase.createEvent(signedInUser, spec.toDomain());
         return ResponseEntity.status(HttpStatus.CREATED).body(EventRepresentation.fromDomain(event));
     }
 
-    @RequestMapping(method = RequestMethod.PATCH, path = "/{eventKey}")
+    @PatchMapping(path = "/{eventKey}")
     public ResponseEntity<EventRepresentation> updateEvent(
         @PathVariable("eventKey") String eventKey,
         @RequestBody UpdateEventRequest spec
@@ -72,7 +72,7 @@ public class EventController {
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path = "/{eventKey}")
+    @DeleteMapping(path = "/{eventKey}")
     public ResponseEntity<Void> deleteEvent(@PathVariable("eventKey") String eventKey) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         eventUseCase.deleteEvent(signedInUser, new EventKey(eventKey));

@@ -36,16 +36,17 @@ public class EventGenerator {
             }
 
             var event = new Event(
-                new EventKey(year + "_wochenendreise_kw_" + Math.floor(start.getDayOfYear() / 7.0)),
-                "Wochenendreise KW " + Math.floor(start.getDayOfYear() / 7.0),
-                state,
-                "Hier ist Platz für Notizen",
-                "Wochenendreise nach Helgoland",
-                Instant.parse(start + "Z"),
-                Instant.parse(start.plusDays(2) + "Z"),
-                List.of(ELSFLETH, NORDSEE, ELSFLETH),
-                slots,
-                registrations
+                    new EventKey(year + "_wochenendreise_kw_" + Math.floor(start.getDayOfYear() / 7.0)),
+                    "Wochenendreise KW " + Math.floor(start.getDayOfYear() / 7.0),
+                    state,
+                    "Hier ist Platz für Notizen",
+                    "Wochenendreise nach Helgoland",
+                    Instant.parse(start + "Z"),
+                    Instant.parse(start.plusDays(2) + "Z"),
+                    List.of(ELSFLETH, NORDSEE, ELSFLETH),
+                    slots,
+                    registrations,
+                    0
             );
             events.add(event);
             start = start.plusDays(7);
@@ -59,19 +60,23 @@ public class EventGenerator {
             var user = users.get(i);
             if (random.nextInt(10) == 8) {
                 registrations.add(new Registration(
-                    new RegistrationKey(),
-                    user.getPositions().getFirst(),
-                    null,
-                    user.getFirstName() + " " + user.getLastName(),
-                    null
+                        new RegistrationKey(),
+                        user.getPositions().getFirst(),
+                        null,
+                        user.getFirstName() + " " + user.getLastName(),
+                        null,
+                        Registration.generateAccessKey(),
+                        null
                 ));
             } else {
                 registrations.add(new Registration(
-                    new RegistrationKey(),
-                    user.getPositions().getFirst(),
-                    user.getKey(),
-                    null,
-                    null
+                        new RegistrationKey(),
+                        user.getPositions().getFirst(),
+                        user.getKey(),
+                        null,
+                        null,
+                        Registration.generateAccessKey(),
+                        null
                 ));
             }
         }
@@ -79,9 +84,9 @@ public class EventGenerator {
     }
 
     private static List<Registration> createRegistrationsForPlanned(
-        List<Slot> slots,
-        List<UserDetails> users,
-        Random random
+            List<Slot> slots,
+            List<UserDetails> users,
+            Random random
     ) {
         var registrations = new LinkedList<Registration>();
 
@@ -89,27 +94,31 @@ public class EventGenerator {
         for (int i = 0; i < random.nextInt(15, 70); i++) {
             var user = users.get(i);
             var matchingSlots = slots.stream()
-                .filter(s -> !usedSlots.contains(s.getKey()))
-                // .filter(s -> s.positions().stream().anyMatch((p) -> user.getPositions().contains(p)))
-                .filter(s -> s.getPositions().contains(user.getPositions().getFirst()))
-                .toList();
+                    .filter(s -> !usedSlots.contains(s.getKey()))
+                    // .filter(s -> s.positions().stream().anyMatch((p) -> user.getPositions().contains(p)))
+                    .filter(s -> s.getPositions().contains(user.getPositions().getFirst()))
+                    .toList();
             if (!matchingSlots.isEmpty()) {
                 var slot = matchingSlots.getFirst();
                 usedSlots.add(slot.getKey());
                 registrations.add(new Registration(
-                    new RegistrationKey(),
-                    user.getPositions().getFirst(),
-                    user.getKey(),
-                    null,
-                    null
+                        new RegistrationKey(),
+                        user.getPositions().getFirst(),
+                        user.getKey(),
+                        null,
+                        null,
+                        Registration.generateAccessKey(),
+                        null
                 ));
             } else {
                 registrations.add(new Registration(
-                    new RegistrationKey(),
-                    user.getPositions().getFirst(),
-                    user.getKey(),
-                    null,
-                    null
+                        new RegistrationKey(),
+                        user.getPositions().getFirst(),
+                        user.getKey(),
+                        null,
+                        null,
+                        Registration.generateAccessKey(),
+                        null
                 ));
             }
         }
@@ -143,7 +152,7 @@ public class EventGenerator {
         slots.add(Slot.of(Pos.DECKSHAND, Pos.MOA, Pos.NOA, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.BACKSCHAFT));
         slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired());
         slots.add(Slot.of(Pos.KOCH, Pos.MATROSE, Pos.LEICHTMATROSE, Pos.DECKSHAND, Pos.MOA, Pos.NOA).withRequired());
-        
+
         for (int i = 0; i < slots.size(); i++) {
             slots.set(i, slots.get(i).withOrder(i + 1));
         }

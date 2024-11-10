@@ -1,5 +1,6 @@
 package org.eventplanner.events.spec;
 
+import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
@@ -16,6 +17,7 @@ public record UpdateEventSpec(
     @Nullable Instant start,
     @Nullable Instant end,
     @Nullable List<Location> locations,
-    @Nullable List<Slot> slots
+    @Nullable List<Slot> slots,
+    @Nullable List<Registration> registrations
 ) {
 }

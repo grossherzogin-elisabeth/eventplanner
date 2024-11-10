@@ -1,29 +1,41 @@
 package org.eventplanner.notifications.values;
 
 public enum NotificationType {
+
     // As a team member
     // I want to get notified when I get added to a waiting list
     // So that I can keep track of the events I signed up for
     ADDED_TO_WAITING_LIST("added_to_waiting_list"),
+
     // As a team member
     // I want to get notified when I get removed from a waiting list
     // So that I can keep track of the events I signed up for
     REMOVED_FROM_WAITING_LIST("removed_from_waiting_list"),
+
     // As a team member
     // I want to get notified when I get add to an events team
     // So that I can keep track of the events I will participate in
     ADDED_TO_CREW("added_to_crew"),
+
     // As a team member
     // I want to get notified when I get removed from an events team
     // So that I can keep track of the events I will participate in
     REMOVED_FROM_CREW("removed_from_crew"),
+
     // As a team planner
     // I want to get a participation confirmation of every team member
     // So that I know early if I need to find a replacement
-    CONFIRM_PARTICIPATION("confirm_participation");
+    CONFIRM_PARTICIPATION("confirm_participation"),
+
+    // As a team planner
+    // I want to get a participation confirmation of every team member in case the user did not respond to the first request
+    // So that I know early if I need to find a replacement
+    CONFIRM_PARTICIPATION_REQUEST("confirm_participation_request"),
+
     // As a team planner
     // I want to get a notification when someone cancels an event signup
     // So that I know early if I need to find a replacement
+    DECLINED_REGISTRATION_ADMIN("declined_registration_admin");
 
     // As a user manager
     // I want to get a notification when a new user registers
