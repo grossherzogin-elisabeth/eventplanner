@@ -144,6 +144,7 @@ async function init(): Promise<void> {
             }),
             users: new UsersUseCase({
                 config: config,
+                authService: authService,
                 notificationService: notificationService,
                 errorHandlingService: errorHandlingService,
                 registrationService: domain.services.registrations,

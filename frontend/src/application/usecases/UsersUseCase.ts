@@ -1,4 +1,4 @@
-import type { Config, NotificationService } from '@/application';
+import type { AuthService, Config, NotificationService } from '@/application';
 import type { UserRepository } from '@/application/ports/UserRepository';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { PositionCachingService } from '@/application/services/PositionCachingService';
@@ -15,11 +15,13 @@ import type {
     UserKey,
     UserSettings,
 } from '@/domain';
+import { Permission } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
 export class UsersUseCase {
     private readonly config: Config;
     private readonly userRepository: UserRepository;
+    private readonly authService: AuthService;
     private readonly positionCachingService: PositionCachingService;
     private readonly userCachingService: UserCachingService;
     private readonly qualificationCachingService: QualificationCachingService;
@@ -29,6 +31,7 @@ export class UsersUseCase {
     constructor(params: {
         config: Config;
         userRepository: UserRepository;
+        authService: AuthService;
         registrationService: RegistrationService;
         positionCachingService: PositionCachingService;
         userCachingService: UserCachingService;
@@ -38,6 +41,7 @@ export class UsersUseCase {
     }) {
         this.config = params.config;
         this.userRepository = params.userRepository;
+        this.authService = params.authService;
         this.positionCachingService = params.positionCachingService;
         this.userCachingService = params.userCachingService;
         this.qualificationCachingService = params.qualificationCachingService;
@@ -48,7 +52,10 @@ export class UsersUseCase {
     public async getUserDetailsForSignedInUser(): Promise<UserDetails> {
         try {
             let user: UserDetails;
-            if (this.config.overrideSignedInUserKey) {
+            if (
+                this.config.overrideSignedInUserKey &&
+                this.authService.getSignedInUser()?.permissions.includes(Permission.READ_USER_DETAILS)
+            ) {
                 user = await this.userRepository.findByKey(this.config.overrideSignedInUserKey);
             } else {
                 user = await this.userRepository.findBySignedInUser();
