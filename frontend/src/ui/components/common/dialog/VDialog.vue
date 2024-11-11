@@ -20,7 +20,7 @@
                         `"
                             class="dialog"
                         >
-                            <div class="dialog-header pl-8 lg:pl-16">
+                            <div class="dialog-header pl-8 lg:pl-10 lg:pr-2">
                                 <div class="dialog-back-button-wrapper -ml-4 mr-4">
                                     <button class="dialog-close-button" @click="reject()">
                                         <i class="fa-solid fa-arrow-left"></i>

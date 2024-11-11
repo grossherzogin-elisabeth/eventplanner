@@ -1,7 +1,7 @@
 .pagination {
     @apply flex items-stretch justify-end space-x-2;
     @apply px-8 py-2 md:px-16 xl:pr-20;
-    @apply bg-primary-50 xl:px-20;
+    @apply bg-surface xl:px-20;
 }
 
 .pagination-page {
@@ -11,9 +11,10 @@
 
 .pagination-page.enabled {
     @apply opacity-100;
-    @apply hover:bg-primary-100 hover:text-primary-600;
+    @apply hover:bg-surface-container;
 }
 
 .pagination-page.active {
-    @apply bg-primary-100 font-bold text-blue-600 shadow-none;
+    @apply bg-primary-container font-bold text-onprimary-container shadow-none;
+    @apply hover:bg-primary-container;
 }

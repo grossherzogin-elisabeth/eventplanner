@@ -13,13 +13,75 @@
             </VInfo>
         </div>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
                 </div>
             </template>
         </VTabs>
+
+        <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
+            <ContextMenuButton
+                anchor-align-x="left"
+                dropdown-position-x="right"
+                class="btn-tag min-w-44 max-w-80 truncate"
+                :class="{ active: filterEventType.length > 0 }"
+            >
+                <template #icon>
+                    <span v-if="filterEventType.length === 0" class="mr-2">Alle Reisearten</span>
+                    <span v-else-if="filterEventType.length > 4" class="mr-2">
+                        {{ filterEventType.length }} Reisearten
+                    </span>
+                    <span v-else class="mr-2">
+                        {{ filterEventType.map(eventTypes.getName).join(', ') }}
+                    </span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </template>
+                <template #default>
+                    <ul>
+                        <li v-if="filterEventType.length === 0" class="context-menu-item">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Alle Reisearten</span>
+                        </li>
+                        <li v-else class="context-menu-item" @click="filterEventType = []">
+                            <i class="w-4"></i>
+                            <span>Alle Reisearten</span>
+                        </li>
+                        <template v-for="eventType in eventTypes.options.value" :key="eventType.value">
+                            <li
+                                v-if="filterEventType.includes(eventType.value)"
+                                class="context-menu-item"
+                                @click="filterEventType = filterEventType.filter((it) => it !== eventType.value)"
+                            >
+                                <i class="fa-solid fa-check w-4"></i>
+                                <span>{{ eventType.label }}</span>
+                            </li>
+                            <li v-else class="context-menu-item" @click="filterEventType.push(eventType.value)">
+                                <i class="w-4"></i>
+                                <span>{{ eventType.label }}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </ContextMenuButton>
+            <button class="btn-tag" :class="{ active: filterAssigned }" @click="filterAssigned = !filterAssigned">
+                <i class="fa-solid fa-check"></i>
+                <span class="">Crew</span>
+            </button>
+            <button
+                class="btn-tag"
+                :class="{ active: filterWaitingList }"
+                @click="filterWaitingList = !filterWaitingList"
+            >
+                <i class="fa-solid fa-check"></i>
+                <span class="">Warteliste</span>
+            </button>
+            <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
+                <i class="fa-solid fa-check"></i>
+                <span class="">Freie Plätze</span>
+            </button>
+        </div>
 
         <div class="w-full">
             <VTable
@@ -35,11 +97,11 @@
                     <td
                         class="w-2/3 max-w-[80vw] font-semibold"
                         style="max-width: min(65vw, 20rem)"
-                        :class="{ 'text-primary-900 text-opacity-50': item.isPastEvent }"
+                        :class="{ 'opacity-50': item.isPastEvent }"
                     >
                         <p
                             class="mb-1 truncate whitespace-nowrap"
-                            :class="{ 'text-red-700 line-through': item.state === EventState.Canceled }"
+                            :class="{ 'text-error line-through': item.state === EventState.Canceled }"
                         >
                             <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
                             <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
@@ -59,17 +121,11 @@
                             <template v-if="item.locations.length === 0">keine Reiseroute angegeben</template>
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
-                        <!--                        <p class="truncate text-sm font-light md:hidden">-->
-                        <!--                            {{ formatDateRange(item.start, item.end) }}-->
-                        <!--                        </p>-->
                     </td>
                     <!-- status -->
-                    <td class="w-1/6">
+                    <td class="w-1/6" :class="{ 'opacity-50': item.isPastEvent }">
                         <div class="flex items-center lg:justify-end">
-                            <div
-                                class="inline-flex w-auto items-center space-x-2 rounded-full py-1 pl-3 pr-4"
-                                :class="item.stateDetails.color"
-                            >
+                            <div :key="item.stateDetails.icon" class="status-panel" :class="item.stateDetails.color">
                                 <i class="fa-solid w-4" :class="item.stateDetails.icon"></i>
                                 <span class="whitespace-nowrap font-semibold">{{ item.stateDetails.name }}</span>
                             </div>
@@ -78,7 +134,7 @@
                     <!-- date -->
                     <td
                         class="hidden w-1/6 whitespace-nowrap md:table-cell"
-                        :class="{ 'text-primary-900 text-opacity-50': item.isPastEvent }"
+                        :class="{ 'opacity-50': item.isPastEvent }"
                     >
                         <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
                         <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
@@ -89,33 +145,31 @@
                     <tr v-for="i in 20" :key="i" class="animate-pulse">
                         <td></td>
                         <td class="w-1/2 max-w-[65vw]">
-                            <p class="mb-1 h-5 w-64 rounded-lg bg-primary-200"></p>
+                            <p class="mb-1 h-5 w-64 rounded-lg bg-surface-container-highest"></p>
                             <p class="flex items-center space-x-2 text-sm font-light">
-                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
                             </p>
                         </td>
                         <td>
-                            <div
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-primary-100 py-1 pl-3 pr-4"
-                            >
-                                <i class="fa-solid fa-circle text-primary-200"></i>
-                                <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-primary-200"></span>
+                            <div class="status-panel bg-surface-container-highest">
+                                <i class="fa-solid fa-circle text-surface-container-high"></i>
+                                <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-surface-container-high"></span>
                             </div>
                         </td>
                         <td class="w-1/6">
-                            <p class="mb-1 h-5 w-16 rounded-lg bg-primary-200"></p>
-                            <p class="h-3 w-10 rounded-lg bg-primary-200"></p>
+                            <p class="mb-1 h-5 w-16 rounded-lg bg-surface-container-highest"></p>
+                            <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
                         </td>
                         <td class="w-2/6">
-                            <p class="mb-1 h-5 w-56 rounded-lg bg-primary-200"></p>
-                            <p class="h-3 w-16 rounded-lg bg-primary-200"></p>
+                            <p class="mb-1 h-5 w-56 rounded-lg bg-surface-container-highest"></p>
+                            <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
                         </td>
 
                         <td class="">
                             <div class="px-4 py-2">
-                                <i class="fa-solid fa-circle text-primary-200"></i>
+                                <i class="fa-solid fa-circle text-surface-container-highest"></i>
                             </div>
                         </td>
                         <td></td>
@@ -171,7 +225,7 @@
                     </li>
                     <template v-else-if="item.signedInUserAssignedPosition">
                         <li
-                            class="permission-write-own-registrations context-menu-item text-red-700"
+                            class="permission-write-own-registrations context-menu-item text-error"
                             :class="{ disabled: item.isPastEvent }"
                             @click="leaveEvents([item])"
                         >
@@ -190,7 +244,7 @@
 
         <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
             <div
-                class="h-full border-t border-primary-200 bg-primary-50 px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
+                class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
@@ -254,7 +308,7 @@
                             </li>
                             <li
                                 v-if="hasAnySelectedEventWithSignedInUserInTeam"
-                                class="permission-write-own-registrations context-menu-item text-red-700"
+                                class="permission-write-own-registrations context-menu-item text-error"
                                 :class="{ disabled: !hasAnySelectedEventInFuture }"
                                 @click="leaveEvents(selectedEvents)"
                             >
@@ -273,7 +327,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey, SignedInUser } from '@/domain';
+import type { Event, EventType, PositionKey, SignedInUser } from '@/domain';
 import { EventState } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VInfo } from '@/ui/components/common';
@@ -284,6 +338,7 @@ import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
+import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
@@ -313,11 +368,16 @@ const eventService = useEventService();
 const route = useRoute();
 const router = useRouter();
 const positions = usePositions();
+const eventTypes = useEventTypes();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
+const filterAssigned = ref<boolean>(false);
+const filterWaitingList = ref<boolean>(false);
+const filterFreeSlots = ref<boolean>(false);
+const filterEventType = ref<EventType[]>([]);
 
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const positionSelectDialog = ref<Dialog<void, PositionKey | undefined> | null>(null);
@@ -337,7 +397,27 @@ const hasAnySelectedEventWithSignedInUserInTeam = computed<boolean>(() => {
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
-    return events.value?.filter((it) => it.name.toLowerCase().includes(f));
+    return events.value
+        ?.filter((it) => eventService.doesEventMatchFilter(it, f))
+        .filter((it) => filterEventType.value.length === 0 || filterEventType.value.includes(it.type))
+        .filter((it) => {
+            if (filterAssigned.value || filterWaitingList.value || filterFreeSlots.value) {
+                let state = 0;
+                if (it.signedInUserAssignedPosition) {
+                    state = 1;
+                } else if (it.signedInUserWaitingListPosition) {
+                    state = 2;
+                } else if (it.hasOpenSlots) {
+                    state = 3;
+                }
+                return (
+                    (filterAssigned.value && state === 1) ||
+                    (filterWaitingList.value && state === 2) ||
+                    (filterFreeSlots.value && state === 3)
+                );
+            }
+            return true;
+        });
 });
 
 const selectedEvents = computed<EventTableViewItem[] | undefined>(() => {
@@ -406,31 +486,28 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 }
 
 function getStateDetails(event: EventTableViewItem): StateDetails {
-    // if (event.isPastEvent) {
-    //     return { name: 'Vergangene', icon: 'fa-check-circle', color: 'bg-gray-200 text-gray-700' };
-    // }
     if (event.state === EventState.Canceled) {
-        return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-200 text-red-700' };
+        return { name: 'Abgesagt', icon: 'fa-ban', color: 'status-red' };
     }
     if (event.signedInUserAssignedPosition) {
-        return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-200 text-green-700' };
+        return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'status-green' };
     }
     if (event.signedInUserWaitingListPosition) {
-        return { name: 'Warteliste', icon: 'fa-hourglass-half', color: 'bg-gray-200 text-gray-700' };
+        return { name: 'Warteliste', icon: 'fa-hourglass-half', color: 'status-blue' };
     }
     if (event.state === EventState.Draft) {
-        return { name: 'Entwurf', icon: 'fa-compass-drafting', color: 'bg-gray-200 text-gray-700' };
+        return { name: 'Entwurf', icon: 'fa-compass-drafting', color: 'status-gray' };
     }
     if (event.state === EventState.OpenForSignup) {
-        return { name: 'Crew Anmeldung', icon: 'fa-unlock', color: 'bg-blue-200 text-blue-700' };
+        return { name: 'Crew Anmeldung', icon: 'fa-unlock', color: 'Status-blue' };
     }
     if (event.hasOpenRequiredSlots) {
-        return { name: 'Crew gesucht', icon: 'fa-info-circle', color: 'bg-yellow-100 text-yellow-700' };
+        return { name: 'Crew gesucht', icon: 'fa-info-circle', color: 'status-yellow' };
     }
     if (event.hasOpenSlots) {
-        return { name: 'Freie Plätze', icon: 'fa-info-circle', color: 'bg-blue-200 text-blue-700' };
+        return { name: 'Freie Plätze', icon: 'fa-info-circle', color: 'status-blue' };
     }
-    return { name: 'Voll belegt', icon: 'fa-info-circle', color: 'bg-gray-200 text-gray-700' };
+    return { name: 'Voll belegt', icon: 'fa-info-circle', color: 'status-gray' };
 }
 
 async function openEvent(evt: EventTableViewItem): Promise<void> {

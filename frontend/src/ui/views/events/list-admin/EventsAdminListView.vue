@@ -6,7 +6,7 @@
             </div>
         </teleport>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
@@ -42,7 +42,7 @@
                     <td class="w-1/2 whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
                         <p
                             class="mb-1 truncate"
-                            :class="{ 'text-red-700 line-through': item.state === EventState.Canceled }"
+                            :class="{ 'text-error line-through': item.state === EventState.Canceled }"
                         >
                             <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
                             <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
@@ -59,10 +59,7 @@
                     <!-- status -->
                     <td class="w-1/6">
                         <div class="flex items-center justify-end">
-                            <div
-                                class="inline-flex w-auto items-center space-x-2 rounded-full py-1 pl-3 pr-4"
-                                :class="item.stateDetails.color"
-                            >
+                            <div class="status-panel" :class="item.stateDetails.color">
                                 <i class="fa-solid w-4" :class="item.stateDetails.icon"></i>
                                 <span class="whitespace-nowrap font-semibold">{{ item.stateDetails.name }}</span>
                             </div>
@@ -87,33 +84,31 @@
                     <tr v-for="i in 20" :key="i" class="animate-pulse">
                         <td></td>
                         <td class="w-1/2 max-w-[65vw]">
-                            <p class="mb-1 h-5 w-64 rounded-lg bg-primary-200"></p>
+                            <p class="mb-1 h-5 w-64 rounded-lg bg-surface-container-highest"></p>
                             <p class="flex items-center space-x-2 text-sm font-light">
-                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
                             </p>
                         </td>
                         <td>
-                            <div
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-primary-100 py-1 pl-3 pr-4"
-                            >
-                                <i class="fa-solid fa-circle text-primary-200"></i>
-                                <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-primary-200"></span>
+                            <div class="status-panel bg-surface-container-highest">
+                                <i class="fa-solid fa-circle text-surface-container-high"></i>
+                                <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-surface-container-high"></span>
                             </div>
                         </td>
                         <td class="w-1/6">
-                            <p class="mb-1 h-5 w-16 rounded-lg bg-primary-200"></p>
-                            <p class="h-3 w-10 rounded-lg bg-primary-200"></p>
+                            <p class="mb-1 h-5 w-16 rounded-lg bg-surface-container-highest"></p>
+                            <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
                         </td>
                         <td class="w-2/6">
-                            <p class="mb-1 h-5 w-56 rounded-lg bg-primary-200"></p>
-                            <p class="h-3 w-16 rounded-lg bg-primary-200"></p>
+                            <p class="mb-1 h-5 w-56 rounded-lg bg-surface-container-highest"></p>
+                            <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
                         </td>
 
                         <td class="">
                             <div class="px-4 py-2">
-                                <i class="fa-solid fa-circle text-primary-200"></i>
+                                <i class="fa-solid fa-circle text-surface-container-highest"></i>
                             </div>
                         </td>
                         <td></td>
@@ -178,17 +173,13 @@
                     </li>
                     <li
                         v-if="item.state === EventState.Canceled"
-                        class="permission-write-events context-menu-item text-red-700"
+                        class="permission-write-events context-menu-item text-error"
                         @click="deleteEvent(item)"
                     >
                         <i class="fa-solid fa-trash-alt" />
                         <span>Reise löschen</span>
                     </li>
-                    <li
-                        v-else
-                        class="permission-write-events context-menu-item text-red-700"
-                        @click="cancelEvent(item)"
-                    >
+                    <li v-else class="permission-write-events context-menu-item text-error" @click="cancelEvent(item)">
                         <i class="fa-solid fa-ban" />
                         <span>Reise absagen</span>
                     </li>
@@ -207,7 +198,7 @@
 
         <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
             <div
-                class="h-full border-t border-primary-200 bg-primary-50 px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
+                class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
@@ -278,7 +269,7 @@
                                 <i class="fa-solid fa-envelope" />
                                 <span>Crew kontaktieren*</span>
                             </li>
-                            <li class="permission-write-events context-menu-item disabled text-red-700">
+                            <li class="permission-write-events context-menu-item disabled text-error">
                                 <i class="fa-solid fa-ban" />
                                 <span>Reisen absagen*</span>
                             </li>
@@ -292,9 +283,9 @@
             v-else
             class="permission-write-events pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
         >
-            <button class="btn-primary btn-floating pointer-events-auto" @click="createEvent()">
+            <button class="btn-floating pointer-events-auto" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
-                <span>Event erstellen</span>
+                <span>Reise erstellen</span>
             </button>
         </div>
     </div>
@@ -464,48 +455,19 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 function getStateDetails(event: EventTableViewItem): StateDetails {
     switch (event.state) {
         case EventState.Draft:
-            return {
-                name: 'Entwurf',
-                icon: 'fa-compass-drafting',
-                color: 'bg-gray-200 text-gray-700',
-            };
+            return { name: 'Entwurf', icon: 'fa-compass-drafting', color: 'status-gray' };
         case EventState.OpenForSignup:
-            return {
-                name: 'Crew Anmeldung',
-                icon: 'fa-unlock',
-                color: 'bg-gray-200 text-gray-700',
-            };
+            return { name: 'Crew Anmeldung', icon: 'fa-unlock', color: 'status-gray' };
         case EventState.Canceled:
-            return {
-                name: 'Abgesagt',
-                icon: 'fa-ban',
-                color: 'bg-red-200 text-red-700',
-            };
+            return { name: 'Abgesagt', icon: 'fa-ban', color: 'status-red' };
     }
-
     if (event.hasOpenRequiredSlots) {
-        return {
-            name: 'Fehlende Crew',
-            icon: 'fa-warning',
-            color: 'bg-yellow-100 text-yellow-700',
-        };
+        return { name: 'Fehlende Crew', icon: 'fa-warning', color: 'status-yellow' };
     }
-
     if (event.hasOpenSlots) {
-        return {
-            name: 'Freie Plätze',
-            icon: 'fa-info-circle',
-            iconMobile: 'fa-info',
-            color: 'bg-blue-200 text-blue-700',
-        };
+        return { name: 'Freie Plätze', icon: 'fa-info-circle', iconMobile: 'fa-info', color: 'status-blue' };
     }
-
-    return {
-        name: 'Voll belegt',
-        icon: 'fa-check-circle',
-        iconMobile: 'fa-check',
-        color: 'bg-green-200 text-green-700',
-    };
+    return { name: 'Voll belegt', icon: 'fa-check-circle', iconMobile: 'fa-check', color: 'status-green' };
 }
 
 function hasOpenSlots(event: Event): boolean {

@@ -1,12 +1,12 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto" class="error-dialog modal">
         <template #title>
-            <h1 class="text-red-600">
+            <h1 class="">
                 {{ error.title || 'Unwerwarteter Fehler' }}
             </h1>
         </template>
         <template #content>
-            <div class="px-8 py-8 lg:px-16">
+            <div class="px-8 py-8 lg:px-10">
                 <p v-if="error.message">
                     {{ error.message }}
                 </p>
@@ -15,7 +15,7 @@
                     auftreten, melde ihn gerne an admin@grossherzogin-elisabeth.de.
                 </p>
                 <div v-if="error.error" class="mt-8">
-                    <h2 class="mb-4 text-red-600">Details</h2>
+                    <h2 class="mb-4 text-error">Details</h2>
                     <p>
                         {{ details }}
                     </p>
@@ -25,9 +25,9 @@
         <template #buttons>
             <template v-if="error.retry">
                 <button class="btn-ghost-danger" @click="submit">{{ error.cancelText || 'Schließen' }}</button>
-                <button class="btn-danger" @click="retry()">{{ error.retryText || 'Erneut versuchen' }}</button>
+                <button class="btn-ghost-danger" @click="retry()">{{ error.retryText || 'Erneut versuchen' }}</button>
             </template>
-            <button v-else class="btn-danger" @click="submit">{{ error.cancelText || 'Schließen' }}</button>
+            <button v-else class="btn-ghost-danger" @click="submit">{{ error.cancelText || 'Schließen' }}</button>
         </template>
     </VDialog>
 </template>
@@ -85,17 +85,3 @@ defineExpose<Dialog<ErrorDialogMessage, void>>({
 
 init();
 </script>
-
-<style #scoped>
-.error-dialog .dialog-header {
-    @apply border-red-600 bg-red-100;
-}
-
-.dialog.error-dialog {
-    @apply bg-gradient-to-br from-red-50 from-50% to-red-50;
-}
-
-.error-dialog .dialog-close-button {
-    @apply hover:bg-red-200 hover:text-red-700;
-}
-</style>

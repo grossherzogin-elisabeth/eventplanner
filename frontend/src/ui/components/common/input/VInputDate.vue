@@ -30,7 +30,7 @@
                 />
 
                 <div class="input-icon-right">
-                    <i class="fa-solid fa-calendar-day text-sm text-primary-600"></i>
+                    <i class="fa-solid fa-calendar-day text-sm text-primary"></i>
                 </div>
             </div>
             <div v-if="showErrors && hasErrors" class="input-errors">

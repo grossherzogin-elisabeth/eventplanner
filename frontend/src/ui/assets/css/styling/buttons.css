@@ -1,136 +1,87 @@
 button:disabled {
-    @apply bg-opacity-50;
+    @apply opacity-50;
 }
 
 .btn-primary,
 .btn-secondary,
-.btn-danger {
+.btn-danger,
+.btn-floating,
+.btn-ghost,
+.btn-ghost-danger {
     @apply rounded-lg;
     @apply px-4 py-2;
     @apply font-bold;
-    @apply flex items-center space-x-4;
+    @apply flex items-center justify-center gap-2;
     @apply whitespace-nowrap;
     @apply hover:no-underline;
 }
 
 .btn-primary {
-    @apply bg-primary-200 text-primary-900;
+    @apply bg-primary text-onprimary;
 }
 
-a.btn-primary,
-.btn-primary:enabled {
-    @apply bg-primary-200 hover:bg-primary-300;
-}
-
-.btn-primary:disabled {
-    @apply bg-primary-200 text-primary-900 text-opacity-25;
+.btn-primary:not(:disabled) {
+    @apply hover:bg-primary hover:text-onprimary hover:shadow;
 }
 
 .btn-secondary {
-    @apply bg-gray-200 text-gray-700;
+    @apply bg-secondary-container text-onsecondary-container;
 }
 
 a.btn-secondary,
 .btn-secondary:enabled {
-    @apply hover:bg-gray-300;
-}
-
-.btn-secondary:disabled {
-    @apply bg-gray-200 text-gray-700 text-opacity-25;
+    @apply hover:shadow;
 }
 
 .btn-danger {
-    @apply bg-red-400 text-white;
+    @apply bg-error-container text-onerror-container;
 }
 
 a.btn-danger,
 .btn-danger:enabled {
-    @apply bg-red-400 bg-opacity-75 hover:bg-opacity-100;
+    @apply hover:shadow;
 }
 
-.btn-danger:disabled {
-    @apply bg-red-100 text-white;
+.btn-floating,
+.btn-floating-danger {
+    @apply gap-5 p-5 md:gap-6 md:p-6;
+    @apply rounded-2xl shadow-lg hover:shadow-xl;
 }
 
 .btn-floating {
-    @apply px-4 py-4;
-    @apply rounded-xl shadow-xl;
-    @apply bg-opacity-100 !important;
+    @apply bg-primary-container text-onprimary-container;
 }
 
-@media (max-width: 1279px) {
-    .-xl\:btn-floating {
-        @apply px-4 py-4;
-        @apply rounded-xl shadow-xl;
-        @apply bg-opacity-100 !important;
-    }
-}
-
-.btn-toolbar {
-    @apply rounded-lg px-2 py-1;
-}
-
-.btn-toolbar:enabled {
-    @apply hover:bg-gray-200;
+.btn-floating-danger {
+    @apply bg-error-container text-onerror-container;
 }
 
 .btn-ghost,
 .btn-ghost-danger {
-    @apply flex items-center justify-center gap-2;
-    @apply font-black;
-    @apply rounded-lg px-4 py-2;
-    @apply hover:no-underline;
+    /*@apply flex items-center justify-center gap-2;*/
+    /*@apply rounded-lg px-4 py-2;*/
+    /*@apply hover:no-underline;*/
 }
 
 .btn-ghost {
-    @apply text-primary-700 hover:bg-primary-50 hover:text-primary-800;
+    @apply text-secondary;
+}
+
+.btn-ghost:not(:disabled):hover {
+    @apply bg-secondary-container text-onsecondary-container;
 }
 
 .btn-ghost-danger {
-    @apply text-red-700 hover:bg-red-50 hover:text-red-800;
+    @apply text-error;
 }
 
-.dialog .btn-ghost,
-.bg-primary-50 .btn-ghost {
-    @apply text-primary-700 hover:bg-primary-100;
-}
-
-.bg-primary-50 .btn-ghost-danger {
-    @apply text-red-700 hover:bg-red-100 hover:text-red-800;
-}
-
-.dialog .btn-ghost,
-.bg-primary-100 .btn-ghost {
-    @apply text-primary-700 hover:bg-primary-200;
-}
-
-.bg-primary-100 .btn-ghost-danger {
-    @apply text-red-700 hover:bg-red-200 hover:text-red-800;
-}
-
-.bg-primary-200 .btn-ghost {
-    @apply text-primary-800 hover:bg-primary-300 hover:text-primary-900;
-}
-
-.bg-primary-200 .btn-ghost-danger {
-    @apply text-red-800 hover:bg-red-300 hover:text-red-900;
-}
-
-.bg-red-100 .btn-ghost-danger {
-    @apply text-red-800 hover:bg-red-300 hover:text-red-900;
-}
-
-.btn-ghost:disabled {
-    @apply text-primary-700 text-opacity-25 hover:bg-transparent hover:text-primary-700 hover:text-opacity-25;
-}
-
-.btn-ghost-danger:disabled {
-    @apply text-red-700 text-opacity-25 hover:bg-transparent hover:text-red-700 hover:text-opacity-25;
+.btn-ghost-danger:not(:disabled):hover {
+    @apply bg-error-container text-onerror-container;
 }
 
 .btn-back {
     @apply flex items-center justify-center;
-    @apply font-black text-primary-700 hover:text-primary-800;
+    @apply font-black hover:text-onsecondary-container;
     @apply rounded-full p-3;
     @apply hover:no-underline;
     @apply relative;
@@ -138,7 +89,7 @@ a.btn-danger,
 
 .btn-back:before {
     content: '';
-    @apply pointer-events-none absolute bg-primary-100;
+    @apply pointer-events-none absolute bg-secondary-container bg-opacity-50;
     top: 50%;
     left: 50%;
     right: 50%;
@@ -167,11 +118,11 @@ a.btn-danger,
 }
 
 .btn-split > .btn-primary {
-    @apply border-primary-900;
+    @apply border-onprimary;
 }
 
 .btn-split > .btn-secondary {
-    @apply border-gray-700;
+    @apply border-onsecondary;
 }
 
 .btn-split > .btn-danger {
@@ -179,11 +130,31 @@ a.btn-danger,
 }
 
 .btn-tag {
-    @apply rounded-full border border-primary-300 text-primary-700;
+    @apply rounded-full border border-outline text-secondary;
     @apply whitespace-nowrap px-4 py-1 text-sm font-bold;
-    @apply hover:bg-primary-200;
+    @apply hover:border-secondary;
+    @apply hover:shadow;
+}
+
+.btn-tag > svg:first-child {
+    @apply mr-2 hidden;
 }
 
 .btn-tag.active {
-    @apply border-primary-400 bg-primary-300;
+    @apply border-secondary bg-secondary-container text-onsecondary-container;
+}
+
+.btn-tag.active > svg:first-child {
+    @apply inline;
+}
+
+@media (max-width: 1023px) {
+    .details-page-primary-button .btn-primary,
+    .details-page-primary-button .btn-secondary {
+        @apply btn-floating;
+    }
+
+    .details-page-primary-button .btn-danger {
+        @apply btn-floating-danger;
+    }
 }

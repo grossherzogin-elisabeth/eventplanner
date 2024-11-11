@@ -8,7 +8,7 @@
                 </div>
             </template>
             <template #content>
-                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
+                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
                     <template #[Tab.USER_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
                             <UserDataForm v-if="user" v-model="user" />
@@ -22,7 +22,7 @@
                     <template #[Tab.USER_EVENTS]>
                         <div class="xl:max-w-5xl">
                             <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`" class="">
-                                <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">
+                                <h2 class="mb-4 font-bold text-secondary">
                                     <template v-if="year === 0">Zukünftige Reisen</template>
                                     <template v-else>Reisen {{ year }}</template>
                                 </h2>

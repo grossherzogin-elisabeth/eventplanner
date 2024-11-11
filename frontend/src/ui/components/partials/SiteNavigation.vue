@@ -1,11 +1,11 @@
 <template>
-    <div class="flex flex-col border-l border-gray-200">
+    <div class="flex flex-col border-l">
         <RouterLink
             v-for="siteLink in siteLinks"
             :key="siteLink.hash"
             :to="siteLink.hash"
             class="-ml-px border-l-2 py-4 pl-4"
-            :class="currentHash === siteLink.hash ? 'border-primary-600 text-primary-600' : 'border-transparent'"
+            :class="currentHash === siteLink.hash ? 'border-primary text-primary' : 'border-transparent'"
         >
             {{ siteLink.name }}
         </RouterLink>

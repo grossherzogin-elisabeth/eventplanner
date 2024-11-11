@@ -35,7 +35,7 @@
                             tabindex="-1"
                             @click="showDropdown()"
                         >
-                            <i class="fa-solid fa-chevron-down text-sm text-primary-600"></i>
+                            <i class="fa-solid fa-chevron-down text-sm text-primary"></i>
                         </button>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
         @close="hideDropdown(true)"
     >
         <div class="flex h-full flex-col overflow-hidden">
-            <div class="flex items-stretch border-b border-primary-300">
+            <div class="flex items-stretch border-b border-outline-variant">
                 <slot name="before-filter">
                     <i class="fa-solid fa-search mx-4 self-center text-sm opacity-50" />
                 </slot>
@@ -73,7 +73,7 @@
                     :required="props.required"
                     :value="focusOptionIndex === null ? displayValue : filter"
                     aria-haspopup="true"
-                    class="w-full overflow-ellipsis bg-transparent py-3 placeholder-primary-900 placeholder-opacity-50"
+                    class="w-full overflow-ellipsis bg-transparent py-3 placeholder-opacity-50"
                     @blur="onBlur"
                     @click="showDropdown()"
                     @input="filterValues($event)"

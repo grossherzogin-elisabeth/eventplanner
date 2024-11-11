@@ -13,7 +13,7 @@ table.v-table {
 }
 
 .v-table thead tr {
-    @apply bg-transparent text-sm font-bold text-primary-700 text-opacity-50;
+    @apply bg-transparent text-sm font-bold text-onsurface-variant;
 }
 
 .v-table th {
@@ -60,7 +60,7 @@ table.v-table {
 }
 
 .sticky-table-header .v-table th {
-    @apply sticky top-12 z-10 bg-primary-50 pt-4 xl:top-0;
+    @apply sticky top-12 z-10 bg-surface pt-4 xl:top-0;
 }
 
 .sticky-table-header .v-table th:before {
@@ -103,25 +103,28 @@ table.v-table {
     @apply relative z-10;
 }
 
-.interactive-table:not(.loading) .v-table tbody tr:not(.no-data) {
-    @apply cursor-pointer hover:text-primary-600;
-}
-
+/* normal */
 .v-table tbody tr td:first-child::before {
     content: '';
-    @apply absolute bottom-1 left-0 right-0 top-1 -z-10 rounded-xl bg-primary-100 bg-opacity-50;
+    @apply absolute bottom-1 left-0 right-0 top-1 -z-10 rounded-xl bg-surface-container-low;
 }
 
+/* hover */
 .interactive-table:not(.loading) .v-table tbody tr:not(.no-data):hover td:first-child::before {
-    @apply bg-primary-100 bg-opacity-100;
+    @apply bg-surface-container;
 }
 
+.interactive-table:not(.loading) .v-table tbody tr:not(.no-data) {
+    @apply cursor-pointer;
+}
+
+/* selected */
 .v-table tbody tr:not(.no-data).selected td {
-    @apply text-primary-700;
+    @apply text-onprimary-container !important;
 }
 
 .v-table tbody tr:not(.no-data).selected td::before {
-    @apply bg-primary-700 bg-opacity-10 !important;
+    @apply bg-primary-container !important;
 }
 
 .v-table td.p-0 {
@@ -149,4 +152,12 @@ table.v-table {
 .with-multi-selection .v-table,
 .interactive-table .v-table {
     @apply select-none;
+}
+
+.v-table .table-action-button {
+    @apply mr-4 h-10 w-10 cursor-pointer rounded-full hover:bg-surface-container-highest;
+}
+
+.v-table tbody tr:not(.no-data).selected .table-action-button {
+    @apply text-onprimary-variant hover:bg-primary-variant;
 }

@@ -4,61 +4,63 @@
             <h1>Alle bearbeiten</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-16">
-                <p class="mb-8">
-                    Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle
-                    Reisen übernommen.
-                </p>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Status</VInputLabel>
-                    <VInputSelect
-                        v-model="patch.state"
-                        :options="[
-                            { value: undefined, label: '' },
-                            { value: EventState.Draft, label: 'Entwurf' },
-                            { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
-                            { value: EventState.Planned, label: 'Crewplanung verlöffentlicht' },
-                            { value: EventState.Canceled, label: 'Abgesagt' },
-                        ]"
-                        :errors="validation.errors.value['state']"
-                        :errors-visible="validation.showErrors.value"
-                        placeholder="nicht geändert"
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Name</VInputLabel>
-                    <VInputText
-                        v-model="patch.name"
-                        :errors="validation.errors.value['name']"
-                        :errors-visible="validation.showErrors.value"
-                        placeholder="nicht geändert"
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Kategorie</VInputLabel>
-                    <VInputSelect
-                        v-model="patch.type"
-                        :errors="validation.errors.value['type']"
-                        :errors-visible="validation.showErrors.value"
-                        :options="[
-                            { value: undefined, label: '' },
-                            { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
-                            { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
-                            { value: EventType.WeekendEvent, label: 'Wochenendreise' },
-                            { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
-                        ]"
-                        placeholder="nicht geändert"
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Beschreibung</VInputLabel>
-                    <VInputTextArea
-                        v-model="patch.description"
-                        :errors="validation.errors.value['description']"
-                        :errors-visible="validation.showErrors.value"
-                        placeholder="nicht geändert"
-                    />
-                </div>
+            <div class="px-8 pt-4 lg:px-10">
+                <section>
+                    <p class="mb-8">
+                        Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für
+                        alle Reisen übernommen.
+                    </p>
+                    <div class="mb-4">
+                        <VInputLabel>Status</VInputLabel>
+                        <VInputSelect
+                            v-model="patch.state"
+                            :options="[
+                                { value: undefined, label: '' },
+                                { value: EventState.Draft, label: 'Entwurf' },
+                                { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
+                                { value: EventState.Planned, label: 'Crewplanung verlöffentlicht' },
+                                { value: EventState.Canceled, label: 'Abgesagt' },
+                            ]"
+                            :errors="validation.errors.value['state']"
+                            :errors-visible="validation.showErrors.value"
+                            placeholder="nicht geändert"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Name</VInputLabel>
+                        <VInputText
+                            v-model="patch.name"
+                            :errors="validation.errors.value['name']"
+                            :errors-visible="validation.showErrors.value"
+                            placeholder="nicht geändert"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Kategorie</VInputLabel>
+                        <VInputSelect
+                            v-model="patch.type"
+                            :errors="validation.errors.value['type']"
+                            :errors-visible="validation.showErrors.value"
+                            :options="[
+                                { value: undefined, label: '' },
+                                { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
+                                { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
+                                { value: EventType.WeekendEvent, label: 'Wochenendreise' },
+                                { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
+                            ]"
+                            placeholder="nicht geändert"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Beschreibung</VInputLabel>
+                        <VInputTextArea
+                            v-model="patch.description"
+                            :errors="validation.errors.value['description']"
+                            :errors-visible="validation.showErrors.value"
+                            placeholder="nicht geändert"
+                        />
+                    </div>
+                </section>
             </div>
         </template>
         <template #buttons>

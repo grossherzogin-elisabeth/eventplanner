@@ -6,61 +6,63 @@
             <h1 v-else>Reiseabschnitt bearbeiten</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-16">
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Name</VInputLabel>
-                    <VInputText
-                        v-model="location.name"
-                        :errors="validation.errors.value['name']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Icon</VInputLabel>
-                    <VInputSelect
-                        v-model="location.icon"
-                        placeholder="fa-anchor"
-                        :errors="validation.errors.value['icon']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                        :options="[
-                            { value: 'fa-anchor', label: 'fa-anchor' },
-                            { value: 'fa-water', label: 'fa-water' },
-                            { value: 'fa-house', label: 'fa-house' },
-                            { value: 'fa-city', label: 'fa-city' },
-                            { value: 'fa-sailboat', label: 'fa-sailboat' },
-                            { value: 'fa-screwdriver-wrench', label: 'fa-screwdriver-wrench' },
-                        ]"
-                    >
-                        <template #item="{ item }">
-                            <i class="fa-solid mr-4" :class="item.value"></i>
-                            <span class="flex-grow">{{ item.label }}</span>
-                        </template>
-                        <template #before>
-                            <span :key="location.icon">
-                                <i class="fa-solid ml-4 mt-5" :class="location.icon"></i>
-                            </span>
-                        </template>
-                    </VInputSelect>
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Adresse</VInputLabel>
-                    <VInputTextArea
-                        v-model="location.address"
-                        :errors="validation.errors.value['address']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Land</VInputLabel>
-                    <VInputCombobox
-                        v-model="location.country"
-                        :errors="validation.errors.value['country']"
-                        :errors-visible="validation.showErrors.value"
-                        :options="countries.options"
-                    />
-                </div>
+            <div class="px-8 pt-4 lg:px-10">
+                <section>
+                    <div class="mb-4">
+                        <VInputLabel>Name</VInputLabel>
+                        <VInputText
+                            v-model="location.name"
+                            :errors="validation.errors.value['name']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Icon</VInputLabel>
+                        <VInputSelect
+                            v-model="location.icon"
+                            placeholder="fa-anchor"
+                            :errors="validation.errors.value['icon']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                            :options="[
+                                { value: 'fa-anchor', label: 'fa-anchor' },
+                                { value: 'fa-water', label: 'fa-water' },
+                                { value: 'fa-house', label: 'fa-house' },
+                                { value: 'fa-city', label: 'fa-city' },
+                                { value: 'fa-sailboat', label: 'fa-sailboat' },
+                                { value: 'fa-screwdriver-wrench', label: 'fa-screwdriver-wrench' },
+                            ]"
+                        >
+                            <template #item="{ item }">
+                                <i class="fa-solid mr-4" :class="item.value"></i>
+                                <span class="flex-grow">{{ item.label }}</span>
+                            </template>
+                            <template #before>
+                                <span :key="location.icon">
+                                    <i class="fa-solid ml-4 mt-5" :class="location.icon"></i>
+                                </span>
+                            </template>
+                        </VInputSelect>
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Adresse</VInputLabel>
+                        <VInputTextArea
+                            v-model="location.address"
+                            :errors="validation.errors.value['address']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Land</VInputLabel>
+                        <VInputCombobox
+                            v-model="location.country"
+                            :errors="validation.errors.value['country']"
+                            :errors-visible="validation.showErrors.value"
+                            :options="countries.options"
+                        />
+                    </div>
+                </section>
             </div>
         </template>
         <template #buttons>

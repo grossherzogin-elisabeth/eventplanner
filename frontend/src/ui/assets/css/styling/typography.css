@@ -7,7 +7,7 @@ html {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-weight: normal;
-    @apply text-primary-950;
+    @apply text-onsurface;
 }
 
 body {
@@ -27,23 +27,34 @@ h3 {
 }
 
 hr {
-    @apply my-4 border-primary-300;
+    @apply my-4 border-outline-variant;
 }
 
 a.link {
-    @apply font-bold text-primary-600 hover:underline;
+    @apply font-bold text-primary hover:underline;
 }
 
 code {
-    @apply rounded-lg bg-gray-300 px-2 py-1;
+    @apply rounded-lg bg-surface-container-high px-2 py-1;
+}
+
+section {
+    @apply -mx-4 md:mx-0;
+}
+
+section > h1,
+section > h2,
+section > h3,
+section > p {
+    @apply px-4 md:px-0;
 }
 
 ::-moz-selection {
-    @apply bg-gray-600 text-white;
+    @apply bg-secondary text-onsecondary;
 }
 
 ::selection {
-    @apply bg-gray-600 text-white;
+    @apply bg-secondary text-onsecondary;
 }
 
 @font-face {

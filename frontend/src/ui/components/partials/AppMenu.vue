@@ -2,14 +2,17 @@
     <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
         <h1 class="mb-8 mt-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
 
-        <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-red-100 pl-4 text-red-800 xl:mx-8 xl:pl-6">
+        <div
+            v-if="signedInUser.impersonated"
+            class="mx-4 rounded-2xl bg-error-container pl-4 text-onerror-container xl:mx-8 xl:pl-6"
+        >
             <div class="flex items-center">
                 <p class="mr-2 w-0 flex-grow py-4 text-sm font-bold">
                     Du siehst die Anwendung aus Sicht von
                     <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
                 </p>
                 <button
-                    class="mr-2 block h-10 w-10 rounded-full hover:bg-red-200"
+                    class="mr-2 block h-10 w-10 rounded-full hover:bg-onerror-container hover:bg-opacity-5"
                     title="Impersonate Modus beenden"
                     @click="authUseCase.impersonateUser(null)"
                 >
@@ -90,12 +93,6 @@
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>
                     <span>Einstellungen</span>
-                </RouterLink>
-            </li>
-            <li class="menu-item hidden">
-                <RouterLink :to="{ name: Routes.Wiki }">
-                    <i class="fa-solid fa-book"></i>
-                    <span>Wiki</span>
                 </RouterLink>
             </li>
             <li class="menu-item">
@@ -216,10 +213,6 @@ watch(route, () => {
     @apply cursor-pointer;
 }
 
-.text-white .menu-item {
-    color: white;
-}
-
 .menu-item > a,
 .menu-item > button {
     @apply px-4 py-2 xl:px-6;
@@ -228,11 +221,7 @@ watch(route, () => {
 
 /* expand */
 .menu-item.expanded {
-    @apply bg-primary-800 bg-opacity-5;
-}
-
-.text-white .menu-item.expanded {
-    @apply bg-primary-50 bg-opacity-5;
+    @apply bg-onprimary bg-opacity-5;
 }
 
 .menu-item .menu-chevron {
@@ -246,19 +235,14 @@ watch(route, () => {
 /* hover */
 .menu-item:hover:not(.expanded):not(.active) > a:not(.router-link-active),
 .menu-item:hover:not(.expanded):not(.active) > button:not(.router-link-active) {
-    @apply bg-gray-500 bg-opacity-10;
-}
-
-.text-white .menu-item:hover:not(.expanded):not(.active) > a:not(.router-link-active),
-.text-white .menu-item:hover:not(.expanded):not(.active) > button:not(.router-link-active) {
-    @apply bg-white bg-opacity-10;
+    @apply bg-onprimary bg-opacity-10;
 }
 
 /* active */
 .menu-item > a.router-link-active,
 .menu-item.active > a,
 .menu-item.active > button {
-    @apply relative bg-primary-800 bg-opacity-15;
+    @apply relative bg-onprimary font-bold text-primary;
 }
 
 .menu-item > a.router-link-active:before,
@@ -266,13 +250,6 @@ watch(route, () => {
     @apply absolute bottom-auto left-0 top-auto;
     @apply h-5 w-1;
     @apply rounded-full bg-current;
-}
-
-.text-white .menu-item > a.router-link-active,
-.text-white .menu-item.active > a,
-.text-white .menu-item.active > button {
-    @apply bg-primary-50 text-primary-800;
-    @apply font-bold;
 }
 
 /* 2nd level */
@@ -295,9 +272,5 @@ watch(route, () => {
 
 .menu-subheading {
     @apply mt-8 pl-8 text-sm font-semibold opacity-50 xl:pl-14;
-}
-
-.text-white .menu-subheading {
-    color: white;
 }
 </style>

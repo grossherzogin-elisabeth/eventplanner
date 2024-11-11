@@ -5,7 +5,8 @@
 .input-field-wrapper {
     @apply relative flex items-center;
     @apply h-full overflow-hidden;
-    @apply rounded-lg border border-primary-200 bg-primary-100;
+    @apply rounded-lg border border-outline bg-transparent p-px;
+    /*@apply border-transparent bg-surface-container;*/
 }
 
 .input-field {
@@ -13,50 +14,51 @@
     @apply border-none;
     @apply bg-transparent;
     @apply outline-none focus:outline-none;
-    @apply text-primary-950;
+    @apply text-onsurface;
 }
 
 /* placeholder state */
 .input-field::placeholder {
-    @apply text-primary-700 text-opacity-25;
+    @apply text-current opacity-25;
 }
 
 /* disabled */
 .input-field-wrapper:has([disabled]) {
-    @apply border border-primary-200 bg-primary-100 bg-opacity-25;
+    @apply border border-onsurface border-opacity-10;
 }
 
 .input-field:disabled {
-    @apply text-primary-700 text-opacity-50;
+    @apply text-onsurface text-opacity-50;
 }
 
 .input-field-wrapper:has(.readonly) {
-    @apply border border-transparent bg-transparent;
+    /*@apply border border-transparent bg-transparent;*/
 }
 
 /* select svgs next to input, like dropdown arrows */
 .input-field:disabled + svg {
-    @apply opacity-50;
+    /*@apply opacity-50;*/
 }
 
 /* focus */
 .input-field-wrapper:not(:has(.readonly)):focus-within {
-    @apply border border-primary-400 bg-primary-100;
+    /*@apply border border-primary-400 bg-primary-100;*/
+    @apply border-2 border-primary p-0;
 }
 
 /* hover */
 .input-field-wrapper:not(:has([disabled])):not(:has(.readonly)):hover {
-    @apply border border-primary-300 bg-primary-200;
+    /*@apply border border-primary-300 bg-primary-200;*/
 }
 
 .input-field-wrapper:not(:has(.readonly)):focus-within:hover {
-    @apply border border-primary-400 bg-primary-100;
+    /*@apply border border-primary-400 bg-primary-100;*/
 }
 
 /* label */
 .input-label {
     @apply mb-1 mt-1 text-xs font-bold;
-    @apply pointer-events-none relative z-10 -mb-5 ml-4 text-primary-700 text-opacity-50;
+    @apply pointer-events-none relative z-10 -mb-5 ml-4 text-onsurface text-opacity-50;
 }
 
 .input-label.required {

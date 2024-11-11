@@ -3,7 +3,7 @@
         <div v-if="props.backTo" class="absolute left-6 top-6 z-30 hidden xl:block">
             <BackButton :to="props.backTo" />
         </div>
-        <div v-if="$slots.header" class="bg-primary-50">
+        <div v-if="$slots.header" class="bg-surface">
             <div class="z-10 px-8 md:px-16 xl:px-20">
                 <slot name="header" />
             </div>
@@ -15,7 +15,7 @@
 
         <div class="h-16 xl:hidden"></div>
         <div
-            class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 flex items-stretch justify-end space-x-2 pb-4 pr-3 pt-6 md:pr-14 lg:pointer-events-auto lg:justify-start lg:border-t lg:border-primary-200 lg:bg-primary-50 lg:px-16 lg:pb-8 xl:sticky xl:px-20"
+            class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 flex items-stretch justify-end space-x-2 pb-4 pr-3 pt-6 md:pr-14 lg:pointer-events-auto lg:justify-start lg:border-t lg:border-outline-variant lg:bg-surface lg:px-16 lg:pb-8 xl:sticky xl:px-20"
         >
             <div class="details-page-primary-button pointer-events-auto w-auto">
                 <slot name="primary-button" />
@@ -52,15 +52,3 @@ interface Props {
 
 const props = defineProps<Props>();
 </script>
-
-<style>
-@media (max-width: 1023px) {
-    .details-page-primary-button .btn-primary,
-    .details-page-primary-button .btn-secondary,
-    .details-page-primary-button .btn-danger {
-        @apply px-4 py-4;
-        @apply rounded-xl shadow-xl;
-        @apply bg-opacity-100 !important;
-    }
-}
-</style>

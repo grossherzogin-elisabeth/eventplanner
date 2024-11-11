@@ -6,17 +6,17 @@
             </h1>
         </template>
         <template #content>
-            <div class="px-8 py-8 lg:px-16">
+            <div class="px-8 py-8 lg:px-10">
                 <p>
                     <slot name="message">{{ content?.message }}</slot>
                 </p>
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel()">
+            <button :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'" @click="cancel()">
                 <slot name="cancel">{{ content?.cancel || 'Abbrechen' }}</slot>
             </button>
-            <button :class="content?.danger ? 'btn-danger' : 'btn-primary'" @click="submit()">
+            <button :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'" @click="submit()">
                 <slot name="submit">{{ content?.submit || 'Ja' }}</slot>
             </button>
         </template>
@@ -53,21 +53,3 @@ defineExpose<ConfirmationDialog>({
     reject: () => dlg.value?.reject(),
 });
 </script>
-
-<style #scoped>
-.error-dialog .dialog-header {
-    @apply border-red-600 bg-red-100;
-}
-
-.dialog.error-dialog {
-    @apply bg-gradient-to-br from-red-50 from-50% to-red-50;
-}
-
-.error-dialog .dialog-close-button {
-    @apply hover:bg-red-200 hover:text-red-700;
-}
-
-.error-dialog h1 {
-    @apply text-red-600;
-}
-</style>

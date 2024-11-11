@@ -4,106 +4,108 @@
             <h1>Neue Reise erstellen</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-16">
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Name</VInputLabel>
-                    <VInputText
-                        v-model="event.name"
-                        :errors="validation.errors.value['name']"
-                        :errors-visible="validation.showErrors.value"
-                        placeholder="Titel der Reise"
-                        required
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Kategorie</VInputLabel>
-                    <VInputSelect
-                        v-model="event.type"
-                        :errors="validation.errors.value['type']"
-                        :errors-visible="validation.showErrors.value"
-                        :options="[
-                            { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
-                            { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
-                            { value: EventType.WeekendEvent, label: 'Wochenendreise' },
-                            { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
-                        ]"
-                        required
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Vorlage</VInputLabel>
-                    <VInputCombobox
-                        v-model="template"
-                        :errors="validation.errors.value['template']"
-                        :errors-visible="validation.showErrors.value"
-                        :options="
-                            templates
-                                .filter((it) => it.type === event.type)
-                                .map((it) => ({
-                                    label: `${$d(it.start, DateTimeFormat.DD_MM_YYYY)} - ${it.name} `,
-                                    value: it,
-                                }))
-                        "
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Beschreibung</VInputLabel>
-                    <VInputTextArea
-                        v-model="event.description"
-                        :errors="validation.errors.value['description']"
-                        :errors-visible="validation.showErrors.value"
-                        placeholder="Kurze Bschreibung oder Zusatzinformationen"
-                    />
-                </div>
-                <div class="-mx-4 mb-4 flex space-x-4">
-                    <div class="w-3/5">
-                        <VInputLabel>Startdatum</VInputLabel>
-                        <VInputDate
-                            :model-value="event.start"
-                            :highlight-from="event.start"
-                            :highlight-to="event.end"
-                            :errors="validation.errors.value['start']"
+            <div class="px-8 pt-4 lg:px-10">
+                <section>
+                    <div class="mb-4">
+                        <VInputLabel>Name</VInputLabel>
+                        <VInputText
+                            v-model="event.name"
+                            :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
+                            placeholder="Titel der Reise"
                             required
-                            @update:model-value="event.start = updateDate(event.start, $event)"
                         />
                     </div>
-                    <div class="w-2/5">
-                        <VInputLabel>Crew an Board</VInputLabel>
-                        <VInputTime
-                            :model-value="event.start"
-                            :errors="validation.errors.value['start']"
+                    <div class="mb-4">
+                        <VInputLabel>Kategorie</VInputLabel>
+                        <VInputSelect
+                            v-model="event.type"
+                            :errors="validation.errors.value['type']"
                             :errors-visible="validation.showErrors.value"
+                            :options="[
+                                { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
+                                { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
+                                { value: EventType.WeekendEvent, label: 'Wochenendreise' },
+                                { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
+                            ]"
                             required
-                            @update:model-value="event.start = updateTime(event.start, $event, 'minutes')"
                         />
                     </div>
-                </div>
+                    <div class="mb-4">
+                        <VInputLabel>Vorlage</VInputLabel>
+                        <VInputCombobox
+                            v-model="template"
+                            :errors="validation.errors.value['template']"
+                            :errors-visible="validation.showErrors.value"
+                            :options="
+                                templates
+                                    .filter((it) => it.type === event.type)
+                                    .map((it) => ({
+                                        label: `${$d(it.start, DateTimeFormat.DD_MM_YYYY)} - ${it.name} `,
+                                        value: it,
+                                    }))
+                            "
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Beschreibung</VInputLabel>
+                        <VInputTextArea
+                            v-model="event.description"
+                            :errors="validation.errors.value['description']"
+                            :errors-visible="validation.showErrors.value"
+                            placeholder="Kurze Bschreibung oder Zusatzinformationen"
+                        />
+                    </div>
+                    <div class="mb-4 flex space-x-4">
+                        <div class="w-3/5">
+                            <VInputLabel>Startdatum</VInputLabel>
+                            <VInputDate
+                                :model-value="event.start"
+                                :highlight-from="event.start"
+                                :highlight-to="event.end"
+                                :errors="validation.errors.value['start']"
+                                :errors-visible="validation.showErrors.value"
+                                required
+                                @update:model-value="event.start = updateDate(event.start, $event)"
+                            />
+                        </div>
+                        <div class="w-2/5">
+                            <VInputLabel>Crew an Board</VInputLabel>
+                            <VInputTime
+                                :model-value="event.start"
+                                :errors="validation.errors.value['start']"
+                                :errors-visible="validation.showErrors.value"
+                                required
+                                @update:model-value="event.start = updateTime(event.start, $event, 'minutes')"
+                            />
+                        </div>
+                    </div>
 
-                <div class="-mx-4 mb-4 flex space-x-4">
-                    <div class="w-3/5">
-                        <VInputLabel>Enddatum</VInputLabel>
-                        <VInputDate
-                            :model-value="event.end"
-                            :highlight-from="event.start"
-                            :highlight-to="event.end"
-                            :errors="validation.errors.value['end']"
-                            :errors-visible="validation.showErrors.value"
-                            required
-                            @update:model-value="event.end = updateDate(event.end, $event)"
-                        />
+                    <div class="mb-4 flex space-x-4">
+                        <div class="w-3/5">
+                            <VInputLabel>Enddatum</VInputLabel>
+                            <VInputDate
+                                :model-value="event.end"
+                                :highlight-from="event.start"
+                                :highlight-to="event.end"
+                                :errors="validation.errors.value['end']"
+                                :errors-visible="validation.showErrors.value"
+                                required
+                                @update:model-value="event.end = updateDate(event.end, $event)"
+                            />
+                        </div>
+                        <div class="w-2/5">
+                            <VInputLabel>Crew von Board</VInputLabel>
+                            <VInputTime
+                                :model-value="event.end"
+                                :errors="validation.errors.value['end']"
+                                :errors-visible="validation.showErrors.value"
+                                required
+                                @update:model-value="event.end = updateTime(event.end, $event, 'minutes')"
+                            />
+                        </div>
                     </div>
-                    <div class="w-2/5">
-                        <VInputLabel>Crew von Board</VInputLabel>
-                        <VInputTime
-                            :model-value="event.end"
-                            :errors="validation.errors.value['end']"
-                            :errors-visible="validation.showErrors.value"
-                            required
-                            @update:model-value="event.end = updateTime(event.end, $event, 'minutes')"
-                        />
-                    </div>
-                </div>
+                </section>
             </div>
         </template>
         <template #buttons>

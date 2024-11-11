@@ -4,15 +4,17 @@
             <h1>Reise absagen</h1>
         </template>
         <template #default>
-            <div v-if="event" class="flex flex-1 flex-col p-8 lg:px-16">
-                <p class="mb-8 max-w-lg">
-                    Wenn du die Reise absagst wird vom System automatisch eine Benachrichtigung an die Crew gesendet. Du
-                    kannst die zu versendene Nachricht hier anpassen.
-                </p>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Nachricht an die Crew</VInputLabel>
-                    <VInputTextArea v-model="message" class="min-h-64" />
-                </div>
+            <div v-if="event" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
+                <section>
+                    <p class="mb-8 max-w-lg">
+                        Wenn du die Reise absagst wird vom System automatisch eine Benachrichtigung an die Crew
+                        gesendet. Du kannst die zu versendene Nachricht hier anpassen.
+                    </p>
+                    <div class="mb-4">
+                        <VInputLabel>Nachricht an die Crew</VInputLabel>
+                        <VInputTextArea v-model="message" class="min-h-64" />
+                    </div>
+                </section>
             </div>
         </template>
         <template #buttons>

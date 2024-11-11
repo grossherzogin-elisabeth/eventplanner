@@ -5,33 +5,35 @@
             <h1 v-else>Qualifikation hinzufügen</h1>
         </template>
         <template #default>
-            <div v-if="userQualification" class="flex flex-1 flex-col p-8 lg:px-16">
-                <div class="-mx-4 mb-2">
-                    <VInputLabel>Qualifikation</VInputLabel>
-                    <VInputCombobox
-                        v-model="userQualification.qualificationKey"
-                        :options="qualificationOptions"
-                        :disabled="editing"
-                        :errors="validation.errors.value['qualificationKey']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
-                <div v-if="selectedQualification?.expires" class="-mx-4 mb-2">
-                    <VInputLabel>Gültig bis</VInputLabel>
-                    <VInputDate
-                        v-model="userQualification.expiresAt"
-                        :errors="validation.errors.value['expiresAt']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
-                <div class="-mx-4 mb-2">
-                    <VInputLabel>Bemerkung</VInputLabel>
-                    <VInputTextArea
-                        v-model="userQualification.note"
-                        :errors="validation.errors.value['note']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
+            <div v-if="userQualification" class="flex flex-1 flex-col p-8 lg:px-10">
+                <section>
+                    <div class="mb-4">
+                        <VInputLabel>Qualifikation</VInputLabel>
+                        <VInputCombobox
+                            v-model="userQualification.qualificationKey"
+                            :options="qualificationOptions"
+                            :disabled="editing"
+                            :errors="validation.errors.value['qualificationKey']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <div v-if="selectedQualification?.expires" class="mb-4">
+                        <VInputLabel>Gültig bis</VInputLabel>
+                        <VInputDate
+                            v-model="userQualification.expiresAt"
+                            :errors="validation.errors.value['expiresAt']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Bemerkung</VInputLabel>
+                        <VInputTextArea
+                            v-model="userQualification.note"
+                            :errors="validation.errors.value['note']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                </section>
             </div>
         </template>
         <template #buttons>

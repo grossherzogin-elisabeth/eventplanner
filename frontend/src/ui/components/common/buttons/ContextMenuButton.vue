@@ -16,7 +16,7 @@
         :max-height="props.maxHeight"
         @close="open = false"
     >
-        <div class="rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl" @click="open = false">
+        <div class="rounded-xl bg-surface-container-high p-4 shadow-xl" @click="open = false">
             <slot />
         </div>
     </VDropdownWrapper>
@@ -53,7 +53,8 @@ const open = ref<boolean>(false);
 
 <style>
 .context-menu-item {
-    @apply -mx-4 flex cursor-pointer items-center px-4 py-3 hover:bg-primary-200 hover:no-underline md:py-2;
+    @apply -mx-4 flex cursor-pointer items-center px-4 py-3 md:py-2;
+    @apply -mx-3 rounded-lg hover:bg-surface-container-highest hover:no-underline;
 }
 
 .context-menu-item.disabled {

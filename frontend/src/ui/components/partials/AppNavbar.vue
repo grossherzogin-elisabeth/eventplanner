@@ -1,11 +1,11 @@
 <template>
     <nav class="fixed top-0 z-40 w-screen print:hidden">
         <div
-            :class="meta.hasTransparentHeader ? 'sm:bg-navbar' : 'bg-navbar'"
-            class="h-nav flex items-center text-white shadow"
+            :class="meta.hasTransparentHeader ? 'sm:bg-primary' : 'bg-primary'"
+            class="h-nav flex items-center text-onprimary shadow"
         >
             <div class="h-full">
-                <div class="flex h-full items-stretch space-x-4 bg-navbar xl:hidden">
+                <div class="flex h-full items-stretch space-x-4 bg-primary xl:hidden">
                     <RouterLink v-if="backTo" :to="backTo" class="flex items-center px-8 md:pl-16">
                         <i class="fa-solid fa-arrow-left"></i>
                     </RouterLink>
@@ -37,7 +37,7 @@
     <div class="h-nav"></div>
     <div
         v-if="signedInUser && signedInUser.impersonated"
-        class="h-16 bg-red-100 px-8 text-red-800 shadow-inner md:px-16"
+        class="h-16 bg-error-container px-8 text-onerror-container shadow-inner md:px-16"
     >
         <div class="flex h-full items-center">
             <i class="fa-solid fa-warning" />
@@ -46,7 +46,7 @@
                 <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
             </p>
             <button
-                class="-mr-3 hidden h-10 w-10 rounded-full hover:bg-red-200 sm:block"
+                class="-mr-3 hidden h-10 w-10 rounded-full hover:bg-onerror-container hover:bg-opacity-5 sm:block"
                 @click="authUseCase.impersonateUser(null)"
             >
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>

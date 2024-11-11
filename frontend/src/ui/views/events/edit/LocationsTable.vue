@@ -9,7 +9,7 @@
     >
         <template #row="{ item, first, last }">
             <td class="py-0">
-                <div class="flex flex-col items-center text-primary-900 text-opacity-20">
+                <div class="flex flex-col items-center text-secondary-variant">
                     <div
                         class="min-h-4 flex-grow border-r-2 border-dashed border-current"
                         :class="{ 'min-h-2 opacity-0': first, 'min-h-6': last }"
@@ -50,7 +50,7 @@
                 <i class="fa-solid fa-arrow-down" />
                 <span>Nach unten verschieben</span>
             </li>
-            <li class="context-menu-item text-red-700" @click="deleteLocation(item)">
+            <li class="context-menu-item text-error" @click="deleteLocation(item)">
                 <i class="fa-solid fa-trash-alt" />
                 <span>Reisestop Löschen</span>
             </li>

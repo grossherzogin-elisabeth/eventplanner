@@ -12,17 +12,11 @@
             </td>
             <td class="w-1/3 min-w-48">
                 <div class="flex items-center justify-end" @click="toggleRole(item.role)">
-                    <div
-                        v-if="item.enabled"
-                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
-                    >
+                    <div v-if="item.enabled" class="status-panel status-green">
                         <i class="fa-solid fa-check-circle"></i>
                         <span class="whitespace-nowrap font-semibold">zugewiesen</span>
                     </div>
-                    <div
-                        v-else
-                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
-                    >
+                    <div v-else class="status-panel status-gray">
                         <i class="fa-solid fa-xmark-circle"></i>
                         <span class="whitespace-nowrap font-semibold">nicht zugewiesen</span>
                     </div>
@@ -34,7 +28,7 @@
                 <i class="fa-solid fa-plus" />
                 <span>Rolle hinzufügen</span>
             </li>
-            <li v-else class="context-menu-item text-red-700" @click="toggleRole(item.role)">
+            <li v-else class="context-menu-item text-error" @click="toggleRole(item.role)">
                 <i class="fa-solid fa-xmark" />
                 <span>Rolle entfernen</span>
             </li>

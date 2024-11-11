@@ -55,10 +55,10 @@
                         @click.stop.prevent="row.selected = !row.selected"
                     >
                         <div v-if="row.selected">
-                            <i class="fa-solid fa-check-square text-xl text-primary-600 sm:text-2xl"></i>
+                            <i class="fa-solid fa-check-square text-xl text-primary sm:text-2xl"></i>
                         </div>
                         <div v-else>
-                            <i class="fa-solid fa-square text-xl text-primary-200 sm:text-2xl"></i>
+                            <i class="fa-solid fa-square text-xl text-surface-container-high sm:text-2xl"></i>
                         </div>
                     </td>
                     <slot
@@ -78,7 +78,7 @@
                         class="w-0"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
-                        <button class="mr-4 h-10 w-10 cursor-pointer rounded-full hover:bg-primary-200">
+                        <button class="table-action-button">
                             <i class="fa-solid fa-ellipsis-vertical mx-1" />
                         </button>
                     </td>
@@ -97,7 +97,7 @@
             max-width="20rem"
             @close="dropdownAnchor = null"
         >
-            <div class="mt-2 rounded-xl border border-primary-200 bg-primary-100 p-4 shadow-xl">
+            <div class="mt-2 rounded-xl bg-surface-container-high p-4 shadow-xl">
                 <ul>
                     <template v-if="props.multiselection">
                         <li
@@ -133,40 +133,6 @@ import type { Selectable } from '@/ui/model/Selectable.ts';
 import { VueDraggableNext } from 'vue-draggable-next';
 import VDropdownWrapper from '../dropdown/VDropdownWrapper.vue';
 import VPagination from './VPagination.vue';
-
-/**
- * --------------------------------------------------------------------------------------------------------
- * Usage Example
- * --------------------------------------------------------------------------------------------------------
- *
- * ````
- * <VTable :items="languages" @click="editLanguage" class="interactive" query>
- *     <template #head>
- *         <th data-sortby="key">Key</th>
- *         <th data-sortby="name.de">Name</th>
- *         <th data-sortby="hidden">Aktiv</th>
- *         <th>Aktionen</th>
- *     </template>
- *     <template #row="{ item }">
- *         <td class="w-1/5">{{ item.key }}</td>
- *         <td class="w-4/5">{{ item.name.de }}</td>
- *         <td>
- *             <IconCheck v-if="!item.hidden" class="w-4 h-4" />
- *         </td>
- *         <td class="text-right">
- *             <div class="flex items-center justify-end space-x-4">
- *                 <button @click.stop="editLanguage(item)">
- *                     <IconEdit class="w-4 h-4 text-blue-dark stroke-1" />
- *                 </button>
- *                 <button @click.stop="deleteLanguage(item)">
- *                     <IconDelete class="w-4 h-4 text-red-dark stroke-1" />
- *                 </button>
- *             </div>
- *         </td>
- *     </template>
- * </VTable>
- * ````
- */
 
 interface Props<T> {
     /**

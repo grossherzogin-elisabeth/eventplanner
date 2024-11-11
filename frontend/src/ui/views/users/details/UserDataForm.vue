@@ -1,6 +1,6 @@
 <template>
-    <section v-if="user" class="-mx-4">
-        <h2 class="mb-4 px-4 font-bold text-primary-800 text-opacity-50">App</h2>
+    <section v-if="user" class="">
+        <h2 class="mb-4 font-bold text-secondary">App</h2>
         <div class="mb-4">
             <VInputLabel>OpenID Connect Subject ID</VInputLabel>
             <VInputText v-model="user.authKey" placeholder="Nicht verknüpft" />
@@ -9,7 +9,8 @@
             <VInputLabel>Anzeigename</VInputLabel>
             <VInputText v-model="user.nickName" :placeholder="user.firstName" />
         </div>
-        <h2 class="mb-4 mt-8 px-4 font-bold text-primary-800 text-opacity-50">Persönliche Daten</h2>
+
+        <h2 class="mb-4 mt-8 font-bold text-secondary">Persönliche Daten</h2>
         <div class="mb-4 sm:w-64">
             <VInputLabel>Geschlecht</VInputLabel>
             <VInputSelect v-model="user.gender" :options="genderOptions" placeholder="keine Angabe" />

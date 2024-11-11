@@ -3,11 +3,11 @@
         <i class="fa-solid fa-search"></i>
     </button>
     <div
-        class="absolute right-0 top-0 z-10 flex h-full items-center bg-navbar px-8 transition-all md:px-16 xl:px-20"
+        class="absolute right-0 top-0 z-10 flex h-full items-center bg-primary px-8 transition-all md:px-16 xl:px-20"
         :class="showSearch ? 'left-0 md:left-auto' : 'left-full lg:left-auto'"
     >
         <div
-            class="-mx-4 flex flex-grow items-center space-x-8 rounded-lg bg-primary-700 px-4 py-1.5 focus-within:bg-primary-700"
+            class="-mx-4 flex flex-grow items-center space-x-8 rounded-full bg-p-500 px-4 py-1.5 focus-within:bg-p-500"
         >
             <i class="fa-solid fa-magnifying-glass text-white" />
             <input

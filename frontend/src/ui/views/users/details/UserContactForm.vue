@@ -1,6 +1,6 @@
 <template>
-    <section v-if="user" class="-mx-4">
-        <h2 class="mb-4 px-4 font-bold text-primary-800 text-opacity-50">Email & Telefon</h2>
+    <section v-if="user" class="">
+        <h2 class="mb-4 font-bold text-secondary">Email & Telefon</h2>
         <div class="mb-4">
             <VInputLabel>Email</VInputLabel>
             <VInputText v-model="user.email" required placeholder="keine Angabe" />
@@ -17,7 +17,8 @@
             <VInputLabel>Mobil</VInputLabel>
             <VInputText v-model="user.mobile" placeholder="keine Angabe" />
         </div>
-        <h2 class="mb-4 mt-8 px-4 font-bold text-primary-800 text-opacity-50">Addresse</h2>
+
+        <h2 class="mb-4 mt-8 font-bold text-secondary">Addresse</h2>
         <div class="mb-4">
             <VInputLabel>Straße, Hausnr</VInputLabel>
             <VInputText v-model="user.address.addressLine1" required placeholder="keine Angabe" />

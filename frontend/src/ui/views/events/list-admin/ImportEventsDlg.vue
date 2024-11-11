@@ -4,7 +4,7 @@
             <h1>Reisen importieren</h1>
         </template>
         <template #default>
-            <div v-if="errors" class="relative h-96 overflow-auto px-8 lg:px-16">
+            <div v-if="errors" class="relative h-96 overflow-auto px-8 lg:px-10">
                 <p class="mb-8 max-w-lg">
                     Die Reisen wurden erfolgreich importiert. Beim Verarbeiten der Datei sind allerdings die folgenden
                     Fehler gefunden worden. Einige konnten automatisch korrigiert werden. in jedem Fall sollten diese
@@ -25,29 +25,31 @@
                     </template>
                 </VTable>
             </div>
-            <div v-else class="p-8 lg:px-16">
-                <p class="mb-4">
-                    Hier kannst du Reisen aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein paar
-                    Minuten.
-                </p>
-                <VWarning class="-mx-4">
-                    Wenn du Reisen aus einer Excel Datei importierts, werden dadurch alle anderen Reisen für das
-                    ausgewählte Jahr überschrieben!
-                </VWarning>
-                <div class="-mx-4 mb-4 mt-8">
-                    <VInputLabel>Jahr</VInputLabel>
-                    <VInputSelect v-model="year" :options="yearOptions" />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Datei</VInputLabel>
-                    <VInputFile v-model="file" />
-                </div>
+            <div v-else class="px-8 pt-4 lg:px-10">
+                <section>
+                    <p class="mb-4">
+                        Hier kannst du Reisen aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein
+                        paar Minuten.
+                    </p>
+                    <VWarning class="">
+                        Wenn du Reisen aus einer Excel Datei importierts, werden dadurch alle anderen Reisen für das
+                        ausgewählte Jahr überschrieben!
+                    </VWarning>
+                    <div class="mb-4 mt-8">
+                        <VInputLabel>Jahr</VInputLabel>
+                        <VInputSelect v-model="year" :options="yearOptions" />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Datei</VInputLabel>
+                        <VInputFile v-model="file" />
+                    </div>
+                </section>
             </div>
         </template>
         <template #buttons="{ reject, submit }">
             <button v-if="uploadComplete" class="btn-primary" @click="submit">Schließen</button>
             <template v-else>
-                <button class="btn-secondary" @click="reject">
+                <button class="btn-ghost" @click="reject">
                     <span>Abbrechen</span>
                 </button>
                 <div class="w-auto">

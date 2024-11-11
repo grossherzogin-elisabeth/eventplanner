@@ -4,74 +4,78 @@
             <h1>Anmeldung hinzufügen</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-16">
-                <p class="mb-8 max-w-lg">
-                    Du kannst eine Anmeldung für ein Stammcrew Mitglied oder Gastcrew anlegen. Die Position kannst du
-                    nachträglich noch auf der Warteliste ändern.
-                </p>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Nutzer</VInputLabel>
-                    <VInputCombobox
-                        v-model="registration.userKey"
-                        :options="userOptions"
-                        :errors="validation.errors.value['userKey']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
-                <div v-if="!registration.userKey" class="-mx-4 mb-4">
-                    <VInputLabel>Name</VInputLabel>
-                    <VInputText
-                        v-model="registration.name"
-                        :errors="validation.errors.value['name']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Position</VInputLabel>
-                    <VInputCombobox
-                        v-model="registration.positionKey"
-                        :options="positions.options.value"
-                        :errors="validation.errors.value['positionKey']"
-                        :errors-visible="validation.showErrors.value"
-                    >
-                        <template #item="{ item }">
-                            <span class="flex-grow">{{ item.label }}</span>
-                            <i
-                                v-if="selectedUser && item.value && !selectedUser.positionKeys.includes(item.value)"
-                                class="fa-solid fa-warning mr-4 text-yellow-500"
-                            />
-                        </template>
-                    </VInputCombobox>
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Notiz</VInputLabel>
-                    <VInputTextArea
-                        v-model="registration.note"
-                        :errors="validation.errors.value['note']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
-                <template v-if="selectedUser !== undefined">
-                    <VWarning
-                        v-if="
-                            registration.positionKey && !selectedUser?.positionKeys.includes(registration.positionKey)
-                        "
-                        class="-mx-4 my-4"
-                    >
-                        {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die Position
-                        <i>{{ selectedPosition?.name }}</i>
+            <div class="px-8 pt-4 lg:px-10">
+                <section>
+                    <p class="mb-8 max-w-lg">
+                        Du kannst eine Anmeldung für ein Stammcrew Mitglied oder Gastcrew anlegen. Die Position kannst
+                        du nachträglich noch auf der Warteliste ändern.
+                    </p>
+                    <div class="mb-4">
+                        <VInputLabel>Nutzer</VInputLabel>
+                        <VInputCombobox
+                            v-model="registration.userKey"
+                            :options="userOptions"
+                            :errors="validation.errors.value['userKey']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <div v-if="!registration.userKey" class="mb-4">
+                        <VInputLabel>Name</VInputLabel>
+                        <VInputText
+                            v-model="registration.name"
+                            :errors="validation.errors.value['name']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Position</VInputLabel>
+                        <VInputCombobox
+                            v-model="registration.positionKey"
+                            :options="positions.options.value"
+                            :errors="validation.errors.value['positionKey']"
+                            :errors-visible="validation.showErrors.value"
+                        >
+                            <template #item="{ item }">
+                                <span class="flex-grow">{{ item.label }}</span>
+                                <i
+                                    v-if="selectedUser && item.value && !selectedUser.positionKeys.includes(item.value)"
+                                    class="fa-solid fa-warning mr-4 text-yellow"
+                                />
+                            </template>
+                        </VInputCombobox>
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Notiz</VInputLabel>
+                        <VInputTextArea
+                            v-model="registration.note"
+                            :errors="validation.errors.value['note']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <template v-if="selectedUser !== undefined">
+                        <VWarning
+                            v-if="
+                                registration.positionKey &&
+                                !selectedUser?.positionKeys.includes(registration.positionKey)
+                            "
+                            class="my-4"
+                        >
+                            {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die
+                            Position
+                            <i>{{ selectedPosition?.name }}</i>
+                        </VWarning>
+                        <VWarning v-if="expiredQualifications.length > 0" class="my-4">
+                            Die folgenden Qualificationen sind abgelaufen oder laufen vor Ende der Reise ab:
+                            <ul class="ml-4 mt-2 list-disc">
+                                <li v-for="quali in expiredQualifications" :key="quali">{{ quali }}</li>
+                            </ul>
+                        </VWarning>
+                    </template>
+                    <VWarning v-else-if="registration.name" class="my-4">
+                        {{ registration.name }} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht
+                        automatisiert geprüft werden.
                     </VWarning>
-                    <VWarning v-if="expiredQualifications.length > 0" class="-mx-4 my-4">
-                        Die folgenden Qualificationen sind abgelaufen oder laufen vor Ende der Reise ab:
-                        <ul class="ml-4 mt-2 list-disc">
-                            <li v-for="quali in expiredQualifications" :key="quali">{{ quali }}</li>
-                        </ul>
-                    </VWarning>
-                </template>
-                <VWarning v-else-if="registration.name" class="-mx-4 my-4">
-                    {{ registration.name }} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht
-                    automatisiert geprüft werden.
-                </VWarning>
+                </section>
             </div>
         </template>
         <template #buttons>

@@ -5,11 +5,8 @@
         @click="editPosition($event)"
     >
         <template #row="{ item }">
-            <!--            <td :key="item.icon" class="text-xl">-->
-            <!--                <i class="fa-solid" :class="item.icon || 'fa-anchor'" />-->
-            <!--            </td>-->
             <td>
-                <div class="flex w-12 items-center justify-center rounded-full bg-gray-200 px-2 py-1 text-gray-700">
+                <div class="flex w-12 items-center justify-center rounded-full bg-surface-container-high px-2 py-1">
                     <i class="fa-solid fa-arrow-up text-xs"></i>
                     <span class="ml-2 text-center text-sm font-semibold">
                         {{ item.prio }}
@@ -38,7 +35,7 @@
                 <i class="fa-solid fa-edit" />
                 <span>Bearbeiten</span>
             </li>
-            <li class="context-menu-item text-red-700" @click="deletePosition(item)">
+            <li class="context-menu-item text-error" @click="deletePosition(item)">
                 <i class="fa-solid fa-trash-alt" />
                 <span>Löschen</span>
             </li>

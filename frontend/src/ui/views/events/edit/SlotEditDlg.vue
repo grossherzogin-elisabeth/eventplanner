@@ -5,28 +5,30 @@
             <h1 v-else>Slot bearbeiten</h1>
         </template>
         <template #default>
-            <div class="flex flex-1 flex-col p-8 lg:px-16">
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Position</VInputLabel>
-                    <VInputCombobox v-model="primaryPositionKey" :options="positions.options.value" />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Anzeigename</VInputLabel>
-                    <VInputText v-model="slot.positionName" :placeholder="positions.get(primaryPositionKey).name" />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Kritikaliät</VInputLabel>
-                    <VInputSelect
-                        v-model="slot.criticality"
-                        :options="[
-                            { value: SlotCriticality.Required, label: 'Notwendig' },
-                            { value: SlotCriticality.Important, label: 'Wichtig' },
-                            { value: SlotCriticality.Optional, label: 'Optional' },
-                        ]"
-                    />
-                </div>
-                <div class="-mx-4 mt-8 rounded-xl bg-primary-100 p-4 pr-8 text-sm">
-                    <h2 class="mb-4 text-xs font-bold text-primary-700 text-opacity-50">Alternative Positionen</h2>
+            <div class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
+                <section>
+                    <div class="mb-4">
+                        <VInputLabel>Position</VInputLabel>
+                        <VInputCombobox v-model="primaryPositionKey" :options="positions.options.value" />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Anzeigename</VInputLabel>
+                        <VInputText v-model="slot.positionName" :placeholder="positions.get(primaryPositionKey).name" />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Kritikaliät</VInputLabel>
+                        <VInputSelect
+                            v-model="slot.criticality"
+                            :options="[
+                                { value: SlotCriticality.Required, label: 'Notwendig' },
+                                { value: SlotCriticality.Important, label: 'Wichtig' },
+                                { value: SlotCriticality.Optional, label: 'Optional' },
+                            ]"
+                        />
+                    </div>
+                </section>
+                <div class="-mx-4 mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm">
+                    <h2 class="mb-4 text-xs font-bold">Alternative Positionen</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox

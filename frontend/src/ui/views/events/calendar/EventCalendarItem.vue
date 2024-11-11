@@ -8,18 +8,21 @@
         class="calendar-event-wrapper"
     >
         <div :class="`${$attrs.class}`" class="calendar-event-entry" @click="showDetails()">
-            <div class="w-full truncate" :title="props.event.name">
-                <span v-if="event.state === EventState.Draft" class="opacity-50"> Entwurf: </span>
-                <span class="">
-                    {{ props.event.name }}
-                </span>
+            <div class="calendar-event-entry-bar"></div>
+            <div class="calendar-event-entry-bg">
+                <div class="w-full truncate" :title="props.event.name">
+                    <span v-if="event.state === EventState.Draft" class="opacity-50"> Entwurf: </span>
+                    <span class="">
+                        {{ props.event.name }}
+                    </span>
+                </div>
+                <template v-if="props.durationInMonth > 1">
+                    <span class="block w-full truncate text-xs font-normal"> {{ props.duration }} Tage </span>
+                    <span v-if="props.event.description" class="block w-full truncate text-xs font-normal">
+                        {{ props.event.description }}
+                    </span>
+                </template>
             </div>
-            <template v-if="props.durationInMonth > 1">
-                <span class="block w-full truncate text-xs font-normal"> {{ props.duration }} Tage </span>
-                <span v-if="props.event.description" class="block w-full truncate text-xs font-normal">
-                    {{ props.event.description }}
-                </span>
-            </template>
         </div>
         <VDropdownWrapper
             v-if="showDropdown"
@@ -31,7 +34,7 @@
             @close="showDropdown = false"
         >
             <div class="w-full px-2">
-                <div class="rounded-2xl border border-primary-100 bg-primary-50 p-4 px-8 shadow-xl">
+                <div class="rounded-2xl bg-surface-container-low p-4 px-8 shadow-xl">
                     <div class="-mr-4 mb-4 flex items-center justify-end">
                         <!-- title -->
                         <h2 class="flex-grow text-lg">
@@ -46,9 +49,9 @@
                     <!-- state -->
                     <div
                         v-if="props.event.signedInUserAssignedPosition"
-                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-green-100 px-4 py-3 text-green-800"
+                        class="status-green -mx-4 mb-4 flex items-center space-x-4 rounded-xl px-4 py-3"
                     >
-                        <i class="fa-solid fa-check" />
+                        <i class="fa-solid fa-check w-4" />
                         <p class="text-sm font-bold">
                             Du bist für diese Reise als
                             {{ positions.get(props.event.signedInUserAssignedPosition).name }}
@@ -57,9 +60,9 @@
                     </div>
                     <div
                         v-else-if="props.event.signedInUserWaitingListPosition"
-                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-blue-100 px-4 py-3 text-blue-800"
+                        class="status-blue -mx-4 mb-4 flex items-center space-x-4 rounded-xl px-4 py-3"
                     >
-                        <i class="fa-solid fa-clock" />
+                        <i class="fa-solid fa-hourglass-half w-4" />
                         <p class="text-sm font-bold">
                             Du stehst für diese Reise als
                             {{ positions.get(props.event.signedInUserWaitingListPosition).name }}
@@ -70,23 +73,23 @@
                     <!-- info -->
                     <div class="mb-4">
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-calendar-day w-4 text-gray-700"></i>
+                            <i class="fa-solid fa-calendar-day w-4"></i>
                             <span>{{ formatDateRange(props.event.start, props.event.end) }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-bell w-4 text-gray-700" />
+                            <i class="fa-solid fa-bell w-4" />
                             <span>Crew an Board: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-bell-slash w-4 text-gray-700" />
+                            <i class="fa-solid fa-bell-slash w-4" />
                             <span>Crew von Board: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p v-if="props.event.assignedUserCount" class="items-center space-x-4">
-                            <i class="fa-solid fa-users w-4 text-gray-700"></i>
+                            <i class="fa-solid fa-users w-4"></i>
                             <span>{{ props.event.assignedUserCount }} Crew</span>
                         </p>
                         <p v-if="props.event.description" class="flex items-baseline space-x-4">
-                            <i class="fa-solid fa-info-circle mt-0.5 w-4 text-gray-700"></i>
+                            <i class="fa-solid fa-info-circle mt-0.5 w-4"></i>
                             <span class="line-clamp-3">{{ props.event.description }}</span>
                         </p>
                     </div>
@@ -126,7 +129,7 @@
                     </VInfo>
 
                     <!-- primary button -->
-                    <div class="-mx-4 mt-4 flex flex-wrap justify-end xl:-mr-4">
+                    <div class="-mx-8 mt-8 flex flex-wrap justify-end px-4">
                         <div class="flex-grow"></div>
                         <button
                             v-if="props.event.signedInUserAssignedPosition"
@@ -269,16 +272,32 @@ init();
 <style scoped>
 .calendar-event-wrapper {
     @apply absolute left-0 right-0 top-px z-10;
-    @apply rounded-lg bg-white hover:shadow-lg;
+    @apply rounded-md bg-surface-container-lowest hover:shadow;
     @apply overflow-hidden;
 }
 
-.calendar-event-entry {
-    @apply block h-full w-full py-1 pl-2 pr-4 sm:px-2;
-    @apply cursor-pointer;
+.calendar-event-entry-bar {
+    @apply w-2 bg-current opacity-10;
+    --color-1: rgb(0 0 0 / 0.25);
+    --color-2: rgb(255 255 255 / 0.25);
+    --pattern: linear-gradient(
+        135deg,
+        var(--color-1) 25%,
+        var(--color-2) 25%,
+        var(--color-2) 50%,
+        var(--color-1) 50%,
+        var(--color-1) 75%,
+        var(--color-2) 75%,
+        var(--color-2) 100%
+    );
+    background-size: 10px 10px;
+}
+
+.calendar-event-entry-bg {
+    @apply h-full w-0 flex-grow py-1 pl-2 pr-4 sm:px-2;
     @apply text-sm font-semibold;
-    --color-1: rgb(255 255 255 / 0.6);
-    --color-2: rgb(255 255 255 / 0.2);
+    --color-1: rgb(0 0 0 / 0.5);
+    --color-2: rgb(255 255 255 / 0.5);
     --pattern: linear-gradient(
         135deg,
         var(--color-1) 25%,
@@ -293,38 +312,44 @@ init();
 }
 
 .calendar-event-entry {
-    @apply border-l-8 border-blue-400 bg-blue-200 bg-opacity-75 hover:bg-opacity-100;
-    @apply font-bold text-blue-800;
-}
-
-.calendar-event-entry:not(.in-past).full {
-    background-image: var(--pattern);
+    @apply flex h-full w-full items-stretch;
+    @apply cursor-pointer;
+    @apply bg-surface-container-high;
+    @apply font-bold text-onsurface;
 }
 
 .calendar-event-entry.assigned {
-    @apply border-l-8 border-green-700 bg-green-200 bg-opacity-75 hover:bg-opacity-100;
-    @apply text-green-800;
+    @apply bg-primary-container;
+    @apply text-onprimary-container;
 }
 
 .calendar-event-entry.waiting-list {
-    @apply border-l-8 border-green-200 bg-green-200 bg-opacity-75 hover:bg-opacity-100;
-    @apply text-green-800;
+    @apply bg-primary-container bg-opacity-50;
+    @apply text-onsecondary-container;
+}
+
+.calendar-event-entry.waiting-list .calendar-event-entry-bar {
+    @apply bg-primary-container bg-opacity-50;
+    @apply opacity-100;
     background-image: var(--pattern);
 }
 
-.calendar-event-entry.small {
+.calendar-event-entry.draft {
+    @apply bg-surface-container-low;
+}
+
+.calendar-event-entry.draft .calendar-event-entry-bar {
+    @apply bg-surface-container-low bg-opacity-50;
+    @apply opacity-100;
+    background-image: var(--pattern);
+}
+
+.calendar-event-entry.small .calendar-event-entry-bg {
     @apply flex items-center py-0;
     font-size: 0.6rem;
 }
 
-.calendar-event-entry.draft {
-    @apply border-l-8 border-gray-300 bg-gray-200 bg-opacity-75 hover:bg-opacity-100;
-    @apply text-gray-800;
-    background-image: var(--pattern);
-}
-
 .calendar-event-entry.in-past {
-    @apply border-opacity-10 bg-opacity-50 hover:bg-opacity-75;
-    @apply text-opacity-30 hover:text-opacity-75;
+    @apply border-opacity-10 opacity-50 hover:opacity-100;
 }
 </style>

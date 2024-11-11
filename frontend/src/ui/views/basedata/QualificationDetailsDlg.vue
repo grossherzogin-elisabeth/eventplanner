@@ -5,49 +5,51 @@
             <h1 v-else>Qualifikation bearbeiten</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-16">
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Name</VInputLabel>
-                    <VInputText
-                        v-model="qualification.name"
-                        :errors="validation.errors.value['name']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Icon</VInputLabel>
-                    <VInputText
-                        v-model="qualification.icon"
-                        placeholder="fa-id-card"
-                        :errors="validation.errors.value['icon']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                    >
-                        <template #after>
-                            <span :key="qualification.icon">
-                                <i class="fa-solid mr-4" :class="qualification.icon"></i>
-                            </span>
-                        </template>
-                    </VInputText>
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Beschreibung</VInputLabel>
-                    <VInputTextArea
-                        v-model="qualification.description"
-                        :errors="validation.errors.value['description']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                    />
-                </div>
+            <div class="p-8 lg:px-10">
+                <section>
+                    <div class="mb-4">
+                        <VInputLabel>Name</VInputLabel>
+                        <VInputText
+                            v-model="qualification.name"
+                            :errors="validation.errors.value['name']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Icon</VInputLabel>
+                        <VInputText
+                            v-model="qualification.icon"
+                            placeholder="fa-id-card"
+                            :errors="validation.errors.value['icon']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        >
+                            <template #after>
+                                <span :key="qualification.icon">
+                                    <i class="fa-solid mr-4" :class="qualification.icon"></i>
+                                </span>
+                            </template>
+                        </VInputText>
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Beschreibung</VInputLabel>
+                        <VInputTextArea
+                            v-model="qualification.description"
+                            :errors="validation.errors.value['description']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        />
+                    </div>
+                </section>
                 <div class="mb-4">
                     <VInputCheckBox
                         v-model="qualification.expires"
                         label="Gültigkeit der Qualifikation ist zeitlich begrenzt"
                     />
                 </div>
-                <div class="-mx-4 mt-8 rounded-xl bg-primary-100 p-4 pr-8 text-sm">
-                    <h2 class="mb-4 text-xs font-bold text-primary-700 text-opacity-50">Positionen</h2>
+                <div class="-mx-4 mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm">
+                    <h2 class="mb-4 text-xs font-bold">Positionen</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox

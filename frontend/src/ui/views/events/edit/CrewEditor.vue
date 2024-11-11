@@ -1,11 +1,11 @@
 <template>
     <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 2xl:flex-row 2xl:items-start">
         <!-- position counters -->
-        <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-primary-50 pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
+        <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-surface pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
             <div
                 class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap 2xl:flex-col"
             >
-                <div class="flex cursor-pointer items-center rounded-2xl bg-gray-500 p-1">
+                <div class="flex cursor-pointer items-center rounded-2xl bg-onsurface-variant p-1">
                     <span class="px-2"> Alle </span>
                     <span
                         class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
@@ -32,7 +32,7 @@
         </div>
         <div class="-mx-4 flex-1 gap-16 md:flex xl:pr-8 2xl:w-0">
             <div class="mb-8 px-4 pb-4 md:w-1/2 lg:mb-0">
-                <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Crew</h2>
+                <h2 class="mb-4 font-bold text-secondary">Crew</h2>
                 <!-- slot list-admin dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute z-10 w-full" :class="{ hidden: dragSource !== DragSource.FROM_WAITING_LIST }">
@@ -49,7 +49,7 @@
                     :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_WAITING_LIST }"
                 >
                     <!-- empty slot list-admin placeholder -->
-                    <div v-if="team.length === 0" class="rounded-xl bg-primary-100">
+                    <div v-if="team.length === 0" class="rounded-xl bg-secondary-container text-onsecondary-container">
                         <div class="flex items-center py-8 pl-4 pr-8">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
@@ -64,19 +64,17 @@
                             </div>
                             <div></div>
                         </div>
-                        <ul class="pb-8 opacity-20">
+                        <ul class="pb-8 opacity-10">
                             <li
                                 v-for="i in 5"
                                 :key="i"
                                 class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4"
                             >
-                                <i class="fa-solid fa-grip-vertical hidden text-sm text-gray-400 lg:inline"></i>
-                                <i class="fa-regular fa-circle text-gray-400"></i>
-                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-gray-400"> </span>
+                                <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
+                                <i class="fa-regular fa-circle"></i>
+                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsecondary-container"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position bg-gray-400">
-                                    <span class="mx-2 inline-block h-2 w-16 rounded-full bg-gray-100"> </span>
-                                </span>
+                                <span class="position h-4 w-20 bg-onsecondary-container"></span>
                             </li>
                         </ul>
                     </div>
@@ -87,8 +85,8 @@
                             :key="it.slot?.key + it.registration?.key + it.user?.key + it.position.key"
                         >
                             <VDraggable
-                                class="flex items-center rounded-xl px-4 py-2 hover:bg-primary-100 md:space-x-4"
-                                :class="{ 'cursor-move': it.name !== undefined }"
+                                class="flex items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
+                                :class="it.registration !== undefined ? 'cursor-move' : 'pointer-events-none'"
                                 component="li"
                                 :value="it"
                                 @dragend="dragSource = null"
@@ -97,22 +95,22 @@
                             >
                                 <i class="fa-solid fa-grip-vertical hidden text-sm opacity-25 lg:inline"></i>
                                 <span v-if="it.name && !it.registration?.confirmed" class="">
-                                    <i class="fa-solid fa-user-clock text-gray-400"></i>
+                                    <i class="fa-solid fa-user-clock text-onsurface text-opacity-50"></i>
                                 </span>
                                 <span v-else-if="it.name && it.registration?.confirmed">
                                     <i class="fa-solid fa-user-check text-green-600"></i>
                                 </span>
                                 <span v-else>
-                                    <i class="fa-solid fa-user-xmark text-red-500"></i>
+                                    <i class="fa-solid fa-user-xmark text-error"></i>
                                 </span>
                                 <span v-if="it.name" class="mx-2 w-0 flex-grow truncate">
                                     {{ it.name }}
                                     <template v-if="it.name && !it.user"> (Gastcrew) </template>
                                 </span>
-                                <span v-else-if="it.user" class="mx-2 w-0 flex-grow truncate italic text-red-500">
+                                <span v-else-if="it.user" class="mx-2 w-0 flex-grow truncate italic text-error">
                                     Unbekannt
                                 </span>
-                                <span v-else class="mx-2 w-0 flex-grow truncate italic text-red-500">
+                                <span v-else class="mx-2 w-0 flex-grow truncate italic text-error">
                                     Noch nicht besetzt
                                 </span>
                                 <span :style="{ background: it.position.color }" class="position text-xs">
@@ -125,7 +123,7 @@
             </div>
 
             <div class="px-4 md:w-1/2">
-                <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Warteliste</h2>
+                <h2 class="mb-4 font-bold text-secondary">Warteliste</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute w-full space-y-8" :class="{ hidden: dragSource !== DragSource.FROM_TEAM }">
@@ -145,7 +143,7 @@
                 </div>
                 <div class="-mx-4" :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_TEAM }">
                     <!-- empty waitinglist placeholder -->
-                    <div v-if="registrations.length === 0" class="rounded-xl bg-gray-100">
+                    <div v-if="registrations.length === 0" class="rounded-xl bg-surface-container-low text-onsurface">
                         <div class="flex items-center py-8 pl-4 pr-8">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
@@ -159,18 +157,16 @@
                             </div>
                             <div></div>
                         </div>
-                        <ul class="pb-8 opacity-20">
+                        <ul class="pb-8 opacity-10">
                             <li
                                 v-for="i in 5"
                                 :key="i"
                                 class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4"
                             >
-                                <i class="fa-solid fa-grip-vertical hidden text-sm text-gray-400 lg:inline"></i>
-                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-gray-400"> </span>
+                                <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
+                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsurface"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position bg-gray-400">
-                                    <span class="mx-2 inline-block h-2 w-16 rounded-full bg-gray-100"> </span>
-                                </span>
+                                <span class="position block h-4 w-20 bg-onsurface"> </span>
                             </li>
                         </ul>
                     </div>
@@ -181,7 +177,7 @@
                             :key="it.registration?.key + it.user?.key + it.name + it.position.key"
                         >
                             <VDraggable
-                                class="flex cursor-move items-center rounded-xl px-4 py-2 hover:bg-primary-100 md:space-x-4"
+                                class="flex cursor-move items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
                                 component="li"
                                 :value="it"
                                 @dragend="dragSource = null"
@@ -193,7 +189,7 @@
                                     {{ it.name }}
                                     <template v-if="it.name && !it.user"> (Gastcrew) </template>
                                 </span>
-                                <span v-else-if="it.user" class="w-0 flex-grow italic text-red-500"> Unbekannt </span>
+                                <span v-else-if="it.user" class="w-0 flex-grow italic text-error"> Unbekannt </span>
                                 <div>
                                     <ContextMenuButton>
                                         <template #icon>
@@ -201,7 +197,7 @@
                                                 :style="{ background: it.position.color }"
                                                 class="position cursor-pointer text-xs"
                                             >
-                                                {{ it.position.name }}
+                                                <span class="mr-2 flex-grow">{{ it.position.name }}</span>
                                                 <i class="fa-solid fa-chevron-down"> </i>
                                             </span>
                                         </template>
@@ -210,23 +206,22 @@
                                                 <template v-for="pos in positions.all.value" :key="pos.key">
                                                     <li
                                                         v-if="!it.user || it.user.positionKeys.includes(pos.key)"
-                                                        class="-mx-4 flex cursor-pointer items-center justify-between px-4 py-1 hover:bg-primary-200"
+                                                        class="context-menu-item"
                                                         @click="changePosition(it, pos.key)"
                                                     >
-                                                        <span>{{ pos.name }}</span>
+                                                        <span class="flex-grow">{{ pos.name }}</span>
                                                     </li>
                                                 </template>
                                                 <!-- show also non matching positions ??? -->
                                                 <template v-if="it.user">
-                                                    <hr />
                                                     <template v-for="pos in positions.all.value" :key="pos.key">
                                                         <li
                                                             v-if="!it.user.positionKeys.includes(pos.key)"
-                                                            class="-mx-4 flex cursor-pointer items-center justify-between px-4 py-1 hover:bg-primary-200"
+                                                            class="context-menu-item"
                                                             @click="changePosition(it, pos.key)"
                                                         >
-                                                            <span>{{ pos.name }}</span>
-                                                            <i class="fa-solid fa-warning text-yellow-500"></i>
+                                                            <span class="flex-grow">{{ pos.name }}</span>
+                                                            <i class="fa-solid fa-warning text-yellow"></i>
                                                         </li>
                                                     </template>
                                                 </template>
@@ -406,7 +401,7 @@ init();
 .dropzone-delete {
     @apply flex h-full flex-col items-center justify-center space-y-8;
     @apply rounded-xl;
-    @apply border-2 border-dashed border-gray-800 text-gray-800;
+    @apply border-2 border-dashed border-outline;
 }
 
 .dropzone span {
@@ -414,14 +409,14 @@ init();
 }
 
 .dropzone.hover .dropzone-add {
-    @apply border-2 border-dashed border-primary-600 bg-primary-100 text-primary-600;
+    @apply border-2 border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
 }
 
 .dropzone.hover .dropzone-remove {
-    @apply border-2 border-dashed border-primary-600 bg-primary-100 text-primary-600;
+    @apply border-2 border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
 }
 
 .dropzone.hover .dropzone-delete {
-    @apply border-2 border-dashed border-red-600 bg-red-100 text-red-600;
+    @apply border-2 border-dashed border-onerror-container bg-error-container text-onerror-container;
 }
 </style>

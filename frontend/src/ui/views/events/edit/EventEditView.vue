@@ -3,39 +3,30 @@
         <template #header>
             <div v-if="event" class="">
                 <h1 class="mb-1 mt-8 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>
-                <!--                <h1 class="mb-1 mt-4 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>-->
-                <!--                <p class="mb-4 text-sm">-->
-                <!--                    {{ $d(event.start, DateTimeFormat.DDD_DD_MM) }}-->
-                <!--                    - -->
-                <!--                    {{ $d(event.end, DateTimeFormat.DDD_DD_MM) }}-->
-                <!--                </p>-->
-                <div class="-mx-4 flex flex-wrap items-start font-semibold">
-                    <div class="w-full">
-                        <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable clamp>
-                            Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen
-                            freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen.
-                        </VInfo>
-                        <VWarning v-if="event.state === EventState.Canceled" class="mt-4" dismissable>
-                            Diese Reise wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im
-                            Tab Reisedaten zurücknehmen.
-                        </VWarning>
-                        <VWarning
-                            v-else-if="event.state === EventState.Planned && hasEmptyRequiredSlots"
-                            class="mt-4"
-                            dismissable
-                        >
-                            Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht
-                            erfüllt!
-                        </VWarning>
-                    </div>
-                </div>
+                <section class="">
+                    <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable clamp>
+                        Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen
+                        freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen.
+                    </VInfo>
+                    <VWarning v-if="event.state === EventState.Canceled" class="mt-4" dismissable>
+                        Diese Reise wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab
+                        Reisedaten zurücknehmen.
+                    </VWarning>
+                    <VWarning
+                        v-else-if="event.state === EventState.Planned && hasEmptyRequiredSlots"
+                        class="mt-4"
+                        dismissable
+                    >
+                        Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht erfüllt!
+                    </VWarning>
+                </section>
             </div>
         </template>
         <template #content>
-            <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
+            <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
-                        <section v-if="event" class="-mx-4">
+                        <section v-if="event" class="">
                             <div class="mb-4">
                                 <VInputLabel>Status</VInputLabel>
                                 <VInputSelect
@@ -217,7 +208,7 @@
                 <i class="fa-solid fa-rotate" />
                 <span>Crew zurücksetzen</span>
             </li>
-            <li class="permission-write-events context-menu-item text-red-700" @click="cancelEvent()">
+            <li class="permission-write-events context-menu-item text-error" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
                 <span>Reise absagen</span>
             </li>

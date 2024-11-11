@@ -9,10 +9,10 @@
             <template #row="{ item }">
                 <td class="w-0 text-xl opacity-50">
                     <span v-if="!item.waitingList">
-                        <i class="fa-solid fa-check-circle text-green-700"></i>
+                        <i class="fa-solid fa-check text-ongreen"></i>
                     </span>
                     <span v-else>
-                        <i class="fa-solid fa-hourglass-half text-gray-500"></i>
+                        <i class="fa-solid fa-hourglass-half"></i>
                     </span>
                 </td>
                 <td class="w-1/2 max-w-[65vw] border-none font-semibold">
@@ -71,7 +71,7 @@
                     <span>Zur Crew hinzufügen</span>
                 </li>
                 <li
-                    class="context-menu-item text-red-700"
+                    class="context-menu-item text-error"
                     :class="{ disabled: item.inPast }"
                     @click="deleteRegistration(item)"
                 >
@@ -84,41 +84,41 @@
                     <td><!-- spacer --></td>
                     <td class="w-0 text-xl">
                         <!-- registration status -->
-                        <i class="fa-solid fa-circle text-primary-200"></i>
+                        <i class="fa-solid fa-circle text-surface-container-highest"></i>
                     </td>
                     <td class="w-1/2 max-w-[65vw]">
                         <!-- event name and locations -->
-                        <p class="mb-1 h-5 w-64 rounded-lg bg-primary-200"></p>
+                        <p class="mb-1 h-5 w-64 rounded-lg bg-surface-container-highest"></p>
                         <p class="flex items-center space-x-2 text-sm font-light">
-                            <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
-                            <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
-                            <span class="inline-block h-3 w-16 rounded-lg bg-primary-200"></span>
+                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
                         </p>
                     </td>
                     <td class="">
                         <!-- crew -->
-                        <p class="mb-1 h-5 w-12 rounded-lg bg-primary-200"></p>
-                        <p class="h-3 w-10 rounded-lg bg-primary-200"></p>
+                        <p class="mb-1 h-5 w-12 rounded-lg bg-surface-container-highest"></p>
+                        <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
                     </td>
                     <td class="">
                         <!-- date -->
                         <div class="mb-1 font-semibold">
-                            <p class="hidden h-5 w-56 rounded-lg bg-primary-200 lg:block"></p>
-                            <p class="h-5 w-20 rounded-lg bg-primary-200 lg:hidden"></p>
+                            <p class="hidden h-5 w-56 rounded-lg bg-surface-container-highest lg:block"></p>
+                            <p class="h-5 w-20 rounded-lg bg-surface-container-highest lg:hidden"></p>
                         </div>
-                        <p class="h-3 w-16 rounded-lg bg-primary-200"></p>
+                        <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
                     </td>
 
                     <td class="">
                         <!-- role -->
                         <div
-                            class="inline-flex h-6 w-32 items-center space-x-2 rounded-full bg-primary-200 py-1 pl-3 pr-4"
+                            class="inline-flex h-6 w-32 items-center space-x-2 rounded-full bg-surface-container-highest py-1 pl-3 pr-4"
                         ></div>
                     </td>
 
                     <td class="w-0">
                         <div class="px-4 py-2">
-                            <i class="fa-solid fa-circle text-primary-200"></i>
+                            <i class="fa-solid fa-circle text-surface-container-highest"></i>
                         </div>
                     </td>
                     <td><!-- spacer --></td>

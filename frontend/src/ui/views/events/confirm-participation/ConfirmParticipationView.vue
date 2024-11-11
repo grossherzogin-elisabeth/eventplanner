@@ -46,19 +46,6 @@
                 </table>
             </div>
 
-            <div class="mb-8 hidden">
-                <button
-                    v-if="!showDetails"
-                    class="font-bold text-primary-600 hover:underline"
-                    @click="showDetails = true"
-                >
-                    Reisedetails anzeigen
-                </button>
-                <button v-else class="font-bold text-primary-600 hover:underline" @click="showDetails = false">
-                    Reisedetails ausblenden
-                </button>
-            </div>
-
             <div v-if="state === null" class="">
                 <div class="hidden items-center gap-4 sm:flex">
                     <button class="btn-primary" @click="state = true">
@@ -71,7 +58,7 @@
                     </button>
                 </div>
                 <div class="ms:hidden h-20"></div>
-                <div class="fixed bottom-0 left-0 right-0 flex items-stretch gap-4 bg-primary-50 px-4 py-2 sm:hidden">
+                <div class="fixed bottom-0 left-0 right-0 flex items-stretch gap-4 bg-surface px-4 py-2 sm:hidden">
                     <button class="btn-primary w-1/2" @click="state = true">
                         <i class="fa-solid fa-check"></i>
                         <span class="whitespace-normal py-2 text-sm">Ja, ich nehme teil</span>
@@ -94,7 +81,10 @@
                     dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!
                 </p>
             </div>
-            <div v-else-if="state === false" class="-mx-4 mb-8 rounded-2xl bg-red-100 p-4 font-bold text-red-900">
+            <div
+                v-else-if="state === false"
+                class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container"
+            >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-xmark"></i>
                     <span class="ml-4">Reise abgesagt</span>

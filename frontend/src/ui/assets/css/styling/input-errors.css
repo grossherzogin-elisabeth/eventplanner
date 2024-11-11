@@ -3,26 +3,18 @@
 /* --------------------------------------------------------------- */
 
 .input-field-wrapper:has(.invalid) {
-    @apply border-red-200 bg-red-50;
+    @apply border-onerror-container bg-error-container;
 }
 
 .input-field-wrapper:has(.invalid) * {
-    @apply text-red-500 text-opacity-50;
-}
-
-.input-field-wrapper:not(:has([disabled])):has(.invalid):not(.disabled):hover {
-    @apply border-red-300 bg-red-100;
-}
-
-.input-field-wrapper:not(:has([disabled])):has(.invalid):focus-within {
-    @apply border-red-300 bg-red-100;
+    @apply text-onerror-container;
 }
 
 .input-error {
     @apply px-4 pt-1 text-xs font-bold;
-    @apply text-red-500 text-opacity-50;
+    @apply text-error;
 }
 
 .input-label.invalid {
-    @apply text-red-500 text-opacity-50;
+    @apply text-error;
 }

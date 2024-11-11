@@ -1,0 +1,23 @@
+.status-panel {
+    @apply inline-flex w-auto items-center space-x-2 rounded-full py-1 pl-3 pr-4;
+}
+
+.status-yellow {
+    @apply bg-yellow bg-opacity-75 text-onyellow;
+}
+
+.status-blue {
+    @apply bg-blue bg-opacity-70 text-onblue;
+}
+
+.status-gray {
+    @apply bg-surface-container-highest text-onsurface;
+}
+
+.status-green {
+    @apply bg-green bg-opacity-75 text-ongreen;
+}
+
+.status-red {
+    @apply bg-error-container text-onerror-container;
+}

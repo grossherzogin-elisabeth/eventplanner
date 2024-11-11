@@ -18,7 +18,7 @@
             <div class="mx-auto flex min-h-full flex-col justify-end sm:p-8">
                 <div class="h-96 sm:hidden"></div>
                 <div
-                    class="mx-auto flex w-full flex-col rounded-t-3xl bg-primary-50 sm:max-w-xl sm:rounded-3xl md:flex-row lg:max-w-5xl"
+                    class="mx-auto flex w-full flex-col rounded-t-3xl bg-surface sm:max-w-xl sm:rounded-3xl md:flex-row lg:max-w-5xl"
                 >
                     <div class="relative hidden w-0 flex-grow overflow-hidden rounded-l-3xl lg:block">
                         <img
@@ -30,7 +30,7 @@
                         ></div>
                     </div>
                     <div class="flex flex-col p-8 sm:p-16 lg:mx-auto lg:max-w-xl">
-                        <div class="mb-8 h-1 w-8 self-center rounded-full bg-gray-800 opacity-25 sm:hidden"></div>
+                        <div class="mb-8 h-1 w-8 self-center rounded-full bg-surface-container sm:hidden"></div>
 
                         <div class="hidden sm:block">
                             <h1 class="mb-8 text-2xl font-thin">
@@ -84,7 +84,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="h-0 flex-grow bg-primary-50 sm:hidden"></div>
+                <div class="h-0 flex-grow bg-surface sm:hidden"></div>
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 <template>
     <div :class="$attrs.class">
         <h2
-            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-primary-200 px-8 text-base font-semibold md:px-16 xl:px-20"
+            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-outline-variant px-8 text-base font-semibold md:px-16 xl:px-20"
         >
             <slot name="before" />
             <div class="flex gap-x-8">
@@ -59,14 +59,17 @@ useQueryStateSync<string>(
 </script>
 <style>
 .tab {
-    @apply whitespace-nowrap border-b border-transparent pb-1 text-primary-900 hover:text-primary-700;
+    @apply whitespace-nowrap border-b border-transparent pb-1;
 }
 .tab button {
-    @apply text-base font-black;
+    @apply text-base font-bold;
     @apply -mx-4 rounded-lg px-4 py-2;
-    @apply hover:bg-primary-100;
+    @apply bg-transparent;
+}
+.tab button:hover {
+    @apply bg-secondary-container text-onsecondary-container;
 }
 .active.tab {
-    @apply border-b border-primary-600 text-primary-600;
+    @apply border-b border-primary text-primary;
 }
 </style>

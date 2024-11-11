@@ -6,7 +6,7 @@
             </div>
         </teleport>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
@@ -26,6 +26,8 @@
 
         <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
             <ContextMenuButton
+                anchor-align-x="left"
+                dropdown-position-x="right"
                 class="btn-tag min-w-44 max-w-80 truncate"
                 :class="{ active: filterPositions.length > 0 }"
             >
@@ -54,7 +56,6 @@
                             <i class="w-4"></i>
                             <span>Alle Positionen</span>
                         </li>
-                        <hr />
                         <template v-for="position in positions.all.value" :key="position.key">
                             <li
                                 v-if="filterPositions.includes(position.key)"
@@ -73,6 +74,7 @@
                 </template>
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterOnlyActive }" @click="filterOnlyActive = !filterOnlyActive">
+                <i class="fa-solid fa-check"></i>
                 <span class="">Aktive Stammcrew</span>
             </button>
             <button
@@ -80,6 +82,7 @@
                 :class="{ active: filterExpiredQualifications }"
                 @click="filterExpiredQualifications = !filterExpiredQualifications"
             >
+                <i class="fa-solid fa-check"></i>
                 <span class="">Abgelaufene Qualifikationen</span>
             </button>
         </div>
@@ -106,7 +109,7 @@
                             <span
                                 v-for="position in item.positions"
                                 :key="position.key"
-                                class="position my-0.5 mr-1 bg-gray-500 text-xs opacity-75"
+                                class="position my-0.5 mr-1 bg-surface-container-highest text-xs opacity-75"
                                 :style="{ background: position.color }"
                             >
                                 {{ position.name }}
@@ -139,16 +142,13 @@
                     </td>
                     <td class="w-1/12">
                         <div class="flex items-center justify-end">
-                            <div
-                                v-if="item.qualifications?.length === 0"
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
-                            >
+                            <div v-if="item.qualifications?.length === 0" class="status-gray status-panel">
                                 <i class="fa-solid fa-question-circle"></i>
                                 <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
                             </div>
                             <div
                                 v-else-if="item.expiredQualifications.length > 0"
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
+                                class="status-red status-panel"
                                 :title="item.expiredQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-ban"></i>
@@ -158,23 +158,20 @@
                             </div>
                             <div
                                 v-else-if="item.soonExpiringQualifications.length > 0"
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
+                                class="status-yellow status-panel"
                                 :title="item.soonExpiringQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-warning"></i>
                                 <span class="whitespace-nowrap font-semibold">
-                                    <template v-if="item.soonExpiringQualifications.length === 1"
-                                        >1 läuft bald ab</template
-                                    >
-                                    <template v-else
-                                        >{{ item.soonExpiringQualifications.length }} laufen bald ab</template
-                                    >
+                                    <template v-if="item.soonExpiringQualifications.length === 1">
+                                        1 läuft bald ab
+                                    </template>
+                                    <template v-else>
+                                        {{ item.soonExpiringQualifications.length }} laufen bald ab
+                                    </template>
                                 </span>
                             </div>
-                            <div
-                                v-else
-                                class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
-                            >
+                            <div v-else class="status-green status-panel">
                                 <i class="fa-solid fa-check-circle"></i>
                                 <span class="whitespace-nowrap font-semibold">Alle gültig</span>
                             </div>
@@ -198,7 +195,7 @@
                         <i class="fa-solid fa-edit" />
                         <span>Nutzer bearbeiten</span>
                     </li>
-                    <li class="permission-delete-users context-menu-item text-red-700" @click="deleteUser(item)">
+                    <li class="permission-delete-users context-menu-item text-error" @click="deleteUser(item)">
                         <i class="fa-solid fa-trash-alt" />
                         <span>Nutzer löschen</span>
                     </li>
@@ -217,7 +214,7 @@
 
         <div v-if="selectedUsers && selectedUsers.length > 0" class="sticky bottom-0 z-20">
             <div
-                class="h-full border-t border-primary-200 bg-primary-50 px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20"
+                class="h-full border-t border-outline-variant bg-surface px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20"
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap">
                     <button class="btn-ghost" @click="selectNone()">
@@ -252,7 +249,7 @@
                                 <i class="fa-solid fa-screwdriver-wrench" />
                                 <span>Arbeitsdienst eintragen*</span>
                             </li>
-                            <li class="permission-delete-users context-menu-item disabled text-red-700">
+                            <li class="permission-delete-users context-menu-item disabled text-error">
                                 <i class="fa-solid fa-trash-alt" />
                                 <span>Nutzer löschen*</span>
                             </li>

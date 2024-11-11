@@ -4,7 +4,7 @@
 
 .check-box-container {
     @apply inline-block rounded-lg;
-    @apply border-primary-300 bg-primary-50 text-primary-700;
+    @apply border-outline;
     @apply border;
     @apply cursor-pointer;
     outline: none;
@@ -44,9 +44,9 @@
 }
 
 .check-box-container.invalid {
-    border-color: indianred;
+    @apply border-onerror-container bg-error-container;
 }
 
 .check-box-label.invalid {
-    color: indianred;
+    @apply bg-error;
 }

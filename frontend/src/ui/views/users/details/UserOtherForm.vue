@@ -1,6 +1,6 @@
 <template>
-    <section v-if="user" class="-mx-4">
-        <h2 class="mb-4 px-4 font-bold text-primary-800 text-opacity-50">Ernährung</h2>
+    <section v-if="user" class="">
+        <h2 class="mb-4 font-bold text-secondary">Ernährung</h2>
         <div class="mb-4">
             <VInputLabel>Ernährungsweise</VInputLabel>
             <VInputSelect
@@ -16,7 +16,7 @@
             <VInputLabel>Unverträglichkeiten</VInputLabel>
             <VInputTextArea v-model="user.intolerances" placeholder="Keine Angabe" />
         </div>
-        <h2 class="mb-4 mt-8 px-4 font-bold text-primary-800 text-opacity-50">Sonstiges</h2>
+        <h2 class="mb-4 mt-8 font-bold text-secondary">Sonstiges</h2>
         <div class="mb-4">
             <VInputLabel>Kommentar (nicht für den Nutzer einsehbar)</VInputLabel>
             <VInputTextArea v-model="user.comment" placeholder="Keine Angabe" />

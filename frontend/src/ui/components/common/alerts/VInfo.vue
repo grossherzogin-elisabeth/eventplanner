@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex items-center overflow-hidden rounded-xl bg-blue-100 text-blue-900"
+        class="flex items-center overflow-hidden rounded-xl bg-secondary-container text-onsecondary-container"
         :class="{ hidden: dismissed }"
         @click="clampActive = !clampActive"
     >
@@ -10,7 +10,7 @@
         </span>
         <button
             v-if="props.dismissable !== false"
-            class="m-1 h-9 w-9 self-start rounded-full hover:bg-blue-200 hover:bg-opacity-75"
+            class="m-1 h-9 w-9 self-start rounded-full hover:bg-secondary-variant hover:text-onsecondary-variant"
             @click="dismiss()"
         >
             <i class="fa-solid fa-xmark"></i>

@@ -16,7 +16,7 @@
                     v-if="event.state === EventState.Canceled"
                     class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:ml-0"
                 >
-                    <div class="overflow-hidden rounded-2xl bg-red-100 text-red-800">
+                    <div class="status-red overflow-hidden rounded-2xl">
                         <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
                             <i class="fa-solid fa-ban" />
                             <p class="text-sm font-bold">Diese Reise wurde abgesagt!</p>
@@ -56,28 +56,28 @@
 
                 <!-- details -->
                 <section class="-mx-4 md:col-start-2 xl:ml-0">
-                    <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">
+                    <h2 class="mb-2 ml-4 font-bold text-secondary">
                         {{ $t('app.event-details.title') }}
                     </h2>
-                    <div class="space-y-1 rounded-2xl bg-primary-100 p-4 lg:px-8">
+                    <div class="space-y-1 rounded-2xl bg-surface-container p-4">
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-route w-4 text-gray-700" />
-                            <span>{{ event.name }}</span>
+                            <i class="fa-solid fa-route w-4" />
+                            <span class="truncate">{{ event.name }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-calendar-day w-4 text-gray-700" />
+                            <i class="fa-solid fa-calendar-day w-4" />
                             <span>{{ formatDateRange(event.start, event.end) }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-bell w-4 text-gray-700" />
+                            <i class="fa-solid fa-bell w-4" />
                             <span>Crew an Board: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-bell-slash w-4 text-gray-700" />
+                            <i class="fa-solid fa-bell-slash w-4" />
                             <span>Crew von Board: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-users w-4 text-gray-700" />
+                            <i class="fa-solid fa-users w-4" />
                             <span v-if="event.assignedUserCount && waitingListCount">
                                 {{ event.assignedUserCount }} Crew, {{ waitingListCount }} Warteliste
                             </span>
@@ -89,11 +89,11 @@
 
                 <!-- route -->
                 <section class="-mx-4 md:col-start-2 xl:ml-0">
-                    <h2 class="mb-2 ml-4 font-bold text-primary-800 text-opacity-50 lg:ml-8">
+                    <h2 class="mb-2 ml-4 font-bold text-secondary">
                         <template v-if="event.locations.length === 1">Ort</template>
                         <template v-else>Route</template>
                     </h2>
-                    <div class="space-y-1 rounded-2xl bg-primary-100 p-4 lg:px-8">
+                    <div class="space-y-1 rounded-2xl bg-surface-container p-4">
                         <p v-if="event.locations.length === 0" class="text-sm">
                             Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen
                             verfügbar sind, kannst du sie hier sehen.
@@ -106,7 +106,7 @@
                         >
                             <i :class="stop.icon" class="fa-solid w-4" />
                             <span class="">{{ stop.name }}</span>
-                            <span v-if="stop.country" class="text-sm text-primary-900 text-opacity-50">
+                            <span v-if="stop.country" class="text-sm text-secondary text-opacity-50">
                                 ({{ stop.country }})
                             </span>
                         </div>
@@ -117,24 +117,21 @@
                 <section class="col-start-1 row-span-6 -mx-4 md:row-start-1 md:mx-0">
                     <h2
                         v-if="statesWithHiddenCrew.includes(event.state)"
-                        class="mb-2 ml-4 flex space-x-4 font-bold text-primary-800 text-opacity-50 md:mb-6 md:ml-0"
+                        class="mb-2 ml-4 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0"
                     >
                         <span>Anmeldungen</span>
                     </h2>
-                    <h2
-                        v-else
-                        class="mb-2 ml-4 flex space-x-4 font-bold text-primary-800 text-opacity-50 md:mb-6 md:ml-0"
-                    >
+                    <h2 v-else class="mb-2 ml-4 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
                         <button
-                            class="hover:text-primary-600"
-                            :class="{ 'text-primary-600 underline': tab === Tab.Team }"
+                            class="hover:text-primary"
+                            :class="{ 'text-primary underline': tab === Tab.Team }"
                             @click="tab = Tab.Team"
                         >
                             Crew ({{ event.assignedUserCount }})
                         </button>
                         <button
-                            class="hover:text-primary-600"
-                            :class="{ 'text-primary-600 underline': tab === Tab.WaitingList }"
+                            class="hover:text-primary"
+                            :class="{ 'text-primary underline': tab === Tab.WaitingList }"
                             @click="tab = Tab.WaitingList"
                         >
                             Warteliste ({{ waitingListCount }})
@@ -142,9 +139,9 @@
                     </h2>
                     <div
                         v-if="event.assignedUserCount === 0 && waitingListCount === 0"
-                        class="rounded-2xl bg-primary-100 px-4 md:-mx-4 md:-mt-4 lg:-mx-8 lg:px-8"
+                        class="rounded-2xl bg-surface-container px-4 md:-mx-4 md:-mt-4"
                     >
-                        <div class="flex items-center py-8">
+                        <div class="flex items-center py-4">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
                                     <i class="fa-solid fa-trophy opacity-75"></i>
@@ -158,22 +155,23 @@
                             </div>
                             <div></div>
                         </div>
-                        <ul class="pb-8 opacity-20">
+                        <ul class="pb-8">
                             <li v-for="i in 10" :key="i" class="flex items-center space-x-4 rounded-xl py-1">
-                                <i class="fa-solid fa-circle text-gray-400"></i>
-                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-gray-400"> </span>
+                                <i class="fa-solid fa-circle text-surface-container-highest"></i>
+                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-surface-container-highest">
+                                </span>
                                 <span class="flex-grow"></span>
-                                <span class="position h-4 w-16 bg-gray-400"> </span>
+                                <span class="position h-4 w-16 bg-surface-container-highest"> </span>
                             </li>
                         </ul>
                     </div>
-                    <div v-else class="rounded-2xl bg-primary-100 p-4 md:rounded-none md:bg-transparent md:p-0">
+                    <div v-else class="rounded-2xl bg-surface-container p-4 md:rounded-none md:bg-transparent md:p-0">
                         <template v-if="tab === Tab.Team">
                             <ul class="space-y-2">
                                 <template v-for="it in team" :key="it.slot?.key || ''">
                                     <li class="flex items-center space-x-2 md:space-x-4">
-                                        <i v-if="it.name" class="fa-solid fa-user-circle text-gray-500" />
-                                        <i v-else class="fa-solid fa-user-circle text-red-500" />
+                                        <i v-if="it.name" class="fa-solid fa-user-circle text-secondary" />
+                                        <i v-else class="fa-solid fa-user-circle text-error" />
                                         <RouterLink
                                             v-if="
                                                 it.user &&
@@ -185,10 +183,10 @@
                                             {{ it.name }}
                                         </RouterLink>
                                         <span v-else-if="it.name" class="truncate">{{ it.name }}</span>
-                                        <span v-else-if="it.user?.key" class="italic text-red-500">
+                                        <span v-else-if="it.user?.key" class="italic text-error">
                                             Unbekannter Nutzer
                                         </span>
-                                        <span v-else class="truncate italic text-red-500">Noch nicht besetzt</span>
+                                        <span v-else class="truncate italic text-error">Noch nicht besetzt</span>
                                         <span class="flex-grow"></span>
                                         <span
                                             :style="{ background: it.position.color }"
@@ -207,7 +205,7 @@
                                     :key="index"
                                     class="flex items-center justify-between space-x-2 md:space-x-4"
                                 >
-                                    <i class="fa-solid fa-user-circle text-gray-500" />
+                                    <i class="fa-solid fa-user-circle" />
                                     <span class="flex-grow">{{ it.name }}</span>
                                     <span :style="{ background: it.position.color }" class="position text-xs">
                                         {{ it.position.name }}
@@ -216,7 +214,7 @@
                             </ul>
                             <div
                                 v-if="waitingList.length === 0"
-                                class="-mx-4 -mt-4 rounded-xl bg-primary-100 p-4 text-sm lg:-mx-8 lg:px-8"
+                                class="-mx-4 -mt-4 rounded-xl bg-surface-container p-4 text-sm"
                             >
                                 <p v-if="statesWithHiddenCrew.includes(event.state)">
                                     Für diesen Termin gibt es noch keine Anmeldungen.

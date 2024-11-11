@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex min-h-screen flex-col bg-primary-50 from-primary-900 to-primary-800 to-50% xl:bg-gradient-to-r"
+        class="flex min-h-screen flex-col bg-primary from-p-700 to-p-600 to-50% xl:bg-gradient-to-r"
         :class="{ impersonated: signedInUser?.impersonated }"
     >
         <div id="navbar" class="xl:hidden">
@@ -12,7 +12,7 @@
                 <AppMenu class="relative z-10" />
             </div>
             <div
-                class="relative flex w-0 flex-grow flex-col bg-primary-50 xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl"
+                class="relative flex w-0 flex-grow flex-col bg-surface xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl"
             >
                 <RouterView id="router-view" v-model:title="title" class="flex flex-1 flex-col" />
             </div>
@@ -66,8 +66,3 @@ function setTitle(): void {
 
 init();
 </script>
-<style>
-.europe {
-    @apply text-primary-600;
-}
-</style>

@@ -35,7 +35,7 @@
                         tabindex="-1"
                         @click="showDropdown()"
                     >
-                        <i class="fa-solid fa-chevron-down text-sm text-primary-600"></i>
+                        <i class="fa-solid fa-chevron-down text-sm text-primary"></i>
                     </button>
                 </div>
                 <slot name="after" />

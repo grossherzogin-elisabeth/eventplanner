@@ -18,7 +18,7 @@
                 <span
                     v-for="positionKey in item.grantsPositions"
                     :key="positionKey"
-                    class="position my-0.5 mr-1 bg-gray-500 text-xs opacity-75"
+                    class="position my-0.5 mr-1 bg-surface-container-high text-xs opacity-75"
                     :style="{ background: positions.get(positionKey).color }"
                 >
                     {{ positions.get(positionKey).name }}
@@ -26,17 +26,11 @@
             </td>
             <td class="w-80">
                 <div class="flex justify-end">
-                    <div
-                        v-if="item.expires"
-                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                    >
+                    <div v-if="item.expires" class="status-yellow status-panel">
                         <i class="fa-solid fa-clock"></i>
                         <span class="whitespace-nowrap font-semibold">Mit Ablaufdatum</span>
                     </div>
-                    <div
-                        v-else
-                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
-                    >
+                    <div v-else class="status-green status-panel">
                         <i class="fa-solid fa-check-circle"></i>
                         <span class="whitespace-nowrap font-semibold">Ohne Ablaufdatum</span>
                     </div>
@@ -48,7 +42,7 @@
                 <i class="fa-solid fa-edit" />
                 <span>Bearbeiten</span>
             </li>
-            <li class="context-menu-item text-red-700" @click="deleteQualification(item)">
+            <li class="context-menu-item text-error" @click="deleteQualification(item)">
                 <i class="fa-solid fa-trash-alt" />
                 <span>Löschen</span>
             </li>

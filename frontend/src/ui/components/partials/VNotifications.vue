@@ -115,11 +115,11 @@ init();
 }
 
 .error .notification {
-    @apply bg-red-100 text-red-800;
+    @apply bg-error-container text-onerror-container;
 }
 
 .error .notification p {
-    @apply text-red-900;
+    @apply text-onerror-container;
 }
 
 .animate-disappear {

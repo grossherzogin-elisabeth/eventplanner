@@ -5,51 +5,53 @@
             <h1 v-else>Position hinzufügen</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-16">
-                <div v-if="position.key" class="-mx-4 mb-4">
-                    <VInputLabel>Id</VInputLabel>
-                    <VInputText v-model="position.key" required disabled />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Name</VInputLabel>
-                    <VInputText
-                        v-model="position.name"
-                        :errors="validation.errors.value['name']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Anzeigename IMO Liste</VInputLabel>
-                    <VInputText
-                        v-model="position.imoListRank"
-                        :errors="validation.errors.value['imoListRank']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Farbe</VInputLabel>
-                    <VInputText
-                        v-model="position.color"
-                        :errors="validation.errors.value['color']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                    >
-                        <template #after>
-                            <div class="mr-4 h-8 w-8 rounded-lg" :style="{ background: position.color }"></div>
-                        </template>
-                    </VInputText>
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Priorität</VInputLabel>
-                    <VInputNumber
-                        v-model="position.prio"
-                        :errors="validation.errors.value['prio']"
-                        :errors-visible="validation.showErrors.value"
-                        required
-                    />
-                </div>
+            <div class="p-8 lg:px-10">
+                <section>
+                    <div v-if="position.key" class="mb-4">
+                        <VInputLabel>Id</VInputLabel>
+                        <VInputText v-model="position.key" required disabled />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Name</VInputLabel>
+                        <VInputText
+                            v-model="position.name"
+                            :errors="validation.errors.value['name']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Anzeigename IMO Liste</VInputLabel>
+                        <VInputText
+                            v-model="position.imoListRank"
+                            :errors="validation.errors.value['imoListRank']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Farbe</VInputLabel>
+                        <VInputText
+                            v-model="position.color"
+                            :errors="validation.errors.value['color']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        >
+                            <template #after>
+                                <div class="mr-4 h-8 w-8 rounded-lg" :style="{ background: position.color }"></div>
+                            </template>
+                        </VInputText>
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Priorität</VInputLabel>
+                        <VInputNumber
+                            v-model="position.prio"
+                            :errors="validation.errors.value['prio']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                        />
+                    </div>
+                </section>
             </div>
         </template>
         <template #buttons>

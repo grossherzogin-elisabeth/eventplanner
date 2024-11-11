@@ -6,24 +6,24 @@
                     v-if="settings"
                     v-model="tab"
                     :tabs="tabs"
-                    class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8"
+                    class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8"
                 >
                     <template #[Tab.GENERAL_SETTINGS]>
                         <div class="items-start gap-32 2xl:flex">
-                            <section class="w-full max-w-2xl">
-                                <div class="-mx-4 mb-4">
+                            <section class="max-w-2xl">
+                                <div class="mb-4">
                                     <VInputLabel>Menü Titel</VInputLabel>
                                     <VInputText v-model="settings.ui.menuTitle" required />
                                 </div>
-                                <div class="-mx-4 mb-4">
+                                <div class="mb-4">
                                     <VInputLabel>Tab Titel Präfix</VInputLabel>
                                     <VInputText v-model="settings.ui.tabTitle" required />
                                 </div>
-                                <div class="-mx-4 mb-4 mt-12">
+                                <div class="mb-4 mt-12">
                                     <VInputLabel>Technischer Support Email</VInputLabel>
                                     <VInputText v-model="settings.ui.technicalSupportEmail" required />
                                 </div>
-                                <div class="-mx-4 mb-4">
+                                <div class="mb-4">
                                     <VInputLabel>Fachlicher Support Email</VInputLabel>
                                     <VInputText v-model="settings.ui.supportEmail" required />
                                 </div>
@@ -32,28 +32,28 @@
                     </template>
                     <template #[Tab.EMAIL]>
                         <div class="items-start gap-32 2xl:flex">
-                            <section class="w-full max-w-2xl">
-                                <div class="-mx-4 mb-4">
+                            <section class="max-w-2xl">
+                                <div class="mb-4">
                                     <VInputLabel>From</VInputLabel>
                                     <VInputText v-model="settings.email.from" required />
                                 </div>
-                                <div class="-mx-4 mb-4">
+                                <div class="mb-4">
                                     <VInputLabel>From Anzeigename</VInputLabel>
                                     <VInputText v-model="settings.email.fromDisplayName" required />
                                 </div>
-                                <div class="-mx-4 mb-4">
+                                <div class="mb-4">
                                     <VInputLabel>Reply to</VInputLabel>
                                     <VInputText v-model="settings.email.replyTo" required />
                                 </div>
-                                <div class="-mx-4 mb-4">
+                                <div class="mb-4">
                                     <VInputLabel>Reply to Anzeigename</VInputLabel>
                                     <VInputText v-model="settings.email.replyToDisplayName" required />
                                 </div>
-                                <div class="-mx-4 mb-4 mt-12">
+                                <div class="mb-4 mt-12">
                                     <VInputLabel>Hostname</VInputLabel>
                                     <VInputText v-model="settings.email.host" required />
                                 </div>
-                                <div class="-mx-4 mb-4">
+                                <div class="mb-4">
                                     <VInputLabel>Port</VInputLabel>
                                     <VInputNumber v-model="settings.email.port" required />
                                 </div>
@@ -63,15 +63,15 @@
                                 <div class="mb-4">
                                     <VInputCheckBox v-model="settings.email.enableSSL" label="SSL" />
                                 </div>
-                                <div class="-mx-4 mb-4 mt-12">
+                                <div class="mb-4 mt-12">
                                     <VInputLabel>Authentifizierungsmethode</VInputLabel>
                                     <VInputText model-value="Benutzername / Passwort" required disabled />
                                 </div>
-                                <div class="-mx-4 mb-4">
+                                <div class="mb-4">
                                     <VInputLabel>Benutzername</VInputLabel>
                                     <VInputText v-model="settings.email.username" required />
                                 </div>
-                                <div class="-mx-4 mb-4">
+                                <div class="mb-4">
                                     <VInputLabel>Password</VInputLabel>
                                     <VInputText
                                         v-model="settings.email.password"

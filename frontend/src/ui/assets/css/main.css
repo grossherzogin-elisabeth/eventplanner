@@ -6,11 +6,11 @@
 @import 'styling/inputs.css';
 @import 'styling/typography.css';
 @import 'styling/buttons.css';
-@import 'styling/card.css';
 @import 'styling/table.css';
 @import 'styling/pagination.css';
 @import 'styling/dialog.css';
 @import 'styling/scrollbar.css';
+@import 'styling/status-panels.css';
 
 @import 'domain/role.css';
 @import 'domain/event.css';

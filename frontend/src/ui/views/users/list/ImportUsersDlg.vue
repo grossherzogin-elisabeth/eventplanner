@@ -4,29 +4,27 @@
             <h1>Nutzer importieren</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-16">
-                <p class="mb-4">
-                    Hier kannst du Nutzer aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein paar
-                    Minuten.
-                </p>
-                <div class="-mx-4 mb-2">
-                    <VInputLabel>Datei</VInputLabel>
-                    <VInputFile v-model="file" />
-                </div>
+            <div class="px-8 pt-4 lg:px-10">
+                <section>
+                    <p class="mb-4">
+                        Hier kannst du Nutzer aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein
+                        paar Minuten.
+                    </p>
+                    <div class="-mx-4 mb-2">
+                        <VInputLabel>Datei</VInputLabel>
+                        <VInputFile v-model="file" />
+                    </div>
+                </section>
             </div>
         </template>
         <template #buttons="{ reject, submit }">
             <button v-if="uploadComplete" class="btn-primary" @click="submit">Schließen</button>
             <template v-else>
-                <button class="btn-secondary" @click="reject">
-                    <i class="fa-solid fa-xmark" />
+                <button class="btn-ghost" @click="reject">
                     <span>Abbrechen</span>
                 </button>
                 <div class="w-auto">
                     <AsyncButton :action="submit" :disabled="!file">
-                        <template #icon>
-                            <i class="fa-solid fa-upload" />
-                        </template>
                         <template #label="{ loading }">
                             <template v-if="loading">Nutzer werden importiert</template>
                             <template v-else>Nutzer importieren</template>

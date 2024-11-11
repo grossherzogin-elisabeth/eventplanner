@@ -1,15 +1,14 @@
 import type { RouteRecordRaw } from 'vue-router';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
-import { Routes } from '@/ui/views/Routes';
 
 const routeMeta: RouteMetaData = {
     authenticated: false,
 };
 
 const route: RouteRecordRaw = {
-    path: '/wiki',
-    name: Routes.Wiki,
-    component: () => import('./WikiView.vue'),
+    path: '/test',
+    name: 'test',
+    component: () => import('./TestView.vue'),
     meta: routeMeta,
 };
 

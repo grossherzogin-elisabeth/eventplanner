@@ -22,13 +22,6 @@
                 <span v-if="props.label" :class="{ invalid: showErrors && hasErrors }" class="check-box-label">
                     {{ $t(props.label) }}
                 </span>
-                <button
-                    v-if="hint"
-                    :title="hint"
-                    class="ml-2 rounded bg-gray-700 px-2 text-sm font-semibold hover:bg-gray-600 hover:text-primary-500"
-                >
-                    <span>?</span>
-                </button>
             </slot>
         </label>
         <div v-if="showErrors && hasErrors" class="input-errors">
@@ -47,8 +40,6 @@ import { v4 as uuid4 } from 'uuid';
 interface Props {
     // an optional label to render before the input field
     label?: string;
-    // an optional hint to display next to the label
-    hint?: string;
     // the value we edit, bind with v-model
     modelValue?: boolean;
     // disables this input

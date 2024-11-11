@@ -1,7 +1,8 @@
 .dialog {
     @apply flex flex-col overflow-hidden;
     @apply sm:rounded-3xl sm:shadow-lg;
-    @apply bg-gradient-to-br from-primary-50 from-50% to-primary-100;
+    @apply bg-surface;
+    /*@apply bg-gradient-to-br from-primary-50 from-50% to-primary-100;*/
 }
 
 .dialog.modal {
@@ -18,11 +19,11 @@
 }
 
 .dialog-close-button {
-    @apply h-10 w-10 rounded-full text-gray-700 hover:bg-primary-100 hover:text-gray-950;
+    @apply h-10 w-10 rounded-full hover:bg-surface-container;
 }
 
 .dialog-buttons {
-    @apply flex justify-end space-x-4 px-8 py-4 lg:px-16;
+    @apply flex justify-end gap-2 px-8 py-4 lg:px-10;
 }
 
 .dialog-background {
@@ -106,10 +107,6 @@
     }
 }
 
-.bg-dialog-header {
-    @apply bg-gradient-to-r from-primary-50 from-50% to-primary-100;
-}
-
 @media (max-width: 639px) {
     .dialog-wrapper:not(:has(.modal)) {
         @apply w-full overflow-hidden;
@@ -128,7 +125,7 @@
 
     .dialog:not(.modal) .dialog-header {
         height: var(--nav-height);
-        @apply truncate bg-navbar text-white;
+        @apply truncate bg-primary text-onprimary;
     }
 
     .dialog:not(.modal) .dialog-close-button {
@@ -145,6 +142,24 @@
 
     .dialog:not(.modal) .dialog-content {
         /*animation: anim-dialog-open var(--open-close-animation-duration) ease-in;*/
-        @apply bg-gradient-to-br from-primary-50 from-50% to-primary-100;
+        /*@apply bg-gradient-to-br from-primary-50 from-50% to-primary-100;*/
     }
+}
+
+.error-dialog .dialog-header {
+    @apply border-onerror-container bg-error-container;
+}
+
+.dialog.error-dialog > .dialog-content,
+.dialog.error-dialog > .dialog-buttons {
+    @apply bg-error-container bg-opacity-50;
+}
+
+.error-dialog .dialog-close-button {
+    @apply text-onerror-container;
+    @apply hover:bg-onerror-container hover:bg-opacity-5;
+}
+
+.error-dialog h1 {
+    @apply text-onerror-container;
 }

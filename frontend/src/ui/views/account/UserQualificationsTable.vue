@@ -25,24 +25,15 @@
             </td>
             <td>
                 <div class="flex items-center justify-end">
-                    <div
-                        v-if="item.isExpired"
-                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
-                    >
+                    <div v-if="item.isExpired" class="status-red status-panel">
                         <i class="fa-solid fa-ban"></i>
                         <span class="whitespace-nowrap font-semibold">Abgelaufen</span>
                     </div>
-                    <div
-                        v-else-if="item.willExpireSoon"
-                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                    >
+                    <div v-else-if="item.willExpireSoon" class="status-panel status-yellow">
                         <i class="fa-solid fa-warning"></i>
                         <span class="whitespace-nowrap font-semibold"> Läuft bald ab</span>
                     </div>
-                    <div
-                        v-else
-                        class="inline-flex w-auto items-center space-x-2 rounded-full bg-green-200 py-1 pl-3 pr-4 text-green-700"
-                    >
+                    <div v-else class="status-panel status-green">
                         <i class="fa-solid fa-check-circle"></i>
                         <span class="whitespace-nowrap font-semibold">Gültig</span>
                     </div>

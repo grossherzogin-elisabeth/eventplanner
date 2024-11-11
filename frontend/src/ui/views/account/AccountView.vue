@@ -2,13 +2,13 @@
     <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <DetailsPage>
             <template #content>
-                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-primary-50 pt-4 xl:top-0 xl:pt-8">
+                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
                     <template #[Tab.PERSONAL_DATA]>
                         <div v-if="userDetails" class="items-start gap-16 md:flex lg:gap-20 xl:max-w-5xl">
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
                                 <section class="app-data">
-                                    <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">App</h2>
-                                    <div class="-mx-4 mb-4">
+                                    <h2 class="mb-4 font-bold text-secondary">App</h2>
+                                    <div class="mb-4">
                                         <VInputLabel>Anzeigename</VInputLabel>
                                         <VInputText
                                             v-model="userDetails.nickName"
@@ -17,8 +17,8 @@
                                     </div>
                                 </section>
                                 <section class="diet-data">
-                                    <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Ernährung</h2>
-                                    <div class="-mx-4 mb-4 sm:w-64">
+                                    <h2 class="mb-4 font-bold text-secondary">Ernährung</h2>
+                                    <div class="mb-4 sm:w-64">
                                         <VInputLabel>Ernährungsweise</VInputLabel>
                                         <VInputSelect
                                             v-model="userDetails.diet"
@@ -29,14 +29,14 @@
                                             ]"
                                         />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Unverträglichkeiten</VInputLabel>
                                         <VInputTextArea v-model="userDetails.intolerances" placeholder="Keine Angabe" />
                                     </div>
                                 </section>
                                 <section class="personal-data">
-                                    <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Persönliche Daten</h2>
-                                    <div class="-mx-4 mb-4 sm:w-64">
+                                    <h2 class="mb-4 font-bold text-secondary">Persönliche Daten</h2>
+                                    <div class="mb-4 sm:w-64">
                                         <VInputLabel>Geschlecht</VInputLabel>
                                         <VInputSelect
                                             v-model="userDetails.gender"
@@ -44,7 +44,7 @@
                                             placeholder="Keine Angabe"
                                         />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Vorname</VInputLabel>
                                         <VInputText
                                             :model-value="
@@ -55,7 +55,7 @@
                                             placeholder="Keine Angabe"
                                         />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Zweiter Vornahme</VInputLabel>
                                         <VInputText
                                             v-model="userDetails.secondName"
@@ -63,7 +63,7 @@
                                             placeholder="Keine Angabe"
                                         />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Nachname</VInputLabel>
                                         <VInputText
                                             v-model="userDetails.lastName"
@@ -72,7 +72,7 @@
                                             placeholder="Keine Angabe"
                                         />
                                     </div>
-                                    <div class="-mx-4 flex flex-col sm:flex-row sm:space-x-4">
+                                    <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
                                             <VInputLabel>Geboren am</VInputLabel>
                                             <VInputDate
@@ -92,7 +92,7 @@
                                             />
                                         </div>
                                     </div>
-                                    <div class="-mx-4 flex flex-col sm:flex-row sm:space-x-4">
+                                    <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
                                             <VInputLabel>Personalausweis Nummer</VInputLabel>
                                             <VInputText
@@ -144,8 +144,8 @@
                         <div v-if="userDetails" class="items-start gap-16 md:flex lg:gap-20 xl:max-w-5xl">
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
                                 <section>
-                                    <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Email & Telefon</h2>
-                                    <div class="-mx-4 mb-4">
+                                    <h2 class="mb-4 font-bold text-secondary">Email & Telefon</h2>
+                                    <div class="mb-4">
                                         <VInputLabel>Email</VInputLabel>
                                         <VInputText
                                             v-model="userDetails.email"
@@ -154,22 +154,22 @@
                                             placeholder="keine Angabe"
                                         />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Telefon</VInputLabel>
                                         <VInputText v-model="userDetails.phone" placeholder="keine Angabe" />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Telefon (dienstlich)</VInputLabel>
                                         <VInputText v-model="userDetails.phoneWork" placeholder="keine Angabe" />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Mobil</VInputLabel>
                                         <VInputText v-model="userDetails.mobile" placeholder="keine Angabe" />
                                     </div>
                                 </section>
                                 <section>
-                                    <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Adresse</h2>
-                                    <div class="-mx-4 mb-4">
+                                    <h2 class="mb-4 font-bold text-secondary">Adresse</h2>
+                                    <div class="mb-4">
                                         <VInputLabel>Straße, Hausnr</VInputLabel>
                                         <VInputText
                                             v-model="userDetails.address.addressLine1"
@@ -177,14 +177,14 @@
                                             placeholder="keine Angabe"
                                         />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Adresszusatz</VInputLabel>
                                         <VInputText
                                             v-model="userDetails.address.addressLine2"
                                             placeholder="keine Angabe"
                                         />
                                     </div>
-                                    <div class="-mx-4 flex flex-col sm:flex-row sm:space-x-4">
+                                    <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-36">
                                             <VInputLabel>PLZ</VInputLabel>
                                             <VInputText
@@ -221,12 +221,12 @@
                     </template>
                     <template #[Tab.ACCOUNT_CREDENTIALS]>
                         <section class="max-w-2xl">
-                            <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Zugangsdaten</h2>
-                            <div class="-mx-4 mb-2">
+                            <h2 class="mb-4 font-bold text-secondary">Zugangsdaten</h2>
+                            <div class="mb-2">
                                 <VInputLabel>Benutzername</VInputLabel>
                                 <VInputText v-model="user.email" disabled required />
                             </div>
-                            <div class="-mx-4 mb-2">
+                            <div class="mb-2">
                                 <VInputLabel>Password</VInputLabel>
                                 <VInputText
                                     disabled
@@ -255,16 +255,16 @@
                     <template #[Tab.EMERGENCY]>
                         <div v-if="userDetails" class="items-start gap-16 md:flex lg:gap-20 xl:max-w-5xl">
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
-                                <section>
-                                    <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">Notfallkontakt</h2>
-                                    <div class="-mx-4 mb-4">
+                                <section class="">
+                                    <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
+                                    <div class="mb-4">
                                         <VInputLabel>Name des Notfallkontakts</VInputLabel>
                                         <VInputText
                                             v-model="userDetails.emergencyContact.name"
                                             placeholder="Keine Angabe"
                                         />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Telefonnummer des Notfallkontakts</VInputLabel>
                                         <VInputText
                                             v-model="userDetails.emergencyContact.phone"
@@ -272,22 +272,22 @@
                                         />
                                     </div>
                                 </section>
-                                <section>
-                                    <h2 class="mb-4 font-bold text-primary-800 text-opacity-50">
+                                <section class="">
+                                    <h2 class="mb-4 font-bold text-secondary">
                                         Wichtige gesundheitliche Informationen
                                     </h2>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Krankheiten</VInputLabel>
                                         <VInputTextArea v-model="userDetails.diseases" placeholder="Keine Angabe" />
                                     </div>
-                                    <div class="-mx-4 mb-4">
+                                    <div class="mb-4">
                                         <VInputLabel>Medikamente</VInputLabel>
                                         <VInputTextArea v-model="userDetails.medication" placeholder="Keine Angabe" />
                                     </div>
                                 </section>
                             </div>
                             <div class="my-8 md:my-0 md:w-1/3 md:max-w-96 2xl:w-1/2">
-                                <VInfo class="-mx-4 py-2">
+                                <VInfo class="-mx-4 py-2 md:mx-0">
                                     <h2 class="mb-2">Notfall Informationen</h2>
                                     <p class="mb-2">
                                         Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord

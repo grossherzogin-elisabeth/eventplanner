@@ -10,7 +10,7 @@
     >
         <template #row="{ item, index }">
             <td class="w-0">
-                <span class="inline-block rounded-full bg-gray-200 px-2 py-1 text-sm font-semibold text-gray-700">
+                <span class="inline-block rounded-full bg-surface-container-highest px-2 py-1 text-sm font-semibold">
                     #{{ index + 1 }}
                 </span>
             </td>
@@ -36,24 +36,15 @@
             </td>
             <td class="w-64">
                 <div class="flex items-center justify-end">
-                    <span
-                        v-if="item.criticality === 2"
-                        class="inline-flex w-auto items-center rounded-full bg-red-100 py-1 pl-3 pr-4 text-red-700"
-                    >
+                    <span v-if="item.criticality === 2" class="status-panel status-red">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-2 whitespace-nowrap font-semibold">Notwendig</span>
                     </span>
-                    <span
-                        v-else-if="item.criticality === 1"
-                        class="inline-flex w-auto items-center rounded-full bg-yellow-100 py-1 pl-3 pr-4 text-yellow-700"
-                    >
+                    <span v-else-if="item.criticality === 1" class="status-panel status-yellow">
                         <i class="fa-solid fa-circle-info"></i>
                         <span class="ml-2 whitespace-nowrap font-semibold">Wichtig</span>
                     </span>
-                    <span
-                        v-else
-                        class="inline-flex w-auto items-center rounded-full bg-gray-200 py-1 pl-3 pr-4 text-gray-700"
-                    >
+                    <span v-else class="status-panel status-gray">
                         <i class="fa-solid fa-circle-question"></i>
                         <span class="ml-2 whitespace-nowrap font-semibold">Optional</span>
                     </span>
@@ -77,7 +68,7 @@
                 <i class="fa-solid fa-arrow-down" />
                 <span>Nach unten verschieben</span>
             </li>
-            <li class="context-menu-item text-red-700" @click="deleteSlot(item)">
+            <li class="context-menu-item text-error" @click="deleteSlot(item)">
                 <i class="fa-solid fa-trash-alt" />
                 <span>Slot Löschen</span>
             </li>

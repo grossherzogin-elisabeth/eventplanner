@@ -4,38 +4,40 @@
             <h1 class="truncate">Anmeldung hinzufügen</h1>
         </template>
         <template #default>
-            <div v-if="registration" class="px-8 py-4 lg:px-16">
-                <p class="mb-8 max-w-lg">
-                    {{ registration.user.firstName }} wird zur Warteliste der ausgewählten Reise hinzugefügt. Wenn
-                    {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die Reise
-                    noch manuell bearbeiten.
-                </p>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Reise</VInputLabel>
-                    <VInputCombobox
-                        v-model="registration.eventKey"
-                        :options="eventOptions"
-                        :errors="validation.errors.value['eventKey']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Position</VInputLabel>
-                    <VInputCombobox
-                        v-model="registration.positionKey"
-                        :options="positions.options.value"
-                        :errors="validation.errors.value['positionKey']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
-                <div class="-mx-4 mb-4">
-                    <VInputLabel>Notiz</VInputLabel>
-                    <VInputTextArea
-                        v-model="registration.note"
-                        :errors="validation.errors.value['note']"
-                        :errors-visible="validation.showErrors.value"
-                    />
-                </div>
+            <div v-if="registration" class="px-8 pt-4 lg:px-10">
+                <section>
+                    <p class="mb-8 max-w-lg">
+                        {{ registration.user.firstName }} wird zur Warteliste der ausgewählten Reise hinzugefügt. Wenn
+                        {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die
+                        Reise noch manuell bearbeiten.
+                    </p>
+                    <div class="mb-4">
+                        <VInputLabel>Reise</VInputLabel>
+                        <VInputCombobox
+                            v-model="registration.eventKey"
+                            :options="eventOptions"
+                            :errors="validation.errors.value['eventKey']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Position</VInputLabel>
+                        <VInputCombobox
+                            v-model="registration.positionKey"
+                            :options="positions.options.value"
+                            :errors="validation.errors.value['positionKey']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Notiz</VInputLabel>
+                        <VInputTextArea
+                            v-model="registration.note"
+                            :errors="validation.errors.value['note']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                </section>
             </div>
         </template>
         <template #buttons>

@@ -1,16 +1,19 @@
 .input-dropdown,
 .input-datepicker-dropdown {
-    @apply rounded-lg border border-primary-200 bg-primary-100 shadow-xl md:border-primary-400;
+    @apply rounded-lg border border-primary bg-surface-container-high shadow-xl;
 }
 
 .input-dropdown li {
     @apply py-4 pl-4;
 }
 
+.input-dropdown li.input-dropdown-option {
+}
+
 .input-dropdown li.input-dropdown-option:hover {
-    @apply bg-primary-200;
+    @apply bg-surface-container-highest;
 }
 
 .input-dropdown li.input-dropdown-option-focus {
-    @apply bg-primary-200 text-primary-700;
+    @apply bg-primary font-bold text-onprimary !important;
 }
