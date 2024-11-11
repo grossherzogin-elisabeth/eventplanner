@@ -7,15 +7,14 @@ import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.RegistrationKey;
-import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
-import org.eventplanner.users.values.UserKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -28,7 +27,6 @@ public class ConsumptionListService {
     }
 
     public @NonNull ByteArrayOutputStream generateConsumptionList(@NonNull Event event) throws IOException {
-
         List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
                 .map(Slot::getAssignedRegistration)
                 .filter(Objects::nonNull)
@@ -43,10 +41,7 @@ public class ConsumptionListService {
 
         try (fileTemplate) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
-
-            List<String> nameList = getNameList(crewList);
-            Collections.sort(nameList);
-            writeCrewDataToWorkbook(workbook, nameList);
+            writeCrewDataToWorkbook(workbook, getNameList(crewList));
 
             return getWorkbookBytes(workbook);
         } catch (IOException e) {
@@ -56,36 +51,28 @@ public class ConsumptionListService {
     }
 
     private List<String> getNameList(List<Registration> crewList) {
+        var userNames = crewList.stream()
+                .map(Registration::getUser)
+                .filter(Objects::nonNull)
+                .map(userService::getUserByKey)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(user ->  user.getNickName() != null
+                            ? user.getNickName()+ "\n" + user.getLastName()
+                            : user.getFirstName()+ "\n" + user.getLastName());
 
-        List<String> nameList = new ArrayList<>();
+        var guestNames = crewList.stream()
+                .filter(registration -> registration.getUser() == null)
+                .map(Registration::getName)
+                .filter(Objects::nonNull)
+                .map(s -> s.contains(",")
+                        ? s.substring(s.indexOf(",") + 1).trim() + "\n" + s.substring(0, s.indexOf(","))
+                        : s.replaceFirst("\\s", "\n"));
 
-        for (Registration registration : crewList) {
-
-            UserKey crewMemberKey = registration.getUser();
-            if (crewMemberKey != null) {
-                Optional<UserDetails> crewMemberDetails = userService.getUserByKey(Objects.requireNonNull(crewMemberKey));
-                crewMemberDetails.ifPresent(userDetails -> nameList.add(userDetails.getFirstName() + "\n" + userDetails.getLastName()));
-                if (crewMemberDetails.isPresent() && crewMemberDetails.get().getNickName() != null) {
-                    crewMemberDetails.ifPresent(userDetails -> nameList.add(userDetails.getNickName() + "\n" + userDetails.getLastName()));
-                } else {
-                    crewMemberDetails.ifPresent(userDetails -> nameList.add(userDetails.getFirstName() + "\n" + userDetails.getLastName()));
-                }
-            } else if (registration.getName() != null) {
-                String guestName = registration.getName();
-                if (guestName.contains(",")) {
-                    String guestLastName = guestName.substring(0, guestName.indexOf(","));
-                    String guestFirstName = guestName.substring(guestName.indexOf(",") + 1).trim();
-                    nameList.add(guestFirstName + "\n" + guestLastName);
-                } else {
-                    nameList.add(guestName.replaceFirst("\\s", "\n"));
-                }
-            }
-        }
-        return nameList;
+        return Stream.concat(userNames, guestNames).sorted().toList();
     }
 
     private void writeCrewDataToWorkbook(XSSFWorkbook workbook, List<String> nameList) throws IOException {
-
         XSSFSheet sheet = workbook.getSheetAt(0);
         for (int i = 1; i < nameList.size(); i++) {
             sheet.getRow(i * 2 - 1).getCell(0).setCellValue(nameList.get(i));

@@ -1,6 +1,7 @@
 import type {
     AuthService,
-    EventRegistrationsRepository, EventRepository,
+    EventRegistrationsRepository,
+    EventRepository,
     NotificationService,
     PositionCachingService,
     UserCachingService,
@@ -280,12 +281,19 @@ export class EventUseCase {
 
     public async downloadImoList(event: Event): Promise<void> {
         const file = await this.eventRepository.downloadImoList(event);
-        saveBlobToFile(`${event.name.replace('s', '_')}_imo-list.xlsx`, file);
+        saveBlobToFile(`${this.formatDateFileName(event.start)}_IMO_Liste.xlsx`, file);
     }
 
     public async downloadConsumptionList(event: Event): Promise<void> {
         const file = await this.eventRepository.downloadConsumptionList(event);
-        saveBlobToFile(`${event.name.replace('s', '_')}_consumption-list.xlsx`, file);
+        saveBlobToFile(`${this.formatDateFileName(event.start)}_Verzehrliste.xlsx`, file);
+    }
+
+    private formatDateFileName(date: Date | string | number): string {
+        const d = new Date(date);
+        const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate().toString();
+        const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : (d.getMonth() + 1).toString();
+        return `${d.getFullYear()}-${month}-${day}`;
     }
 
     public downloadCalendarEntry(event: Event): void {

@@ -1,4 +1,4 @@
-export function saveBlobToFile(fileName: string, data: Blob) {
+export function saveBlobToFile(fileName: string, data: Blob): void {
     try {
         const downloadElement = document.createElement('a');
         downloadElement.setAttribute('download', fileName);
@@ -14,7 +14,7 @@ export function saveBlobToFile(fileName: string, data: Blob) {
     }
 }
 
-export function saveStringToFile(fileName: string, data: string) {
+export function saveStringToFile(fileName: string, data: string): void {
     const blob = new Blob([data], { type: 'octet/stream' });
     saveBlobToFile(fileName, blob);
 }

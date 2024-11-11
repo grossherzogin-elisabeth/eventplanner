@@ -84,13 +84,9 @@ public class EventController {
         ByteArrayOutputStream imoListStream = eventUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
         byte[] imoListByteArray = imoListStream.toByteArray();
 
-        HttpHeaders headers = new HttpHeaders();
-        String fileName = eventKey + "imo-list" + ".xlsx";
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName +"\"");
         ByteArrayResource resource = new ByteArrayResource(imoListByteArray);
 
         return ResponseEntity.ok()
-                .headers(headers)
                 .contentLength(imoListByteArray.length)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
@@ -103,13 +99,9 @@ public class EventController {
         ByteArrayOutputStream consumptionListStream = eventUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
         byte[] consumptionListByteArray = consumptionListStream.toByteArray();
 
-        HttpHeaders headers = new HttpHeaders();
-        String fileName = eventKey + "consumption-list" + ".xlsx";
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName +"\"");
         ByteArrayResource resource = new ByteArrayResource(consumptionListByteArray);
 
         return ResponseEntity.ok()
-                .headers(headers)
                 .contentLength(consumptionListByteArray.length)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
