@@ -58,9 +58,13 @@ public class ImoListService {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
             XSSFSheet sheet = workbook.getSheetAt(0);
 
-            String arrivalPort = event.getLocations().getFirst().name();
-            String departurePort = event.getLocations().getLast().name();
-            replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", arrivalPort + "/" + departurePort);
+            if (!event.getLocations().isEmpty()) {
+                String arrivalPort = event.getLocations().getFirst().name();
+                String departurePort = event.getLocations().getLast().name();
+                replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", arrivalPort + "/" + departurePort);
+            } else {
+                replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", "");
+            }
 
             String arrivalDate = event.getStart().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             String departureDate = event.getEnd().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -139,7 +143,7 @@ public class ImoListService {
         }
     }
 
-    private void replacePlaceHolderInSheet(XSSFSheet sheet, String placeHolder, @NonNull String eventDetail) {
+    private void replacePlaceHolderInSheet(XSSFSheet sheet, String placeHolder, @NonNull String replacement) {
         Iterator<Row> rowIterator = sheet.iterator();
         int rowCounter = 0;
         while (rowIterator.hasNext()) {
@@ -149,7 +153,7 @@ public class ImoListService {
             while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
                 if (cell.getCellType() == CellType.STRING && cell.getStringCellValue().contains(placeHolder)) {
-                    sheet.getRow(rowCounter).getCell(cellCounter).setCellValue(eventDetail);
+                    sheet.getRow(rowCounter).getCell(cellCounter).setCellValue(replacement);
                 }
                 cellCounter++;
             }

@@ -139,6 +139,20 @@
                             <span>Reise bearbeiten</span>
                         </RouterLink>
                     </li>
+                    <li
+                        class="permission-read-user-details context-menu-item"
+                        @click="eventUseCase.downloadImoList(item)"
+                    >
+                        <i class="fa-solid fa-clipboard-user" />
+                        <span>IMO Liste generieren</span>
+                    </li>
+                    <li
+                        class="permission-read-user-details context-menu-item"
+                        @click="eventUseCase.downloadConsumptionList(item)"
+                    >
+                        <i class="fa-solid fa-beer-mug-empty" />
+                        <span>Verzehrliste generieren</span>
+                    </li>
                     <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
                         <i class="fa-solid fa-user-plus" />
                         <span>Anmeldung hinzufügen</span>
