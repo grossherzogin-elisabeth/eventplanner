@@ -6,6 +6,8 @@ import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
+import org.eventplanner.events.services.ConsumptionListService;
+import org.eventplanner.events.services.ImoListService;
 import org.eventplanner.events.service.EventService;
 import org.eventplanner.events.spec.CreateEventSpec;
 import org.eventplanner.events.spec.CreateRegistrationSpec;
@@ -16,7 +18,6 @@ import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.notifications.service.NotificationService;
 import org.eventplanner.users.entities.SignedInUser;
-import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.Permission;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.*;
@@ -37,18 +40,24 @@ public class EventUseCase {
     private final EventRepository eventRepository;
     private final NotificationService notificationService;
     private final UserService userService;
+    private final ImoListService imoListService;
+    private final ConsumptionListService consumptionListService;
     private final EventService eventService;
 
     public EventUseCase(
             @Autowired EventRepository eventRepository,
             @Autowired NotificationService notificationService,
             @Autowired UserService userService,
-            @Autowired EventService eventService
+            @Autowired ImoListService imoListService,
+            @Autowired EventService eventService,
+            @Autowired ConsumptionListService consumptionListService
     ) {
         this.eventRepository = eventRepository;
         this.notificationService = notificationService;
         this.userService = userService;
         this.eventService = eventService;
+        this.imoListService = imoListService;
+        this.consumptionListService = consumptionListService;
     }
 
     public @NonNull List<Event> getEvents(@NonNull SignedInUser signedInUser, int year) {
@@ -157,6 +166,22 @@ public class EventUseCase {
 
         this.eventRepository.findByKey(eventKey).orElseThrow();
         eventRepository.deleteByKey(eventKey);
+    }
+
+    public ByteArrayOutputStream downloadImoList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
+        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
+        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+
+        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        return imoListService.generateImoList(event);
+    }
+
+    public ByteArrayOutputStream downloadConsumptionList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
+        signedInUser.assertHasPermission(Permission.READ_USERS);
+        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+
+        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        return consumptionListService.generateConsumptionList(event);
     }
 
     public @NonNull Event addRegistration(

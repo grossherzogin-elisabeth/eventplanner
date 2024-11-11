@@ -136,6 +136,7 @@ async function init(): Promise<void> {
                 errorHandlingService: errorHandlingService,
                 eventCachingService: eventCachingService,
                 eventRegistrationsRepository: eventRegistrationsRepository,
+                eventRepository: eventRepository,
                 userCachingService: userCachingService,
                 positionCachingService: positionCachingService,
                 registrationService: domain.services.registrations,

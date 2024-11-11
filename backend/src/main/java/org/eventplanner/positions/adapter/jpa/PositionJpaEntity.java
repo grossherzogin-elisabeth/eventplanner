@@ -35,16 +35,20 @@ public class PositionJpaEntity implements Serializable {
     @Column(name = "prio", nullable = false)
     private int prio;
 
+    @Column(name = "imoListRank", nullable = false)
+    private String imoListRank;
+
     public static PositionJpaEntity fromDomain(Position position) {
         return new PositionJpaEntity(
             position.getKey().value(),
             position.getName(),
             position.getColor(),
-            position.getPriority()
+            position.getPriority(),
+            position.getImoListRank()
         );
     }
 
     public Position toDomain() {
-        return new Position(new PositionKey(key), name, color, prio);
+        return new Position(new PositionKey(key), name, color, prio, imoListRank);
     }
 }

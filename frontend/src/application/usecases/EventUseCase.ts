@@ -1,6 +1,7 @@
 import type {
     AuthService,
     EventRegistrationsRepository,
+    EventRepository,
     NotificationService,
     PositionCachingService,
     UserCachingService,
@@ -8,6 +9,7 @@ import type {
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { formatIcsDate } from '@/common/date';
+import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
 import type { Event, EventKey, EventService, PositionKey, RegistrationService, UserKey } from '@/domain';
 import { EventState, EventType, SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
@@ -17,6 +19,7 @@ export class EventUseCase {
     private readonly errorHandlingService: ErrorHandlingService;
     private readonly authService: AuthService;
     private readonly eventService: EventService;
+    private readonly eventRepository: EventRepository;
     private readonly eventCachingService: EventCachingService;
     private readonly userCachingService: UserCachingService;
     private readonly positionCachingService: PositionCachingService;
@@ -28,6 +31,7 @@ export class EventUseCase {
         errorHandlingService: ErrorHandlingService;
         authService: AuthService;
         eventService: EventService;
+        eventRepository: EventRepository;
         eventCachingService: EventCachingService;
         userCachingService: UserCachingService;
         positionCachingService: PositionCachingService;
@@ -39,6 +43,7 @@ export class EventUseCase {
         this.authService = params.authService;
         this.eventService = params.eventService;
         this.eventCachingService = params.eventCachingService;
+        this.eventRepository = params.eventRepository;
         this.userCachingService = params.userCachingService;
         this.positionCachingService = params.positionCachingService;
         this.registrationService = params.registrationService;
@@ -274,6 +279,23 @@ export class EventUseCase {
         return savedEvent;
     }
 
+    public async downloadImoList(event: Event): Promise<void> {
+        const file = await this.eventRepository.downloadImoList(event);
+        saveBlobToFile(`${this.formatDateFileName(event.start)}_IMO_Liste.xlsx`, file);
+    }
+
+    public async downloadConsumptionList(event: Event): Promise<void> {
+        const file = await this.eventRepository.downloadConsumptionList(event);
+        saveBlobToFile(`${this.formatDateFileName(event.start)}_Verzehrliste.xlsx`, file);
+    }
+
+    private formatDateFileName(date: Date | string | number): string {
+        const d = new Date(date);
+        const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate().toString();
+        const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : (d.getMonth() + 1).toString();
+        return `${d.getFullYear()}-${month}-${day}`;
+    }
+
     public downloadCalendarEntry(event: Event): void {
         // create ics file
         const lines = [
@@ -298,19 +320,6 @@ export class EventUseCase {
             'END:VCALENDAR',
         ];
         // download ics file
-        try {
-            const downloadElement = document.createElement('a');
-            downloadElement.setAttribute(
-                'href',
-                'data:text/plain;charset=utf-8,' + encodeURIComponent(lines.join('\n'))
-            );
-            downloadElement.setAttribute('download', 'Event.ics');
-            downloadElement.style.display = 'none';
-            document.body.appendChild(downloadElement);
-            downloadElement.click();
-            document.body.removeChild(document);
-        } catch (e) {
-            console.error(e);
-        }
+        saveStringToFile('Event.ics', lines.join('\n'));
     }
 }

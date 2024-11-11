@@ -252,6 +252,28 @@ export class EventRestRepository implements EventRepository {
         }
     }
 
+    public async downloadImoList(event: Event): Promise<Blob> {
+        const response = await fetch(`/api/v1/events/${event.key}/imo-list`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        return response.clone().blob();
+    }
+
+    public async downloadConsumptionList(event: Event): Promise<Blob> {
+        const response = await fetch(`/api/v1/events/${event.key}/consumption-list`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        return response.clone().blob();
+    }
+
     private static parseDate(date: string): Date {
         // js cannot parse an ISO date time like 2024-06-25T00:00+02:00[Europe/Berlin]
         if (date.includes('[')) {

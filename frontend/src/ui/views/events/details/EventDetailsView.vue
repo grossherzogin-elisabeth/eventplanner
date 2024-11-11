@@ -299,16 +299,16 @@
                 <i class="fa-solid fa-note-sticky" />
                 <span>Notiz fürs Büro hinzufügen</span>
             </li>
-            <li
-                v-if="signedInUser.permissions.includes(Permission.READ_USER_DETAILS)"
-                class="context-menu-item disabled"
-            >
+            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
             </li>
-            <li class="permission-read-users context-menu-item disabled">
+            <li
+                class="permission-read-user-details context-menu-item"
+                @click="eventUseCase.downloadConsumptionList(event)"
+            >
                 <i class="fa-solid fa-beer-mug-empty" />
-                <span>Getränkeliste generieren</span>
+                <span>Verzehrliste generieren</span>
             </li>
             <li class="permission-write-events">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
