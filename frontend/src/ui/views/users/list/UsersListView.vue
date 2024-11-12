@@ -6,7 +6,7 @@
             </div>
         </teleport>
 
-        <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
@@ -109,7 +109,7 @@
                             <span
                                 v-for="position in item.positions"
                                 :key="position.key"
-                                class="position bg-surface-container-highest my-0.5 mr-1 text-xs opacity-75"
+                                class="position my-0.5 mr-1 bg-surface-container-highest text-xs opacity-75"
                                 :style="{ background: position.color }"
                             >
                                 {{ position.name }}
@@ -144,14 +144,14 @@
                         <div class="flex items-center justify-end">
                             <div
                                 v-if="item.qualifications?.length === 0"
-                                class="bg-surface-container-highest text-onsurface status-panel"
+                                class="status-panel bg-surface-container-highest text-onsurface"
                             >
                                 <i class="fa-solid fa-question-circle"></i>
                                 <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
                             </div>
                             <div
                                 v-else-if="item.expiredQualifications.length > 0"
-                                class="bg-red-container text-onred-container status-panel"
+                                class="status-panel bg-red-container text-onred-container"
                                 :title="item.expiredQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-ban"></i>
@@ -161,7 +161,7 @@
                             </div>
                             <div
                                 v-else-if="item.soonExpiringQualifications.length > 0"
-                                class="bg-yellow-container text-onyellow-container status-panel"
+                                class="status-panel bg-yellow-container text-onyellow-container"
                                 :title="item.soonExpiringQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-warning"></i>
@@ -174,7 +174,7 @@
                                     </template>
                                 </span>
                             </div>
-                            <div v-else class="bg-green-container text-ongreen-container status-panel">
+                            <div v-else class="status-panel bg-green-container text-ongreen-container">
                                 <i class="fa-solid fa-check-circle"></i>
                                 <span class="whitespace-nowrap font-semibold">Alle gültig</span>
                             </div>
@@ -217,7 +217,7 @@
 
         <div v-if="selectedUsers && selectedUsers.length > 0" class="sticky bottom-0 z-20">
             <div
-                class="border-outline-variant bg-surface h-full border-t px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20"
+                class="h-full border-t border-outline-variant bg-surface px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20"
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap">
                     <button class="btn-ghost" @click="selectNone()">

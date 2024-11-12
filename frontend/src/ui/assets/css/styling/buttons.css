@@ -13,11 +13,11 @@
 }
 
 .btn-primary {
-    @apply bg-primary text-onprimary bg-opacity-90;
+    @apply bg-primary bg-opacity-90 text-onprimary;
 }
 
 .btn-primary:not(:disabled) {
-    @apply hover:shadow hover:bg-opacity-100;
+    @apply hover:bg-opacity-100 hover:shadow;
 }
 
 .btn-primary.disabled,
@@ -26,11 +26,11 @@
 }
 
 .btn-secondary {
-    @apply bg-secondary-container text-onsecondary-container bg-opacity-90;
+    @apply bg-secondary-container bg-opacity-90 text-onsecondary-container;
 }
 
 .btn-secondary:not(:disabled) {
-    @apply hover:shadow hover:bg-opacity-100;
+    @apply hover:bg-opacity-100 hover:shadow;
 }
 
 .btn-secondary.disabled,
@@ -55,7 +55,7 @@ a.btn-danger,
 
 .btn-floating:disabled,
 .btn-floating-danger:disabled {
-    @apply opacity-100 text-opacity-25 !important;
+    @apply text-opacity-25 opacity-100 !important;
 }
 
 .btn-floating {
@@ -95,7 +95,7 @@ a.btn-danger,
 
 .icon-button {
     @apply flex items-center justify-center;
-    @apply w-11 h-11;
+    @apply h-11 w-11;
     @apply relative;
 }
 
@@ -103,7 +103,7 @@ a.btn-danger,
     content: '';
     @apply rounded-full bg-current opacity-10;
     @apply pointer-events-none;
-    @apply absolute top-1/2 left-1/2 right-1/2 bottom-1/2;
+    @apply absolute bottom-1/2 left-1/2 right-1/2 top-1/2;
     transition: top, left, right, bottom;
     transition-duration: 100ms;
     transition-timing-function: ease-in-out;

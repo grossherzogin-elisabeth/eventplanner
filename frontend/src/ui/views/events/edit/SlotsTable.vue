@@ -10,7 +10,7 @@
     >
         <template #row="{ item, index }">
             <td class="w-0">
-                <span class="bg-surface-container-highest inline-block rounded-full px-2 py-1 text-sm font-semibold">
+                <span class="inline-block rounded-full bg-surface-container-highest px-2 py-1 text-sm font-semibold">
                     #{{ index + 1 }}
                 </span>
             </td>

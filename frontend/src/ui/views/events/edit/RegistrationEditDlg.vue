@@ -36,7 +36,7 @@
                                 <span class="flex-grow">{{ item.label }}</span>
                                 <i
                                     v-if="selectedUser && item.value && !selectedUser.positionKeys.includes(item.value)"
-                                    class="fa-solid fa-warning text-yellow mr-4"
+                                    class="fa-solid fa-warning mr-4 text-yellow"
                                 />
                             </template>
                         </VInputCombobox>

@@ -48,17 +48,17 @@
                 >
                     <td></td>
                     <td v-if="props.sortable && viewPortSize.width.value > 1024" class="w-0">
-                        <i class="fa-solid fa-grip-vertical text-secondary-variant cursor-move"></i>
+                        <i class="fa-solid fa-grip-vertical cursor-move text-secondary-variant"></i>
                     </td>
                     <td
                         v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"
                         @click.stop.prevent="row.selected = !row.selected"
                     >
                         <div v-if="row.selected">
-                            <i class="fa-solid fa-check-square text-primary text-xl sm:text-2xl"></i>
+                            <i class="fa-solid fa-check-square text-xl text-primary sm:text-2xl"></i>
                         </div>
                         <div v-else>
-                            <i class="fa-solid fa-square text-surface-container-high text-xl sm:text-2xl"></i>
+                            <i class="fa-solid fa-square text-xl text-surface-container-high sm:text-2xl"></i>
                         </div>
                     </td>
                     <slot
@@ -97,7 +97,7 @@
             max-width="20rem"
             @close="dropdownAnchor = null"
         >
-            <div class="bg-surface-container-high mt-2 rounded-xl p-4 shadow-xl">
+            <div class="mt-2 rounded-xl bg-surface-container-high p-4 shadow-xl">
                 <ul>
                     <template v-if="props.multiselection">
                         <li

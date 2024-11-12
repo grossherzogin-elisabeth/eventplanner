@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-surface flex flex-1 flex-col">
+    <div class="flex flex-1 flex-col bg-surface">
         <div v-if="events" class="flex h-full flex-1 flex-col">
             <div class="relative flex h-full flex-1 items-stretch">
                 <div class="absolute left-5 top-1 z-30 hidden h-10 w-10 lg:block xl:top-6">
@@ -368,8 +368,8 @@ init();
 
 .calendar-header {
     @apply sticky top-0 z-50 sm:z-20;
-    @apply bg-primary text-onprimary py-2.5 pl-20 pr-4 sm:ml-2 sm:pl-16 md:ml-2 md:pl-20 xl:pb-4 xl:pt-8;
-    @apply sm:border-r-surface border-r border-transparent;
+    @apply bg-primary py-2.5 pl-20 pr-4 text-onprimary sm:ml-2 sm:pl-16 md:ml-2 md:pl-20 xl:pb-4 xl:pt-8;
+    @apply border-r border-transparent sm:border-r-surface;
     @apply text-lg font-bold;
 }
 
@@ -380,7 +380,7 @@ init();
 .calendar-day {
     height: var(--row-height);
     width: calc(var(--scrollcontainer-width) / var(--columns));
-    @apply border-surface bg-surface relative flex items-center border-b border-r pl-2 pr-1;
+    @apply relative flex items-center border-b border-r border-surface bg-surface pl-2 pr-1;
     @apply select-none;
 }
 
@@ -390,12 +390,12 @@ init();
 
 .calendar-filler {
     height: var(--row-height);
-    @apply border-r-surface border-r;
+    @apply border-r border-r-surface;
     @apply border-b border-b-transparent;
 }
 
 .calendar-day-label {
-    @apply text-outline-variant w-7 text-sm font-bold md:w-8;
+    @apply w-7 text-sm font-bold text-outline-variant md:w-8;
 }
 
 .calendar-day.holiday .calendar-day-label,
@@ -407,14 +407,14 @@ init();
 .calendar-day.weekend:before {
     content: '';
     @apply absolute bottom-0 left-0 right-0 top-0;
-    @apply bg-surface-variant rounded-lg bg-opacity-25;
+    @apply rounded-lg bg-surface-variant bg-opacity-25;
 }
 
 .create-event-overlay {
     @apply pointer-events-none;
     @apply absolute left-0 right-0 top-0 z-10;
     height: calc((var(--create-event-days) * var(--row-height)) - 0.125rem);
-    @apply border-onprimary-container bg-primary-container text-onprimary-container rounded-lg border border-dashed;
+    @apply rounded-lg border border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
     @apply cursor-pointer text-sm font-semibold;
     @apply flex flex-col px-4 py-1;
 }
@@ -426,7 +426,7 @@ init();
 .calendar-day.today:after {
     content: '';
     @apply pointer-events-none absolute bottom-0 left-0 right-0 top-0 z-10;
-    @apply border-error bg-error-container rounded-lg border-2 border-opacity-50 bg-opacity-25;
+    @apply rounded-lg border-2 border-error border-opacity-50 bg-error-container bg-opacity-25;
 }
 
 @media only screen and (min-width: 450px) {
@@ -443,12 +443,12 @@ init();
     }
 
     .calendar-header {
-        @apply text-onsurface bg-transparent font-normal;
+        @apply bg-transparent font-normal text-onsurface;
     }
 
     .calendar-header::before {
         content: '';
-        @apply bg-surface absolute -left-8 bottom-0 right-0 top-0 -z-10 bg-opacity-95;
+        @apply absolute -left-8 bottom-0 right-0 top-0 -z-10 bg-surface bg-opacity-95;
     }
 }
 

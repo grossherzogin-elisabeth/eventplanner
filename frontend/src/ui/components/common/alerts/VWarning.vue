@@ -1,6 +1,6 @@
 <template>
     <div
-        class="bg-yellow-container text-onyellow-container flex items-center overflow-hidden rounded-xl"
+        class="flex items-center overflow-hidden rounded-xl bg-yellow-container text-onyellow-container"
         :class="{ hidden: dismissed }"
         @click="clamp = !clamp"
     >

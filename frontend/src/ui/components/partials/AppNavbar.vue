@@ -2,10 +2,10 @@
     <nav class="fixed top-0 z-40 w-screen print:hidden">
         <div
             :class="meta.hasTransparentHeader ? 'sm:bg-primary' : 'bg-primary'"
-            class="h-nav text-onprimary flex items-center shadow"
+            class="h-nav flex items-center text-onprimary shadow"
         >
             <div class="h-full">
-                <div class="bg-primary flex h-full items-center space-x-4 xl:hidden">
+                <div class="flex h-full items-center space-x-4 bg-primary xl:hidden">
                     <RouterLink v-if="backTo" :to="backTo" class="icon-button mx-4 md:ml-12">
                         <i class="fa-solid fa-arrow-left"></i>
                     </RouterLink>
@@ -32,7 +32,7 @@
     <div class="h-nav"></div>
     <div
         v-if="signedInUser && signedInUser.impersonated"
-        class="bg-error-container text-onerror-container h-16 pl-8 pr-4 shadow-inner md:pl-16 md:pr-12"
+        class="h-16 bg-error-container pl-8 pr-4 text-onerror-container shadow-inner md:pl-16 md:pr-12"
     >
         <div class="flex h-full items-center">
             <i class="fa-solid fa-warning" />

@@ -34,7 +34,7 @@
             @close="showDropdown = false"
         >
             <div class="w-full px-2">
-                <div class="bg-surface-container-low rounded-2xl p-4 px-8 shadow-xl">
+                <div class="rounded-2xl bg-surface-container-low p-4 px-8 shadow-xl">
                     <div class="-mr-4 mb-4 flex items-center justify-end">
                         <!-- title -->
                         <h2 class="flex-grow text-lg">
@@ -49,7 +49,7 @@
                     <!-- state -->
                     <div
                         v-if="props.event.signedInUserAssignedPosition"
-                        class="bg-green-container text-ongreen-container -mx-4 mb-4 flex items-center space-x-4 rounded-xl px-4 py-3"
+                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-green-container px-4 py-3 text-ongreen-container"
                     >
                         <i class="fa-solid fa-check w-4" />
                         <p class="text-sm font-bold">
@@ -60,7 +60,7 @@
                     </div>
                     <div
                         v-else-if="props.event.signedInUserWaitingListPosition"
-                        class="bg-blue-container text-onblue-container -mx-4 mb-4 flex items-center space-x-4 rounded-xl px-4 py-3"
+                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-blue-container px-4 py-3 text-onblue-container"
                     >
                         <i class="fa-solid fa-hourglass-half w-4" />
                         <p class="text-sm font-bold">
@@ -272,7 +272,7 @@ init();
 <style scoped>
 .calendar-event-wrapper {
     @apply absolute left-0 right-0 top-px z-10;
-    @apply bg-surface-container-lowest rounded-md hover:shadow;
+    @apply rounded-md bg-surface-container-lowest hover:shadow;
     @apply overflow-hidden;
 }
 
@@ -315,7 +315,7 @@ init();
     @apply flex h-full w-full items-stretch;
     @apply cursor-pointer;
     @apply bg-surface-container-high;
-    @apply text-onsurface font-bold;
+    @apply font-bold text-onsurface;
 }
 
 .calendar-event-entry.assigned {

@@ -18,7 +18,7 @@
                 <span
                     v-for="positionKey in item.grantsPositions"
                     :key="positionKey"
-                    class="position bg-surface-container-high my-0.5 mr-1 text-xs opacity-75"
+                    class="position my-0.5 mr-1 bg-surface-container-high text-xs opacity-75"
                     :style="{ background: positions.get(positionKey).color }"
                 >
                     {{ positions.get(positionKey).name }}
@@ -26,11 +26,11 @@
             </td>
             <td class="w-80">
                 <div class="flex justify-end">
-                    <div v-if="item.expires" class="bg-yellow-container text-onyellow-container status-panel">
+                    <div v-if="item.expires" class="status-panel bg-yellow-container text-onyellow-container">
                         <i class="fa-solid fa-clock"></i>
                         <span class="whitespace-nowrap font-semibold">Mit Ablaufdatum</span>
                     </div>
-                    <div v-else class="bg-green-container text-ongreen-container status-panel">
+                    <div v-else class="status-panel bg-green-container text-ongreen-container">
                         <i class="fa-solid fa-check-circle"></i>
                         <span class="whitespace-nowrap font-semibold">Ohne Ablaufdatum</span>
                     </div>

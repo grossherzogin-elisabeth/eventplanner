@@ -58,7 +58,7 @@
                     </button>
                 </div>
                 <div class="ms:hidden h-20"></div>
-                <div class="bg-surface fixed bottom-0 left-0 right-0 flex items-stretch gap-4 px-4 py-2 sm:hidden">
+                <div class="fixed bottom-0 left-0 right-0 flex items-stretch gap-4 bg-surface px-4 py-2 sm:hidden">
                     <button class="btn-primary w-1/2" @click="state = true">
                         <i class="fa-solid fa-check"></i>
                         <span class="whitespace-normal py-2 text-sm">Ja, ich nehme teil</span>
@@ -72,7 +72,7 @@
 
             <div
                 v-if="state === true"
-                class="bg-green-container text-ongreen-container -mx-4 mb-8 rounded-2xl p-4 font-bold"
+                class="-mx-4 mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container"
             >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-check"></i>
@@ -86,7 +86,7 @@
             </div>
             <div
                 v-else-if="state === false"
-                class="bg-error-container text-onerror-container -mx-4 mb-8 rounded-2xl p-4 font-bold"
+                class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container"
             >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-xmark"></i>
@@ -108,7 +108,7 @@
 
             <div
                 v-if="state !== null && false"
-                class="bg-blue-container text-onblue-container -mx-4 mb-8 rounded-lg p-4 font-bold"
+                class="-mx-4 mb-8 rounded-lg bg-blue-container p-4 font-bold text-onblue-container"
             >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-info"></i>

@@ -25,7 +25,7 @@
             </td>
             <td>
                 <div class="flex items-center justify-end">
-                    <div v-if="item.isExpired" class="bg-red-container text-onred-container status-panel">
+                    <div v-if="item.isExpired" class="status-panel bg-red-container text-onred-container">
                         <i class="fa-solid fa-ban"></i>
                         <span class="whitespace-nowrap font-semibold">Abgelaufen</span>
                     </div>

@@ -9,7 +9,7 @@
     >
         <template #row="{ item, first, last }">
             <td class="py-0">
-                <div class="text-secondary flex flex-col items-center">
+                <div class="flex flex-col items-center text-secondary">
                     <div
                         class="min-h-4 flex-grow border-r-2 border-dashed border-current"
                         :class="{ 'min-h-2 opacity-0': first, 'min-h-6': last }"
