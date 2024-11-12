@@ -1,18 +1,20 @@
 <template>
     <div
-        class="flex items-center overflow-hidden rounded-xl bg-secondary-container text-onsecondary-container"
+        class="bg-secondary-container text-onsecondary-container flex items-center overflow-hidden rounded-xl"
         :class="{ hidden: dismissed }"
         @click="clampActive = !clampActive"
     >
-        <i class="fa-solid fa-info-circle my-3 ml-4 self-start text-xl"></i>
-        <span class="mx-4 my-2 w-0 flex-grow text-sm" :class="{ 'line-clamp-3': clamp && clampActive }">
+        <i class="fa-solid fa-info-circle my-5 ml-4 self-start text-xl"></i>
+        <span
+            class="mx-4 my-4 mr-1 w-0 flex-grow text-sm"
+            :class="{
+                'line-clamp-3': clamp && clampActive,
+                'mr-4': !props.dismissable,
+            }"
+        >
             <slot></slot>
         </span>
-        <button
-            v-if="props.dismissable !== false"
-            class="m-1 h-9 w-9 self-start rounded-full hover:bg-secondary-variant hover:text-onsecondary-variant"
-            @click="dismiss()"
-        >
+        <button v-if="props.dismissable !== false" class="icon-button my-1 mr-1 self-start" @click="dismiss()">
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>

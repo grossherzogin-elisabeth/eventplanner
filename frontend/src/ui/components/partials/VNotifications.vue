@@ -91,35 +91,35 @@ init();
 }
 
 .success .notification {
-    @apply bg-green-100 text-green-800;
+    @apply bg-green-container text-ongreen-container;
 }
 
 .success .notification p {
-    @apply text-green-900;
+    @apply text-ongreen-container;
 }
 
 .info .notification {
-    @apply bg-blue-100 text-blue-800;
+    @apply bg-blue-container text-onblue-container;
 }
 
 .info .notification p {
-    @apply text-blue-900;
+    @apply text-onblue-container;
 }
 
 .warning .notification {
-    @apply bg-yellow-100 text-yellow-800;
+    @apply bg-yellow-container text-onyellow-container;
 }
 
 .warning .notification p {
-    @apply text-yellow-900;
+    @apply text-onyellow-container;
 }
 
 .error .notification {
-    @apply bg-error-container text-onerror-container;
+    @apply bg-red-container text-onred-container;
 }
 
 .error .notification p {
-    @apply text-onerror-container;
+    @apply text-onred-container;
 }
 
 .animate-disappear {

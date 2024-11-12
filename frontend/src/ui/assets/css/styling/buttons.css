@@ -1,14 +1,10 @@
-button:disabled {
-    @apply opacity-50;
-}
-
 .btn-primary,
 .btn-secondary,
 .btn-danger,
 .btn-floating,
 .btn-ghost,
 .btn-ghost-danger {
-    @apply rounded-lg;
+    @apply rounded-xl;
     @apply px-4 py-2;
     @apply font-bold;
     @apply flex items-center justify-center gap-2;
@@ -17,20 +13,29 @@ button:disabled {
 }
 
 .btn-primary {
-    @apply bg-primary text-onprimary;
+    @apply bg-primary text-onprimary bg-opacity-90;
 }
 
 .btn-primary:not(:disabled) {
-    @apply hover:bg-primary hover:text-onprimary hover:shadow;
+    @apply hover:shadow hover:bg-opacity-100;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+    @apply bg-onsurface bg-opacity-15 text-onsurface text-opacity-40;
 }
 
 .btn-secondary {
-    @apply bg-secondary-container text-onsecondary-container;
+    @apply bg-secondary-container text-onsecondary-container bg-opacity-90;
 }
 
-a.btn-secondary,
-.btn-secondary:enabled {
-    @apply hover:shadow;
+.btn-secondary:not(:disabled) {
+    @apply hover:shadow hover:bg-opacity-100;
+}
+
+.btn-secondary.disabled,
+.btn-secondary:disabled {
+    @apply bg-onsurface bg-opacity-15 text-onsurface text-opacity-40;
 }
 
 .btn-danger {
@@ -86,6 +91,26 @@ a.btn-danger,
 
 .btn-ghost-danger:not(:disabled):hover {
     @apply bg-error-container text-onerror-container;
+}
+
+.icon-button {
+    @apply flex items-center justify-center;
+    @apply w-11 h-11;
+    @apply relative;
+}
+
+.icon-button:before {
+    content: '';
+    @apply rounded-full bg-current opacity-10;
+    @apply pointer-events-none;
+    @apply absolute top-1/2 left-1/2 right-1/2 bottom-1/2;
+    transition: top, left, right, bottom;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in-out;
+}
+
+.icon-button:hover:before {
+    @apply bottom-0.5 left-0.5 right-0.5 top-0.5;
 }
 
 .btn-back {

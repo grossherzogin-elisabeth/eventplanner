@@ -1,18 +1,14 @@
 <template>
     <div
-        class="status-yellow flex items-center overflow-hidden rounded-xl"
+        class="bg-yellow-container text-onyellow-container flex items-center overflow-hidden rounded-xl"
         :class="{ hidden: dismissed }"
         @click="clamp = !clamp"
     >
-        <i class="fa-solid fa-warning my-3 ml-4 self-start text-xl"></i>
-        <span class="my-2 ml-4 mr-1 w-0 flex-grow text-sm" :class="{ 'line-clamp-3': clamp }">
+        <i class="fa-solid fa-warning my-5 ml-4 self-start text-xl"></i>
+        <span class="my-4 ml-4 mr-1 w-0 flex-grow text-sm" :class="{ 'line-clamp-3': clamp }">
             <slot></slot>
         </span>
-        <button
-            v-if="props.dismissable !== false"
-            class="m-1 h-9 w-9 self-start rounded-full hover:bg-yellow hover:bg-opacity-75"
-            @click="dismiss()"
-        >
+        <button v-if="props.dismissable !== false" class="icon-button my-1 mr-1 self-start" @click="dismiss()">
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>

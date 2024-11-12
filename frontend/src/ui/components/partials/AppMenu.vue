@@ -4,7 +4,7 @@
 
         <div
             v-if="signedInUser.impersonated"
-            class="mx-4 rounded-2xl bg-error-container pl-4 text-onerror-container xl:mx-8 xl:pl-6"
+            class="bg-error-container text-onerror-container mx-4 rounded-2xl pl-4 xl:mx-8 xl:pl-6"
         >
             <div class="flex items-center">
                 <p class="mr-2 w-0 flex-grow py-4 text-sm font-bold">
@@ -12,7 +12,7 @@
                     <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
                 </p>
                 <button
-                    class="mr-2 block h-10 w-10 rounded-full hover:bg-onerror-container hover:bg-opacity-5"
+                    class="icon-button mr-2"
                     title="Impersonate Modus beenden"
                     @click="authUseCase.impersonateUser(null)"
                 >
@@ -137,7 +137,9 @@
     </div>
     <div v-else>
         <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
-        <div class="mx-4 rounded-2xl bg-blue-100 bg-opacity-25 px-4 py-4 font-bold backdrop-blur-2xl xl:mx-8 xl:pl-6">
+        <div
+            class="bg-secondary-container text-onsecondary-container mx-4 rounded-2xl px-4 py-4 font-bold backdrop-blur-2xl xl:mx-8 xl:pl-6"
+        >
             <p class="mb-2 text-base">
                 <i class="fa-solid fa-info-circle"></i>
                 <span class="ml-4">Noch kein Account?</span>
@@ -242,7 +244,7 @@ watch(route, () => {
 .menu-item > a.router-link-active,
 .menu-item.active > a,
 .menu-item.active > button {
-    @apply relative bg-onprimary font-bold text-primary;
+    @apply bg-onprimary text-primary relative font-bold;
 }
 
 .menu-item > a.router-link-active:before,

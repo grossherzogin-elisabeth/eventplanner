@@ -1,11 +1,11 @@
 <template>
     <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 2xl:flex-row 2xl:items-start">
         <!-- position counters -->
-        <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-surface pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
+        <div class="bg-surface top-14 -mx-8 mb-4 overflow-x-auto pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
             <div
                 class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap 2xl:flex-col"
             >
-                <div class="flex cursor-pointer items-center rounded-2xl bg-onsurface-variant p-1">
+                <div class="bg-secondary text-onsecondary flex cursor-pointer items-center rounded-2xl p-1">
                     <span class="px-2"> Alle </span>
                     <span
                         class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
@@ -32,7 +32,7 @@
         </div>
         <div class="-mx-4 flex-1 gap-16 md:flex xl:pr-8 2xl:w-0">
             <div class="mb-8 px-4 pb-4 md:w-1/2 lg:mb-0">
-                <h2 class="mb-4 font-bold text-secondary">Crew</h2>
+                <h2 class="text-secondary mb-4 font-bold">Crew</h2>
                 <!-- slot list-admin dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute z-10 w-full" :class="{ hidden: dragSource !== DragSource.FROM_WAITING_LIST }">
@@ -49,7 +49,7 @@
                     :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_WAITING_LIST }"
                 >
                     <!-- empty slot list-admin placeholder -->
-                    <div v-if="team.length === 0" class="rounded-xl bg-secondary-container text-onsecondary-container">
+                    <div v-if="team.length === 0" class="bg-secondary-container text-onsecondary-container rounded-xl">
                         <div class="flex items-center py-8 pl-4 pr-8">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
@@ -72,9 +72,9 @@
                             >
                                 <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
                                 <i class="fa-regular fa-circle"></i>
-                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsecondary-container"> </span>
+                                <span class="bg-onsecondary-container mx-2 inline-block h-4 w-64 rounded-full"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position h-4 w-20 bg-onsecondary-container"></span>
+                                <span class="position bg-onsecondary-container h-4 w-20"></span>
                             </li>
                         </ul>
                     </div>
@@ -85,7 +85,7 @@
                             :key="it.slot?.key + it.registration?.key + it.user?.key + it.position.key"
                         >
                             <VDraggable
-                                class="flex items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
+                                class="hover:bg-surface-container flex items-center rounded-xl px-4 py-2 md:space-x-4"
                                 :class="it.registration !== undefined ? 'cursor-move' : 'pointer-events-none'"
                                 component="li"
                                 :value="it"
@@ -93,12 +93,14 @@
                                 @dragstart="dragSource = DragSource.FROM_TEAM"
                                 @click="editSlotRegistration(it)"
                             >
-                                <i class="fa-solid fa-grip-vertical hidden text-sm opacity-25 lg:inline"></i>
+                                <i
+                                    class="fa-solid fa-grip-vertical text-secondary-variant hidden text-sm lg:inline"
+                                ></i>
                                 <span v-if="it.name && !it.registration?.confirmed" class="">
                                     <i class="fa-solid fa-user-clock text-onsurface text-opacity-50"></i>
                                 </span>
                                 <span v-else-if="it.name && it.registration?.confirmed">
-                                    <i class="fa-solid fa-user-check text-green-600"></i>
+                                    <i class="fa-solid fa-user-check text-green"></i>
                                 </span>
                                 <span v-else>
                                     <i class="fa-solid fa-user-xmark text-error"></i>
@@ -107,10 +109,10 @@
                                     {{ it.name }}
                                     <template v-if="it.name && !it.user"> (Gastcrew) </template>
                                 </span>
-                                <span v-else-if="it.user" class="mx-2 w-0 flex-grow truncate italic text-error">
+                                <span v-else-if="it.user" class="text-error mx-2 w-0 flex-grow truncate italic">
                                     Unbekannt
                                 </span>
-                                <span v-else class="mx-2 w-0 flex-grow truncate italic text-error">
+                                <span v-else class="text-error mx-2 w-0 flex-grow truncate italic">
                                     Noch nicht besetzt
                                 </span>
                                 <span :style="{ background: it.position.color }" class="position text-xs">
@@ -123,7 +125,7 @@
             </div>
 
             <div class="px-4 md:w-1/2">
-                <h2 class="mb-4 font-bold text-secondary">Warteliste</h2>
+                <h2 class="text-secondary mb-4 font-bold">Warteliste</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute w-full space-y-8" :class="{ hidden: dragSource !== DragSource.FROM_TEAM }">
@@ -143,7 +145,7 @@
                 </div>
                 <div class="-mx-4" :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_TEAM }">
                     <!-- empty waitinglist placeholder -->
-                    <div v-if="registrations.length === 0" class="rounded-xl bg-surface-container-low text-onsurface">
+                    <div v-if="registrations.length === 0" class="bg-surface-container-low text-onsurface rounded-xl">
                         <div class="flex items-center py-8 pl-4 pr-8">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
@@ -164,9 +166,9 @@
                                 class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4"
                             >
                                 <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
-                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsurface"> </span>
+                                <span class="bg-onsurface mx-2 inline-block h-4 w-64 rounded-full"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position block h-4 w-20 bg-onsurface"> </span>
+                                <span class="position bg-onsurface block h-4 w-20"> </span>
                             </li>
                         </ul>
                     </div>
@@ -177,19 +179,21 @@
                             :key="it.registration?.key + it.user?.key + it.name + it.position.key"
                         >
                             <VDraggable
-                                class="flex cursor-move items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
+                                class="hover:bg-surface-container flex cursor-move items-center rounded-xl px-4 py-2 md:space-x-4"
                                 component="li"
                                 :value="it"
                                 @dragend="dragSource = null"
                                 @dragstart="dragSource = DragSource.FROM_WAITING_LIST"
                                 @click="editWaitinglistRegistration(it)"
                             >
-                                <i class="fa-solid fa-grip-vertical mr-2 hidden text-sm opacity-25 lg:inline"></i>
+                                <i
+                                    class="fa-solid fa-grip-vertical text-secondary-variant mr-2 hidden text-sm lg:inline"
+                                ></i>
                                 <span v-if="it.name" class="w-0 flex-grow truncate">
                                     {{ it.name }}
                                     <template v-if="it.name && !it.user"> (Gastcrew) </template>
                                 </span>
-                                <span v-else-if="it.user" class="w-0 flex-grow italic text-error"> Unbekannt </span>
+                                <span v-else-if="it.user" class="text-error w-0 flex-grow italic"> Unbekannt </span>
                                 <div>
                                     <ContextMenuButton>
                                         <template #icon>
@@ -401,7 +405,7 @@ init();
 .dropzone-delete {
     @apply flex h-full flex-col items-center justify-center space-y-8;
     @apply rounded-xl;
-    @apply border-2 border-dashed border-outline;
+    @apply border-outline border-2 border-dashed;
 }
 
 .dropzone span {
@@ -409,14 +413,14 @@ init();
 }
 
 .dropzone.hover .dropzone-add {
-    @apply border-2 border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
+    @apply border-onprimary-container bg-primary-container text-onprimary-container border-2 border-dashed;
 }
 
 .dropzone.hover .dropzone-remove {
-    @apply border-2 border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
+    @apply border-onprimary-container bg-primary-container text-onprimary-container border-2 border-dashed;
 }
 
 .dropzone.hover .dropzone-delete {
-    @apply border-2 border-dashed border-onerror-container bg-error-container text-onerror-container;
+    @apply border-onerror-container bg-error-container text-onerror-container border-2 border-dashed;
 }
 </style>

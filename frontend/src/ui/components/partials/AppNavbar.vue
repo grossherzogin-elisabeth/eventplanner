@@ -2,21 +2,16 @@
     <nav class="fixed top-0 z-40 w-screen print:hidden">
         <div
             :class="meta.hasTransparentHeader ? 'sm:bg-primary' : 'bg-primary'"
-            class="h-nav flex items-center text-onprimary shadow"
+            class="h-nav text-onprimary flex items-center shadow"
         >
             <div class="h-full">
-                <div class="flex h-full items-stretch space-x-4 bg-primary xl:hidden">
-                    <RouterLink v-if="backTo" :to="backTo" class="flex items-center px-8 md:pl-16">
+                <div class="bg-primary flex h-full items-center space-x-4 xl:hidden">
+                    <RouterLink v-if="backTo" :to="backTo" class="icon-button mx-4 md:ml-12">
                         <i class="fa-solid fa-arrow-left"></i>
                     </RouterLink>
-                    <button v-else class="px-8 md:pl-16" @click="menuOpen = true">
+                    <button v-else class="icon-button mx-4 md:ml-12" @click="menuOpen = true">
                         <i class="fa-solid fa-bars"></i>
                     </button>
-                </div>
-                <div class="hidden h-full items-center space-x-4 xl:flex">
-                    <div class="px-8 xl:pl-12">
-                        <i class="fa-solid fa-rocket"></i>
-                    </div>
                 </div>
             </div>
             <div class="flex flex-grow">
@@ -29,7 +24,7 @@
                 </h1>
             </div>
             <div class="flex h-full justify-end">
-                <div id="nav-right" class="h-full px-8 md:pr-16 xl:pr-20"></div>
+                <div id="nav-right" class="mx-8 h-full md:mr-16 xl:mr-20"></div>
             </div>
         </div>
     </nav>
@@ -37,18 +32,15 @@
     <div class="h-nav"></div>
     <div
         v-if="signedInUser && signedInUser.impersonated"
-        class="h-16 bg-error-container px-8 text-onerror-container shadow-inner md:px-16"
+        class="bg-error-container text-onerror-container h-16 pl-8 pr-4 shadow-inner md:pl-16 md:pr-12"
     >
         <div class="flex h-full items-center">
             <i class="fa-solid fa-warning" />
-            <p class="ml-4 mr-2 line-clamp-3 flex-grow py-4 text-sm font-bold">
+            <p class="ml-4 mr-2 line-clamp-3 w-0 flex-grow flex-grow py-4 text-sm font-bold">
                 Du siehst die Anwendung aus Sicht von
                 <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
             </p>
-            <button
-                class="-mr-3 hidden h-10 w-10 rounded-full hover:bg-onerror-container hover:bg-opacity-5 sm:block"
-                @click="authUseCase.impersonateUser(null)"
-            >
+            <button class="icon-button" @click="authUseCase.impersonateUser(null)">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </button>
         </div>

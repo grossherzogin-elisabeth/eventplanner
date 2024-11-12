@@ -2,7 +2,6 @@
     @apply flex flex-col overflow-hidden;
     @apply sm:rounded-3xl sm:shadow-lg;
     @apply bg-surface;
-    /*@apply bg-gradient-to-br from-primary-50 from-50% to-primary-100;*/
 }
 
 .dialog.modal {
@@ -19,7 +18,7 @@
 }
 
 .dialog-close-button {
-    @apply h-10 w-10 rounded-full hover:bg-surface-container;
+    @apply h-10 w-10 rounded-full hover:bg-onprimary hover:bg-opacity-10;
 }
 
 .dialog-buttons {
@@ -138,11 +137,6 @@
 
     .dialog:not(.modal) .dialog-close-button-wrapper {
         @apply hidden;
-    }
-
-    .dialog:not(.modal) .dialog-content {
-        /*animation: anim-dialog-open var(--open-close-animation-duration) ease-in;*/
-        /*@apply bg-gradient-to-br from-primary-50 from-50% to-primary-100;*/
     }
 }
 

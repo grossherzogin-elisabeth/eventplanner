@@ -6,7 +6,7 @@
             </div>
         </teleport>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
@@ -84,26 +84,26 @@
                     <tr v-for="i in 20" :key="i" class="animate-pulse">
                         <td></td>
                         <td class="w-1/2 max-w-[65vw]">
-                            <p class="mb-1 h-5 w-64 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-64 rounded-lg"></p>
                             <p class="flex items-center space-x-2 text-sm font-light">
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
                             </p>
                         </td>
                         <td>
                             <div class="status-panel bg-surface-container-highest">
                                 <i class="fa-solid fa-circle text-surface-container-high"></i>
-                                <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-surface-container-high"></span>
+                                <span class="bg-surface-container-high my-0.5 inline-block h-4 w-12 rounded-lg"></span>
                             </div>
                         </td>
                         <td class="w-1/6">
-                            <p class="mb-1 h-5 w-16 rounded-lg bg-surface-container-highest"></p>
-                            <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-16 rounded-lg"></p>
+                            <p class="bg-surface-container-highest h-3 w-10 rounded-lg"></p>
                         </td>
                         <td class="w-2/6">
-                            <p class="mb-1 h-5 w-56 rounded-lg bg-surface-container-highest"></p>
-                            <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-56 rounded-lg"></p>
+                            <p class="bg-surface-container-highest h-3 w-16 rounded-lg"></p>
                         </td>
 
                         <td class="">
@@ -212,7 +212,7 @@
 
         <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
             <div
-                class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
+                class="border-outline-variant bg-surface h-full border-t px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
             >
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
@@ -469,19 +469,33 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 function getStateDetails(event: EventTableViewItem): StateDetails {
     switch (event.state) {
         case EventState.Draft:
-            return { name: 'Entwurf', icon: 'fa-compass-drafting', color: 'status-gray' };
+            return {
+                name: 'Entwurf',
+                icon: 'fa-compass-drafting',
+                color: 'bg-surface-container-highest text-onsurface',
+            };
         case EventState.OpenForSignup:
-            return { name: 'Crew Anmeldung', icon: 'fa-unlock', color: 'status-gray' };
+            return { name: 'Crew Anmeldung', icon: 'fa-unlock', color: 'bg-surface-container-highest text-onsurface' };
         case EventState.Canceled:
-            return { name: 'Abgesagt', icon: 'fa-ban', color: 'status-red' };
+            return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
     }
     if (event.hasOpenRequiredSlots) {
-        return { name: 'Fehlende Crew', icon: 'fa-warning', color: 'status-yellow' };
+        return { name: 'Fehlende Crew', icon: 'fa-warning', color: 'bg-yellow-container text-onyellow-container' };
     }
     if (event.hasOpenSlots) {
-        return { name: 'Freie Plätze', icon: 'fa-info-circle', iconMobile: 'fa-info', color: 'status-blue' };
+        return {
+            name: 'Freie Plätze',
+            icon: 'fa-info-circle',
+            iconMobile: 'fa-info',
+            color: 'bg-blue-container text-onblue-container',
+        };
     }
-    return { name: 'Voll belegt', icon: 'fa-check-circle', iconMobile: 'fa-check', color: 'status-green' };
+    return {
+        name: 'Voll belegt',
+        icon: 'fa-check-circle',
+        iconMobile: 'fa-check',
+        color: 'bg-green-container text-ongreen-container',
+    };
 }
 
 function hasOpenSlots(event: Event): boolean {

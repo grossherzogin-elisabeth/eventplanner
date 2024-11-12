@@ -1,8 +1,6 @@
 <template>
     <div v-if="enableLoginView">
-        <div
-            class="fixed bottom-0 left-0 right-0 top-0 overflow-y-auto bg-gradient-to-t from-primary-800 to-primary-700"
-        >
+        <div class="from-p-800 to-p-700 fixed bottom-0 left-0 right-0 top-0 overflow-y-auto bg-gradient-to-t">
             <div class="self-stretch p-8 pt-16 text-white sm:hidden">
                 <h1 class="mb-8 text-2xl font-thin">
                     Segelschulschiff<br />
@@ -18,7 +16,7 @@
             <div class="mx-auto flex min-h-full flex-col justify-end sm:p-8">
                 <div class="h-96 sm:hidden"></div>
                 <div
-                    class="mx-auto flex w-full flex-col rounded-t-3xl bg-surface sm:max-w-xl sm:rounded-3xl md:flex-row lg:max-w-5xl"
+                    class="bg-surface mx-auto flex w-full flex-col rounded-t-3xl sm:max-w-xl sm:rounded-3xl md:flex-row lg:max-w-5xl"
                 >
                     <div class="relative hidden w-0 flex-grow overflow-hidden rounded-l-3xl lg:block">
                         <img
@@ -26,11 +24,11 @@
                             src="@/ui/assets/images/login-1.jpg"
                         />
                         <div
-                            class="absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-l from-primary-50 to-transparent"
+                            class="from-p-50 absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-l to-transparent"
                         ></div>
                     </div>
                     <div class="flex flex-col p-8 sm:p-16 lg:mx-auto lg:max-w-xl">
-                        <div class="mb-8 h-1 w-8 self-center rounded-full bg-surface-container sm:hidden"></div>
+                        <div class="bg-surface-container mb-8 h-1 w-8 self-center rounded-full sm:hidden"></div>
 
                         <div class="hidden sm:block">
                             <h1 class="mb-8 text-2xl font-thin">
@@ -84,12 +82,14 @@
                         </button>
                     </div>
                 </div>
-                <div class="h-0 flex-grow bg-surface sm:hidden"></div>
+                <div class="bg-surface h-0 flex-grow sm:hidden"></div>
             </div>
         </div>
     </div>
     <div v-else class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
-        <div class="-mx-4 flex max-w-2xl items-center gap-4 rounded-2xl bg-blue-200 p-4 text-blue-700">
+        <div
+            class="bg-secondary-container text-onsecondary-container -mx-4 flex max-w-2xl items-center gap-4 rounded-2xl p-4"
+        >
             <i class="fa-solid fa-info-circle"></i>
             <span class="font-bold">
                 Diese Seite ist nur für angemeldete Nutzer sichtbar. Du wirst in Kürze zum Login weitergeleitet...

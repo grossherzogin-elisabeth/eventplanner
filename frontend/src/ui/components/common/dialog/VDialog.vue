@@ -22,7 +22,7 @@
                         >
                             <div class="dialog-header pl-8 lg:pl-10 lg:pr-2">
                                 <div class="dialog-back-button-wrapper -ml-4 mr-4">
-                                    <button class="dialog-close-button" @click="reject()">
+                                    <button class="icon-button" @click="reject()">
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
                                 </div>
@@ -30,7 +30,7 @@
                                     <slot name="title"></slot>
                                 </div>
                                 <div class="dialog-close-button-wrapper flex w-20 items-center justify-center lg:w-16">
-                                    <button class="dialog-close-button" @click="reject()">
+                                    <button class="icon-button" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>

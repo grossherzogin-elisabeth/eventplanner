@@ -10,7 +10,7 @@
     >
         <template #row="{ item, index }">
             <td class="w-0">
-                <span class="inline-block rounded-full bg-surface-container-highest px-2 py-1 text-sm font-semibold">
+                <span class="bg-surface-container-highest inline-block rounded-full px-2 py-1 text-sm font-semibold">
                     #{{ index + 1 }}
                 </span>
             </td>
@@ -19,7 +19,7 @@
                     {{ item.positionName || positions.get(item.positionKeys[0]).name }}
                 </p>
                 <p class="truncate text-sm">
-                    {{ item.assignedRegistrationKey || 'frei' }}
+                    Anmeldungs ID: {{ item.assignedRegistrationKey?.substring(0, 8) || 'frei' }}
                 </p>
             </td>
             <td class="w-2/3 min-w-96">
@@ -36,15 +36,18 @@
             </td>
             <td class="w-64">
                 <div class="flex items-center justify-end">
-                    <span v-if="item.criticality === 2" class="status-panel status-red">
+                    <span v-if="item.criticality === 2" class="status-panel bg-red-container text-onred-container">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-2 whitespace-nowrap font-semibold">Notwendig</span>
                     </span>
-                    <span v-else-if="item.criticality === 1" class="status-panel status-yellow">
+                    <span
+                        v-else-if="item.criticality === 1"
+                        class="status-panel bg-yellow-container text-onyellow-container"
+                    >
                         <i class="fa-solid fa-circle-info"></i>
                         <span class="ml-2 whitespace-nowrap font-semibold">Wichtig</span>
                     </span>
-                    <span v-else class="status-panel status-gray">
+                    <span v-else class="status-panel bg-surface-container-highest text-onsurface">
                         <i class="fa-solid fa-circle-question"></i>
                         <span class="ml-2 whitespace-nowrap font-semibold">Optional</span>
                     </span>

@@ -1,7 +1,7 @@
 .input-search .input-field-wrapper {
     @apply rounded-full px-2;
-    @apply border border-primary-100;
-    @apply focus-within:border-primary-300;
+    @apply border border-outline;
+    @apply focus-within:border-primary;
 }
 
 .input-search .input-field-wrapper .input-field {
@@ -9,5 +9,5 @@
 }
 
 .input-search .input-field-wrapper:not(.disabled):hover {
-    @apply border-primary-300;
+    @apply border-primary;
 }

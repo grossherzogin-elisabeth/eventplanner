@@ -6,7 +6,6 @@
     @apply relative flex items-center;
     @apply h-full overflow-hidden;
     @apply rounded-lg border border-outline bg-transparent p-px;
-    /*@apply border-transparent bg-surface-container;*/
 }
 
 .input-field {
@@ -32,27 +31,22 @@
 }
 
 .input-field-wrapper:has(.readonly) {
-    /*@apply border border-transparent bg-transparent;*/
 }
 
 /* select svgs next to input, like dropdown arrows */
 .input-field:disabled + svg {
-    /*@apply opacity-50;*/
 }
 
 /* focus */
 .input-field-wrapper:not(:has(.readonly)):focus-within {
-    /*@apply border border-primary-400 bg-primary-100;*/
     @apply border-2 border-primary p-0;
 }
 
 /* hover */
 .input-field-wrapper:not(:has([disabled])):not(:has(.readonly)):hover {
-    /*@apply border border-primary-300 bg-primary-200;*/
 }
 
 .input-field-wrapper:not(:has(.readonly)):focus-within:hover {
-    /*@apply border border-primary-400 bg-primary-100;*/
 }
 
 /* label */
