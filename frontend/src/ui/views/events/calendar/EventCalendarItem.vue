@@ -41,7 +41,7 @@
                             <span>{{ props.event.name }}</span>
                         </h2>
 
-                        <button class="dialog-close-button" title="Schließen" @click="showDropdown = false">
+                        <button class="icon-button" title="Schließen" @click="showDropdown = false">
                             <i class="fa-solid fa-close"></i>
                         </button>
                     </div>

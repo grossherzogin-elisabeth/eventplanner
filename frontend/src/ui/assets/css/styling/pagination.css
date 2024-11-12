@@ -1,17 +1,17 @@
 .pagination {
     @apply flex items-stretch justify-end space-x-2;
-    @apply px-8 py-2 md:px-16 xl:pr-20;
-    @apply bg-surface xl:px-20;
+    @apply px-8 py-2 md:px-16 xl:px-20;
+    @apply bg-surface;
 }
 
 .pagination-page {
-    @apply w-8 rounded-lg px-2 py-2 font-semibold opacity-25;
+    @apply w-10 rounded-xl px-2 py-2 font-semibold opacity-25;
     @apply flex items-center justify-center;
 }
 
 .pagination-page.enabled {
     @apply opacity-100;
-    @apply hover:bg-surface-container;
+    @apply hover:bg-surface-container-low hover:shadow;
 }
 
 .pagination-page.active {

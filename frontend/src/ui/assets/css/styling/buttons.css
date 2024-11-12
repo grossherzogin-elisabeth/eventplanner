@@ -101,7 +101,7 @@ a.btn-danger,
 
 .icon-button:before {
     content: '';
-    @apply rounded-full bg-current opacity-10;
+    @apply rounded-full bg-current opacity-5;
     @apply pointer-events-none;
     @apply absolute bottom-1/2 left-1/2 right-1/2 top-1/2;
     transition: top, left, right, bottom;

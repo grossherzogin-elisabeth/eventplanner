@@ -30,7 +30,7 @@
                                     <slot name="title"></slot>
                                 </div>
                                 <div class="dialog-close-button-wrapper flex w-20 items-center justify-center lg:w-16">
-                                    <button class="icon-button" @click="reject()">
+                                    <button class="dialog-close-button icon-button" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>
