@@ -48,12 +48,21 @@ a.btn-danger,
     @apply rounded-2xl shadow-lg hover:shadow-xl;
 }
 
+.btn-floating:disabled,
+.btn-floating-danger:disabled {
+    @apply opacity-100 text-opacity-25 !important;
+}
+
 .btn-floating {
     @apply bg-primary-container text-onprimary-container;
+    @apply hover:bg-primary-container hover:text-onprimary-container;
+    @apply truncate;
 }
 
 .btn-floating-danger {
     @apply bg-error-container text-onerror-container;
+    @apply hover:bg-error-container hover:text-onerror-container;
+    @apply truncate;
 }
 
 .btn-ghost,
