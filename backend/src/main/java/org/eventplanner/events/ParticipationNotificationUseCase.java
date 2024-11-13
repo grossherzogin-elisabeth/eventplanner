@@ -145,12 +145,11 @@ public class ParticipationNotificationUseCase {
 
         event.removeRegistration(registration.getKey());
 
-        var slot = event.getSlots().stream()
+        event.getSlots().stream()
                 .filter(s -> registrationKey.equals(s.getAssignedRegistration()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Slot not found"));
+                .ifPresent((slot) -> slot.setAssignedRegistration(null));
 
-        slot.setAssignedRegistration(null);
         eventRepository.update(event);
 
         if (registration.getUserKey() != null) {
