@@ -3,7 +3,7 @@
     "name": "Lissi Reiseplaner",
     "icons": [
         {
-            "src": "/favicon-vue.svg",
+            "src": "/favicon.svg",
             "sizes": "any"
         }
     ],

@@ -1,4 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" height="1em" fill="#fafafa" viewBox="0 0 576 512">
-    <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-    <path d="M256 16c0-7 4.5-13.2 11.2-15.3s13.9 .4 17.9 6.1l224 320c3.4 4.9 3.8 11.3 1.1 16.6s-8.2 8.6-14.2 8.6H272c-8.8 0-16-7.2-16-16V16zM212.1 96.5c7 1.9 11.9 8.2 11.9 15.5V336c0 8.8-7.2 16-16 16H80c-5.7 0-11-3-13.8-8s-2.9-11-.1-16l128-224c3.6-6.3 11-9.4 18-7.5zM5.7 404.3C2.8 394.1 10.5 384 21.1 384H554.9c10.6 0 18.3 10.1 15.4 20.3l-4 14.3C550.7 473.9 500.4 512 443 512H133C75.6 512 25.3 473.9 9.7 418.7l-4-14.3z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <defs>
+        <linearGradient id="gradient_background" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#31628d"/>
+            <stop offset="100%" stop-color="#526070"/>
+        </linearGradient>
+        <radialGradient id="gradient_foreground">
+            <stop offset="0%" stop-color="#cfe5ff"/>
+            <stop offset="100%" stop-color="#d5e4f7"/>
+        </radialGradient>
+    </defs>
+
+    <rect id="background" width="512" height="512" rx="124"/>
+    <clipPath id="shadow">
+        <path id="shadow" d="M64 440 L136 512 L388 512 L512 512 L512 388 L512 260 L310 90 L256 80 L210 110 L210 168"/>
+    </clipPath>
+    <rect width="512" height="512" rx="124" fill="url(#gradient_background)"/>
+    <use clip-path="url(#shadow)" href="#background" fill="" opacity="0.2"/>
+
+    <g transform="scale(0.75) translate(80 80)" fill="url(#gradient_foreground)">
+        <path d="M352 96c0 14.3-3.1 27.9-8.8 40.2L396 227.4c-23.7 25.3-54.2 44.1-88.5 53.6L256 192c0 0 0 0 0 0s0 0 0 0l-68
+            117.5c21.5 6.8 44.3 10.5 68.1 10.5c70.7 0 133.8-32.7 174.9-84c11.1-13.8 31.2-16 45-5s16 31.2 5 45C428.1 341.8
+            347 384 256 384c-35.4 0-69.4-6.4-100.7-18.1L98.7 463.7C94 471.8 87 478.4 78.6 482.6L23.2 510.3c-5 2.5-10.9
+            2.2-15.6-.7S0 501.5 0 496l0-55.4c0-8.4 2.2-16.7 6.5-24.1l60-103.7C53.7 301.6 41.8 289.3 31.2
+            276c-11.1-13.8-8.8-33.9 5-45s33.9-8.8 45 5c5.7 7.1 11.8 13.8 18.2 20.1l69.4-119.9c-5.6-12.2-8.8-25.8-8.8-40.2c0-53
+            43-96 96-96s96 43 96 96zm21 297.9c32.6-12.8 62.5-30.8 88.9-52.9l43.7 75.5c4.2 7.3 6.5 15.6 6.5 24.1l0 55.4c0
+            5.5-2.9 10.7-7.6 13.6s-10.6 3.2-15.6 .7l-55.4-27.7c-8.4-4.2-15.4-10.8-20.1-18.9L373 393.9zM256 128a32 32 0 1 0
+            0-64 32 32 0 1 0 0 64z"/>
+    </g>
 </svg>
