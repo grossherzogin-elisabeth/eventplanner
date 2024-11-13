@@ -3,12 +3,12 @@
         <div class="flex px-8 pb-8 md:px-16 xl:px-20">
             <div class="w-full xl:max-w-2xl">
                 <div
-                    class="bg-surface sticky top-12 z-10 -mx-4 flex h-14 justify-end pb-2 pt-4 xl:top-0 xl:h-16 xl:pt-8"
+                    class="sticky top-12 z-10 -mx-4 flex h-14 justify-end bg-surface pb-2 pt-4 xl:top-0 xl:h-16 xl:pt-8"
                 ></div>
                 <div v-if="loading" class="-mt-10">
                     <div class="pb-8">
                         <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">
-                            <h2 class="text-secondary inline-block font-bold">Reisen werden geladen...</h2>
+                            <h2 class="inline-block font-bold text-secondary">Reisen werden geladen...</h2>
                         </div>
                         <ul class="-mx-4 max-w-xl">
                             <li v-for="i in 3" :key="i" class="mt-4">
@@ -19,9 +19,9 @@
                 </div>
                 <div
                     v-else-if="events.length === 0"
-                    class="bg-surface-container relative z-10 -mx-4 -mt-10 rounded-2xl p-4"
+                    class="relative z-10 -mx-4 -mt-10 rounded-2xl bg-surface-container p-4"
                 >
-                    <h3 class="text-secondary mb-2 font-bold">Keine zukünftigen Reisen</h3>
+                    <h3 class="mb-2 font-bold text-secondary">Keine zukünftigen Reisen</h3>
                     <p class="mb-4">
                         Du hast aktuell keine anstehenden Reisen. Du kannst im Kalender oder der Reiseliste nach Reisen
                         suchen und dich für Reisen anmelden, die du gerne mitfahren möchtest. Du wirst dann auf die
@@ -37,7 +37,7 @@
                 <div v-else class="-mt-10">
                     <div v-for="entry in eventsByMonth.entries()" :key="entry[0]" class="pb-8">
                         <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">
-                            <h2 class="text-secondary inline-block">
+                            <h2 class="inline-block text-secondary">
                                 {{ entry[0] }}
                             </h2>
                         </div>
