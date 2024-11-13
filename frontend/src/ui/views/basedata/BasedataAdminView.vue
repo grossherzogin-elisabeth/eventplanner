@@ -17,18 +17,22 @@
                 <div v-if="tab === Tab.QUALIFICATIONS" class="flex items-stretch gap-2 pb-2">
                     <VSearchButton v-model="qualificationFilter" placeholder="Einträge filtern" class="w-48" />
                     <div class="hidden flex-grow md:block"></div>
-                    <button class="btn-primary" @click="createQualification()">
-                        <i class="fa-solid fa-file-circle-plus"></i>
-                        <span>Qualifikation hinzufügen</span>
-                    </button>
+                    <div class="hidden 2xl:block">
+                        <button class="btn-primary" @click="createQualification()">
+                            <i class="fa-solid fa-file-circle-plus"></i>
+                            <span>Qualifikation hinzufügen</span>
+                        </button>
+                    </div>
                 </div>
                 <div v-else-if="tab === Tab.POSITIONS" class="flex items-stretch gap-2 pb-2">
                     <VSearchButton v-model="positionsFilter" placeholder="Einträge filtern" class="w-48" />
                     <div class="hidden flex-grow md:block"></div>
-                    <button class="btn-primary" @click="createPosition()">
-                        <i class="fa-solid fa-file-circle-plus"></i>
-                        <span>Position hinzufügen</span>
-                    </button>
+                    <div class="hidden 2xl:block">
+                        <button class="btn-primary" @click="createPosition()">
+                            <i class="fa-solid fa-file-circle-plus"></i>
+                            <span>Position hinzufügen</span>
+                        </button>
+                    </div>
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
@@ -42,6 +46,26 @@
                 </div>
             </template>
         </VTabs>
+
+        <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
+        <div
+            v-if="tab === Tab.POSITIONS"
+            class="permission-write-positions pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+        >
+            <button class="btn-floating pointer-events-auto" @click="createPosition()">
+                <i class="fa-solid fa-file-circle-plus"></i>
+                <span>Position hinzufügen</span>
+            </button>
+        </div>
+        <div
+            v-else-if="tab === Tab.QUALIFICATIONS"
+            class="permission-write-positions pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+        >
+            <button class="btn-floating pointer-events-auto" @click="createQualification()">
+                <i class="fa-solid fa-file-circle-plus"></i>
+                <span>Qualifikation hinzufügen</span>
+            </button>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
