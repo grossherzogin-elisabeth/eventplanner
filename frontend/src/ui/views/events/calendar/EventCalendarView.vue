@@ -2,13 +2,13 @@
     <div class="flex flex-1 flex-col bg-surface">
         <div v-if="events" class="flex h-full flex-1 flex-col">
             <div class="relative flex h-full flex-1 items-stretch">
-                <div class="absolute left-5 top-1 z-30 hidden h-10 w-10 lg:block xl:top-6">
-                    <button class="btn-back h-full w-full" @click="scrollLeft()">
+                <div class="absolute left-0 top-0 z-30 hidden w-14 bg-surface pt-0.5 lg:block xl:pt-6">
+                    <button class="icon-button ml-5" @click="scrollLeft()">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                 </div>
-                <div class="absolute right-6 top-1 z-30 hidden h-10 w-10 lg:block xl:top-6">
-                    <button class="btn-back h-full w-full" @click="scrollRight()">
+                <div class="absolute right-0 top-0 z-30 hidden w-14 bg-surface pt-0.5 lg:block xl:pt-6">
+                    <button class="icon-button" @click="scrollRight()">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>

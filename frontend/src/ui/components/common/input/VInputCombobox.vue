@@ -73,7 +73,7 @@
                     :required="props.required"
                     :value="focusOptionIndex === null ? displayValue : filter"
                     aria-haspopup="true"
-                    class="w-full overflow-ellipsis bg-transparent py-3 placeholder-opacity-50"
+                    class="h-14 w-full overflow-ellipsis bg-transparent py-3 placeholder-opacity-50"
                     @blur="onBlur"
                     @click="showDropdown()"
                     @input="filterValues($event)"

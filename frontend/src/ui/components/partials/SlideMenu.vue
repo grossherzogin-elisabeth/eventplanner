@@ -1,14 +1,14 @@
 <template>
     <div
         v-if="props.open"
-        class="fixed bottom-0 left-0 right-0 top-0 z-50 bg-black bg-opacity-50"
+        class="fixed bottom-0 left-0 right-0 top-0 z-50 bg-black bg-opacity-75"
         @click="close()"
     ></div>
     <div class="menu-wrapper text-white" :class="{ open: props.open }" @click="close()">
         <div class="menu" @click.stop>
             <slot />
         </div>
-        <button class="px-6 py-3 text-xl text-white md:px-8">
+        <button class="icon-button ml-2 mr-6 text-xl text-white">
             <i class="fa-solid fa-close"></i>
         </button>
     </div>
@@ -75,8 +75,8 @@ function close(): void {
 }
 
 .menu {
-    @apply flex-grow;
-    @apply h-full overflow-hidden rounded-r-xl shadow-xl;
+    @apply w-0 flex-grow;
+    @apply h-full overflow-hidden rounded-r-3xl shadow-xl;
     @apply flex flex-col;
     @apply bg-primary text-onprimary;
 }

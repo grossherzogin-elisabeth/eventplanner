@@ -30,7 +30,7 @@ function onInput(event: Event): void {
 <style scoped>
 .btn-search {
     @apply hidden items-center lg:flex;
-    @apply cursor-pointer gap-4 rounded-lg px-4 py-2;
+    @apply cursor-pointer gap-4 rounded-xl px-4 py-2;
     @apply transition-all duration-100;
     @apply text-secondary;
 }

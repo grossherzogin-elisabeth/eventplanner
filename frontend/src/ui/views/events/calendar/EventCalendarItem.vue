@@ -37,7 +37,7 @@
                 <div class="rounded-2xl bg-surface-container-low p-4 px-8 shadow-xl">
                     <div class="-mr-4 mb-4 flex items-center justify-end">
                         <!-- title -->
-                        <h2 class="flex-grow text-lg">
+                        <h2 class="w-0 flex-grow text-lg">
                             <span>{{ props.event.name }}</span>
                         </h2>
 

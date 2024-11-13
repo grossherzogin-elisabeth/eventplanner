@@ -59,7 +59,7 @@ const dropdownStyle = ref({
     'top': '0px',
     'left': '0px',
     'width': '10rem',
-    'maxHeight': '10rem',
+    'maxHeight': 'min(10rem, var(--viewport-height))',
     '--max-height': 'unset',
 });
 const resizeObserver = new ResizeObserver(() => moveIntoVisibleArea());
@@ -74,7 +74,7 @@ async function updatePosition(): Promise<void> {
             'top': `${props.y}px`,
             'left': `${props.x}px`,
             'width': `min(${props.minWidth || '10rem'}, ${props.maxWidth || '100vw'})`,
-            'maxHeight': props.maxHeight || 'unset',
+            'maxHeight': props.maxHeight || 'var(--viewport-height)',
             '--max-height': props.maxHeight || 'unset',
         };
     }
@@ -177,6 +177,13 @@ function moveIntoVisibleArea(): void {
     }
     const windowPadding = 10;
     const dropdownRect = dropdown.value.getBoundingClientRect();
+    const viewPortHeight = window.visualViewport?.height || window.innerHeight;
+    if (dropdownRect.height > viewPortHeight) {
+        dropdownStyle.value = {
+            ...dropdownStyle.value,
+            maxHeight: `${viewPortHeight - windowPadding * 2}px`,
+        };
+    }
     if (dropdownRect.top < windowPadding) {
         dropdownStyle.value = {
             ...dropdownStyle.value,
