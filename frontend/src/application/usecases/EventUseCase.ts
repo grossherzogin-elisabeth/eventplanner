@@ -192,7 +192,7 @@ export class EventUseCase {
             return [];
         }
         return registrations.filter(
-            (it) => it.registration || (it.slot && it.slot.criticality >= SlotCriticality.Important)
+            (it) => it.slot && (it.registration || it.slot.criticality >= SlotCriticality.Important)
         );
     }
 

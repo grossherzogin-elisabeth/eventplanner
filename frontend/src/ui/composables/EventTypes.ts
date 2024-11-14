@@ -9,7 +9,7 @@ export function useEventTypes() {
             { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
             { value: EventType.WeekendEvent, label: 'Wochenendreise' },
             { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
-            { value: EventType.WorkEvent, label: 'Arbeitsdiesnt' },
+            { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
         ];
     });
 
