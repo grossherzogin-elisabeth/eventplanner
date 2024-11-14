@@ -9,7 +9,7 @@
     >
         <template #row="{ item, first, last }">
             <td class="py-0">
-                <div class="flex flex-col items-center text-secondary">
+                <div class="text-secondary flex flex-col items-center">
                     <div
                         class="min-h-4 flex-grow border-r-2 border-dashed border-current"
                         :class="{ 'min-h-2 opacity-0': first, 'min-h-6': last }"
@@ -40,7 +40,7 @@
         <template #context-menu="{ item }">
             <li class="context-menu-item" @click="editLocation(item)">
                 <i class="fa-solid fa-edit" />
-                <span>Reisestop bearbeiten</span>
+                <span>Abschnitt bearbeiten</span>
             </li>
             <li class="context-menu-item" @click="moveLocationUp(item)">
                 <i class="fa-solid fa-arrow-up" />
@@ -52,7 +52,7 @@
             </li>
             <li class="context-menu-item text-error" @click="deleteLocation(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>Reisestop Löschen</span>
+                <span>Abschnitt Löschen</span>
             </li>
         </template>
     </VTable>
