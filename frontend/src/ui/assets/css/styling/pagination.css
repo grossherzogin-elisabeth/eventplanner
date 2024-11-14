@@ -1,6 +1,6 @@
 .pagination {
     @apply flex items-stretch justify-end space-x-2;
-    @apply px-8 py-2 md:px-16 xl:px-20;
+    @apply mr-1 px-4 py-2 md:px-12 xl:px-16;
     @apply bg-surface;
 }
 

@@ -18,10 +18,10 @@
                         Du kannst die ausgewählte Position als Standard festlegen, um dich für weitere Reisen noch
                         einfacher anmelden zu können.
                     </p>
-                    <div class="mb-4">
-                        <VInputCheckBox v-model="saveAsDefaultPosition" label="Als Standardposition merken" />
-                    </div>
                 </section>
+                <div class="mb-4">
+                    <VInputCheckBox v-model="saveAsDefaultPosition" label="Als Standardposition merken" />
+                </div>
             </div>
         </template>
         <template #buttons>
