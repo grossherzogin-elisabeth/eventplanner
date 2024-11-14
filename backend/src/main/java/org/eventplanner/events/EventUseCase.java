@@ -118,7 +118,7 @@ public class EventUseCase {
             @NonNull EventKey eventKey,
             @NonNull UpdateEventSpec spec
     ) {
-        signedInUser.assertHasAnyPermission(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_TEAM, Permission.WRITE_EVENT_REGISTRATION);
+        signedInUser.assertHasAnyPermission(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_TEAM);
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
 
@@ -153,25 +153,6 @@ public class EventUseCase {
         }
         if (signedInUser.hasPermission(Permission.WRITE_EVENT_TEAM)) {
             applyNullable(spec.slots(), event::setSlots);
-        }
-
-        if (signedInUser.hasPermission(Permission.WRITE_EVENT_REGISTRATION) && spec.registrations() != null) {
-            // find registrations confirmations that have changed and send notifications
-
-            event.getRegistrations().stream()
-                    .filter(r -> spec.registrations().stream().noneMatch(r2 -> r.getKey().equals(r2.getKey())))
-                    // map them together
-                    .forEach(existingRegistration -> {
-                        // check if the registration has been confirmed
-                        var userKey = existingRegistration.getUserKey();
-                        if (userKey != null) {
-                            var maybeUser = userService.getUserByKey(userKey);
-                            maybeUser.ifPresent(userDetails -> notificationService.sendRemovedFromCrewNotification(userDetails, event));
-                        }
-                    });
-
-
-            applyNullable(spec.registrations(), event::setRegistrations);
         }
 
         var updatedEvent = this.eventRepository.update(this.eventService.removeInvalidSlotAssignments(event));
@@ -296,11 +277,23 @@ public class EventUseCase {
             signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
             registration.setPosition(spec.positionKey());
             registration.setNote(spec.note());
+
+            if (Boolean.TRUE.equals(spec.confirmed())) {
+                registration.setConfirmedAt(Instant.now().atZone(ZoneId.of("Europe/Berlin")));
+            } else {
+                registration.setConfirmedAt(null);
+            }
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
             registration.setPosition(spec.positionKey());
             registration.setName(spec.name());
             registration.setNote(spec.note());
+
+            if (Boolean.TRUE.equals(spec.confirmed())) {
+                registration.setConfirmedAt(Instant.now().atZone(ZoneId.of("Europe/Berlin")));
+            } else {
+                registration.setConfirmedAt(null);
+            }
         }
 
         event.updateRegistration(registrationKey, registration);

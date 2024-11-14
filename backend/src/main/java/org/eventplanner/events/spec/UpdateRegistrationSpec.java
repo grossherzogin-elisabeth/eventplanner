@@ -9,6 +9,7 @@ public record UpdateRegistrationSpec(
     @NonNull PositionKey positionKey,
     @Nullable UserKey userKey,
     @Nullable String name,
-    @Nullable String note
+    @Nullable String note,
+    @Nullable Boolean confirmed
 ) {
 }

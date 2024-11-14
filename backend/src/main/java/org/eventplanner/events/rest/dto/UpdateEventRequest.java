@@ -18,8 +18,7 @@ public record UpdateEventRequest(
         @Nullable String start,
         @Nullable String end,
         @Nullable List<LocationRepresentation> locations,
-        @Nullable List<SlotRepresentation> slots,
-        @Nullable List<RegistrationRepresentation> registrations
+        @Nullable List<SlotRepresentation> slots
 ) implements Serializable {
     public UpdateEventSpec toDomain() {
         return new UpdateEventSpec(
@@ -31,7 +30,6 @@ public record UpdateEventRequest(
                 mapNullable(end, Instant::parse),
                 mapNullable(locations, LocationRepresentation::toDomain),
                 mapNullable(slots, SlotRepresentation::toDomain),
-                mapNullable(registrations, RegistrationRepresentation::toDomain)
         );
     }
 }
