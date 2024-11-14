@@ -26,7 +26,8 @@ html {
 
 html,
 body {
-    overscroll-behavior: none;
+    /* disables drag to reload */
+    /* overscroll-behavior: none; */
 }
 
 .h-nav {

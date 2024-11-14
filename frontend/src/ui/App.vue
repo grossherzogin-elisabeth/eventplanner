@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex min-h-screen flex-col bg-primary from-p-700 to-p-600 to-50% xl:bg-gradient-to-r"
+        class="flex min-h-screen flex-col from-p-700 to-p-600 to-50% xl:bg-gradient-to-r"
         :class="{ impersonated: signedInUser?.impersonated }"
     >
         <div id="navbar" class="xl:hidden">
