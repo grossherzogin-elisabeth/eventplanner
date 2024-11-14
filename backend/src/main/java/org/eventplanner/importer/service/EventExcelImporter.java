@@ -400,6 +400,11 @@ public class EventExcelImporter {
     private static List<Location> getLocationsFromText(String text) {
         var elsfleth = new Location("Elsfleth", "fa-anchor", "An der Kaje 1, 26931 Elsfleth", "DE");
         var bremerhaven = new Location("Bremerhaven", "fa-anchor", null, "DE");
+        var warnemuende = new Location("Warnemünde", "fa-anchor", null, "DE");
+        var stralsund = new Location("Stralsund", "fa-anchor", null, "DE");
+        var karlskrona = new Location("Karlskrona", "fa-anchor", null, "SE");
+        var danzig = new Location("Danzig", "fa-anchor", null, "PL");
+        var ystad = new Location("Ystad", "fa-anchor", null, "SE");
         var rosstock = new Location("Rosstock", "fa-anchor", null, "DE");
         var mariehamn = new Location("Mariehamn", "fa-anchor", null, "FI");
         var stettin = new Location("Stettin", "fa-anchor", null, "PL");
@@ -410,19 +415,31 @@ public class EventExcelImporter {
 
         var textNormalized = text.replaceAll(" ", "").toLowerCase();
 
-        if (textNormalized.contains("elsfleth-nordsee-elsfleth")) {
+        if (textNormalized.startsWith("elsfleth-nordsee-elsfleth")) {
             return List.of(elsfleth, nordsee, elsfleth);
         }
-        if (textNormalized.contains("sr1")) {
+        if (textNormalized.equals("sr1überführungwarnemünde")) {
+            return List.of(elsfleth, nok, warnemuende);
+        }
+        if (textNormalized.equals("sr2w'mündestralsundviastettinkarlskrona")) {
+            return List.of(warnemuende, stettin, karlskrona, stralsund);
+        }
+        if (textNormalized.equals("sr3stralsundw'mündeviadanzigystad")) {
+            return List.of(stralsund, danzig, ystad, warnemuende);
+        }
+        if (textNormalized.equals("sr44rostockbremerhaven")) {
+            return List.of(rosstock, nok, bremerhaven);
+        }
+        if (textNormalized.equals("sr127crew möglich")) {
             return List.of(elsfleth, nok, mariehamn);
         }
-        if (textNormalized.contains("sr2")) {
+        if (textNormalized.equals("sr225crew möglich")) {
             return List.of(mariehamn, ostsee, stettin);
         }
-        if (textNormalized.contains("sr3")) {
+        if (textNormalized.equals("sr3")) {
             return List.of(stettin, ostsee, rosstock);
         }
-        if (textNormalized.contains("sr4")) {
+        if (textNormalized.equals("sr4")) {
             return List.of(rosstock, nok, bremerhaven);
         }
         if (textNormalized.contains("maritimetage")) {
@@ -431,9 +448,28 @@ public class EventExcelImporter {
         if (textNormalized.contains("hansesail")) {
             return List.of(rosstock, ostsee, rosstock);
         }
+        if (textNormalized.contains("sail")) {
+            return List.of(bremerhaven, nordsee, bremerhaven);
+        }
         if (textNormalized.contains("tagesfahrt") || textNormalized.contains("abendfahrt")) {
             return List.of(elsfleth, weser, elsfleth);
         }
+        if (text.contains("-")) {
+            return Arrays.stream(text.split("-"))
+                    .map(s -> {
+                        var location = s
+                                .replace("Hochschule OSNABRÜCK", "")
+                                .replaceAll("SR[0-9 ]+", "")
+                                .trim();
+                        var raw = location.toLowerCase();
+                        if (raw.equals("nok")) return nok;
+                        if (raw.equals("nordsee")) return nordsee;
+                        if (raw.equals("ostsee")) return ostsee;
+                        return new Location(location, "fa-anchor", null, null);
+                    })
+                    .toList();
+        }
+
         return List.of(elsfleth, nordsee, elsfleth);
     }
 
