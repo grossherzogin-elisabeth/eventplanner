@@ -27,7 +27,7 @@
                         />
                     </div>
                 </section>
-                <div class="bg-surface-container-low -mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
+                <div class="-mx-4 mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold">Alternative Positionen</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
