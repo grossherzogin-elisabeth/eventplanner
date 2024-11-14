@@ -107,6 +107,16 @@ public class ImporterUseCase {
                 log.error("Failed to import events 2024 on startup", e);
             }
         }
+
+        var events2025 = new File(dataImportDirectory + "/events-2025.xlsx");
+        if (events2025.exists()) {
+            log.info("Importing events 2025 from {}", events2025.getAbsolutePath());
+            try {
+                importEventsFromFile(2025, events2025);
+            } catch (Exception e) {
+                log.error("Failed to import events 2025 on startup", e);
+            }
+        }
     }
 
     public List<ImportError> importEvents(@NonNull SignedInUser signedInUser, int year, InputStream stream) {

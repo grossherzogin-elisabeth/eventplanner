@@ -117,6 +117,9 @@
                             <i>{{ positions.get(item.signedInUserWaitingListPosition).name }}</i>
                             auf der Warteliste.
                         </p>
+                        <p v-else-if="item.description" class="truncate text-sm font-light">
+                            {{ item.description }}
+                        </p>
                         <p v-else class="truncate text-sm font-light">
                             <template v-if="item.locations.length === 0">keine Reiseroute angegeben</template>
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>

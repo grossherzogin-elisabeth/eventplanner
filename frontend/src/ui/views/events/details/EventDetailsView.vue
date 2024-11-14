@@ -178,7 +178,7 @@
                                                 signedInUser.permissions.includes(Permission.READ_USER_DETAILS)
                                             "
                                             :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
-                                            class="truncate"
+                                            class="truncate hover:text-primary hover:underline"
                                         >
                                             {{ it.name }}
                                         </RouterLink>
@@ -205,8 +205,17 @@
                                     :key="index"
                                     class="flex items-center justify-between space-x-2 md:space-x-4"
                                 >
-                                    <i class="fa-solid fa-user-circle" />
-                                    <span class="flex-grow">{{ it.name }}</span>
+                                    <i class="fa-solid fa-user-circle text-secondary" />
+                                    <RouterLink
+                                        v-if="
+                                            it.user && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)
+                                        "
+                                        :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
+                                        class="flex-grow truncate hover:text-primary hover:underline"
+                                    >
+                                        {{ it.name }}
+                                    </RouterLink>
+                                    <span v-else-if="it.name" class="flex-grow truncate">{{ it.name }}</span>
                                     <span :style="{ background: it.position.color }" class="position text-xs">
                                         {{ it.position.name }}
                                     </span>

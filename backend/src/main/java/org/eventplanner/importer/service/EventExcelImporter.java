@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.*;
 import java.util.*;
 
 import static org.eventplanner.common.ObjectUtils.mapNullable;
@@ -58,15 +59,28 @@ public class EventExcelImporter {
         if (knownUsers.isEmpty()) {
             log.warn("Userlist is empty, cannot resolve any username!");
         }
+        var hasWaitinglist = false;
+        for (int i = 0; i < data[0].length; i++) {
+            if (data[0][i].contains("Warteliste")) {
+                hasWaitinglist = true;
+            }
+        }
         var events = new ArrayList<Event>();
         for (int i = 1; i < data.length; i++) {
             try {
                 var raw = data[i];
                 var start = parseExcelDate(raw[2], year, 0);
                 var end = parseExcelDate(raw[2], year, 1);
-                var eventName = removeDuplicateWhitespaces(raw[1]);
-                if (eventName.startsWith("SR")) {
-                    eventName = eventName.replace("SR", "Sommerreise");
+                var eventName = findEventName(raw, start);
+                if (eventName.toLowerCase().contains("tagesfahrt")) {
+                    start = start.withHour(7).withMinute(30);
+                    end = end.withHour(16);
+                } else if (eventName.toLowerCase().contains("abend")) {
+                    start = start.withHour(16);
+                    end = end.withHour(22);
+                } else {
+                    start = start.withHour(16);
+                    end = end.withHour(16);
                 }
                 var eventKey = new EventKey(start.format(DateTimeFormatter.ISO_LOCAL_DATE) + "_" +
                     eventName.replaceAll("-", "")
@@ -74,7 +88,7 @@ public class EventExcelImporter {
                         .replaceAll(" ", "-")
                         .toLowerCase());
                 var slots = generateDefaultEventSlots();
-                var waitingListReached = false;
+                var waitingListReached = !hasWaitinglist;
                 var registrations = new ArrayList<Registration>();
                 for (int r = 4; r < raw.length; r++) {
                     var name = raw[r];
@@ -115,9 +129,9 @@ public class EventExcelImporter {
                 var event = new Event(
                     eventKey,
                     eventName,
-                    EventState.PLANNED,
+                    hasWaitinglist ? EventState.PLANNED : EventState.OPEN_FOR_SIGNUP,
                     raw[3],
-                    "",
+                    findDescription(raw[1]),
                     start,
                     end,
                     getLocationsFromText(raw[1]),
@@ -310,6 +324,7 @@ public class EventExcelImporter {
             case "NOA" -> Pos.NOA;
             case "1. Maschinist", "2. Maschinist" -> Pos.MASCHINIST;
             case "3. Maschinist (Ausb.)" -> Pos.MOA;
+            case "Maschinist" -> Pos.MOA;
             case "Koch" -> Pos.KOCH;
             case "Ausbilder" -> Pos.AUSBILDER;
             case "Matrose" -> Pos.MATROSE;
@@ -335,16 +350,63 @@ public class EventExcelImporter {
         throw new IllegalStateException("No matching slot found");
     }
 
+    private static String findDescription(String raw) {
+        var result = raw;
+        if (raw.toLowerCase().contains("exklusiv")) {
+            result = result.replace("Elsfleth-Nordsee-Elsfleth", "");
+            result = result.replace("Exklusiv", "");
+            return "Exklusivcharter: " + result.trim();
+        }
+        return "";
+    }
+
+    private static String findEventName(String[] raw, ZonedDateTime start) {
+        var eventName = removeDuplicateWhitespaces(raw[1]);
+        if (eventName.equals("Abendfahrt")) {
+            return "Abendfahrt";
+        }
+        if (raw[0].startsWith("TF")) {
+            return "Tagesfahrt";
+        }
+        if (eventName.toLowerCase().contains("ausbildungstörn")) {
+            return "Crew Ausbildungstörn";
+        }
+        if (eventName.toLowerCase().contains("ostern")) {
+            return "Osterreise";
+        }
+        if (eventName.toLowerCase().contains("pfingsten")) {
+            return "Pfingstreise";
+        }
+        if (eventName.toLowerCase().contains("himmelfahrt")) {
+            return "Christi Himmelfahrt";
+        }
+        if (eventName.toLowerCase().contains("osnabrück")) {
+            return "Hochschule Osnabrück";
+        }
+        for (int i = 0; i < 9; i++) {
+            if (eventName.startsWith("SR" + i) || eventName.startsWith("SR " + i)) {
+                return "Sommerreise " + i;
+            }
+        }
+        if (eventName.toLowerCase().startsWith("elsfleth-nordsee-elsfleth")) {
+            return "Wochenendreise KW " + start.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
+        }
+        if (eventName.toLowerCase().startsWith("elsfleth - nordsee - elsfleth")) {
+            return "Wochenendreise KW " + start.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
+        }
+        return eventName;
+    }
+
     private static List<Location> getLocationsFromText(String text) {
         var elsfleth = new Location("Elsfleth", "fa-anchor", "An der Kaje 1, 26931 Elsfleth", "DE");
         var bremerhaven = new Location("Bremerhaven", "fa-anchor", null, "DE");
         var rosstock = new Location("Rosstock", "fa-anchor", null, "DE");
         var mariehamn = new Location("Mariehamn", "fa-anchor", null, "FI");
         var stettin = new Location("Stettin", "fa-anchor", null, "PL");
-        var nok = new Location("Nord-Ostsee-Kanal", "fa-water text-blue-600", null, "DE");
-        var nordsee = new Location("Nordsee", "fa-water text-blue-600", null, null);
-        var ostsee = new Location("Ostsee", "fa-water text-blue-600", null, null);
-        var weser = new Location("Weser", "fa-water text-blue-600", null, null);
+        var nok = new Location("Nord-Ostsee-Kanal", "fa-water text-blue", null, "DE");
+        var nordsee = new Location("Nordsee", "fa-water text-blue", null, null);
+        var ostsee = new Location("Ostsee", "fa-water text-blue", null, null);
+        var weser = new Location("Weser", "fa-water text-blue", null, null);
 
         var textNormalized = text.replaceAll(" ", "").toLowerCase();
 
