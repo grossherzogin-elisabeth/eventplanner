@@ -137,18 +137,13 @@
     </div>
     <div v-else>
         <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
-        <div
-            class="mx-4 rounded-2xl bg-secondary-container px-4 py-4 font-bold text-onsecondary-container backdrop-blur-2xl xl:mx-8 xl:pl-6"
-        >
-            <p class="mb-2 text-base">
-                <i class="fa-solid fa-info-circle"></i>
-                <span class="ml-4">Noch kein Account?</span>
-            </p>
-            <p class="text-sm">
+        <VInfo class="mx-8">
+            <h2 class="mb-2">Noch kein Account?</h2>
+            <p class="mb-2">
                 Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Reisen einsehen und dich zu
                 Reisen an und abmelden.
             </p>
-        </div>
+        </VInfo>
         <ul class="menu-list my-4">
             <li class="menu-item">
                 <RouterLink :to="{ name: Routes.Login }">
@@ -170,6 +165,7 @@ import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { SignedInUser } from '@/domain';
 import { Permission } from '@/domain';
+import { VInfo } from '@/ui/components/common';
 import { useAuthUseCase, useConfig } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 

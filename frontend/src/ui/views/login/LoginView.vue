@@ -86,16 +86,7 @@
             </div>
         </div>
     </div>
-    <div v-else class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
-        <div
-            class="-mx-4 flex max-w-2xl items-center gap-4 rounded-2xl bg-secondary-container p-4 text-onsecondary-container"
-        >
-            <i class="fa-solid fa-info-circle"></i>
-            <span class="font-bold">
-                Diese Seite ist nur für angemeldete Nutzer sichtbar. Du wirst in Kürze zum Login weitergeleitet...
-            </span>
-        </div>
-    </div>
+    <div v-else class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20"></div>
 </template>
 
 <script lang="ts" setup>
