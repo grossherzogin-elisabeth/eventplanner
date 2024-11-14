@@ -23,7 +23,7 @@
             </div>
         </template>
         <template #content>
-            <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+            <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-10 z-20 pt-4 xl:top-0 xl:pt-8">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event" class="">
@@ -34,7 +34,7 @@
                                     :options="[
                                         { value: EventState.Draft, label: 'Entwurf' },
                                         { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
-                                        { value: EventState.Planned, label: 'Crewplanung verlöffentlicht' },
+                                        { value: EventState.Planned, label: 'Crew verlöffentlicht' },
                                         { value: EventState.Canceled, label: 'Reise ist abgesagt', hidden: true },
                                     ]"
                                     :errors="validation.errors.value['state']"
@@ -218,7 +218,7 @@
                 @click="publishPlannedCrew()"
             >
                 <i class="fa-solid fa-earth-europe" />
-                <span>Crewplanung veröffentlichen</span>
+                <span>Crew veröffentlichen</span>
             </li>
             <li class="permission-write-events context-menu-item" @click="resetTeam()">
                 <i class="fa-solid fa-rotate" />

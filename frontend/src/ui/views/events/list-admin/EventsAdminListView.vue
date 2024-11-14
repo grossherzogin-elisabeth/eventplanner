@@ -231,7 +231,7 @@
                         @click="publishCrewPlanning([item])"
                     >
                         <i class="fa-solid fa-earth-europe" />
-                        <span>Crewplanung veröffentlichen</span>
+                        <span>Crew veröffentlichen</span>
                     </li>
                     <li class="permission-write-events context-menu-item disabled">
                         <i class="fa-solid fa-users" />
@@ -295,7 +295,7 @@
                             @click="publishCrewPlanning(selectedEvents)"
                         >
                             <i class="fa-solid fa-earth-europe"></i>
-                            <span class="truncate">Crewplanung veröffentlichen</span>
+                            <span class="truncate">Crew veröffentlichen</span>
                         </button>
                         <button v-else class="permission-write-events btn-ghost" @click="editBatch(selectedEvents)">
                             <i class="fa-solid fa-edit"></i>
@@ -333,7 +333,7 @@
                                 @click="publishCrewPlanning(selectedEvents)"
                             >
                                 <i class="fa-solid fa-earth-europe" />
-                                <span>Crewplanung veröffentlichen</span>
+                                <span>Crew veröffentlichen</span>
                             </li>
                             <li class="permission-write-events context-menu-item disabled">
                                 <i class="fa-solid fa-users" />
@@ -674,7 +674,7 @@ async function publishCrewPlanning(events: Event[]): Promise<void> {
     let eventsToEdit = events.filter((it) => it.state !== EventState.Planned);
     if (eventsToEdit.find((event) => event.state !== EventState.OpenForSignup)) {
         const confirmed = await confirmationDialog.value?.open({
-            title: 'Crewplanung veröffentlichen',
+            title: 'Crew veröffentlichen',
             message: `Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status 'Crew Anmeldung' ist.
                 Möchtest du trotzdem alle ausgewählten Reisen in den Status 'Crewplanung veröffentlicht' ändern?`,
             cancel: 'Nein, nur die in Anmeldung',
