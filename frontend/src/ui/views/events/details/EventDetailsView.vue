@@ -4,59 +4,49 @@
             <h1 class="mb-2 hidden w-full truncate pt-8 xl:block">
                 {{ event?.name }}
             </h1>
-            <!--            <p>{{ event?.description }}</p>-->
         </template>
         <template #content>
             <div
                 v-if="event"
-                class="gap-x-20 gap-y-8 space-y-8 px-8 pb-8 pt-6 md:grid md:grid-cols-2 md:space-y-0 md:px-16 xl:px-20"
+                class="space-y-4 px-8 pb-8 pt-6 md:grid md:grid-cols-2 md:gap-x-20 md:gap-y-4 md:space-y-0 md:px-16 xl:px-20"
             >
                 <!-- state info banner -->
+                <section v-if="event.state === EventState.OpenForSignup" class="col-start-2">
+                    <VInfo clamp>
+                        Diese Reise befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der
+                        Reise! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.
+                    </VInfo>
+                </section>
                 <section
                     v-if="event.state === EventState.Canceled"
-                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:ml-0"
+                    class="sticky left-4 right-4 top-14 col-start-2 md:static"
                 >
-                    <div class="overflow-hidden rounded-2xl bg-red-container text-onred-container">
-                        <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
-                            <i class="fa-solid fa-ban" />
-                            <p class="text-sm font-bold">Diese Reise wurde abgesagt!</p>
-                        </div>
-                    </div>
+                    <VWarning> Diese Reise wurde abgesagt! </VWarning>
                 </section>
                 <section
                     v-else-if="event.signedInUserAssignedPosition"
-                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:ml-0"
+                    class="sticky left-4 right-4 top-14 col-start-2 md:static"
                 >
-                    <div class="overflow-hidden rounded-2xl bg-green-container text-ongreen-container">
-                        <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
-                            <i class="fa-solid fa-check" />
-                            <p class="text-sm font-bold">
-                                Du bist für diese Reise als
-                                {{ positions.get(event.signedInUserAssignedPosition).name }}
-                                eingeplant
-                            </p>
-                        </div>
-                    </div>
+                    <VInfo>
+                        Du bist für diese Reise als
+                        {{ positions.get(event.signedInUserAssignedPosition).name }}
+                        eingeplant
+                    </VInfo>
                 </section>
                 <section
                     v-else-if="event.signedInUserWaitingListPosition"
-                    class="sticky left-4 right-4 top-14 col-start-2 -mx-4 md:static xl:ml-0"
+                    class="sticky left-4 right-4 top-14 col-start-2 md:static"
                 >
-                    <div class="overflow-hidden rounded-2xl bg-yellow-container text-onyellow-container">
-                        <div class="flex items-center space-x-4 px-4 py-4 lg:px-8">
-                            <i class="fa-solid fa-hourglass-half" />
-                            <p class="text-sm font-bold">
-                                Du stehst für diese Reise als
-                                {{ positions.get(event.signedInUserWaitingListPosition).name }}
-                                auf der Warteliste
-                            </p>
-                        </div>
-                    </div>
+                    <VInfo>
+                        Du stehst für diese Reise als
+                        {{ positions.get(event.signedInUserWaitingListPosition).name }}
+                        auf der Warteliste
+                    </VInfo>
                 </section>
 
                 <!-- details -->
-                <section class="-mx-4 md:col-start-2 xl:ml-0">
-                    <h2 class="mb-2 ml-4 font-bold text-secondary">
+                <section class="pt-4 md:col-start-2">
+                    <h2 class="mb-2 font-bold text-secondary">
                         {{ $t('app.event-details.title') }}
                     </h2>
                     <div class="space-y-1 rounded-2xl bg-surface-container p-4">
@@ -84,12 +74,16 @@
                             <span v-else-if="event.assignedUserCount"> {{ event.assignedUserCount }} Crew </span>
                             <span v-else> {{ event.registrations.length }} Anmeldungen </span>
                         </p>
+                        <p v-if="event.description" class="flex items-center space-x-4">
+                            <i class="fa-solid fa-info-circle w-4" />
+                            <span>{{ event.description }} </span>
+                        </p>
                     </div>
                 </section>
 
                 <!-- route -->
-                <section class="-mx-4 md:col-start-2 xl:ml-0">
-                    <h2 class="mb-2 ml-4 font-bold text-secondary">
+                <section class="pt-4 md:col-start-2">
+                    <h2 class="mb-2 font-bold text-secondary">
                         <template v-if="event.locations.length === 1">Ort</template>
                         <template v-else>Route</template>
                     </h2>
@@ -114,14 +108,14 @@
                 </section>
 
                 <!-- crew -->
-                <section class="col-start-1 row-span-6 -mx-4 md:row-start-1 md:mx-0">
+                <section class="col-start-1 row-span-6 pt-4 md:row-start-1 md:pt-0">
                     <h2
                         v-if="statesWithHiddenCrew.includes(event.state)"
-                        class="mb-2 ml-4 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0"
+                        class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0"
                     >
                         <span>Anmeldungen</span>
                     </h2>
-                    <h2 v-else class="mb-2 ml-4 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
+                    <h2 v-else class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
                         <button
                             class="hover:text-primary"
                             :class="{ 'text-primary underline': tab === Tab.Team }"
@@ -338,7 +332,7 @@ import type { Event, PositionKey, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
-import { AsyncButton } from '@/ui/components/common';
+import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';

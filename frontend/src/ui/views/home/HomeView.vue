@@ -30,7 +30,8 @@
                     </p>
                     <div class="flex">
                         <RouterLink :to="{ name: Routes.EventsList }" class="btn-primary">
-                            Finde deine nächste Reise
+                            <i class="fa-solid fa-binoculars"></i>
+                            <span>Finde deine nächste Reise</span>
                         </RouterLink>
                     </div>
                 </div>

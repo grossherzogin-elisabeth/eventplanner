@@ -74,16 +74,18 @@
                 </template>
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterOnlyActive }" @click="filterOnlyActive = !filterOnlyActive">
-                <i class="fa-solid fa-check"></i>
                 <span class="">Aktive Stammcrew</span>
+                <i class="icon-active fa-solid fa-check ml-2"></i>
+                <i class="icon-inactive fa-solid fa-plus ml-2"></i>
             </button>
             <button
                 class="btn-tag"
                 :class="{ active: filterExpiredQualifications }"
                 @click="filterExpiredQualifications = !filterExpiredQualifications"
             >
-                <i class="fa-solid fa-check"></i>
                 <span class="">Abgelaufene Qualifikationen</span>
+                <i class="icon-active fa-solid fa-check ml-2"></i>
+                <i class="icon-inactive fa-solid fa-plus ml-2"></i>
             </button>
         </div>
 

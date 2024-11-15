@@ -170,16 +170,18 @@ a.btn-danger,
     @apply hover:shadow;
 }
 
-.btn-tag > svg:first-child {
-    @apply mr-2 hidden;
-}
-
 .btn-tag.active {
     @apply border-secondary bg-secondary-container text-onsecondary-container;
 }
 
-.btn-tag.active > svg:first-child {
-    @apply inline;
+.btn-tag.active .icon-inactive,
+.btn-tag .icon-active {
+    @apply hidden;
+}
+
+.btn-tag .icon-inactive,
+.btn-tag.active > .icon-active {
+    @apply inline-block w-4;
 }
 
 @media (max-width: 1023px) {

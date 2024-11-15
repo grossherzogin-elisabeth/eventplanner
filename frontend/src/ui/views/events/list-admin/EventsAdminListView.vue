@@ -74,16 +74,18 @@
                 </template>
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
-                <i class="fa-solid fa-check"></i>
                 <span class="">Freie Plätze</span>
+                <i class="icon-active fa-solid fa-check ml-2"></i>
+                <i class="icon-inactive fa-solid fa-plus ml-2"></i>
             </button>
             <button
                 class="btn-tag"
                 :class="{ active: filterWaitinglist }"
                 @click="filterWaitinglist = !filterWaitinglist"
             >
-                <i class="fa-solid fa-check"></i>
                 <span class="">Warteliste</span>
+                <i class="icon-active fa-solid fa-check ml-2"></i>
+                <i class="icon-inactive fa-solid fa-plus ml-2"></i>
             </button>
         </div>
 

@@ -6,13 +6,13 @@
         @click="onClick()"
     >
         <VLoadingSpinner v-if="loading" class="-mx-1 block w-6 text-current" />
-        <span v-else-if="success === true" class="block w-4">
+        <span v-else-if="success === true" class="block w-6">
             <i class="fa-solid fa-check"></i>
         </span>
-        <span v-else-if="success === false" class="block w-4">
+        <span v-else-if="success === false" class="block w-6">
             <i class="fa-solid fa-warning"></i>
         </span>
-        <span v-else-if="$slots.icon" class="block w-4">
+        <span v-else-if="$slots.icon" class="block w-6">
             <slot name="icon"></slot>
         </span>
         <span class="truncate text-left">
