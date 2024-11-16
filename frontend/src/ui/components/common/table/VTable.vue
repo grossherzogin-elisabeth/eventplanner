@@ -380,11 +380,19 @@ function openContextMenu(anchor: EventTarget | HTMLElement | undefined, row: T &
     }
 }
 
+function resetPage(): void {
+    page.value = 0;
+}
+
 async function init(): Promise<void> {
     registerSortListeners();
     watch(() => slots.head, registerSortListeners);
     watch(head, registerSortListeners);
     watch(page, () => emit('update:page', page.value));
+    watch(
+        () => props.items,
+        () => resetPage()
+    );
 
     await router.isReady();
     setSortingIndicators();

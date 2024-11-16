@@ -44,7 +44,6 @@
                                 .join(', ')
                         }}
                     </span>
-                    <i class="fa-solid fa-chevron-down"></i>
                 </template>
                 <template #default>
                     <ul>
@@ -75,8 +74,6 @@
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterOnlyActive }" @click="filterOnlyActive = !filterOnlyActive">
                 <span class="">Aktive Stammcrew</span>
-                <i class="icon-active fa-solid fa-check ml-2"></i>
-                <i class="icon-inactive fa-solid fa-plus ml-2"></i>
             </button>
             <button
                 class="btn-tag"
@@ -84,8 +81,6 @@
                 @click="filterExpiredQualifications = !filterExpiredQualifications"
             >
                 <span class="">Abgelaufene Qualifikationen</span>
-                <i class="icon-active fa-solid fa-check ml-2"></i>
-                <i class="icon-inactive fa-solid fa-plus ml-2"></i>
             </button>
         </div>
 
@@ -453,6 +448,10 @@ function selectAll(): void {
 async function fetchUsers(): Promise<void> {
     const positions = await usersUseCase.resolvePositionNames();
     const userlist: User[] = await usersUseCase.getUsers();
+    // current
+    // -1
+    // -2
+    // +1
     const events = await eventUseCase.getEvents(new Date().getFullYear());
     const registrationsSingleDayEventsWithSlot = events
         .filter((evt) => evt.type === EventType.SingleDayEvent)

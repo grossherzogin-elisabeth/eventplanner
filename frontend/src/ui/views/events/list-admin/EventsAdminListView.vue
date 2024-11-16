@@ -43,7 +43,6 @@
                     <span v-else class="mr-2">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
-                    <i class="fa-solid fa-chevron-down"></i>
                 </template>
                 <template #default>
                     <ul>
@@ -52,7 +51,6 @@
                             <span>Alle Reisearten</span>
                         </li>
                         <li v-else class="context-menu-item" @click="filterEventType = []">
-                            <i class="w-4"></i>
                             <i class="w-4"></i>
                             <span>Alle Reisearten</span>
                         </li>
@@ -75,8 +73,6 @@
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
                 <span class="">Freie Plätze</span>
-                <i class="icon-active fa-solid fa-check ml-2"></i>
-                <i class="icon-inactive fa-solid fa-plus ml-2"></i>
             </button>
             <button
                 class="btn-tag"
@@ -84,8 +80,6 @@
                 @click="filterWaitinglist = !filterWaitinglist"
             >
                 <span class="">Warteliste</span>
-                <i class="icon-active fa-solid fa-check ml-2"></i>
-                <i class="icon-inactive fa-solid fa-plus ml-2"></i>
             </button>
         </div>
 
