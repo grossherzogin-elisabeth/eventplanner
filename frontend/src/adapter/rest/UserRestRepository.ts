@@ -89,21 +89,10 @@ interface UserDetailsUpdateRequest {
     diet?: string;
 }
 
-interface UserDetailsCreateRequest {
-    gender?: string;
-    title?: string;
+interface UserCreateRequest {
     firstName: string;
-    secondName?: string;
     lastName: string;
     email: string;
-    phone?: string;
-    mobile?: string;
-    dateOfBirth?: string;
-    placeOfBirth?: string;
-    passNr?: string;
-    nationality?: string;
-    comment?: string;
-    address: AddressRepresentation;
 }
 
 interface UserQualificationRepresentation {
@@ -242,27 +231,11 @@ export class UserRestRepository implements UserRepository {
         return UserRestRepository.mapUserDetailsToDomain(representation);
     }
 
-    public async createUser(user: UserDetails): Promise<UserDetails> {
-        const requestBody: UserDetailsCreateRequest = {
-            gender: user.gender,
-            title: user.title,
+    public async createUser(user: User): Promise<UserDetails> {
+        const requestBody: UserCreateRequest = {
             firstName: user.firstName,
-            secondName: user.secondName,
             lastName: user.lastName,
-            dateOfBirth: user.dateOfBirth?.toISOString(),
-            placeOfBirth: user.placeOfBirth,
-            email: user.email,
-            phone: user.phone,
-            mobile: user.mobile,
-            passNr: user.passNr,
-            nationality: user.nationality,
-            comment: user.comment,
-            address: {
-                addressLine1: user.address.addressLine1,
-                addressLine2: user.address.addressLine2,
-                town: user.address.town,
-                zipCode: user.address.zipcode,
-            },
+            email: user.email || '',
         };
         const response = await fetch('/api/v1/users', {
             method: 'POST',

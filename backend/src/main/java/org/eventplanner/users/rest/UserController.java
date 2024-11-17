@@ -2,6 +2,7 @@ package org.eventplanner.users.rest;
 
 import org.eventplanner.users.UserUseCase;
 import org.eventplanner.users.rest.dto.*;
+import org.eventplanner.users.spec.CreateUserSpec;
 import org.eventplanner.users.values.Permission;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -39,6 +41,17 @@ public class UserController {
             var users = userUseCase.getUsers(signedInUser).stream();
             return ResponseEntity.ok(users.map(UserRepresentation::fromDomain).toList());
         }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "")
+    public ResponseEntity<UserDetailsRepresentation> createUser(
+            @RequestBody CreateUserRequest spec
+    ) {
+        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var user = userUseCase.createUser(signedInUser, spec.toDomain());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(URI.create("/api/v1/users/" + user.getKey().value()))
+                .body(UserDetailsRepresentation.fromDomain(user));
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/{key}")

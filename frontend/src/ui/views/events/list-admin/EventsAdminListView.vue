@@ -10,14 +10,6 @@
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
-                    <button
-                        v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
-                        class="permission-write-events btn-ghost"
-                        @click="importEvents()"
-                    >
-                        <i class="fa-solid fa-upload"></i>
-                        <span class="">Importieren</span>
-                    </button>
                     <div class="permission-write-events hidden 2xl:block">
                         <button class="btn-primary ml-2" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
@@ -259,7 +251,6 @@
 
         <EventCreateDlg ref="createEventDialog" />
         <EventCancelDlg ref="cancelEventDialog" />
-        <ImportEventsDlg ref="importEventsDialog" />
         <VConfirmationDialog ref="confirmationDialog" />
         <EventBatchEditDlg ref="eventBatchEditDialog" />
         <CreateRegistrationDlg ref="createRegistrationDialog" submit-text="Speichern" />
@@ -387,7 +378,6 @@ import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
-import ImportEventsDlg from '@/ui/views/events/list-admin/ImportEventsDlg.vue';
 
 interface StateDetails {
     name: string;
@@ -430,7 +420,6 @@ const filterEventType = ref<EventType[]>([]);
 
 const createEventDialog = ref<Dialog<Event> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string> | null>(null);
-const importEventsDialog = ref<Dialog<Event> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
@@ -612,10 +601,6 @@ async function cancelEvent(evt: Event): Promise<void> {
         await eventAdminUseCase.cancelEvent(evt, message);
         await fetchEvents();
     }
-}
-
-async function importEvents(): Promise<void> {
-    await importEventsDialog.value?.open().catch();
 }
 
 async function editBatch(events: Event[]): Promise<void> {

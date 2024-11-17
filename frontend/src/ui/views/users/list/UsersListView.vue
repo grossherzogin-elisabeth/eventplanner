@@ -10,14 +10,10 @@
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
-                    <div class="hidden 2xl:block">
-                        <button
-                            v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)"
-                            class="btn-primary"
-                            @click="importUsers()"
-                        >
-                            <i class="fa-solid fa-upload"></i>
-                            <span class="">Importieren</span>
+                    <div class="permission-write-users hidden 2xl:block">
+                        <button class="btn-primary" @click="createUser()">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span class="">Hinzufügen</span>
                         </button>
                     </div>
                 </div>
@@ -206,7 +202,7 @@
 
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
         <VConfirmationDialog ref="deleteUserDialog" />
-        <ImportUsersDlg ref="importUsersDialog" />
+        <CreateUserDlg ref="createUserDialog" />
 
         <div class="flex-1"></div>
 
@@ -256,6 +252,16 @@
                 </div>
             </div>
         </div>
+        <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
+        <div
+            v-else
+            class="permission-write-events pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+        >
+            <button class="btn-floating pointer-events-auto" @click="createUser()">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Nutzer hinzufügen</span>
+            </button>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -282,7 +288,7 @@ import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
-import ImportUsersDlg from '@/ui/views/users/list/ImportUsersDlg.vue';
+import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
 import UsersListSkeletonLoader from '@/ui/views/users/list/UsersListSkeletonLoader.vue';
 
 enum Tab {
@@ -326,7 +332,7 @@ const filterPositions = ref<PositionKey[]>([]);
 
 const users = ref<UserRegistrations[] | undefined>(undefined);
 
-const importUsersDialog = ref<Dialog | null>(null);
+const createUserDialog = ref<Dialog<void, User | undefined> | null>(null);
 const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
 const deleteUserDialog = ref<ConfirmationDialog | null>(null);
 
@@ -394,8 +400,8 @@ function matchesActiveCategory(user: UserRegistrations): boolean {
     return true;
 }
 
-function importUsers(): void {
-    importUsersDialog.value?.open().catch();
+function createUser(): void {
+    createUserDialog.value?.open().catch();
 }
 
 async function editUser(user: UserRegistrations): Promise<void> {

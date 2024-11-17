@@ -34,6 +34,10 @@
     pointer-events: none;
 }
 
+.dialog-background:has(.error-dialog) {
+    @apply z-50;
+}
+
 .dialog-background.open {
     animation: anim-dialog-background-open var(--open-close-animation-duration) ease-in;
     background-color: var(--dialog-open-background);

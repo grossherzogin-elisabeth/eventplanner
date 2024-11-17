@@ -2,7 +2,7 @@ import type { NotificationService, UserRepository } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
 import { diff, filterUndefined, wait } from '@/common';
-import type { User, UserDetails, UserKey } from '@/domain';
+import type { User, UserDetails, UserKey, ValidationHint } from '@/domain';
 
 export class UserAdministrationUseCase {
     private readonly userRepository: UserRepository;
@@ -20,6 +20,27 @@ export class UserAdministrationUseCase {
         this.userCachingService = params.userCachingService;
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
+    }
+
+    public async createUser(user: User): Promise<UserDetails> {
+        try {
+            const savedUser = await this.userRepository.createUser(user);
+            await this.userCachingService.updateCache({
+                key: savedUser.key,
+                firstName: savedUser.firstName,
+                nickName: savedUser.nickName,
+                lastName: savedUser.lastName,
+                positionKeys: savedUser.positionKeys,
+                roles: savedUser.roles,
+                email: savedUser.email,
+                qualifications: savedUser.qualifications,
+            });
+            this.notificationService.success('Nutzer erstellt');
+            return savedUser;
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 
     public async updateUser(original: UserDetails, updated: UserDetails): Promise<UserDetails> {
@@ -116,5 +137,31 @@ export class UserAdministrationUseCase {
         mailToElement.click();
         await wait(1000);
         document.body.removeChild(mailToElement);
+    }
+
+    public validate(event: User): Record<string, ValidationHint[]> {
+        const errors: Record<string, ValidationHint[]> = {};
+        if (event.firstName.trim().length === 0) {
+            errors.firstName = errors.firstName || [];
+            errors.firstName.push({
+                key: 'Bitte gib einen Vornamen an',
+                params: {},
+            });
+        }
+        if (event.lastName.trim().length === 0) {
+            errors.lastName = errors.lastName || [];
+            errors.lastName.push({
+                key: 'Bitte gib einen Nachnamen an',
+                params: {},
+            });
+        }
+        if (!event.email || !new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$').test(event.email)) {
+            errors.email = errors.email || [];
+            errors.email.push({
+                key: 'Bitte gib eine gültige Email Adresse an',
+                params: {},
+            });
+        }
+        return errors;
     }
 }

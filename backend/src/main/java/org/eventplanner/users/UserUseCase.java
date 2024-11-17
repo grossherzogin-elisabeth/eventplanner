@@ -6,6 +6,7 @@ import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
+import org.eventplanner.users.spec.CreateUserSpec;
 import org.eventplanner.users.spec.UpdateUserSpec;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Permission;
@@ -113,33 +114,40 @@ public class UserUseCase {
         return userService.getUserByKey(key);
     }
 
+    public UserDetails createUser(@NonNull SignedInUser signedInUser, @NonNull CreateUserSpec spec) {
+        signedInUser.assertHasPermission(Permission.WRITE_USERS);
+        var newUser = new UserDetails(new UserKey(), spec.firstName(), spec.lastName());
+        newUser.setEmail(spec.email());
+        return userService.createUser(newUser);
+    }
+
     public UserDetails updateUser(@NonNull SignedInUser signedInUser, @NonNull UserKey key, @NonNull UpdateUserSpec spec) {
         signedInUser.assertHasPermission(Permission.WRITE_USERS);
 
         var user = userService.getUserByKey(key).orElseThrow();
         applyNullable(spec.authKey(), user::setAuthKey);
-        applyNullable(spec.gender(), user::setGender);
-        applyNullable(spec.title(), user::setTitle);
-        applyNullable(spec.firstName(), user::setFirstName);
-        applyNullable(spec.nickName(), user::setNickName);
-        applyNullable(spec.secondName(), user::setSecondName);
-        applyNullable(spec.lastName(), user::setLastName);
+        applyNullable(spec.gender(), it -> user.setGender(it.trim()));
+        applyNullable(spec.title(), it -> user.setTitle(it.trim()));
+        applyNullable(spec.firstName(), it -> user.setFirstName(it.trim()));
+        applyNullable(spec.nickName(), it -> user.setNickName(it.trim()));
+        applyNullable(spec.secondName(), it -> user.setSecondName(it.trim()));
+        applyNullable(spec.lastName(), it -> user.setLastName(it.trim()));
         applyNullable(spec.dateOfBirth(), user::setDateOfBirth);
-        applyNullable(spec.placeOfBirth(), user::setPlaceOfBirth);
-        applyNullable(spec.nationality(), user::setNationality);
-        applyNullable(spec.passNr(), user::setPassNr);
-        applyNullable(spec.email(), user::setEmail);
-        applyNullable(spec.phone(), user::setPhone);
-        applyNullable(spec.phoneWork(), user::setPhoneWork);
+        applyNullable(spec.placeOfBirth(), it -> user.setPlaceOfBirth(it.trim()));
+        applyNullable(spec.nationality(), it -> user.setNationality(it.trim()));
+        applyNullable(spec.passNr(), it -> user.setPassNr(it.trim()));
+        applyNullable(spec.email(), it -> user.setEmail(it.trim()));
+        applyNullable(spec.phone(), it -> user.setPhone(it.trim()));
+        applyNullable(spec.phoneWork(), it -> user.setPhoneWork(it.trim()));
         applyNullable(spec.address(), user::setAddress);
-        applyNullable(spec.mobile(), user::setMobile);
-        applyNullable(spec.comment(), user::setComment);
+        applyNullable(spec.mobile(), it -> user.setMobile(it.trim()));
+        applyNullable(spec.comment(), it -> user.setComment(it.trim()));
         applyNullable(spec.qualifications(), user::setQualifications);
         applyNullable(spec.roles(), user::setRoles);
         applyNullable(spec.emergencyContact(), user::setEmergencyContact);
-        applyNullable(spec.diseases(), user::setDiseases);
-        applyNullable(spec.intolerances(), user::setIntolerances);
-        applyNullable(spec.medication(), user::setMedication);
+        applyNullable(spec.diseases(), it -> user.setDiseases(it.trim()));
+        applyNullable(spec.intolerances(), it -> user.setIntolerances(it.trim()));
+        applyNullable(spec.medication(), it -> user.setMedication(it.trim()));
         applyNullable(spec.diet(), user::setDiet);
 
         return userService.updateUser(user);
