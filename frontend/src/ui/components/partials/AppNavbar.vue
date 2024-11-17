@@ -6,10 +6,10 @@
         >
             <div class="h-full">
                 <div class="flex h-full items-center space-x-4 bg-primary xl:hidden">
-                    <RouterLink v-if="backTo" :to="backTo" class="icon-button mx-4 md:ml-12">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </RouterLink>
-                    <button v-else class="icon-button mx-4 md:ml-12" @click="menuOpen = true">
+                    <!--                    <RouterLink v-if="backTo" :to="backTo" class="icon-button mx-4 md:ml-12">-->
+                    <!--                        <i class="fa-solid fa-arrow-left"></i>-->
+                    <!--                    </RouterLink>-->
+                    <button class="icon-button mx-4 md:ml-12" @click="menuOpen = true">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>

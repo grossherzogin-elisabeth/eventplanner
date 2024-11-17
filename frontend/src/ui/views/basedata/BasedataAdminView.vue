@@ -81,12 +81,20 @@ enum Tab {
     POSITIONS = 'Positionen',
 }
 
+type RouteEmits = (e: 'update:title', value: string) => void;
+
+const emit = defineEmits<RouteEmits>();
+
 const tabs = [Tab.QUALIFICATIONS, Tab.POSITIONS];
 const tab = ref<string>(tabs[0]);
 const qualificationFilter = ref<string>('');
 const positionsFilter = ref<string>('');
 const qualificationsTable = ref<{ createQualification(): void } | null>(null);
 const positionsTable = ref<{ createPosition(): void } | null>(null);
+
+function init(): void {
+    emit('update:title', 'Stammdaten');
+}
 
 function createQualification(): void {
     if (qualificationsTable.value) {
@@ -99,4 +107,6 @@ function createPosition(): void {
         positionsTable.value.createPosition();
     }
 }
+
+init();
 </script>
