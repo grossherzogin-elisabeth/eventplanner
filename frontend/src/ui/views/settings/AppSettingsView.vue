@@ -6,7 +6,7 @@
                     v-if="settings"
                     v-model="tab"
                     :tabs="tabs"
-                    class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8"
+                    class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8"
                 >
                     <template #[Tab.GENERAL_SETTINGS]>
                         <div class="items-start gap-32 2xl:flex">
@@ -31,7 +31,7 @@
                         </div>
                     </template>
                     <template #[Tab.EMAIL]>
-                        <div class="items-start gap-32 2xl:flex">
+                        <div class="items-start gap-32">
                             <section class="max-w-2xl">
                                 <div class="mb-4">
                                     <VInputLabel>From</VInputLabel>
