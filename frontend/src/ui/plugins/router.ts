@@ -50,6 +50,18 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
         console.log(`🛤️ Entering route '${String(to.name)}'`);
         next();
     });
+
+    router.onError((error, to) => {
+        if (
+            error.message.includes('Failed to fetch dynamically imported module') ||
+            error.message.includes('Importing a module script failed')
+        ) {
+            // load the target page with a page reload
+            // this error occurs when we redeploy and a page hash changes while a user is on the page
+            window.location.href = to.fullPath;
+        }
+    });
+
     return router;
 }
 
