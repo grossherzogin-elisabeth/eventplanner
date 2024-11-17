@@ -1,0 +1,8 @@
+{
+  "key": "lissi-master",
+  "icon": "fa-anchor",
+  "name": "Kapitän:in",
+  "description": "Kapitän:in nach Ernennung",
+  "expires": false,
+  "grantsPositions": ["kapitaen"]
+}

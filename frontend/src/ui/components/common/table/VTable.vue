@@ -41,10 +41,10 @@
                     ref="rows"
                     :key="index"
                     :class="{ selected: row.selected }"
-                    @touchstart="touch.start($event).then(() => onLongTouch(row))"
+                    @touchstart="touch.start($event).then(() => onLongTouch(row, index))"
                     @touchend="touch.end()"
                     @touchmove="touch.update($event)"
-                    @click.stop.prevent="onClick($event, row as T & Selectable, index)"
+                    @click.stop.prevent="onClick($event, row as T & Selectable)"
                 >
                     <td></td>
                     <td v-if="props.sortable && viewPortSize.width.value > 1024" class="w-0">
@@ -73,7 +73,7 @@
                         </td>
                     </slot>
                     <td
-                        v-if="$slots['context-menu'] && viewPortSize.width.value > 1024"
+                        v-if="$slots['context-menu']"
                         ref="contextColumns"
                         class="w-0"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
@@ -338,23 +338,20 @@ function setSortingIndicators(): void {
     }
 }
 
-function onLongTouch(row: Reactive<T & Selectable>): void {
+function onLongTouch(row: Reactive<T & Selectable>, index: number): void {
     if (props.multiselection) {
         row.selected = !row.selected;
-        return;
+    } else {
+        openContextMenu(rows.value?.[index], row);
     }
 }
 
-function onClick(event: MouseEvent, row: T & Selectable, index: number): void {
+function onClick(event: MouseEvent, row: T & Selectable): void {
     if (touch.isLongTouch()) {
         return;
     }
-    if (touch.isTouch()) {
-        if (selected.value.length > 0) {
-            row.selected = !row.selected;
-        } else {
-            openContextMenu(rows.value?.[index], row);
-        }
+    if (touch.isTouch() && selected.value.length > 0) {
+        row.selected = !row.selected;
         return;
     }
     event.stopPropagation();

@@ -4,5 +4,5 @@
   "name": "STCW-II/2 (Kapitän)",
   "description": "Kapitän oder Erster Nautischer Offizier auf Schiffen ab 500 BRZ",
   "expires": true,
-  "grantsPositions": ["kapitaen", "steuermann", "matrose"]
+  "grantsPositions": ["steuermann", "matrose"]
 }

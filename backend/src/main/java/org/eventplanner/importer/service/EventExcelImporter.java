@@ -82,11 +82,7 @@ public class EventExcelImporter {
                     start = start.withHour(16);
                     end = end.withHour(16);
                 }
-                var eventKey = new EventKey(start.format(DateTimeFormatter.ISO_LOCAL_DATE) + "_" +
-                    eventName.replaceAll("-", "")
-                        .replaceAll("  ", " ")
-                        .replaceAll(" ", "-")
-                        .toLowerCase());
+                var eventKey = new EventKey();
                 var slots = generateDefaultEventSlots();
                 var waitingListReached = !hasWaitinglist;
                 var registrations = new ArrayList<Registration>();

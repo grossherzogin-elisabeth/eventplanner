@@ -25,7 +25,7 @@
             <ContextMenuButton
                 anchor-align-x="left"
                 dropdown-position-x="right"
-                class="btn-tag min-w-44 max-w-80 truncate"
+                class="btn-tag max-w-80 truncate"
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>

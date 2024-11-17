@@ -28,7 +28,7 @@
             <ContextMenuButton
                 anchor-align-x="left"
                 dropdown-position-x="right"
-                class="btn-tag min-w-44 max-w-80 truncate"
+                class="btn-tag max-w-80 truncate"
                 :class="{ active: filterPositions.length > 0 }"
             >
                 <template #icon>
@@ -322,7 +322,7 @@ const positions = usePositions();
 const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS];
 const tab = ref<string>(tabs[0]);
 const filter = ref<string>('');
-const filterOnlyActive = ref<boolean>(false);
+const filterOnlyActive = ref<boolean>(true);
 const filterExpiredQualifications = ref<boolean>(false);
 const filterPositions = ref<PositionKey[]>([]);
 
@@ -452,7 +452,16 @@ async function fetchUsers(): Promise<void> {
     // -1
     // -2
     // +1
-    const events = await eventUseCase.getEvents(new Date().getFullYear());
+    const currentYear = new Date().getFullYear();
+    console.log(currentYear);
+    const events = (
+        await Promise.all([
+            eventUseCase.getEvents(currentYear - 2),
+            eventUseCase.getEvents(currentYear - 1),
+            eventUseCase.getEvents(currentYear),
+            eventUseCase.getEvents(currentYear + 1),
+        ])
+    ).flatMap((evts) => evts);
     const registrationsSingleDayEventsWithSlot = events
         .filter((evt) => evt.type === EventType.SingleDayEvent)
         .flatMap((evt) => eventService.getAssignedRegistrations(evt));

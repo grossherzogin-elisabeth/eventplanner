@@ -367,6 +367,8 @@ public class UserExcelImporter {
                 case "Eng. Cadet" -> "lissi-moa";
                 case "Naut. Cadet" -> "lissi-noa";
                 case "Supernumerary", "Deckshand" -> "lissi-deckshand";
+                case "Master" -> "lissi-master";
+                case "OS" -> "lissi-lm";
 
                 // Befaehigungen
                 case "LM" -> "lissi-lm";

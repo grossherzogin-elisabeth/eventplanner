@@ -51,6 +51,7 @@ export class EventUseCase {
     }
 
     public async getEvents(year: number): Promise<Event[]> {
+        console.log(year);
         try {
             const events = await this.eventCachingService.getEvents(year);
             return events
