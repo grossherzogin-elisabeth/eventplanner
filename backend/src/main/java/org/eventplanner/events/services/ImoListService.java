@@ -105,8 +105,8 @@ public class ImoListService {
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
 
-        for (int crewCounter = 1; crewCounter < crewList.size(); crewCounter++) {
-            Row currentRow = sheet.getRow(crewCounter + firstEmptyRow - 1);
+        for (int crewCounter = 0; crewCounter < crewList.size(); crewCounter++) {
+            Row currentRow = sheet.getRow(crewCounter + firstEmptyRow);
             currentRow.getCell(0).setCellValue(crewCounter);
             Registration currentRegistration = crewList.get(crewCounter);
             String imoListRank = ObjectUtils.mapNullable(positionMap.get(currentRegistration.getPosition()),
