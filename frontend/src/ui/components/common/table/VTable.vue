@@ -1,5 +1,5 @@
 <template>
-    <div :class="$attrs.class + ' ' + classes.join(' ')">
+    <div class="mb-4" :class="$attrs.class + ' ' + classes.join(' ')">
         <table class="v-table">
             <thead>
                 <tr ref="head">
@@ -41,7 +41,7 @@
                     ref="rows"
                     :key="index"
                     :class="{ selected: row.selected }"
-                    @touchstart="touch.start($event).then(() => onLongTouch(row, index))"
+                    @touchstart="touch.start($event).then(() => onLongTouch(row as T & Selectable, index))"
                     @touchend="touch.end()"
                     @touchmove="touch.update($event)"
                     @click.stop.prevent="onClick($event, row as T & Selectable)"
@@ -122,7 +122,7 @@
 </template>
 
 <script setup generic="T extends {}" lang="ts">
-import type { ComputedRef, Reactive, Ref } from 'vue';
+import type { ComputedRef, Ref } from 'vue';
 import { computed, ref, useSlots, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { deepCopy, extractValue } from '@/common';
@@ -338,7 +338,7 @@ function setSortingIndicators(): void {
     }
 }
 
-function onLongTouch(row: Reactive<T & Selectable>, index: number): void {
+function onLongTouch(row: T & Selectable, index: number): void {
     if (props.multiselection) {
         row.selected = !row.selected;
     } else {

@@ -28,15 +28,13 @@
             <ContextMenuButton
                 anchor-align-x="left"
                 dropdown-position-x="right"
-                class="btn-tag max-w-80 truncate"
+                class="btn-tag"
                 :class="{ active: filterPositions.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterPositions.length === 0" class="mr-2">Alle Positionen</span>
-                    <span v-else-if="filterPositions.length > 4" class="mr-2"
-                        >{{ filterPositions.length }} Positionen</span
-                    >
-                    <span v-else class="mr-2">
+                    <span v-if="filterPositions.length === 0" class="">Alle Positionen</span>
+                    <span v-else-if="filterPositions.length > 4" class="">{{ filterPositions.length }} Positionen</span>
+                    <span v-else class="block max-w-64 truncate">
                         {{
                             filterPositions
                                 .map(positions.get)
@@ -87,7 +85,7 @@
         <div class="w-full">
             <VTable
                 :items="filteredUsers"
-                :page-size="10"
+                :page-size="20"
                 query
                 multiselection
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"

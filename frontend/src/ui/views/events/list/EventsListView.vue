@@ -25,15 +25,15 @@
             <ContextMenuButton
                 anchor-align-x="left"
                 dropdown-position-x="right"
-                class="btn-tag max-w-80 truncate"
+                class="btn-tag"
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventType.length === 0" class="mr-2">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4" class="mr-2">
+                    <span v-if="filterEventType.length === 0" class="">Alle Reisearten</span>
+                    <span v-else-if="filterEventType.length > 4" class="">
                         {{ filterEventType.length }} Reisearten
                     </span>
-                    <span v-else class="mr-2">
+                    <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
                 </template>
