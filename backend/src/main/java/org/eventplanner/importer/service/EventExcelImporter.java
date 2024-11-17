@@ -472,9 +472,9 @@ public class EventExcelImporter {
     private static List<Slot> generateDefaultEventSlots() {
         var slots = new ArrayList<Slot>();
         slots.add(Slot.of(Pos.KAPITAEN).withCriticality(2));
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withName("1. Steuermann:frau").withCriticality(2));
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withName("2. Steuermann:frau").withCriticality(1));
-        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.NOA).withName("3. Steuermann:frau").withCriticality(1));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withCriticality(2));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN).withCriticality(1));
+        slots.add(Slot.of(Pos.STM, Pos.KAPITAEN, Pos.NOA).withCriticality(1));
         slots.add(Slot.of(Pos.MASCHINIST).withName("1. Maschinist").withCriticality(2));
         slots.add(Slot.of(Pos.MASCHINIST).withName("2. Maschinist").withCriticality(1));
 

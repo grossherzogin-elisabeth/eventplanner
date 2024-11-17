@@ -52,6 +52,15 @@ public class ImoListService {
         List<Registration> crewList = event.getRegistrations()
                 .stream()
                 .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
+                .sorted((a, b) -> {
+                    // TODO get crew member name here for sorting
+                    // if (a.getPosition().equals(b.getPosition())) {
+                    //   return a.getName().compareTo(b.getName());
+                    // }
+                    var pa = positionMap.get(a.getPosition());
+                    var pb = positionMap.get(b.getPosition());
+                    return pb.getPriority() - pa.getPriority();
+                })
                 .toList();
 
         try (FileInputStream fileTemplate = new FileInputStream("data/templates/ImoList_template.xlsx")) {
