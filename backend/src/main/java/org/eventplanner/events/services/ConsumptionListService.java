@@ -75,7 +75,7 @@ public class ConsumptionListService {
     private void writeCrewDataToWorkbook(XSSFWorkbook workbook, List<String> nameList) {
         XSSFSheet sheet = workbook.getSheetAt(0);
         for (int i = 0; i < nameList.size(); i++) {
-            sheet.getRow(i * 2).getCell(0).setCellValue(nameList.get(i));
+            sheet.getRow(((i + 1) * 2 - 1)).getCell(0).setCellValue(nameList.get(i));
         }
     }
 
