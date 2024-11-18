@@ -324,7 +324,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, PositionKey, SignedInUser } from '@/domain';
 import { EventState } from '@/domain';
@@ -364,7 +364,6 @@ const emit = defineEmits<RouteEmits>();
 const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
 const eventService = useEventService();
-const route = useRoute();
 const router = useRouter();
 const positions = usePositions();
 const eventTypes = useEventTypes();
@@ -430,7 +429,6 @@ const tabs = computed<string[]>(() => {
 
 function init(): void {
     emit('update:title', 'Alle Reisen');
-    watch(route, () => fetchEvents());
     watch(tab, () => fetchEvents());
     onMounted(() => {
         if (tab.value === tabs.value[0]) {
