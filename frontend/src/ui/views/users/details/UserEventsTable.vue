@@ -88,31 +88,31 @@
                     </td>
                     <td class="w-1/2 max-w-[65vw]">
                         <!-- event name and locations -->
-                        <p class="bg-surface-container-highest mb-1 h-5 w-64 rounded-lg"></p>
+                        <p class="mb-1 h-5 w-64 rounded-lg bg-surface-container-highest"></p>
                         <p class="flex items-center space-x-2 text-sm font-light">
-                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
                         </p>
                     </td>
                     <td class="">
                         <!-- crew -->
-                        <p class="bg-surface-container-highest mb-1 h-5 w-12 rounded-lg"></p>
-                        <p class="bg-surface-container-highest h-3 w-10 rounded-lg"></p>
+                        <p class="mb-1 h-5 w-12 rounded-lg bg-surface-container-highest"></p>
+                        <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
                     </td>
                     <td class="">
                         <!-- date -->
                         <div class="mb-1 font-semibold">
-                            <p class="bg-surface-container-highest hidden h-5 w-56 rounded-lg lg:block"></p>
-                            <p class="bg-surface-container-highest h-5 w-20 rounded-lg lg:hidden"></p>
+                            <p class="hidden h-5 w-56 rounded-lg bg-surface-container-highest lg:block"></p>
+                            <p class="h-5 w-20 rounded-lg bg-surface-container-highest lg:hidden"></p>
                         </div>
-                        <p class="bg-surface-container-highest h-3 w-16 rounded-lg"></p>
+                        <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
                     </td>
 
                     <td class="">
                         <!-- role -->
                         <div
-                            class="bg-surface-container-highest inline-flex h-6 w-32 items-center space-x-2 rounded-full py-1 pl-3 pr-4"
+                            class="inline-flex h-6 w-32 items-center space-x-2 rounded-full bg-surface-container-highest py-1 pl-3 pr-4"
                         ></div>
                     </td>
 
