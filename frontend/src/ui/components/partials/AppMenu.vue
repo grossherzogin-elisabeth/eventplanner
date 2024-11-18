@@ -96,6 +96,12 @@
                 </RouterLink>
             </li>
             <li class="menu-item">
+                <RouterLink :to="{ name: Routes.SystemInfo }">
+                    <i class="fa-solid fa-comment"></i>
+                    <span>Feedback</span>
+                </RouterLink>
+            </li>
+            <li class="menu-item">
                 <RouterLink :to="{ name: Routes.Account }">
                     <i class="fa-solid fa-user-circle"></i>
                     <span>Meine Daten</span>

@@ -35,7 +35,7 @@ a.link {
 }
 
 code {
-    @apply rounded-lg bg-surface-container-high px-2 py-1;
+    @apply rounded-lg bg-surface-container-highest px-1 py-1 text-onsurface;
 }
 
 section {
