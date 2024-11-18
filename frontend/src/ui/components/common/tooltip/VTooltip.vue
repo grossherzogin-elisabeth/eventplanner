@@ -28,7 +28,8 @@
     </VDropdownWrapper>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
+import { isTouchDevice } from '@/common';
 import { VDropdownWrapper } from '@/ui/components/common';
 
 const showTooltip = ref<boolean>(false);
@@ -43,6 +44,9 @@ interface Props {
 const props = defineProps<Props>();
 
 function onMouseEnter(): void {
+    if (isTouchDevice()) {
+        return;
+    }
     if (timeout) {
         clearTimeout(timeout);
     }
@@ -52,6 +56,9 @@ function onMouseEnter(): void {
 }
 
 function onMouseLeave(): void {
+    if (isTouchDevice()) {
+        return;
+    }
     if (timeout) {
         clearTimeout(timeout);
     }

@@ -141,6 +141,8 @@ function updatePositionToAnchor(): void {
             'top': `${top}px`,
             'left': `${left}px`,
             'width': `clamp(${props.minWidth || '20rem'}, ${rect.width}px, ${props.maxWidth || '100vw'})`,
+            'minWidth': props.minWidth || '20rem',
+            'maxWidth': props.maxWidth || '100vw',
             'maxHeight': props.maxHeight || 'unset',
             '--max-height': props.maxHeight || 'unset',
         };
