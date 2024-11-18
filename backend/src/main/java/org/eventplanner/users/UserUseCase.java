@@ -122,35 +122,52 @@ public class UserUseCase {
     }
 
     public UserDetails updateUser(@NonNull SignedInUser signedInUser, @NonNull UserKey key, @NonNull UpdateUserSpec spec) {
-        signedInUser.assertHasPermission(Permission.WRITE_USERS);
+        if (signedInUser.key().equals(key)) {
+            signedInUser.assertHasPermission(Permission.WRITE_OWN_USER_DETAILS);
+        } else {
+            signedInUser.assertHasPermission(Permission.WRITE_USERS);
+        }
 
         var user = userService.getUserByKey(key).orElseThrow();
-        applyNullable(spec.authKey(), user::setAuthKey);
+
+        // these may be changed by a user themselves
         applyNullable(spec.gender(), it -> user.setGender(it.trim()));
         applyNullable(spec.title(), it -> user.setTitle(it.trim()));
-        applyNullable(spec.firstName(), it -> user.setFirstName(it.trim()));
         applyNullable(spec.nickName(), it -> user.setNickName(it.trim()));
-        applyNullable(spec.secondName(), it -> user.setSecondName(it.trim()));
-        applyNullable(spec.lastName(), it -> user.setLastName(it.trim()));
-        applyNullable(spec.dateOfBirth(), user::setDateOfBirth);
-        applyNullable(spec.placeOfBirth(), it -> user.setPlaceOfBirth(it.trim()));
         applyNullable(spec.nationality(), it -> user.setNationality(it.trim()));
         applyNullable(spec.passNr(), it -> user.setPassNr(it.trim()));
-        applyNullable(spec.email(), it -> user.setEmail(it.trim()));
         applyNullable(spec.phone(), it -> user.setPhone(it.trim()));
         applyNullable(spec.phoneWork(), it -> user.setPhoneWork(it.trim()));
         applyNullable(spec.address(), user::setAddress);
         applyNullable(spec.mobile(), it -> user.setMobile(it.trim()));
-        applyNullable(spec.comment(), it -> user.setComment(it.trim()));
-        applyNullable(spec.qualifications(), user::setQualifications);
-        applyNullable(spec.roles(), user::setRoles);
         applyNullable(spec.emergencyContact(), user::setEmergencyContact);
         applyNullable(spec.diseases(), it -> user.setDiseases(it.trim()));
         applyNullable(spec.intolerances(), it -> user.setIntolerances(it.trim()));
         applyNullable(spec.medication(), it -> user.setMedication(it.trim()));
         applyNullable(spec.diet(), user::setDiet);
 
+        // these may only be changed by admins
+        var hasWritePermission = signedInUser.hasPermission(Permission.WRITE_USERS);
+        if (hasWritePermission) {
+            applyNullable(spec.authKey(), user::setAuthKey);
+            applyNullable(spec.firstName(), it -> user.setFirstName(it.trim()));
+            applyNullable(spec.secondName(), it -> user.setSecondName(it.trim()));
+            applyNullable(spec.lastName(), it -> user.setLastName(it.trim()));
+            applyNullable(spec.email(), it -> user.setEmail(it.trim()));
+            applyNullable(spec.comment(), it -> user.setComment(it.trim()));
+            applyNullable(spec.qualifications(), user::setQualifications);
+            applyNullable(spec.roles(), user::setRoles);
+        }
+        // these may be changed by a user themselves, if there is no value yet
+        if (hasWritePermission || user.getDateOfBirth() == null) {
+            applyNullable(spec.dateOfBirth(), user::setDateOfBirth);
+        }
+        if (hasWritePermission || user.getPlaceOfBirth() == null) {
+            applyNullable(spec.placeOfBirth(), it -> user.setPlaceOfBirth(it.trim()));
+        }
+
         return userService.updateUser(user);
+
     }
 
     public void deleteUser(@NonNull SignedInUser signedInUser, @NonNull UserKey userKey) {
