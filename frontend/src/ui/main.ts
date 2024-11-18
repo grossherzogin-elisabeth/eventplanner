@@ -23,6 +23,7 @@ import {
     REGISTRATION_SERVICE,
     USER_SERVICE,
 } from '@/ui/composables/Domain';
+import { setupTooltips } from '@/ui/plugins/tooltip.ts';
 import App from './App.vue';
 import './assets/css/main.css';
 import './plugins/countries';
@@ -34,6 +35,7 @@ export function setupVue(context: { domain: Domain; application: Application }):
     const app = createApp(App);
     app.use(setupI18n(context.application.config));
     app.use(setupRouter(context.application.usecases.auth));
+    app.use(setupTooltips());
 
     app.provide(USER_SERVICE, context.domain.services.users);
     app.provide(REGISTRATION_SERVICE, context.domain.services.registrations);

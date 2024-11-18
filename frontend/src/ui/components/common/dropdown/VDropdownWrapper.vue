@@ -2,7 +2,7 @@
     <teleport to="#app">
         <div
             class="dropdown-wrapper-background"
-            :class="{ 'pointer-events-none': blockAllInput }"
+            :class="blockAllInput ? `pointer-events-none ${props.backgroundClass}` : props.backgroundClass"
             @click.stop="close"
             @keydown.esc="close"
         ></div>
@@ -38,8 +38,11 @@ interface Props {
     maxWidth?: string;
     // min width of the dropdown, use a css value like `50px`
     minWidth?: string;
+    // use the width of the anchor element as preferred width
+    preferAnchorWidth?: boolean;
     // max height of the dropdown, use a css value like `50px`
     maxHeight?: string;
+    backgroundClass?: string;
 }
 
 // dropdown is closed
@@ -59,6 +62,8 @@ const dropdownStyle = ref({
     'top': '0px',
     'left': '0px',
     'width': '10rem',
+    'minWidth': '10rem',
+    'maxWidth': '100vw',
     'maxHeight': 'min(10rem, var(--viewport-height))',
     '--max-height': 'unset',
 });
@@ -74,6 +79,8 @@ async function updatePosition(): Promise<void> {
             'top': `${props.y}px`,
             'left': `${props.x}px`,
             'width': `min(${props.minWidth || '10rem'}, ${props.maxWidth || '100vw'})`,
+            'minWidth': props.minWidth || '10rem',
+            'maxWidth': props.maxWidth || '100vw',
             'maxHeight': props.maxHeight || 'var(--viewport-height)',
             '--max-height': props.maxHeight || 'unset',
         };
@@ -119,13 +126,25 @@ function updatePositionToAnchor(): void {
         default:
             left = rect.x;
     }
-    dropdownStyle.value = {
-        'top': `${top}px`,
-        'left': `${left}px`,
-        'width': `clamp(${props.minWidth || '20rem'}, ${rect.width}px,${props.maxWidth || '100vw'})`,
-        'maxHeight': props.maxHeight || 'unset',
-        '--max-height': props.maxHeight || 'unset',
-    };
+    if (props.preferAnchorWidth === false) {
+        dropdownStyle.value = {
+            'top': `${top}px`,
+            'left': `${left}px`,
+            'width': 'auto',
+            'minWidth': props.minWidth || '20rem',
+            'maxWidth': props.maxWidth || '100vw',
+            'maxHeight': props.maxHeight || 'unset',
+            '--max-height': props.maxHeight || 'unset',
+        };
+    } else {
+        dropdownStyle.value = {
+            'top': `${top}px`,
+            'left': `${left}px`,
+            'width': `clamp(${props.minWidth || '20rem'}, ${rect.width}px, ${props.maxWidth || '100vw'})`,
+            'maxHeight': props.maxHeight || 'unset',
+            '--max-height': props.maxHeight || 'unset',
+        };
+    }
 }
 
 function applyDropdownAlignment(): void {
@@ -228,5 +247,5 @@ onUnmounted(() => {
 
 setTimeout(() => {
     blockAllInput.value = false;
-}, 150);
+}, 200);
 </script>

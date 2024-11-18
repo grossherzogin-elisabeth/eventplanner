@@ -2,10 +2,16 @@
     <div
         class="flex items-center overflow-hidden rounded-2xl bg-yellow-container text-onyellow-container"
         :class="{ hidden: dismissed }"
-        @click="clamp = !clamp"
+        @click="clampActive = !clampActive"
     >
         <i class="fa-solid fa-warning my-5 ml-4 self-start text-xl"></i>
-        <span class="my-4 ml-4 mr-1 w-0 flex-grow text-sm" :class="{ 'line-clamp-3': clamp }">
+        <span
+            class="mx-4 my-4 mr-1 w-0 flex-grow text-sm"
+            :class="{
+                'line-clamp-3': props.clamp && clampActive,
+                'mr-4': !props.dismissable,
+            }"
+        >
             <slot></slot>
         </span>
         <button v-if="props.dismissable !== false" class="icon-button my-1 mr-1 self-start" @click="dismiss()">
@@ -18,6 +24,7 @@ import { ref } from 'vue';
 
 interface Props {
     dismissable?: boolean;
+    clamp?: boolean;
 }
 
 type Emits = (e: 'dismiss') => void;
@@ -30,7 +37,7 @@ type Emits = (e: 'dismiss') => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const clamp = ref<boolean>(true);
+const clampActive = ref<boolean>(true);
 const dismissed = ref<boolean>(false);
 
 function dismiss(): void {

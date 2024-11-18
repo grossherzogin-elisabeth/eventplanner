@@ -29,3 +29,4 @@ export { default as VDropzone } from './drag-n-drop/VDropzone.vue';
 export { default as VWarning } from './alerts/VWarning.vue';
 export { default as VInfo } from './alerts/VInfo.vue';
 export { default as VError } from './alerts/VError.vue';
+export { default as VTooltip } from './tooltip/VTooltip.vue';

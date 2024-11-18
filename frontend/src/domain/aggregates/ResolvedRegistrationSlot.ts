@@ -8,5 +8,4 @@ export interface ResolvedRegistrationSlot {
     slot?: Slot;
     expiredQualifications: QualificationKey[];
     hasOverwrittenPosition: boolean;
-    hasFitnessForSeaService: boolean;
 }

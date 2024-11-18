@@ -39,7 +39,6 @@ export class RegistrationService {
                 user: user,
                 slot: slotMap.get(registration.key),
                 expiredQualifications: this.filterExpiredQualifications(user, event.end),
-                hasFitnessForSeaService: this.hasFitnessForSeaService(user, event.end),
                 hasOverwrittenPosition: this.hasOverwrittenPosition(registration, user),
             });
         });
@@ -60,7 +59,6 @@ export class RegistrationService {
                     user: undefined,
                     slot: slot,
                     expiredQualifications: [],
-                    hasFitnessForSeaService: false,
                     hasOverwrittenPosition: false,
                 })
             );
@@ -73,17 +71,6 @@ export class RegistrationService {
         );
     }
 
-    private hasFitnessForSeaService(user?: User, atTime: Date = new Date()): boolean {
-        return (
-            user?.qualifications?.find(
-                (q) =>
-                    q.qualificationKey === 'fitness-for-seaservice' &&
-                    q.expiresAt &&
-                    q.expiresAt.getTime() > atTime.getTime()
-            ) !== undefined
-        );
-    }
-
     private hasOverwrittenPosition(registration: Registration, user?: User): boolean {
         return user !== undefined && !user.positionKeys.includes(registration.positionKey);
     }
@@ -93,7 +80,7 @@ export class RegistrationService {
             return [];
         }
         return user.qualifications
-            .filter((it) => it.expiresAt !== undefined && it.expiresAt.getTime() <= date.getTime())
+            .filter((it) => it.expires && (it.expiresAt === undefined || it.expiresAt.getTime() <= date.getTime()))
             .map((it) => it.qualificationKey);
     }
 }

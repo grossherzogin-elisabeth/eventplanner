@@ -48,6 +48,7 @@
             max-height="100vh"
             max-width="100vw"
             min-width="300px"
+            :prefer-anchor-width="true"
             @close="showDropdown = false"
         >
             <Datepicker

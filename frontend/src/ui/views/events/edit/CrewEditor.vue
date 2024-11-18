@@ -2,10 +2,8 @@
     <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 2xl:flex-row 2xl:items-start">
         <!-- position counters -->
         <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-surface pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
-            <div
-                class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap 2xl:flex-col"
-            >
-                <div class="flex cursor-pointer items-center rounded-2xl bg-secondary p-1 text-onsecondary">
+            <div class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap 2xl:flex-col">
+                <div class="flex items-center rounded-2xl bg-secondary p-1 text-onsecondary">
                     <span class="px-2"> Alle </span>
                     <span
                         class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
@@ -17,7 +15,7 @@
                     v-for="pos in positions.all.value"
                     :key="pos.key"
                     :style="{ 'background-color': pos.color }"
-                    class="flex cursor-pointer items-center rounded-2xl p-1"
+                    class="flex items-center rounded-2xl p-1"
                 >
                     <span class="truncate px-2">
                         {{ pos.name }}
@@ -44,10 +42,7 @@
                         </VDropzone>
                     </div>
                 </div>
-                <div
-                    class="-mx-4"
-                    :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_WAITING_LIST }"
-                >
+                <div class="-mx-4" :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_WAITING_LIST }">
                     <!-- empty slot list-admin placeholder -->
                     <div v-if="team.length === 0" class="rounded-xl bg-secondary-container text-onsecondary-container">
                         <div class="flex items-center py-8 pl-4 pr-8">
@@ -57,19 +52,14 @@
                                     Hier ist noch nichts...
                                 </h3>
                                 <p class="text-sm">
-                                    Für diese Reise wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots
-                                    für diese Reise definieren. Anschließend kannst du Nutzer von der Warteliste in die
-                                    Crew ziehen.
+                                    Für diese Reise wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese Reise
+                                    definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.
                                 </p>
                             </div>
                             <div></div>
                         </div>
                         <ul class="pb-8 opacity-10">
-                            <li
-                                v-for="i in 5"
-                                :key="i"
-                                class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4"
-                            >
+                            <li v-for="i in 5" :key="i" class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4">
                                 <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
                                 <i class="fa-regular fa-circle"></i>
                                 <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsecondary-container"> </span>
@@ -80,45 +70,55 @@
                     </div>
                     <!-- slot list-admin -->
                     <ul v-else>
-                        <template
-                            v-for="it in team"
-                            :key="it.slot?.key + it.registration?.key + it.user?.key + it.position.key"
-                        >
-                            <VDraggable
-                                class="flex items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
-                                :class="it.registration !== undefined ? 'cursor-move' : 'pointer-events-none'"
-                                component="li"
-                                :value="it"
-                                @dragend="dragSource = null"
-                                @dragstart="dragSource = DragSource.FROM_TEAM"
-                                @click="editSlotRegistration(it)"
-                            >
-                                <i
-                                    class="fa-solid fa-grip-vertical hidden text-sm text-secondary-variant lg:inline"
-                                ></i>
-                                <span v-if="it.name && !it.registration?.confirmed" class="">
-                                    <i class="fa-solid fa-user-clock text-onsurface text-opacity-50"></i>
-                                </span>
-                                <span v-else-if="it.name && it.registration?.confirmed">
-                                    <i class="fa-solid fa-user-check text-green"></i>
-                                </span>
-                                <span v-else>
-                                    <i class="fa-solid fa-user-xmark text-error"></i>
-                                </span>
-                                <span v-if="it.name" class="mx-2 w-0 flex-grow truncate">
-                                    {{ it.name }}
-                                    <template v-if="it.name && !it.user"> (Gastcrew) </template>
-                                </span>
-                                <span v-else-if="it.user" class="mx-2 w-0 flex-grow truncate italic text-error">
-                                    Unbekannt
-                                </span>
-                                <span v-else class="mx-2 w-0 flex-grow truncate italic text-error">
-                                    Noch nicht besetzt
-                                </span>
-                                <span :style="{ background: it.position.color }" class="position text-xs">
-                                    {{ it.slot?.positionName || it.position.name }}
-                                </span>
-                            </VDraggable>
+                        <template v-for="it in team" :key="it.slot?.key + it.registration?.key + it.user?.key + it.position.key">
+                            <VTooltip :disabled="it.registration === undefined">
+                                <template #default>
+                                    <VDraggable
+                                        class="flex items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
+                                        :class="{
+                                            'cursor-move': it.registration !== undefined,
+                                            'pointer-events-none': it.registration === undefined,
+                                            'text-yellow': it.expiredQualifications.length > 0,
+                                        }"
+                                        component="li"
+                                        :value="it"
+                                        @dragend="dragSource = null"
+                                        @dragstart="dragSource = DragSource.FROM_TEAM"
+                                        @click="editSlotRegistration(it)"
+                                    >
+                                        <!-- drag icon -->
+                                        <i class="fa-solid fa-grip-vertical hidden text-sm text-secondary-variant lg:inline"></i>
+
+                                        <!-- user status -->
+                                        <span v-if="it.name && !it.registration?.confirmed" class="">
+                                            <i class="fa-solid fa-user-clock opacity-50"></i>
+                                        </span>
+                                        <span v-else-if="it.name && it.registration?.confirmed">
+                                            <i class="fa-solid fa-user-check text-green"></i>
+                                        </span>
+                                        <span v-else>
+                                            <i class="fa-solid fa-user-xmark text-error text-opacity-50"></i>
+                                        </span>
+
+                                        <!-- user name -->
+                                        <span v-if="it.name" class="mx-2 truncate">{{ it.name }}</span>
+                                        <span v-else-if="it.user" class="mx-2 truncate italic text-error"> Gelöschter Nutzer </span>
+                                        <span v-else class="mx-2 truncate italic text-error text-opacity-50"> Noch nicht besetzt </span>
+
+                                        <!-- user qualification status -->
+                                        <i v-if="it.expiredQualifications.length > 0" class="fa-solid fa-warning"></i>
+                                        <!-- <i v-else class="fa-solid fa-check"></i>-->
+                                        <!-- user position -->
+                                        <span class="flex-grow"></span>
+                                        <span :style="{ background: it.position.color }" class="position text-xs">
+                                            {{ it.slot?.positionName || it.position.name }}
+                                        </span>
+                                    </VDraggable>
+                                </template>
+                                <template #tooltip>
+                                    <RegistrationTooltip :registration="it" />
+                                </template>
+                            </VTooltip>
                         </template>
                     </ul>
                 </div>
@@ -153,18 +153,14 @@
                                     Die Warteliste ist leer...
                                 </h3>
                                 <p class="text-sm">
-                                    Für diese Reise gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Reise
-                                    anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden.
+                                    Für diese Reise gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Reise anmelden, werden
+                                    sie hier aufgelistet und können für die Crew eingeplant werden.
                                 </p>
                             </div>
                             <div></div>
                         </div>
                         <ul class="pb-8 opacity-10">
-                            <li
-                                v-for="i in 5"
-                                :key="i"
-                                class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4"
-                            >
+                            <li v-for="i in 5" :key="i" class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4">
                                 <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
                                 <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsurface"> </span>
                                 <span class="flex-grow"></span>
@@ -174,66 +170,72 @@
                     </div>
                     <!-- waitinglist -->
                     <ul>
-                        <template
-                            v-for="it in registrations"
-                            :key="it.registration?.key + it.user?.key + it.name + it.position.key"
-                        >
-                            <VDraggable
-                                class="flex cursor-move items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
-                                component="li"
-                                :value="it"
-                                @dragend="dragSource = null"
-                                @dragstart="dragSource = DragSource.FROM_WAITING_LIST"
-                                @click="editWaitinglistRegistration(it)"
-                            >
-                                <i
-                                    class="fa-solid fa-grip-vertical mr-2 hidden text-sm text-secondary-variant lg:inline"
-                                ></i>
-                                <span v-if="it.name" class="w-0 flex-grow truncate">
-                                    {{ it.name }}
-                                    <template v-if="it.name && !it.user"> (Gastcrew) </template>
-                                </span>
-                                <span v-else-if="it.user" class="w-0 flex-grow italic text-error"> Unbekannt </span>
-                                <div>
-                                    <ContextMenuButton>
-                                        <template #icon>
-                                            <span
-                                                :style="{ background: it.position.color }"
-                                                class="position cursor-pointer text-xs"
-                                            >
-                                                <span class="mr-2 flex-grow">{{ it.position.name }}</span>
-                                                <i class="fa-solid fa-chevron-down"> </i>
-                                            </span>
-                                        </template>
-                                        <template #default>
-                                            <ul>
-                                                <template v-for="pos in positions.all.value" :key="pos.key">
-                                                    <li
-                                                        v-if="!it.user || it.user.positionKeys.includes(pos.key)"
-                                                        class="context-menu-item"
-                                                        @click="changePosition(it, pos.key)"
+                        <template v-for="it in registrations" :key="it.registration?.key + it.user?.key + it.name + it.position.key">
+                            <VTooltip>
+                                <template #default>
+                                    <VDraggable
+                                        class="flex cursor-move items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
+                                        :class="{
+                                            'cursor-move': it.registration !== undefined,
+                                            'pointer-events-none': it.registration === undefined,
+                                            'text-yellow': it.expiredQualifications.length > 0,
+                                        }"
+                                        component="li"
+                                        :value="it"
+                                        @dragend="dragSource = null"
+                                        @dragstart="dragSource = DragSource.FROM_WAITING_LIST"
+                                        @click="editSlotRegistration(it)"
+                                    >
+                                        <i class="fa-solid fa-grip-vertical mr-2 hidden text-sm text-secondary-variant lg:inline"></i>
+                                        <span v-if="it.name" class="truncate">{{ it.name }}</span>
+                                        <span v-else-if="it.user" class="flex-grow italic text-error"> Unbekannt </span>
+                                        <i v-if="it.expiredQualifications.length > 0" class="fa-solid fa-warning text-yellow"></i>
+                                        <span class="flex-grow"></span>
+                                        <div>
+                                            <ContextMenuButton>
+                                                <template #icon>
+                                                    <span
+                                                        :style="{ background: it.position.color }"
+                                                        class="position cursor-pointer text-xs"
                                                     >
-                                                        <span class="flex-grow">{{ pos.name }}</span>
-                                                    </li>
+                                                        <span class="mr-2 flex-grow">{{ it.position.name }}</span>
+                                                        <i class="fa-solid fa-chevron-down"> </i>
+                                                    </span>
                                                 </template>
-                                                <!-- show also non matching positions ??? -->
-                                                <template v-if="it.user">
-                                                    <template v-for="pos in positions.all.value" :key="pos.key">
-                                                        <li
-                                                            v-if="!it.user.positionKeys.includes(pos.key)"
-                                                            class="context-menu-item"
-                                                            @click="changePosition(it, pos.key)"
-                                                        >
-                                                            <span class="flex-grow">{{ pos.name }}</span>
-                                                            <i class="fa-solid fa-warning text-yellow"></i>
-                                                        </li>
-                                                    </template>
+                                                <template #default>
+                                                    <ul>
+                                                        <template v-for="pos in positions.all.value" :key="pos.key">
+                                                            <li
+                                                                v-if="!it.user || it.user.positionKeys.includes(pos.key)"
+                                                                class="context-menu-item"
+                                                                @click="changePosition(it, pos.key)"
+                                                            >
+                                                                <span class="flex-grow">{{ pos.name }}</span>
+                                                            </li>
+                                                        </template>
+                                                        <!-- show also non matching positions ??? -->
+                                                        <template v-if="it.user">
+                                                            <template v-for="pos in positions.all.value" :key="pos.key">
+                                                                <li
+                                                                    v-if="!it.user.positionKeys.includes(pos.key)"
+                                                                    class="context-menu-item"
+                                                                    @click="changePosition(it, pos.key)"
+                                                                >
+                                                                    <span class="flex-grow">{{ pos.name }}</span>
+                                                                    <i class="fa-solid fa-warning text-yellow"></i>
+                                                                </li>
+                                                            </template>
+                                                        </template>
+                                                    </ul>
                                                 </template>
-                                            </ul>
-                                        </template>
-                                    </ContextMenuButton>
-                                </div>
-                            </VDraggable>
+                                            </ContextMenuButton>
+                                        </div>
+                                    </VDraggable>
+                                </template>
+                                <template #tooltip>
+                                    <RegistrationTooltip :registration="it" />
+                                </template>
+                            </VTooltip>
                         </template>
                     </ul>
                 </div>
@@ -249,12 +251,13 @@ import type { Event, PositionKey, Registration } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
-import { ContextMenuButton, VDraggable, VDropzone } from '@/ui/components/common';
+import { ContextMenuButton, VDraggable, VDropzone, VTooltip } from '@/ui/components/common';
 import { useErrorHandling, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { v4 as uuid } from 'uuid';
 import RegistrationEditDlg from './RegistrationEditDlg.vue';
+import RegistrationTooltip from './RegistrationTooltip.vue';
 
 enum DragSource {
     FROM_TEAM = 'team',
@@ -281,7 +284,7 @@ const team = ref<ResolvedRegistrationSlot[]>([]);
 const dragSource = ref<DragSource | null>(null);
 const loading = ref<boolean>(true);
 
-const editRegistrationDialog = ref<Dialog<Registration, Registration> | null>(null);
+const editRegistrationDialog = ref<Dialog<Registration, Registration | undefined> | null>(null);
 
 const summary = computed<Record<PositionKey, number>>(() => {
     const sum: Record<PositionKey, number> = {};
@@ -326,7 +329,6 @@ async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
             },
         });
     } else if (aggregate.user) {
-        console.log(props.event.slots.map((it) => `${it.key} -> ${it.positionName}`));
         emit('update:event', eventService.assignUserToSlot(props.event, aggregate.user, slot.key));
         await fetchTeam();
     } else {
@@ -351,40 +353,22 @@ async function cancelRegistration(aggregate: ResolvedRegistrationSlot): Promise<
     await fetchTeam();
 }
 
-async function editWaitinglistRegistration(aggregate: ResolvedRegistrationSlot): Promise<void> {
-    if (editRegistrationDialog.value && (aggregate.user || aggregate.name)) {
-        const registration = eventService.findRegistration(props.event, aggregate.user?.key, aggregate.name);
-        if (registration) {
-            await editRegistrationDialog.value
-                .open(registration)
-                .then((edited) => (registration.positionKey = edited.positionKey))
-                .catch(() => console.debug('dialog was canceled'));
-        } else {
-            console.error('Registration not found');
-        }
-    }
-}
-
 async function editSlotRegistration(aggregate: ResolvedRegistrationSlot): Promise<void> {
-    if (editRegistrationDialog.value && (aggregate.user || aggregate.name)) {
+    if (aggregate.user || aggregate.name) {
         const registration = eventService.findRegistration(props.event, aggregate.user?.key, aggregate.name);
         if (registration) {
-            await editRegistrationDialog.value
-                .open(registration)
-                .then((edited) => (registration.positionKey = edited.positionKey))
-                .catch(() => console.debug('dialog was canceled'));
-        } else {
-            console.error('Registration not found');
+            const updatedRegistration = await editRegistrationDialog.value?.open(registration);
+            if (updatedRegistration) {
+                registration.positionKey = updatedRegistration.positionKey;
+                registration.note = updatedRegistration.note;
+                registration.name = updatedRegistration.name;
+            }
         }
     }
 }
 
 function changePosition(resolvedRegistration: ResolvedRegistrationSlot, newPositionKey: PositionKey): void {
-    const registration = eventService.findRegistration(
-        props.event,
-        resolvedRegistration.user?.key,
-        resolvedRegistration.name
-    );
+    const registration = eventService.findRegistration(props.event, resolvedRegistration.user?.key, resolvedRegistration.name);
     if (registration) {
         registration.positionKey = newPositionKey;
     }

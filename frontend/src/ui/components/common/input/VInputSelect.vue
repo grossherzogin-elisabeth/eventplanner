@@ -54,6 +54,7 @@
         class="input-dropdown"
         max-height="300px"
         min-width="50px"
+        :prefer-anchor-width="true"
         @close="hideDropdown(true)"
     >
         <ul v-if="visibleOptions.length === 0" ref="list">
@@ -128,12 +129,8 @@ const hasErrors: ComputedRef<boolean> = computed(() => props.errors !== undefine
 const list: Ref<HTMLUListElement | null> = ref(null);
 const dropdownAnchor: Ref<HTMLInputElement | null> = ref(null);
 const focusOptionIndex: Ref<number | null> = ref(null);
-const selectedOptionIndex: ComputedRef<number> = computed(() =>
-    props.options.findIndex((opt) => opt.value === props.modelValue)
-);
-const displayValue: ComputedRef<string> = computed(
-    () => props.options.find((it) => it.value === props.modelValue)?.label || ''
-);
+const selectedOptionIndex: ComputedRef<number> = computed(() => props.options.findIndex((opt) => opt.value === props.modelValue));
+const displayValue: ComputedRef<string> = computed(() => props.options.find((it) => it.value === props.modelValue)?.label || '');
 const visibleOptions: ComputedRef<InputSelectOption<T>[]> = computed(() =>
     props.options.filter((it) => !it.hidden || it.value === props.modelValue)
 );

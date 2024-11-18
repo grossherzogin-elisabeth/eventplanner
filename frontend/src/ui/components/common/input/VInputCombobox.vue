@@ -54,6 +54,7 @@
         anchor-align-y="top"
         class="input-dropdown combobox"
         max-height="400px"
+        :prefer-anchor-width="true"
         @close="hideDropdown(true)"
     >
         <div class="flex h-full flex-col overflow-hidden">
@@ -189,9 +190,7 @@ const focusOptionIndex: Ref<number | null> = ref(null);
 const input = ref<HTMLInputElement | null>(null);
 const filter = ref('');
 
-const selectedOptionIndex = computed<number>(() =>
-    filteredOptions.value.findIndex((opt) => opt.value === props.modelValue)
-);
+const selectedOptionIndex = computed<number>(() => filteredOptions.value.findIndex((opt) => opt.value === props.modelValue));
 
 const visibleOptions = computed<InputSelectOption<T>[]>(() => {
     return props.options.filter((it) => !it.hidden || it.value === props.modelValue);

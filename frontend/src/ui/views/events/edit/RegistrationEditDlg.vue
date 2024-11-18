@@ -1,21 +1,12 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Anmeldung bearbeiten</h1>
+            <h1 v-if="selectedUser">Anmeldung von {{ selectedUser.nickName || selectedUser.firstName }} {{ selectedUser.lastName }}</h1>
+            <h1 v-else>Gastcrewanmeldung</h1>
         </template>
         <template #default>
             <div class="px-8 pt-4 lg:px-10">
                 <section>
-                    <div class="mb-4">
-                        <VInputLabel>Nutzer</VInputLabel>
-                        <VInputCombobox
-                            v-model="registration.userKey"
-                            :options="userOptions"
-                            disabled
-                            :errors="validation.errors.value['userKey']"
-                            :errors-visible="validation.showErrors.value"
-                        />
-                    </div>
                     <div v-if="!registration.userKey" class="mb-4">
                         <VInputLabel>Name</VInputLabel>
                         <VInputText
@@ -51,22 +42,36 @@
                     </div>
                     <template v-if="selectedUser !== undefined">
                         <VWarning v-if="!selectedUser?.positionKeys.includes(registration.positionKey)" class="my-4">
-                            {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die
-                            Position
+                            {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die Position
                             <i>{{ selectedPosition?.name }}</i>
-                        </VWarning>
-                        <VWarning v-if="expiredQualifications.length > 0" class="my-4">
-                            Die folgenden Qualificationen sind abgelaufen oder laufen vor Ende der Reise ab:
-                            <ul class="ml-4 mt-2 list-disc">
-                                <li v-for="quali in expiredQualifications" :key="quali">{{ quali }}</li>
-                            </ul>
                         </VWarning>
                     </template>
                     <VWarning v-else-if="registration.name" class="my-4">
-                        {{ registration.name }} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht
-                        automatisiert geprüft werden.
+                        {{ registration.name }} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft
+                        werden.
                     </VWarning>
                 </section>
+                <template v-if="selectedUser">
+                    <p class="mb-2">
+                        {{ selectedUser.nickName || selectedUser.firstName }} hat zum Zeitpunkt der Reise die folgenden Qualifikationen:
+                    </p>
+                    <div class="flex flex-wrap items-center gap-1 text-sm">
+                        <span
+                            v-for="q in selectedUser.qualifications"
+                            :key="q.qualificationKey"
+                            class="truncate whitespace-nowrap rounded-lg px-2 py-1 font-bold"
+                            :class="
+                                expiredQualifications.includes(q.qualificationKey)
+                                    ? 'bg-error-container text-onerror-container'
+                                    : 'bg-secondary-container text-onsecondary-container'
+                            "
+                        >
+                            <i v-if="expiredQualifications.includes(q.qualificationKey)" class="fa-solid fa-warning"></i>
+                            <i v-else class="fa-solid fa-check"></i>
+                            {{ qualifications.get(q.qualificationKey).name }}
+                        </span>
+                    </div>
+                </template>
             </div>
         </template>
         <template #buttons>
@@ -83,7 +88,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { deepCopy, filterUndefined } from '@/common';
-import type { Event, InputSelectOption, Position, Registration, User, ValidationHint } from '@/domain';
+import type { Event, Position, QualificationKey, Registration, User, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
@@ -125,15 +130,6 @@ const validation = useValidation(registration, (value) => {
     return errors;
 });
 
-const userOptions = computed<InputSelectOption<string | undefined>[]>(() => {
-    const options: InputSelectOption<string | undefined>[] = users.value.map((it) => ({
-        label: `${it.nickName || it.firstName} ${it.lastName}`,
-        value: it.key,
-    }));
-    options.unshift({ label: 'Gastcrew', value: undefined });
-    return options;
-});
-
 const selectedUser = computed<User | undefined>(() => {
     if (!registration.value?.userKey) {
         return undefined;
@@ -148,7 +144,7 @@ const selectedPosition = computed<Position | undefined>(() => {
     return positions.get(registration.value.positionKey);
 });
 
-const expiredQualifications = computed<string[]>(() => {
+const expiredQualifications = computed<QualificationKey[]>(() => {
     if (!selectedUser.value) {
         return [];
     }
@@ -156,7 +152,7 @@ const expiredQualifications = computed<string[]>(() => {
         .getExpiredQualifications(selectedUser.value, props.event.end)
         .map((key) => qualifications.get(key))
         .filter(filterUndefined)
-        .map((qualification) => qualification.name);
+        .map((qualification) => qualification.key);
 });
 
 async function init(): Promise<void> {
