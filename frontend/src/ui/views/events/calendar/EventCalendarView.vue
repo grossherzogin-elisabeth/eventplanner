@@ -209,9 +209,7 @@ function buildCalender(year: number): Map<Month, CalendarDay[]> {
             isHoliday: isHoliday(date, 'NI'),
             isWeekend: date.getDay() === 0 || date.getDay() === 6,
             isToday:
-                date.getDate() === today.getDate() &&
-                date.getMonth() === today.getMonth() &&
-                date.getFullYear() === today.getFullYear(),
+                date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear(),
             events: [],
         });
         date = addToDate(date, { days: 1 });

@@ -12,9 +12,7 @@
             }"
         >
             <div class="flex">
-                <div
-                    class="border-event-card -my-2 -ml-2 hidden w-32 flex-col items-center justify-center border-r sm:flex"
-                >
+                <div class="border-event-card -my-2 -ml-2 hidden w-32 flex-col items-center justify-center border-r sm:flex">
                     <span class="text-3xl">{{ props.event.start.getDate() }}</span>
                     <span class="text-lg">{{ $d(props.event.start, DateTimeFormat.MMM) }}</span>
                 </div>
@@ -30,11 +28,7 @@
                     </p>
                     <div class="flex flex-col items-stretch gap-6">
                         <div class="flex flex-grow flex-col flex-wrap gap-2 sm:flex-row">
-                            <div
-                                v-for="(location, index) in props.event.locations"
-                                :key="index"
-                                class="flex items-center gap-2"
-                            >
+                            <div v-for="(location, index) in props.event.locations" :key="index" class="flex items-center gap-2">
                                 <i :class="location.icon" class="fa-solid w-4" />
                                 <span class="flex-grow">{{ location.name }}</span>
                             </div>
@@ -56,9 +50,7 @@
     </RouterLink>
     <div v-else class="event-card loading animate-pulse">
         <div class="flex">
-            <div
-                class="border-event-card -my-2 -ml-2 hidden w-32 flex-col items-center justify-center border-r sm:flex"
-            >
+            <div class="border-event-card -my-2 -ml-2 hidden w-32 flex-col items-center justify-center border-r sm:flex">
                 <span class="mb-2 inline-block h-8 w-12 rounded-lg bg-surface-container-highest"></span>
                 <span class="mb-2 inline-block h-4 w-16 rounded-lg bg-surface-container-highest"></span>
             </div>

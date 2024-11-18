@@ -3,9 +3,7 @@ import countries from 'i18n-iso-countries';
 import de from 'i18n-iso-countries/langs/de.json';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useCountries(
-    favorites: string[] = ['DE', 'NL', 'BE', 'FR', 'GB', 'NO', 'SE', 'FI', 'PL', 'DK', 'LT', 'LV', 'EE']
-) {
+export function useCountries(favorites: string[] = ['DE', 'NL', 'BE', 'FR', 'GB', 'NO', 'SE', 'FI', 'PL', 'DK', 'LT', 'LV', 'EE']) {
     countries.registerLocale(de);
 
     const options: InputSelectOption[] = Object.keys(countries.getAlpha2Codes())

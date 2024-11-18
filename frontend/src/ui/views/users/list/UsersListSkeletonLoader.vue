@@ -29,9 +29,7 @@
         </td>
 
         <td class="w-1/12">
-            <div
-                class="inline-flex h-8 w-auto items-center space-x-2 rounded-full bg-surface-container-highest py-1 pl-3 pr-4"
-            >
+            <div class="inline-flex h-8 w-auto items-center space-x-2 rounded-full bg-surface-container-highest py-1 pl-3 pr-4">
                 <i class="fa-solid fa-circle text-surface-container-high"></i>
                 <p class="h-3 w-20 rounded-lg"></p>
             </div>

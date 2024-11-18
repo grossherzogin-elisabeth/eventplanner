@@ -8,8 +8,8 @@
                 <section>
                     <p class="mb-8 max-w-lg">
                         {{ registration.user.firstName }} wird zur Warteliste der ausgewählten Reise hinzugefügt. Wenn
-                        {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die
-                        Reise noch manuell bearbeiten.
+                        {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die Reise noch manuell
+                        bearbeiten.
                     </p>
                     <div class="mb-4">
                         <VInputLabel>Reise</VInputLabel>

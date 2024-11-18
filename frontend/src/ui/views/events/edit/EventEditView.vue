@@ -5,18 +5,14 @@
                 <h1 class="mb-1 mt-8 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>
                 <section class="">
                     <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable clamp>
-                        Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen
-                        freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen.
+                        Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als
+                        Admin allerdings bereits Anmeldungen eintragen.
                     </VInfo>
                     <VWarning v-if="event.state === EventState.Canceled" class="mt-4" dismissable>
-                        Diese Reise wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab
-                        Reisedaten zurücknehmen.
+                        Diese Reise wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab Reisedaten
+                        zurücknehmen.
                     </VWarning>
-                    <VWarning
-                        v-else-if="event.state === EventState.Planned && hasEmptyRequiredSlots"
-                        class="mt-4"
-                        dismissable
-                    >
+                    <VWarning v-else-if="event.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
                         Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht erfüllt!
                     </VWarning>
                 </section>
@@ -188,19 +184,11 @@
                 <i class="fa-solid fa-envelope" />
                 <span>Crew kontaktieren</span>
             </li>
-            <li
-                v-if="event"
-                class="permission-read-user-details context-menu-item"
-                @click="eventUseCase.downloadImoList(event)"
-            >
+            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
             </li>
-            <li
-                v-if="event"
-                class="permission-read-user-details context-menu-item"
-                @click="eventUseCase.downloadConsumptionList(event)"
-            >
+            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Verzehrliste generieren</span>
             </li>

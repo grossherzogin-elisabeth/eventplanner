@@ -43,10 +43,7 @@
                     </div>
                 </section>
                 <div class="mb-4">
-                    <VInputCheckBox
-                        v-model="qualification.expires"
-                        label="Gültigkeit der Qualifikation ist zeitlich begrenzt"
-                    />
+                    <VInputCheckBox v-model="qualification.expires" label="Gültigkeit der Qualifikation ist zeitlich begrenzt" />
                 </div>
                 <div class="-mx-4 mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold">Positionen</h2>

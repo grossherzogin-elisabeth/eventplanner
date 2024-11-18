@@ -33,9 +33,7 @@
                             placeholder="Kontakt Email Adresse"
                         />
                     </div>
-                    <VInfo>
-                        Du kannst im Anschluss weitere Daten eingeben und alle Eingaben noch nachträglich bearbeiten.
-                    </VInfo>
+                    <VInfo> Du kannst im Anschluss weitere Daten eingeben und alle Eingaben noch nachträglich bearbeiten. </VInfo>
                 </section>
             </div>
         </template>

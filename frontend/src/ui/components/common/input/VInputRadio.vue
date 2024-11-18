@@ -4,12 +4,7 @@
             {{ props.label }}
         </label>
         <div class="input-radio">
-            <label
-                v-for="(option, index) in props.options"
-                :key="index"
-                :for="`${id}-${index}`"
-                class="my-4 flex items-center"
-            >
+            <label v-for="(option, index) in props.options" :key="index" :for="`${id}-${index}`" class="my-4 flex items-center">
                 <input
                     :id="`${id}-${index}`"
                     :aria-checked="props.modelValue === option.value"
@@ -23,11 +18,7 @@
                     type="radio"
                     @input="onInput(option.value)"
                 />
-                <span
-                    :class="{ invalid: showErrors && hasErrors }"
-                    class="check-box-container select-box-container"
-                    tabindex="0"
-                >
+                <span :class="{ invalid: showErrors && hasErrors }" class="check-box-container select-box-container" tabindex="0">
                     <icon-check class="check-box-icon" />
                 </span>
                 <span :class="{ invalid: showErrors && hasErrors }" class="check-box-label">

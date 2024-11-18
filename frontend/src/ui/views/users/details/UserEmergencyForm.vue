@@ -11,8 +11,8 @@
         </div>
         <h2 class="mb-4 mt-8 font-bold text-secondary">Wichtige gesundheitliche Informationen</h2>
         <VInfo class="mb-8">
-            Diese Daten sind vertraulich zu behandlen und nur für den Kapitän im Rahmen der Reiseunterlagen bestimmt!
-            Angaben werden von der Stammcrew freiwillig gemacht.
+            Diese Daten sind vertraulich zu behandlen und nur für den Kapitän im Rahmen der Reiseunterlagen bestimmt! Angaben werden von der
+            Stammcrew freiwillig gemacht.
         </VInfo>
         <div class="mb-4">
             <VInputLabel>Krankheiten</VInputLabel>

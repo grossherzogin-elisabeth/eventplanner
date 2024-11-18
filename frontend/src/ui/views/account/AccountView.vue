@@ -10,10 +10,7 @@
                                     <h2 class="mb-4 font-bold text-secondary">App</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Anzeigename</VInputLabel>
-                                        <VInputText
-                                            v-model="userDetails.nickName"
-                                            :placeholder="userDetails.firstName"
-                                        />
+                                        <VInputText v-model="userDetails.nickName" :placeholder="userDetails.firstName" />
                                     </div>
                                 </section>
                                 <section class="diet-data">
@@ -38,18 +35,12 @@
                                     <h2 class="mb-4 font-bold text-secondary">Persönliche Daten</h2>
                                     <div class="mb-4 sm:w-64">
                                         <VInputLabel>Geschlecht</VInputLabel>
-                                        <VInputSelect
-                                            v-model="userDetails.gender"
-                                            :options="genderOptions"
-                                            placeholder="Keine Angabe"
-                                        />
+                                        <VInputSelect v-model="userDetails.gender" :options="genderOptions" placeholder="Keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Vorname</VInputLabel>
                                         <VInputText
-                                            :model-value="
-                                                `${userDetails.firstName} ${userDetails.secondName || ''}`.trim()
-                                            "
+                                            :model-value="`${userDetails.firstName} ${userDetails.secondName || ''}`.trim()"
                                             required
                                             disabled
                                             placeholder="Keine Angabe"
@@ -57,20 +48,11 @@
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Zweiter Vornahme</VInputLabel>
-                                        <VInputText
-                                            v-model="userDetails.secondName"
-                                            disabled
-                                            placeholder="Keine Angabe"
-                                        />
+                                        <VInputText v-model="userDetails.secondName" disabled placeholder="Keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Nachname</VInputLabel>
-                                        <VInputText
-                                            v-model="userDetails.lastName"
-                                            required
-                                            disabled
-                                            placeholder="Keine Angabe"
-                                        />
+                                        <VInputText v-model="userDetails.lastName" required disabled placeholder="Keine Angabe" />
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
@@ -95,11 +77,7 @@
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
                                             <VInputLabel>Personalausweis Nummer</VInputLabel>
-                                            <VInputText
-                                                v-model="userDetails.passNr"
-                                                required
-                                                placeholder="Keine Angabe"
-                                            />
+                                            <VInputText v-model="userDetails.passNr" required placeholder="Keine Angabe" />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
                                             <VInputLabel>Nationalität</VInputLabel>
@@ -117,14 +95,14 @@
                                 <VInfo class="-mx-4 py-2">
                                     <h2 class="mb-2">Name und Personalausweis Nummer</h2>
                                     <p class="mb-2">
-                                        Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen,
-                                        da dieser auch zum Erstellen der IMO Liste verwendet wird. Bitte beachte, das du
-                                        den Personalausweis bei Reisen mitführen musst!
+                                        Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen, da dieser auch zum
+                                        Erstellen der IMO Liste verwendet wird. Bitte beachte, das du den Personalausweis bei Reisen
+                                        mitführen musst!
                                     </p>
                                     <p class="mb-2">
-                                        Solltest du mit einem anderen Namen oder Spitznamen angesprochen werden wollen,
-                                        kannst du einen abweichenden Anzeigenamen angeben. Dieser wird dann in der App
-                                        angezeigt und auch beim Kammerplan und der Getränkeliste verwendet.
+                                        Solltest du mit einem anderen Namen oder Spitznamen angesprochen werden wollen, kannst du einen
+                                        abweichenden Anzeigenamen angeben. Dieser wird dann in der App angezeigt und auch beim Kammerplan
+                                        und der Getränkeliste verwendet.
                                     </p>
                                     <p>
                                         <a
@@ -147,12 +125,7 @@
                                     <h2 class="mb-4 font-bold text-secondary">Email & Telefon</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Email</VInputLabel>
-                                        <VInputText
-                                            v-model="userDetails.email"
-                                            required
-                                            disabled
-                                            placeholder="keine Angabe"
-                                        />
+                                        <VInputText v-model="userDetails.email" required disabled placeholder="keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Telefon</VInputLabel>
@@ -171,35 +144,20 @@
                                     <h2 class="mb-4 font-bold text-secondary">Adresse</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Straße, Hausnr</VInputLabel>
-                                        <VInputText
-                                            v-model="userDetails.address.addressLine1"
-                                            required
-                                            placeholder="keine Angabe"
-                                        />
+                                        <VInputText v-model="userDetails.address.addressLine1" required placeholder="keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Adresszusatz</VInputLabel>
-                                        <VInputText
-                                            v-model="userDetails.address.addressLine2"
-                                            placeholder="keine Angabe"
-                                        />
+                                        <VInputText v-model="userDetails.address.addressLine2" placeholder="keine Angabe" />
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-36">
                                             <VInputLabel>PLZ</VInputLabel>
-                                            <VInputText
-                                                v-model="userDetails.address.zipcode"
-                                                required
-                                                placeholder="keine Angabe"
-                                            />
+                                            <VInputText v-model="userDetails.address.zipcode" required placeholder="keine Angabe" />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
                                             <VInputLabel>Ort</VInputLabel>
-                                            <VInputText
-                                                v-model="userDetails.address.town"
-                                                required
-                                                placeholder="keine Angabe"
-                                            />
+                                            <VInputText v-model="userDetails.address.town" required placeholder="keine Angabe" />
                                         </div>
                                     </div>
                                 </section>
@@ -208,8 +166,8 @@
                                 <VInfo class="-mx-4 py-2">
                                     <h2 class="mb-2">Du möchtest deine Email Adresse ändern?</h2>
                                     <p>
-                                        Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login
-                                        verwendet. Wenn du die Email Adresse ändern möchtest wende dich bitte ans
+                                        Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login verwendet. Wenn du die
+                                        Email Adresse ändern möchtest wende dich bitte ans
                                         <a class="link" :href="`mailto:${config.supportEmail}`">
                                             Büro
                                             <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> </a
@@ -228,19 +186,13 @@
                             </div>
                             <div class="mb-2">
                                 <VInputLabel>Password</VInputLabel>
-                                <VInputText
-                                    disabled
-                                    model-value="this is not your real password, sorry"
-                                    required
-                                    type="password"
-                                />
+                                <VInputText disabled model-value="this is not your real password, sorry" required type="password" />
                             </div>
                             <VInfo class="-mx-4 mt-8 py-2">
                                 <h2 class="mb-2">Hinweis zum Passwort ändern:</h2>
                                 <p>
-                                    Wenn du dein Passwort ändern willst, nutze dazu die "Passwort vergessen" Funktion
-                                    beim Login. Du bekommst dann einen Link per Email zugesandt, mit dem du ein neues
-                                    Passwort vergeben kannst.
+                                    Wenn du dein Passwort ändern willst, nutze dazu die "Passwort vergessen" Funktion beim Login. Du
+                                    bekommst dann einen Link per Email zugesandt, mit dem du ein neues Passwort vergeben kannst.
                                 </p>
                             </VInfo>
                         </section>
@@ -259,23 +211,15 @@
                                     <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Name des Notfallkontakts</VInputLabel>
-                                        <VInputText
-                                            v-model="userDetails.emergencyContact.name"
-                                            placeholder="Keine Angabe"
-                                        />
+                                        <VInputText v-model="userDetails.emergencyContact.name" placeholder="Keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Telefonnummer des Notfallkontakts</VInputLabel>
-                                        <VInputText
-                                            v-model="userDetails.emergencyContact.phone"
-                                            placeholder="Keine Angabe"
-                                        />
+                                        <VInputText v-model="userDetails.emergencyContact.phone" placeholder="Keine Angabe" />
                                     </div>
                                 </section>
                                 <section class="">
-                                    <h2 class="mb-4 font-bold text-secondary">
-                                        Wichtige gesundheitliche Informationen
-                                    </h2>
+                                    <h2 class="mb-4 font-bold text-secondary">Wichtige gesundheitliche Informationen</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Krankheiten</VInputLabel>
                                         <VInputTextArea v-model="userDetails.diseases" placeholder="Keine Angabe" />
@@ -290,21 +234,16 @@
                                 <VInfo class="-mx-4 py-2 md:mx-0">
                                     <h2 class="mb-2">Notfall Informationen</h2>
                                     <p class="mb-2">
-                                        Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord
-                                        weiß, das du bestimmte Krankheiten hast oder welche wichtigen Medikamente du
-                                        benötigst. Außerdem kannst du einen Notfallkontakt angeben, den wir kontaktieren
-                                        können, falls du mal nicht mehr ansprechbar bist.
+                                        Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, das du bestimmte
+                                        Krankheiten hast oder welche wichtigen Medikamente du benötigst. Außerdem kannst du einen
+                                        Notfallkontakt angeben, den wir kontaktieren können, falls du mal nicht mehr ansprechbar bist.
                                     </p>
                                     <p class="mb-2">
-                                        Deine Daten werden <b>verschlüsselt</b> gespeichert und sind nur für
-                                        autorisierte Personen einsehbar. In der Regel sind dies das Büro und der Kapitän
-                                        der jeweiligen Reise.
+                                        Deine Daten werden <b>verschlüsselt</b> gespeichert und sind nur für autorisierte Personen
+                                        einsehbar. In der Regel sind dies das Büro und der Kapitän der jeweiligen Reise.
                                     </p>
                                     <p class="mb-2">
-                                        <b>
-                                            All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an
-                                            Bord!
-                                        </b>
+                                        <b> All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord! </b>
                                     </p>
                                 </VInfo>
                             </div>
@@ -385,10 +324,7 @@ async function fetchUserDetails(): Promise<void> {
 
 async function save(): Promise<void> {
     if (userDetailsOriginal.value && userDetails.value) {
-        userDetailsOriginal.value = await usersUseCase.updateUserDetailsForSignedInUser(
-            userDetailsOriginal.value,
-            userDetails.value
-        );
+        userDetailsOriginal.value = await usersUseCase.updateUserDetailsForSignedInUser(userDetailsOriginal.value, userDetails.value);
         userDetails.value = deepCopy(userDetailsOriginal.value);
     }
 }

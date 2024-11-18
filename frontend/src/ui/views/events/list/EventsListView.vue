@@ -8,8 +8,8 @@
 
         <div v-if="signedInUser.positions.length === 0" class="px-4 md:px-12 xl:px-16">
             <VInfo class="mt-4 xl:mt-8" clamp>
-                Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht selber
-                für Reisen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.
+                Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht selber für Reisen anmelden.
+                Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.
             </VInfo>
         </div>
 
@@ -30,9 +30,7 @@
             >
                 <template #icon>
                     <span v-if="filterEventType.length === 0" class="">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4" class="">
-                        {{ filterEventType.length }} Reisearten
-                    </span>
+                    <span v-else-if="filterEventType.length > 4" class=""> {{ filterEventType.length }} Reisearten </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -67,11 +65,7 @@
             <button class="btn-tag" :class="{ active: filterAssigned }" @click="filterAssigned = !filterAssigned">
                 <span class="">Eingeplant</span>
             </button>
-            <button
-                class="btn-tag"
-                :class="{ active: filterWaitingList }"
-                @click="filterWaitingList = !filterWaitingList"
-            >
+            <button class="btn-tag" :class="{ active: filterWaitingList }" @click="filterWaitingList = !filterWaitingList">
                 <span class="">Warteliste</span>
             </button>
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
@@ -131,10 +125,7 @@
                         </div>
                     </td>
                     <!-- date -->
-                    <td
-                        class="hidden w-1/6 whitespace-nowrap md:table-cell"
-                        :class="{ 'opacity-50': item.isPastEvent }"
-                    >
+                    <td class="hidden w-1/6 whitespace-nowrap md:table-cell" :class="{ 'opacity-50': item.isPastEvent }">
                         <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
                         <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
                         <p class="text-sm">{{ item.duration }} Tage</p>
@@ -199,9 +190,7 @@
                             @click="joinEvents([item])"
                         >
                             <i class="fa-solid fa-user-plus" />
-                            <span class="truncate">
-                                Anmelden als {{ positions.get(signedInUser.positions[0]).name }}
-                            </span>
+                            <span class="truncate"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
                         </li>
                         <li
                             v-else
@@ -242,9 +231,7 @@
         <div class="flex-1"></div>
 
         <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
-            <div
-                class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
-            >
+            <div class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20">
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
                         <i class="fa-solid fa-xmark" />
@@ -258,9 +245,7 @@
                             @click="joinEvents(selectedEvents)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
-                            <span class="truncate">
-                                Anmelden als {{ positions.get(signedInUser.positions[0]).name || '...' }}
-                            </span>
+                            <span class="truncate"> Anmelden als {{ positions.get(signedInUser.positions[0]).name || '...' }} </span>
                         </button>
                     </div>
                     <ContextMenuButton class="btn-ghost">
@@ -281,9 +266,7 @@
                                 @click="joinEvents(selectedEvents)"
                             >
                                 <i class="fa-solid fa-user-plus" />
-                                <span class="truncate">
-                                    Anmelden als {{ positions.get(signedInUser.positions[0]).name }}
-                                </span>
+                                <span class="truncate"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
                             </li>
                             <li
                                 v-else

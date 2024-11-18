@@ -133,10 +133,7 @@
                     </td>
                     <td class="w-1/12">
                         <div class="flex items-center justify-end">
-                            <div
-                                v-if="item.qualifications?.length === 0"
-                                class="status-panel bg-surface-container-highest text-onsurface"
-                            >
+                            <div v-if="item.qualifications?.length === 0" class="status-panel bg-surface-container-highest text-onsurface">
                                 <i class="fa-solid fa-question-circle"></i>
                                 <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
                             </div>
@@ -146,9 +143,7 @@
                                 :title="item.expiredQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-ban"></i>
-                                <span class="whitespace-nowrap font-semibold">
-                                    {{ item.expiredQualifications.length }} abgelaufen
-                                </span>
+                                <span class="whitespace-nowrap font-semibold"> {{ item.expiredQualifications.length }} abgelaufen </span>
                             </div>
                             <div
                                 v-else-if="item.soonExpiringQualifications.length > 0"
@@ -157,12 +152,8 @@
                             >
                                 <i class="fa-solid fa-warning"></i>
                                 <span class="whitespace-nowrap font-semibold">
-                                    <template v-if="item.soonExpiringQualifications.length === 1">
-                                        1 läuft bald ab
-                                    </template>
-                                    <template v-else>
-                                        {{ item.soonExpiringQualifications.length }} laufen bald ab
-                                    </template>
+                                    <template v-if="item.soonExpiringQualifications.length === 1"> 1 läuft bald ab </template>
+                                    <template v-else> {{ item.soonExpiringQualifications.length }} laufen bald ab </template>
                                 </span>
                             </div>
                             <div v-else class="status-panel bg-green-container text-ongreen-container">
@@ -207,9 +198,7 @@
         <div class="flex-1"></div>
 
         <div v-if="selectedUsers && selectedUsers.length > 0" class="sticky bottom-0 z-20">
-            <div
-                class="h-full border-t border-outline-variant bg-surface px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20"
-            >
+            <div class="h-full border-t border-outline-variant bg-surface px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20">
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap">
                     <button class="btn-ghost" @click="selectNone()">
                         <i class="fa-solid fa-xmark w-6" />
@@ -276,12 +265,7 @@ import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import {
-    useAuthUseCase,
-    useEventUseCase,
-    useUserAdministrationUseCase,
-    useUsersUseCase,
-} from '@/ui/composables/Application.ts';
+import { useAuthUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useEventService, useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
@@ -373,12 +357,7 @@ function init(): void {
 }
 
 function hasAnyEvents(user: UserRegistrations): boolean {
-    return (
-        user.waitingListCount > 0 ||
-        user.multiDayEventsCount > 0 ||
-        user.weekendEventsCount > 0 ||
-        user.singleDayEventsCount > 0
-    );
+    return user.waitingListCount > 0 || user.multiDayEventsCount > 0 || user.weekendEventsCount > 0 || user.singleDayEventsCount > 0;
 }
 
 function matchesActiveCategory(user: UserRegistrations): boolean {

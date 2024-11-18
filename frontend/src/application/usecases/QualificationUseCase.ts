@@ -5,10 +5,7 @@ export class QualificationUseCase {
     private readonly qualificationCachingService: QualificationCachingService;
     private readonly errorHandlingService: ErrorHandlingService;
 
-    constructor(params: {
-        qualificationCachingService: QualificationCachingService;
-        errorHandlingService: ErrorHandlingService;
-    }) {
+    constructor(params: { qualificationCachingService: QualificationCachingService; errorHandlingService: ErrorHandlingService }) {
         this.qualificationCachingService = params.qualificationCachingService;
         this.errorHandlingService = params.errorHandlingService;
     }

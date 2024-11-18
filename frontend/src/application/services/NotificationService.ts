@@ -1,13 +1,9 @@
 export class NotificationService {
-    private notificationHandler: (message: string, type: 'success' | 'warning' | 'error' | 'info') => void = (
-        message
-    ) => {
+    private notificationHandler: (message: string, type: 'success' | 'warning' | 'error' | 'info') => void = (message) => {
         alert(message);
     };
 
-    public registerNotificationHandler(
-        handler: (message: string, type: 'success' | 'warning' | 'error' | 'info') => void
-    ): void {
+    public registerNotificationHandler(handler: (message: string, type: 'success' | 'warning' | 'error' | 'info') => void): void {
         this.notificationHandler = handler;
     }
 

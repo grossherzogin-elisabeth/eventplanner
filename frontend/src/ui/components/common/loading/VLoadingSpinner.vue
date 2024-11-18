@@ -1,10 +1,5 @@
 <template>
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 200 200"
-        class="h-6 w-6"
-        :class="$attrs.class || 'text-primary'"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="h-6 w-6" :class="$attrs.class || 'text-primary'">
         <radialGradient id="a4" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)">
             <stop offset="0" stop-color="#FF156D"></stop>
             <stop offset=".3" stop-color="#FF156D" stop-opacity=".9"></stop>

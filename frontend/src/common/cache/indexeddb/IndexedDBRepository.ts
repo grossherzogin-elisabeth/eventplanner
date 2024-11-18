@@ -41,17 +41,10 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
      * @param store name of the IndexedDB store, store musst be created manually before connecting!
      * @param cacheInvalidationOptions optional invalidation parameters
      */
-    constructor(
-        database: Promise<IDBDatabase>,
-        store: string,
-        cacheInvalidationOptions?: Partial<CacheInvalidationOptions>
-    ) {
+    constructor(database: Promise<IDBDatabase>, store: string, cacheInvalidationOptions?: Partial<CacheInvalidationOptions>) {
         this.database = database;
         this.store = store;
-        this.cacheInvalidationOptions = Object.assign(
-            this.defaultCacheInvalidationOptions,
-            cacheInvalidationOptions || {}
-        );
+        this.cacheInvalidationOptions = Object.assign(this.defaultCacheInvalidationOptions, cacheInvalidationOptions || {});
         if (this.cacheInvalidationOptions.invalidateOnReload) {
             this.deleteAll();
         }

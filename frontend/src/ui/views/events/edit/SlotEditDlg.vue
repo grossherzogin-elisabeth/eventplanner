@@ -32,9 +32,7 @@
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox
-                                :model-value="
-                                    slot.positionKeys.includes(position.key) || position.key === primaryPositionKey
-                                "
+                                :model-value="slot.positionKeys.includes(position.key) || position.key === primaryPositionKey"
                                 :label="position.name"
                                 :disabled="position.key === primaryPositionKey"
                                 @update:model-value="togglePosition(position.key, $event)"

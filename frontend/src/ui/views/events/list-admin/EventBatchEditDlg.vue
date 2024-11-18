@@ -7,8 +7,7 @@
             <div class="px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8">
-                        Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für
-                        alle Reisen übernommen.
+                        Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle Reisen übernommen.
                     </p>
                     <div class="mb-4">
                         <VInputLabel>Status</VInputLabel>

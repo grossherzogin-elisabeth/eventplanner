@@ -127,15 +127,7 @@ import type { Event } from '@/domain';
 import { EventState, EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputTime } from '@/ui/components/common';
-import {
-    VDialog,
-    VInputCombobox,
-    VInputDate,
-    VInputLabel,
-    VInputSelect,
-    VInputText,
-    VInputTextArea,
-} from '@/ui/components/common';
+import { VDialog, VInputCombobox, VInputDate, VInputLabel, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
 import { useValidation } from '@/ui/composables/Validation';

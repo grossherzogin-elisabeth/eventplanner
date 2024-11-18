@@ -1,16 +1,5 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
-import type {
-    Event,
-    Location,
-    PositionKey,
-    Registration,
-    SignedInUser,
-    Slot,
-    SlotKey,
-    User,
-    UserKey,
-    ValidationHint,
-} from '@/domain';
+import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import { EventState } from '@/domain';
 import { v4 as uuid } from 'uuid';
@@ -131,9 +120,7 @@ export class EventService {
                     if (!lowerPrioSlot.assignedRegistrationKey) {
                         continue;
                     }
-                    const registration = event.registrations.find(
-                        (r) => r.key === lowerPrioSlot.assignedRegistrationKey
-                    );
+                    const registration = event.registrations.find((r) => r.key === lowerPrioSlot.assignedRegistrationKey);
                     if (registration && slot.positionKeys.includes(registration.positionKey)) {
                         // the registration of a lower prio slot can also be assigned to this slot, move it up
                         slot.assignedRegistrationKey = lowerPrioSlot.assignedRegistrationKey;
@@ -263,9 +250,7 @@ export class EventService {
             (it) =>
                 it.criticality >= criticality &&
                 it.assignedRegistrationKey === undefined &&
-                (positions === undefined ||
-                    positions.length === 0 ||
-                    positions?.find((p) => it.positionKeys.includes(p)))
+                (positions === undefined || positions.length === 0 || positions?.find((p) => it.positionKeys.includes(p)))
         );
         return openSlots.length > 0;
     }

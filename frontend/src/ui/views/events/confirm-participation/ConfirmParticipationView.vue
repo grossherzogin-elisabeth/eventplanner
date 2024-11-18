@@ -4,9 +4,8 @@
             <h1 class="mb-4">Hallo Max,</h1>
             <p class="mb-8 text-sm sm:text-base">
                 In {{ daysUntilStart }} Tagen startet die Reise {{ event.name }}, bei der du als
-                {{ event.signedInUserAssignedPosition }} eingeplant bist. Bitte bestätige deine Teilnahme bis spätestens
-                7 Tage vor Reisebeginn, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich
-                zu finden.
+                {{ event.signedInUserAssignedPosition }} eingeplant bist. Bitte bestätige deine Teilnahme bis spätestens 7 Tage vor
+                Reisebeginn, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden.
             </p>
 
             <div v-if="showDetails" class="mb-8">
@@ -70,32 +69,26 @@
                 </div>
             </div>
 
-            <div
-                v-if="state === true"
-                class="-mx-4 mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container"
-            >
+            <div v-if="state === true" class="-mx-4 mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container">
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-check"></i>
                     <span class="ml-4">Teilnahme bestätigt</span>
                 </p>
                 <p class="mb-4">
-                    Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte
-                    denk daran, deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen
-                    dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!
+                    Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte denk daran, deine
+                    Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew einen
+                    angenehmen Törn und immer eine handbreit Wasser unterm Kiel!
                 </p>
             </div>
-            <div
-                v-else-if="state === false"
-                class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container"
-            >
+            <div v-else-if="state === false" class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container">
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-xmark"></i>
                     <span class="ml-4">Reise abgesagt</span>
                 </p>
                 <p class="mb-4">
-                    Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der
-                    Reise wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann
-                    schwierig ist noch einen Ersatz für dich zu finden.
+                    Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Reise wurde
+                    storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz
+                    für dich zu finden.
                 </p>
             </div>
 
@@ -106,22 +99,17 @@
             <!--                </button>-->
             <!--            </div>-->
 
-            <div
-                v-if="state !== null && false"
-                class="-mx-4 mb-8 rounded-lg bg-blue-container p-4 font-bold text-onblue-container"
-            >
+            <div v-if="state !== null && false" class="-mx-4 mb-8 rounded-lg bg-blue-container p-4 font-bold text-onblue-container">
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-info"></i>
                     <span class="ml-4">Hast du schon einen Lissi Account?</span>
                 </p>
                 <p class="mb-4">
-                    Mit einem kostenlosen Lissi Account kannst du jederzeit den Status deiner kommenden Reisen einsehen
-                    und dich noch einfacher für Reisen an und abmelden.
+                    Mit einem kostenlosen Lissi Account kannst du jederzeit den Status deiner kommenden Reisen einsehen und dich noch
+                    einfacher für Reisen an und abmelden.
                 </p>
                 <div class="flex items-center space-x-2">
-                    <RouterLink :to="{ name: Routes.Login }" class="btn-primary">
-                        Jetzt anmelden oder registrieren
-                    </RouterLink>
+                    <RouterLink :to="{ name: Routes.Login }" class="btn-primary"> Jetzt anmelden oder registrieren </RouterLink>
                 </div>
             </div>
         </div>

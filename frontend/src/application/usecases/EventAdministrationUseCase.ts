@@ -184,13 +184,9 @@ export class EventAdministrationUseCase {
         try {
             let eventsToUpdate = events;
             if (registration.userKey) {
-                eventsToUpdate = eventsToUpdate.filter(
-                    (it) => !it.registrations.find((it) => it.userKey === registration.userKey)
-                );
+                eventsToUpdate = eventsToUpdate.filter((it) => !it.registrations.find((it) => it.userKey === registration.userKey));
             } else if (registration.name) {
-                eventsToUpdate = eventsToUpdate.filter((it) =>
-                    it.registrations.find((it) => it.name === registration.name)
-                );
+                eventsToUpdate = eventsToUpdate.filter((it) => it.registrations.find((it) => it.name === registration.name));
             }
             if (eventsToUpdate.length === 0) {
                 this.notificationService.warning('Keine neue Anmeldung hinzugefügt');

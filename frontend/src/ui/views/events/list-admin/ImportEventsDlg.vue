@@ -6,16 +6,13 @@
         <template #default>
             <div v-if="errors" class="relative h-96 overflow-auto px-8 lg:px-10">
                 <p class="mb-8 max-w-lg">
-                    Die Reisen wurden erfolgreich importiert. Beim Verarbeiten der Datei sind allerdings die folgenden
-                    Fehler gefunden worden. Einige konnten automatisch korrigiert werden. in jedem Fall sollten diese
-                    Fehler aber geprüft werden.
+                    Die Reisen wurden erfolgreich importiert. Beim Verarbeiten der Datei sind allerdings die folgenden Fehler gefunden
+                    worden. Einige konnten automatisch korrigiert werden. in jedem Fall sollten diese Fehler aber geprüft werden.
                 </p>
                 <VTable :items="errors" :page-size="-1">
                     <template #row="{ item }">
                         <td class="w-full">
-                            <p class="mb-2 font-semibold">
-                                {{ item.eventName }} ({{ formatDateRange(item.start, item.end) }})
-                            </p>
+                            <p class="mb-2 font-semibold">{{ item.eventName }} ({{ formatDateRange(item.start, item.end) }})</p>
                             <ul class="mb-4 ml-4 list-disc text-sm">
                                 <li v-for="(message, index) in item.messages" :key="index">
                                     {{ message }}
@@ -28,12 +25,11 @@
             <div v-else class="px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-4">
-                        Hier kannst du Reisen aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein
-                        paar Minuten.
+                        Hier kannst du Reisen aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein paar Minuten.
                     </p>
                     <VWarning class="">
-                        Wenn du Reisen aus einer Excel Datei importierts, werden dadurch alle anderen Reisen für das
-                        ausgewählte Jahr überschrieben!
+                        Wenn du Reisen aus einer Excel Datei importierts, werden dadurch alle anderen Reisen für das ausgewählte Jahr
+                        überschrieben!
                     </VWarning>
                     <div class="mb-4 mt-8">
                         <VInputLabel>Jahr</VInputLabel>

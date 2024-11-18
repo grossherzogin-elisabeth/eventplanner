@@ -29,9 +29,7 @@
             >
                 <template #icon>
                     <span v-if="filterEventType.length === 0" class="">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4" class="">
-                        {{ filterEventType.length }} Reisearten
-                    </span>
+                    <span v-else-if="filterEventType.length > 4" class=""> {{ filterEventType.length }} Reisearten </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -66,11 +64,7 @@
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
                 <span class="">Freie Plätze</span>
             </button>
-            <button
-                class="btn-tag"
-                :class="{ active: filterWaitinglist }"
-                @click="filterWaitinglist = !filterWaitinglist"
-            >
+            <button class="btn-tag" :class="{ active: filterWaitinglist }" @click="filterWaitinglist = !filterWaitinglist">
                 <span class="">Warteliste</span>
             </button>
         </div>
@@ -87,10 +81,7 @@
                 <template #row="{ item }">
                     <!-- name -->
                     <td class="w-1/2 whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
-                        <p
-                            class="mb-1 truncate"
-                            :class="{ 'text-error line-through': item.state === EventState.Canceled }"
-                        >
+                        <p class="mb-1 truncate" :class="{ 'text-error line-through': item.state === EventState.Canceled }">
                             <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
                             <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
                             {{ item.name }}
@@ -187,17 +178,11 @@
                             <span>Reise bearbeiten</span>
                         </RouterLink>
                     </li>
-                    <li
-                        class="permission-read-user-details context-menu-item"
-                        @click="eventUseCase.downloadImoList(item)"
-                    >
+                    <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(item)">
                         <i class="fa-solid fa-clipboard-user" />
                         <span>IMO Liste generieren</span>
                     </li>
-                    <li
-                        class="permission-read-user-details context-menu-item"
-                        @click="eventUseCase.downloadConsumptionList(item)"
-                    >
+                    <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(item)">
                         <i class="fa-solid fa-beer-mug-empty" />
                         <span>Verzehrliste generieren</span>
                     </li>
@@ -258,9 +243,7 @@
         <div class="flex-1"></div>
 
         <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
-            <div
-                class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20"
-            >
+            <div class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20">
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
                         <i class="fa-solid fa-xmark" />
@@ -295,10 +278,7 @@
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
-                            <li
-                                class="permission-write-registrations context-menu-item"
-                                @click="addRegistration(selectedEvents)"
-                            >
+                            <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
                                 <i class="fa-solid fa-user-plus" />
                                 <span>Anmeldung hinzufügen</span>
                             </li>
@@ -454,13 +434,7 @@ const showBatchPublishPlannedCrew = computed<boolean>(() => {
 
 const tabs = computed<string[]>(() => {
     const currentYear = new Date().getFullYear();
-    return [
-        'Zukünftige',
-        String(currentYear + 1),
-        String(currentYear),
-        String(currentYear - 1),
-        String(currentYear - 2),
-    ];
+    return ['Zukünftige', String(currentYear + 1), String(currentYear), String(currentYear - 1), String(currentYear - 2)];
 });
 
 function init(): void {

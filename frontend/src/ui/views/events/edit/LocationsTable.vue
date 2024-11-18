@@ -29,9 +29,7 @@
                     <span>{{ item.name }}</span>
                 </p>
                 <p class="mb-1 truncate text-sm font-light">
-                    <span v-if="item.address && item.country">
-                        {{ item.address }}, {{ countries.getName(item.country) }}
-                    </span>
+                    <span v-if="item.address && item.country"> {{ item.address }}, {{ countries.getName(item.country) }} </span>
                     <span v-else-if="item.address">{{ item.address }}</span>
                     <span v-else-if="item.country">{{ countries.getName(item.country) }}</span>
                 </p>

@@ -16,13 +16,7 @@ import {
     USER_ADMIN_USE_CASE,
     USER_USE_CASE,
 } from '@/ui/composables/Application';
-import {
-    EVENT_SERVICE,
-    POSITION_SERVICE,
-    QUALIFICATION_SERVICE,
-    REGISTRATION_SERVICE,
-    USER_SERVICE,
-} from '@/ui/composables/Domain';
+import { EVENT_SERVICE, POSITION_SERVICE, QUALIFICATION_SERVICE, REGISTRATION_SERVICE, USER_SERVICE } from '@/ui/composables/Domain';
 import { setupTooltips } from '@/ui/plugins/tooltip.ts';
 import App from './App.vue';
 import './assets/css/main.css';

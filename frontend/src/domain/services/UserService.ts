@@ -19,18 +19,14 @@ export class UserService {
         return false;
     }
 
-    public resolveQualifications(
-        user: UserDetails,
-        qualifications: Map<QualificationKey, Qualification>
-    ): ResolvedUserQualification[] {
+    public resolveQualifications(user: UserDetails, qualifications: Map<QualificationKey, Qualification>): ResolvedUserQualification[] {
         const now = new Date();
         const expiresSoonDate = addToDate(now, { months: 3 });
 
         return user.qualifications.map((it) => {
             const qualification = qualifications.get(it.qualificationKey);
             const isExpired = it.expires && (!it.expiresAt || it.expiresAt.getTime() < now.getTime());
-            const willExpireSoon =
-                it.expires && (it.expiresAt ? it.expiresAt.getTime() < expiresSoonDate.getTime() : false);
+            const willExpireSoon = it.expires && (it.expiresAt ? it.expiresAt.getTime() < expiresSoonDate.getTime() : false);
 
             if (qualification) {
                 return {

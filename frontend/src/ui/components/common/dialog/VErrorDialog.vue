@@ -11,8 +11,8 @@
                     {{ error.message }}
                 </p>
                 <p v-else>
-                    Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut. Sollte der Fehler wiederholt
-                    auftreten, melde ihn gerne an admin@grossherzogin-elisabeth.de.
+                    Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut. Sollte der Fehler wiederholt auftreten, melde ihn
+                    gerne an admin@grossherzogin-elisabeth.de.
                 </p>
                 <div v-if="error.error" class="mt-8">
                     <h2 class="mb-4 text-error">Details</h2>

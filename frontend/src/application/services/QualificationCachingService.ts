@@ -7,10 +7,7 @@ export class QualificationCachingService {
     private readonly qualificationRepository: QualificationRepository;
     private readonly cache: Cache<QualificationKey, Qualification>;
 
-    constructor(params: {
-        qualificationRepository: QualificationRepository;
-        cache: Cache<QualificationKey, Qualification>;
-    }) {
+    constructor(params: { qualificationRepository: QualificationRepository; cache: Cache<QualificationKey, Qualification> }) {
         this.qualificationRepository = params.qualificationRepository;
         this.cache = params.cache;
     }

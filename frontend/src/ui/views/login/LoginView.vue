@@ -7,25 +7,18 @@
                     Großherzogin Elisabeth
                 </h1>
                 <p class="mb-8 text-lg">
-                    Diese Seite ist nur für angemeldete Stammcrew Mitglieder sichtbar. Bitte melde dich mit deinem Crew
-                    Account an um die App zu nutzen.
+                    Diese Seite ist nur für angemeldete Stammcrew Mitglieder sichtbar. Bitte melde dich mit deinem Crew Account an um die
+                    App zu nutzen.
                 </p>
             </div>
         </div>
         <div class="fixed bottom-0 left-0 right-0 top-0 overflow-y-auto">
             <div class="mx-auto flex min-h-full flex-col justify-end sm:p-8">
                 <div class="h-96 sm:hidden"></div>
-                <div
-                    class="mx-auto flex w-full flex-col rounded-t-3xl bg-surface sm:max-w-xl sm:rounded-3xl md:flex-row lg:max-w-5xl"
-                >
+                <div class="mx-auto flex w-full flex-col rounded-t-3xl bg-surface sm:max-w-xl sm:rounded-3xl md:flex-row lg:max-w-5xl">
                     <div class="relative hidden w-0 flex-grow overflow-hidden rounded-l-3xl lg:block">
-                        <img
-                            class="h-full w-full object-cover object-left opacity-50"
-                            src="@/ui/assets/images/login-1.jpg"
-                        />
-                        <div
-                            class="absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-l from-p-50 to-transparent"
-                        ></div>
+                        <img class="h-full w-full object-cover object-left opacity-50" src="@/ui/assets/images/login-1.jpg" />
+                        <div class="absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-l from-p-50 to-transparent"></div>
                     </div>
                     <div class="flex flex-col p-8 sm:p-16 lg:mx-auto lg:max-w-xl">
                         <div class="mb-8 h-1 w-8 self-center rounded-full bg-surface-container sm:hidden"></div>
@@ -36,8 +29,8 @@
                                 Großherzogin Elisabeth
                             </h1>
                             <p class="mb-8 text-lg">
-                                Diese Seite ist nur für angemeldete Stammcrew Mitglieder sichtbar. Bitte melde dich mit
-                                deinem Crew Account an um die App zu nutzen.
+                                Diese Seite ist nur für angemeldete Stammcrew Mitglieder sichtbar. Bitte melde dich mit deinem Crew Account
+                                an um die App zu nutzen.
                             </p>
                         </div>
 

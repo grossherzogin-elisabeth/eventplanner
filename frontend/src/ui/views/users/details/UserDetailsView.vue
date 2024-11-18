@@ -136,12 +136,7 @@ import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import {
-    useAuthUseCase,
-    useErrorHandling,
-    useEventUseCase,
-    useUserAdministrationUseCase,
-} from '@/ui/composables/Application.ts';
+import { useAuthUseCase, useErrorHandling, useEventUseCase, useUserAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
 import UserEmergencyForm from '@/ui/views/users/details/UserEmergencyForm.vue';

@@ -7,8 +7,8 @@
             <div class="px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
-                        Du kannst eine Anmeldung für ein Stammcrew Mitglied oder Gastcrew anlegen. Die Position kannst
-                        du nachträglich noch auf der Warteliste ändern.
+                        Du kannst eine Anmeldung für ein Stammcrew Mitglied oder Gastcrew anlegen. Die Position kannst du nachträglich noch
+                        auf der Warteliste ändern.
                     </p>
                     <div class="mb-4">
                         <VInputLabel>Nutzer</VInputLabel>
@@ -54,14 +54,10 @@
                     </div>
                     <template v-if="selectedUser !== undefined">
                         <VWarning
-                            v-if="
-                                registration.positionKey &&
-                                !selectedUser?.positionKeys.includes(registration.positionKey)
-                            "
+                            v-if="registration.positionKey && !selectedUser?.positionKeys.includes(registration.positionKey)"
                             class="my-4"
                         >
-                            {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die
-                            Position
+                            {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die Position
                             <i>{{ selectedPosition?.name }}</i>
                         </VWarning>
                         <VWarning v-if="expiredQualifications.length > 0" class="my-4">
@@ -72,8 +68,8 @@
                         </VWarning>
                     </template>
                     <VWarning v-else-if="registration.name" class="my-4">
-                        {{ registration.name }} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht
-                        automatisiert geprüft werden.
+                        {{ registration.name }} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft
+                        werden.
                     </VWarning>
                 </section>
             </div>

@@ -5,16 +5,7 @@ import type { PositionCachingService } from '@/application/services/PositionCach
 import type { QualificationCachingService } from '@/application/services/QualificationCachingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
 import { diff } from '@/common';
-import type {
-    Position,
-    PositionKey,
-    Qualification,
-    QualificationKey,
-    User,
-    UserDetails,
-    UserKey,
-    UserSettings,
-} from '@/domain';
+import type { Position, PositionKey, Qualification, QualificationKey, User, UserDetails, UserKey, UserSettings } from '@/domain';
 import { Permission } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
@@ -73,10 +64,7 @@ export class UsersUseCase {
         }
     }
 
-    public async updateUserDetailsForSignedInUser(
-        originalUser: UserDetails,
-        updatedUser: UserDetails
-    ): Promise<UserDetails> {
+    public async updateUserDetailsForSignedInUser(originalUser: UserDetails, updatedUser: UserDetails): Promise<UserDetails> {
         try {
             const changes = diff(originalUser, updatedUser);
             if (Object.keys(changes).length > 0) {

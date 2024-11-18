@@ -100,11 +100,7 @@
             <div class="mt-2 rounded-xl bg-surface-container-high p-4 shadow-xl">
                 <ul>
                     <template v-if="props.multiselection">
-                        <li
-                            v-if="dropdownItem.selected"
-                            class="context-menu-item"
-                            @click="dropdownItem.selected = !dropdownItem.selected"
-                        >
+                        <li v-if="dropdownItem.selected" class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
                             <i class="fa-solid fa-xmark" />
                             <span>Abwählen</span>
                         </li>
@@ -265,10 +261,7 @@ const sortedItems = computed<(T & Selectable)[]>(() => {
         // Compare dates
         const vaDate = new Date(va);
         const vbDate = new Date(vb);
-        if (
-            !vaDate.toString().toLowerCase().includes('invalid') &&
-            !vbDate.toString().toLowerCase().includes('invalid')
-        ) {
+        if (!vaDate.toString().toLowerCase().includes('invalid') && !vbDate.toString().toLowerCase().includes('invalid')) {
             return (vaDate.getTime() - vbDate.getTime()) * sortDir.value;
         }
 
@@ -299,9 +292,7 @@ const columnCount = computed<number>(() => {
 function sort(th: HTMLTableCellElement): void {
     // remove all sort classes from all th elements in the header
     if (th.parentElement) {
-        th.parentElement
-            .querySelectorAll<HTMLTableCellElement>('th')
-            .forEach((sibling) => sibling.classList.remove('sort', 'asc', 'desc'));
+        th.parentElement.querySelectorAll<HTMLTableCellElement>('th').forEach((sibling) => sibling.classList.remove('sort', 'asc', 'desc'));
     }
     const thSortBy = th.dataset.sortby || '';
     if (sortCol.value === thSortBy) {

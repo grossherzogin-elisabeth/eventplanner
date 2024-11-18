@@ -5,10 +5,7 @@ export class PositionUseCase {
     private readonly positionCachingService: PositionCachingService;
     private readonly errorHandlingService: ErrorHandlingService;
 
-    constructor(params: {
-        positionCachingService: PositionCachingService;
-        errorHandlingService: ErrorHandlingService;
-    }) {
+    constructor(params: { positionCachingService: PositionCachingService; errorHandlingService: ErrorHandlingService }) {
         this.positionCachingService = params.positionCachingService;
         this.errorHandlingService = params.errorHandlingService;
     }

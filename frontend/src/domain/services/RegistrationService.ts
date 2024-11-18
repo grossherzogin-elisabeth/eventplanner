@@ -1,14 +1,4 @@
-import type {
-    Event,
-    Position,
-    PositionKey,
-    QualificationKey,
-    Registration,
-    RegistrationKey,
-    Slot,
-    User,
-    UserKey,
-} from '@/domain';
+import type { Event, Position, PositionKey, QualificationKey, Registration, RegistrationKey, Slot, User, UserKey } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class RegistrationService {

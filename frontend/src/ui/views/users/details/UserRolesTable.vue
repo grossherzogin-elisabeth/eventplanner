@@ -63,8 +63,7 @@ const roles = ref<RoleTableEntry[]>([
         role: Role.TEAM_MEMBER,
         name: 'Stammcrewmitglied',
         icon: 'fa-sailboat',
-        description:
-            'Der Nutzer kann sich eigenständig zu Reisen an- und abmelden und alle Reisen sowie verknüpfte andere Nutzer sehen',
+        description: 'Der Nutzer kann sich eigenständig zu Reisen an- und abmelden und alle Reisen sowie verknüpfte andere Nutzer sehen',
         enabled: false,
     },
     {
@@ -92,16 +91,14 @@ const roles = ref<RoleTableEntry[]>([
         role: Role.EVENT_LEADER,
         name: 'Reiseleiter:in',
         icon: 'fa-life-ring',
-        description:
-            'Der Nutzer kann die aktuelle Reise bearbeiten um Last-Minute Änderungen an der Crewliste vornehmen zu können',
+        description: 'Der Nutzer kann die aktuelle Reise bearbeiten um Last-Minute Änderungen an der Crewliste vornehmen zu können',
         enabled: false,
     },
     {
         role: Role.ADMIN,
         name: 'Admin',
         icon: 'fa-wand-magic-sparkles',
-        description:
-            'Der Nutzer kann alle Funktionen der App vollumfänglich nutzen und darf alle Daten sehen und bearbeiten',
+        description: 'Der Nutzer kann alle Funktionen der App vollumfänglich nutzen und darf alle Daten sehen und bearbeiten',
         enabled: false,
     },
 ]);

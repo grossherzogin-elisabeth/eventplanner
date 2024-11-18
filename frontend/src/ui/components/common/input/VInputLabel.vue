@@ -1,10 +1,5 @@
 <template>
-    <label
-        ref="label"
-        :for="id"
-        class="input-label flex items-center space-x-2"
-        :class="$attrs.class + (required ? ' required' : '')"
-    >
+    <label ref="label" :for="id" class="input-label flex items-center space-x-2" :class="$attrs.class + (required ? ' required' : '')">
         <span>
             <slot>
                 {{ props.modelValue }}

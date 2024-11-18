@@ -96,19 +96,14 @@
 
                     <!-- route -->
                     <div class="">
-                        <p
-                            v-for="(location, index) in props.event.locations"
-                            :key="index"
-                            class="flex items-center space-x-4"
-                        >
+                        <p v-for="(location, index) in props.event.locations" :key="index" class="flex items-center space-x-4">
                             <i :class="location.icon" class="fa-solid w-4" />
                             <span class="flex-grow">{{ location.name }}</span>
                         </p>
                     </div>
 
                     <VInfo v-if="signedInUser.positions.length === 0" class="-mx-4 my-4 text-sm" clamp>
-                        Deinem Benutzerkonto wurde noch keine Position zugewiesen. Du kannst dich deshalb nicht selber
-                        für Reisen anmelden.
+                        Deinem Benutzerkonto wurde noch keine Position zugewiesen. Du kannst dich deshalb nicht selber für Reisen anmelden.
                     </VInfo>
 
                     <VInfo
@@ -156,15 +151,10 @@
                             @click="joinEvent(props.event)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
-                            <span class="truncate">
-                                Anmelden als {{ positions.get(signedInUser.positions[0]).name }}</span
-                            >
+                            <span class="truncate"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }}</span>
                         </button>
                         <RouterLink
-                            v-if="
-                                event.state === EventState.Draft &&
-                                signedInUser.permissions.includes(Permission.WRITE_EVENTS)
-                            "
+                            v-if="event.state === EventState.Draft && signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                             :to="{ name: Routes.EventEdit, params: { key: props.event.key } }"
                             class="btn-ghost text-sm"
                             title="Detailansicht"

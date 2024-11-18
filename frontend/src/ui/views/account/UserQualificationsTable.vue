@@ -29,10 +29,7 @@
                         <i class="fa-solid fa-ban"></i>
                         <span class="whitespace-nowrap font-semibold">Abgelaufen</span>
                     </div>
-                    <div
-                        v-else-if="item.willExpireSoon"
-                        class="status-panel bg-yellow-container text-onyellow-container"
-                    >
+                    <div v-else-if="item.willExpireSoon" class="status-panel bg-yellow-container text-onyellow-container">
                         <i class="fa-solid fa-warning"></i>
                         <span class="whitespace-nowrap font-semibold"> Läuft bald ab</span>
                     </div>

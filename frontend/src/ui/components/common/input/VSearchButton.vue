@@ -1,9 +1,5 @@
 <template>
-    <div
-        class="btn-search"
-        :class="`${$attrs.class || 'w-44'} ${modelValue ? 'active' : ''}`"
-        @click="$refs.input.focus()"
-    >
+    <div class="btn-search" :class="`${$attrs.class || 'w-44'} ${modelValue ? 'active' : ''}`" @click="$refs.input.focus()">
         <i class="fa-solid fa-search" />
         <input ref="input" :value="props.modelValue" :placeholder="placeholder" @input="onInput" />
         <button v-if="props.modelValue !== ''" @click="emit('update:modelValue', '')">

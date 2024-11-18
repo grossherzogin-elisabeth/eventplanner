@@ -1,10 +1,5 @@
 <template>
-    <button
-        :disabled="props.disabled || loading"
-        class="whitespace-nowrap"
-        :class="$attrs.class || 'btn-primary'"
-        @click="onClick()"
-    >
+    <button :disabled="props.disabled || loading" class="whitespace-nowrap" :class="$attrs.class || 'btn-primary'" @click="onClick()">
         <VLoadingSpinner v-if="loading" class="-mx-1 block w-6 text-current" />
         <span v-else-if="success === true" class="block w-6">
             <i class="fa-solid fa-check"></i>

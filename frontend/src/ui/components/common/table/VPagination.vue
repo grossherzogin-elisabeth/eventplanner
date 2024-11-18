@@ -1,11 +1,6 @@
 <template>
     <div v-if="pageCount > 1" class="pagination">
-        <button
-            :class="{ enabled: page > 0 }"
-            :disabled="page === 0"
-            class="pagination-page"
-            @click="emit('update:page', page - 1)"
-        >
+        <button :class="{ enabled: page > 0 }" :disabled="page === 0" class="pagination-page" @click="emit('update:page', page - 1)">
             <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 

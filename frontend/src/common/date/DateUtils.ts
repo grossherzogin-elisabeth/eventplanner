@@ -48,10 +48,7 @@ export function updateTime(target: Date, time: Date, precision: 'hours' | 'minut
     return result;
 }
 
-export function cropToPrecision(
-    date: Date,
-    precision: 'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds'
-): Date {
+export function cropToPrecision(date: Date, precision: 'years' | 'months' | 'days' | 'hours' | 'minutes' | 'seconds'): Date {
     switch (precision) {
         case 'years':
             return new Date(date.getFullYear(), 0, 1, 0, 0, 0);
@@ -64,14 +61,7 @@ export function cropToPrecision(
         case 'minutes':
             return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), 0);
         case 'seconds':
-            return new Date(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate(),
-                date.getHours(),
-                date.getMinutes(),
-                date.getSeconds()
-            );
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
         default:
             return date;
     }

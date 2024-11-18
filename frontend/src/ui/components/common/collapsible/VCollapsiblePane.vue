@@ -10,10 +10,7 @@
                 <div>
                     <slot name="title"></slot>
                 </div>
-                <IconArrowDown
-                    :class="isCollapsed ? 'rotate-180' : 'rotate-0'"
-                    class="collapsible-pane-btn-icon transition-transform"
-                />
+                <IconArrowDown :class="isCollapsed ? 'rotate-180' : 'rotate-0'" class="collapsible-pane-btn-icon transition-transform" />
             </button>
         </div>
         <div

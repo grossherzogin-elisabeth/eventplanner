@@ -6,37 +6,25 @@
             </h1>
         </template>
         <template #content>
-            <div
-                v-if="event"
-                class="space-y-4 px-8 pb-8 pt-6 md:grid md:grid-cols-2 md:gap-x-20 md:gap-y-4 md:space-y-0 md:px-16 xl:px-20"
-            >
+            <div v-if="event" class="space-y-4 px-8 pb-8 pt-6 md:grid md:grid-cols-2 md:gap-x-20 md:gap-y-4 md:space-y-0 md:px-16 xl:px-20">
                 <!-- state info banner -->
                 <section v-if="event.state === EventState.OpenForSignup" class="col-start-2">
                     <VInfo clamp>
-                        Diese Reise befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der
-                        Reise! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.
+                        Diese Reise befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Reise! Sobald die
+                        Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.
                     </VInfo>
                 </section>
-                <section
-                    v-if="event.state === EventState.Canceled"
-                    class="sticky left-4 right-4 top-14 col-start-2 md:static"
-                >
+                <section v-if="event.state === EventState.Canceled" class="sticky left-4 right-4 top-14 col-start-2 md:static">
                     <VWarning> Diese Reise wurde abgesagt! </VWarning>
                 </section>
-                <section
-                    v-else-if="event.signedInUserAssignedPosition"
-                    class="sticky left-4 right-4 top-14 col-start-2 md:static"
-                >
+                <section v-else-if="event.signedInUserAssignedPosition" class="sticky left-4 right-4 top-14 col-start-2 md:static">
                     <VInfo>
                         Du bist für diese Reise als
                         {{ positions.get(event.signedInUserAssignedPosition).name }}
                         eingeplant
                     </VInfo>
                 </section>
-                <section
-                    v-else-if="event.signedInUserWaitingListPosition"
-                    class="sticky left-4 right-4 top-14 col-start-2 md:static"
-                >
+                <section v-else-if="event.signedInUserWaitingListPosition" class="sticky left-4 right-4 top-14 col-start-2 md:static">
                     <VInfo>
                         Du stehst für diese Reise als
                         {{ positions.get(event.signedInUserWaitingListPosition).name }}
@@ -89,20 +77,13 @@
                     </h2>
                     <div class="space-y-1 rounded-2xl bg-surface-container p-4">
                         <p v-if="event.locations.length === 0" class="text-sm">
-                            Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen
-                            verfügbar sind, kannst du sie hier sehen.
+                            Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar sind, kannst
+                            du sie hier sehen.
                         </p>
-                        <div
-                            v-for="(stop, portIndex) in event.locations"
-                            v-else
-                            :key="portIndex"
-                            class="flex items-center space-x-4"
-                        >
+                        <div v-for="(stop, portIndex) in event.locations" v-else :key="portIndex" class="flex items-center space-x-4">
                             <i :class="stop.icon" class="fa-solid w-4" />
                             <span class="">{{ stop.name }}</span>
-                            <span v-if="stop.country" class="text-sm text-secondary text-opacity-50">
-                                ({{ stop.country }})
-                            </span>
+                            <span v-if="stop.country" class="text-sm text-secondary text-opacity-50"> ({{ stop.country }}) </span>
                         </div>
                     </div>
                 </section>
@@ -116,11 +97,7 @@
                         <span>Anmeldungen</span>
                     </h2>
                     <h2 v-else class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
-                        <button
-                            class="hover:text-primary"
-                            :class="{ 'text-primary underline': tab === Tab.Team }"
-                            @click="tab = Tab.Team"
-                        >
+                        <button class="hover:text-primary" :class="{ 'text-primary underline': tab === Tab.Team }" @click="tab = Tab.Team">
                             Crew ({{ event.assignedUserCount }})
                         </button>
                         <button
@@ -142,9 +119,9 @@
                                     <span class="ml-4">Du könntest der erste sein!</span>
                                 </h3>
                                 <p class="text-sm">
-                                    Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen
-                                    und dich anmelden. Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und
-                                    anschließend wird vom Büro eine Crew zusammengestellt.
+                                    Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich anmelden.
+                                    Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und anschließend wird vom Büro eine Crew
+                                    zusammengestellt.
                                 </p>
                             </div>
                             <div></div>
@@ -152,8 +129,7 @@
                         <ul class="pb-8">
                             <li v-for="i in 10" :key="i" class="flex items-center space-x-4 rounded-xl py-1">
                                 <i class="fa-solid fa-circle text-surface-container-highest"></i>
-                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-surface-container-highest">
-                                </span>
+                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-surface-container-highest"> </span>
                                 <span class="flex-grow"></span>
                                 <span class="position h-4 w-16 bg-surface-container-highest"> </span>
                             </li>
@@ -167,25 +143,17 @@
                                         <i v-if="it.name" class="fa-solid fa-user-circle text-secondary" />
                                         <i v-else class="fa-solid fa-user-circle text-error" />
                                         <RouterLink
-                                            v-if="
-                                                it.user &&
-                                                signedInUser.permissions.includes(Permission.READ_USER_DETAILS)
-                                            "
+                                            v-if="it.user && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)"
                                             :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
                                             class="truncate hover:text-primary hover:underline"
                                         >
                                             {{ it.name }}
                                         </RouterLink>
                                         <span v-else-if="it.name" class="truncate">{{ it.name }}</span>
-                                        <span v-else-if="it.user?.key" class="italic text-error">
-                                            Unbekannter Nutzer
-                                        </span>
+                                        <span v-else-if="it.user?.key" class="italic text-error"> Unbekannter Nutzer </span>
                                         <span v-else class="truncate italic text-error">Noch nicht besetzt</span>
                                         <span class="flex-grow"></span>
-                                        <span
-                                            :style="{ background: it.position.color }"
-                                            class="position ml-auto text-xs"
-                                        >
+                                        <span :style="{ background: it.position.color }" class="position ml-auto text-xs">
                                             {{ it.position.name }}
                                         </span>
                                     </li>
@@ -201,9 +169,7 @@
                                 >
                                     <i class="fa-solid fa-user-circle text-secondary" />
                                     <RouterLink
-                                        v-if="
-                                            it.user && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)
-                                        "
+                                        v-if="it.user && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)"
                                         :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
                                         class="flex-grow truncate hover:text-primary hover:underline"
                                     >
@@ -215,13 +181,8 @@
                                     </span>
                                 </li>
                             </ul>
-                            <div
-                                v-if="waitingList.length === 0"
-                                class="-mx-4 -mt-4 rounded-xl bg-surface-container p-4 text-sm"
-                            >
-                                <p v-if="statesWithHiddenCrew.includes(event.state)">
-                                    Für diesen Termin gibt es noch keine Anmeldungen.
-                                </p>
+                            <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container p-4 text-sm">
+                                <p v-if="statesWithHiddenCrew.includes(event.state)">Für diesen Termin gibt es noch keine Anmeldungen.</p>
                                 <p v-else>Für diesen Termin gibt es keine Anmeldungen auf der Warteliste.</p>
                             </div>
                         </template>
@@ -252,27 +213,16 @@
                     </template>
                     <template #label> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </template>
                 </AsyncButton>
-                <button
-                    v-if="signedInUser.positions.length > 1"
-                    class="btn-primary"
-                    @click="choosePositionAndJoinEvent(event)"
-                >
+                <button v-if="signedInUser.positions.length > 1" class="btn-primary" @click="choosePositionAndJoinEvent(event)">
                     <i class="fa-solid fa-chevron-down" />
                 </button>
             </div>
-            <AsyncButton
-                v-else
-                class="btn-primary max-w-80"
-                :disabled="!event.canSignedInUserJoin"
-                :action="() => joinEvent()"
-            >
+            <AsyncButton v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" :action="() => joinEvent()">
                 <template #icon>
                     <i class="fa-solid fa-user-plus" />
                 </template>
                 <template #label>
-                    <span class="truncate text-left">
-                        Anmelden als {{ positions.get(signedInUser.positions[0]).name }}
-                    </span>
+                    <span class="truncate text-left"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
                 </template>
             </AsyncButton>
         </template>
@@ -295,10 +245,7 @@
                 <i class="fa-solid fa-calendar-alt" />
                 <span>Kalendereintrag erstellen</span>
             </li>
-            <li
-                v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition"
-                class="context-menu-item disabled"
-            >
+            <li v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition" class="context-menu-item disabled">
                 <i class="fa-solid fa-note-sticky" />
                 <span>Notiz fürs Büro hinzufügen</span>
             </li>
@@ -306,10 +253,7 @@
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
             </li>
-            <li
-                class="permission-read-user-details context-menu-item"
-                @click="eventUseCase.downloadConsumptionList(event)"
-            >
+            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Verzehrliste generieren</span>
             </li>

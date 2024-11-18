@@ -5,12 +5,7 @@
         >
             <slot name="before" />
             <div class="flex gap-x-8">
-                <div
-                    v-for="tab in props.tabs"
-                    :key="tab"
-                    class="tab"
-                    :class="{ active: tab === props.modelValue && !showSearch }"
-                >
+                <div v-for="tab in props.tabs" :key="tab" class="tab" :class="{ active: tab === props.modelValue && !showSearch }">
                     <button class="btn-tab" @click="emit('update:modelValue', tab)">
                         <slot name="tab" :tab="tab">
                             {{ $t(tab) }}

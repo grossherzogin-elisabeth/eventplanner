@@ -24,9 +24,7 @@ export async function getConnection(databaseName: string, storeNames: string[], 
             if (missingStores.length === 0) {
                 resolve(request.result);
             } else {
-                reject(
-                    new Error(`Missing stores: ${missingStores.join(', ')}. Increase DB Version to create new stores.`)
-                );
+                reject(new Error(`Missing stores: ${missingStores.join(', ')}. Increase DB Version to create new stores.`));
             }
         };
         request.onerror = async (): Promise<void> => {

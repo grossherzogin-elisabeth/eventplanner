@@ -1,9 +1,6 @@
 <template>
     <nav class="fixed top-0 z-40 w-screen print:hidden">
-        <div
-            :class="meta.hasTransparentHeader ? 'sm:bg-primary' : 'bg-primary'"
-            class="h-nav flex items-center text-onprimary shadow"
-        >
+        <div :class="meta.hasTransparentHeader ? 'sm:bg-primary' : 'bg-primary'" class="h-nav flex items-center text-onprimary shadow">
             <div class="h-full">
                 <div class="flex h-full items-center space-x-4 bg-primary xl:hidden">
                     <!--                    <RouterLink v-if="backTo" :to="backTo" class="icon-button mx-4 md:ml-12">-->

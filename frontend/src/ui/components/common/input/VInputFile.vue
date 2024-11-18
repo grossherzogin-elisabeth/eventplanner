@@ -21,11 +21,7 @@
                     readonly
                 />
                 <div v-if="file" class="absolute bottom-0 right-0 top-0 z-20 flex w-12 items-center justify-center">
-                    <button
-                        class="h-10 w-10 rounded-full hover:bg-primary-container"
-                        tabindex="-1"
-                        @click.stop="clearSelection()"
-                    >
+                    <button class="h-10 w-10 rounded-full hover:bg-primary-container" tabindex="-1" @click.stop="clearSelection()">
                         <i class="fa-solid fa-file-circle-xmark text-onprimary-container" />
                     </button>
                 </div>

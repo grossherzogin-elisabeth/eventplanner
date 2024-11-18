@@ -31,10 +31,7 @@ interface Notification {
 const notificationService = useNotifications();
 const notifications = ref<Notification[]>([]);
 
-async function showNotification(
-    message: string,
-    type: 'success' | 'warning' | 'error' | 'info' = 'success'
-): Promise<void> {
+async function showNotification(message: string, type: 'success' | 'warning' | 'error' | 'info' = 'success'): Promise<void> {
     let icon = '';
     switch (type) {
         case 'success':

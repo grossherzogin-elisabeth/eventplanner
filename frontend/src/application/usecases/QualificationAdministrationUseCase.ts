@@ -1,9 +1,4 @@
-import type {
-    ErrorHandlingService,
-    NotificationService,
-    QualificationCachingService,
-    QualificationRepository,
-} from '@/application';
+import type { ErrorHandlingService, NotificationService, QualificationCachingService, QualificationRepository } from '@/application';
 import type { Qualification } from '@/domain';
 
 export class QualificationAdministrationUseCase {

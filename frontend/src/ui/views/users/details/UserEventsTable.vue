@@ -70,11 +70,7 @@
                     <i class="fa-solid fa-user-plus" />
                     <span>Zur Crew hinzufügen</span>
                 </li>
-                <li
-                    class="context-menu-item text-error"
-                    :class="{ disabled: item.inPast }"
-                    @click="deleteRegistration(item)"
-                >
+                <li class="context-menu-item text-error" :class="{ disabled: item.inPast }" @click="deleteRegistration(item)">
                     <i class="fa-solid fa-trash-alt" />
                     <span>Anmeldung löschen</span>
                 </li>

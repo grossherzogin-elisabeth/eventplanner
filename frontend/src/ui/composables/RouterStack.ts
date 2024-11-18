@@ -1,10 +1,4 @@
-import type {
-    RouteLocationNamedRaw,
-    RouteLocationNormalized,
-    RouteLocationPathRaw,
-    RouteLocationRaw,
-    RouteRecordName,
-} from 'vue-router';
+import type { RouteLocationNamedRaw, RouteLocationNormalized, RouteLocationPathRaw, RouteLocationRaw, RouteRecordName } from 'vue-router';
 
 const stack: (RouteLocationNamedRaw | RouteLocationPathRaw)[] = [];
 

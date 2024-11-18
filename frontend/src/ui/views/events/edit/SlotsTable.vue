@@ -18,9 +18,7 @@
                 <p class="whitespace-nowrap font-semibold">
                     {{ item.positionName || positions.get(item.positionKeys[0]).name }}
                 </p>
-                <p class="truncate text-sm">
-                    Anmeldungs ID: {{ item.assignedRegistrationKey?.substring(0, 8) || 'frei' }}
-                </p>
+                <p class="truncate text-sm">Anmeldungs ID: {{ item.assignedRegistrationKey?.substring(0, 8) || 'frei' }}</p>
             </td>
             <td class="w-2/3 min-w-96">
                 <div class="flex flex-wrap items-center">
@@ -40,10 +38,7 @@
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-2 whitespace-nowrap font-semibold">Notwendig</span>
                     </span>
-                    <span
-                        v-else-if="item.criticality === 1"
-                        class="status-panel bg-yellow-container text-onyellow-container"
-                    >
+                    <span v-else-if="item.criticality === 1" class="status-panel bg-yellow-container text-onyellow-container">
                         <i class="fa-solid fa-circle-info"></i>
                         <span class="ml-2 whitespace-nowrap font-semibold">Wichtig</span>
                     </span>

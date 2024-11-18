@@ -2,20 +2,13 @@
     <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
         <h1 class="mb-8 mt-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
 
-        <div
-            v-if="signedInUser.impersonated"
-            class="mx-4 rounded-2xl bg-error-container pl-4 text-onerror-container xl:mx-8 xl:pl-6"
-        >
+        <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-error-container pl-4 text-onerror-container xl:mx-8 xl:pl-6">
             <div class="flex items-center">
                 <p class="mr-2 w-0 flex-grow py-4 text-sm font-bold">
                     Du siehst die Anwendung aus Sicht von
                     <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
                 </p>
-                <button
-                    class="icon-button mr-2"
-                    title="Impersonate Modus beenden"
-                    @click="authUseCase.impersonateUser(null)"
-                >
+                <button class="icon-button mr-2" title="Impersonate Modus beenden" @click="authUseCase.impersonateUser(null)">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
             </div>
@@ -53,19 +46,13 @@
                     </li>
                 </ul>
             </li>
-            <li
-                class="permission-read-events menu-item"
-                :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }"
-            >
+            <li class="permission-read-events menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }">
                 <RouterLink :to="{ name: Routes.EventsList }">
                     <i class="fa-solid fa-compass"></i>
                     <span>Alle Reisen</span>
                 </RouterLink>
             </li>
-            <li
-                class="permission-write-events menu-item"
-                :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }"
-            >
+            <li class="permission-write-events menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }">
                 <RouterLink :to="{ name: Routes.EventsListAdmin }">
                     <i class="fa-solid fa-compass-drafting"></i>
                     <span>Reisen verwalten</span>
@@ -146,8 +133,7 @@
         <VInfo class="mx-8">
             <h2 class="mb-2">Noch kein Account?</h2>
             <p class="mb-2">
-                Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Reisen einsehen und dich zu
-                Reisen an und abmelden.
+                Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Reisen einsehen und dich zu Reisen an und abmelden.
             </p>
         </VInfo>
         <ul class="menu-list my-4">

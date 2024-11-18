@@ -7,8 +7,7 @@
             <div class="px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-4">
-                        Hier kannst du Nutzer aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein
-                        paar Minuten.
+                        Hier kannst du Nutzer aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein paar Minuten.
                     </p>
                     <div class="-mx-4 mb-2">
                         <VInputLabel>Datei</VInputLabel>

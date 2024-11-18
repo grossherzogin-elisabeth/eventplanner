@@ -7,8 +7,8 @@
             <div v-if="event" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
-                        Wenn du die Reise absagst wird vom System automatisch eine Benachrichtigung an die Crew
-                        gesendet. Du kannst die zu versendene Nachricht hier anpassen.
+                        Wenn du die Reise absagst wird vom System automatisch eine Benachrichtigung an die Crew gesendet. Du kannst die zu
+                        versendene Nachricht hier anpassen.
                     </p>
                     <div class="mb-4">
                         <VInputLabel>Nachricht an die Crew</VInputLabel>
