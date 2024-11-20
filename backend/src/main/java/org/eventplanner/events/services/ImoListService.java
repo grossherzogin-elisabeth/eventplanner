@@ -138,7 +138,7 @@ public class ImoListService {
                     } else {
                         currentRow.getCell(6).setCellValue("");
                     }
-                    currentRow.getCell(7).setCellValue(crewMemberDetails.get().getPlaceOfBirth());
+                    currentRow.getCell(8).setCellValue(crewMemberDetails.get().getPlaceOfBirth());
                     currentRow.getCell(9).setCellValue(crewMemberDetails.get().getPassNr());
                     continue;
                 }
@@ -148,9 +148,9 @@ public class ImoListService {
             currentRow.getCell(2).setCellValue("");
             currentRow.getCell(3).setCellValue(imoListRank);
             currentRow.getCell(4).setCellValue("");
-            currentRow.getCell(5).setCellValue("");
             currentRow.getCell(6).setCellValue("");
-            currentRow.getCell(7).setCellValue("");
+            currentRow.getCell(8).setCellValue("");
+            currentRow.getCell(9).setCellValue("");
         }
     }
 
