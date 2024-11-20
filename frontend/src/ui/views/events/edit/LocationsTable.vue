@@ -8,7 +8,7 @@
         @click="editLocation($event)"
     >
         <template #row="{ item, first, last }">
-            <td class="py-0">
+            <td class="hidden py-0">
                 <div class="flex flex-col items-center text-secondary">
                     <div
                         class="min-h-4 flex-grow border-r-2 border-dashed border-current"
@@ -24,14 +24,24 @@
             <td :key="item.icon" class="text-xl">
                 <i class="fa-solid" :class="item.icon" />
             </td>
-            <td class="w-full max-w-[50vw] sm:max-w-full">
-                <p class="mb-1 font-semibold">
+            <td class="w-1/2 max-w-[50vw] sm:max-w-full">
+                <p class="font-semibold">
                     <span>{{ item.name }}</span>
                 </p>
-                <p class="mb-1 truncate text-sm font-light">
-                    <span v-if="item.address && item.country"> {{ item.address }}, {{ countries.getName(item.country) }} </span>
-                    <span v-else-if="item.address">{{ item.address }}</span>
-                    <span v-else-if="item.country">{{ countries.getName(item.country) }}</span>
+                <p v-if="item.address" class="mt-1 truncate text-sm font-light">
+                    <span>{{ item.address }}</span>
+                </p>
+            </td>
+            <td class="w-1/2 whitespace-nowrap">
+                <p class="mb-2 text-sm">
+                    <span class="mr-2 inline-block w-10 opacity-50">ETA: </span>
+                    <span v-if="item.eta" class="font-semibold">{{ $d(item.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
+                    <span v-else>-</span>
+                </p>
+                <p class="text-sm">
+                    <span class="mr-2 inline-block w-10 opacity-50">ETD: </span>
+                    <span v-if="item.etd" class="font-semibold">{{ $d(item.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
+                    <span v-else>-</span>
                 </p>
             </td>
         </template>
@@ -58,10 +68,10 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
+import { DateTimeFormat } from '@/common/date';
 import type { Event, Location } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
-import { useCountries } from '@/ui/composables/Countries.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import LocationEditDlg from '@/ui/views/events/edit/LocationEditDlg.vue';
 
@@ -74,7 +84,6 @@ type Emit = (e: 'update:modelValue', event: Event) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
-const countries = useCountries();
 const eventService = useEventService();
 const editLocationDialog = ref<Dialog<Location, Location | undefined> | null>(null);
 
