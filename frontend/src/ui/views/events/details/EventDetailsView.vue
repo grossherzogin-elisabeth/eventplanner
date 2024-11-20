@@ -37,7 +37,7 @@
                     <h2 class="mb-2 font-bold text-secondary">
                         {{ $t('app.event-details.title') }}
                     </h2>
-                    <div class="space-y-1 rounded-2xl bg-surface-container p-4">
+                    <div class="space-y-1 rounded-2xl bg-surface-container-low p-4">
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-route w-4" />
                             <span class="truncate">{{ event.name }}</span>
@@ -75,7 +75,7 @@
                         <template v-if="event.locations.length === 1">Ort</template>
                         <template v-else>Route</template>
                     </h2>
-                    <div class="space-y-1 rounded-2xl bg-surface-container p-4">
+                    <div class="space-y-1 rounded-2xl bg-surface-container-low p-4">
                         <p v-if="event.locations.length === 0" class="text-sm">
                             Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar sind, kannst
                             du sie hier sehen.
@@ -85,16 +85,20 @@
                             <div class="absolute bottom-4 left-0 top-4 flex w-12 justify-center">
                                 <div class="border-r-2 border-dashed border-current"></div>
                             </div>
-                            <div v-for="(location, index) in event.locations" :key="index" class="relative z-10 mb-8 flex items-center">
+                            <div
+                                v-for="(location, index) in event.locations"
+                                :key="index"
+                                class="relative z-10 mb-4 flex items-center last:mb-0"
+                            >
                                 <div class="flex w-12 flex-col items-center self-stretch">
                                     <div
-                                        class="-mt-1 flex h-8 w-8 items-center justify-center rounded-full border-current bg-surface-container"
+                                        class="-mt-1 flex h-7 w-7 items-center justify-center rounded-full border-current bg-surface-container-low"
                                     >
                                         <i class="fa-solid text-sm" :class="location.icon"></i>
                                     </div>
-                                    <div v-if="index === event.locations.length - 1" class="w-full flex-1 bg-surface-container"></div>
+                                    <div v-if="index === event.locations.length - 1" class="w-full flex-1 bg-surface-container-low"></div>
                                 </div>
-                                <div class="min-h-12 w-0 flex-grow">
+                                <div class="w-0 flex-grow">
                                     <h3 class="mb-1 flex items-center justify-between space-x-2">
                                         <span>{{ location.name }}</span>
                                         <ContextMenuButton v-if="location.information">
@@ -131,11 +135,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--                        <div v-for="(stop, portIndex) in event.locations" :key="portIndex" class="flex items-center space-x-4">-->
-                        <!--                            <i :class="stop.icon" class="fa-solid w-4" />-->
-                        <!--                            <span class="">{{ stop.name }}</span>-->
-                        <!--                            <span v-if="stop.country" class="text-sm text-secondary text-opacity-50"> ({{ stop.country }}) </span>-->
-                        <!--                        </div>-->
                     </div>
                 </section>
 
@@ -161,7 +160,7 @@
                     </h2>
                     <div
                         v-if="event.assignedUserCount === 0 && waitingListCount === 0"
-                        class="rounded-2xl bg-surface-container px-4 md:-mx-4 md:-mt-4"
+                        class="rounded-2xl bg-surface-container-low px-4 md:-mx-4 md:-mt-4"
                     >
                         <div class="flex items-center py-4">
                             <div class="mr-4">
@@ -186,7 +185,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div v-else class="rounded-2xl bg-surface-container p-4 md:rounded-none md:bg-transparent md:p-0">
+                    <div v-else class="rounded-2xl bg-surface-container-low p-4 md:rounded-none md:bg-transparent md:p-0">
                         <template v-if="tab === Tab.Team">
                             <ul class="space-y-2">
                                 <template v-for="it in team" :key="it.slot?.key || ''">
@@ -228,7 +227,7 @@
                                     </span>
                                 </li>
                             </ul>
-                            <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container p-4 text-sm">
+                            <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container-low p-4 text-sm">
                                 <p v-if="statesWithHiddenCrew.includes(event.state)">Für diesen Termin gibt es noch keine Anmeldungen.</p>
                                 <p v-else>Für diesen Termin gibt es keine Anmeldungen auf der Warteliste.</p>
                             </div>
