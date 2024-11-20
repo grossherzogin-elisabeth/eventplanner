@@ -9,7 +9,7 @@
                 <section>
                     <div v-if="position.key" class="mb-4">
                         <VInputLabel>Id</VInputLabel>
-                        <VInputText v-model="position.key" required disabled />
+                        <VInputText v-model.trim="position.key" required disabled />
                     </div>
                     <div class="mb-4">
                         <VInputLabel>Name</VInputLabel>

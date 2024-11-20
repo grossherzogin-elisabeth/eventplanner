@@ -80,11 +80,62 @@
                             Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar sind, kannst
                             du sie hier sehen.
                         </p>
-                        <div v-for="(stop, portIndex) in event.locations" v-else :key="portIndex" class="flex items-center space-x-4">
-                            <i :class="stop.icon" class="fa-solid w-4" />
-                            <span class="">{{ stop.name }}</span>
-                            <span v-if="stop.country" class="text-sm text-secondary text-opacity-50"> ({{ stop.country }}) </span>
+
+                        <div v-else class="relative -ml-4">
+                            <div class="absolute bottom-4 left-0 top-4 flex w-12 justify-center">
+                                <div class="border-r-2 border-dashed border-current"></div>
+                            </div>
+                            <div v-for="(location, index) in event.locations" :key="index" class="relative z-10 mb-8 flex items-center">
+                                <div class="flex w-12 flex-col items-center self-stretch">
+                                    <div
+                                        class="-mt-1 flex h-8 w-8 items-center justify-center rounded-full border-current bg-surface-container"
+                                    >
+                                        <i class="fa-solid text-sm" :class="location.icon"></i>
+                                    </div>
+                                    <div v-if="index === event.locations.length - 1" class="w-full flex-1 bg-surface-container"></div>
+                                </div>
+                                <div class="min-h-12 w-0 flex-grow">
+                                    <h3 class="mb-1 flex items-center justify-between space-x-2">
+                                        <span>{{ location.name }}</span>
+                                        <ContextMenuButton v-if="location.information">
+                                            <template #icon>
+                                                <i class="fa-solid fa-info-circle text-primary text-opacity-75 hover:text-opacity-100"></i>
+                                            </template>
+                                            <template #default>
+                                                <div @click.stop @mouseup.stop>
+                                                    <p class="text-sm">
+                                                        {{ location.information }}
+                                                    </p>
+                                                    <p v-if="location.informationLink">
+                                                        <a :href="location.informationLink" class="link">Weitere Informationen</a>
+                                                    </p>
+                                                </div>
+                                            </template>
+                                        </ContextMenuButton>
+                                    </h3>
+                                    <p v-if="location.eta" class="text-sm">
+                                        <span class="inline-block w-8">ETA:</span> {{ $d(location.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}
+                                    </p>
+                                    <p v-if="location.etd" class="text-sm">
+                                        <span class="inline-block w-8">ETD:</span> {{ $d(location.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}
+                                    </p>
+                                    <p v-if="location.addressLink" class="line-clamp-3 text-sm">
+                                        <a :href="location.addressLink" target="_blank" class="link">
+                                            {{ location.address || 'Anreiseinformationen' }}
+                                            <i class="fa-solid fa-external-link-alt mb-0.5 text-xs"></i>
+                                        </a>
+                                    </p>
+                                    <p v-else-if="location.address" class="line-clamp-3 text-sm">
+                                        {{ location.address }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
+                        <!--                        <div v-for="(stop, portIndex) in event.locations" :key="portIndex" class="flex items-center space-x-4">-->
+                        <!--                            <i :class="stop.icon" class="fa-solid w-4" />-->
+                        <!--                            <span class="">{{ stop.name }}</span>-->
+                        <!--                            <span v-if="stop.country" class="text-sm text-secondary text-opacity-50"> ({{ stop.country }}) </span>-->
+                        <!--                        </div>-->
                     </div>
                 </section>
 
@@ -139,7 +190,7 @@
                         <template v-if="tab === Tab.Team">
                             <ul class="space-y-2">
                                 <template v-for="it in team" :key="it.slot?.key || ''">
-                                    <li class="flex items-center space-x-2 md:space-x-4">
+                                    <li class="flex items-center space-x-4">
                                         <i v-if="it.name" class="fa-solid fa-user-circle text-secondary" />
                                         <i v-else class="fa-solid fa-user-circle text-error" />
                                         <RouterLink
@@ -162,11 +213,7 @@
                         </template>
                         <template v-else-if="tab === Tab.WaitingList">
                             <ul class="space-y-2">
-                                <li
-                                    v-for="(it, index) in waitingList"
-                                    :key="index"
-                                    class="flex items-center justify-between space-x-2 md:space-x-4"
-                                >
+                                <li v-for="(it, index) in waitingList" :key="index" class="flex items-center justify-between space-x-4">
                                     <i class="fa-solid fa-user-circle text-secondary" />
                                     <RouterLink
                                         v-if="it.user && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)"
@@ -276,6 +323,7 @@ import type { Event, PositionKey, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
+import { ContextMenuButton } from '@/ui/components/common';
 import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';

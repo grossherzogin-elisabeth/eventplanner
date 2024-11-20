@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.common.ObjectUtils;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
@@ -21,7 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -29,6 +33,7 @@ import java.util.*;
 @Service
 public class ImoListService {
 
+    private static final ZoneId timezone = ZoneId.of("Europe/Berlin");
     private final UserService userService;
     private final PositionRepository positionRepository;
 
@@ -68,16 +73,13 @@ public class ImoListService {
             XSSFSheet sheet = workbook.getSheetAt(0);
 
             if (!event.getLocations().isEmpty()) {
-                String arrivalPort = event.getLocations().getFirst().name();
-                String departurePort = event.getLocations().getLast().name();
-                replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", arrivalPort + "/" + departurePort);
+                String departurePort = event.getLocations().getFirst().name();
+                replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", departurePort);
             } else {
                 replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", "");
             }
-
-            String arrivalDate = event.getStart().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            String departureDate = event.getEnd().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            replacePlaceHolderInSheet(sheet, "{{Date_a/d}}", arrivalDate + "/" + departureDate);
+            String departureDate = event.getStart().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            replacePlaceHolderInSheet(sheet, "{{Date_a/d}}", departureDate);
 
             writeCrewDataToSheet(sheet, crewList, positionMap);
 
@@ -132,12 +134,12 @@ public class ImoListService {
                     currentRow.getCell(4).setCellValue(crewMemberDetails.get().getNationality());
                     var dateOfBirth = crewMemberDetails.get().getDateOfBirth();
                     if (dateOfBirth != null) {
-                        currentRow.getCell(5).setCellValue(dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                        currentRow.getCell(6).setCellValue(dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                     } else {
-                        currentRow.getCell(5).setCellValue("");
+                        currentRow.getCell(6).setCellValue("");
                     }
-                    currentRow.getCell(6).setCellValue(crewMemberDetails.get().getPlaceOfBirth());
-                    currentRow.getCell(7).setCellValue(crewMemberDetails.get().getPassNr());
+                    currentRow.getCell(7).setCellValue(crewMemberDetails.get().getPlaceOfBirth());
+                    currentRow.getCell(9).setCellValue(crewMemberDetails.get().getPassNr());
                     continue;
                 }
             }

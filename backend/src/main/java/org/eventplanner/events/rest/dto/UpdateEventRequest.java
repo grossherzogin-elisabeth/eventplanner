@@ -5,7 +5,7 @@ import org.eventplanner.events.values.EventState;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.eventplanner.common.ObjectUtils.mapNullable;
@@ -26,8 +26,8 @@ public record UpdateEventRequest(
             mapNullable(state, s -> EventState.fromString(s).orElseThrow()),
             note,
             description,
-            mapNullable(start, ZonedDateTime::parse),
-            mapNullable(end, ZonedDateTime::parse),
+            mapNullable(start, Instant::parse),
+            mapNullable(end, Instant::parse),
             mapNullable(locations, LocationRepresentation::toDomain),
             mapNullable(slots, SlotRepresentation::toDomain)
         );

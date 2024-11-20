@@ -7,11 +7,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UpdateQualificationRequest(
         @NonNull String name,

@@ -1,7 +1,9 @@
 package org.eventplanner.events.rest;
 
 import org.eventplanner.events.EventUseCase;
-import org.eventplanner.events.rest.dto.*;
+import org.eventplanner.events.rest.dto.CreateRegistrationRequest;
+import org.eventplanner.events.rest.dto.EventRepresentation;
+import org.eventplanner.events.rest.dto.UpdateRegistrationRequest;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.users.UserUseCase;
@@ -11,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/events")

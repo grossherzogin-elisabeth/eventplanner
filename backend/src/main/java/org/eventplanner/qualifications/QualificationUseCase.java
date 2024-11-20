@@ -1,6 +1,5 @@
 package org.eventplanner.qualifications;
 
-import org.eventplanner.exceptions.NotImplementedException;
 import org.eventplanner.qualifications.adapter.QualificationRepository;
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-
-import static org.eventplanner.common.ObjectUtils.applyNullable;
 
 @Service
 public class QualificationUseCase {

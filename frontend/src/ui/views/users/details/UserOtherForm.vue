@@ -14,12 +14,12 @@
         </div>
         <div class="mb-4">
             <VInputLabel>Unverträglichkeiten</VInputLabel>
-            <VInputTextArea v-model="user.intolerances" placeholder="Keine Angabe" />
+            <VInputTextArea v-model.trim="user.intolerances" placeholder="Keine Angabe" />
         </div>
         <h2 class="mb-4 mt-8 font-bold text-secondary">Sonstiges</h2>
         <div class="mb-4">
             <VInputLabel>Kommentar (nicht für den Nutzer einsehbar)</VInputLabel>
-            <VInputTextArea v-model="user.comment" placeholder="Keine Angabe" />
+            <VInputTextArea v-model.trim="user.comment" placeholder="Keine Angabe" />
         </div>
     </section>
 </template>

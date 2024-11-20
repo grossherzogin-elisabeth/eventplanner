@@ -1,14 +1,13 @@
 package org.eventplanner.settings.adapter.jpa;
 
 import org.eventplanner.common.Crypto;
+import org.eventplanner.common.EncryptedString;
 import org.eventplanner.settings.adapter.SettingsRepository;
 import org.eventplanner.settings.values.EmailSettings;
 import org.eventplanner.settings.values.Settings;
 import org.eventplanner.settings.values.UiSettings;
-import org.eventplanner.common.EncryptedString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

@@ -199,7 +199,7 @@ export class UserRestRepository implements UserRepository {
             phone: user.phone,
             phoneWork: user.phoneWork,
             mobile: user.mobile,
-            dateOfBirth: user.dateOfBirth?.toISOString(),
+            dateOfBirth: user.dateOfBirth?.toISOString().substring(0, 10),
             placeOfBirth: user.placeOfBirth,
             passNr: user.passNr,
             nationality: user.nationality,
@@ -296,7 +296,7 @@ export class UserRestRepository implements UserRepository {
                       phone: user.emergencyContact?.phone,
                   }
                 : undefined,
-            dateOfBirth: user.dateOfBirth?.toISOString(),
+            dateOfBirth: user.dateOfBirth?.toISOString().substring(0, 10),
             placeOfBirth: user.placeOfBirth,
         };
         const response = await fetch(`/api/v1/users/self`, {

@@ -1,6 +1,5 @@
 package org.eventplanner.settings;
 
-import org.eventplanner.settings.adapter.SettingsRepository;
 import org.eventplanner.settings.service.SettingsService;
 import org.eventplanner.settings.values.Settings;
 import org.eventplanner.settings.values.UiSettings;

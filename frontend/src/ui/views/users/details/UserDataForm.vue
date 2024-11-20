@@ -3,11 +3,11 @@
         <h2 class="mb-4 font-bold text-secondary">App</h2>
         <div class="mb-4">
             <VInputLabel>OpenID Connect Subject ID</VInputLabel>
-            <VInputText v-model="user.authKey" placeholder="Nicht verknüpft" />
+            <VInputText v-model.trim="user.authKey" placeholder="Nicht verknüpft" />
         </div>
         <div class="mb-4">
             <VInputLabel>Anzeigename</VInputLabel>
-            <VInputText v-model="user.nickName" :placeholder="user.firstName" />
+            <VInputText v-model.trim="user.nickName" :placeholder="user.firstName" />
         </div>
 
         <h2 class="mb-4 mt-8 font-bold text-secondary">Persönliche Daten</h2>
@@ -17,19 +17,19 @@
         </div>
         <div class="mb-4 sm:w-64">
             <VInputLabel>Titel</VInputLabel>
-            <VInputText v-model="user.title" placeholder="keine Angabe" />
+            <VInputText v-model.trim="user.title" placeholder="keine Angabe" />
         </div>
         <div class="mb-4">
             <VInputLabel>Vorname</VInputLabel>
-            <VInputText v-model="user.firstName" required />
+            <VInputText v-model.trim="user.firstName" required />
         </div>
         <div class="mb-4">
             <VInputLabel>Zweiter Vorname</VInputLabel>
-            <VInputText v-model="user.secondName" placeholder="keine Angabe" />
+            <VInputText v-model.trim="user.secondName" placeholder="keine Angabe" />
         </div>
         <div class="mb-4">
             <VInputLabel>Nachname</VInputLabel>
-            <VInputText v-model="user.lastName" required placeholder="keine Angabe" />
+            <VInputText v-model.trim="user.lastName" required placeholder="keine Angabe" />
         </div>
         <div class="flex flex-col sm:flex-row sm:space-x-4">
             <div class="mb-4 sm:w-64">
@@ -38,13 +38,13 @@
             </div>
             <div class="mb-4 sm:flex-grow">
                 <VInputLabel>Geburtsort</VInputLabel>
-                <VInputText v-model="user.placeOfBirth" required placeholder="keine Angabe" />
+                <VInputText v-model.trim="user.placeOfBirth" required placeholder="keine Angabe" />
             </div>
         </div>
         <div class="flex flex-col sm:flex-row sm:space-x-4">
             <div class="mb-4 sm:w-64">
                 <VInputLabel>Pass Nummer</VInputLabel>
-                <VInputText v-model="user.passNr" required placeholder="keine Angabe" />
+                <VInputText v-model.trim="user.passNr" required placeholder="keine Angabe" />
             </div>
             <div class="mb-4 sm:flex-grow">
                 <VInputLabel>Nationalität</VInputLabel>

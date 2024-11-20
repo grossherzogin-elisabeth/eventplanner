@@ -10,7 +10,7 @@
                     <div v-if="!registration.userKey" class="mb-4">
                         <VInputLabel>Name</VInputLabel>
                         <VInputText
-                            v-model="registration.name"
+                            v-model.trim="registration.name"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -35,7 +35,7 @@
                     <div class="mb-4">
                         <VInputLabel>Notiz</VInputLabel>
                         <VInputTextArea
-                            v-model="registration.note"
+                            v-model.trim="registration.note"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />

@@ -20,13 +20,14 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.*;
+import java.time.temporal.ChronoField;
 import java.util.*;
 
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public class EventExcelImporter {
 
+    private static final ZoneId timezone = ZoneId.of("Europe/Berlin");
     private static final Logger log = LoggerFactory.getLogger(EventExcelImporter.class);
     private static final List<String> loggedUserErrors = new LinkedList<>();
 
@@ -111,7 +112,7 @@ public class EventExcelImporter {
                         try {
                             slots = assignToFirstMatchingSlot(registration, slots);
                         } catch (Exception e) {
-                            // but the excel is the best truth we have, so just add a slot...
+                            // but the Excel is the best truth we have, so just add a slot...
                             var newSlot = new Slot();
                             newSlot.setKey(new SlotKey());
                             newSlot.setPositions(List.of(positionKey));
@@ -122,15 +123,18 @@ public class EventExcelImporter {
                     }
                     registrations.add(registration);
                 }
+                var locations = new LinkedList<>(getLocationsFromText(raw[1]));
+                locations.set(0, locations.getFirst().withEtd(start.plusHours(2).toInstant()));
+                locations.set(locations.size() - 1, locations.getLast().withEta(end.minusHours(2).toInstant()));
                 var event = new Event(
                     eventKey,
                     eventName,
                     hasWaitinglist ? EventState.PLANNED : EventState.OPEN_FOR_SIGNUP,
                     raw[3],
                     findDescription(raw[1]),
-                    start,
-                    end,
-                    getLocationsFromText(raw[1]),
+                    start.toInstant(),
+                    end.toInstant(),
+                    locations,
                     slots,
                     registrations
                 );
@@ -280,7 +284,7 @@ public class EventExcelImporter {
                     return maybeDate.get();
                 }
             }
-            var date = Instant.parse(value).atZone(ZoneId.of("Europe/Berlin"));
+            var date = Instant.parse(value).atZone(timezone);
             if (date.getYear() == year) {
                 return date;
             }
@@ -306,7 +310,12 @@ public class EventExcelImporter {
         format = format.replace("mm", dayMonth.get(1));
         format = format.replace("dd", dayMonth.get(0));
         try {
-            return ZonedDateTime.parse(format);
+            if (timezone.getRules().isDaylightSavings(Instant.parse(format))) {
+                format = format.replace("Z", "+02:00[Europe/Berlin]");
+            } else {
+                format = format.replace("Z", "+01:00[Europe/Berlin]");
+            }
+            return ZonedDateTime.parse(format, DateTimeFormatter.ISO_ZONED_DATE_TIME);
         } catch (Exception e) {
             log.warn("Failed to parse '{}' as zoned date time!", format);
             return ZonedDateTime.now();

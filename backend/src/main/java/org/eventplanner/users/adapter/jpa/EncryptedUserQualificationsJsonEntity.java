@@ -1,7 +1,7 @@
 package org.eventplanner.users.adapter.jpa;
 
-import org.eventplanner.users.entities.EncryptedUserQualification;
 import org.eventplanner.common.EncryptedString;
+import org.eventplanner.users.entities.EncryptedUserQualification;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

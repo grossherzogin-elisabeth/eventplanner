@@ -5,8 +5,6 @@ import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 public record PositionRepresentation(
     @NonNull String key,
     @NonNull String name,

@@ -12,7 +12,7 @@
                     </p>
                     <div class="mb-4">
                         <VInputLabel>Nachricht an die Crew</VInputLabel>
-                        <VInputTextArea v-model="message" class="min-h-64" />
+                        <VInputTextArea v-model.trim="message" class="min-h-64" />
                     </div>
                 </section>
             </div>

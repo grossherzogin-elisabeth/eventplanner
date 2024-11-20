@@ -6,8 +6,6 @@ import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 public record CreatePositionRequest(
     @NonNull String name,
     @NonNull String color,

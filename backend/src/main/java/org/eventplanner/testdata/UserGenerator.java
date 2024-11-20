@@ -6,7 +6,7 @@ import org.eventplanner.users.values.Address;
 import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -239,7 +239,7 @@ public class UserGenerator {
             );
             user.getRoles().add(Role.TEAM_MEMBER);
             user.setAddress(new Address("Teststraße " + i, null, "Teststadt", String.valueOf((12345 * i) % 99999)));
-            user.setDateOfBirth(ZonedDateTime.now());
+            user.setDateOfBirth(LocalDate.now());
             user.setMobile("+49 123456789");
             user.setPhone("+49 123456789");
             user.setPlaceOfBirth("Teststadt");

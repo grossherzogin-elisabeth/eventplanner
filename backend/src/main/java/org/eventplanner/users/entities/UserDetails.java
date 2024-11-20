@@ -7,7 +7,8 @@ import org.eventplanner.users.values.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class UserDetails {
     private @Nullable String phone;
     private @Nullable String phoneWork;
     private @Nullable String mobile;
-    private @Nullable ZonedDateTime dateOfBirth;
+    private @Nullable LocalDate dateOfBirth;
     private @Nullable String placeOfBirth;
     private @Nullable String passNr;
     private @Nullable String comment;
@@ -69,7 +70,7 @@ public class UserDetails {
         }
     }
 
-    public void addQualification(QualificationKey qualificationKey, ZonedDateTime expirationDate) {
+    public void addQualification(QualificationKey qualificationKey, Instant expirationDate) {
         var maybeExistingQualification = qualifications.stream().filter(it -> it.getQualificationKey().equals(qualificationKey)).findFirst();
         if (maybeExistingQualification.isPresent()) {
             var existingQualification = maybeExistingQualification.get();

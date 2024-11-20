@@ -21,9 +21,11 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import static org.eventplanner.common.ObjectUtils.applyNullable;
+import static java.util.Optional.ofNullable;
 
 @Service
 public class UserUseCase {
@@ -131,39 +133,39 @@ public class UserUseCase {
         var user = userService.getUserByKey(key).orElseThrow();
 
         // these may be changed by a user themselves
-        applyNullable(spec.gender(), it -> user.setGender(it.trim()));
-        applyNullable(spec.title(), it -> user.setTitle(it.trim()));
-        applyNullable(spec.nickName(), it -> user.setNickName(it.trim()));
-        applyNullable(spec.nationality(), it -> user.setNationality(it.trim()));
-        applyNullable(spec.passNr(), it -> user.setPassNr(it.trim()));
-        applyNullable(spec.phone(), it -> user.setPhone(it.trim()));
-        applyNullable(spec.phoneWork(), it -> user.setPhoneWork(it.trim()));
-        applyNullable(spec.address(), user::setAddress);
-        applyNullable(spec.mobile(), it -> user.setMobile(it.trim()));
-        applyNullable(spec.emergencyContact(), user::setEmergencyContact);
-        applyNullable(spec.diseases(), it -> user.setDiseases(it.trim()));
-        applyNullable(spec.intolerances(), it -> user.setIntolerances(it.trim()));
-        applyNullable(spec.medication(), it -> user.setMedication(it.trim()));
-        applyNullable(spec.diet(), user::setDiet);
+        ofNullable(spec.gender()).map(String::trim).ifPresent(user::setGender);
+        ofNullable(spec.title()).map(String::trim).ifPresent(user::setTitle);
+        ofNullable(spec.nickName()).map(String::trim).ifPresent(user::setNickName);
+        ofNullable(spec.nationality()).map(String::trim).ifPresent(user::setNationality);
+        ofNullable(spec.passNr()).map(String::trim).ifPresent(user::setPassNr);
+        ofNullable(spec.phone()).map(String::trim).ifPresent(user::setPhone);
+        ofNullable(spec.phoneWork()).map(String::trim).ifPresent(user::setPhoneWork);
+        ofNullable(spec.address()).ifPresent(user::setAddress);
+        ofNullable(spec.mobile()).map(String::trim).ifPresent(user::setMobile);
+        ofNullable(spec.emergencyContact()).ifPresent(user::setEmergencyContact);
+        ofNullable(spec.diseases()).map(String::trim).ifPresent(user::setDiseases);
+        ofNullable(spec.intolerances()).map(String::trim).ifPresent(user::setIntolerances);
+        ofNullable(spec.medication()).map(String::trim).ifPresent(user::setMedication);
+        ofNullable(spec.diet()).ifPresent(user::setDiet);
 
         // these may only be changed by admins
         var hasWritePermission = signedInUser.hasPermission(Permission.WRITE_USERS);
         if (hasWritePermission) {
-            applyNullable(spec.authKey(), user::setAuthKey);
-            applyNullable(spec.firstName(), it -> user.setFirstName(it.trim()));
-            applyNullable(spec.secondName(), it -> user.setSecondName(it.trim()));
-            applyNullable(spec.lastName(), it -> user.setLastName(it.trim()));
-            applyNullable(spec.email(), it -> user.setEmail(it.trim()));
-            applyNullable(spec.comment(), it -> user.setComment(it.trim()));
-            applyNullable(spec.qualifications(), user::setQualifications);
-            applyNullable(spec.roles(), user::setRoles);
+            ofNullable(spec.authKey()).ifPresent(user::setAuthKey);
+            ofNullable(spec.firstName()).map(String::trim).ifPresent(user::setFirstName);
+            ofNullable(spec.secondName()).map(String::trim).ifPresent(user::setSecondName);
+            ofNullable(spec.lastName()).map(String::trim).ifPresent(user::setLastName);
+            ofNullable(spec.email()).map(String::trim).ifPresent(user::setEmail);
+            ofNullable(spec.comment()).map(String::trim).ifPresent(user::setComment);
+            ofNullable(spec.qualifications()).ifPresent(user::setQualifications);
+            ofNullable(spec.roles()).ifPresent(user::setRoles);
         }
         // these may be changed by a user themselves, if there is no value yet
         if (hasWritePermission || user.getDateOfBirth() == null) {
-            applyNullable(spec.dateOfBirth(), user::setDateOfBirth);
+            ofNullable(spec.dateOfBirth()).ifPresent(user::setDateOfBirth);
         }
         if (hasWritePermission || user.getPlaceOfBirth() == null) {
-            applyNullable(spec.placeOfBirth(), it -> user.setPlaceOfBirth(it.trim()));
+            ofNullable(spec.placeOfBirth()).map(String::trim).ifPresent(user::setPlaceOfBirth);
         }
 
         return userService.updateUser(user);

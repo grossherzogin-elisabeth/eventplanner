@@ -2,7 +2,6 @@ package org.eventplanner.users.rest;
 
 import org.eventplanner.users.UserUseCase;
 import org.eventplanner.users.rest.dto.*;
-import org.eventplanner.users.spec.CreateUserSpec;
 import org.eventplanner.users.values.Permission;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.beans.factory.annotation.Autowired;

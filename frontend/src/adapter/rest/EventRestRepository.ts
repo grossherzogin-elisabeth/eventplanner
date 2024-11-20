@@ -1,7 +1,7 @@
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
-import { cropToPrecision } from '@/common';
-import type { Event, EventKey, EventState, ImportError, PositionKey } from '@/domain';
+import { cropToPrecision, deserializeDate } from '@/common';
+import type { Event, EventKey, EventState, ImportError } from '@/domain';
 import { EventType } from '@/domain';
 
 interface SlotRepresentation {
@@ -25,6 +25,11 @@ interface LocationRepresentation {
     icon: string;
     address?: string;
     country?: string;
+    addressLink?: string;
+    information?: string;
+    informationLink?: string;
+    eta?: string;
+    etd?: string;
 }
 
 export interface EventRepresentation {
@@ -76,13 +81,13 @@ export class EventRestRepository implements EventRepository {
             name: eventRepresentation.name,
             description: eventRepresentation.description,
             state: eventRepresentation.state as EventState,
-            start: EventRestRepository.parseDate(eventRepresentation.start),
-            end: EventRestRepository.parseDate(eventRepresentation.end),
+            start: deserializeDate(eventRepresentation.start),
+            end: deserializeDate(eventRepresentation.end),
             registrations: eventRepresentation.registrations.map((it) => ({
                 key: it.key,
                 positionKey: it.positionKey,
-                userKey: it.userKey || undefined,
-                name: it.name || undefined,
+                userKey: it.userKey ?? undefined,
+                name: it.name ?? undefined,
             })),
             locations: eventRepresentation.locations.map((locationRepresentation, index) => ({
                 name: locationRepresentation.name,
@@ -90,14 +95,19 @@ export class EventRestRepository implements EventRepository {
                 address: locationRepresentation.address,
                 country: locationRepresentation.country,
                 order: index + 1,
+                addressLink: locationRepresentation.addressLink,
+                information: locationRepresentation.information,
+                informationLink: locationRepresentation.informationLink,
+                eta: locationRepresentation.eta ? deserializeDate(locationRepresentation.eta) : undefined,
+                etd: locationRepresentation.etd ? deserializeDate(locationRepresentation.etd) : undefined,
             })),
             slots: eventRepresentation.slots.map((slotRepresentation) => ({
                 key: slotRepresentation.key,
                 order: slotRepresentation.order,
                 criticality: slotRepresentation.criticality,
-                positionKeys: slotRepresentation.positionKeys as PositionKey[],
-                positionName: slotRepresentation.name || undefined,
-                assignedRegistrationKey: slotRepresentation.assignedRegistrationKey || undefined,
+                positionKeys: slotRepresentation.positionKeys,
+                positionName: slotRepresentation.name ?? undefined,
+                assignedRegistrationKey: slotRepresentation.assignedRegistrationKey ?? undefined,
             })),
             assignedUserCount: eventRepresentation.slots.filter((it) => it.assignedRegistrationKey).length,
             canSignedInUserJoin: false,
@@ -154,8 +164,8 @@ export class EventRestRepository implements EventRepository {
             const eventErrs = map.get(err.eventKey) || {
                 eventName: err.eventName,
                 messages: [],
-                start: EventRestRepository.parseDate(err.start),
-                end: EventRestRepository.parseDate(err.end),
+                start: deserializeDate(err.start),
+                end: deserializeDate(err.end),
             };
             map.set(err.eventKey, eventErrs);
             eventErrs.messages.push(err.message);
@@ -168,13 +178,18 @@ export class EventRestRepository implements EventRepository {
             state: event.state,
             name: event.name,
             description: event.description,
-            start: event.start?.toISOString(),
-            end: event.end?.toISOString(),
+            start: event.start.toISOString(),
+            end: event.end.toISOString(),
             locations: event.locations.map((location) => ({
                 icon: location.icon,
                 name: location.name,
                 country: location.country,
                 address: location.address,
+                addressLink: location.addressLink,
+                information: location.information,
+                informationLink: location.informationLink,
+                eta: location.eta?.toISOString(),
+                etd: location.etd?.toISOString(),
             })),
             slots: event.slots?.map((it) => ({
                 key: it.key,
@@ -213,6 +228,11 @@ export class EventRestRepository implements EventRepository {
                 name: location.name,
                 country: location.country,
                 address: location.address,
+                addressLink: location.addressLink,
+                information: location.information,
+                informationLink: location.informationLink,
+                eta: location.eta?.toISOString(),
+                etd: location.etd?.toISOString(),
             })),
             slots: updateRequest.slots?.map((it) => ({
                 key: it.key,
@@ -272,13 +292,5 @@ export class EventRestRepository implements EventRepository {
             throw response;
         }
         return response.clone().blob();
-    }
-
-    private static parseDate(date: string): Date {
-        // js cannot parse an ISO date time like 2024-06-25T00:00+02:00[Europe/Berlin]
-        if (date.includes('[')) {
-            return new Date(date.substring(0, date.indexOf('[')));
-        }
-        return new Date(date);
     }
 }

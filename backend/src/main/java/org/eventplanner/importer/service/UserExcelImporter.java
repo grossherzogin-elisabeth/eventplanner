@@ -16,6 +16,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.*;
 
 public class UserExcelImporter {
@@ -157,7 +158,7 @@ public class UserExcelImporter {
 
         var dateOfBirth = ExcelUtils.parseExcelDate(data[COL_DATE_OF_BIRTH]);
         if (dateOfBirth.isPresent()) {
-            user.setDateOfBirth(dateOfBirth.get());
+            user.setDateOfBirth(dateOfBirth.map(LocalDate::from).get());
         } else {
             log.debug("Row {}: {} has no date of birth", row, user.getFullName());
         }
@@ -170,7 +171,15 @@ public class UserExcelImporter {
         }
 
         var passNr = data[COL_PASS_NR].trim();
-        if (!passNr.isBlank()) {
+        if (passNr.contains(".")) {
+            // we got a number with E here
+            try {
+                var number = Double.parseDouble(passNr);
+                user.setPassNr(String.valueOf((int) number));
+            } catch (Exception e) {
+                user.setPassNr(passNr);
+            }
+        } else if (!passNr.isBlank()) {
             user.setPassNr(passNr);
         } else {
             log.debug("Row {}: {} has no pass nr", row, user.getFullName());
@@ -328,7 +337,7 @@ public class UserExcelImporter {
                 return true;
             } else if (!expirationDateRaw.isBlank() && !expirationDateRaw.equals("-") && !expirationDateRaw.equals("nein")) {
                 var expirationDate = ExcelUtils.parseExcelDate(expirationDateRaw).orElseThrow();
-                user.addQualification(qualification, expirationDate);
+                user.addQualification(qualification, expirationDate.toInstant());
                 return true;
             }
         } catch (Exception e) {
@@ -347,7 +356,7 @@ public class UserExcelImporter {
                 var qualifications = mapQualifications(qualificationRaw.trim());
                 var qualificationExpires = ExcelUtils.parseExcelDate(expirationDateRaw);
                 if (qualificationExpires.isPresent()) {
-                    qualifications.forEach(qualificationKey -> user.addQualification(qualificationKey, qualificationExpires.get()));
+                    qualifications.forEach(qualificationKey -> user.addQualification(qualificationKey, qualificationExpires.get().toInstant()));
                 } else {
                     qualifications.forEach(user::addQualification);
                 }

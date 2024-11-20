@@ -8,7 +8,7 @@ import org.eventplanner.users.values.Diet;
 import org.eventplanner.users.values.Role;
 import org.springframework.lang.Nullable;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public record UpdateUserSpec(
@@ -26,7 +26,7 @@ public record UpdateUserSpec(
     @Nullable String phone,
     @Nullable String phoneWork,
     @Nullable String mobile,
-    @Nullable ZonedDateTime dateOfBirth,
+    @Nullable LocalDate dateOfBirth,
     @Nullable String placeOfBirth,
     @Nullable String passNr,
     @Nullable String comment,

@@ -11,7 +11,7 @@
                     <div class="mb-4">
                         <VInputLabel>Name</VInputLabel>
                         <VInputText
-                            v-model="location.name"
+                            v-model.trim="location.name"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -45,21 +45,84 @@
                             </template>
                         </VInputSelect>
                     </div>
+                    <div class="mb-2 flex space-x-4">
+                        <div class="w-3/5">
+                            <VInputLabel>EDA</VInputLabel>
+                            <VInputDate
+                                :model-value="location.eta"
+                                :errors="validation.errors.value['start']"
+                                :errors-visible="validation.showErrors.value"
+                                @update:model-value="location.eta = updateDate(location.eta, $event)"
+                            />
+                        </div>
+                        <div class="w-2/5">
+                            <VInputLabel>ETA</VInputLabel>
+                            <VInputTime
+                                :model-value="location.eta"
+                                :errors="validation.errors.value['start']"
+                                :errors-visible="validation.showErrors.value"
+                                @update:model-value="location.eta = updateTime(location.eta, $event, 'minutes')"
+                            />
+                        </div>
+                    </div>
+                    <div class="mb-4 flex justify-end">
+                        <button class="link text-sm" @click="location.eta = undefined">ETA löschen</button>
+                    </div>
+                    <div class="mb-2 flex space-x-4">
+                        <div class="w-3/5">
+                            <VInputLabel>EDD</VInputLabel>
+                            <VInputDate
+                                :model-value="location.etd"
+                                :errors="validation.errors.value['etd']"
+                                :errors-visible="validation.showErrors.value"
+                                @update:model-value="location.etd = updateDate(location.etd, $event)"
+                            />
+                        </div>
+                        <div class="w-2/5">
+                            <VInputLabel>ETD</VInputLabel>
+                            <VInputTime
+                                :model-value="location.etd"
+                                :errors="validation.errors.value['etd']"
+                                :errors-visible="validation.showErrors.value"
+                                @update:model-value="location.etd = updateTime(location.etd, $event, 'minutes')"
+                            />
+                        </div>
+                    </div>
+                    <div class="mb-4 flex justify-end">
+                        <button class="link text-sm" @click="location.etd = undefined">ETD löschen</button>
+                    </div>
                     <div class="mb-4">
-                        <VInputLabel>Adresse</VInputLabel>
+                        <VInputLabel>Liegeplatz</VInputLabel>
                         <VInputTextArea
-                            v-model="location.address"
+                            v-model.trim="location.address"
+                            class="h-24"
                             :errors="validation.errors.value['address']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Land</VInputLabel>
-                        <VInputCombobox
-                            v-model="location.country"
-                            :errors="validation.errors.value['country']"
+                        <VInputLabel>Liegeplatz Link</VInputLabel>
+                        <VInputText
+                            v-model.trim="location.addressLink"
+                            :errors="validation.errors.value['addressLink']"
                             :errors-visible="validation.showErrors.value"
-                            :options="countries.options"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Weitere Informationen</VInputLabel>
+                        <VInputTextArea
+                            v-model.trim="location.information"
+                            class="h-24"
+                            :errors="validation.errors.value['information']"
+                            :errors-visible="validation.showErrors.value"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Weitere Informationen Link</VInputLabel>
+                        <VInputText
+                            v-model.trim="location.informationLink"
+                            :errors="validation.errors.value['informationLink']"
+                            :errors-visible="validation.showErrors.value"
                         />
                     </div>
                 </section>
@@ -78,17 +141,11 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { deepCopy } from '@/common';
+import { deepCopy, updateDate, updateTime } from '@/common';
 import type { Location, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VInputTextArea } from '@/ui/components/common';
-import { VInputCombobox } from '@/ui/components/common';
-import { VInputSelect } from '@/ui/components/common';
-import { VDialog, VInputLabel, VInputText } from '@/ui/components/common';
-import { useCountries } from '@/ui/composables/Countries.ts';
+import { VDialog, VInputDate, VInputLabel, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation.ts';
-
-const countries = useCountries();
 
 const dlg = ref<Dialog<Location | undefined, Location | undefined> | null>(null);
 const location = ref<Location>({

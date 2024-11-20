@@ -7,7 +7,7 @@ import org.eventplanner.events.values.Location;
 import org.eventplanner.events.values.RegistrationKey;
 import org.springframework.lang.NonNull;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,8 +23,8 @@ public class Event {
     private @NonNull EventState state = EventState.DRAFT;
     private @NonNull String note = "";
     private @NonNull String description = "";
-    private @NonNull ZonedDateTime start = ZonedDateTime.now();
-    private @NonNull ZonedDateTime end = ZonedDateTime.now();
+    private @NonNull Instant start = Instant.now();
+    private @NonNull Instant end = Instant.now();
     private @NonNull List<Location> locations = Collections.emptyList();
     private @NonNull List<Slot> slots = Collections.emptyList();
     private @NonNull List<Registration> registrations = Collections.emptyList();

@@ -1,7 +1,6 @@
 package org.eventplanner.positions.rest;
 
 import org.eventplanner.positions.PositionUseCase;
-import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.rest.dto.CreatePositionRequest;
 import org.eventplanner.positions.rest.dto.PositionRepresentation;
 import org.eventplanner.positions.rest.dto.UpdatePositionRequest;

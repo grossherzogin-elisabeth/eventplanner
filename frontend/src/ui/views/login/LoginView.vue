@@ -38,11 +38,11 @@
                             <h2 class="mb-4 px-4">Bei deinem Lissi Account anmelden</h2>
                             <div class="mb-4">
                                 <VInputLabel>Email ode Benutzername</VInputLabel>
-                                <VInputText v-model="username" placeholder="max.mustermensch@email.de" />
+                                <VInputText v-model.trim="username" placeholder="max.mustermensch@email.de" />
                             </div>
                             <div class="mb-8">
                                 <VInputLabel>Passwort</VInputLabel>
-                                <VInputText v-model="password" type="password" placeholder="**********" />
+                                <VInputText v-model.trim="password" type="password" placeholder="**********" />
                             </div>
                             <div class="flex items-center justify-between sm:flex-row">
                                 <button class="btn-ghost">

@@ -57,7 +57,7 @@
                 :model-value="props.modelValue"
                 language="de"
                 monday-first
-                :open-date="props.modelValue"
+                :open-date="props.modelValue || new Date()"
                 :highlighted="{
                     from: props.highlightFrom || props.modelValue,
                     to: props.highlightTo || props.modelValue,

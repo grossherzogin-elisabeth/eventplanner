@@ -10,8 +10,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 public record CreateQualificationRequest(
         @NonNull String name,
         @Nullable String icon,

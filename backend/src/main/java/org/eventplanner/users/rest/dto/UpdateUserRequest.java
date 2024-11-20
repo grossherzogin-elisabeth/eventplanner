@@ -8,9 +8,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UpdateUserRequest(
@@ -56,7 +57,7 @@ public record UpdateUserRequest(
             phone,
             phoneWork,
             mobile,
-            mapNullable(dateOfBirth, ZonedDateTime::parse),
+            ofNullable(dateOfBirth).map(LocalDate::parse).orElse(null),
             placeOfBirth,
             passNr,
             comment,

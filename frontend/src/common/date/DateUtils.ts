@@ -22,15 +22,14 @@ export function subtractFromDate(date: Date | number, diff: DateDiff): Date {
     return new Date(year, month, day, hours, minutes, seconds);
 }
 
-export function updateDate(target: Date, date: Date): Date {
-    const result = new Date(target);
+export function updateDate(target: Date | undefined, date: Date): Date {
+    const result = target ? new Date(target) : new Date();
     result.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
     return result;
 }
 
-export function updateTime(target: Date, time: Date, precision: 'hours' | 'minutes' | 'seconds' | 'millis'): Date {
-    const result = new Date(target);
-    console.log(time);
+export function updateTime(target: Date | undefined, time: Date, precision: 'hours' | 'minutes' | 'seconds' | 'millis'): Date {
+    const result = target ? new Date(target) : new Date();
     switch (precision) {
         case 'hours':
             result.setHours(time.getHours(), 0, 0, 0);
@@ -65,4 +64,12 @@ export function cropToPrecision(date: Date, precision: 'years' | 'months' | 'day
         default:
             return date;
     }
+}
+
+export function deserializeDate(date: string): Date {
+    // js cannot parse an ISO date time like 2024-06-25T00:00+02:00[Europe/Berlin]
+    if (date.includes('[')) {
+        return new Date(date.substring(0, date.indexOf('[')));
+    }
+    return new Date(date);
 }

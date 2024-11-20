@@ -4,7 +4,6 @@ import org.eventplanner.events.entities.Event;
 import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public record EventRepresentation(
@@ -27,8 +26,8 @@ public record EventRepresentation(
             event.getState().value(),
             event.getNote(),
             event.getDescription(),
-            event.getStart().format(DateTimeFormatter.ISO_DATE_TIME),
-            event.getEnd().format(DateTimeFormatter.ISO_DATE_TIME),
+            event.getStart().toString(),
+            event.getEnd().toString(),
             event.getLocations().stream().map(LocationRepresentation::fromDomain).toList(),
             event.getSlots().stream().map(SlotRepresentation::fromDomain).toList(),
             event.getRegistrations().stream().map(RegistrationRepresentation::fromDomain).toList()

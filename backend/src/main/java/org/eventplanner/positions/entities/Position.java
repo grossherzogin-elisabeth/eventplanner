@@ -1,6 +1,9 @@
 package org.eventplanner.positions.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
 

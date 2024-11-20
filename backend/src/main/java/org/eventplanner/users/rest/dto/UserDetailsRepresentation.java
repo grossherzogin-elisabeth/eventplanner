@@ -2,13 +2,17 @@ package org.eventplanner.users.rest.dto;
 
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.entities.UserDetails;
+import org.eventplanner.users.values.AuthKey;
+import org.eventplanner.users.values.Diet;
 import org.eventplanner.users.values.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.List;
+
+import static java.util.Optional.ofNullable;
 
 public record UserDetailsRepresentation(
         @NonNull String key,
@@ -41,7 +45,9 @@ public record UserDetailsRepresentation(
     public static UserDetailsRepresentation fromDomain(@NonNull UserDetails user) {
         return new UserDetailsRepresentation(
             user.getKey().value(),
-            user.getAuthKey() == null ? null : user.getAuthKey().value(),
+            ofNullable(user.getAuthKey())
+                    .map(AuthKey::value)
+                    .orElse(null),
             user.getTitle(),
             user.getGender(),
             user.getFirstName(),
@@ -56,7 +62,9 @@ public record UserDetailsRepresentation(
             user.getPhone(),
             user.getPhoneWork(),
             user.getMobile(),
-            user.getDateOfBirth() == null ? null : user.getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE),
+            ofNullable(user.getDateOfBirth())
+                    .map(LocalDate::toString)
+                    .orElse(null),
             user.getPlaceOfBirth(),
             user.getPassNr(),
             user.getComment(),
@@ -65,7 +73,9 @@ public record UserDetailsRepresentation(
             user.getDiseases(),
             user.getIntolerances(),
             user.getMedication(),
-            user.getDiet () == null ? null : user.getDiet().value()
+            ofNullable(user.getDiet())
+                    .map(Diet::value)
+                    .orElse(null)
         );
     }
 }

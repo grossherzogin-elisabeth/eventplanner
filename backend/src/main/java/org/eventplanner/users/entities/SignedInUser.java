@@ -1,9 +1,7 @@
 package org.eventplanner.users.entities;
 
-import org.eventplanner.common.ObjectUtils;
 import org.eventplanner.exceptions.MissingPermissionException;
 import org.eventplanner.exceptions.UnauthorizedException;
-import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Permission;

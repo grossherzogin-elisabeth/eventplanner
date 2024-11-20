@@ -13,7 +13,7 @@
                     </div>
                     <div class="mb-4">
                         <VInputLabel>Anzeigename</VInputLabel>
-                        <VInputText v-model="slot.positionName" :placeholder="positions.get(primaryPositionKey).name" />
+                        <VInputText v-model.trim="slot.positionName" :placeholder="positions.get(primaryPositionKey).name" />
                     </div>
                     <div class="mb-4">
                         <VInputLabel>Kritikaliät</VInputLabel>

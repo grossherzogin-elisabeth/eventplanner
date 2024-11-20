@@ -1,20 +1,17 @@
 package org.eventplanner.users.service;
 
-import org.eventplanner.common.EncryptedString;
-import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.common.Crypto;
+import org.eventplanner.common.EncryptedString;
+import org.eventplanner.qualifications.values.QualificationKey;
 import org.eventplanner.users.entities.*;
 import org.eventplanner.users.values.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -81,7 +78,7 @@ public class UserEncryptionService {
             encryptNullable(user.getPhoneWork()),
             encryptNullable(user.getMobile()),
             ofNullable(user.getDateOfBirth())
-                .map((date) -> date.format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
+                .map(LocalDate::toString)
                 .map(this::encrypt)
                 .orElse(null),
             encryptNullable(user.getPlaceOfBirth()),
@@ -128,7 +125,7 @@ public class UserEncryptionService {
             decryptNullable(user.getMobile()),
             ofNullable(user.getDateOfBirth())
                 .map(this::decrypt)
-                .map(ZonedDateTime::parse)
+                .map(LocalDate::parse)
                 .orElse(null),
             decryptNullable(user.getPlaceOfBirth()),
             decryptNullable(user.getPassNr()),
@@ -169,7 +166,7 @@ public class UserEncryptionService {
         return new EncryptedUserQualification(
                 encrypt(value.getQualificationKey().value()),
                 Optional.ofNullable(value.getExpiresAt())
-                        .map(zonedDateTime -> zonedDateTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
+                        .map(Instant::toString)
                         .map(this::encrypt)
                         .orElse(null)
         );
@@ -180,7 +177,7 @@ public class UserEncryptionService {
             new QualificationKey(decrypt(value.getQualificationKey())),
             Optional.ofNullable(value.getExpiresAt())
                 .map(this::decrypt)
-                .map(ZonedDateTime::parse)
+                .map(Instant::parse)
                 .orElse(null),
             value.getExpiresAt() != null
         );

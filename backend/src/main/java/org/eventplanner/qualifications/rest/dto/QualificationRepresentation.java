@@ -2,14 +2,11 @@ package org.eventplanner.qualifications.rest.dto;
 
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.entities.Qualification;
-import org.eventplanner.qualifications.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
-
-import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record QualificationRepresentation(
         @NonNull String key,

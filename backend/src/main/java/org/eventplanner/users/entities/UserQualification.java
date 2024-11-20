@@ -6,7 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -15,6 +15,6 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 public class UserQualification implements Serializable {
     private @NonNull QualificationKey qualificationKey;
-    private @Nullable ZonedDateTime expiresAt;
+    private @Nullable Instant expiresAt;
     private boolean expires;
 }

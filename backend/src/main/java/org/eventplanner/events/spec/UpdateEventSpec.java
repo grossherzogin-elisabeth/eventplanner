@@ -5,7 +5,7 @@ import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
 import org.springframework.lang.Nullable;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public record UpdateEventSpec(
@@ -13,8 +13,8 @@ public record UpdateEventSpec(
     @Nullable EventState state,
     @Nullable String note,
     @Nullable String description,
-    @Nullable ZonedDateTime start,
-    @Nullable ZonedDateTime end,
+    @Nullable Instant start,
+    @Nullable Instant end,
     @Nullable List<Location> locations,
     @Nullable List<Slot> slots
 ) {

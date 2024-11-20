@@ -1,12 +1,12 @@
 package org.eventplanner.events.adapter.jpa;
 
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-
-import jakarta.persistence.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.*;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
@@ -14,13 +14,11 @@ import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -68,13 +66,13 @@ public class EventJpaEntity {
     public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
         var eventJpaEntity = new EventJpaEntity();
         eventJpaEntity.setKey(domain.getKey().value());
-        eventJpaEntity.setYear(domain.getStart().getYear());
+        eventJpaEntity.setYear(domain.getStart().atZone(ZoneId.systemDefault()).getYear());
         eventJpaEntity.setName(domain.getName());
         eventJpaEntity.setState(domain.getState().value());
         eventJpaEntity.setNote(domain.getNote());
         eventJpaEntity.setDescription(domain.getDescription());
-        eventJpaEntity.setStart(domain.getStart().format(DateTimeFormatter.ISO_DATE_TIME));
-        eventJpaEntity.setEnd(domain.getEnd().format(DateTimeFormatter.ISO_DATE_TIME));
+        eventJpaEntity.setStart(domain.getStart().toString());
+        eventJpaEntity.setEnd(domain.getEnd().toString());
         eventJpaEntity.setLocationsRaw(serializeLocations(domain.getLocations()));
         eventJpaEntity.setSlotsRaw(serializeSlots(domain.getSlots()));
         eventJpaEntity.setRegistrationsRaw(serializeRegistrations(domain.getRegistrations()));
@@ -142,8 +140,8 @@ public class EventJpaEntity {
             EventState.fromString(state).orElse(EventState.PLANNED),
             note != null ? note : "",
             description != null ? description : "",
-            ZonedDateTime.parse(start),
-            ZonedDateTime.parse(end),
+            Instant.parse(start),
+            Instant.parse(end),
             deserializeLocations(locationsRaw),
             deserializeSlots(slotsRaw),
             deserializeRegistrations(registrationsRaw)

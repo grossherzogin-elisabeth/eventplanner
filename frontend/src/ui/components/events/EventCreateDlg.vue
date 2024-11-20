@@ -9,7 +9,7 @@
                     <div class="mb-4">
                         <VInputLabel>Name</VInputLabel>
                         <VInputText
-                            v-model="event.name"
+                            v-model.trim="event.name"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Titel der Reise"
@@ -50,7 +50,7 @@
                     <div class="mb-4">
                         <VInputLabel>Beschreibung</VInputLabel>
                         <VInputTextArea
-                            v-model="event.description"
+                            v-model.trim="event.description"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Kurze Bschreibung oder Zusatzinformationen"

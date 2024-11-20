@@ -12,7 +12,7 @@ import java.util.*;
 public class EventGenerator {
 
     protected static final Location ELSFLETH = new Location("Elsfleth", "fa-anchor", "An d. Kaje 1, 26931 Elsfleth", "DE");
-    protected static final Location NORDSEE = new Location("Nordsee", "fa-water text-blue-600", null, null);
+    protected static final Location NORDSEE = new Location("Nordsee", "fa-water", null, null);
 
     public static List<Event> createTestEvents(int year, List<UserDetails> users, EventState state) {
         var start = LocalDateTime.of(year, Month.APRIL, 1, 16, 0);
@@ -41,8 +41,8 @@ public class EventGenerator {
                 state,
                 "Hier ist Platz für Notizen",
                 "Wochenendreise nach Helgoland",
-                ZonedDateTime.parse(start + "Z"),
-                ZonedDateTime.parse(start.plusDays(2) + "Z"),
+                Instant.parse(start + "Z"),
+                Instant.parse(start.plusDays(2) + "Z"),
                 List.of(ELSFLETH, NORDSEE, ELSFLETH),
                 slots,
                 registrations

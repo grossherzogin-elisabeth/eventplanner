@@ -18,7 +18,6 @@ import org.eventplanner.settings.values.EmailSettings;
 import org.eventplanner.users.entities.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.jdbc.metadata.DataSourcePoolMetadataProvider;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
@@ -26,13 +25,17 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 
 @Slf4j
 @Service
 public class NotificationService {
-
+    private static final ZoneId timezone = ZoneId.of("Europe/Berlin");
     private final Configuration freemarkerConfig;
     private final SettingsService settingsService;
     private final String frontendDomain;
@@ -91,8 +94,10 @@ public class NotificationService {
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", user);
         notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         try {
             sendNotification(notification, user);
         } catch (Exception e) {
@@ -105,8 +110,10 @@ public class NotificationService {
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", user);
         notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         try {
             sendNotification(notification, user);
         } catch (Exception e) {
@@ -119,8 +126,10 @@ public class NotificationService {
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", user);
         notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         try {
             sendNotification(notification, user);
         } catch (Exception e) {
@@ -133,8 +142,10 @@ public class NotificationService {
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", user);
         notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         try {
             sendNotification(notification, user);
         } catch (Exception e) {
@@ -147,10 +158,14 @@ public class NotificationService {
         notification.setTitle("Bitte um Rückmeldung: " + event.getName());
         notification.getProps().put("user", user);
         notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("deadline", event.getStart().minusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        var eventUrl = frontendDomain + "/events/" + event.getStart().getYear() + "/details/" + event.getKey();
+        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("deadline", event.getStart().atZone(timezone)
+                .minusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        var eventUrl = frontendDomain + "/events/" + event.getStart().atZone(timezone)
+                .getYear() + "/details/" + event.getKey();
         // TODO we need some one-time token here for authentication
         notification.getProps().put("confirm_link", eventUrl + "/confirm?user=" + user.getKey());
         notification.getProps().put("deny_link", eventUrl + "/deny?user=" + user.getKey());

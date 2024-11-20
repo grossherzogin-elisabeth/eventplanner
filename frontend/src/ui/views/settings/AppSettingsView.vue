@@ -8,19 +8,19 @@
                             <section class="max-w-2xl">
                                 <div class="mb-4">
                                     <VInputLabel>Menü Titel</VInputLabel>
-                                    <VInputText v-model="settings.ui.menuTitle" required />
+                                    <VInputText v-model.trim="settings.ui.menuTitle" required />
                                 </div>
                                 <div class="mb-4">
                                     <VInputLabel>Tab Titel Präfix</VInputLabel>
-                                    <VInputText v-model="settings.ui.tabTitle" required />
+                                    <VInputText v-model.trim="settings.ui.tabTitle" required />
                                 </div>
                                 <div class="mb-4 mt-12">
                                     <VInputLabel>Technischer Support Email</VInputLabel>
-                                    <VInputText v-model="settings.ui.technicalSupportEmail" required />
+                                    <VInputText v-model.trim="settings.ui.technicalSupportEmail" required />
                                 </div>
                                 <div class="mb-4">
                                     <VInputLabel>Fachlicher Support Email</VInputLabel>
-                                    <VInputText v-model="settings.ui.supportEmail" required />
+                                    <VInputText v-model.trim="settings.ui.supportEmail" required />
                                 </div>
                             </section>
                         </div>
@@ -30,23 +30,23 @@
                             <section class="max-w-2xl">
                                 <div class="mb-4">
                                     <VInputLabel>From</VInputLabel>
-                                    <VInputText v-model="settings.email.from" required />
+                                    <VInputText v-model.trim="settings.email.from" required />
                                 </div>
                                 <div class="mb-4">
                                     <VInputLabel>From Anzeigename</VInputLabel>
-                                    <VInputText v-model="settings.email.fromDisplayName" required />
+                                    <VInputText v-model.trim="settings.email.fromDisplayName" required />
                                 </div>
                                 <div class="mb-4">
                                     <VInputLabel>Reply to</VInputLabel>
-                                    <VInputText v-model="settings.email.replyTo" required />
+                                    <VInputText v-model.trim="settings.email.replyTo" required />
                                 </div>
                                 <div class="mb-4">
                                     <VInputLabel>Reply to Anzeigename</VInputLabel>
-                                    <VInputText v-model="settings.email.replyToDisplayName" required />
+                                    <VInputText v-model.trim="settings.email.replyToDisplayName" required />
                                 </div>
                                 <div class="mb-4 mt-12">
                                     <VInputLabel>Hostname</VInputLabel>
-                                    <VInputText v-model="settings.email.host" required />
+                                    <VInputText v-model.trim="settings.email.host" required />
                                 </div>
                                 <div class="mb-4">
                                     <VInputLabel>Port</VInputLabel>
@@ -64,11 +64,16 @@
                                 </div>
                                 <div class="mb-4">
                                     <VInputLabel>Benutzername</VInputLabel>
-                                    <VInputText v-model="settings.email.username" required />
+                                    <VInputText v-model.trim="settings.email.username" required />
                                 </div>
                                 <div class="mb-4">
                                     <VInputLabel>Password</VInputLabel>
-                                    <VInputText v-model="settings.email.password" type="password" placeholder="****************" required />
+                                    <VInputText
+                                        v-model.trim="settings.email.password"
+                                        type="password"
+                                        placeholder="****************"
+                                        required
+                                    />
                                 </div>
                             </section>
                         </div>

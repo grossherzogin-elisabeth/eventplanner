@@ -40,6 +40,13 @@ datetimeFormatsDe[DateTimeFormat.hh_mm] = {
     hour: '2-digit',
     minute: '2-digit',
 };
+datetimeFormatsDe[DateTimeFormat.DDD_DD_MM_hh_mm] = {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+};
 
 export function setupI18n(config: Config): I18n {
     return createI18n({

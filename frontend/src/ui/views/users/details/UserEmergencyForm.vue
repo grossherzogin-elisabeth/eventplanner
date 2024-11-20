@@ -3,11 +3,11 @@
         <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
         <div class="mb-4">
             <VInputLabel>Name des Notfallkontakts</VInputLabel>
-            <VInputText v-model="user.emergencyContact.name" placeholder="Keine Angabe" />
+            <VInputText v-model.trim="user.emergencyContact.name" placeholder="Keine Angabe" />
         </div>
         <div class="mb-4">
             <VInputLabel>Telefonnummer des Notfallkontakts</VInputLabel>
-            <VInputText v-model="user.emergencyContact.phone" placeholder="Keine Angabe" />
+            <VInputText v-model.trim="user.emergencyContact.phone" placeholder="Keine Angabe" />
         </div>
         <h2 class="mb-4 mt-8 font-bold text-secondary">Wichtige gesundheitliche Informationen</h2>
         <VInfo class="mb-8">
@@ -16,11 +16,11 @@
         </VInfo>
         <div class="mb-4">
             <VInputLabel>Krankheiten</VInputLabel>
-            <VInputTextArea v-model="user.diseases" placeholder="Keine Angabe" />
+            <VInputTextArea v-model.trim="user.diseases" placeholder="Keine Angabe" />
         </div>
         <div class="mb-4">
             <VInputLabel>Medikamente</VInputLabel>
-            <VInputTextArea v-model="user.medication" placeholder="Keine Angabe" />
+            <VInputTextArea v-model.trim="user.medication" placeholder="Keine Angabe" />
         </div>
     </section>
 </template>

@@ -30,7 +30,7 @@ hr {
     @apply my-4 border-outline-variant;
 }
 
-a.link {
+.link {
     @apply font-bold text-primary hover:underline;
 }
 

@@ -87,7 +87,7 @@ const displayValue = computed<string>(() => {
     } else if (props.modelValue instanceof Date) {
         return i18n.d(props.modelValue, DateTimeFormat.hh_mm).replace(':', ' : ');
     }
-    return '00 : 00';
+    return '-- : --';
 });
 
 function onBlur(): void {

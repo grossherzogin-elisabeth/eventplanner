@@ -6,10 +6,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
+import static java.util.Optional.ofNullable;
 
 public record UserQualificationRepresentation(
     @NonNull String qualificationKey,
@@ -23,7 +22,9 @@ public record UserQualificationRepresentation(
         }
         return new UserQualificationRepresentation(
             userQualification.getQualificationKey().value(),
-            mapNullable(userQualification.getExpiresAt(), d -> d.format(DateTimeFormatter.ISO_DATE_TIME)),
+            ofNullable(userQualification.getExpiresAt())
+                    .map(Instant::toString)
+                    .orElse(null),
             userQualification.isExpires()
         );
     }
@@ -31,7 +32,9 @@ public record UserQualificationRepresentation(
     public @NonNull UserQualification toDomain() {
         return new UserQualification(
             new QualificationKey(qualificationKey),
-            mapNullable(expiresAt, ZonedDateTime::parse),
+            ofNullable(expiresAt)
+                    .map(Instant::parse)
+                    .orElse(null),
             expires
         );
     }

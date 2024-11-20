@@ -1,7 +1,6 @@
 package org.eventplanner.qualifications.rest;
 
 import org.eventplanner.qualifications.QualificationUseCase;
-import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.rest.dto.CreateQualificationRequest;
 import org.eventplanner.qualifications.rest.dto.QualificationRepresentation;
 import org.eventplanner.qualifications.rest.dto.UpdateQualificationRequest;

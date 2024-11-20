@@ -10,7 +10,7 @@
                                     <h2 class="mb-4 font-bold text-secondary">App</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Anzeigename</VInputLabel>
-                                        <VInputText v-model="userDetails.nickName" :placeholder="userDetails.firstName" />
+                                        <VInputText v-model.trim="userDetails.nickName" :placeholder="userDetails.firstName" />
                                     </div>
                                 </section>
                                 <section class="diet-data">
@@ -28,7 +28,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Unverträglichkeiten</VInputLabel>
-                                        <VInputTextArea v-model="userDetails.intolerances" placeholder="Keine Angabe" />
+                                        <VInputTextArea v-model.trim="userDetails.intolerances" placeholder="Keine Angabe" />
                                     </div>
                                 </section>
                                 <section class="personal-data">
@@ -48,11 +48,11 @@
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Zweiter Vornahme</VInputLabel>
-                                        <VInputText v-model="userDetails.secondName" disabled placeholder="Keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.secondName" disabled placeholder="Keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Nachname</VInputLabel>
-                                        <VInputText v-model="userDetails.lastName" required disabled placeholder="Keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.lastName" required disabled placeholder="Keine Angabe" />
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
@@ -77,7 +77,7 @@
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
                                             <VInputLabel>Personalausweis Nummer</VInputLabel>
-                                            <VInputText v-model="userDetails.passNr" required placeholder="Keine Angabe" />
+                                            <VInputText v-model.trim="userDetails.passNr" required placeholder="Keine Angabe" />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
                                             <VInputLabel>Nationalität</VInputLabel>
@@ -125,39 +125,39 @@
                                     <h2 class="mb-4 font-bold text-secondary">Email & Telefon</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Email</VInputLabel>
-                                        <VInputText v-model="userDetails.email" required disabled placeholder="keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.email" required disabled placeholder="keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Telefon</VInputLabel>
-                                        <VInputText v-model="userDetails.phone" placeholder="keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.phone" placeholder="keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Telefon (dienstlich)</VInputLabel>
-                                        <VInputText v-model="userDetails.phoneWork" placeholder="keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.phoneWork" placeholder="keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Mobil</VInputLabel>
-                                        <VInputText v-model="userDetails.mobile" placeholder="keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.mobile" placeholder="keine Angabe" />
                                     </div>
                                 </section>
                                 <section>
                                     <h2 class="mb-4 font-bold text-secondary">Adresse</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Straße, Hausnr</VInputLabel>
-                                        <VInputText v-model="userDetails.address.addressLine1" required placeholder="keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.address.addressLine1" required placeholder="keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Adresszusatz</VInputLabel>
-                                        <VInputText v-model="userDetails.address.addressLine2" placeholder="keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.address.addressLine2" placeholder="keine Angabe" />
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-36">
                                             <VInputLabel>PLZ</VInputLabel>
-                                            <VInputText v-model="userDetails.address.zipcode" required placeholder="keine Angabe" />
+                                            <VInputText v-model.trim="userDetails.address.zipcode" required placeholder="keine Angabe" />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
                                             <VInputLabel>Ort</VInputLabel>
-                                            <VInputText v-model="userDetails.address.town" required placeholder="keine Angabe" />
+                                            <VInputText v-model.trim="userDetails.address.town" required placeholder="keine Angabe" />
                                         </div>
                                     </div>
                                 </section>
@@ -182,7 +182,7 @@
                             <h2 class="mb-4 font-bold text-secondary">Zugangsdaten</h2>
                             <div class="mb-2">
                                 <VInputLabel>Benutzername</VInputLabel>
-                                <VInputText v-model="user.email" disabled required />
+                                <VInputText v-model.trim="user.email" disabled required />
                             </div>
                             <div class="mb-2">
                                 <VInputLabel>Password</VInputLabel>
@@ -211,22 +211,22 @@
                                     <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Name des Notfallkontakts</VInputLabel>
-                                        <VInputText v-model="userDetails.emergencyContact.name" placeholder="Keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.emergencyContact.name" placeholder="Keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Telefonnummer des Notfallkontakts</VInputLabel>
-                                        <VInputText v-model="userDetails.emergencyContact.phone" placeholder="Keine Angabe" />
+                                        <VInputText v-model.trim="userDetails.emergencyContact.phone" placeholder="Keine Angabe" />
                                     </div>
                                 </section>
                                 <section class="">
                                     <h2 class="mb-4 font-bold text-secondary">Wichtige gesundheitliche Informationen</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Krankheiten</VInputLabel>
-                                        <VInputTextArea v-model="userDetails.diseases" placeholder="Keine Angabe" />
+                                        <VInputTextArea v-model.trim="userDetails.diseases" placeholder="Keine Angabe" />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Medikamente</VInputLabel>
-                                        <VInputTextArea v-model="userDetails.medication" placeholder="Keine Angabe" />
+                                        <VInputTextArea v-model.trim="userDetails.medication" placeholder="Keine Angabe" />
                                     </div>
                                 </section>
                             </div>

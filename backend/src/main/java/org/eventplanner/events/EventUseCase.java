@@ -1,14 +1,13 @@
 package org.eventplanner.events;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
+import org.eventplanner.events.service.EventService;
 import org.eventplanner.events.services.ConsumptionListService;
 import org.eventplanner.events.services.ImoListService;
-import org.eventplanner.events.service.EventService;
 import org.eventplanner.events.spec.CreateEventSpec;
 import org.eventplanner.events.spec.CreateRegistrationSpec;
 import org.eventplanner.events.spec.UpdateEventSpec;
