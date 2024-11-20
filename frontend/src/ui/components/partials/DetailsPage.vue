@@ -3,8 +3,8 @@
         <div v-if="props.backTo" class="absolute left-6 top-6 z-30 hidden xl:block">
             <BackButton :to="props.backTo" />
         </div>
-        <div v-if="$slots.header" class="bg-surface">
-            <div class="z-10 px-8 md:px-16 xl:px-20">
+        <div v-if="$slots.header" class="ml-8 bg-surface">
+            <div class="z-10 pr-8 md:pl-8 md:pr-16 xl:pl-12 xl:pr-20">
                 <slot name="header" />
             </div>
         </div>

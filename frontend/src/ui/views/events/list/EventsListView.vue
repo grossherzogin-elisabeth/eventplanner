@@ -306,7 +306,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, PositionKey, SignedInUser } from '@/domain';
@@ -322,6 +322,7 @@ import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
+import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
 interface StateDetails {
@@ -410,14 +411,11 @@ const tabs = computed<string[]>(() => {
     return ['Zukünftige', String(currentYear + 1), String(currentYear), String(currentYear - 1)];
 });
 
-function init(): void {
+async function init(): Promise<void> {
     emit('update:title', 'Alle Reisen');
     watch(tab, () => fetchEvents());
-    onMounted(() => {
-        if (tab.value === tabs.value[0]) {
-            fetchEvents();
-        }
-    });
+    await fetchEvents();
+    restoreScrollPosition();
 }
 
 function selectNone(): void {

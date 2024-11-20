@@ -49,12 +49,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
-import type { RouteLocationRaw } from 'vue-router';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import type { SignedInUser } from '@/domain';
 import { useAuthUseCase } from '@/ui/composables/Application';
-import { useRouterStack } from '@/ui/composables/RouterStack';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import AppMenu from './AppMenu.vue';
 import SlideMenu from './SlideMenu.vue';
@@ -65,30 +63,17 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const router = useRouter();
 const route = useRoute();
-const routerStack = useRouterStack();
 
 const authUseCase = useAuthUseCase();
 
 const menuOpen = ref<boolean>(false);
 const signedInUser = ref<SignedInUser | null>(null);
-const backTo = ref<RouteLocationRaw>('');
 
 const meta = computed<RouteMetaData>(() => route.meta as RouteMetaData);
 
 async function init(): Promise<void> {
     authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
-    watch(router.currentRoute, onRouteChanged);
-}
-
-function onRouteChanged(): void {
-    const meta = route.meta as RouteMetaData;
-    if (meta.backTo) {
-        backTo.value = routerStack.getLastOther() || { name: meta.backTo };
-    } else {
-        backTo.value = '';
-    }
 }
 
 init();

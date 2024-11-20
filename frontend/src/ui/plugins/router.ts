@@ -4,23 +4,61 @@ import type { AuthUseCase } from '@/application';
 import type { Permission } from '@/domain';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 
+interface SavedRouteState {
+    query: unknown;
+    scrollY: number;
+    scrollX: number;
+}
+
+let isBackNavigation = false;
+window.addEventListener('popstate', () => (isBackNavigation = true));
+window.history.pushState = new Proxy(window.history.pushState, {
+    apply: (target, thisArg, argArray: never): unknown => {
+        isBackNavigation = false;
+        return target.apply(thisArg, argArray);
+    },
+});
+
+export function saveScrollPosition(path: string = window.location.pathname): void {
+    try {
+        const state: SavedRouteState = JSON.parse(localStorage.getItem(path) || '{}');
+        const routerView = document.getElementById('router-view');
+        state.scrollY = routerView?.scrollTop || window.scrollY;
+        state.scrollX = routerView?.scrollLeft || window.scrollX;
+        localStorage.setItem(path, JSON.stringify(state));
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export function restoreScrollPosition(path: string = window.location.pathname): void {
+    if (isBackNavigation) {
+        try {
+            const state = JSON.parse(localStorage.getItem(path) || '{}');
+            const routerView = document.getElementById('router-view');
+            routerView?.scrollTo({
+                top: state.scrollY,
+                left: state.scrollX,
+                behavior: 'auto',
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+}
+
 export function setupRouter(authUseCase: AuthUseCase): Router {
     const routes = getRoutes();
     const router = createRouter({
         history: createWebHistory(import.meta.env.BASE_URL),
         routes,
-        scrollBehavior: (to, _, savedPosition) => {
-            if (to.hash) {
-                return {
-                    el: to.hash,
-                    behavior: 'smooth',
-                };
-            }
-            if (savedPosition) {
-                return savedPosition;
-            }
-            return { top: 0 };
-        },
+    });
+
+    router.beforeEach((to, from, next) => {
+        if (to.name !== from.name) {
+            saveScrollPosition(from.path);
+        }
+        next();
     });
 
     /**

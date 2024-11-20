@@ -22,7 +22,7 @@ export function useQueryStateSync<T>(prop: string, get: () => T, set: (t: T) => 
         }
 
         if (route.name) {
-            await router.push({
+            await router.replace({
                 name: route.name || undefined,
                 hash: route.hash,
                 params: route.params,
@@ -30,7 +30,7 @@ export function useQueryStateSync<T>(prop: string, get: () => T, set: (t: T) => 
                 force: true,
             });
         } else {
-            await router.push({
+            await router.replace({
                 hash: route.hash,
                 path: route.path,
                 query: route.query,

@@ -270,6 +270,7 @@ import { useEventService, useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
+import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
 import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
@@ -351,9 +352,10 @@ const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
     return filteredUsers.value?.filter((it) => it.selected);
 });
 
-function init(): void {
+async function init(): Promise<void> {
     emit('update:title', 'Nutzer verwalten');
-    fetchUsers();
+    await fetchUsers();
+    restoreScrollPosition();
 }
 
 function hasAnyEvents(user: UserRegistrations): boolean {
@@ -431,12 +433,7 @@ function selectAll(): void {
 async function fetchUsers(): Promise<void> {
     const positions = await usersUseCase.resolvePositionNames();
     const userlist: User[] = await usersUseCase.getUsers();
-    // current
-    // -1
-    // -2
-    // +1
     const currentYear = new Date().getFullYear();
-    console.log(currentYear);
     const events = (
         await Promise.all([
             eventUseCase.getEvents(currentYear - 2),

@@ -32,7 +32,7 @@
 }
 
 .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell {
-    @apply text-onsurface relative;
+    @apply relative text-onsurface;
     @apply inline-flex items-center justify-center;
     @apply my-1 h-10 rounded-full border border-transparent;
 }
