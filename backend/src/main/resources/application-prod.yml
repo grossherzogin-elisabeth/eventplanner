@@ -10,5 +10,8 @@ frontend:
   protocol: https
   domain: https://${frontend.host}
 
-
+logging:
+  file:
+    path:
+      ./logs
 
