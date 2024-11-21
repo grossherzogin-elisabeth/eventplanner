@@ -279,7 +279,7 @@ public class EventUseCase {
             registration.setNote(spec.note());
 
             if (Boolean.TRUE.equals(spec.confirmed())) {
-                registration.setConfirmedAt(Instant.now().atZone(ZoneId.of("Europe/Berlin")));
+                registration.setConfirmedAt(Instant.now());
             } else {
                 registration.setConfirmedAt(null);
             }
@@ -290,7 +290,7 @@ public class EventUseCase {
             registration.setNote(spec.note());
 
             if (Boolean.TRUE.equals(spec.confirmed())) {
-                registration.setConfirmedAt(Instant.now().atZone(ZoneId.of("Europe/Berlin")));
+                registration.setConfirmedAt(Instant.now());
             } else {
                 registration.setConfirmedAt(null);
             }

@@ -14,14 +14,16 @@ public record UpdateRegistrationRequest(
     @NonNull String positionKey,
     @Nullable String userKey,
     @Nullable String name,
-    @Nullable String note
+    @Nullable String note,
+    @Nullable boolean confirmed
 ) implements Serializable {
     public UpdateRegistrationSpec toDomain() {
         return new UpdateRegistrationSpec(
-            new PositionKey(positionKey),
-            mapNullable(userKey, UserKey::new),
-            name,
-            note
+                new PositionKey(positionKey),
+                mapNullable(userKey, UserKey::new),
+                name,
+                note,
+                confirmed
         );
     }
 }

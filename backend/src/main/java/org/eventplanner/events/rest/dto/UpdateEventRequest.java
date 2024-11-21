@@ -29,7 +29,7 @@ public record UpdateEventRequest(
                 mapNullable(start, Instant::parse),
                 mapNullable(end, Instant::parse),
                 mapNullable(locations, LocationRepresentation::toDomain),
-                mapNullable(slots, SlotRepresentation::toDomain),
+                mapNullable(slots, SlotRepresentation::toDomain)
         );
     }
 }

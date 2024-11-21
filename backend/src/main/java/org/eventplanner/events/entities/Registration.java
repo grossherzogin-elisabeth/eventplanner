@@ -7,6 +7,7 @@ import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class Registration {
     private @Nullable String name;
     private @Nullable String note;
     private @Nullable String accessKey;
-    private @Nullable ZonedDateTime confirmedAt;
+    private @Nullable Instant confirmedAt;
 
     public static Registration ofUser(@NonNull UserKey user, @NonNull PositionKey position) {
         return new Registration(new RegistrationKey(), position, user, null, null, generateAccessKey(), null);

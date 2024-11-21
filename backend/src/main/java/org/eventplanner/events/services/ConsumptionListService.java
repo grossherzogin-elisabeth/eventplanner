@@ -56,7 +56,7 @@ public class ConsumptionListService {
 
     private List<String> getNameList(List<Registration> crewList) {
         var userNames = crewList.stream()
-                .map(Registration::getUser)
+                .map(Registration::getUserKey)
                 .filter(Objects::nonNull)
                 .map(userService::getUserByKey)
                 .filter(Optional::isPresent)
@@ -66,7 +66,7 @@ public class ConsumptionListService {
                             : user.getFirstName()+ "\n" + user.getLastName());
 
         var guestNames = crewList.stream()
-                .filter(registration -> registration.getUser() == null)
+                .filter(registration -> registration.getUserKey() == null)
                 .map(Registration::getName)
                 .filter(Objects::nonNull)
                 .map(s -> s.contains(",")

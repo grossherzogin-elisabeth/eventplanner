@@ -123,7 +123,7 @@ public class ImoListService {
             String imoListRank = ObjectUtils.mapNullable(positionMap.get(currentRegistration.getPosition()),
                     Position::getImoListRank,
                     currentRegistration.getPosition().value());
-            UserKey crewMemberKey = currentRegistration.getUser();
+            UserKey crewMemberKey = currentRegistration.getUserKey();
             if (crewMemberKey != null) {
                 Optional<UserDetails> crewMemberDetails = userService.getUserByKey(crewMemberKey);
 

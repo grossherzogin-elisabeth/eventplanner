@@ -41,7 +41,7 @@ public record RegistrationRepresentation(
                 name,
                 note,
                 Registration.generateAccessKey(),
-                Boolean.TRUE.equals(confirmed) ? Instant.now().atZone(ZoneId.of("Europe/Berlin")) : null
+                Boolean.TRUE.equals(confirmed) ? Instant.now() : null
         );
     }
 }

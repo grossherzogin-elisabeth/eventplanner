@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class ParticipationNotificationUseCase {
 
+    private final ZoneId timezone = ZoneId.of("Europe/Berlin");
     private final EventRepository eventRepository;
     private final NotificationService notificationService;
     private final UserService userService;
@@ -96,27 +98,25 @@ public class ParticipationNotificationUseCase {
     }
 
     private List<Event> getEventsToNotify(int alreadySentRequests) {
-        var currentYear = Instant.now().atZone(ZoneId.of("Europe/Berlin")).getYear();
+        var currentYear = Instant.now().atZone(timezone).getYear();
         var nextYear = currentYear + 1;
 
-        var getEvents = Stream.concat(
+        return Stream.concat(
                 eventRepository.findAllByYear(currentYear).stream(),
-                eventRepository.findAllByYear(nextYear).stream()
-        ).toList();
-
-        return switch (alreadySentRequests) {
-            case 0 -> getEvents.stream()
-                    .filter(event -> event.getParticipationConfirmationsRequestsSent() == 0)
-                    // filter for 2 weeks remaining
-                    .filter(event -> event.getStart().minusWeeks(2).isBefore(Instant.now().atZone(ZoneId.of("Europe/Berlin"))))
-                    .toList();
-            case 1 -> getEvents.stream()
-                    .filter(event -> event.getParticipationConfirmationsRequestsSent() == 1)
-                    // filter for 1 week remaining
-                    .filter(event -> event.getStart().minusWeeks(1).isBefore(Instant.now().atZone(ZoneId.of("Europe/Berlin"))))
-                    .toList();
-            default -> List.of();
-        };
+                eventRepository.findAllByYear(nextYear).stream())
+                .filter(event -> event.getEnd().isAfter(Instant.now()))
+                .filter(event -> event.getParticipationConfirmationsRequestsSent() == alreadySentRequests)
+                .filter(event -> {
+                    var start = event.getStart().atZone(timezone);
+                    if (alreadySentRequests == 0) {
+                        return start.minusWeeks(2).isBefore(ZonedDateTime.now(timezone));
+                    }
+                    if (alreadySentRequests == 1) {
+                        return start.minusWeeks(1).isBefore(ZonedDateTime.now(timezone));
+                    }
+                    return false;
+                })
+                .toList();
     }
 
     public void confirmRegistration(EventKey eventKey, RegistrationKey registrationKey, String accessKey) {
@@ -130,7 +130,7 @@ public class ParticipationNotificationUseCase {
             return;
         }
 
-        registration.setConfirmedAt(Instant.now().atZone(ZoneId.of("Europe/Berlin")));
+        registration.setConfirmedAt(Instant.now());
         event.updateRegistration(registrationKey, registration);
         eventRepository.update(event);
     }
