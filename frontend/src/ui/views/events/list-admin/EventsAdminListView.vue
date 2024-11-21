@@ -61,6 +61,46 @@
                     </ul>
                 </template>
             </ContextMenuButton>
+            <ContextMenuButton
+                anchor-align-x="left"
+                dropdown-position-x="right"
+                class="btn-tag"
+                :class="{ active: filterEventStates.length > 0 }"
+            >
+                <template #icon>
+                    <span v-if="filterEventStates.length === 0" class="">Alle Status</span>
+                    <span v-else-if="filterEventStates.length > 4" class=""> {{ filterEventStates.length }} Status </span>
+                    <span v-else class="block max-w-64 truncate">
+                        {{ filterEventStates.map(eventStates.getName).join(', ') }}
+                    </span>
+                </template>
+                <template #default>
+                    <ul>
+                        <li v-if="filterEventStates.length === 0" class="context-menu-item">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Alle Status</span>
+                        </li>
+                        <li v-else class="context-menu-item" @click="filterEventStates = []">
+                            <i class="w-4"></i>
+                            <span>Alle Status</span>
+                        </li>
+                        <template v-for="eventStatus in eventStates.options.value" :key="eventStatus.value">
+                            <li
+                                v-if="filterEventStates.includes(eventStatus.value)"
+                                class="context-menu-item"
+                                @click="filterEventStates = filterEventStates.filter((it) => it !== eventStatus.value)"
+                            >
+                                <i class="fa-solid fa-check w-4"></i>
+                                <span>{{ eventStatus.label }}</span>
+                            </li>
+                            <li v-else class="context-menu-item" @click="filterEventStates.push(eventStatus.value)">
+                                <i class="w-4"></i>
+                                <span>{{ eventStatus.label }}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
                 <span class="">Freie Plätze</span>
             </button>
@@ -355,7 +395,9 @@ import {
 } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
+import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
+import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
@@ -390,12 +432,14 @@ const eventService = useEventService();
 const router = useRouter();
 const signedInUser = authUseCase.getSignedInUser();
 const eventTypes = useEventTypes();
+const eventStates = useEventStates();
 
 const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
 const filterWaitinglist = ref<boolean>(false);
 const filterFreeSlots = ref<boolean>(false);
+const filterEventStates = ref<EventState[]>([]);
 const filterEventType = ref<EventType[]>([]);
 
 const createEventDialog = ref<Dialog<Event> | null>(null);
@@ -404,12 +448,34 @@ const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
 
+useQueryStateSync<boolean>(
+    'has-free-slots',
+    () => filterFreeSlots.value,
+    (v) => (filterFreeSlots.value = v)
+);
+useQueryStateSync<boolean>(
+    'has-waitinglist',
+    () => filterWaitinglist.value,
+    (v) => (filterWaitinglist.value = v)
+);
+useQueryStateSync<string>(
+    'states',
+    () => filterEventStates.value.join('_'),
+    (v) => (filterEventStates.value = v.split('_') as EventState[])
+);
+useQueryStateSync<string>(
+    'types',
+    () => filterEventType.value.join('_'),
+    (v) => (filterEventType.value = v.split('_') as EventType[])
+);
+
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
     return events.value
         ?.filter((it) => eventService.doesEventMatchFilter(it, f))
         .filter((it) => filterEventType.value.length === 0 || filterEventType.value.includes(it.type))
         .filter((it) => !filterFreeSlots.value || it.hasOpenSlots)
+        .filter((it) => filterEventStates.value.length === 0 || filterEventStates.value.includes(it.state))
         .filter((it) => !filterWaitinglist.value || it.waitingListCount > 0);
 });
 

@@ -322,6 +322,7 @@ import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
+import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
@@ -363,6 +364,27 @@ const filterEventType = ref<EventType[]>([]);
 
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const positionSelectDialog = ref<Dialog<void, PositionKey | undefined> | null>(null);
+
+useQueryStateSync<boolean>(
+    'assigned',
+    () => filterAssigned.value,
+    (v) => (filterAssigned.value = v)
+);
+useQueryStateSync<boolean>(
+    'waitinglist',
+    () => filterWaitingList.value,
+    (v) => (filterWaitingList.value = v)
+);
+useQueryStateSync<boolean>(
+    'has-free-slots',
+    () => filterFreeSlots.value,
+    (v) => (filterFreeSlots.value = v)
+);
+useQueryStateSync<string>(
+    'types',
+    () => filterEventType.value.join('_'),
+    (v) => (filterEventType.value = v.split('_') as EventType[])
+);
 
 const hasAnySelectedEventInFuture = computed<boolean>(() => {
     const now = new Date().getTime();
