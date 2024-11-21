@@ -99,11 +99,9 @@ public class ParticipationNotificationUseCase {
 
     private List<Event> getEventsToNotify(int alreadySentRequests) {
         var currentYear = Instant.now().atZone(timezone).getYear();
-        var nextYear = currentYear + 1;
-
         return Stream.concat(
-                eventRepository.findAllByYear(currentYear).stream(),
-                eventRepository.findAllByYear(nextYear).stream())
+                eventRepository.findAllByYear(currentYear + 1).stream(),
+                eventRepository.findAllByYear(currentYear).stream())
                 .filter(event -> event.getEnd().isAfter(Instant.now()))
                 .filter(event -> event.getParticipationConfirmationsRequestsSent() == alreadySentRequests)
                 .filter(event -> {
