@@ -4,7 +4,7 @@
             <NavbarFilter v-if="tab === Tab.QUALIFICATIONS" v-model="qualificationFilter" placeholder="Qualifikationen durchsuchen" />
             <NavbarFilter v-else-if="tab === Tab.POSITIONS" v-model="positionsFilter" placeholder="Positionen durchsuchen" />
         </teleport>
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 md:top-0 xl:pt-8">
             <template #end>
                 <div v-if="tab === Tab.QUALIFICATIONS" class="flex items-stretch gap-2 pb-2">
                     <VSearchButton v-model="qualificationFilter" placeholder="Einträge filtern" class="w-48" />

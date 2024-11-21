@@ -1,18 +1,23 @@
 <template>
     <div
-        class="flex min-h-screen flex-col from-p-700 to-p-600 to-50% xl:bg-gradient-to-r"
+        class="flex min-h-screen flex-col from-p-700 to-p-600 to-50% md:bg-gradient-to-r"
         :class="{ impersonated: signedInUser?.impersonated }"
     >
-        <div id="navbar" class="xl:hidden">
+        <div id="navbar" class="md:hidden">
             <AppNavbar :title="title" />
         </div>
         <VNotifications id="notifications" />
+        <div class="fixed bottom-0 left-0 top-0 z-50 hidden text-onprimary md:block xl:hidden">
+            <AppMenu class="relative z-10 h-screen" :collapsed="true" />
+        </div>
         <div class="flex flex-1 items-stretch">
-            <div class="relative hidden h-screen w-96 flex-col text-white xl:flex">
-                <AppMenu class="relative z-10" />
+            <div class="relative hidden h-screen w-96 flex-col xl:flex">
+                <AppMenu class="relative z-10" :collapsed="false" />
             </div>
-            <div class="relative flex w-0 flex-grow flex-col bg-surface xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl">
-                <RouterView id="router-view" v-model:title="title" class="flex flex-1 flex-col" />
+            <div class="relative flex w-0 flex-grow flex-col md:ml-16 md:h-screen xl:ml-0">
+                <div class="flex flex-1 flex-col bg-surface md:overflow-hidden md:rounded-l-3xl md:shadow-2xl">
+                    <RouterView id="router-view" v-model:title="title" class="flex flex-1 flex-col md:overflow-y-auto" />
+                </div>
             </div>
         </div>
     </div>

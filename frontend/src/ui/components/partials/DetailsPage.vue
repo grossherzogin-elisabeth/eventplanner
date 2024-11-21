@@ -14,13 +14,11 @@
         </div>
 
         <div class="h-16 xl:hidden"></div>
-        <div
-            class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 flex items-stretch justify-end space-x-2 pb-4 pr-3 pt-6 md:pr-14 lg:pointer-events-auto lg:justify-start lg:border-t lg:border-outline-variant lg:bg-surface lg:px-16 lg:pb-8 xl:sticky xl:px-20"
-        >
+        <div class="button-panel">
             <div class="details-page-primary-button pointer-events-auto w-auto">
                 <slot name="primary-button" />
             </div>
-            <div class="pointer-events-auto hidden items-stretch space-x-2 lg:flex">
+            <div class="pointer-events-auto hidden items-stretch space-x-2 xl:flex">
                 <slot name="secondary-buttons" />
             </div>
             <PageActionsContextMenu v-if="$slots['actions-menu'] !== undefined" class="pointer-events-auto">
@@ -52,3 +50,12 @@ interface Props {
 
 const props = defineProps<Props>();
 </script>
+<style>
+.button-panel {
+    @apply pointer-events-none xl:pointer-events-auto;
+    @apply fixed bottom-0 left-0 right-0 z-10;
+    @apply flex items-stretch justify-end space-x-2 xl:justify-start;
+    @apply pb-4 pr-3 pt-6 md:pr-14 xl:sticky xl:px-16 xl:px-20 xl:pb-8;
+    @apply xl:border-t xl:border-outline-variant xl:bg-surface;
+}
+</style>

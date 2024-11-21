@@ -1,6 +1,10 @@
 <template>
-    <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
-        <h1 class="mb-8 mt-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
+    <div
+        v-if="signedInUser.key"
+        class="menu h-full flex-1 overflow-y-auto text-onprimary transition-all duration-100"
+        :class="props.collapsed && isCollapsed ? 'collapsed w-16' : 'md:w-96 md:bg-p-700 xl:bg-transparent'"
+    >
+        <h1 v-if="!props.collapsed" class="menu-title mb-8 mt-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
 
         <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-error-container pl-4 text-onerror-container xl:mx-8 xl:pl-6">
             <div class="flex items-center">
@@ -15,6 +19,15 @@
         </div>
 
         <ul class="menu-list my-4">
+            <li v-if="props.collapsed" class="menu-item mb-8">
+                <button v-if="isCollapsed" @click="isCollapsed = !isCollapsed">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <button v-else @click="isCollapsed = !isCollapsed">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span></span>
+                </button>
+            </li>
             <li v-if="signedInUser.permissions.includes(Permission.READ_EVENTS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.Home }">
                     <i class="fa-solid fa-home"></i>
@@ -151,6 +164,7 @@
             </li>
         </ul>
     </div>
+    <div v-if="props.collapsed && !isCollapsed" class="fixed bottom-0 left-0 right-0 top-0 -z-10 bg-black bg-opacity-75"></div>
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
@@ -161,10 +175,17 @@ import { VInfo } from '@/ui/components/common';
 import { useAuthUseCase, useConfig } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 
+interface Props {
+    collapsed: boolean;
+}
+
+const props = defineProps<Props>();
+
 const config = useConfig();
 const authUseCase = useAuthUseCase();
 const route = useRoute();
 
+const isCollapsed = ref<boolean>(props.collapsed);
 const eventRoute = ref<string | undefined>(undefined);
 const eventRouteActive = ref<boolean>(false);
 
@@ -176,6 +197,7 @@ const eventsExpanded = ref<boolean>(false);
 authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
 setTimeout(() => (loading.value = false), 1000);
 watch(route, () => {
+    isCollapsed.value = props.collapsed;
     eventRouteActive.value = route.matched.find((it) => it.name === 'app_event-parent') !== undefined;
     if (route.name === Routes.EventsCalendar) {
         eventRoute.value = Routes.EventsCalendar + ':' + route.params.year;
@@ -188,8 +210,16 @@ watch(route, () => {
 </script>
 
 <style>
+.collapsed .menu-item span {
+    @apply hidden 2xl:inline;
+}
+
+.collapsed .menu-title {
+    @apply hidden 2xl:block;
+}
+
 .menu-list {
-    @apply space-y-1 px-4 xl:px-8;
+    @apply space-y-1 px-4 md:px-2 xl:px-8;
 }
 
 .menu-list * {
@@ -201,11 +231,12 @@ watch(route, () => {
     @apply overflow-hidden rounded-2xl;
     @apply font-semibold md:text-lg;
     @apply cursor-pointer;
+    @apply whitespace-nowrap;
 }
 
 .menu-item > a,
 .menu-item > button {
-    @apply px-4 py-2 xl:px-6;
+    @apply h-12 px-4 py-2 xl:px-6;
     @apply flex w-full items-center;
 }
 
@@ -262,5 +293,9 @@ watch(route, () => {
 
 .menu-subheading {
     @apply mt-8 pl-8 text-sm font-semibold opacity-50 xl:pl-14;
+}
+
+.transition-width {
+    transition-property: width;
 }
 </style>

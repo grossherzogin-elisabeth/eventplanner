@@ -1,11 +1,11 @@
 <template>
     <nav class="fixed top-0 z-40 w-screen print:hidden">
-        <div :class="meta.hasTransparentHeader ? 'sm:bg-primary' : 'bg-primary'" class="h-nav flex items-center text-onprimary shadow">
+        <div
+            :class="meta.hasTransparentHeader ? 'sm:bg-primary md:bg-transparent' : 'bg-primary'"
+            class="h-nav flex items-center text-onprimary shadow md:shadow-none"
+        >
             <div class="h-full">
-                <div class="flex h-full items-center space-x-4 bg-primary xl:hidden">
-                    <!--                    <RouterLink v-if="backTo" :to="backTo" class="icon-button mx-4 md:ml-12">-->
-                    <!--                        <i class="fa-solid fa-arrow-left"></i>-->
-                    <!--                    </RouterLink>-->
+                <div class="flex h-full items-center space-x-4 bg-primary md:bg-transparent">
                     <button class="icon-button mx-4 md:ml-12" @click="menuOpen = true">
                         <i class="fa-solid fa-bars"></i>
                     </button>
@@ -29,11 +29,11 @@
     <div class="h-nav"></div>
     <div
         v-if="signedInUser && signedInUser.impersonated"
-        class="h-16 bg-error-container pl-8 pr-4 text-onerror-container shadow-inner md:pl-16 md:pr-12"
+        class="h-16 bg-error-container pl-8 pr-4 text-onerror-container shadow-inner md:hidden md:pl-16 md:pr-12"
     >
         <div class="flex h-full items-center">
             <i class="fa-solid fa-warning" />
-            <p class="ml-4 mr-2 line-clamp-3 w-0 flex-grow flex-grow py-4 text-sm font-bold">
+            <p class="ml-4 mr-2 line-clamp-3 w-0 flex-grow py-4 text-sm font-bold">
                 Du siehst die Anwendung aus Sicht von
                 <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
             </p>
@@ -44,7 +44,7 @@
     </div>
 
     <SlideMenu v-model:open="menuOpen">
-        <AppMenu />
+        <AppMenu :collapsed="false" />
     </SlideMenu>
 </template>
 

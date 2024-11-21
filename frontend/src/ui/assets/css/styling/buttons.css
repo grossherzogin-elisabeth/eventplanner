@@ -184,7 +184,7 @@ a.btn-danger,
     @apply inline-block w-4;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1280px) {
     .details-page-primary-button .btn-primary,
     .details-page-primary-button .btn-secondary {
         @apply btn-floating;
