@@ -20,4 +20,9 @@ public record EventKey(
             this.value = UUID.randomUUID().toString();
         }
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

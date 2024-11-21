@@ -110,6 +110,7 @@ public class EventUseCase {
                 Collections.emptyList(),
                 0
         );
+        log.info("Creating event {}", event.getKey());
         return this.eventRepository.create(event);
     }
 
@@ -120,6 +121,7 @@ public class EventUseCase {
     ) {
         signedInUser.assertHasAnyPermission(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_TEAM);
 
+        log.info("Updating event {}", eventKey);
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         var previousState = event.getState();
 
@@ -175,6 +177,7 @@ public class EventUseCase {
 
     public void deleteEvent(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) {
         signedInUser.assertHasPermission(Permission.WRITE_EVENTS);
+        log.info("Deleting event {}", eventKey);
 
         this.eventRepository.findByKey(eventKey).orElseThrow();
         eventRepository.deleteByKey(eventKey);
@@ -184,6 +187,7 @@ public class EventUseCase {
         signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
+        log.info("Generating IMO list for event {}", eventKey);
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         return imoListService.generateImoList(event);
     }
@@ -192,6 +196,7 @@ public class EventUseCase {
         signedInUser.assertHasPermission(Permission.READ_USERS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
+        log.info("Generating consumption list for event {}", eventKey);
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         return consumptionListService.generateConsumptionList(event);
     }
@@ -214,6 +219,7 @@ public class EventUseCase {
                 log.info("Registration for {} already exists. Nothing to do to get requested state.", userKey.value());
                 return event;
             }
+            log.info("Adding registration for user {} on event {}", userKey, eventKey);
             var user = userService.getUserByKey(userKey)
                     .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not exist"));
             event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), userKey, null, spec.note(), Registration.generateAccessKey(), null));
@@ -224,6 +230,7 @@ public class EventUseCase {
             if (event.getRegistrations().stream().anyMatch(r -> spec.name().equals(r.getName()))) {
                 throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
             }
+            log.info("Adding registration for guest {} on event {}", spec.name(), eventKey);
             event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), null, spec.name(), spec.note(), Registration.generateAccessKey(), null));
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
@@ -248,6 +255,7 @@ public class EventUseCase {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
         }
 
+        log.info("Removing registration {} from event {}", registrationKey, eventKey);
         var hasAssignedSlot = false;
         for (Slot slot : event.getSlots()) {
             if (registrationKey.equals(slot.getAssignedRegistration())) {
@@ -287,9 +295,10 @@ public class EventUseCase {
 
         if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
+
+            log.info("Updating registration {} on event {}", registrationKey, eventKey);
             registration.setPosition(spec.positionKey());
             registration.setNote(spec.note());
-
             if (Boolean.TRUE.equals(spec.confirmed())) {
                 registration.setConfirmedAt(Instant.now());
             } else {
@@ -297,10 +306,11 @@ public class EventUseCase {
             }
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
+
+            log.info("Updating registration {} on event {}", registrationKey, eventKey);
             registration.setPosition(spec.positionKey());
             registration.setName(spec.name());
             registration.setNote(spec.note());
-
             if (Boolean.TRUE.equals(spec.confirmed())) {
                 registration.setConfirmedAt(Instant.now());
             } else {

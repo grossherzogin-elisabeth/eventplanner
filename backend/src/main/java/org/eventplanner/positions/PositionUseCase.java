@@ -1,5 +1,6 @@
 package org.eventplanner.positions;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class PositionUseCase {
 
     private final PositionRepository positionRepository;
@@ -30,7 +32,8 @@ public class PositionUseCase {
     public Position createPosition(@NonNull SignedInUser signedInUser, Position position) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
-        position.setKey(new PositionKey(UUID.randomUUID().toString()));
+        position.setKey(new PositionKey());
+        log.info("Creating position {}", position.getKey());
         positionRepository.create(position);
         return position;
     }
@@ -42,6 +45,7 @@ public class PositionUseCase {
             throw new IllegalArgumentException("Keys cannot be changed");
         }
 
+        log.info("Updating position {}", positionKey);
         positionRepository.update(position);
         return position;
     }
@@ -49,6 +53,7 @@ public class PositionUseCase {
     public void deletePosition(@NonNull SignedInUser signedInUser, PositionKey positionKey) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
+        log.info("Deleting position {}", positionKey);
         // TODO remove position from all qualifications and events
         // TODO might want soft delete here
         positionRepository.deleteByKey(positionKey);

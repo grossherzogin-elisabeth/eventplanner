@@ -20,4 +20,9 @@ public record QualificationKey(
             this.value = UUID.randomUUID().toString();
         }
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

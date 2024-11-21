@@ -119,18 +119,20 @@ public class UserUseCase {
     public UserDetails createUser(@NonNull SignedInUser signedInUser, @NonNull CreateUserSpec spec) {
         signedInUser.assertHasPermission(Permission.WRITE_USERS);
         var newUser = new UserDetails(new UserKey(), spec.firstName(), spec.lastName());
+        log.info("Creating user {}", newUser.getKey());
         newUser.setEmail(spec.email());
         return userService.createUser(newUser);
     }
 
-    public UserDetails updateUser(@NonNull SignedInUser signedInUser, @NonNull UserKey key, @NonNull UpdateUserSpec spec) {
-        if (signedInUser.key().equals(key)) {
+    public UserDetails updateUser(@NonNull SignedInUser signedInUser, @NonNull UserKey userKey, @NonNull UpdateUserSpec spec) {
+        if (signedInUser.key().equals(userKey)) {
             signedInUser.assertHasPermission(Permission.WRITE_OWN_USER_DETAILS);
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_USERS);
         }
 
-        var user = userService.getUserByKey(key).orElseThrow();
+        log.info("Updating user {}", userKey);
+        var user = userService.getUserByKey(userKey).orElseThrow();
 
         // these may be changed by a user themselves
         ofNullable(spec.gender()).map(String::trim).ifPresent(user::setGender);
@@ -175,6 +177,7 @@ public class UserUseCase {
     public void deleteUser(@NonNull SignedInUser signedInUser, @NonNull UserKey userKey) {
         signedInUser.assertHasPermission(Permission.DELETE_USERS);
 
+        log.info("Deleting user {}", userKey);
         userService.deleteUser(userKey);
     }
 }

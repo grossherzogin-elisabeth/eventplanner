@@ -1,5 +1,6 @@
 package org.eventplanner.settings;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eventplanner.settings.service.SettingsService;
 import org.eventplanner.settings.values.Settings;
 import org.eventplanner.settings.values.UiSettings;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@Slf4j
 public class SettingsUseCase {
 
     private final SettingsService settingsService;
@@ -30,6 +32,7 @@ public class SettingsUseCase {
     public @NonNull Settings updateSettings(@NonNull SignedInUser signedInUser, @NonNull Settings settings) {
         signedInUser.assertHasPermission(Permission.WRITE_APP_SETTINGS);
 
+        log.info("Updating settings");
         return settingsService.updateSettings(settings);
     }
 

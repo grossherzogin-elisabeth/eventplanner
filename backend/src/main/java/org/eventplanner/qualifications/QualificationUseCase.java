@@ -1,5 +1,6 @@
 package org.eventplanner.qualifications;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eventplanner.qualifications.adapter.QualificationRepository;
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class QualificationUseCase {
 
     private final QualificationRepository qualificationRepository;
@@ -30,7 +32,8 @@ public class QualificationUseCase {
     public Qualification createQualification(@NonNull SignedInUser signedInUser, Qualification qualification) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
-        qualification.setKey(new QualificationKey(UUID.randomUUID().toString()));
+        qualification.setKey(new QualificationKey());
+        log.info("Creating qualification {}", qualification.getKey());
         qualificationRepository.create(qualification);
         return qualification;
     }
@@ -42,6 +45,7 @@ public class QualificationUseCase {
             throw new IllegalArgumentException("Keys cannot be changed");
         }
 
+        log.info("Updating qualification {}", qualificationKey);
         qualificationRepository.update(qualification);
         return qualification;
     }
@@ -49,6 +53,7 @@ public class QualificationUseCase {
     public void deleteQualification(@NonNull SignedInUser signedInUser, QualificationKey qualificationKey) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
+        log.info("Deleting qualification {}", qualificationKey);
         // TODO remove qualification from all users
         // TODO might want soft delete here
         qualificationRepository.deleteByKey(qualificationKey);
