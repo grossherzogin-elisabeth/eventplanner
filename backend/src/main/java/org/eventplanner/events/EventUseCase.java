@@ -121,27 +121,10 @@ public class EventUseCase {
         signedInUser.assertHasAnyPermission(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_TEAM);
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        var previousState = event.getState();
 
-        var updatedSlots = spec.slots();
-        List<UserDetails> usersAddedToCrew = new LinkedList<>();
-        List<UserDetails> usersRemovedFromCrew = new LinkedList<>();
-        if (updatedSlots != null) {
-            var registrationsWithSlotBefore = event.getSlots().stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
-            var registrationsWithSlotAfter = updatedSlots.stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
-
-            var registrationsAddedToCrew = registrationsWithSlotAfter.stream()
-                    .filter((key -> !registrationsWithSlotBefore.contains(key)))
-                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
-                    .toList();
-            usersAddedToCrew = mapRegistrationsToUsers(registrationsAddedToCrew);
-
-            var registrationsRemovedFromCrew = registrationsWithSlotBefore.stream()
-                    .filter((key -> !registrationsWithSlotAfter.contains(key)))
-                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
-                    .toList();
-            usersRemovedFromCrew = mapRegistrationsToUsers(registrationsRemovedFromCrew);
-        }
-
+        List<UserDetails> notifyUsersAddedToCrew = new LinkedList<>();
+        List<UserDetails> notifyUsersRemovedFromCrew = new LinkedList<>();
         if (signedInUser.hasPermission(Permission.WRITE_EVENTS)) {
             applyNullable(spec.name(), event::setName);
             applyNullable(spec.description(), event::setDescription);
@@ -151,13 +134,42 @@ public class EventUseCase {
             applyNullable(spec.end(), event::setEnd);
             applyNullable(spec.locations(), event::setLocations);
         }
+
         if (signedInUser.hasPermission(Permission.WRITE_EVENT_TEAM)) {
+            var updatedSlots = spec.slots();
+            // notify changed crew members if crew is already published
+            if (updatedSlots != null && EventState.PLANNED.equals(event.getState())) {
+                var registrationsWithSlotBefore = event.getSlots().stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
+                var registrationsWithSlotAfter = updatedSlots.stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
+
+                var registrationsAddedToCrew = registrationsWithSlotAfter.stream()
+                        .filter((key -> !registrationsWithSlotBefore.contains(key)))
+                        .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                        .toList();
+                notifyUsersAddedToCrew = mapRegistrationsToUsers(registrationsAddedToCrew);
+
+                var registrationsRemovedFromCrew = registrationsWithSlotBefore.stream()
+                        .filter((key -> !registrationsWithSlotAfter.contains(key)))
+                        .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                        .toList();
+                notifyUsersRemovedFromCrew = mapRegistrationsToUsers(registrationsRemovedFromCrew);
+            }
             applyNullable(spec.slots(), event::setSlots);
         }
 
+        // crew planning has just been published, notify all crew members
+        if (EventState.PLANNED.equals(spec.state()) && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(previousState)) {
+            var crew = event.getSlots().stream()
+                    .map(Slot::getAssignedRegistration)
+                    .filter(Objects::nonNull)
+                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                    .toList();
+            notifyUsersAddedToCrew = mapRegistrationsToUsers(crew);
+        }
+
         var updatedEvent = this.eventRepository.update(this.eventService.removeInvalidSlotAssignments(event));
-        usersAddedToCrew.forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
-        usersRemovedFromCrew.forEach(user -> notificationService.sendRemovedFromCrewNotification(user, updatedEvent));
+        notifyUsersAddedToCrew.forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
+        notifyUsersRemovedFromCrew.forEach(user -> notificationService.sendRemovedFromCrewNotification(user, updatedEvent));
         return updatedEvent;
     }
 

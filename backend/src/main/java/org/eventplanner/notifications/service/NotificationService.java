@@ -171,6 +171,7 @@ public class NotificationService {
     }
 
     public void sendParticipationConfirmationNotificationRequest(UserDetails user, Event event, Registration registration) {
+        log.info("Sending participation notification request to user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
         notification.setTitle("Bitte sofortige um Rückmeldung: " + event.getName());
         sendParticipationNotificationBody(user, event, registration, notification);
@@ -242,13 +243,21 @@ public class NotificationService {
         var htmlContent = renderEmail(notification);
         message.setContent(htmlContent, "text/html; charset=utf-8");
 
-        if (!recipientsWhitelist.isEmpty() && !recipientsWhitelist.contains(toUser.getEmail())) {
-            log.warn("Skipped sending email to {} because notifications are configured to only be sent to whitelisted users", toUser.getEmail());
-        } else if (toUser.getAuthKey() != null) {
-            log.debug("Sending {} email to {}", notification.getType(), toUser.getEmail());
-            mailSender.send(message);
+
+        if (!recipientsWhitelist.isEmpty()) {
+            if (recipientsWhitelist.contains(toUser.getEmail())) {
+                log.debug("Sending {} email to whitelisted recipient {}", notification.getType(), toUser.getEmail());
+                mailSender.send(message);
+            } else {
+                log.warn("Skipped sending email to {} because notifications are configured to only be sent to whitelisted users", toUser.getEmail());
+            }
         } else {
-            log.warn("Skipped sending email to {} because notifications are configured to only be sent to beta users", toUser.getEmail());
+            if (toUser.getAuthKey() != null) {
+                log.debug("Sending {} email to {}", notification.getType(), toUser.getEmail());
+                mailSender.send(message);
+            } else {
+                log.warn("Skipped sending email to {} because notifications are configured to only be sent to beta users", toUser.getEmail());
+            }
         }
     }
 

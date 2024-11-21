@@ -2,17 +2,18 @@ package org.eventplanner.events;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.function.TriConsumer;
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.EventKey;
+import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.notifications.service.NotificationService;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.UserKey;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -35,66 +36,60 @@ public class ParticipationNotificationUseCase {
     private final UserService userService;
 
     public void sendParticipationNotificationRequest() {
-        sendNotification((UserDetails user, Event event, Registration registration) -> {
-            log.info("Sending participation notification to user {}", user.getEmail());
-            notificationService.sendParticipationConfirmationNotification(user, event, registration);
-        }, 0);
+        var eventsToNotify = getEventsToNotify(0);
+        if (eventsToNotify.isEmpty()) {
+            log.info("No events to notify for participation confirmation");
+        } else {
+            eventsToNotify.forEach(event -> sendParticipationNotifications(event, 0));
+        }
     }
 
     public void sendParticipationNotificationRequestReminder() {
-        sendNotification((UserDetails user, Event event, Registration registration) -> {
-            log.info("Sending participation notification request to user {}", user.getEmail());
-            notificationService.sendParticipationConfirmationNotificationRequest(user, event, registration);
-        }, 1);
+        var eventsToNotify = getEventsToNotify(1);
+        if (eventsToNotify.isEmpty()) {
+            log.info("No events to notify for participation confirmation reminder");
+        } else {
+            eventsToNotify.forEach(event -> sendParticipationNotifications(event, 1));
+        }
     }
 
-    private void sendNotification(TriConsumer<UserDetails, Event, Registration> function, int alreadySentRequests) {
-        var eventsToNotify = getEventsToNotify(alreadySentRequests);
+    private void sendParticipationNotifications(@NonNull Event event, int alreadySentRequests) {
+        log.info("Sending participation notification request for event {}", event.getName());
+        var registrationKeys = event.getSlots()
+                .stream()
+                .map(Slot::getAssignedRegistration)
+                .filter(Objects::nonNull)
+                .toList();
+        var userKeyRegistrationMap = new HashMap<UserKey, Registration>();
+        event.getRegistrations().stream()
+                .filter(registration -> registrationKeys.contains(registration.getKey()) && registration.getUserKey() != null)
+                .filter(registration -> registration.getConfirmedAt() == null)
+                .forEach(registration -> userKeyRegistrationMap.put(registration.getUserKey(), registration));
+        var users = event.getRegistrations().stream()
+                .filter(registration -> registrationKeys.contains(registration.getKey()))
+                .map(Registration::getUserKey)
+                .filter(Objects::nonNull)
+                .map(userService::getUserByKey)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
 
-        if (eventsToNotify.isEmpty()) {
-            switch (alreadySentRequests) {
-                case 0 -> log.info("No events to notify for participation confirmation");
-                case 1 -> log.info("No events to notify for participation confirmation reminder");
-            }
-            return;
+        // make sure every userKey has a registration with accessKey
+        // needed for legacy registrations, where accessKey was not generated
+        userKeyRegistrationMap.entrySet().stream()
+                .filter(entry -> entry.getValue().getAccessKey() == null)
+                .forEach(entry -> entry.getValue().setAccessKey(Registration.generateAccessKey()));
+
+        if (alreadySentRequests == 0) {
+            users.forEach(user -> notificationService
+                    .sendParticipationConfirmationNotification(user, event, userKeyRegistrationMap.get(user.getKey())));
+        } else if (alreadySentRequests == 1) {
+            users.forEach(user -> notificationService
+                    .sendParticipationConfirmationNotificationRequest(user, event, userKeyRegistrationMap.get(user.getKey())));
         }
 
-        eventsToNotify.forEach(event -> {
-            log.info("Sending participation notification request for event {}", event.getName());
-
-            var registrationKeys = event.getSlots()
-                    .stream()
-                    .map(Slot::getAssignedRegistration)
-                    .filter(Objects::nonNull).toList();
-
-
-            var userKeyAccessKeyMap = new HashMap<UserKey, Registration>();
-
-            event.getRegistrations().stream()
-                    .filter(registration -> registrationKeys.contains(registration.getKey()) && registration.getUserKey() != null)
-                    .filter(registration -> registration.getConfirmedAt() == null)
-                    .forEach(registration -> userKeyAccessKeyMap.put(registration.getUserKey(), registration));
-
-            var users = event.getRegistrations().stream()
-                    .filter(registration -> registrationKeys.contains(registration.getKey()))
-                    .map(Registration::getUserKey)
-                    .filter(Objects::nonNull)
-                    .map(userService::getUserByKey)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .toList();
-
-            // make sure every userKey has a registration with accessKey
-            // needed for legacy registrations, where accessKey was not generated
-            userKeyAccessKeyMap.entrySet().stream()
-                    .filter(entry -> entry.getValue().getAccessKey() == null)
-                    .forEach(entry -> entry.getValue().setAccessKey(Registration.generateAccessKey()));
-
-            users.forEach(user -> function.accept(user, event, userKeyAccessKeyMap.get(user.getKey())));
-
-            event.setParticipationConfirmationsRequestsSent(alreadySentRequests + 1);
-            eventRepository.update(event);
-        });
+        event.setParticipationConfirmationsRequestsSent(alreadySentRequests + 1);
+        eventRepository.update(event);
     }
 
     private List<Event> getEventsToNotify(int alreadySentRequests) {
@@ -102,6 +97,7 @@ public class ParticipationNotificationUseCase {
         return Stream.concat(
                 eventRepository.findAllByYear(currentYear + 1).stream(),
                 eventRepository.findAllByYear(currentYear).stream())
+                .filter(event -> event.getState().equals(EventState.PLANNED))
                 .filter(event -> event.getEnd().isAfter(Instant.now()))
                 .filter(event -> event.getParticipationConfirmationsRequestsSent() == alreadySentRequests)
                 .filter(event -> {
@@ -117,7 +113,7 @@ public class ParticipationNotificationUseCase {
                 .toList();
     }
 
-    public void confirmRegistration(EventKey eventKey, RegistrationKey registrationKey, String accessKey) {
+    public void confirmRegistration(@NonNull EventKey eventKey, @NonNull RegistrationKey registrationKey, @NonNull String accessKey) {
         var event = eventRepository.findByKey(eventKey).orElseThrow();
         var registration = event.getRegistrations().stream()
                 .filter(r -> registrationKey.equals(r.getKey()) && accessKey.equals(r.getAccessKey()))
@@ -133,7 +129,7 @@ public class ParticipationNotificationUseCase {
         eventRepository.update(event);
     }
 
-    public void declineRegistration(EventKey eventKey, RegistrationKey registrationKey, String accessKey) {
+    public void declineRegistration(@NonNull EventKey eventKey, @NonNull RegistrationKey registrationKey, @NonNull String accessKey) {
         // delete registration, find slot, delete registration key from slot, send email
         var event = eventRepository.findByKey(eventKey).orElseThrow();
         var registration = event.getRegistrations().stream()

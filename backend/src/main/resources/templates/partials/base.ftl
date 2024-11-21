@@ -5,10 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${title}</title>
     <style media="all" type="text/css">
-        /* -------------------------------------
-        GLOBAL RESETS
-    ------------------------------------- */
-
+        /* GLOBAL RESETS */
         body {
             font-family: Helvetica, sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -30,50 +27,33 @@
             font-size: 16px;
             vertical-align: top;
         }
-        /* -------------------------------------
-        BODY & CONTAINER
-    ------------------------------------- */
+        /* BODY & CONTAINER */
 
         body {
-            background-color: #f4f5f6;
+            /*background-color: rgb(247 249 255);*/
+            background-color: transparent;
             margin: 0;
             padding: 0;
         }
 
         .body {
-            background-color: #f4f5f6;
+            /*background-color: rgb(247 249 255);*/
+            background-color: transparent;
             width: 100%;
         }
 
         .container {
             margin: 0 auto !important;
             max-width: 600px;
-            padding: 0;
-            padding-top: 24px;
             width: 600px;
         }
 
         .content {
+            padding: 24px;
             box-sizing: border-box;
             display: block;
             margin: 0 auto;
             max-width: 600px;
-            padding: 0;
-        }
-        /* -------------------------------------
-        HEADER, FOOTER, MAIN
-    ------------------------------------- */
-
-        .main {
-            background: #ffffff;
-            border: 1px solid #eaebed;
-            border-radius: 16px;
-            width: 100%;
-        }
-
-        .wrapper {
-            box-sizing: border-box;
-            padding: 24px;
         }
 
         .footer {
@@ -91,9 +71,8 @@
             font-size: 12px;
             text-align: left;
         }
-        /* -------------------------------------
-        TYPOGRAPHY
-    ------------------------------------- */
+
+        /* TYPOGRAPHY */
 
         p {
             font-family: Helvetica, sans-serif;
@@ -107,127 +86,6 @@
             color: #0867ec;
             text-decoration: underline;
         }
-        /* -------------------------------------
-        BUTTONS
-    ------------------------------------- */
-
-        .btn {
-            box-sizing: border-box;
-            min-width: 100% !important;
-            width: 100%;
-        }
-
-        .btn > tbody > tr > td {
-            padding-bottom: 16px;
-        }
-
-        .btn table {
-            width: auto;
-        }
-
-        .btn table td {
-            background-color: #ffffff;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        .btn a {
-            background-color: #ffffff;
-            border: solid 2px #0867ec;
-            border-radius: 4px;
-            box-sizing: border-box;
-            color: #0867ec;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0;
-            padding: 12px 24px;
-            text-decoration: none;
-            text-transform: capitalize;
-        }
-
-        .btn-primary table td {
-            background-color: #0867ec;
-        }
-
-        .btn-primary a {
-            background-color: #0867ec;
-            border-color: #0867ec;
-            color: #ffffff;
-        }
-
-        @media all {
-            .btn-primary table td:hover {
-                background-color: #ec0867 !important;
-            }
-            .btn-primary a:hover {
-                background-color: #ec0867 !important;
-                border-color: #ec0867 !important;
-            }
-        }
-
-        /* -------------------------------------
-        OTHER STYLES THAT MIGHT BE USEFUL
-    ------------------------------------- */
-
-        .last {
-            margin-bottom: 0;
-        }
-
-        .first {
-            margin-top: 0;
-        }
-
-        .align-center {
-            text-align: center;
-        }
-
-        .align-right {
-            text-align: right;
-        }
-
-        .align-left {
-            text-align: left;
-        }
-
-        .text-link {
-            color: #0867ec !important;
-            text-decoration: underline !important;
-        }
-
-        .clear {
-            clear: both;
-        }
-
-        .mt0 {
-            margin-top: 0;
-        }
-
-        .mb0 {
-            margin-bottom: 0;
-        }
-
-        .preheader {
-            color: transparent;
-            display: none;
-            height: 0;
-            max-height: 0;
-            max-width: 0;
-            opacity: 0;
-            overflow: hidden;
-            mso-hide: all;
-            visibility: hidden;
-            width: 0;
-        }
-
-        .powered-by a {
-            text-decoration: none;
-        }
-
-        /* -------------------------------------
-        RESPONSIVE AND MOBILE FRIENDLY STYLES
-    ------------------------------------- */
 
         @media only screen and (max-width: 640px) {
             .main p,
@@ -235,39 +93,18 @@
             .main span {
                 font-size: 16px !important;
             }
-            .wrapper {
+            .content {
                 padding: 8px !important;
             }
-            .content {
-                padding: 0 !important;
-            }
             .container {
-                padding: 0 !important;
                 padding-top: 8px !important;
                 width: 100% !important;
             }
-            .main {
-                border-left-width: 0 !important;
-                border-radius: 0 !important;
-                border-right-width: 0 !important;
-            }
-            .btn table {
-                max-width: 100% !important;
-                width: 100% !important;
-            }
-            .btn a {
-                font-size: 16px !important;
-                max-width: 100% !important;
-                width: 100% !important;
-            }
             .footer {
-                padding-left: 0;
-                padding-right: 0;
+                padding: 8px !important;
             }
         }
-        /* -------------------------------------
-        PRESERVE THESE STYLES IN THE HEAD
-    ------------------------------------- */
+        /* PRESERVE THESE STYLES IN THE HEAD */
 
         @media all {
             .ExternalClass {
@@ -309,30 +146,22 @@
                 ${content}
             </div>
             <div class="footer">
-                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td class="content-block">
-                            <p>
-                                Schulschiffverein Großherzogin Elisabeth e.V.<br>
-                                Rathausplatz 5, 26931 Elsfleth<br>
-                                Sitz Elsfleth / Weser Vereinsregister Oldenburg 100123
-                            </p>
-                            <p>
-                                Email: <a href="mailto:office@grossherzogin-elisabeth.de">office@grossherzogin-elisabeth.de</a><br>
-                                Tel. <a href="tel:+49 4404 988672">04404 - 988672</a><br>
-                                Bürozeiten: Mo. - Do. 09:00 - 12:00 Uhr und 14:00 - 16:30 Uhr, Fr. 09:00 - 12:00 Uhr
-                            </p>
-                            <p>
-                                Dies ist eine automatisch generierte Email. Du erhältst diese Email, weil mit deiner
-                                Email Adresse ein Nutzer beim Schulschiffverein Großherzogin Elisabeth e.V.
-                                registriert ist. Wenn du keine weiteren Emails erhalten möchtest, gib gerne kurz per
-                                Email an admin@großherzogin-elisabeth.de Bescheid.
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                    </tr>
-                </table>
+                <p>
+                    Schulschiffverein Großherzogin Elisabeth e.V.<br>
+                    Rathausplatz 5, 26931 Elsfleth<br>
+                    Sitz Elsfleth / Weser Vereinsregister Oldenburg 100123
+                </p>
+                <p>
+                    Email: <a href="mailto:office@grossherzogin-elisabeth.de">office@grossherzogin-elisabeth.de</a><br>
+                    Tel. <a href="tel:+49 4404 988672">04404 - 988672</a><br>
+                    Bürozeiten: Mo. - Do. 09:00 - 12:00 Uhr und 14:00 - 16:30 Uhr, Fr. 09:00 - 12:00 Uhr
+                </p>
+                <p>
+                    Dies ist eine automatisch generierte Email. Du erhältst diese Email, weil mit deiner Email Adresse
+                    ein Nutzer beim Schulschiffverein Großherzogin Elisabeth e.V. als Stammcrew Mitglied registriert
+                    ist. Wenn du keine weiteren Emails erhalten möchtest, schreib uns gerne eine Email an
+                    <a href="mailto:admin@grossherzogin-elisabeth.de">admin@grossherzogin-elisabeth.de</a>.
+                </p>
             </div>
         </td>
         <td>&nbsp;</td>
