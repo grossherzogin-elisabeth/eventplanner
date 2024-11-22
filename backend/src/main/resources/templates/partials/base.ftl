@@ -3,8 +3,29 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
     <title>${title}</title>
     <style media="all" type="text/css">
+        a[x-apple-data-detectors] {
+            pointer-events: none !important;
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        .this-is-not-a-phone-number {
+            pointer-events: none !important;
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
         /* GLOBAL RESETS */
         body {
             font-family: Helvetica, sans-serif;
@@ -30,14 +51,12 @@
         /* BODY & CONTAINER */
 
         body {
-            /*background-color: rgb(247 249 255);*/
             background-color: transparent;
             margin: 0;
             padding: 0;
         }
 
         .body {
-            /*background-color: rgb(247 249 255);*/
             background-color: transparent;
             width: 100%;
         }
@@ -74,6 +93,14 @@
 
         /* TYPOGRAPHY */
 
+        h1 {
+            font-family: Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: normal;
+            margin: 0;
+            margin-bottom: 16px;
+        }
+
         p {
             font-family: Helvetica, sans-serif;
             font-size: 16px;
@@ -82,9 +109,15 @@
             margin-bottom: 16px;
         }
 
-        a {
-            color: #0867ec;
-            text-decoration: underline;
+        .facts-table {
+            table-layout: fixed;
+            width: auto;
+            margin: 0;
+            margin-bottom: 16px;
+        }
+
+        .facts-table td {
+            padding-right: 8px;
         }
 
         @media only screen and (max-width: 640px) {

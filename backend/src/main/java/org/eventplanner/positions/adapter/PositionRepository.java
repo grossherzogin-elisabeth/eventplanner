@@ -2,13 +2,17 @@ package org.eventplanner.positions.adapter;
 
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PositionRepository {
-    List<Position> findAll();
-    void create(Position position);
-    void update(Position position);
-    void deleteByKey(PositionKey key);
+    @NonNull Optional<Position> findByKey(@Nullable PositionKey key);
+    @NonNull List<Position> findAll();
+    void create(@NonNull Position position);
+    void update(@NonNull Position position);
+    void deleteByKey(@NonNull PositionKey key);
     void deleteAll();
 }

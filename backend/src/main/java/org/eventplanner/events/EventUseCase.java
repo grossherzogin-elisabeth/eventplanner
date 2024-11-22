@@ -1,5 +1,6 @@
 package org.eventplanner.events;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
@@ -8,6 +9,7 @@ import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.service.EventService;
 import org.eventplanner.events.services.ConsumptionListService;
 import org.eventplanner.events.services.ImoListService;
+import org.eventplanner.events.services.RegistrationService;
 import org.eventplanner.events.spec.CreateEventSpec;
 import org.eventplanner.events.spec.CreateRegistrationSpec;
 import org.eventplanner.events.spec.UpdateEventSpec;
@@ -35,6 +37,7 @@ import static org.eventplanner.common.ObjectUtils.orElse;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class EventUseCase {
     private final EventRepository eventRepository;
     private final NotificationService notificationService;
@@ -42,22 +45,7 @@ public class EventUseCase {
     private final ImoListService imoListService;
     private final ConsumptionListService consumptionListService;
     private final EventService eventService;
-
-    public EventUseCase(
-            @Autowired EventRepository eventRepository,
-            @Autowired NotificationService notificationService,
-            @Autowired UserService userService,
-            @Autowired ImoListService imoListService,
-            @Autowired EventService eventService,
-            @Autowired ConsumptionListService consumptionListService
-    ) {
-        this.eventRepository = eventRepository;
-        this.notificationService = notificationService;
-        this.userService = userService;
-        this.eventService = eventService;
-        this.imoListService = imoListService;
-        this.consumptionListService = consumptionListService;
-    }
+    private final RegistrationService registrationService;
 
     public @NonNull List<Event> getEvents(@NonNull SignedInUser signedInUser, int year) {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
@@ -206,7 +194,6 @@ public class EventUseCase {
             @NonNull EventKey eventKey,
             @NonNull CreateRegistrationSpec spec
     ) {
-        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         var userKey = spec.userKey();
         if (userKey != null) {
             // validate permission and request for user registration
@@ -217,26 +204,14 @@ public class EventUseCase {
                 signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
                 log.info("Adding registration for user {} to event {}", userKey, eventKey);
             }
-            if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUserKey()))) {
-                log.info("Registration for {} already exists on event {}.", userKey, eventKey);
-                return event;
-            }
-            var user = userService.getUserByKey(userKey)
-                    .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not exist"));
-            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), userKey, null, spec.note(), Registration.generateAccessKey(), null));
-            notificationService.sendAddedToWaitingListNotification(user, event);
         } else if (spec.name() != null) {
             // validate permission and request for guest registration
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
-            if (event.getRegistrations().stream().anyMatch(r -> spec.name().equals(r.getName()))) {
-                throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
-            }
             log.info("Adding registration for guest {} on event {}", spec.name(), eventKey);
-            event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), null, spec.name(), spec.note(), Registration.generateAccessKey(), null));
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
         }
-        return this.eventRepository.update(event);
+        return this.registrationService.addRegistration(eventKey, spec);
     }
 
     public @NonNull Event removeRegistration(
@@ -262,29 +237,7 @@ public class EventUseCase {
             }
         }
 
-        var hasAssignedSlot = false;
-        for (Slot slot : event.getSlots()) {
-            if (registrationKey.equals(slot.getAssignedRegistration())) {
-                slot.setAssignedRegistration(null);
-                hasAssignedSlot = true;
-            }
-        }
-
-        event.removeRegistration(registrationKey);
-        event = this.eventRepository.update(event);
-
-        var userKey = registration.getUserKey();
-        if (userKey != null) {
-            var maybeUser = userService.getUserByKey(userKey);
-            if (maybeUser.isPresent()) {
-                if (hasAssignedSlot) {
-                    notificationService.sendRemovedFromCrewNotification(maybeUser.get(), event);
-                } else {
-                    notificationService.sendRemovedFromWaitingListNotification(maybeUser.get(), event);
-                }
-            }
-        }
-        return event;
+        return registrationService.removeRegistration(event, registration);
     }
 
     public @NonNull Event updateRegistration(
@@ -301,31 +254,13 @@ public class EventUseCase {
 
         if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
-
-            log.info("Updating registration {} on event {}", registrationKey, eventKey);
-            registration.setPosition(spec.positionKey());
-            registration.setNote(spec.note());
-            if (Boolean.TRUE.equals(spec.confirmed())) {
-                registration.setConfirmedAt(Instant.now());
-            } else {
-                registration.setConfirmedAt(null);
-            }
+            log.info("User {} updates their registration on event {}", registration.getUserKey(), eventKey);
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
-
             log.info("Updating registration {} on event {}", registrationKey, eventKey);
-            registration.setPosition(spec.positionKey());
-            registration.setName(spec.name());
-            registration.setNote(spec.note());
-            if (Boolean.TRUE.equals(spec.confirmed())) {
-                registration.setConfirmedAt(Instant.now());
-            } else {
-                registration.setConfirmedAt(null);
-            }
         }
 
-        event.updateRegistration(registrationKey, registration);
-        return this.eventRepository.update(event);
+        return registrationService.updateRegistration(event, registration, spec);
     }
 
     private List<UserDetails> mapRegistrationsToUsers(List<Registration> registrations) {

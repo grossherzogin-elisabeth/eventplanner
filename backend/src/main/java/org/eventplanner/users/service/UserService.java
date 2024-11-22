@@ -72,7 +72,10 @@ public class UserService {
         return cache.values();
     }
 
-    public Optional<UserDetails> getUserByKey(@NonNull UserKey key) {
+    public Optional<UserDetails> getUserByKey(@Nullable UserKey key) {
+        if (key == null) {
+            return Optional.empty();
+        }
         var encryptedUserDetails = Optional.ofNullable(cache.get(key));
         if (encryptedUserDetails.isEmpty()) {
             encryptedUserDetails = userRepository.findByKey(key);

@@ -27,10 +27,10 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET, path = "")
     public ResponseEntity<List<?>> getUsers(
-        @RequestParam(name = "details", required = false) boolean details
+            @RequestParam(name = "details", required = false) boolean details
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        if (signedInUser.hasPermission(Permission.READ_USER_DETAILS)) {
+        if (signedInUser.hasPermission(Permission.READ_FULL_USER_DETAILS)) {
             var users = userUseCase.getDetailedUsers(signedInUser).stream();
             if (details) {
                 return ResponseEntity.ok(users.map(UserDetailsRepresentation::fromDomain).toList());
@@ -55,7 +55,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/{key}")
     public ResponseEntity<UserDetailsRepresentation> getUserByKey(
-        @PathVariable("key") String userKey
+            @PathVariable("key") String userKey
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         return userUseCase.getUserByKey(signedInUser, new UserKey(userKey))
@@ -75,8 +75,8 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.PATCH, path = "/{key}")
     public ResponseEntity<UserDetailsRepresentation> updateUser(
-        @PathVariable("key") String userKey,
-        @RequestBody UpdateUserRequest spec
+            @PathVariable("key") String userKey,
+            @RequestBody UpdateUserRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var user = userUseCase.updateUser(signedInUser, new UserKey(userKey), spec.toDomain());
@@ -85,7 +85,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.PATCH, path = "/self")
     public ResponseEntity<UserDetailsRepresentation> updateSignedInUser(
-        @RequestBody UpdateUserRequest spec
+            @RequestBody UpdateUserRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var user = userUseCase.updateUser(signedInUser, signedInUser.key(), spec.toDomain());

@@ -14,11 +14,14 @@ import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.notifications.values.Notification;
 import org.eventplanner.notifications.values.NotificationType;
+import org.eventplanner.positions.entities.Position;
 import org.eventplanner.settings.service.SettingsService;
 import org.eventplanner.settings.values.EmailSettings;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
+import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
@@ -26,32 +29,31 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
 public class NotificationService {
     private static final ZoneId timezone = ZoneId.of("Europe/Berlin");
+
     private final Configuration freemarkerConfig;
     private final SettingsService settingsService;
     private final String frontendDomain;
     private final List<String> recipientsWhitelist;
-    private final List<String> admins;
-    private final UserService userService;
 
     public NotificationService(
             Configuration freemarkerConfig,
             SettingsService settingsService,
             @Value("${frontend.domain}") String frontendDomain,
-            @Value("${email.recipients-whitelist}") String recipientsWhitelist,
-            @Value("${auth.admins}") String admins,
-            UserService userService
-    ) {
+            @Value("${email.recipients-whitelist}") String recipientsWhitelist) {
         this.freemarkerConfig = freemarkerConfig;
         this.settingsService = settingsService;
         this.frontendDomain = frontendDomain;
@@ -59,18 +61,13 @@ public class NotificationService {
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .toList();
-        this.admins = Arrays.stream(admins.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isBlank())
-                .toList();
-        this.userService = userService;
     }
 
     private EmailSettings getEmailSettings() {
         return settingsService.getSettings().emailSettings();
     }
 
-    private JavaMailSender getMailSender(EmailSettings emailSettings) {
+    private JavaMailSender getMailSender(@NonNull EmailSettings emailSettings) {
         var host = emailSettings.getHost();
         var port = emailSettings.getPort();
         var username = emailSettings.getUsername();
@@ -99,50 +96,38 @@ public class NotificationService {
         return mailSender;
     }
 
-    public void sendAddedToWaitingListNotification(UserDetails user, Event event) {
-        log.info("Sending added to waiting list notification to user {}", user.getEmail());
+    public void sendAddedToWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
+        log.info("Sending added to waiting list notification to user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.ADDED_TO_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
-        notification.getProps().put("user", user);
-        notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("user", to);
+        addEventDetails(notification, event);
         try {
-            sendNotification(notification, user);
+            sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'removed from waiting list' notification to user {}", user.getEmail(), e);
+            log.error("Failed to send 'removed from waiting list' notification to user {}", to.getEmail(), e);
         }
     }
 
-    public void sendRemovedFromWaitingListNotification(UserDetails user, Event event) {
-        log.info("Sending removed from waiting list notification to user {}", user.getEmail());
+    public void sendRemovedFromWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
+        log.info("Sending removed from waiting list notification to user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
-        notification.getProps().put("user", user);
-        notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("user", to);
+        addEventDetails(notification, event);
         try {
-            sendNotification(notification, user);
+            sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'removed from waiting list' notification to user {}", user.getEmail(), e);
+            log.error("Failed to send 'removed from waiting list' notification to user {}", to.getEmail(), e);
         }
     }
 
-    public void sendAddedToCrewNotification(UserDetails user, Event event) {
+    public void sendAddedToCrewNotification(@NonNull UserDetails user, @NonNull Event event) {
         log.info("Sending added to crew notification to user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.ADDED_TO_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
+        addEventDetails(notification, event);
         notification.getProps().put("user", user);
-        notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         try {
             sendNotification(notification, user);
         } catch (Exception e) {
@@ -150,58 +135,93 @@ public class NotificationService {
         }
     }
 
-    public void sendRemovedFromCrewNotification(UserDetails user, Event event) {
-        log.info("Sending removed from crew notification to user {}", user.getEmail());
+    public void sendRemovedFromCrewNotification(@NonNull UserDetails to, @NonNull Event event) {
+        log.info("Sending removed from crew notification to user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
-        notification.getProps().put("user", user);
-        notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        notification.getProps().put("user", to);
+        addEventDetails(notification, event);
         try {
-            sendNotification(notification, user);
+            sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'removed from crew' notification to user {}", user.getEmail(), e);
+            log.error("Failed to send 'removed from crew' notification to user {}", to.getEmail(), e);
         }
     }
 
-    public void sendFirstParticipationConfirmationRequestNotification(UserDetails user, Event event, Registration registration) {
-        log.info("Sending first participation confirmation request to user {}", user.getEmail());
+    public void sendCrewRegistrationCanceledNotification(
+            @NonNull UserDetails to,
+            @NonNull Event event,
+            @NonNull String userName,
+            @NonNull String position
+    ) {
+        log.info("Sending crew registration canceled notification to user {}", to.getEmail());
+        Notification notification = new Notification(NotificationType.CREW_REGISTRATION_CANCELED);
+        notification.setTitle("Absage zu " + event.getName());
+        addEventDetails(notification, event);
+        notification.getProps().put("userName", userName);
+        notification.getProps().put("position", position);
+        try {
+            sendNotification(notification, to);
+        } catch (Exception e) {
+            log.error("Failed to send 'crew registration canceled' notification to to {}", to.getEmail(), e);
+        }
+    }
+
+    public void sendFirstParticipationConfirmationRequestNotification(
+            @NonNull UserDetails to,
+            @NonNull Event event,
+            @NonNull Registration registration
+    ) {
+        log.info("Sending first participation confirmation request to user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION);
         notification.setTitle("Bitte um Rückmeldung: " + event.getName());
-        sendParticipationNotificationBody(user, event, registration, notification);
+        addEventDetails(notification, event);
+
+        sendParticipationNotificationBody(to, event, registration, notification);
     }
 
-    public void sendSecondParticipationConfirmationRequestNotification(UserDetails user, Event event, Registration registration) {
-        log.info("Sending second participation confirmation request to user {}", user.getEmail());
+    public void sendSecondParticipationConfirmationRequestNotification(
+            @NonNull UserDetails to,
+            @NonNull Event event,
+            @NonNull Registration registration
+    ) {
+        log.info("Sending second participation confirmation request to user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
         notification.setTitle("Bitte sofortige um Rückmeldung: " + event.getName());
-        sendParticipationNotificationBody(user, event, registration, notification);
+        addEventDetails(notification, event);
+
+        sendParticipationNotificationBody(to, event, registration, notification);
     }
 
-    private void sendParticipationNotificationBody(UserDetails user, Event event, Registration registration, Notification notification) {
-        notification.getProps().put("user", user);
-        notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", event.getStart().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("event_end_date", event.getEnd().atZone(timezone)
-                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        notification.getProps().put("deadline", event.getStart().atZone(timezone)
-                .minusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+    private void sendParticipationNotificationBody(
+            @NonNull UserDetails to,
+            @NonNull Event event,
+            @NonNull Registration registration,
+            @NonNull Notification notification
+    ) {
+        notification.getProps().put("user", to);
+        notification.getProps().put("deadline", formatDate(event.getStart().atZone(timezone).minusDays(7)));
         var eventUrl = frontendDomain + "/events/" + event.getStart().atZone(timezone)
                 .getYear() + "/details/" + event.getKey() + "/registrations/" + registration.getKey();
         notification.getProps().put("confirm_link", eventUrl + "/confirm?accessKey=" + registration.getAccessKey());
         notification.getProps().put("deny_link", eventUrl + "/deny?accessKey=" + registration.getAccessKey());
         try {
-            sendNotification(notification, user);
+            sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'participation confirmation' notification to user {}", user.getEmail(), e);
+            log.error("Failed to send participation confirmation request to to {}", to.getEmail(), e);
         }
     }
 
-    public void sendNotification(Notification notification, UserDetails toUser) throws IOException, TemplateException, MessagingException {
+    private void addEventDetails(@NonNull Notification notification, @NonNull Event event) {
+        notification.getProps().put("event", event);
+        notification.getProps().put("event_start_date", formatDate(event.getStart().atZone(timezone)));
+        notification.getProps().put("event_start_datetime", formatDateTime(event.getStart().atZone(timezone)));
+        notification.getProps().put("event_end_date", formatDate(event.getEnd().atZone(timezone)));
+        notification.getProps().put("event_end_datetime", formatDateTime(event.getStart().atZone(timezone)));
+        notification.getProps().put("event_crew_on_board_datetime", formatDateTime(event.getStart().atZone(timezone)));
+    }
+
+    public void sendNotification(@NonNull Notification notification, @NonNull UserDetails to) throws IOException, TemplateException, MessagingException {
         var emailSettings = getEmailSettings();
 
         if (Strings.isEmpty(emailSettings.getUsername())) {
@@ -235,37 +255,40 @@ public class NotificationService {
 
         message.setFrom(new InternetAddress(from, fromDisplayName));
         message.setReplyTo(new Address[]{ new InternetAddress(replyTo, replyToDisplayName) });
-        message.setRecipients(RecipientType.TO, toUser.getEmail());
-        // TODO what emails should also be send to crew speaker?
-        // message.setRecipients(RecipientType.BCC, "crew.grossherzogin-elisabeth.de");
+        message.setRecipients(RecipientType.TO, to.getEmail());
         message.setSubject(notification.getTitle());
 
         notification.getProps().put("title", notification.getTitle());
         notification.getProps().put("app_link", frontendDomain);
-        notification.getProps().put("user", toUser);
+        notification.getProps().put("user", to);
         notification.getProps().put("footer", emailSettings.getFooter());
         var htmlContent = renderEmail(notification);
         message.setContent(htmlContent, "text/html; charset=utf-8");
 
-
         if (!recipientsWhitelist.isEmpty()) {
-            if (recipientsWhitelist.contains(toUser.getEmail())) {
-                log.debug("Sending {} email to whitelisted recipient {}", notification.getType(), toUser.getEmail());
-                mailSender.send(message);
+            if (recipientsWhitelist.contains(to.getEmail())) {
+                log.info("Sending {} email to whitelisted recipient {}", notification.getType(), to.getEmail());
+                try (var exec = Executors.newSingleThreadExecutor()) {
+                    exec.submit(() -> mailSender.send(message));
+                    exec.shutdown();
+                }
             } else {
-                log.warn("Skipped sending email to {} because notifications are configured to only be sent to whitelisted users", toUser.getEmail());
+                log.warn("Skipped sending email to {} because notifications are configured to only be sent to whitelisted users", to.getEmail());
             }
         } else {
-            if (toUser.getAuthKey() != null) {
-                log.debug("Sending {} email to {}", notification.getType(), toUser.getEmail());
-                mailSender.send(message);
+            if (to.getAuthKey() != null) {
+                log.info("Sending {} email to {}", notification.getType(), to.getEmail());
+                try (var exec = Executors.newSingleThreadExecutor()) {
+                    exec.submit(() -> mailSender.send(message));
+                    exec.shutdown();
+                }
             } else {
-                log.warn("Skipped sending email to {} because notifications are configured to only be sent to beta users", toUser.getEmail());
+                log.warn("Skipped sending email to {} because notifications are configured to only be sent to beta users", to.getEmail());
             }
         }
     }
 
-    private String renderEmail(Notification notification) throws IOException, TemplateException {
+    private String renderEmail(@NonNull Notification notification) throws IOException, TemplateException {
         var props = notification.getProps();
         String content = renderTemplate("emails/" + notification.getType().toString() + ".ftl", props);
 
@@ -274,30 +297,22 @@ public class NotificationService {
         return renderTemplate("partials/base.ftl", baseTemplateParams);
     }
 
-    private String renderTemplate(String template, Object params) throws TemplateException, IOException {
+    private String renderTemplate(@NonNull String template, @NonNull Object params) throws TemplateException, IOException {
         Template content = freemarkerConfig.getTemplate(template);
         Writer writer = new StringWriter();
         content.process(params, writer);
         return writer.toString();
     }
 
-    public void sendDeclinedRegistrationNotification(Event event, String userName) {
-        Notification notification = new Notification(NotificationType.DECLINED_REGISTRATION_ADMIN);
+    private String formatDate(ZonedDateTime zonedDateTime) {
+        var formatted = zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        formatted = formatted.replace(".", "&#8203.");
+        return formatted;
+    }
 
-        notification.setTitle("Absage von " + userName);
-        notification.getProps().put("event", event);
-        notification.getProps().put("userName", userName);
-        try {
-            // TODO this should be users with admin roles, not static admins listed in the configuration
-            admins.forEach(admin -> {
-                try {
-                    sendNotification(notification, userService.getUserByEmail(admin).orElseThrow());
-                } catch (Exception e) {
-                    log.error("Failed to send 'declined registration' notification to admin {}", admin, e);
-                }
-            });
-        } catch (Exception e) {
-            log.error("Failed to send 'declined registration' notification to admin", e);
-        }
+    private String formatDateTime(ZonedDateTime zonedDateTime) {
+        var formatted = zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        formatted = formatted.replace(".", "&#8203.");
+        return formatted;
     }
 }

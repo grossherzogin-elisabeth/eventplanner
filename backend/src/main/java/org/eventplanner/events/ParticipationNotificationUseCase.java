@@ -6,6 +6,8 @@ import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
+import org.eventplanner.events.services.RegistrationService;
+import org.eventplanner.events.spec.UpdateRegistrationSpec;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.RegistrationKey;
@@ -34,6 +36,7 @@ public class ParticipationNotificationUseCase {
     private final EventRepository eventRepository;
     private final NotificationService notificationService;
     private final UserService userService;
+    private final RegistrationService registrationService;
 
     public void sendParticipationNotificationRequest() {
         var eventsToNotify = getEventsToNotify(0);
@@ -123,7 +126,7 @@ public class ParticipationNotificationUseCase {
         if (registration.getConfirmedAt() != null) {
             return;
         }
-
+        log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getKey());
         registration.setConfirmedAt(Instant.now());
         event.updateRegistration(registrationKey, registration);
         eventRepository.update(event);
@@ -136,25 +139,7 @@ public class ParticipationNotificationUseCase {
                 .filter(r -> registrationKey.equals(r.getKey()) && accessKey.equals(r.getAccessKey()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Registration not found"));
-
-        event.removeRegistration(registration.getKey());
-
-        event.getSlots().stream()
-                .filter(s -> registrationKey.equals(s.getAssignedRegistration()))
-                .findFirst()
-                .ifPresent((slot) -> slot.setAssignedRegistration(null));
-
-        eventRepository.update(event);
-
-        if (registration.getUserKey() != null) {
-            notificationService.sendRemovedFromCrewNotification(userService.getUserByKey(registration.getUserKey()).orElseThrow(), event);
-        }
-
-        // notify admins about declined registration
-        var userName = registration.getUserKey() != null ?
-                userService.getUserByKey(registration.getUserKey()).map(UserDetails::getFullName).orElseThrow() :
-                registration.getName();
-
-        notificationService.sendDeclinedRegistrationNotification(event, userName);
+        log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getKey());
+        registrationService.removeRegistration(event, registration);
     }
 }

@@ -35,7 +35,7 @@ public enum NotificationType {
     // As a team planner
     // I want to get a notification when someone cancels an event signup
     // So that I know early if I need to find a replacement
-    DECLINED_REGISTRATION_ADMIN("declined_registration_admin");
+    CREW_REGISTRATION_CANCELED("crew_registration_canceled"),;
 
     // As a user manager
     // I want to get a notification when a new user registers
