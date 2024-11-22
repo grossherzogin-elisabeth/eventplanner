@@ -131,6 +131,17 @@ export class EventRestRepository implements EventRepository {
         return EventType.MultiDayEvent;
     }
 
+    public async findByKey(key: EventKey): Promise<Event> {
+        const response = await fetch(`/api/v1/events/${key}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        const responseData: EventRepresentation = await response.clone().json();
+        return EventRestRepository.mapEventToDomain(responseData);
+    }
+
     public async findAll(year: number): Promise<Event[]> {
         const response = await fetch(`/api/v1/events?year=${year}`, {
             credentials: 'include',

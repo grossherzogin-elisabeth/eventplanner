@@ -30,7 +30,8 @@ export class EventCachingService {
     }
 
     public async updateCache(event: Event): Promise<Event> {
-        if ((await this.cache.count()) > 0) {
+        const all = await this.cache.findAll();
+        if (all.find((it) => it.start.getFullYear() === event.start.getFullYear())) {
             return await this.cache.save(event);
         }
         return event;

@@ -1,6 +1,8 @@
 import type { Event, EventKey, ImportError } from '@/domain';
 
 export interface EventRepository {
+    findByKey(key: EventKey): Promise<Event>;
+
     findAll(year: number): Promise<Event[]>;
 
     updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event>;
