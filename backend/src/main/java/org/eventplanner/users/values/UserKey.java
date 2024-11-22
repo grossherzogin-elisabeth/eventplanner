@@ -54,4 +54,9 @@ public record UserKey(
             this.value = UUID.randomUUID().toString();
         }
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

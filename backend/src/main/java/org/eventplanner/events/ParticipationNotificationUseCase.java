@@ -82,10 +82,10 @@ public class ParticipationNotificationUseCase {
 
         if (alreadySentRequests == 0) {
             users.forEach(user -> notificationService
-                    .sendParticipationConfirmationNotification(user, event, userKeyRegistrationMap.get(user.getKey())));
+                    .sendFirstParticipationConfirmationRequestNotification(user, event, userKeyRegistrationMap.get(user.getKey())));
         } else if (alreadySentRequests == 1) {
             users.forEach(user -> notificationService
-                    .sendParticipationConfirmationNotificationRequest(user, event, userKeyRegistrationMap.get(user.getKey())));
+                    .sendSecondParticipationConfirmationRequestNotification(user, event, userKeyRegistrationMap.get(user.getKey())));
         }
 
         event.setParticipationConfirmationsRequestsSent(alreadySentRequests + 1);

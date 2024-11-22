@@ -212,14 +212,15 @@ public class EventUseCase {
             // validate permission and request for user registration
             if (userKey.equals(signedInUser.key())) {
                 signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
+                log.info("User {} signed up on event {}", userKey, eventKey);
             } else {
                 signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
+                log.info("Adding registration for user {} to event {}", userKey, eventKey);
             }
             if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUserKey()))) {
-                log.info("Registration for {} already exists. Nothing to do to get requested state.", userKey.value());
+                log.info("Registration for {} already exists on event {}.", userKey, eventKey);
                 return event;
             }
-            log.info("Adding registration for user {} on event {}", userKey, eventKey);
             var user = userService.getUserByKey(userKey)
                     .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not exist"));
             event.addRegistration(new Registration(new RegistrationKey(), spec.positionKey(), userKey, null, spec.note(), Registration.generateAccessKey(), null));
@@ -251,11 +252,16 @@ public class EventUseCase {
 
         if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
+            log.info("User {} removed their registration from event {}", signedInUser.key(), eventKey);
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
+            if (registration.getUserKey() != null) {
+                log.info("Removing registration of {} from event {}", registration.getUserKey(), eventKey);
+            } else if (registration.getName() != null) {
+                log.info("Removing guest registration of {} from event {}", registration.getName(), eventKey);
+            }
         }
 
-        log.info("Removing registration {} from event {}", registrationKey, eventKey);
         var hasAssignedSlot = false;
         for (Slot slot : event.getSlots()) {
             if (registrationKey.equals(slot.getAssignedRegistration())) {

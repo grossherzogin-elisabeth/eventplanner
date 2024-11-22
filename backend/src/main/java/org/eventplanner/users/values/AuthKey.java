@@ -7,4 +7,8 @@ import java.io.Serializable;
 public record AuthKey(
     @NonNull String value
 ) implements Serializable {
+    @Override
+    public String toString() {
+        return value;
+    }
 }

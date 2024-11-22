@@ -18,7 +18,6 @@ import org.eventplanner.settings.service.SettingsService;
 import org.eventplanner.settings.values.EmailSettings;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -101,6 +100,7 @@ public class NotificationService {
     }
 
     public void sendAddedToWaitingListNotification(UserDetails user, Event event) {
+        log.info("Sending added to waiting list notification to user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.ADDED_TO_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", user);
@@ -117,6 +117,7 @@ public class NotificationService {
     }
 
     public void sendRemovedFromWaitingListNotification(UserDetails user, Event event) {
+        log.info("Sending removed from waiting list notification to user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", user);
@@ -133,6 +134,7 @@ public class NotificationService {
     }
 
     public void sendAddedToCrewNotification(UserDetails user, Event event) {
+        log.info("Sending added to crew notification to user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.ADDED_TO_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", user);
@@ -149,6 +151,7 @@ public class NotificationService {
     }
 
     public void sendRemovedFromCrewNotification(UserDetails user, Event event) {
+        log.info("Sending removed from crew notification to user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", user);
@@ -164,14 +167,15 @@ public class NotificationService {
         }
     }
 
-    public void sendParticipationConfirmationNotification(UserDetails user, Event event, Registration registration) {
+    public void sendFirstParticipationConfirmationRequestNotification(UserDetails user, Event event, Registration registration) {
+        log.info("Sending first participation confirmation request to user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION);
         notification.setTitle("Bitte um Rückmeldung: " + event.getName());
         sendParticipationNotificationBody(user, event, registration, notification);
     }
 
-    public void sendParticipationConfirmationNotificationRequest(UserDetails user, Event event, Registration registration) {
-        log.info("Sending participation notification request to user {}", user.getEmail());
+    public void sendSecondParticipationConfirmationRequestNotification(UserDetails user, Event event, Registration registration) {
+        log.info("Sending second participation confirmation request to user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
         notification.setTitle("Bitte sofortige um Rückmeldung: " + event.getName());
         sendParticipationNotificationBody(user, event, registration, notification);
@@ -284,6 +288,7 @@ public class NotificationService {
         notification.getProps().put("event", event);
         notification.getProps().put("userName", userName);
         try {
+            // TODO this should be users with admin roles, not static admins listed in the configuration
             admins.forEach(admin -> {
                 try {
                     sendNotification(notification, userService.getUserByEmail(admin).orElseThrow());

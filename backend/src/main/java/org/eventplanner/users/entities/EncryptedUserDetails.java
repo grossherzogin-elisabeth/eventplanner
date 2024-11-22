@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EncryptedUserDetails implements Serializable {
     private @NonNull UserKey key;
-    private @Nullable EncryptedString authKey;
+    private @Nullable EncryptedString authKey; // TODO should this really be encrypted?
     private @Nullable EncryptedString gender;
     private @Nullable EncryptedString title;
     private @NonNull EncryptedString firstName;
