@@ -14,17 +14,17 @@
                         Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.
                     </VInfo>
                 </section>
-                <section v-if="event.state === EventState.Canceled" class="sticky left-4 right-4 top-14 col-start-2 md:static">
+                <section v-if="event.state === EventState.Canceled" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
                     <VWarning> Diese Reise wurde abgesagt! </VWarning>
                 </section>
-                <section v-else-if="event.signedInUserAssignedPosition" class="sticky left-4 right-4 top-14 col-start-2 md:static">
+                <section v-else-if="event.signedInUserAssignedPosition" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
                     <VInfo>
                         Du bist für diese Reise als
                         {{ positions.get(event.signedInUserAssignedPosition).name }}
                         eingeplant
                     </VInfo>
                 </section>
-                <section v-else-if="event.signedInUserWaitingListPosition" class="sticky left-4 right-4 top-14 col-start-2 md:static">
+                <section v-else-if="event.signedInUserWaitingListPosition" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
                     <VInfo>
                         Du stehst für diese Reise als
                         {{ positions.get(event.signedInUserWaitingListPosition).name }}
@@ -88,7 +88,7 @@
                             <div
                                 v-for="(location, index) in event.locations"
                                 :key="index"
-                                class="relative z-10 mb-4 flex items-center last:mb-0"
+                                class="relative mb-4 flex items-center last:mb-0"
                             >
                                 <div class="flex w-12 flex-col items-center self-stretch">
                                     <div
