@@ -8,9 +8,9 @@
                     '--open-close-animation-duration': `${animationDuration}ms`,
                 }"
                 class="dialog-background"
-                @click="reject()"
+                @mousedown="reject()"
             >
-                <div class="dialog-wrapper" @click.stop="">
+                <div class="dialog-wrapper" @click.stop="" @mousedown.stop="">
                     <slot name="dialog">
                         <div
                             :class="`
