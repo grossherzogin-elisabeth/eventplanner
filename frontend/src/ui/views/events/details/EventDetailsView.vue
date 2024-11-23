@@ -106,7 +106,7 @@
                                                 <i class="fa-solid fa-info-circle text-primary text-opacity-75 hover:text-opacity-100"></i>
                                             </template>
                                             <template #default>
-                                                <div @click.stop @mouseup.stop>
+                                                <div class="overflow-hidden" @click.stop @mouseup.stop>
                                                     <p class="text-sm">
                                                         {{ location.information }}
                                                     </p>
