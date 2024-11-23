@@ -47,6 +47,9 @@ export function useQueryStateSync<T>(prop: string, get: () => T, set: (t: T) => 
             if (!Number.isNaN(param)) {
                 set(param as T);
             }
+        } else if (typeof value === 'boolean') {
+            const param = route.query[prop] as string;
+            set((param === 'true') as T);
         } else {
             const param = route.query[prop] as string;
             if (param) {

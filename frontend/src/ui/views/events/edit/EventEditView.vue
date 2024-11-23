@@ -36,6 +36,7 @@
                                     :errors="validation.errors.value['state']"
                                     :errors-visible="validation.showErrors.value"
                                     required
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
                                 />
                             </div>
                             <div class="mb-4">
@@ -45,6 +46,7 @@
                                     :errors="validation.errors.value['name']"
                                     :errors-visible="validation.showErrors.value"
                                     required
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
                                 />
                             </div>
                             <div class="mb-4">
@@ -60,6 +62,7 @@
                                     :errors="validation.errors.value['type']"
                                     :errors-visible="validation.showErrors.value"
                                     required
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
                                 />
                             </div>
                             <div class="mb-4">
@@ -68,6 +71,7 @@
                                     v-model.trim="event.description"
                                     :errors="validation.errors.value['description']"
                                     :errors-visible="validation.showErrors.value"
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
                                 />
                             </div>
                             <div class="mb-4 flex space-x-4">
@@ -80,6 +84,7 @@
                                         :errors="validation.errors.value['start']"
                                         :errors-visible="validation.showErrors.value"
                                         required
+                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
                                         @update:model-value="event.start = updateDate(event.start, $event)"
                                     />
                                 </div>
@@ -90,6 +95,7 @@
                                         :errors="validation.errors.value['start']"
                                         :errors-visible="validation.showErrors.value"
                                         required
+                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
                                         @update:model-value="event.start = updateTime(event.start, $event, 'minutes')"
                                     />
                                 </div>
@@ -105,6 +111,7 @@
                                         :errors="validation.errors.value['end']"
                                         :errors-visible="validation.showErrors.value"
                                         required
+                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
                                         @update:model-value="event.end = updateDate(event.end, $event)"
                                     />
                                 </div>
@@ -115,6 +122,7 @@
                                         :errors="validation.errors.value['end']"
                                         :errors-visible="validation.showErrors.value"
                                         required
+                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
                                         @update:model-value="event.end = updateTime(event.end, $event, 'minutes')"
                                     />
                                 </div>
@@ -122,7 +130,7 @@
                         </section>
                     </div>
                 </template>
-                <template #[Tab.EVENT_POSITIONS]>
+                <template #[Tab.EVENT_TEAM]>
                     <CrewEditor v-if="event" v-model:event="event" />
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
@@ -153,34 +161,34 @@
         </template>
         <template #secondary-buttons>
             <div class="hidden items-stretch space-x-2 lg:flex">
-                <button v-if="tab === Tab.EVENT_POSITIONS" class="btn-secondary" @click="addRegistration()">
+                <button v-if="tab === Tab.EVENT_TEAM" class="permission-write-registrations btn-secondary" @click="addRegistration()">
                     <i class="fa-solid fa-user-plus" />
                     <span>Anmeldung hinzufügen</span>
                 </button>
-                <button v-else-if="tab === Tab.EVENT_SLOTS" class="btn-secondary" @click="addSlot()">
+                <button v-else-if="tab === Tab.EVENT_SLOTS" class="permission-write-event-slots btn-secondary" @click="addSlot()">
                     <i class="fa-solid fa-list" />
                     <span>Crewslot hinzufügen</span>
                 </button>
-                <button v-else-if="tab === Tab.EVENT_LOCATIONS" class="btn-secondary" @click="addLocation()">
+                <button v-else-if="tab === Tab.EVENT_LOCATIONS" class="permission-write-event-details btn-secondary" @click="addLocation()">
                     <i class="fa-solid fa-route" />
                     <span>Reiseabschnitt hinzufügen</span>
                 </button>
             </div>
         </template>
         <template #actions-menu>
-            <li class="context-menu-item permission-write-registrations" @click="addRegistration()">
+            <li class="permission-write-registrations context-menu-item" @click="addRegistration()">
                 <i class="fa-solid fa-user-plus" />
                 <span>Anmeldung hinzufügen</span>
             </li>
-            <li class="context-menu-item permission-write-events" @click="addSlot()">
+            <li class="permission-write-event-slots context-menu-item" @click="addSlot()">
                 <i class="fa-solid fa-list" />
                 <span>Crewslot hinzufügen</span>
             </li>
-            <li class="context-menu-item permission-write-events" @click="addLocation()">
+            <li class="permission-write-event-details context-menu-item" @click="addLocation()">
                 <i class="fa-solid fa-route" />
                 <span>Reiseabschnitt hinzufügen</span>
             </li>
-            <li class="context-menu-item permission-read-user-details" @click="contactTeam()">
+            <li class="permission-read-user-details context-menu-item" @click="contactTeam()">
                 <i class="fa-solid fa-envelope" />
                 <span>Crew kontaktieren</span>
             </li>
@@ -188,13 +196,13 @@
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
             </li>
-            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
+            <li v-if="event" class="permission-read-users context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Verzehrliste generieren</span>
             </li>
             <li
                 v-if="event?.state === EventState.Draft"
-                class="permission-write-events context-menu-item"
+                class="permission-write-event-details context-menu-item"
                 @click="openEventForCrewSignup()"
             >
                 <i class="fa-solid fa-lock-open" />
@@ -202,17 +210,17 @@
             </li>
             <li
                 v-if="event?.state === EventState.OpenForSignup"
-                class="permission-write-events context-menu-item"
+                class="permission-write-event-details context-menu-item"
                 @click="publishPlannedCrew()"
             >
                 <i class="fa-solid fa-earth-europe" />
                 <span>Crew veröffentlichen</span>
             </li>
-            <li class="permission-write-events context-menu-item" @click="resetTeam()">
+            <li class="permission-write-event-slots context-menu-item" @click="resetTeam()">
                 <i class="fa-solid fa-rotate" />
                 <span>Crew zurücksetzen</span>
             </li>
-            <li class="permission-write-events context-menu-item text-error" @click="cancelEvent()">
+            <li class="permission-write-event-details context-menu-item text-error" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
                 <span>Reise absagen</span>
             </li>
@@ -264,7 +272,7 @@ import SlotsTable from './SlotsTable.vue';
 
 enum Tab {
     EVENT_DATA = 'app.edit-event.tab.data',
-    EVENT_POSITIONS = 'Crew verwalten',
+    EVENT_TEAM = 'Crew verwalten',
     EVENT_SLOTS = 'Crew Slots',
     EVENT_LOCATIONS = 'Reiseroute',
 }
@@ -286,8 +294,17 @@ const signedInUser = authUseCase.getSignedInUser();
 const event = ref<Event | null>(null);
 const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
 
-const tabs = [Tab.EVENT_POSITIONS, Tab.EVENT_DATA, Tab.EVENT_LOCATIONS, Tab.EVENT_SLOTS];
-const tab = ref<Tab>(Tab.EVENT_POSITIONS);
+const tab = ref<Tab>(Tab.EVENT_TEAM);
+const tabs = computed<Tab[]>(() => {
+    const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
+    if (signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)) {
+    }
+    if (signedInUser.permissions.includes(Permission.WRITE_EVENT_SLOTS)) {
+        visibleTabs.push(Tab.EVENT_TEAM);
+        visibleTabs.push(Tab.EVENT_SLOTS);
+    }
+    return visibleTabs;
+});
 
 const createLocationDialog = ref<Dialog<void, Location | undefined> | null>(null);
 const createSlotDialog = ref<Dialog<void, Slot | undefined> | null>(null);

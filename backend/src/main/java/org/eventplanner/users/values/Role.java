@@ -48,7 +48,7 @@ public enum Role {
                 Permission.READ_USERS,
                 Permission.READ_POSITIONS,
                 Permission.READ_QUALIFICATIONS,
-                Permission.JOIN_LEAVE_EVENT_TEAM
+                Permission.WRITE_OWN_REGISTRATIONS
             );
             case EVENT_PLANNER -> Stream.of(
                 Permission.READ_OWN_USER_DETAILS,
@@ -57,7 +57,10 @@ public enum Role {
                 Permission.READ_USERS,
                 Permission.READ_POSITIONS,
                 Permission.READ_QUALIFICATIONS,
-                Permission.WRITE_EVENTS
+                Permission.WRITE_EVENTS,
+                Permission.CREATE_EVENTS,
+                Permission.DELETE_EVENTS,
+                Permission.WRITE_EVENT_DETAILS
             );
             case TEAM_PLANNER -> Stream.of(
                 Permission.READ_OWN_USER_DETAILS,
@@ -66,8 +69,9 @@ public enum Role {
                 Permission.READ_USERS,
                 Permission.READ_POSITIONS,
                 Permission.READ_QUALIFICATIONS,
-                Permission.JOIN_LEAVE_EVENT_TEAM,
-                Permission.WRITE_EVENT_TEAM,
+                Permission.WRITE_EVENTS,
+                Permission.WRITE_EVENT_SLOTS,
+                Permission.WRITE_REGISTRATIONS,
                 Permission.READ_USER_DETAILS
             );
             case USER_MANAGER -> Stream.of(
@@ -90,9 +94,7 @@ public enum Role {
                 Permission.READ_USERS,
                 Permission.READ_POSITIONS,
                 Permission.READ_QUALIFICATIONS,
-                Permission.READ_USER_DETAILS,
-                Permission.WRITE_EVENTS,
-                Permission.WRITE_EVENT_TEAM
+                Permission.READ_USER_DETAILS
             );
         };
     }

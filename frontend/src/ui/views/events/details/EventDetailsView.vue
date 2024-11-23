@@ -236,7 +236,7 @@
                 </section>
             </div>
         </template>
-        <template v-if="event && signedInUser.permissions.includes(Permission.EVENT_TEAM_WRITE_SELF)" #primary-button>
+        <template v-if="event && signedInUser.permissions.includes(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
             <AsyncButton v-if="event.signedInUserAssignedPosition" class="btn-danger" :action="() => leaveEvent()">
                 <template #icon><i class="fa-solid fa-cancel" /></template>
                 <template #label>Reise absagen</template>

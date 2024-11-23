@@ -10,7 +10,7 @@
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
-                    <div class="permission-write-events hidden 2xl:block">
+                    <div class="permission-create-events hidden 2xl:block">
                         <button class="btn-primary ml-2" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
                             <span class="">Hinzufügen</span>
@@ -206,7 +206,7 @@
                             <span>Reise anzeigen</span>
                         </RouterLink>
                     </li>
-                    <li class="permission-write-events">
+                    <li class="permission-write-event-details">
                         <RouterLink
                             :to="{
                                 name: Routes.EventEdit,
@@ -222,7 +222,7 @@
                         <i class="fa-solid fa-clipboard-user" />
                         <span>IMO Liste generieren</span>
                     </li>
-                    <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(item)">
+                    <li class="permission-read-users context-menu-item" @click="eventUseCase.downloadConsumptionList(item)">
                         <i class="fa-solid fa-beer-mug-empty" />
                         <span>Verzehrliste generieren</span>
                     </li>
@@ -232,7 +232,7 @@
                     </li>
                     <li
                         v-if="item.state === EventState.Draft"
-                        class="permission-write-events context-menu-item"
+                        class="permission-write-event-details context-menu-item"
                         @click="openEventsForSignup([item])"
                     >
                         <i class="fa-solid fa-people-group" />
@@ -240,13 +240,13 @@
                     </li>
                     <li
                         v-else-if="item.state === EventState.OpenForSignup"
-                        class="permission-write-events context-menu-item"
+                        class="permission-write-event-details context-menu-item"
                         @click="publishCrewPlanning([item])"
                     >
                         <i class="fa-solid fa-earth-europe" />
                         <span>Crew veröffentlichen</span>
                     </li>
-                    <li class="permission-write-events context-menu-item disabled">
+                    <li class="permission-read-user-details context-menu-item disabled">
                         <i class="fa-solid fa-users" />
                         <span>Weitere Crew anfragen*</span>
                     </li>
@@ -260,13 +260,13 @@
                     </li>
                     <li
                         v-if="item.state === EventState.Canceled"
-                        class="permission-write-events context-menu-item text-error"
+                        class="permission-delete-events context-menu-item text-error"
                         @click="deleteEvent(item)"
                     >
                         <i class="fa-solid fa-trash-alt" />
                         <span>Reise löschen</span>
                     </li>
-                    <li v-else class="permission-write-events context-menu-item text-error" @click="cancelEvent(item)">
+                    <li v-else class="permission-delete-events context-menu-item text-error" @click="cancelEvent(item)">
                         <i class="fa-solid fa-ban" />
                         <span>Reise absagen</span>
                     </li>
@@ -322,13 +322,13 @@
                                 <i class="fa-solid fa-user-plus" />
                                 <span>Anmeldung hinzufügen</span>
                             </li>
-                            <li class="permission-write-events context-menu-item" @click="editBatch(selectedEvents)">
+                            <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
                                 <i class="fa-solid fa-edit" />
                                 <span>Ausgewählte bearbeiten</span>
                             </li>
                             <li
                                 v-if="showBatchOpenEventForSignup"
-                                class="permission-write-events context-menu-item"
+                                class="permission-write-event-details context-menu-item"
                                 @click="openEventsForSignup(selectedEvents)"
                             >
                                 <i class="fa-solid fa-people-group" />
@@ -336,21 +336,21 @@
                             </li>
                             <li
                                 v-if="showBatchPublishPlannedCrew"
-                                class="permission-write-events context-menu-item"
+                                class="permission-write-event-details context-menu-item"
                                 @click="publishCrewPlanning(selectedEvents)"
                             >
                                 <i class="fa-solid fa-earth-europe" />
                                 <span>Crew veröffentlichen</span>
                             </li>
-                            <li class="permission-write-events context-menu-item disabled">
+                            <li class="permission-read-user-details permission-write-events context-menu-item disabled">
                                 <i class="fa-solid fa-users" />
                                 <span>Weitere Crew anfragen*</span>
                             </li>
-                            <li class="permission-write-events context-menu-item disabled">
+                            <li class="permission-read-user-details context-menu-item disabled">
                                 <i class="fa-solid fa-envelope" />
                                 <span>Crew kontaktieren*</span>
                             </li>
-                            <li class="permission-write-events context-menu-item disabled text-error">
+                            <li class="permission-delete-events context-menu-item disabled text-error">
                                 <i class="fa-solid fa-ban" />
                                 <span>Reisen absagen*</span>
                             </li>
@@ -362,7 +362,7 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
-            class="permission-write-events pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-create-events pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
         >
             <button class="btn-floating pointer-events-auto" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>

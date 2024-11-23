@@ -105,13 +105,13 @@ public class UserUseCase {
     }
 
     public @NonNull List<UserDetails> getDetailedUsers(@NonNull SignedInUser signedInUser) {
-        signedInUser.assertHasPermission(Permission.READ_FULL_USER_DETAILS);
+        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         return userService.getDetailedUsers();
     }
 
     public Optional<UserDetails> getUserByKey(@NonNull SignedInUser signedInUser, @NonNull UserKey key) {
         if (!signedInUser.key().equals(key)) {
-            signedInUser.assertHasPermission(Permission.READ_FULL_USER_DETAILS);
+            signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         }
         return userService.getUserByKey(key);
     }

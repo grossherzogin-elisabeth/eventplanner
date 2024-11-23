@@ -6,8 +6,13 @@ import java.util.Optional;
 public enum Permission {
     READ_EVENTS("events:read"),
     WRITE_EVENTS("events:write"),
-    JOIN_LEAVE_EVENT_TEAM("event-team:write-self"),
-    WRITE_EVENT_TEAM("event-team:write"),
+    DELETE_EVENTS("events:delete"),
+    CREATE_EVENTS("events:create"),
+    WRITE_EVENT_DETAILS("events:write-details"),
+    WRITE_EVENT_SLOTS("events:write-slots"),
+    WRITE_REGISTRATIONS("registrations:write"),
+    WRITE_OWN_REGISTRATIONS("registrations:write-self"),
+
     READ_USERS("users:read"),
     READ_OWN_USER_DETAILS("users:read-details-self"),
     WRITE_OWN_USER_DETAILS("users:write-self"),
@@ -15,10 +20,13 @@ public enum Permission {
     READ_FULL_USER_DETAILS("users:read-full-details"),
     WRITE_USERS("users:write"),
     DELETE_USERS("users:delete"),
+
     READ_POSITIONS("positions:read"),
     WRITE_POSITIONS("positions:write"),
+
     READ_QUALIFICATIONS("qualifications:read"),
     WRITE_QUALIFICATIONS("qualifications:write"),
+
     READ_APP_SETTINGS("application-settings:read"),
     WRITE_APP_SETTINGS("application-settings:write");
 

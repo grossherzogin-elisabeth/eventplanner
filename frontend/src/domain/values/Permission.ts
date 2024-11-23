@@ -1,6 +1,10 @@
 export enum Permission {
     READ_EVENTS = 'events:read',
     WRITE_EVENTS = 'events:write',
+    CREATE_EVENTS = 'events:create',
+    DELETE_EVENTS = 'events:delete',
+    WRITE_EVENT_DETAILS = 'events:write-details',
+    WRITE_EVENT_SLOTS = 'events:write-slots',
 
     READ_USERS = 'users:read',
     READ_OWN_USER = 'users:read-details-self',
@@ -15,8 +19,8 @@ export enum Permission {
     READ_QUALIFICATIONS = 'qualifications:read',
     WRITE_QUALIFICATIONS = 'qualifications:write',
 
-    EVENT_TEAM_WRITE_SELF = 'event-team:write-self',
-    EVENT_TEAM_WRITE = 'event-team:write',
+    WRITE_REGISTRATIONS = 'registrations:write',
+    WRITE_OWN_REGISTRATIONS = 'registrations:write-self',
     BETA_FEATURES = 'beta-features',
     WRITE_SETTINGS = 'application-settings:write',
 }

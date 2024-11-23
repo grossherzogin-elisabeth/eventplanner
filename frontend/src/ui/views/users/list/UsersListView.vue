@@ -164,19 +164,23 @@
                     </td>
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="context-menu-item" :class="{ disabled: !item.email }" @click="contactUsers([item])">
+                    <li
+                        class="permission-read-user-details context-menu-item"
+                        :class="{ disabled: !item.email }"
+                        @click="contactUsers([item])"
+                    >
                         <i class="fa-solid fa-envelope" />
                         <span>Email schreiben</span>
                     </li>
-                    <li class="context-menu-item" @click="impersonateUser(item)">
+                    <li class="permission-write-registrations context-menu-item" @click="impersonateUser(item)">
                         <i class="fa-solid fa-user-secret" />
                         <span>Impersonate</span>
                     </li>
-                    <li class="context-menu-item" @click="createRegistration(item)">
+                    <li class="permission-write-registrations context-menu-item" @click="createRegistration(item)">
                         <i class="fa-solid fa-calendar-plus" />
                         <span>Anmeldung hinzufügen</span>
                     </li>
-                    <li class="context-menu-item" @click="editUser(item)">
+                    <li class="permission-write-users context-menu-item" @click="editUser(item)">
                         <i class="fa-solid fa-edit" />
                         <span>Nutzer bearbeiten</span>
                     </li>
@@ -206,13 +210,13 @@
                     <span class="self-center font-bold">{{ selectedUsers.length }} ausgewählt</span>
                     <div class="flex-grow"></div>
 
-                    <div class="hidden sm:block">
+                    <div class="permission-read-user-details hidden sm:block">
                         <button class="btn-ghost" @click="contactUsers(selectedUsers)">
                             <i class="fa-solid fa-envelope" />
                             <span class="">Email schreiben</span>
                         </button>
                     </div>
-                    <div class="hidden lg:block xl:hidden 2xl:block">
+                    <div class="permission-write-users hidden lg:block xl:hidden 2xl:block">
                         <button class="btn-ghost" disabled>
                             <i class="fa-solid fa-screwdriver-wrench"></i>
                             <span class="">Arbeitsdienst eintragen*</span>
@@ -224,11 +228,11 @@
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
-                            <li class="context-menu-item" @click="contactUsers(selectedUsers)">
+                            <li class="permission-read-user-details context-menu-item" @click="contactUsers(selectedUsers)">
                                 <i class="fa-solid fa-envelope" />
                                 <span>Email schreiben</span>
                             </li>
-                            <li class="context-menu-item disabled">
+                            <li class="permission-write-users context-menu-item disabled">
                                 <i class="fa-solid fa-screwdriver-wrench" />
                                 <span>Arbeitsdienst eintragen*</span>
                             </li>
@@ -244,7 +248,7 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
-            class="permission-write-events pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-write-users pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
         >
             <button class="btn-floating pointer-events-auto" @click="createUser()">
                 <i class="fa-solid fa-user-plus"></i>
@@ -388,6 +392,8 @@ function createUser(): void {
 async function editUser(user: UserRegistrations): Promise<void> {
     if (signedInUser.permissions.includes(Permission.WRITE_USERS)) {
         await router.push({ name: Routes.UserDetails, params: { key: user.key } });
+    } else {
+        console.error('User has no permission to edit users.');
     }
 }
 

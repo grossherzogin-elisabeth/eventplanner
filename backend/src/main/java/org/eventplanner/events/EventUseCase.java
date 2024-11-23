@@ -22,7 +22,6 @@ import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.Permission;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -59,10 +58,10 @@ public class EventUseCase {
                 .map(eventService::removeInvalidSlotAssignments)
                 .toList();
 
-        if (signedInUser.hasPermission(Permission.WRITE_EVENTS)) {
+        if (signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
             return allEvents;
         }
-        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_TEAM)) {
+        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)) {
             // clear assigned registrations on slots if crew is not published yet
             allEvents.stream()
                     .filter(it -> List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(it.getState()))
@@ -78,12 +77,19 @@ public class EventUseCase {
 
     public @NonNull Event getEventByKey(@NonNull SignedInUser signedInUser, EventKey key) {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
-
+        var event = this.eventRepository.findByKey(key).orElseThrow();
+        if (EventState.DRAFT.equals(event.getState()) && !signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+            throw new NoSuchElementException();
+        }
+        if (EventState.CANCELED.equals(event.getState()) && event.getRegistrations()
+                .stream().noneMatch(reg -> signedInUser.key().equals(reg.getUserKey()))) {
+            throw new NoSuchElementException();
+        }
         return this.eventRepository.findByKey(key).orElseThrow();
     }
 
     public @NonNull Event createEvent(@NonNull SignedInUser signedInUser, @NonNull CreateEventSpec spec) {
-        signedInUser.assertHasPermission(Permission.WRITE_EVENTS);
+        signedInUser.assertHasPermission(Permission.CREATE_EVENTS);
 
         var event = new Event(
                 new EventKey(),
@@ -107,7 +113,7 @@ public class EventUseCase {
             @NonNull EventKey eventKey,
             @NonNull UpdateEventSpec spec
     ) {
-        signedInUser.assertHasAnyPermission(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_TEAM);
+        signedInUser.assertHasAnyPermission(Permission.WRITE_EVENT_DETAILS, Permission.WRITE_EVENT_SLOTS);
 
         log.info("Updating event {}", eventKey);
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
@@ -115,7 +121,7 @@ public class EventUseCase {
 
         List<UserDetails> notifyUsersAddedToCrew = new LinkedList<>();
         List<UserDetails> notifyUsersRemovedFromCrew = new LinkedList<>();
-        if (signedInUser.hasPermission(Permission.WRITE_EVENTS)) {
+        if (signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
             applyNullable(spec.name(), event::setName);
             applyNullable(spec.description(), event::setDescription);
             applyNullable(spec.note(), event::setNote);
@@ -125,7 +131,7 @@ public class EventUseCase {
             applyNullable(spec.locations(), event::setLocations);
         }
 
-        if (signedInUser.hasPermission(Permission.WRITE_EVENT_TEAM)) {
+        if (signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)) {
             var updatedSlots = spec.slots();
             // notify changed crew members if crew is already published
             if (updatedSlots != null && EventState.PLANNED.equals(event.getState())) {
@@ -164,11 +170,11 @@ public class EventUseCase {
     }
 
     public void deleteEvent(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) {
-        signedInUser.assertHasPermission(Permission.WRITE_EVENTS);
+        signedInUser.assertHasPermission(Permission.DELETE_EVENTS);
         log.info("Deleting event {}", eventKey);
 
-        this.eventRepository.findByKey(eventKey).orElseThrow();
-        eventRepository.deleteByKey(eventKey);
+        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        eventRepository.deleteByKey(event.getKey());
     }
 
     public ByteArrayOutputStream downloadImoList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
@@ -198,15 +204,15 @@ public class EventUseCase {
         if (userKey != null) {
             // validate permission and request for user registration
             if (userKey.equals(signedInUser.key())) {
-                signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
+                signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
                 log.info("User {} signed up on event {}", userKey, eventKey);
             } else {
-                signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
+                signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
                 log.info("Adding registration for user {} to event {}", userKey, eventKey);
             }
         } else if (spec.name() != null) {
             // validate permission and request for guest registration
-            signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
+            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             log.info("Adding registration for guest {} on event {}", spec.name(), eventKey);
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
@@ -226,10 +232,10 @@ public class EventUseCase {
                 .orElseThrow();
 
         if (signedInUser.key().equals(registration.getUserKey())) {
-            signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
+            signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
             log.info("User {} removed their registration from event {}", signedInUser.key(), eventKey);
         } else {
-            signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
+            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             if (registration.getUserKey() != null) {
                 log.info("Removing registration of {} from event {}", registration.getUserKey(), eventKey);
             } else if (registration.getName() != null) {
@@ -253,10 +259,10 @@ public class EventUseCase {
                 .orElseThrow();
 
         if (signedInUser.key().equals(registration.getUserKey())) {
-            signedInUser.assertHasAnyPermission(Permission.JOIN_LEAVE_EVENT_TEAM, Permission.WRITE_EVENT_TEAM);
+            signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
             log.info("User {} updates their registration on event {}", registration.getUserKey(), eventKey);
         } else {
-            signedInUser.assertHasPermission(Permission.WRITE_EVENT_TEAM);
+            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             log.info("Updating registration {} on event {}", registrationKey, eventKey);
         }
 

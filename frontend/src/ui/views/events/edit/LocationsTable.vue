@@ -3,7 +3,7 @@
         :items="props.event.locations"
         class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
         :class="$attrs.class"
-        sortable
+        :sortable="signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
         @reordered="updateOrders"
         @click="editLocation($event)"
     >
@@ -45,7 +45,7 @@
                 </p>
             </td>
         </template>
-        <template #context-menu="{ item }">
+        <template v-if="signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
             <li class="context-menu-item" @click="editLocation(item)">
                 <i class="fa-solid fa-edit" />
                 <span>Abschnitt bearbeiten</span>
@@ -70,8 +70,10 @@
 import { ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Location } from '@/domain';
+import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
+import { useAuthUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import LocationEditDlg from '@/ui/views/events/edit/LocationEditDlg.vue';
 
@@ -84,10 +86,15 @@ type Emit = (e: 'update:modelValue', event: Event) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
+const signedInUser = useAuthUseCase().getSignedInUser();
 const eventService = useEventService();
 const editLocationDialog = ref<Dialog<Location, Location | undefined> | null>(null);
 
 async function editLocation(location: Location): Promise<void> {
+    if (!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)) {
+        console.warn('User has no permission to edit event details');
+        return;
+    }
     const editedLocation = await editLocationDialog.value?.open(location);
     if (editedLocation) {
         const updatedEvent = eventService.updateLocation(props.event, editedLocation);

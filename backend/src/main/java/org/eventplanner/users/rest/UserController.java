@@ -30,7 +30,7 @@ public class UserController {
             @RequestParam(name = "details", required = false) boolean details
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        if (signedInUser.hasPermission(Permission.READ_FULL_USER_DETAILS)) {
+        if (signedInUser.hasPermission(Permission.READ_USER_DETAILS)) {
             var users = userUseCase.getDetailedUsers(signedInUser).stream();
             if (details) {
                 return ResponseEntity.ok(users.map(UserDetailsRepresentation::fromDomain).toList());
