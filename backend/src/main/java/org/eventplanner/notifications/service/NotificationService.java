@@ -97,7 +97,7 @@ public class NotificationService {
     }
 
     public void sendAddedToWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Sending added to waiting list notification to user {}", to.getEmail());
+        log.info("Creating added to waiting list notification for user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.ADDED_TO_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -110,7 +110,7 @@ public class NotificationService {
     }
 
     public void sendRemovedFromWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Sending removed from waiting list notification to user {}", to.getEmail());
+        log.info("Creating removed from waiting list notification for user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -123,7 +123,7 @@ public class NotificationService {
     }
 
     public void sendAddedToCrewNotification(@NonNull UserDetails user, @NonNull Event event) {
-        log.info("Sending added to crew notification to user {}", user.getEmail());
+        log.info("Creating added to crew notification for user {}", user.getEmail());
         Notification notification = new Notification(NotificationType.ADDED_TO_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         addEventDetails(notification, event);
@@ -136,7 +136,7 @@ public class NotificationService {
     }
 
     public void sendRemovedFromCrewNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Sending removed from crew notification to user {}", to.getEmail());
+        log.info("Creating removed from crew notification for user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -154,7 +154,7 @@ public class NotificationService {
             @NonNull String userName,
             @NonNull String position
     ) {
-        log.info("Sending crew registration canceled notification to user {}", to.getEmail());
+        log.info("Creating crew registration canceled notification for user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.CREW_REGISTRATION_CANCELED);
         notification.setTitle("Absage zu " + event.getName());
         addEventDetails(notification, event);
@@ -172,7 +172,7 @@ public class NotificationService {
             @NonNull Event event,
             @NonNull Registration registration
     ) {
-        log.info("Sending first participation confirmation request to user {}", to.getEmail());
+        log.info("Creating first participation confirmation request for user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION);
         notification.setTitle("Bitte um Rückmeldung: " + event.getName());
         addEventDetails(notification, event);
@@ -185,7 +185,7 @@ public class NotificationService {
             @NonNull Event event,
             @NonNull Registration registration
     ) {
-        log.info("Sending second participation confirmation request to user {}", to.getEmail());
+        log.info("Creating second participation confirmation request for user {}", to.getEmail());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
         notification.setTitle("Bitte sofortige um Rückmeldung: " + event.getName());
         addEventDetails(notification, event);
@@ -222,6 +222,10 @@ public class NotificationService {
     }
 
     public void sendNotification(@NonNull Notification notification, @NonNull UserDetails to) throws IOException, TemplateException, MessagingException {
+        if (to.getEmail() == null) {
+            log.warn("User {} has associated email, cannot send notification", to.getKey());
+            throw new IllegalStateException("User is missing an email address");
+        }
         var emailSettings = getEmailSettings();
 
         if (Strings.isEmpty(emailSettings.getUsername())) {
@@ -255,7 +259,7 @@ public class NotificationService {
 
         message.setFrom(new InternetAddress(from, fromDisplayName));
         message.setReplyTo(new Address[]{ new InternetAddress(replyTo, replyToDisplayName) });
-        message.setRecipients(RecipientType.TO, to.getEmail());
+        message.setRecipients(RecipientType.TO, to.getEmail().trim());
         message.setSubject(notification.getTitle());
 
         notification.getProps().put("title", notification.getTitle());
