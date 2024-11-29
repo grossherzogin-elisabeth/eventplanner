@@ -83,6 +83,12 @@
                 </RouterLink>
             </li>
             <li class="menu-item">
+                <RouterLink :to="{ name: Routes.Wiki }">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Wiki</span>
+                </RouterLink>
+            </li>
+            <li class="menu-item">
                 <RouterLink :to="{ name: Routes.SystemInfo }">
                     <i class="fa-solid fa-comment"></i>
                     <span>Feedback</span>
