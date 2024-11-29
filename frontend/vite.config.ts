@@ -25,6 +25,7 @@ export default defineConfig({
         port: 8080,
         host: true,
         proxy: {
+            '/items': 'http://localhost:8083',
             '/api/': 'http://localhost:8081',
             '/auth/': 'http://localhost:8081',
             '/login/oauth2/code/': 'http://localhost:8081',
