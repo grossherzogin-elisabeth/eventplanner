@@ -174,7 +174,7 @@
                             <VTooltip>
                                 <template #default>
                                     <VDraggable
-                                        class="flex cursor-move items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
+                                        class="flex cursor-move items-center space-x-4 rounded-xl px-4 py-2 hover:bg-surface-container"
                                         :class="{
                                             'cursor-move': it.registration !== undefined,
                                             'pointer-events-none': it.registration === undefined,
