@@ -11,7 +11,7 @@
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
                     <div class="permission-write-users hidden 2xl:block">
-                        <button class="btn-primary" @click="createUser()">
+                        <button class="btn-primary" name="create" @click="createUser()">
                             <i class="fa-solid fa-user-plus"></i>
                             <span class="">Hinzufügen</span>
                         </button>

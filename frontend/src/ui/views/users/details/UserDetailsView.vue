@@ -74,7 +74,7 @@
                 </VTabs>
             </template>
             <template v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)" #primary-button>
-                <AsyncButton :action="save">
+                <AsyncButton :action="save" name="save">
                     <template #icon>
                         <i class="fa-solid fa-save"></i>
                     </template>

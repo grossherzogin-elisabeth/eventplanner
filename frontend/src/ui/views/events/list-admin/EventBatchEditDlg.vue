@@ -66,7 +66,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <AsyncButton class="btn-primary" :action="submit" :disabled="validation.disableSubmit.value">
+            <AsyncButton class="btn-primary" name="save" :action="submit" :disabled="validation.disableSubmit.value">
                 <template #label>Speichern</template>
             </AsyncButton>
         </template>

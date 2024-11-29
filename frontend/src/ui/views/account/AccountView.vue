@@ -252,7 +252,7 @@
                 </VTabs>
             </template>
             <template #primary-button>
-                <AsyncButton v-if="userDetails" :action="save">
+                <AsyncButton v-if="userDetails" :action="save" name="save">
                     <template #icon>
                         <i class="fa-solid fa-save"></i>
                     </template>

@@ -42,7 +42,7 @@
                 <span>Abbrechen</span>
             </button>
             <div class="w-auto">
-                <AsyncButton :action="submit" :disabled="validation.disableSubmit.value">
+                <AsyncButton name="save" :action="submit" :disabled="validation.disableSubmit.value">
                     <template #label> Speichern </template>
                 </AsyncButton>
             </div>

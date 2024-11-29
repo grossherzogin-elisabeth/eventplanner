@@ -152,7 +152,7 @@
             </VTabs>
         </template>
         <template v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)" #primary-button>
-            <AsyncButton :action="saveIfValid" :disabled="!validation.isValid">
+            <AsyncButton :action="saveIfValid" :disabled="!validation.isValid" name="save">
                 <template #icon>
                     <i class="fa-solid fa-save" />
                 </template>
@@ -236,7 +236,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { deepCopy, diff, filterUndefined, updateDate, updateTime } from '@/common';
 import type { Event, Location, Registration, Slot } from '@/domain';

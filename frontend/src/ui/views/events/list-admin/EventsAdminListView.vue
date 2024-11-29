@@ -11,7 +11,7 @@
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
                     <div class="permission-create-events hidden 2xl:block">
-                        <button class="btn-primary ml-2" @click="createEvent()">
+                        <button class="btn-primary ml-2" name="create" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
                             <span class="">Hinzufügen</span>
                         </button>

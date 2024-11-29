@@ -10,7 +10,7 @@
                 class="dialog-background"
                 @mousedown="reject()"
             >
-                <div class="dialog-wrapper" @click.stop="" @mousedown.stop="">
+                <div ref="wrapper" class="dialog-wrapper" @click.stop="" @mousedown.stop="">
                     <slot name="dialog">
                         <div
                             :class="`
@@ -99,6 +99,7 @@ defineExpose<Dialog>({
 
 const animationDuration = 250;
 const dialogOpen: Ref<boolean> = ref(false);
+const wrapper: Ref<HTMLElement | null> = ref(null);
 const renderContent: Ref<boolean> = ref(false);
 let promiseResolve: ((result: T) => void) | null = null;
 let promiseReject: ((reason: T) => void) | null = null;
@@ -111,6 +112,8 @@ async function open(): Promise<T> {
     renderContent.value = true;
     await nextTick(() => (dialogOpen.value = true));
     emit('opened');
+    wrapper.value?.querySelector('input')?.focus();
+    window.addEventListener('cancel', close, { once: true });
 
     // this promise is resolved, when the dialog is closed
     return new Promise<T>((resolve, reject) => {

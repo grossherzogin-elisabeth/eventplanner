@@ -10,7 +10,7 @@
                     <VSearchButton v-model="qualificationFilter" placeholder="Einträge filtern" class="w-48" />
                     <div class="hidden flex-grow md:block"></div>
                     <div class="hidden 2xl:block">
-                        <button class="btn-primary" @click="createQualification()">
+                        <button class="btn-primary" name="create" @click="createQualification()">
                             <i class="fa-solid fa-file-circle-plus"></i>
                             <span>Qualifikation hinzufügen</span>
                         </button>
@@ -20,7 +20,7 @@
                     <VSearchButton v-model="positionsFilter" placeholder="Einträge filtern" class="w-48" />
                     <div class="hidden flex-grow md:block"></div>
                     <div class="hidden 2xl:block">
-                        <button class="btn-primary" @click="createPosition()">
+                        <button class="btn-primary" name="create" @click="createPosition()">
                             <i class="fa-solid fa-file-circle-plus"></i>
                             <span>Position hinzufügen</span>
                         </button>
