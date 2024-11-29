@@ -125,16 +125,17 @@
         </DetailsPage>
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
         <UserQualificationDetailsDlg ref="addUserQualificationDialog" />
+        <VConfirmationDialog ref="confirmDialog" />
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { deepCopy } from '@/common';
+import { computed, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { deepCopy, diff } from '@/common';
 import type { Event, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
-import type { Dialog } from '@/ui/components/common';
-import { AsyncButton, VTabs } from '@/ui/components/common';
+import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { AsyncButton, VConfirmationDialog, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useErrorHandling, useEventUseCase, useUserAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
@@ -163,6 +164,7 @@ type RouteEmits = (e: 'update:title', value: string) => void;
 const emit = defineEmits<RouteEmits>();
 
 const route = useRoute();
+const router = useRouter();
 const userAdministrationUseCase = useUserAdministrationUseCase();
 const eventsUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
@@ -181,22 +183,59 @@ const tabs = [
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);
+const hasChanges = ref<boolean>(false);
 const eventsByYear = ref<Map<number, Event[] | undefined>>(new Map<number, Event[] | undefined>());
+const eventsLoadedUntilYear = ref<number>(0);
+
 const createRegistrationForUserDialog = ref<Dialog<UserDetails, boolean> | null>(null);
 const addUserQualificationDialog = ref<Dialog<void, UserQualification | undefined> | null>(null);
-const eventsLoadedUntilYear = ref<number>(0);
+const confirmDialog = ref<ConfirmationDialog | null>(null);
 
 const userKey = computed<string>(() => (route.params.key as string) || '');
 
 function init(): void {
     fetchUser();
     fetchUserFutureEvents();
+    preventPageUnloadOnUnsavedChanges();
 }
 
 async function fetchUser(): Promise<void> {
     userOriginal.value = await userAdministrationUseCase.getUserDetailsByKey(userKey.value);
     user.value = deepCopy(userOriginal.value);
     emit('update:title', `${user.value.firstName} ${user.value.lastName}`);
+}
+
+function preventPageUnloadOnUnsavedChanges(): void {
+    watch(() => user.value, updateHasChanges, { deep: true });
+    const removeNavigationGuard = router.beforeEach(async (to, from) => {
+        if (to.name === from.name) {
+            // we stay on the same page and only change
+            return true;
+        }
+        if (hasChanges.value) {
+            const continueNavigation = await confirmDialog.value?.open({
+                title: 'Änderungen verwerfen?',
+                message: `Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden
+                    diese Änderungen verworfen. Möchtest du forfahren?`,
+                cancel: 'Abbrechen',
+                submit: 'Änderungen verwerfen',
+            });
+            if (!continueNavigation) {
+                return false;
+            }
+        }
+        removeNavigationGuard();
+        return true;
+    });
+}
+
+function updateHasChanges(): void {
+    if (userOriginal.value !== null && user.value !== null) {
+        const changes = diff(userOriginal.value, user.value);
+        hasChanges.value = Object.keys(changes).length > 0;
+    } else {
+        hasChanges.value = true;
+    }
 }
 
 async function fetchNextEvents(): Promise<void> {

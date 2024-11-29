@@ -2,7 +2,9 @@
     <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class">
         <template #header>
             <div v-if="event" class="">
-                <h1 class="mb-1 mt-8 hidden truncate xl:block">{{ event.name || 'Err' }}</h1>
+                <h1 class="mb-1 mt-8 hidden truncate xl:block">
+                    {{ event.name || 'Err' }}
+                </h1>
                 <section class="">
                     <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable clamp>
                         Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als
@@ -155,7 +157,7 @@
                     <i class="fa-solid fa-save" />
                 </template>
                 <template #label>
-                    <span>Speichern</span>
+                    <span> Speichern </span>
                 </template>
             </AsyncButton>
         </template>
@@ -230,15 +232,17 @@
     <SlotEditDlg ref="createSlotDialog" />
     <EventCancelDlg ref="cancelEventDialog" />
     <LocationEditDlg ref="createLocationDialog" />
+    <VConfirmationDialog ref="confirmDialog" />
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { filterUndefined, updateDate, updateTime } from '@/common';
+import { deepCopy, diff, filterUndefined, updateDate, updateTime } from '@/common';
 import type { Event, Location, Registration, Slot } from '@/domain';
 import { EventState, EventType, Permission } from '@/domain';
-import type { Dialog } from '@/ui/components/common';
+import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { VConfirmationDialog } from '@/ui/components/common';
 import {
     AsyncButton,
     VInfo,
@@ -291,14 +295,14 @@ const usersUseCase = useUsersUseCase();
 const usersAdminUseCase = useUserAdministrationUseCase();
 const signedInUser = authUseCase.getSignedInUser();
 
+const eventOriginal = ref<Event | null>(null);
 const event = ref<Event | null>(null);
 const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
+const hasChanges = ref<boolean>(false);
 
 const tab = ref<Tab>(Tab.EVENT_TEAM);
 const tabs = computed<Tab[]>(() => {
     const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
-    if (signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)) {
-    }
     if (signedInUser.permissions.includes(Permission.WRITE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_TEAM);
         visibleTabs.push(Tab.EVENT_SLOTS);
@@ -310,6 +314,7 @@ const createLocationDialog = ref<Dialog<void, Location | undefined> | null>(null
 const createSlotDialog = ref<Dialog<void, Slot | undefined> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string | undefined> | null>(null);
+const confirmDialog = ref<ConfirmationDialog | null>(null);
 
 const hasEmptyRequiredSlots = computed<boolean>(() => {
     return event.value !== null && eventService.hasOpenRequiredSlots(event.value);
@@ -317,13 +322,48 @@ const hasEmptyRequiredSlots = computed<boolean>(() => {
 
 async function init(): Promise<void> {
     await fetchEvent();
+    preventPageUnloadOnUnsavedChanges();
 }
 
 async function fetchEvent(): Promise<void> {
     const year = parseInt(route.params.year as string, 10);
     const key = route.params.key as string;
-    event.value = await eventUseCase.getEventByKey(year, key, true);
+    eventOriginal.value = await eventUseCase.getEventByKey(year, key, true);
+    event.value = deepCopy(eventOriginal.value);
     emit('update:title', event.value.name);
+}
+
+function preventPageUnloadOnUnsavedChanges(): void {
+    watch(event, updateHasChanges, { deep: true });
+    const removeNavigationGuard = router.beforeEach(async (to, from) => {
+        if (to.name === from.name) {
+            // we stay on the same page and only change
+            return true;
+        }
+        if (hasChanges.value) {
+            const continueNavigation = await confirmDialog.value?.open({
+                title: 'Änderungen verwerfen?',
+                message: `Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden
+                    diese Änderungen verworfen. Möchtest du forfahren?`,
+                cancel: 'Abbrechen',
+                submit: 'Änderungen verwerfen',
+            });
+            if (!continueNavigation) {
+                return false;
+            }
+        }
+        removeNavigationGuard();
+        return true;
+    });
+}
+
+function updateHasChanges(): void {
+    if (eventOriginal.value !== null && event.value !== null) {
+        const changes = diff(eventOriginal.value, event.value);
+        hasChanges.value = Object.keys(changes).length > 0;
+    } else {
+        hasChanges.value = true;
+    }
 }
 
 function resetTeam(): void {

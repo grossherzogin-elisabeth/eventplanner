@@ -104,7 +104,7 @@ export function diff<T extends object>(oldValue: T, newValue: T): Partial<T> {
         .filter((key) => {
             const a = (oldValue as Record<string, unknown>)[key];
             const b = (newValue as Record<string, unknown>)[key];
-            return !deepEquals(a, b);
+            return !(!a && b === '') && !deepEquals(a, b);
         })
         .forEach((key) => ((diff as Record<string, unknown>)[key] = (newValue as Record<string, unknown>)[key]));
     return diff;
