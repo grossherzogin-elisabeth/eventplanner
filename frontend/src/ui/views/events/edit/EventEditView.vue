@@ -236,7 +236,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { deepCopy, diff, filterUndefined, updateDate, updateTime } from '@/common';
 import type { Event, Location, Registration, Slot } from '@/domain';

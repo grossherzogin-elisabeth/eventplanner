@@ -22,9 +22,9 @@ import App from './App.vue';
 import './assets/css/main.css';
 import './plugins/countries';
 import './plugins/fontawesome';
-import './plugins/shortcuts';
 import { setupI18n } from './plugins/i18n';
 import { setupRouter } from './plugins/router';
+import './plugins/shortcuts';
 
 export function setupVue(context: { domain: Domain; application: Application }): void {
     const app = createApp(App);
