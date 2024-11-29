@@ -1,0 +1,20 @@
+services:
+  directus:
+    image: directus/directus:11.2.1
+    environment:
+      DB_CLIENT: "sqlite3"
+      DB_FILENAME: "/directus/database/directus.db"
+      AUTH_PROVIDERS: "keycloak"
+      AUTH_KEYCLOAK_DRIVER: "openid"
+      AUTH_KEYCLOAK_CLIENT_ID: "directus"
+      AUTH_KEYCLOAK_ISSUER_URL: "https://auth.grossherzogin-elisabeth.de/realms/stammcrew"
+      AUTH_KEYCLOAK_IDENTIFIER_KEY: "preferred_username"
+      AUTH_KEYCLOAK_LABEL: "Keycloak"
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+      PUBLIC_URL: "https://content.grossherzogin-elisabeth.de"
+    ports:
+      - 8083:8055
+    volumes:
+      - ./data/directus/database:/directus/database
+      - ./data/directus/uploads:/data/directus/uploads
+      - ./data/directus/extensions:/data/directus/extensions
