@@ -193,6 +193,19 @@ public class NotificationService {
         sendParticipationNotificationBody(to, event, registration, notification);
     }
 
+    public void sendUserChangedPersonalDataNotification(@NonNull UserDetails to, @NonNull UserDetails who) {
+        log.info("Creating user changed personal data notification for user {}", to.getEmail());
+        Notification notification = new Notification(NotificationType.USER_DATA_CHANGED);
+        notification.setTitle(who.getFullName() + " hat seine Daten geändert");
+        notification.getProps().put("user", to);
+        notification.getProps().put("userName", who.getFullName());
+        try {
+            sendNotification(notification, to);
+        } catch (Exception e) {
+            log.error("Failed to send 'user changed personal data' notification to to {}", to.getEmail(), e);
+        }
+    }
+
     private void sendParticipationNotificationBody(
             @NonNull UserDetails to,
             @NonNull Event event,

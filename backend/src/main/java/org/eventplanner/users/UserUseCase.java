@@ -1,7 +1,13 @@
 package org.eventplanner.users;
 
-import io.micrometer.common.lang.Nullable;
+import static java.util.Optional.ofNullable;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import org.eventplanner.exceptions.UnauthorizedException;
+import org.eventplanner.notifications.service.NotificationService;
 import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;
@@ -10,6 +16,7 @@ import org.eventplanner.users.spec.CreateUserSpec;
 import org.eventplanner.users.spec.UpdateUserSpec;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Permission;
+import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,20 +28,18 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
+import io.micrometer.common.lang.Nullable;
 
 @Service
 public class UserUseCase {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
+    private final NotificationService notificationService;
 
-    public UserUseCase(@Autowired UserService userService) {
+    public UserUseCase(@Autowired UserService userService, final NotificationService notificationService) {
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     public @NonNull SignedInUser getSignedInUser(@Nullable Authentication authentication) {
@@ -124,7 +129,11 @@ public class UserUseCase {
         return userService.createUser(newUser);
     }
 
-    public UserDetails updateUser(@NonNull SignedInUser signedInUser, @NonNull UserKey userKey, @NonNull UpdateUserSpec spec) {
+    public UserDetails updateUser(
+        @NonNull SignedInUser signedInUser,
+        @NonNull UserKey userKey,
+        @NonNull UpdateUserSpec spec
+    ) {
         if (signedInUser.key().equals(userKey)) {
             signedInUser.assertHasPermission(Permission.WRITE_OWN_USER_DETAILS);
         } else {
@@ -133,6 +142,11 @@ public class UserUseCase {
 
         log.info("Updating user {}", userKey);
         var user = userService.getUserByKey(userKey).orElseThrow();
+
+        if (signedInUser.key().equals(userKey)) {
+            userService.getUsersByRole(Role.USER_MANAGER)
+                .forEach(userManager -> notificationService.sendUserChangedPersonalDataNotification(userManager, user));
+        }
 
         // these may be changed by a user themselves
         ofNullable(spec.gender()).map(String::trim).ifPresent(user::setGender);

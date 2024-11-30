@@ -89,9 +89,7 @@ public class RegistrationService {
         List<UserDetails> admins = Collections.emptyList();
         String positionName = "";
         if (hasAssignedSlot) {
-            admins = userService.getDetailedUsers().stream()
-                    .filter(it -> it.getRoles().contains(Role.TEAM_PLANNER))
-                    .toList();
+            admins = userService.getUsersByRole(Role.TEAM_PLANNER);
             positionName = positionRepository
                     .findByKey(registration.getPosition())
                     .map(Position::getName)

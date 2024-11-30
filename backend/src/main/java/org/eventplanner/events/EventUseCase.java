@@ -6,7 +6,7 @@ import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
-import org.eventplanner.events.service.EventService;
+import org.eventplanner.events.services.EventService;
 import org.eventplanner.events.services.ConsumptionListService;
 import org.eventplanner.events.services.ImoListService;
 import org.eventplanner.events.services.RegistrationService;

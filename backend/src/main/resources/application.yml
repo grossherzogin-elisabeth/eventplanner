@@ -67,7 +67,7 @@ spring:
             scope: openid,email,profile
         provider:
           default:
-            issuer-uri: ${OAUTH_ISSUER_URI:https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_erXnjLJc7}
+            issuer-uri: ${OAUTH_ISSUER_URI}
   servlet:
     multipart:
       max-file-size: 10MB

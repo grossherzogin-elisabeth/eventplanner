@@ -1,4 +1,4 @@
-package org.eventplanner.events.service;
+package org.eventplanner.events.services;
 
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;

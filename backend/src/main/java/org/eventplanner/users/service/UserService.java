@@ -8,6 +8,7 @@ import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.User;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.values.AuthKey;
+import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,6 +155,12 @@ public class UserService {
         if (!cache.isEmpty()) {
             cache.remove(userKey);
         }
+    }
+
+    public List<UserDetails> getUsersByRole(Role role) {
+        return getDetailedUsers().stream()
+            .filter(user -> user.getRoles().contains(role))
+            .collect(Collectors.toList());
     }
 
     private UserDetails resolvePositionsAndQualificationExpires(UserDetails userDetails) {
