@@ -22,7 +22,7 @@ function focusSearch(evt: KeyboardEvent): void {
 
 function registerKeyboardShortcuts(): void {
     window.addEventListener('keydown', (evt) => {
-        if (evt.metaKey) {
+        if (evt.metaKey || evt.ctrlKey) {
             switch (evt.code) {
                 case 'KeyF':
                     focusSearch(evt);
