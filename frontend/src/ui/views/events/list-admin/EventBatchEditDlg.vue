@@ -17,7 +17,7 @@
                                 { value: undefined, label: '' },
                                 { value: EventState.Draft, label: 'Entwurf' },
                                 { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
-                                { value: EventState.Planned, label: 'Crew verlöffentlicht' },
+                                { value: EventState.Planned, label: 'Crew veröffentlicht' },
                                 { value: EventState.Canceled, label: 'Abgesagt' },
                             ]"
                             :errors="validation.errors.value['state']"

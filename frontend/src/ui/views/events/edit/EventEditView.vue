@@ -32,7 +32,7 @@
                                     :options="[
                                         { value: EventState.Draft, label: 'Entwurf' },
                                         { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
-                                        { value: EventState.Planned, label: 'Crew verlöffentlicht' },
+                                        { value: EventState.Planned, label: 'Crew veröffentlicht' },
                                         { value: EventState.Canceled, label: 'Reise ist abgesagt', hidden: true },
                                     ]"
                                     :errors="validation.errors.value['state']"
