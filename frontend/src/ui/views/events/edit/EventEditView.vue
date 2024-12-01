@@ -434,7 +434,8 @@ async function publishPlannedCrew(): Promise<void> {
 
 async function saveIfValid(): Promise<void> {
     if (event.value && validation.isValid.value) {
-        await eventAdministrationUseCase.updateEvent(event.value.key, event.value);
+        eventOriginal.value = await eventAdministrationUseCase.updateEvent(event.value.key, event.value);
+        event.value = deepCopy(eventOriginal.value);
     } else {
         validation.showErrors.value = true;
         throw validation.errors;

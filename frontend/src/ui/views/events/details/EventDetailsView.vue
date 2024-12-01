@@ -108,7 +108,7 @@
                                             <template #default>
                                                 <div class="overflow-hidden" @click.stop @mouseup.stop>
                                                     <p class="text-sm">
-                                                        {{ location.information }}
+                                                        <VMarkdown :value="location.information" />
                                                     </p>
                                                     <p v-if="location.informationLink">
                                                         <a :href="location.informationLink" class="link">Weitere Informationen</a>
@@ -324,6 +324,7 @@ import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegis
 import type { Dialog } from '@/ui/components/common';
 import { ContextMenuButton } from '@/ui/components/common';
 import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
+import VMarkdown from '@/ui/components/common/VMarkdown.vue';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
