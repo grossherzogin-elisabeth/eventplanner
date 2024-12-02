@@ -125,7 +125,7 @@
                         </div>
                     </td>
                     <!-- date -->
-                    <td class="hidden w-1/6 whitespace-nowrap md:table-cell" :class="{ 'opacity-50': item.isPastEvent }">
+                    <td class="w-1/6 whitespace-nowrap" :class="{ 'opacity-50': item.isPastEvent }">
                         <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
                         <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
                         <p class="text-sm">{{ item.duration }} Tage</p>
@@ -306,7 +306,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, PositionKey, SignedInUser } from '@/domain';
@@ -436,6 +436,7 @@ const tabs = computed<string[]>(() => {
 async function init(): Promise<void> {
     emit('update:title', 'Alle Reisen');
     watch(tab, () => fetchEvents());
+    await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();
     restoreScrollPosition();
 }

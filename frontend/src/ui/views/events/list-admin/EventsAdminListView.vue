@@ -373,7 +373,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
@@ -507,6 +507,7 @@ const tabs = computed<string[]>(() => {
 async function init(): Promise<void> {
     emit('update:title', 'Reisen verwalten');
     watch(tab, () => fetchEvents());
+    await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();
     restoreScrollPosition();
 }
