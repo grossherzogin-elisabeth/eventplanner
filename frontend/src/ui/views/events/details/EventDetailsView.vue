@@ -56,7 +56,8 @@
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-users w-4" />
-                            <span v-if="event.assignedUserCount && waitingListCount">
+                            <span v-if="event.state === EventState.OpenForSignup"> {{ event.registrations.length }} Anmeldungen </span>
+                            <span v-else-if="event.assignedUserCount && waitingListCount">
                                 {{ event.assignedUserCount }} Crew, {{ waitingListCount }} Warteliste
                             </span>
                             <span v-else-if="event.assignedUserCount"> {{ event.assignedUserCount }} Crew </span>
