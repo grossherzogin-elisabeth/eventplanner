@@ -23,4 +23,17 @@ const rendered = computed<string>(() => {
 .markdown a {
     @apply font-bold text-primary hover:underline;
 }
+
+.markdown p {
+    @apply mb-4;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+    @apply mt-4;
+}
 </style>
