@@ -91,7 +91,7 @@
                                     />
                                 </div>
                                 <div class="w-2/5">
-                                    <VInputLabel>Crew an Board</VInputLabel>
+                                    <VInputLabel>Crew an Bord</VInputLabel>
                                     <VInputTime
                                         :model-value="event.start"
                                         :errors="validation.errors.value['start']"
@@ -118,7 +118,7 @@
                                     />
                                 </div>
                                 <div class="w-2/5">
-                                    <VInputLabel>Crew von Board</VInputLabel>
+                                    <VInputLabel>Crew von Bord</VInputLabel>
                                     <VInputTime
                                         :model-value="event.end"
                                         :errors="validation.errors.value['end']"

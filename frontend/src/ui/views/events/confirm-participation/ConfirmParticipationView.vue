@@ -16,14 +16,14 @@
                             <td class="block py-1 font-bold sm:table-cell">{{ event.name }}</td>
                         </tr>
                         <tr class="mb-2 block sm:table-row">
-                            <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Crew an Board:</td>
+                            <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Crew an Bord:</td>
                             <td class="block py-1 font-bold sm:table-cell">
                                 {{ $d(event.start, DateTimeFormat.DD_MM_YYYY) }}
                                 {{ $d(event.start, DateTimeFormat.hh_mm) }}
                             </td>
                         </tr>
                         <tr class="mb-2 block sm:table-row">
-                            <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Crew von Board:</td>
+                            <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Crew von Bord:</td>
                             <td class="block py-1 font-bold sm:table-cell">
                                 {{ $d(event.end, DateTimeFormat.DD_MM_YYYY) }}
                                 {{ $d(event.end, DateTimeFormat.hh_mm) }}

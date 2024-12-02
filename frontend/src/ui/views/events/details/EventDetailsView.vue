@@ -48,11 +48,11 @@
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-bell w-4" />
-                            <span>Crew an Board: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
+                            <span>Crew an Bord: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-bell-slash w-4" />
-                            <span>Crew von Board: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
+                            <span>Crew von Bord: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-users w-4" />
