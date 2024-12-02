@@ -320,6 +320,6 @@ export class EventUseCase {
             'END:VCALENDAR',
         ];
         // download ics file
-        saveStringToFile('Event.ics', lines.join('\n'));
+        saveStringToFile(`${event.name}.ics`, lines.join('\n'));
     }
 }
