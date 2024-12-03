@@ -115,8 +115,8 @@ public class EventUseCase {
     ) {
         signedInUser.assertHasAnyPermission(Permission.WRITE_EVENT_DETAILS, Permission.WRITE_EVENT_SLOTS);
 
-        log.info("Updating event {}", eventKey);
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        log.info("Updating event {} ({})", event.getName(), eventKey);
         var previousState = event.getState();
 
         List<UserDetails> notifyUsersAddedToCrew = new LinkedList<>();
@@ -171,9 +171,9 @@ public class EventUseCase {
 
     public void deleteEvent(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) {
         signedInUser.assertHasPermission(Permission.DELETE_EVENTS);
-        log.info("Deleting event {}", eventKey);
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        log.info("Deleting event {} ({})", event.getName(), eventKey);
         eventRepository.deleteByKey(event.getKey());
     }
 
@@ -181,8 +181,8 @@ public class EventUseCase {
         signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
-        log.info("Generating IMO list for event {}", eventKey);
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        log.info("Generating IMO list for event {} ({})", event.getName(), eventKey);
         return imoListService.generateImoList(event);
     }
 
@@ -190,8 +190,8 @@ public class EventUseCase {
         signedInUser.assertHasPermission(Permission.READ_USERS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
-        log.info("Generating consumption list for event {}", eventKey);
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        log.info("Generating consumption list for event {} ({})", event.getName(), eventKey);
         return consumptionListService.generateConsumptionList(event);
     }
 
@@ -261,7 +261,7 @@ public class EventUseCase {
 
         if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
-            log.info("User {} updates their registration on event {}", registration.getUserKey(), eventKey);
+            log.info("User {} updates their registration on event {} ({})", registration.getUserKey(), event.getName(), eventKey);
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             log.info("Updating registration {} on event {} ({})", registrationKey, event.getName(), eventKey);
