@@ -4,6 +4,9 @@ import type { ResolvedUserQualification } from '@/domain/aggregates/ResolvedUser
 
 export class UserService {
     public doesUserMatchFilter(user: User, filter: string): boolean {
+        if (user.key === filter) {
+            return true;
+        }
         const filterLc = filter.toLowerCase();
         const fullname = `${user.firstName} ${user.lastName}`.toLowerCase().trim();
         if (fullname.includes(filterLc)) {
