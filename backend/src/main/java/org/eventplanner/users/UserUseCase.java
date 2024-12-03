@@ -135,12 +135,13 @@ public class UserUseCase {
         @NonNull UpdateUserSpec spec
     ) {
         if (signedInUser.key().equals(userKey)) {
+            log.info("User {} is updating their personal information", userKey);
             signedInUser.assertHasPermission(Permission.WRITE_OWN_USER_DETAILS);
         } else {
+            log.info("Updating user {}", userKey);
             signedInUser.assertHasPermission(Permission.WRITE_USERS);
         }
 
-        log.info("Updating user {}", userKey);
         var user = userService.getUserByKey(userKey).orElseThrow();
 
         if (signedInUser.key().equals(userKey)) {
