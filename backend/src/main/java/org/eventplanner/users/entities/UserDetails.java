@@ -1,5 +1,7 @@
 package org.eventplanner.users.entities;
 
+import static java.util.Optional.ofNullable;
+
 import lombok.*;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.values.QualificationKey;
@@ -50,7 +52,7 @@ public class UserDetails {
         if (title != null) {
             stb.append(title).append(" ");
         }
-        stb.append(firstName).append(" ");
+        stb.append(ofNullable(nickName).orElse(firstName)).append(" ");
         if (secondName != null) {
             stb.append(secondName).append(" ");
         }
