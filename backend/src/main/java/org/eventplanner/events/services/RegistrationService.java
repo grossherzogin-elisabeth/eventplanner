@@ -8,7 +8,6 @@ import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.spec.CreateRegistrationSpec;
 import org.eventplanner.events.spec.UpdateRegistrationSpec;
-import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.notifications.service.NotificationService;
 import org.eventplanner.positions.adapter.PositionRepository;
@@ -20,9 +19,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -36,14 +33,13 @@ public class RegistrationService {
     private final PositionRepository positionRepository;
 
     public @NonNull Event addRegistration(
-            @NonNull EventKey eventKey,
+            @NonNull Event event,
             @NonNull CreateRegistrationSpec spec
     ) {
-        var event = eventRepository.findByKey(eventKey).orElseThrow();
         var userKey = spec.userKey();
         if (userKey != null) {
             if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUserKey()))) {
-                log.info("Registration for {} already exists on event {}.", userKey, eventKey);
+                log.debug("Registration for {} already exists on event {} ({}).", userKey, event.getName(), event.getKey());
                 return event;
             }
             var user = userService.getUserByKey(userKey)
@@ -61,7 +57,7 @@ public class RegistrationService {
             if (event.getRegistrations().stream().anyMatch(r -> spec.name().equals(r.getName()))) {
                 throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
             }
-            log.info("Adding registration for guest {} on event {}", spec.name(), eventKey);
+            log.info("Adding registration for guest {} on event {} ({})", spec.name(), event.getName(), event.getKey());
             event.addRegistration(new Registration(
                     new RegistrationKey(),
                     spec.positionKey(),
@@ -78,6 +74,7 @@ public class RegistrationService {
             @NonNull Event event,
             @NonNull Registration registration
     ) {
+        log.info("Deleting registration {} from event {} ({})", registration.getKey(), event.getName(), event.getKey());
         var hasAssignedSlot = false;
         for (Slot slot : event.getSlots()) {
             if (registration.getKey().equals(slot.getAssignedRegistration())) {
@@ -136,7 +133,7 @@ public class RegistrationService {
             @NonNull Registration registration,
             @NonNull UpdateRegistrationSpec spec
     ) {
-        log.info("Updating registration {} on event {}", registration.getKey(), event.getKey());
+        log.info("Updating registration {} on event {} ({})", registration.getKey(), event.getName(), event.getKey());
         registration.setPosition(spec.positionKey());
         registration.setName(spec.name());
         registration.setNote(spec.note());
