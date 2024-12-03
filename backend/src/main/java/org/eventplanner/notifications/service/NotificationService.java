@@ -97,7 +97,7 @@ public class NotificationService {
     }
 
     public void sendAddedToWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Creating added to waiting list notification for user {}", to.getKey());
+        log.debug("Creating added to waiting list notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.ADDED_TO_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -110,7 +110,7 @@ public class NotificationService {
     }
 
     public void sendRemovedFromWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Creating removed from waiting list notification for user {}", to.getKey());
+        log.debug("Creating removed from waiting list notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -123,7 +123,7 @@ public class NotificationService {
     }
 
     public void sendAddedToCrewNotification(@NonNull UserDetails user, @NonNull Event event) {
-        log.info("Creating added to crew notification for user {}", user.getKey());
+        log.debug("Creating added to crew notification for user {}", user.getKey());
         Notification notification = new Notification(NotificationType.ADDED_TO_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         addEventDetails(notification, event);
@@ -136,7 +136,7 @@ public class NotificationService {
     }
 
     public void sendRemovedFromCrewNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Creating removed from crew notification for user {}", to.getKey());
+        log.debug("Creating removed from crew notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -154,7 +154,7 @@ public class NotificationService {
             @NonNull String userName,
             @NonNull String position
     ) {
-        log.info("Creating crew registration canceled notification for user {}", to.getKey());
+        log.debug("Creating crew registration canceled notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CREW_REGISTRATION_CANCELED);
         notification.setTitle("Absage zu " + event.getName());
         addEventDetails(notification, event);
@@ -172,7 +172,7 @@ public class NotificationService {
             @NonNull Event event,
             @NonNull Registration registration
     ) {
-        log.info("Creating first participation confirmation request for user {}", to.getKey());
+        log.debug("Creating first participation confirmation request for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION);
         notification.setTitle("Bitte um Rückmeldung: " + event.getName());
         addEventDetails(notification, event);
@@ -185,7 +185,7 @@ public class NotificationService {
             @NonNull Event event,
             @NonNull Registration registration
     ) {
-        log.info("Creating second participation confirmation request for user {}", to.getKey());
+        log.debug("Creating second participation confirmation request for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
         notification.setTitle("Bitte sofortige um Rückmeldung: " + event.getName());
         addEventDetails(notification, event);
@@ -194,7 +194,7 @@ public class NotificationService {
     }
 
     public void sendUserChangedPersonalDataNotification(@NonNull UserDetails to, @NonNull UserDetails who) {
-        log.info("Creating user changed personal data notification for user {}", to.getKey());
+        log.debug("Creating user changed personal data notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.USER_DATA_CHANGED);
         notification.setTitle(who.getFullName() + " hat seine Daten geändert");
         notification.getProps().put("user", to);
