@@ -97,7 +97,7 @@ public class NotificationService {
     }
 
     public void sendAddedToWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Creating added to waiting list notification for user {}", to.getEmail());
+        log.info("Creating added to waiting list notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.ADDED_TO_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -105,12 +105,12 @@ public class NotificationService {
         try {
             sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'removed from waiting list' notification to user {}", to.getEmail(), e);
+            log.error("Failed to send 'removed from waiting list' notification to user {}", to.getKey(), e);
         }
     }
 
     public void sendRemovedFromWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Creating removed from waiting list notification for user {}", to.getEmail());
+        log.info("Creating removed from waiting list notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_WAITING_LIST);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -118,12 +118,12 @@ public class NotificationService {
         try {
             sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'removed from waiting list' notification to user {}", to.getEmail(), e);
+            log.error("Failed to send 'removed from waiting list' notification to user {}", to.getKey(), e);
         }
     }
 
     public void sendAddedToCrewNotification(@NonNull UserDetails user, @NonNull Event event) {
-        log.info("Creating added to crew notification for user {}", user.getEmail());
+        log.info("Creating added to crew notification for user {}", user.getKey());
         Notification notification = new Notification(NotificationType.ADDED_TO_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         addEventDetails(notification, event);
@@ -131,12 +131,12 @@ public class NotificationService {
         try {
             sendNotification(notification, user);
         } catch (Exception e) {
-            log.error("Failed to send 'added to crew' notification to user {}", user.getEmail(), e);
+            log.error("Failed to send 'added to crew' notification to user {}", user.getKey(), e);
         }
     }
 
     public void sendRemovedFromCrewNotification(@NonNull UserDetails to, @NonNull Event event) {
-        log.info("Creating removed from crew notification for user {}", to.getEmail());
+        log.info("Creating removed from crew notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.REMOVED_FROM_CREW);
         notification.setTitle("Deine Anmeldung zu " + event.getName());
         notification.getProps().put("user", to);
@@ -144,7 +144,7 @@ public class NotificationService {
         try {
             sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'removed from crew' notification to user {}", to.getEmail(), e);
+            log.error("Failed to send 'removed from crew' notification to user {}", to.getKey(), e);
         }
     }
 
@@ -154,7 +154,7 @@ public class NotificationService {
             @NonNull String userName,
             @NonNull String position
     ) {
-        log.info("Creating crew registration canceled notification for user {}", to.getEmail());
+        log.info("Creating crew registration canceled notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CREW_REGISTRATION_CANCELED);
         notification.setTitle("Absage zu " + event.getName());
         addEventDetails(notification, event);
@@ -163,7 +163,7 @@ public class NotificationService {
         try {
             sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'crew registration canceled' notification to to {}", to.getEmail(), e);
+            log.error("Failed to send 'crew registration canceled' notification to user {}", to.getKey(), e);
         }
     }
 
@@ -172,7 +172,7 @@ public class NotificationService {
             @NonNull Event event,
             @NonNull Registration registration
     ) {
-        log.info("Creating first participation confirmation request for user {}", to.getEmail());
+        log.info("Creating first participation confirmation request for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION);
         notification.setTitle("Bitte um Rückmeldung: " + event.getName());
         addEventDetails(notification, event);
@@ -185,7 +185,7 @@ public class NotificationService {
             @NonNull Event event,
             @NonNull Registration registration
     ) {
-        log.info("Creating second participation confirmation request for user {}", to.getEmail());
+        log.info("Creating second participation confirmation request for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
         notification.setTitle("Bitte sofortige um Rückmeldung: " + event.getName());
         addEventDetails(notification, event);
@@ -194,7 +194,7 @@ public class NotificationService {
     }
 
     public void sendUserChangedPersonalDataNotification(@NonNull UserDetails to, @NonNull UserDetails who) {
-        log.info("Creating user changed personal data notification for user {}", to.getEmail());
+        log.info("Creating user changed personal data notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.USER_DATA_CHANGED);
         notification.setTitle(who.getFullName() + " hat seine Daten geändert");
         notification.getProps().put("user", to);
@@ -202,7 +202,7 @@ public class NotificationService {
         try {
             sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send 'user changed personal data' notification to to {}", to.getEmail(), e);
+            log.error("Failed to send 'user changed personal data' notification to user {}", to.getKey(), e);
         }
     }
 
@@ -221,7 +221,7 @@ public class NotificationService {
         try {
             sendNotification(notification, to);
         } catch (Exception e) {
-            log.error("Failed to send participation confirmation request to to {}", to.getEmail(), e);
+            log.error("Failed to send participation confirmation request to user {}", to.getKey(), e);
         }
     }
 
@@ -236,7 +236,7 @@ public class NotificationService {
 
     public void sendNotification(@NonNull Notification notification, @NonNull UserDetails to) throws IOException, TemplateException, MessagingException {
         if (to.getEmail() == null) {
-            log.warn("User {} has associated email, cannot send notification", to.getKey());
+            log.warn("Cannot send email notification to user {} due to missing email address", to.getKey());
             throw new IllegalStateException("User is missing an email address");
         }
         var emailSettings = getEmailSettings();
