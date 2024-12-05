@@ -58,6 +58,7 @@ public class UserUseCase {
             if (maybeUser.isPresent()) {
                 var user = maybeUser.get();
                 user.setAuthKey(authkey);
+                log.info("Linking user {} with oidc user {} by email", user.getKey(), authkey);
                 userService.updateUser(user);
                 return SignedInUser
                     .fromUser(user)
@@ -70,6 +71,7 @@ public class UserUseCase {
                 maybeUser = userService.getUserByName(firstName, lastName);
                 if (maybeUser.isPresent()) {
                     var user = maybeUser.get();
+                    log.info("Linking user {} with oidc user {} by name", user.getKey(), authkey);
                     user.setAuthKey(authkey);
                     userService.updateUser(user);
                     return SignedInUser
@@ -77,6 +79,7 @@ public class UserUseCase {
                         .withPermissionsFromAuthentication(authentication);
                 }
 
+                log.warn("Cannot find match for oidc user {}. Creating new user.", authkey);
                 var newUser = new UserDetails(UserKey.fromName(firstName + " " + lastName), firstName, lastName);
                 newUser.setEmail(oidcUser.getEmail());
                 newUser.setAuthKey(authkey);
