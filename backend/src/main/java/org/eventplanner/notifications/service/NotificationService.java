@@ -303,7 +303,7 @@ public class NotificationService {
 
     private String renderEmail(@NonNull Notification notification) throws IOException, TemplateException {
         var props = notification.getProps();
-        String content = renderTemplate("emails/" + notification.getType().toString() + ".ftl", props);
+        String content = renderTemplate("emails/" + notification.getType() + ".ftl", props);
 
         var baseTemplateParams = new HashMap<>(notification.getProps());
         baseTemplateParams.put("content", content);
