@@ -22,12 +22,12 @@ export default defineConfig({
     plugins: [vue(), svgLoader(), pwa],
     assetsInclude: ['**/*.csv'],
     server: {
-        port: 8080,
+        port: 8090,
         host: true,
         proxy: {
-            '/api/': 'http://localhost:8081',
-            '/auth/': 'http://localhost:8081',
-            '/login/oauth2/code/': 'http://localhost:8081',
+            '/api/': 'http://localhost:8091',
+            '/auth/': 'http://localhost:8091',
+            '/login/oauth2/code/': 'http://localhost:8091',
         },
     },
     resolve: {

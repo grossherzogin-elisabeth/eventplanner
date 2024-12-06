@@ -9,6 +9,7 @@ import org.eventplanner.users.UserUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import jakarta.servlet.ServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/events")
@@ -37,8 +40,19 @@ public class EventController {
     }
 
     @GetMapping(path = "")
-    public ResponseEntity<List<EventRepresentation>> getEvents(@RequestParam("year") int year) {
+    public ResponseEntity<?> getEvents(@RequestHeader(HttpHeaders.ACCEPT) String accept, @RequestParam("year") int year) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+
+        if (accept.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            var stream = eventUseCase.exportEvents(signedInUser, year);
+            byte[] binary = stream.toByteArray();
+            ByteArrayResource resource = new ByteArrayResource(binary);
+            return ResponseEntity.ok()
+                .contentLength(binary.length)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+        }
+
         var events = eventUseCase.getEvents(signedInUser, year)
             .stream()
             .map(EventRepresentation::fromDomain)

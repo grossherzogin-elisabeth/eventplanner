@@ -8,6 +8,7 @@ import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.services.EventService;
 import org.eventplanner.events.services.ConsumptionListService;
+import org.eventplanner.events.services.ExportService;
 import org.eventplanner.events.services.ImoListService;
 import org.eventplanner.events.services.RegistrationService;
 import org.eventplanner.events.spec.CreateEventSpec;
@@ -45,6 +46,7 @@ public class EventUseCase {
     private final ConsumptionListService consumptionListService;
     private final EventService eventService;
     private final RegistrationService registrationService;
+    private final ExportService exportService;
 
     public @NonNull List<Event> getEvents(@NonNull SignedInUser signedInUser, int year) {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
@@ -73,6 +75,15 @@ public class EventUseCase {
                         .stream()
                         .anyMatch(reg -> signedInUser.key().equals(reg.getUserKey())))
                 .toList();
+    }
+
+    public @NonNull ByteArrayOutputStream exportEvents(@NonNull SignedInUser signedInUser, int year) {
+        signedInUser.assertHasPermission(Permission.READ_USERS);
+        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+
+        var events = this.getEvents(signedInUser, year); // we want the exact same permission checks here
+        log.info("Generating excel export for events of year {}", year);
+        return exportService.exportEvents(events, year);
     }
 
     public @NonNull Event getEventByKey(@NonNull SignedInUser signedInUser, EventKey key) {

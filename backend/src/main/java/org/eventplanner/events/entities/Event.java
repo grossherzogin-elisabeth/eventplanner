@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -29,6 +30,13 @@ public class Event {
     private @NonNull List<Slot> slots = Collections.emptyList();
     private @NonNull List<Registration> registrations = Collections.emptyList();
     private @NonNull Integer participationConfirmationsRequestsSent = 0;
+
+    public List<RegistrationKey> getAssignedRegistrationKeys() {
+        return getSlots().stream()
+            .map(Slot::getAssignedRegistration)
+            .filter(Objects::nonNull)
+            .toList();
+    }
 
     public void addRegistration(Registration registration) {
         var mutableList = new LinkedList<>(registrations);

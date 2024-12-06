@@ -10,6 +10,12 @@
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
+                    <div v-if="!Number.isNaN(parseInt(tab))" class="permission-read-events hidden lg:block">
+                        <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(parseInt(tab))">
+                            <i class="fa-solid fa-download"></i>
+                            <span class="">Export</span>
+                        </button>
+                    </div>
                     <div class="permission-create-events hidden 2xl:block">
                         <button class="btn-primary ml-2" name="create" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>

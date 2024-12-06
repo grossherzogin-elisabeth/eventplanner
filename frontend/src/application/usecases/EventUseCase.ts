@@ -62,6 +62,16 @@ export class EventUseCase {
         }
     }
 
+    public async exportEvents(year: number): Promise<void> {
+        try {
+            const blob = await this.eventRepository.export(year);
+            saveBlobToFile(`Einsatzmatrix ${year}.xlsx`, blob);
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
     public async getEventByKey(year: number, eventKey: EventKey, ignoreCache: boolean = false): Promise<Event> {
         try {
             const signedInUser = this.authService.getSignedInUser();

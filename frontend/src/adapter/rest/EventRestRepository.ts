@@ -145,12 +145,28 @@ export class EventRestRepository implements EventRepository {
     public async findAll(year: number): Promise<Event[]> {
         const response = await fetch(`/api/v1/events?year=${year}`, {
             credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+            },
         });
         if (!response.ok) {
             throw response;
         }
         const responseData: EventRepresentation[] = await response.clone().json();
         return responseData.map(EventRestRepository.mapEventToDomain);
+    }
+
+    public async export(year: number): Promise<Blob> {
+        const response = await fetch(`/api/v1/events?year=${year}`, {
+            credentials: 'include',
+            headers: {
+                Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            },
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        return await response.clone().blob();
     }
 
     public async importEvents(year: number, file: Blob): Promise<ImportError[]> {
@@ -162,6 +178,7 @@ export class EventRestRepository implements EventRepository {
             credentials: 'include',
             body: formParams,
             headers: {
+                'Accept': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },
         });
@@ -216,6 +233,7 @@ export class EventRestRepository implements EventRepository {
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },
@@ -259,6 +277,7 @@ export class EventRestRepository implements EventRepository {
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
             },

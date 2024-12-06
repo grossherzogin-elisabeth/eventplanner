@@ -5,6 +5,8 @@ export interface EventRepository {
 
     findAll(year: number): Promise<Event[]>;
 
+    export(year: number): Promise<Blob>;
+
     updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event>;
 
     deleteEvent(eventKey: EventKey): Promise<void>;
