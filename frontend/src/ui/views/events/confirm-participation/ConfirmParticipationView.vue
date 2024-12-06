@@ -132,6 +132,7 @@ const event = ref<Event>({
     key: '',
     start: addToDate(new Date(), { days: 14 }),
     end: addToDate(new Date(), { days: 20 }),
+    days: 10,
     name: 'Sommerreise 2',
     type: EventType.MultiDayEvent,
     assignedUserCount: 0,

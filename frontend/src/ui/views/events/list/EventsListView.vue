@@ -128,7 +128,7 @@
                     <td class="w-1/6 whitespace-nowrap" :class="{ 'opacity-50': item.isPastEvent }">
                         <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
                         <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
-                        <p class="text-sm">{{ item.duration }} Tage</p>
+                        <p class="text-sm">{{ item.days }} Tage</p>
                     </td>
                 </template>
                 <template #loading>
@@ -334,7 +334,6 @@ interface StateDetails {
 
 interface EventTableViewItem extends Event {
     selected: boolean;
-    duration: number;
     isPastEvent: boolean;
     waitingListCount: number;
     hasOpenSlots: boolean;
@@ -470,7 +469,6 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
         const tableItem: EventTableViewItem = {
             ...evt,
             selected: false,
-            duration: new Date(evt.end.getTime() - evt.start.getTime()).getDate(),
             isPastEvent: evt.start.getTime() < new Date().getTime(),
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
             hasOpenSlots: eventService.hasOpenSlots(evt, signedInUser.value.positions),

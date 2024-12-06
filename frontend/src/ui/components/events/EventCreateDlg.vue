@@ -145,6 +145,7 @@ const event = ref<Event>({
     type: EventType.WeekendEvent,
     state: EventState.Draft,
     start: new Date(),
+    days: 0,
     end: new Date(),
     locations: [],
     slots: [],

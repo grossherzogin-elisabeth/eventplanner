@@ -83,6 +83,7 @@ export class EventRestRepository implements EventRepository {
             state: eventRepresentation.state as EventState,
             start: deserializeDate(eventRepresentation.start),
             end: deserializeDate(eventRepresentation.end),
+            days: 0,
             registrations: eventRepresentation.registrations.map((it) => ({
                 key: it.key,
                 positionKey: it.positionKey,

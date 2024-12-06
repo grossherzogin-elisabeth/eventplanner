@@ -321,6 +321,10 @@ export class EventService {
         if (event.state === EventState.Canceled) {
             event.canSignedInUserJoin = false;
         }
+        const dayStart = cropToPrecision(event.start, 'days');
+        const dayEnd = cropToPrecision(event.end, 'days');
+        event.days = new Date(dayEnd.getTime() - dayStart.getTime()).getDate();
+
         return event;
     }
 }

@@ -278,8 +278,8 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
 
         const calendarDayEvent: CalendarDayEvent = {
             event: event,
-            duration: new Date(event.end.getTime() - event.start.getTime()).getDate(),
-            durationInMonth: new Date(event.end.getTime() - event.start.getTime()).getDate(),
+            duration: event.days,
+            durationInMonth: event.days,
             class: '',
             isContinuation: false,
             offset: 0,
@@ -292,22 +292,21 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
             calendarDayEvent.durationInMonth -= 0.5;
         }
         if (day.events.length === 1) {
+            // we have multiple events on this day
+            // TODO how can we handle more than 2 events on the same day?
             calendarDayEvent.offset = 0.5;
         }
 
         // add user event relation class
         if (event.signedInUserAssignedPosition) {
             calendarDayEvent.class += ' assigned';
-        } else if (event.signedInUserWaitingListPosition) {
-            calendarDayEvent.class += ' waiting-list';
-        } else if (event.assignedUserCount >= 23) {
-            calendarDayEvent.class += ' full';
         }
-
+        if (event.signedInUserWaitingListPosition) {
+            calendarDayEvent.class += ' waiting-list';
+        }
         if (event.end.getTime() < new Date().getTime()) {
             calendarDayEvent.class += ' in-past';
         }
-
         if (calendarDayEvent.durationInMonth < 1) {
             calendarDayEvent.class += ' small';
         }

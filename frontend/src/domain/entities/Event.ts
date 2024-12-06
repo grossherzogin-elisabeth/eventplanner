@@ -10,6 +10,7 @@ export interface Event {
     description: string;
     start: Date;
     end: Date;
+    days: number;
     locations: Location[];
     slots: Slot[];
     registrations: Registration[];
