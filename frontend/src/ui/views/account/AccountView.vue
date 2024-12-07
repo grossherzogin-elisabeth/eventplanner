@@ -47,7 +47,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Zweiter Vornahme</VInputLabel>
+                                        <VInputLabel>Zweiter Vorname</VInputLabel>
                                         <VInputText v-model.trim="userDetails.secondName" disabled placeholder="Keine Angabe" />
                                     </div>
                                     <div class="mb-4">
