@@ -12,29 +12,26 @@ function cancel(evt: KeyboardEvent): void {
     window.dispatchEvent(new CustomEvent('cancel'));
 }
 
-function left(evt: KeyboardEvent): void {
+function left(): void {
     window.dispatchEvent(new CustomEvent('left'));
     const button = document.querySelector('button[name="previous"]');
     if (button) {
-        evt.preventDefault();
         (button as HTMLButtonElement).click();
     }
 }
 
-function right(evt: KeyboardEvent): void {
+function right(): void {
     window.dispatchEvent(new CustomEvent('right'));
     const button = document.querySelector('button[name="next"]');
     if (button) {
-        evt.preventDefault();
         (button as HTMLButtonElement).click();
     }
 }
 
-function down(evt: KeyboardEvent): void {
+function down(): void {
     window.dispatchEvent(new CustomEvent('down'));
     const routerView = document.getElementById('router-view');
     if (routerView) {
-        evt.preventDefault();
         routerView.scroll({
             top: routerView.scrollTop + 200,
             behavior: 'smooth',
@@ -42,11 +39,10 @@ function down(evt: KeyboardEvent): void {
     }
 }
 
-function up(evt: KeyboardEvent): void {
+function up(): void {
     window.dispatchEvent(new CustomEvent('up'));
     const routerView = document.getElementById('router-view');
     if (routerView) {
-        evt.preventDefault();
         routerView.scroll({
             top: routerView.scrollTop - 200,
             behavior: 'smooth',
@@ -75,22 +71,22 @@ function registerKeyboardShortcuts(): void {
                 default:
             }
         }
-        console.log(evt.code);
+        // console.log(evt.code);
         switch (evt.code) {
             case 'Escape':
                 cancel(evt);
                 break;
             case 'ArrowLeft':
-                left(evt);
+                left();
                 break;
             case 'ArrowRight':
-                right(evt);
+                right();
                 break;
             case 'ArrowDown':
-                down(evt);
+                down();
                 break;
             case 'ArrowUp':
-                up(evt);
+                up();
                 break;
         }
     });
