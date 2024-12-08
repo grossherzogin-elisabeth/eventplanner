@@ -233,7 +233,7 @@ public class NotificationService {
     public void sendNotification(@NonNull Notification notification, @NonNull UserDetails to) throws IOException, TemplateException, MessagingException {
         if (to.getEmail() == null) {
             log.warn("Cannot send email notification to user {} due to missing email address", to.getKey());
-            throw new IllegalStateException("User is missing an email address");
+            return;
         }
         var emailSettings = getEmailSettings();
 
@@ -286,17 +286,12 @@ public class NotificationService {
                     exec.shutdown();
                 }
             } else {
-                log.warn("Skipped sending email to {} because notifications are configured to only be sent to whitelisted users", to.getEmail());
+                log.warn("Skipped sending email to user {} because notifications are configured to only be sent to whitelisted users", to.getKey());
             }
         } else {
-            if (to.getAuthKey() != null) {
-                log.info("Sending {} email to {}", notification.getType(), to.getEmail());
-                try (var exec = Executors.newSingleThreadExecutor()) {
-                    exec.submit(() -> mailSender.send(message));
-                    exec.shutdown();
-                }
-            } else {
-                log.warn("Skipped sending email to {} because notifications are configured to only be sent to beta users", to.getEmail());
+            try (var exec = Executors.newSingleThreadExecutor()) {
+                exec.submit(() -> mailSender.send(message));
+                exec.shutdown();
             }
         }
     }
@@ -319,13 +314,13 @@ public class NotificationService {
 
     private String formatDate(ZonedDateTime zonedDateTime) {
         var formatted = zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        formatted = formatted.replace(".", "&#8203.");
+        formatted = formatted.replace(".", "&#8203."); // zero length whitespace to prevent phone number detection
         return formatted;
     }
 
     private String formatDateTime(ZonedDateTime zonedDateTime) {
         var formatted = zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
-        formatted = formatted.replace(".", "&#8203.");
+        formatted = formatted.replace(".", "&#8203."); // zero length whitespace to prevent phone number detection
         return formatted;
     }
 }
