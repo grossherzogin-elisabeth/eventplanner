@@ -10,7 +10,7 @@
                 <ul class="mb-4 ml-4 list-disc space-y-2">
                     <li>Du hast bei der Registrierung eine andere Email Adresse als die uns bekannte verwendet</li>
                     <li>
-                        Du hast bei der Registrierung deinen Namen etwas anders geschrieben (z.B. mit/ohne Zwischennahmen, mit/ohne
+                        Du hast bei der Registrierung deinen Namen etwas anders geschrieben (z.B. mit/ohne Zwischennamen, mit/ohne
                         Bindestrich, ...)
                     </li>
                     <li>Du bist dem Verein noch nicht beigetreten und bist deshalb noch nicht in unserer Datenbank hinterlegt</li>
