@@ -4,6 +4,7 @@ import static java.util.Optional.ofNullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.eventplanner.exceptions.UnauthorizedException;
@@ -50,8 +51,12 @@ public class UserUseCase {
             var authkey = new AuthKey(oidcUser.getSubject());
             var maybeUser = userService.getUserByAuthKey(authkey);
             if (maybeUser.isPresent()) {
+                var user = maybeUser.get();
+                if (!Objects.equals(user.getEmail(), oidcUser.getEmail())) {
+                    log.warn("Oidc user {} has a different email than the linked internal user {}", authkey, user.getKey());
+                }
                 return SignedInUser
-                    .fromUser(maybeUser.get())
+                    .fromUser(user)
                     .withPermissionsFromAuthentication(authentication);
             }
             maybeUser = userService.getUserByEmail(oidcUser.getEmail());
