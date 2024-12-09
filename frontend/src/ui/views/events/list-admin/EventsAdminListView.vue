@@ -473,6 +473,11 @@ useQueryStateSync<string>(
     () => filterEventType.value.join('_'),
     (v) => (filterEventType.value = v.split('_') as EventType[])
 );
+useQueryStateSync<string>(
+    'filter',
+    () => filter.value,
+    (v) => (filter.value = v)
+);
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();

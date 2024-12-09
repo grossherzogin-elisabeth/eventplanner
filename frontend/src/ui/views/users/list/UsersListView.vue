@@ -340,6 +340,11 @@ useQueryStateSync<string>(
     () => filterPositions.value.join('_'),
     (v) => (filterPositions.value = v.split('_'))
 );
+useQueryStateSync<string>(
+    'filter',
+    () => filter.value,
+    (v) => (filter.value = v)
+);
 
 const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
     users.value?.filter(
