@@ -363,7 +363,7 @@ export class UserRestRepository implements UserRepository {
                 addressLine2: representation.address?.addressLine2 || undefined,
                 town: representation.address?.town || '',
                 zipcode: representation.address?.zipCode || '',
-                country: representation.address?.country || representation.nationality,
+                country: representation.address?.country || representation.nationality || '',
             },
             nationality: representation.nationality,
             diseases: representation.diseases,
