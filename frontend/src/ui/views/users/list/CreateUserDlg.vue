@@ -74,7 +74,7 @@ const user = ref<User>({
     positionKeys: [],
 });
 
-const validation = useValidation(user, userAdministrationUseCase.validate);
+const validation = useValidation(user, userAdministrationUseCase.validateForCreate);
 
 async function open(): Promise<User | undefined> {
     user.value = {

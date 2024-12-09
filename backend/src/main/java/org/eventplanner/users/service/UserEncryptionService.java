@@ -149,7 +149,8 @@ public class UserEncryptionService {
             encrypt(value.addressLine1()),
             encryptNullable(value.addressLine2()),
             encrypt(value.town()),
-            encrypt(value.zipCode())
+            encrypt(value.zipCode()),
+            encryptNullable(value.country())
         );
     }
 
@@ -158,7 +159,8 @@ public class UserEncryptionService {
             decrypt(value.addressLine1()),
             decryptNullable(value.addressLine2()),
             decrypt(value.town()),
-            decrypt(value.zipCode())
+            decrypt(value.zipCode()),
+            decryptNullable(value.country())
         );
     }
 

@@ -10,7 +10,12 @@
                                     <h2 class="mb-4 font-bold text-secondary">App</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Anzeigename</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.nickName" :placeholder="userDetails.firstName" />
+                                        <VInputText
+                                            v-model.trim="userDetails.nickName"
+                                            :placeholder="userDetails.firstName"
+                                            :errors="validation.errors.value['nickName']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                 </section>
                                 <section class="diet-data">
@@ -24,18 +29,31 @@
                                                 { value: 'vegetarian', label: 'Vegetarisch' },
                                                 { value: 'vegan', label: 'Vegan' },
                                             ]"
+                                            :errors="validation.errors.value['diet']"
+                                            :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Unverträglichkeiten</VInputLabel>
-                                        <VInputTextArea v-model.trim="userDetails.intolerances" placeholder="Keine Angabe" />
+                                        <VInputTextArea
+                                            v-model.trim="userDetails.intolerances"
+                                            placeholder="Keine Angabe"
+                                            :errors="validation.errors.value['intolerances']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                 </section>
                                 <section class="personal-data">
                                     <h2 class="mb-4 font-bold text-secondary">Persönliche Daten</h2>
                                     <div class="mb-4 sm:w-64">
                                         <VInputLabel>Geschlecht</VInputLabel>
-                                        <VInputSelect v-model="userDetails.gender" :options="genderOptions" placeholder="Keine Angabe" />
+                                        <VInputSelect
+                                            v-model="userDetails.gender"
+                                            :options="genderOptions"
+                                            placeholder="Keine Angabe"
+                                            :errors="validation.errors.value['gender']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Vorname</VInputLabel>
@@ -62,6 +80,8 @@
                                                 required
                                                 :disabled="!enableEditingDateOfBirth"
                                                 placeholder="Keine Angabe"
+                                                :errors="validation.errors.value['dateOfBirth']"
+                                                :errors-visible="validation.showErrors.value"
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
@@ -71,13 +91,21 @@
                                                 required
                                                 :disabled="!enableEditingPlaceOfBirth"
                                                 placeholder="Keine Angabe"
+                                                :errors="validation.errors.value['placeOfBirth']"
+                                                :errors-visible="validation.showErrors.value"
                                             />
                                         </div>
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
                                             <VInputLabel>Personalausweis Nummer</VInputLabel>
-                                            <VInputText v-model.trim="userDetails.passNr" required placeholder="Keine Angabe" />
+                                            <VInputText
+                                                v-model.trim="userDetails.passNr"
+                                                required
+                                                placeholder="Keine Angabe"
+                                                :errors="validation.errors.value['passNr']"
+                                                :errors-visible="validation.showErrors.value"
+                                            />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
                                             <VInputLabel>Nationalität</VInputLabel>
@@ -86,6 +114,8 @@
                                                 :options="nationalities.options"
                                                 required
                                                 placeholder="Keine Angabe"
+                                                :errors="validation.errors.value['nationality']"
+                                                :errors-visible="validation.showErrors.value"
                                             />
                                         </div>
                                     </div>
@@ -125,40 +155,96 @@
                                     <h2 class="mb-4 font-bold text-secondary">Email & Telefon</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Email</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.email" required disabled placeholder="keine Angabe" />
+                                        <VInputText
+                                            v-model.trim="userDetails.email"
+                                            required
+                                            disabled
+                                            placeholder="keine Angabe"
+                                            :errors="validation.errors.value['email']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Telefon</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.phone" placeholder="keine Angabe" />
+                                        <VInputText
+                                            v-model.trim="userDetails.phone"
+                                            placeholder="keine Angabe"
+                                            :errors="validation.errors.value['phone']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Telefon (dienstlich)</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.phoneWork" placeholder="keine Angabe" />
+                                        <VInputText
+                                            v-model.trim="userDetails.phoneWork"
+                                            placeholder="keine Angabe"
+                                            :errors="validation.errors.value['phoneWork']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Mobil</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.mobile" placeholder="keine Angabe" />
+                                        <VInputText
+                                            v-model.trim="userDetails.mobile"
+                                            placeholder="keine Angabe"
+                                            :errors="validation.errors.value['mobile']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                 </section>
                                 <section>
                                     <h2 class="mb-4 font-bold text-secondary">Adresse</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Straße, Hausnr</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.address.addressLine1" required placeholder="keine Angabe" />
+                                        <VInputText
+                                            v-model.trim="userDetails.address.addressLine1"
+                                            required
+                                            placeholder="keine Angabe"
+                                            :errors="validation.errors.value['address.addressLine1']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Adresszusatz</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.address.addressLine2" placeholder="keine Angabe" />
+                                        <VInputText
+                                            v-model.trim="userDetails.address.addressLine2"
+                                            placeholder="keine Angabe"
+                                            :errors="validation.errors.value['address.addressLine2']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-36">
                                             <VInputLabel>PLZ</VInputLabel>
-                                            <VInputText v-model.trim="userDetails.address.zipcode" required placeholder="keine Angabe" />
+                                            <VInputText
+                                                v-model.trim="userDetails.address.zipcode"
+                                                required
+                                                placeholder="keine Angabe"
+                                                :errors="validation.errors.value['address.zipcode']"
+                                                :errors-visible="validation.showErrors.value"
+                                            />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
                                             <VInputLabel>Ort</VInputLabel>
-                                            <VInputText v-model.trim="userDetails.address.town" required placeholder="keine Angabe" />
+                                            <VInputText
+                                                v-model.trim="userDetails.address.town"
+                                                required
+                                                placeholder="keine Angabe"
+                                                :errors="validation.errors.value['address.town']"
+                                                :errors-visible="validation.showErrors.value"
+                                            />
                                         </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <VInputLabel>Land</VInputLabel>
+                                        <VInputCombobox
+                                            v-model.trim="userDetails.address.country"
+                                            :options="countries.options"
+                                            required
+                                            placeholder="keine Angabe"
+                                            :errors="validation.errors.value['address.country']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                 </section>
                             </div>
@@ -211,22 +297,42 @@
                                     <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Name des Notfallkontakts</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.emergencyContact.name" placeholder="Keine Angabe" />
+                                        <VInputText
+                                            v-model.trim="userDetails.emergencyContact.name"
+                                            placeholder="Keine Angabe"
+                                            :errors="validation.errors.value['emergencyContact.name']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Telefonnummer des Notfallkontakts</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.emergencyContact.phone" placeholder="Keine Angabe" />
+                                        <VInputText
+                                            v-model.trim="userDetails.emergencyContact.phone"
+                                            placeholder="Keine Angabe"
+                                            :errors="validation.errors.value['emergencyContact.phone']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                 </section>
                                 <section class="">
                                     <h2 class="mb-4 font-bold text-secondary">Wichtige gesundheitliche Informationen</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Krankheiten</VInputLabel>
-                                        <VInputTextArea v-model.trim="userDetails.diseases" placeholder="Keine Angabe" />
+                                        <VInputTextArea
+                                            v-model.trim="userDetails.diseases"
+                                            placeholder="Keine Angabe"
+                                            :errors="validation.errors.value['diseases']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                     <div class="mb-4">
                                         <VInputLabel>Medikamente</VInputLabel>
-                                        <VInputTextArea v-model.trim="userDetails.medication" placeholder="Keine Angabe" />
+                                        <VInputTextArea
+                                            v-model.trim="userDetails.medication"
+                                            placeholder="Keine Angabe"
+                                            :errors="validation.errors.value['medication']"
+                                            :errors-visible="validation.showErrors.value"
+                                        />
                                     </div>
                                 </section>
                             </div>
@@ -252,7 +358,7 @@
                 </VTabs>
             </template>
             <template #primary-button>
-                <AsyncButton v-if="userDetails" :action="save" name="save">
+                <AsyncButton v-if="userDetails" :action="save" name="save" :disabled="validation.disableSubmit.value">
                     <template #icon>
                         <i class="fa-solid fa-save"></i>
                     </template>
@@ -281,7 +387,9 @@ import {
 } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useConfig, useUsersUseCase } from '@/ui/composables/Application';
+import { useCountries } from '@/ui/composables/Countries.ts';
 import { useNationalities } from '@/ui/composables/Nationalities.ts';
+import { useValidation } from '@/ui/composables/Validation.ts';
 import UserQualificationsTable from './UserQualificationsTable.vue';
 
 enum Tab {
@@ -301,8 +409,10 @@ const authUseCase = useAuthUseCase();
 const usersUseCase = useUsersUseCase();
 const user = ref(authUseCase.getSignedInUser());
 const nationalities = useNationalities();
+const countries = useCountries();
 const userDetails = ref<UserDetails | null>(null);
 const userDetailsOriginal = ref<UserDetails | null>(null);
+const validation = useValidation<UserDetails | null>(userDetails, usersUseCase.validate);
 
 const genderOptions: InputSelectOption[] = [
     { value: 'm', label: 'männlich' },
@@ -320,6 +430,7 @@ async function fetchUserDetails(): Promise<void> {
     userDetails.value = deepCopy(userDetailsOriginal.value);
     enableEditingDateOfBirth.value = userDetails.value.dateOfBirth === undefined;
     enableEditingPlaceOfBirth.value = userDetails.value.placeOfBirth === undefined;
+    validation.showErrors.value = true;
 }
 
 async function save(): Promise<void> {

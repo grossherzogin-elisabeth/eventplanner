@@ -11,12 +11,12 @@
                 <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
                     <template #[Tab.USER_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserDataForm v-if="user" v-model="user" />
+                            <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />
                         </div>
                     </template>
                     <template #[Tab.USER_CONTACT_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserContactForm v-if="user" v-model="user" />
+                            <UserContactForm v-if="user" v-model="user" :errors="validation.errors.value" />
                         </div>
                     </template>
                     <template #[Tab.USER_EVENTS]>
@@ -63,18 +63,18 @@
                     </template>
                     <template #[Tab.USER_EMERGENCY]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserEmergencyForm v-if="user" v-model="user" />
+                            <UserEmergencyForm v-if="user" v-model="user" :errors="validation.errors.value" />
                         </div>
                     </template>
                     <template #[Tab.USER_OTHER]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserOtherForm v-if="user" v-model="user" />
+                            <UserOtherForm v-if="user" v-model="user" :errors="validation.errors.value" />
                         </div>
                     </template>
                 </VTabs>
             </template>
             <template v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)" #primary-button>
-                <AsyncButton :action="save" name="save">
+                <AsyncButton :action="save" name="save" :disabled="validation.disableSubmit.value">
                     <template #icon>
                         <i class="fa-solid fa-save"></i>
                     </template>
@@ -138,6 +138,7 @@ import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useErrorHandling, useEventUseCase, useUserAdministrationUseCase } from '@/ui/composables/Application.ts';
+import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
 import UserEmergencyForm from '@/ui/views/users/details/UserEmergencyForm.vue';
@@ -186,6 +187,7 @@ const user = ref<UserDetails | null>(null);
 const hasChanges = ref<boolean>(false);
 const eventsByYear = ref<Map<number, Event[] | undefined>>(new Map<number, Event[] | undefined>());
 const eventsLoadedUntilYear = ref<number>(0);
+const validation = useValidation(user, userAdministrationUseCase.validate);
 
 const createRegistrationForUserDialog = ref<Dialog<UserDetails, boolean> | null>(null);
 const addUserQualificationDialog = ref<Dialog<void, UserQualification | undefined> | null>(null);
@@ -203,6 +205,7 @@ async function fetchUser(): Promise<void> {
     userOriginal.value = await userAdministrationUseCase.getUserDetailsByKey(userKey.value);
     user.value = deepCopy(userOriginal.value);
     emit('update:title', `${user.value.firstName} ${user.value.lastName}`);
+    validation.showErrors.value = true;
 }
 
 function preventPageUnloadOnUnsavedChanges(): void {

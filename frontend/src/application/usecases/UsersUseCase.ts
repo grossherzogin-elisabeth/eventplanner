@@ -5,7 +5,17 @@ import type { PositionCachingService } from '@/application/services/PositionCach
 import type { QualificationCachingService } from '@/application/services/QualificationCachingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
 import { diff } from '@/common';
-import type { Position, PositionKey, Qualification, QualificationKey, User, UserDetails, UserKey, UserSettings } from '@/domain';
+import type {
+    Position,
+    PositionKey,
+    Qualification,
+    QualificationKey,
+    User,
+    UserDetails,
+    UserKey,
+    UserSettings,
+    ValidationHint,
+} from '@/domain';
 import { Permission } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
@@ -152,5 +162,80 @@ export class UsersUseCase {
         settings = Object.assign(settings, patch);
         localStorage.setItem('settings', JSON.stringify(settings));
         return settings;
+    }
+
+    public validate(user: UserDetails | null): Record<string, ValidationHint[]> {
+        if (!user) {
+            return {};
+        }
+        const phoneRegex = new RegExp('^[0-9+\\- ]+$');
+        const nameRegex = new RegExp(
+            "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$"
+        );
+        const errors: Record<string, ValidationHint[]> = {};
+        if (user.nickName && user.nickName.trim().length > 0 && user.nickName.includes(user.lastName)) {
+            errors.nickName = errors.nickName || [];
+            errors.nickName.push({
+                key: 'Bitte gib hier nur deinen Vornamen an',
+                params: {},
+            });
+        }
+        if (user.nickName && !nameRegex.test(user.nickName)) {
+            errors.nickName = errors.nickName || [];
+            errors.nickName.push({
+                key: 'Dein Name darf keine Zahlen oder Sonderzeichen enthalten',
+                params: {},
+            });
+        }
+        if (user.address.addressLine1.trim().length === 0) {
+            errors['address.addressLine1'] = errors['address.addressLine1'] || [];
+            errors['address.addressLine1'].push({
+                key: 'Diese Eingabe ist erforderlich',
+                params: {},
+            });
+        }
+        if (user.address.town.trim().length === 0) {
+            errors['address.town'] = errors['address.town'] || [];
+            errors['address.town'].push({
+                key: 'Diese Eingabe ist erforderlich',
+                params: {},
+            });
+        }
+        if (user.address.zipcode.trim().length === 0) {
+            errors['address.zipcode'] = errors['address.zipcode'] || [];
+            errors['address.zipcode'].push({
+                key: 'Diese Eingabe ist erforderlich',
+                params: {},
+            });
+        }
+        if (user.address.country.trim().length === 0) {
+            errors['address.country'] = errors['address.country'] || [];
+            errors['address.country'].push({
+                key: 'Diese Eingabe ist erforderlich',
+                params: {},
+            });
+        }
+        if (user.phone && !phoneRegex.test(user.phone)) {
+            errors['phone'] = errors['phone'] || [];
+            errors['phone'].push({
+                key: 'Bitte gib eine gültige Telefon Nummer an',
+                params: {},
+            });
+        }
+        if (user.mobile && !phoneRegex.test(user.mobile)) {
+            errors['mobile'] = errors['mobile'] || [];
+            errors['mobile'].push({
+                key: 'Bitte gib eine gültige Telefon Nummer an',
+                params: {},
+            });
+        }
+        if (user.phoneWork && !phoneRegex.test(user.phoneWork)) {
+            errors['phoneWork'] = errors['phoneWork'] || [];
+            errors['phoneWork'].push({
+                key: 'Bitte gib eine gültige Telefon Nummer an',
+                params: {},
+            });
+        }
+        return errors;
     }
 }

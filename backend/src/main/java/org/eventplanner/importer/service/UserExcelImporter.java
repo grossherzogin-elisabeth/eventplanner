@@ -130,7 +130,7 @@ public class UserExcelImporter {
         var town = data[COL_TOWN].trim();
         Address address = null;
         if (!street.isBlank() && !zipcode.isBlank() && !town.isBlank()) {
-            address = new Address(street, null, town, zipcode);
+            address = new Address(street, null, town, zipcode, "DE");
         }
         user.setAddress(address);
 

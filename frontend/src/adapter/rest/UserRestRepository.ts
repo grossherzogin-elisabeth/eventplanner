@@ -107,6 +107,7 @@ interface AddressRepresentation {
     addressLine2?: string;
     town: string;
     zipCode: string;
+    country: string;
 }
 
 interface EmergencyContactRepresentation {
@@ -193,6 +194,7 @@ export class UserRestRepository implements UserRepository {
                       addressLine2: user.address.addressLine2,
                       town: user.address.town,
                       zipCode: user.address.zipcode,
+                      country: user.address.country,
                   }
                 : undefined,
             email: user.email,
@@ -284,6 +286,7 @@ export class UserRestRepository implements UserRepository {
                       addressLine2: user.address.addressLine2,
                       town: user.address.town,
                       zipCode: user.address.zipcode,
+                      country: user.address.country,
                   }
                 : undefined,
             diet: user.diet,
@@ -360,6 +363,7 @@ export class UserRestRepository implements UserRepository {
                 addressLine2: representation.address?.addressLine2 || undefined,
                 town: representation.address?.town || '',
                 zipcode: representation.address?.zipCode || '',
+                country: representation.address?.country || representation.nationality,
             },
             nationality: representation.nationality,
             diseases: representation.diseases,

@@ -9,6 +9,7 @@ public record Address(
     @NonNull String addressLine1,
     @Nullable String addressLine2,
     @NonNull String town,
-    @NonNull String zipCode
+    @NonNull String zipCode,
+    @Nullable String country
 ) implements Serializable {
 }

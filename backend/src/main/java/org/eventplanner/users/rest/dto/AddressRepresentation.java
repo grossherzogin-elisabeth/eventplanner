@@ -10,17 +10,19 @@ public record AddressRepresentation(
     @NonNull String addressLine1,
     @Nullable String addressLine2,
     @NonNull String town,
-    @NonNull String zipCode
+    @NonNull String zipCode,
+    @Nullable String country
 ) implements Serializable {
     public static @Nullable AddressRepresentation fromDomain(@Nullable Address address) {
         if (address == null) {
-            return new AddressRepresentation("", null, "", "");
+            return new AddressRepresentation("", null, "", "", "");
         }
         return new AddressRepresentation(
             address.addressLine1(),
             address.addressLine2(),
             address.town(),
-            address.zipCode()
+            address.zipCode(),
+            address.country()
         );
     }
 
@@ -29,7 +31,8 @@ public record AddressRepresentation(
             addressLine1,
             addressLine2,
             town,
-            zipCode
+            zipCode,
+            country
         );
     }
 }

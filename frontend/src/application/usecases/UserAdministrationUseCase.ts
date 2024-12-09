@@ -1,6 +1,7 @@
 import type { NotificationService, UserRepository } from '@/application';
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { UserCachingService } from '@/application/services/UserCachingService';
+import { EMAIL_REGEX, NAME_REGEX, PHONE_REGEX } from '@/application/utils/RegExpresions.ts';
 import { diff, filterUndefined, wait } from '@/common';
 import type { User, UserDetails, UserKey, ValidationHint } from '@/domain';
 
@@ -139,26 +140,146 @@ export class UserAdministrationUseCase {
         document.body.removeChild(mailToElement);
     }
 
-    public validate(event: User): Record<string, ValidationHint[]> {
+    public validateForCreate(user: User): Record<string, ValidationHint[]> {
         const errors: Record<string, ValidationHint[]> = {};
-        if (event.firstName.trim().length === 0) {
+        if (user.firstName.trim().length === 0) {
             errors.firstName = errors.firstName || [];
             errors.firstName.push({
                 key: 'Bitte gib einen Vornamen an',
                 params: {},
             });
         }
-        if (event.lastName.trim().length === 0) {
+        if (user.firstName && !NAME_REGEX.test(user.firstName)) {
+            errors.firstName = errors.firstName || [];
+            errors.firstName.push({
+                key: 'Namen dürfen keine Zahlen oder Sonderzeichen enthalten',
+                params: {},
+            });
+        }
+        if (user.lastName.trim().length === 0) {
             errors.lastName = errors.lastName || [];
             errors.lastName.push({
                 key: 'Bitte gib einen Nachnamen an',
                 params: {},
             });
         }
-        if (!event.email || !new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$').test(event.email)) {
+        if (user.lastName && !NAME_REGEX.test(user.lastName)) {
+            errors.lastName = errors.lastName || [];
+            errors.lastName.push({
+                key: 'Namen dürfen keine Zahlen oder Sonderzeichen enthalten',
+                params: {},
+            });
+        }
+        if (!user.email || !EMAIL_REGEX.test(user.email)) {
             errors.email = errors.email || [];
             errors.email.push({
                 key: 'Bitte gib eine gültige Email Adresse an',
+                params: {},
+            });
+        }
+        return errors;
+    }
+
+    public validate(user: UserDetails | null): Record<string, ValidationHint[]> {
+        if (!user) {
+            return {};
+        }
+        const errors: Record<string, ValidationHint[]> = {};
+        if (user.firstName.trim().length === 0) {
+            errors.firstName = errors.firstName || [];
+            errors.firstName.push({
+                key: 'Bitte gib einen Vornamen an',
+                params: {},
+            });
+        }
+        if (user.firstName && !NAME_REGEX.test(user.firstName)) {
+            errors.firstName = errors.firstName || [];
+            errors.firstName.push({
+                key: 'Namen dürfen keine Zahlen oder Sonderzeichen enthalten',
+                params: {},
+            });
+        }
+        if (user.lastName.trim().length === 0) {
+            errors.lastName = errors.lastName || [];
+            errors.lastName.push({
+                key: 'Bitte gib einen Nachnamen an',
+                params: {},
+            });
+        }
+        if (user.lastName && !NAME_REGEX.test(user.lastName)) {
+            errors.lastName = errors.lastName || [];
+            errors.lastName.push({
+                key: 'Namen dürfen keine Zahlen oder Sonderzeichen enthalten',
+                params: {},
+            });
+        }
+        if (!user.email || !EMAIL_REGEX.test(user.email)) {
+            errors.email = errors.email || [];
+            errors.email.push({
+                key: 'Bitte gib eine gültige Email Adresse an',
+                params: {},
+            });
+        }
+        if (user.nickName && user.nickName.trim().length > 0 && user.nickName.includes(user.lastName)) {
+            errors.nickName = errors.nickName || [];
+            errors.nickName.push({
+                key: 'Bitte gib hier nur einen Vornamen an',
+                params: {},
+            });
+        }
+        if (user.nickName && !NAME_REGEX.test(user.nickName)) {
+            errors.nickName = errors.nickName || [];
+            errors.nickName.push({
+                key: 'Namen dürfen keine Zahlen oder Sonderzeichen enthalten',
+                params: {},
+            });
+        }
+        if (user.address.addressLine1.trim().length === 0) {
+            errors['address.addressLine1'] = errors['address.addressLine1'] || [];
+            errors['address.addressLine1'].push({
+                key: 'Diese Eingabe ist erforderlich',
+                params: {},
+            });
+        }
+        if (user.address.town.trim().length === 0) {
+            errors['address.town'] = errors['address.town'] || [];
+            errors['address.town'].push({
+                key: 'Diese Eingabe ist erforderlich',
+                params: {},
+            });
+        }
+        if (user.address.zipcode.trim().length === 0) {
+            errors['address.zipcode'] = errors['address.zipcode'] || [];
+            errors['address.zipcode'].push({
+                key: 'Diese Eingabe ist erforderlich',
+                params: {},
+            });
+        }
+        if (user.address.country.trim().length === 0) {
+            errors['address.country'] = errors['address.country'] || [];
+            errors['address.country'].push({
+                key: 'Diese Eingabe ist erforderlich',
+                params: {},
+            });
+        }
+        if (user.phone && !PHONE_REGEX.test(user.phone)) {
+            errors['phone'] = errors['phone'] || [];
+            errors['phone'].push({
+                key: 'Bitte gib eine gültige Telefon Nummer an',
+                params: {},
+            });
+        }
+        if (user.mobile && !PHONE_REGEX.test(user.mobile)) {
+            errors['mobile'] = errors['mobile'] || [];
+            errors['mobile'].push({
+                key: 'Bitte gib eine gültige Telefon Nummer an',
+                params: {},
+            });
+        }
+        if (user.phoneWork && !PHONE_REGEX.test(user.phoneWork)) {
+            errors['phoneWork'] = errors['phoneWork'] || [];
+            errors['phoneWork'].push({
+                key: 'Bitte gib eine gültige Telefon Nummer an',
                 params: {},
             });
         }

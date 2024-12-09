@@ -238,7 +238,7 @@ public class UserGenerator {
                 .replaceAll("ü", "ue")
             );
             user.getRoles().add(Role.TEAM_MEMBER);
-            user.setAddress(new Address("Teststraße " + i, null, "Teststadt", String.valueOf((12345 * i) % 99999)));
+            user.setAddress(new Address("Teststraße " + i, null, "Teststadt", String.valueOf((12345 * i) % 99999), "DE"));
             user.setDateOfBirth(LocalDate.now());
             user.setMobile("+49 123456789");
             user.setPhone("+49 123456789");
