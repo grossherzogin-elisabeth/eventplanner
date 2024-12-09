@@ -57,8 +57,8 @@ public class UserUseCase {
             maybeUser = userService.getUserByEmail(oidcUser.getEmail());
             if (maybeUser.isPresent()) {
                 var user = maybeUser.get();
-                user.setAuthKey(authkey);
                 log.info("Linking user {} with oidc user {} by email", user.getKey(), authkey);
+                user.setAuthKey(authkey);
                 userService.updateUser(user);
                 return SignedInUser
                     .fromUser(user)
@@ -68,19 +68,8 @@ public class UserUseCase {
             var firstName = oidcUser.getAttributes().get("given_name").toString();
             var lastName = oidcUser.getAttributes().get("family_name").toString();
             if (firstName != null && lastName != null) {
-                maybeUser = userService.getUserByName(firstName, lastName);
-                if (maybeUser.isPresent()) {
-                    var user = maybeUser.get();
-                    log.info("Linking user {} with oidc user {} by name", user.getKey(), authkey);
-                    user.setAuthKey(authkey);
-                    userService.updateUser(user);
-                    return SignedInUser
-                        .fromUser(user)
-                        .withPermissionsFromAuthentication(authentication);
-                }
-
-                log.warn("Cannot find match for oidc user {}. Creating new user.", authkey);
-                var newUser = new UserDetails(UserKey.fromName(firstName + " " + lastName), firstName, lastName);
+                var newUser = new UserDetails(new UserKey(), firstName, lastName);
+                log.warn("Cannot find match for oidc user {}, creating new user with key {}", authkey, newUser.getKey());
                 newUser.setEmail(oidcUser.getEmail());
                 newUser.setAuthKey(authkey);
                 newUser = userService.createUser(newUser);
@@ -88,6 +77,8 @@ public class UserUseCase {
                     .fromUser(newUser)
                     .withPermissionsFromAuthentication(authentication);
             }
+
+            log.error("Oidc user {} cannot be linked to an existing user and has no name information", authkey);
 
             // this should not happen
             return new SignedInUser(
