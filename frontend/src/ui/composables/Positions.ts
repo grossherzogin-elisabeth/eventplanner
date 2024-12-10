@@ -14,8 +14,8 @@ export function usePositions() {
         pos.forEach((p) => positions.value.set(p.key, p));
     }
 
-    const options = computed<InputSelectOption<string | undefined>[]>(() => {
-        const positionOptions: InputSelectOption<string | undefined>[] = [...positions.value.values()]
+    const options = computed<InputSelectOption<PositionKey | undefined>[]>(() => {
+        const positionOptions: InputSelectOption<PositionKey | undefined>[] = [...positions.value.values()]
             .sort((a, b) => b.prio - a.prio)
             .map((it) => ({
                 label: it.name,
@@ -24,7 +24,7 @@ export function usePositions() {
         return positionOptions;
     });
 
-    const optionsIncludingNone = computed<InputSelectOption<string | undefined>[]>(() => {
+    const optionsIncludingNone = computed<InputSelectOption<PositionKey | undefined>[]>(() => {
         const positionOptions = options.value;
         positionOptions.unshift({ value: undefined, label: '-' });
         return positionOptions;

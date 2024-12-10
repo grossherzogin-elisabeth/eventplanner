@@ -1,15 +1,11 @@
 package org.eventplanner.events.rest.dto;
 
 import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.values.RegistrationKey;
-import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.ZoneId;
 
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
@@ -30,18 +26,6 @@ public record RegistrationRepresentation(
                 domain.getName(),
                 domain.getNote(),
                 domain.getConfirmedAt() != null
-        );
-    }
-
-    public @NonNull Registration toDomain() {
-        return new Registration(
-                new RegistrationKey(key),
-                new PositionKey(positionKey),
-                mapNullable(userKey, UserKey::new),
-                name,
-                note,
-                Registration.generateAccessKey(),
-                Boolean.TRUE.equals(confirmed) ? Instant.now() : null
         );
     }
 }

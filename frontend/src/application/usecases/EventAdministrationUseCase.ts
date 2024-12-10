@@ -112,7 +112,11 @@ export class EventAdministrationUseCase {
     }
 
     private async updateEventInternal(eventKey: EventKey, event: Partial<Event>): Promise<Event> {
-        const original = await this.eventCachingService.getEventByKey(eventKey);
+        let original = await this.eventCachingService.getEventByKey(eventKey);
+        if (!original) {
+            // workaround: we don't have the original cached yet, because for example a reload on a details page happened
+            original = await this.eventRepository.findByKey(eventKey);
+        }
         if (original && event.registrations) {
             const originalRegistrationKeys = original.registrations.map((r) => r.key);
             const newRegistrationKeys = event.registrations.map((r) => r.key);
@@ -121,6 +125,7 @@ export class EventAdministrationUseCase {
             const deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
             const changedRegistrations = event.registrations.filter((a) => {
                 const b = original.registrations.find((it) => it.key === a.key);
+                console.log(a.note, b?.note);
                 return b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey || a.note !== b.note);
             });
 

@@ -1,42 +1,12 @@
-import {
-    Blend,
-    DynamicColor,
-    DynamicScheme,
-    Hct,
-    SchemeAndroid,
-    SchemeContent,
-    SchemeExpressive,
-    SchemeFidelity,
-    SchemeFruitSalad,
-    SchemeMonochrome,
-    SchemeRainbow,
-    SchemeTonalSpot,
-    SchemeVibrant,
-    TonalPalette,
-    argbFromHex,
-    hexFromArgb,
-} from '@material/material-color-utilities';
+import { Hct, SchemeTonalSpot, argbFromHex, argbFromRgb, hexFromArgb } from '@material/material-color-utilities';
 
 let darkMode = true;
 darkMode = false;
 
 let hct = Hct.fromInt(argbFromHex('#188edc'));
 // hct = Hct.fromInt(argbFromHex('#007800'));
+// hct = Hct.fromInt(argbFromRgb(39, 98, 48));
 const scheme = new SchemeTonalSpot(hct, darkMode, 0);
-// const scheme = new DynamicScheme({
-//     sourceColorArgb: argbFromHex('#188edc'),
-//     variant: 2,
-//     isDark: darkMode,
-//     contrastLevel: 0.0,
-//     // primaryPalette: TonalPalette.fromInt(argbFromHex('#4c7ba7')),
-//     primaryPalette: TonalPalette.fromInt(argbFromHex('#188edc')),
-//     // secondaryPalette: TonalPalette.fromInt(argbFromHex('#6a8889')),
-//     secondaryPalette: TonalPalette.fromInt(argbFromHex('#c4deef')),
-//     // tertiaryPalette: TonalPalette.fromInt(argbFromHex('#827093')),
-//     tertiaryPalette: TonalPalette.fromInt(argbFromHex('#bf805e')),
-//     neutralPalette: TonalPalette.fromInt(argbFromHex('#74777c')),
-//     neutralVariantPalette: TonalPalette.fromInt(argbFromHex('#72777e')),
-// });
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -219,12 +189,6 @@ module.exports = {
             screens: {
                 xxl: 1600,
             },
-            // boxShadow: {
-            //     sm: '0 0px 2px rgb(0 0 0 / 0.05)',
-            //     DEFAULT: ['0 0px 3px rgb(0 0 0 / 0.1)', '0 0px 2px rgb(0 0 0 / 0.06)'],
-            //     md: ['0 0px 8px rgb(0 0 0 / 0.07)', '0 0px 3px rgb(0 0 0 / 0.06)'],
-            //     lg: ['0 0px 13px rgb(0 0 0 / 0.04)', '0 0px 5px rgb(0 0 0 / 0.1)'],
-            // },
             borderRadius: {
                 '4xl': '3em',
             },

@@ -292,7 +292,11 @@
                 <i class="fa-solid fa-calendar-alt" />
                 <span>Kalendereintrag erstellen</span>
             </li>
-            <li v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition" class="context-menu-item disabled">
+            <li
+                v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition"
+                class="context-menu-item"
+                @click="editUserRegistration()"
+            >
                 <i class="fa-solid fa-note-sticky" />
                 <span>Notiz fürs Büro hinzufügen</span>
             </li>
@@ -313,13 +317,14 @@
         </template>
     </DetailsPage>
     <PositionSelectDlg ref="positionSelectDialog" />
+    <RegistrationEditDlg v-if="event" ref="editRegistrationDialog" :event="event" />
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey, SignedInUser } from '@/domain';
+import type { Event, PositionKey, Registration, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
@@ -330,8 +335,10 @@ import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
+import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
+import RegistrationEditDlg from '@/ui/views/events/details/RegistrationEditDlg.vue';
 
 enum Tab {
     Team = 'team',
@@ -347,6 +354,7 @@ const router = useRouter();
 const positions = usePositions();
 const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
+const eventService = useEventService();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const statesWithHiddenCrew = [EventState.OpenForSignup, EventState.Draft];
@@ -357,6 +365,7 @@ const waitingList = ref<ResolvedRegistrationSlot[]>([]);
 const team = ref<ResolvedRegistrationSlot[]>([]);
 
 const positionSelectDialog = ref<Dialog<unknown, PositionKey> | null>(null);
+const editRegistrationDialog = ref<Dialog<Registration, Registration | undefined> | null>(null);
 
 const waitingListCount = computed<number>(() => {
     if (!event.value) return 0;
@@ -418,6 +427,17 @@ async function joinEvent(): Promise<void> {
 async function leaveEvent(): Promise<void> {
     if (event.value) {
         event.value = await eventUseCase.leaveEvent(event.value);
+    }
+}
+
+async function editUserRegistration(): Promise<void> {
+    if (event.value) {
+        const registration = eventService.findRegistration(event.value, signedInUser.value.key);
+        const updatedRegistration = await editRegistrationDialog.value?.open(registration);
+        if (updatedRegistration) {
+            await eventUseCase.updateRegistration(event.value, updatedRegistration);
+            await fetchTeam(event.value);
+        }
     }
 }
 

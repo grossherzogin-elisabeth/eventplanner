@@ -18,6 +18,7 @@ interface RegistrationRepresentation {
     positionKey: string;
     name?: string | null;
     userKey?: string | null;
+    note?: string | null;
 }
 
 interface LocationRepresentation {
@@ -89,6 +90,7 @@ export class EventRestRepository implements EventRepository {
                 positionKey: it.positionKey,
                 userKey: it.userKey ?? undefined,
                 name: it.name ?? undefined,
+                note: it.note ?? undefined,
             })),
             locations: eventRepresentation.locations.map((locationRepresentation, index) => ({
                 name: locationRepresentation.name,

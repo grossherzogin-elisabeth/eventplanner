@@ -60,21 +60,12 @@ public class EventUseCase {
                 .map(eventService::removeInvalidSlotAssignments)
                 .toList();
 
-        if (signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
-            return allEvents;
-        }
-        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)) {
-            // clear assigned registrations on slots if crew is not published yet
-            allEvents.stream()
-                    .filter(it -> List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(it.getState()))
-                    .forEach(it -> it.getSlots().forEach(slot -> slot.setAssignedRegistration(null)));
-        }
         return allEvents.stream()
-                .filter(it -> !EventState.DRAFT.equals(it.getState()))
-                .filter(it -> !EventState.CANCELED.equals(it.getState()) || it.getRegistrations()
-                        .stream()
-                        .anyMatch(reg -> signedInUser.key().equals(reg.getUserKey())))
-                .toList();
+            .map(event -> filterForVisibility(signedInUser, event))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(event -> clearConfidentialData(signedInUser, event))
+            .toList();
     }
 
     public @NonNull ByteArrayOutputStream exportEvents(@NonNull SignedInUser signedInUser, int year) {
@@ -86,17 +77,12 @@ public class EventUseCase {
         return exportService.exportEvents(events, year);
     }
 
-    public @NonNull Event getEventByKey(@NonNull SignedInUser signedInUser, EventKey key) {
+    public @NonNull Event getEventByKey(@NonNull SignedInUser signedInUser, @NonNull EventKey key) {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
-        var event = this.eventRepository.findByKey(key).orElseThrow();
-        if (EventState.DRAFT.equals(event.getState()) && !signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
-            throw new NoSuchElementException();
-        }
-        if (EventState.CANCELED.equals(event.getState()) && event.getRegistrations()
-                .stream().noneMatch(reg -> signedInUser.key().equals(reg.getUserKey()))) {
-            throw new NoSuchElementException();
-        }
-        return this.eventRepository.findByKey(key).orElseThrow();
+        var event = this.eventRepository.findByKey(key)
+            .flatMap(evt -> filterForVisibility(signedInUser, evt))
+            .orElseThrow();
+        return clearConfidentialData(signedInUser, event);
     }
 
     public @NonNull Event createEvent(@NonNull SignedInUser signedInUser, @NonNull CreateEventSpec spec) {
@@ -288,5 +274,33 @@ public class EventUseCase {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
+    }
+
+    private Optional<Event> filterForVisibility(@NonNull SignedInUser signedInUser, @NonNull Event event) {
+        if (EventState.DRAFT.equals(event.getState()) && !signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+            return Optional.empty();
+        }
+        if (EventState.CANCELED.equals(event.getState()) && event.getRegistrations()
+            .stream().noneMatch(reg -> signedInUser.key().equals(reg.getUserKey()))) {
+            return Optional.empty();
+        }
+        return Optional.of(event);
+    }
+
+
+    private Event clearConfidentialData(@NonNull SignedInUser signedInUser, @NonNull Event event) {
+        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
+            && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(event.getState())) {
+            // clear assigned registrations on slots if crew is not published yet
+            event.getSlots().forEach(slot -> slot.setAssignedRegistration(null));
+        }
+        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)) {
+            // clear notes of all but the signed in user
+            event.getRegistrations().stream()
+                .filter(it -> it.getNote() != null)
+                .filter(it -> !signedInUser.key().equals(it.getUserKey()))
+                .forEach(it -> it.setNote(null));
+        }
+        return event;
     }
 }

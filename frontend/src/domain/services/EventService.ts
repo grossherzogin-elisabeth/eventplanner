@@ -256,7 +256,7 @@ export class EventService {
     }
 
     public findRegistration(event: Event, userKey?: string, name?: string): Registration | undefined {
-        return event.registrations.find((r) => (userKey && r.userKey === userKey) || r.name === name);
+        return event.registrations.find((r) => (userKey && r.userKey === userKey) || (name && r.name === name));
     }
 
     public getAssignedRegistrations(event: Event): Registration[] {

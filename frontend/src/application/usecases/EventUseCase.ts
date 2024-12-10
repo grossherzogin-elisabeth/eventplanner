@@ -10,7 +10,7 @@ import type { ErrorHandlingService } from '@/application/services/ErrorHandlingS
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { formatIcsDate } from '@/common/date';
 import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
-import type { Event, EventKey, EventService, PositionKey, RegistrationService, UserKey } from '@/domain';
+import type { Event, EventKey, EventService, PositionKey, Registration, RegistrationService, UserKey } from '@/domain';
 import { EventState, EventType, SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
@@ -181,6 +181,14 @@ export class EventUseCase {
             positionKey: positionKey,
             userKey: signedInUser?.key,
         });
+        savedEvent = this.eventService.updateComputedValues(savedEvent, signedInUser);
+        savedEvent = await this.eventCachingService.updateCache(savedEvent);
+        return savedEvent;
+    }
+
+    public async updateRegistration(event: Event, registration: Registration): Promise<Event> {
+        const signedInUser = this.authService.getSignedInUser();
+        let savedEvent = await this.eventRegistrationsRepository.updateRegistration(event.key, registration);
         savedEvent = this.eventService.updateComputedValues(savedEvent, signedInUser);
         savedEvent = await this.eventCachingService.updateCache(savedEvent);
         return savedEvent;
