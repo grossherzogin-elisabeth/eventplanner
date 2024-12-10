@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@With
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor

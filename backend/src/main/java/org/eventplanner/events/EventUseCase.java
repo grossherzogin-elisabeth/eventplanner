@@ -56,14 +56,11 @@ public class EventUseCase {
             throw new IllegalArgumentException("Invalid year");
         }
 
-        var allEvents = this.eventRepository.findAllByYear(year).stream()
-                .map(eventService::removeInvalidSlotAssignments)
-                .toList();
-
-        return allEvents.stream()
+        return this.eventRepository.findAllByYear(year).stream()
             .map(event -> filterForVisibility(signedInUser, event))
             .filter(Optional::isPresent)
             .map(Optional::get)
+            .map(eventService::removeInvalidSlotAssignments)
             .map(event -> clearConfidentialData(signedInUser, event))
             .toList();
     }
@@ -288,7 +285,7 @@ public class EventUseCase {
     }
 
 
-    private Event clearConfidentialData(@NonNull SignedInUser signedInUser, @NonNull Event event) {
+    private @NonNull Event clearConfidentialData(@NonNull SignedInUser signedInUser, @NonNull Event event) {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
             && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(event.getState())) {
             // clear assigned registrations on slots if crew is not published yet

@@ -13,6 +13,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@With
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
