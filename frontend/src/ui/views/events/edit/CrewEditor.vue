@@ -2,8 +2,8 @@
     <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 2xl:flex-row 2xl:items-start">
         <!-- position counters -->
         <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-surface pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
-            <div class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-white md:flex-wrap 2xl:flex-col">
-                <div class="flex items-center rounded-2xl bg-secondary p-1 text-onsecondary">
+            <div class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-onsurface-variant md:flex-wrap 2xl:flex-col">
+                <div class="flex items-center rounded-2xl bg-surface-container p-1">
                     <span class="px-2"> Alle </span>
                     <span
                         class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
@@ -23,7 +23,7 @@
                     <span
                         class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
                     >
-                        {{ summary[pos.key] || '-' }}
+                        {{ summary[pos.key] || '0' }}
                     </span>
                 </div>
             </div>
