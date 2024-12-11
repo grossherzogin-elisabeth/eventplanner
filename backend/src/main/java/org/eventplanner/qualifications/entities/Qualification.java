@@ -1,13 +1,18 @@
 package org.eventplanner.qualifications.entities;
 
-import lombok.*;
+import java.util.Collections;
+import java.util.List;
+
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.util.Collections;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

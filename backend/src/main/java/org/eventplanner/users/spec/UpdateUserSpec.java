@@ -1,5 +1,8 @@
 package org.eventplanner.users.spec;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.eventplanner.users.entities.EmergencyContact;
 import org.eventplanner.users.entities.UserQualification;
 import org.eventplanner.users.values.Address;
@@ -7,9 +10,6 @@ import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Diet;
 import org.eventplanner.users.values.Role;
 import org.springframework.lang.Nullable;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public record UpdateUserSpec(
     @Nullable AuthKey authKey,

@@ -1,6 +1,9 @@
 package org.eventplanner.common;
 
-import org.springframework.lang.NonNull;
+import java.nio.charset.StandardCharsets;
+import java.security.AlgorithmParameters;
+import java.security.spec.KeySpec;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -8,10 +11,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.AlgorithmParameters;
-import java.security.spec.KeySpec;
-import java.util.Base64;
+
+import org.springframework.lang.NonNull;
 
 public class Crypto {
 

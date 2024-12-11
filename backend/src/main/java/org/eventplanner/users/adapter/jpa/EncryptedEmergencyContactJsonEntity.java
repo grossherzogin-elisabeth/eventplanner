@@ -1,10 +1,10 @@
 package org.eventplanner.users.adapter.jpa;
 
+import java.io.Serializable;
+
 import org.eventplanner.common.EncryptedString;
 import org.eventplanner.users.entities.EncryptedEmergencyContact;
 import org.springframework.lang.NonNull;
-
-import java.io.Serializable;
 
 public record EncryptedEmergencyContactJsonEntity(
         @NonNull String name,

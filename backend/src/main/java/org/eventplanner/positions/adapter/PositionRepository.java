@@ -1,12 +1,12 @@
 package org.eventplanner.positions.adapter;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface PositionRepository {
     @NonNull Optional<Position> findByKey(@Nullable PositionKey key);

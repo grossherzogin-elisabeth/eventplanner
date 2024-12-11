@@ -1,6 +1,7 @@
 package org.eventplanner.qualifications;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.eventplanner.qualifications.adapter.QualificationRepository;
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
@@ -10,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

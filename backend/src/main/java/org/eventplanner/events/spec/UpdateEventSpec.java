@@ -1,13 +1,12 @@
 package org.eventplanner.events.spec;
 
-import org.eventplanner.events.entities.Registration;
+import java.time.Instant;
+import java.util.List;
+
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
 import org.springframework.lang.Nullable;
-
-import java.time.Instant;
-import java.util.List;
 
 public record UpdateEventSpec(
     @Nullable String name,

@@ -1,15 +1,20 @@
 package org.eventplanner.events.entities;
 
-import lombok.*;
+import java.time.Instant;
+import java.util.UUID;
+
 import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.With;
 
 @Getter
 @Setter

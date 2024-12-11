@@ -1,7 +1,9 @@
 package org.eventplanner.events.services;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
+
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
@@ -18,9 +20,8 @@ import org.eventplanner.users.values.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor

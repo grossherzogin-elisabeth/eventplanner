@@ -1,11 +1,11 @@
 package org.eventplanner.notifications.values;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 @Setter

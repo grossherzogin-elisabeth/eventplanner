@@ -1,13 +1,13 @@
 package org.eventplanner.events.rest.dto;
 
+import static org.eventplanner.common.ObjectUtils.mapNullable;
+
+import java.io.Serializable;
+
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
-
-import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record RegistrationRepresentation(
         @NonNull String key,

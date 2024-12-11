@@ -1,12 +1,16 @@
 package org.eventplanner.events.rest;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import org.eventplanner.ConsumtionListUseCase;
 import org.eventplanner.events.EventUseCase;
+import org.eventplanner.events.ImoListUseCase;
 import org.eventplanner.events.rest.dto.CreateEventRequest;
 import org.eventplanner.events.rest.dto.EventRepresentation;
 import org.eventplanner.events.rest.dto.UpdateEventRequest;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.users.UserUseCase;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,29 +19,30 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-
-import jakarta.servlet.ServletRequest;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/events")
 @EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class EventController {
 
     private final UserUseCase userUseCase;
     private final EventUseCase eventUseCase;
-
-    public EventController(
-        @Autowired UserUseCase userUseCase,
-        @Autowired EventUseCase eventUseCase
-    ) {
-        this.userUseCase = userUseCase;
-        this.eventUseCase = eventUseCase;
-    }
+    private final ImoListUseCase imoListUseCase;
+    private final ConsumtionListUseCase consumtionListUseCase;
 
     @GetMapping(path = "")
     public ResponseEntity<?> getEvents(@RequestHeader(HttpHeaders.ACCEPT) String accept, @RequestParam("year") int year) {
@@ -97,7 +102,7 @@ public class EventController {
     public ResponseEntity<Resource> downloadImoList(@PathVariable("eventKey") String eventKey) throws IOException {
 
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream imoListStream = eventUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
+        ByteArrayOutputStream imoListStream = imoListUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
         byte[] imoListByteArray = imoListStream.toByteArray();
 
         ByteArrayResource resource = new ByteArrayResource(imoListByteArray);
@@ -112,7 +117,7 @@ public class EventController {
     public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey) throws IOException {
 
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream consumptionListStream = eventUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
+        ByteArrayOutputStream consumptionListStream = consumtionListUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
         byte[] consumptionListByteArray = consumptionListStream.toByteArray();
 
         ByteArrayResource resource = new ByteArrayResource(consumptionListByteArray);

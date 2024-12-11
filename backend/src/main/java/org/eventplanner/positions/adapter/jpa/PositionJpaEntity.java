@@ -1,5 +1,10 @@
 package org.eventplanner.positions.adapter.jpa;
 
+import java.io.Serializable;
+
+import org.eventplanner.positions.entities.Position;
+import org.eventplanner.positions.values.PositionKey;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,10 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.eventplanner.positions.entities.Position;
-import org.eventplanner.positions.values.PositionKey;
-
-import java.io.Serializable;
 
 @Entity
 @Table(name = "positions")

@@ -1,14 +1,14 @@
 package org.eventplanner.events.rest.dto;
 
+import static org.eventplanner.common.ObjectUtils.mapNullable;
+
+import java.io.Serializable;
+
 import org.eventplanner.events.spec.UpdateRegistrationSpec;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
-
-import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UpdateRegistrationRequest(
     @NonNull String positionKey,

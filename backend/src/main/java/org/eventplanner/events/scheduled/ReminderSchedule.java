@@ -1,10 +1,11 @@
 package org.eventplanner.events.scheduled;
 
-import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
 import org.eventplanner.events.ParticipationNotificationUseCase;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor

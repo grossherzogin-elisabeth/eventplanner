@@ -1,9 +1,9 @@
 package org.eventplanner.events.values;
 
-import org.springframework.lang.Nullable;
-
 import java.util.Arrays;
 import java.util.Optional;
+
+import org.springframework.lang.Nullable;
 
 public enum EventState {
 

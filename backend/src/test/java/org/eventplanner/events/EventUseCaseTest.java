@@ -12,11 +12,8 @@ import java.util.List;
 
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.services.ConsumptionListService;
 import org.eventplanner.events.services.EventService;
 import org.eventplanner.events.services.ExportService;
-import org.eventplanner.events.services.ImoListService;
-import org.eventplanner.events.services.RegistrationService;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.notifications.service.NotificationService;
 import org.eventplanner.testdata.EventFactory;
@@ -49,10 +46,7 @@ class EventUseCaseTest {
             eventRepository,
             mock(NotificationService.class),
             mock(UserService.class),
-            mock(ImoListService.class),
-            mock(ConsumptionListService.class),
             new EventService(),
-            mock(RegistrationService.class),
             mock(ExportService.class)
         );
 
@@ -73,10 +67,7 @@ class EventUseCaseTest {
             eventRepository,
             mock(NotificationService.class),
             mock(UserService.class),
-            mock(ImoListService.class),
-            mock(ConsumptionListService.class),
             new EventService(),
-            mock(RegistrationService.class),
             mock(ExportService.class)
         );
 
@@ -97,10 +88,7 @@ class EventUseCaseTest {
             eventRepository,
             mock(NotificationService.class),
             mock(UserService.class),
-            mock(ImoListService.class),
-            mock(ConsumptionListService.class),
             new EventService(),
-            mock(RegistrationService.class),
             mock(ExportService.class)
         );
 
@@ -127,10 +115,7 @@ class EventUseCaseTest {
             eventRepository,
             mock(NotificationService.class),
             mock(UserService.class),
-            mock(ImoListService.class),
-            mock(ConsumptionListService.class),
             new EventService(),
-            mock(RegistrationService.class),
             mock(ExportService.class)
         );
 
@@ -153,10 +138,7 @@ class EventUseCaseTest {
             eventRepository,
             mock(NotificationService.class),
             mock(UserService.class),
-            mock(ImoListService.class),
-            mock(ConsumptionListService.class),
             new EventService(),
-            mock(RegistrationService.class),
             mock(ExportService.class)
         );
 
@@ -182,10 +164,7 @@ class EventUseCaseTest {
             eventRepository,
             mock(NotificationService.class),
             mock(UserService.class),
-            mock(ImoListService.class),
-            mock(ConsumptionListService.class),
             new EventService(),
-            mock(RegistrationService.class),
             mock(ExportService.class)
         );
 

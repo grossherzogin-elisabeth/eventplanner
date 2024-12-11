@@ -1,5 +1,8 @@
 package org.eventplanner.settings.adapter.jpa;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import org.eventplanner.common.Crypto;
 import org.eventplanner.common.EncryptedString;
 import org.eventplanner.settings.adapter.SettingsRepository;
@@ -9,9 +12,6 @@ import org.eventplanner.settings.values.UiSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Component
 public class SettingsJpaRepositoryAdapter implements SettingsRepository {

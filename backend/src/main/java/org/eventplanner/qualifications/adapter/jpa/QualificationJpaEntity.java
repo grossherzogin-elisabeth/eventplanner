@@ -1,5 +1,13 @@
 package org.eventplanner.qualifications.adapter.jpa;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+
+import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.qualifications.entities.Qualification;
+import org.eventplanner.qualifications.values.QualificationKey;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,13 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.qualifications.entities.Qualification;
-import org.eventplanner.qualifications.values.QualificationKey;
-
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
 
 @Entity
 @Table(name = "qualifications")

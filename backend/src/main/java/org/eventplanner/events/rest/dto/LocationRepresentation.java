@@ -1,13 +1,13 @@
 package org.eventplanner.events.rest.dto;
 
-import org.eventplanner.events.values.Location;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import static java.util.Optional.ofNullable;
 
 import java.io.Serializable;
 import java.time.Instant;
 
-import static java.util.Optional.ofNullable;
+import org.eventplanner.events.values.Location;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record LocationRepresentation(
     @NonNull String name,

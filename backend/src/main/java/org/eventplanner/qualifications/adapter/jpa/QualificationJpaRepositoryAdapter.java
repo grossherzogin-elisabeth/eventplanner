@@ -1,12 +1,12 @@
 package org.eventplanner.qualifications.adapter.jpa;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eventplanner.qualifications.adapter.QualificationRepository;
 import org.eventplanner.qualifications.entities.Qualification;
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class QualificationJpaRepositoryAdapter implements QualificationRepository {

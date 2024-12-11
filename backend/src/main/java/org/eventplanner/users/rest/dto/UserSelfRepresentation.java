@@ -1,16 +1,16 @@
 package org.eventplanner.users.rest.dto;
 
-import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.users.entities.UserDetails;
-import org.eventplanner.users.values.Diet;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import static java.util.Optional.ofNullable;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.util.Optional.ofNullable;
+import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.users.entities.UserDetails;
+import org.eventplanner.users.values.Diet;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record UserSelfRepresentation(
     @NonNull String key,

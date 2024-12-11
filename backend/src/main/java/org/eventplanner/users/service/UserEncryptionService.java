@@ -1,14 +1,8 @@
 package org.eventplanner.users.service;
 
-import org.eventplanner.common.Crypto;
-import org.eventplanner.common.EncryptedString;
-import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.users.entities.*;
-import org.eventplanner.users.values.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
+import static java.util.Optional.ofNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.streamNullable;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -18,9 +12,24 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-import static org.eventplanner.common.ObjectUtils.streamNullable;
+import org.eventplanner.common.Crypto;
+import org.eventplanner.common.EncryptedString;
+import org.eventplanner.qualifications.values.QualificationKey;
+import org.eventplanner.users.entities.EmergencyContact;
+import org.eventplanner.users.entities.EncryptedEmergencyContact;
+import org.eventplanner.users.entities.EncryptedUserDetails;
+import org.eventplanner.users.entities.EncryptedUserQualification;
+import org.eventplanner.users.entities.UserDetails;
+import org.eventplanner.users.entities.UserQualification;
+import org.eventplanner.users.values.Address;
+import org.eventplanner.users.values.AuthKey;
+import org.eventplanner.users.values.Diet;
+import org.eventplanner.users.values.EncryptedAddress;
+import org.eventplanner.users.values.Role;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserEncryptionService {

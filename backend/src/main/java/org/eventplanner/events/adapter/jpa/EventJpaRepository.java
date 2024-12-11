@@ -1,9 +1,9 @@
 package org.eventplanner.events.adapter.jpa;
 
+import java.util.stream.Stream;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.stream.Stream;
 
 @Repository
 public interface EventJpaRepository extends JpaRepository<EventJpaEntity, String> {

@@ -1,11 +1,12 @@
 package org.eventplanner.events.values;
 
-import lombok.With;
+import java.io.Serializable;
+import java.time.Instant;
+
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.io.Serializable;
-import java.time.Instant;
+import lombok.With;
 
 @With
 public record Location(

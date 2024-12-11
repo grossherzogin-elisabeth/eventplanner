@@ -1,13 +1,13 @@
 package org.eventplanner.users.adapter.jpa;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eventplanner.users.adapter.UserRepository;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {

@@ -1,14 +1,14 @@
 package org.eventplanner.users.rest.dto;
 
-import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.users.entities.UserQualification;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import static java.util.Optional.ofNullable;
 
 import java.io.Serializable;
 import java.time.Instant;
 
-import static java.util.Optional.ofNullable;
+import org.eventplanner.qualifications.values.QualificationKey;
+import org.eventplanner.users.entities.UserQualification;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record UserQualificationRepresentation(
     @NonNull String qualificationKey,

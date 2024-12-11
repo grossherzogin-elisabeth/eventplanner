@@ -1,13 +1,13 @@
 package org.eventplanner.users.adapter.jpa;
 
+import static org.eventplanner.common.ObjectUtils.mapNullable;
+
+import java.io.Serializable;
+
 import org.eventplanner.common.EncryptedString;
 import org.eventplanner.users.values.EncryptedAddress;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
-
-import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record EncryptedAddressJsonEntity(
         @NonNull String addressLine1,

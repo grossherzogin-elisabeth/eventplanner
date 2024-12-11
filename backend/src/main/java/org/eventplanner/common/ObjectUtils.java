@@ -1,12 +1,12 @@
 package org.eventplanner.common;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public class ObjectUtils {
     public static @NonNull <T> T orElse(@Nullable T nullable, @NonNull T fallback) {

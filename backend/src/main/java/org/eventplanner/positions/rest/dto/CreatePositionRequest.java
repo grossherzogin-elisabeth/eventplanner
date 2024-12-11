@@ -1,10 +1,10 @@
 package org.eventplanner.positions.rest.dto;
 
+import java.io.Serializable;
+
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
-
-import java.io.Serializable;
 
 public record CreatePositionRequest(
     @NonNull String name,

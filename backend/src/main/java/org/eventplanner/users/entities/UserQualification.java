@@ -1,12 +1,17 @@
 package org.eventplanner.users.entities;
 
-import lombok.*;
+import java.io.Serializable;
+import java.time.Instant;
+
 import org.eventplanner.qualifications.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.io.Serializable;
-import java.time.Instant;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

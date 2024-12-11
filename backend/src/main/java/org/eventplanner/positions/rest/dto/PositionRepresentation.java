@@ -1,9 +1,9 @@
 package org.eventplanner.positions.rest.dto;
 
+import java.io.Serializable;
+
 import org.eventplanner.positions.entities.Position;
 import org.springframework.lang.NonNull;
-
-import java.io.Serializable;
 
 public record PositionRepresentation(
     @NonNull String key,

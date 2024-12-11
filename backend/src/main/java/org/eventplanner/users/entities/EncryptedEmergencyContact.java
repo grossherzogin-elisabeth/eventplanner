@@ -1,9 +1,14 @@
 package org.eventplanner.users.entities;
 
-import lombok.*;
+import java.io.Serializable;
+
 import org.eventplanner.common.EncryptedString;
 
-import java.io.Serializable;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

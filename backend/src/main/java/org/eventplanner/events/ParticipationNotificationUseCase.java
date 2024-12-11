@@ -1,23 +1,5 @@
 package org.eventplanner.events;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.eventplanner.events.adapter.EventRepository;
-import org.eventplanner.events.entities.Event;
-import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.entities.Slot;
-import org.eventplanner.events.services.RegistrationService;
-import org.eventplanner.events.spec.UpdateRegistrationSpec;
-import org.eventplanner.events.values.EventKey;
-import org.eventplanner.events.values.EventState;
-import org.eventplanner.events.values.RegistrationKey;
-import org.eventplanner.notifications.service.NotificationService;
-import org.eventplanner.users.entities.UserDetails;
-import org.eventplanner.users.service.UserService;
-import org.eventplanner.users.values.UserKey;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -26,6 +8,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import org.eventplanner.events.adapter.EventRepository;
+import org.eventplanner.events.entities.Event;
+import org.eventplanner.events.entities.Registration;
+import org.eventplanner.events.entities.Slot;
+import org.eventplanner.events.services.RegistrationService;
+import org.eventplanner.events.values.EventKey;
+import org.eventplanner.events.values.EventState;
+import org.eventplanner.events.values.RegistrationKey;
+import org.eventplanner.notifications.service.NotificationService;
+import org.eventplanner.users.service.UserService;
+import org.eventplanner.users.values.UserKey;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

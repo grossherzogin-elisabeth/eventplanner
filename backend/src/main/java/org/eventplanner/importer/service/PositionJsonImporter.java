@@ -1,14 +1,15 @@
 package org.eventplanner.importer.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.File;
+import java.io.Serializable;
+import java.util.List;
+
 import org.eventplanner.common.FileSystemJsonRepository;
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class PositionJsonImporter {
 

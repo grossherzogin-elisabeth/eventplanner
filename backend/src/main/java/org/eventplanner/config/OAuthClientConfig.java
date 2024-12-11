@@ -1,13 +1,13 @@
 package org.eventplanner.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.stereotype.Component;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OAuthClientConfig {

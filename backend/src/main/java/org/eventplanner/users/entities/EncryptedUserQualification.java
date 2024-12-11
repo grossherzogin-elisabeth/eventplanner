@@ -1,9 +1,10 @@
 package org.eventplanner.users.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import static java.util.Optional.ofNullable;
+
+import java.io.Serializable;
+import java.time.Instant;
+
 import org.eventplanner.common.Crypto;
 import org.eventplanner.common.Encryptable;
 import org.eventplanner.common.EncryptedString;
@@ -11,10 +12,10 @@ import org.eventplanner.qualifications.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.io.Serializable;
-import java.time.Instant;
-
-import static java.util.Optional.ofNullable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

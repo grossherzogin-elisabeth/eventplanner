@@ -1,13 +1,13 @@
 package org.eventplanner.events.adapter.jpa;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.values.EventKey;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class EventJpaRepositoryAdapter implements EventRepository {

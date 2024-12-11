@@ -1,5 +1,11 @@
 package org.eventplanner.users.entities;
 
+import static org.eventplanner.common.ObjectUtils.orElse;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.eventplanner.exceptions.MissingPermissionException;
 import org.eventplanner.exceptions.UnauthorizedException;
 import org.eventplanner.positions.values.PositionKey;
@@ -10,12 +16,6 @@ import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import static org.eventplanner.common.ObjectUtils.orElse;
 
 public record SignedInUser(
     @NonNull UserKey key,

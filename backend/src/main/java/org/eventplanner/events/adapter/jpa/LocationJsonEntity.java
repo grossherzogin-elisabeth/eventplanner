@@ -1,13 +1,13 @@
 package org.eventplanner.events.adapter.jpa;
 
-import org.eventplanner.events.values.Location;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import static java.util.Optional.ofNullable;
 
 import java.io.Serializable;
 import java.time.Instant;
 
-import static java.util.Optional.ofNullable;
+import org.eventplanner.events.values.Location;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record LocationJsonEntity(
         @Nullable String name,

@@ -1,9 +1,9 @@
 package org.eventplanner.users.values;
 
-import lombok.NonNull;
-
 import java.util.Arrays;
 import java.util.Optional;
+
+import lombok.NonNull;
 
 public enum Diet {
     OMNIVORE("omnivore"),

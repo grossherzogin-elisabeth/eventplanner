@@ -1,6 +1,12 @@
 package org.eventplanner.importer.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import static org.eventplanner.common.ObjectUtils.streamNullable;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.eventplanner.common.FileSystemJsonRepository;
 import org.eventplanner.positions.values.PositionKey;
 import org.eventplanner.qualifications.entities.Qualification;
@@ -8,12 +14,7 @@ import org.eventplanner.qualifications.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.eventplanner.common.ObjectUtils.streamNullable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class QualificationJsonImporter {
 

@@ -1,10 +1,10 @@
 package org.eventplanner.users.rest.dto;
 
+import java.io.Serializable;
+
 import org.eventplanner.users.entities.EmergencyContact;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
 
 public record EmergencyContactRepresentation(
         @NonNull String name,

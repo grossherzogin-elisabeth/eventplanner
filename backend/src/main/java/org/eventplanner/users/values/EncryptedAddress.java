@@ -1,10 +1,10 @@
 package org.eventplanner.users.values;
 
+import java.io.Serializable;
+
 import org.eventplanner.common.EncryptedString;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
 
 public record EncryptedAddress(
     @NonNull EncryptedString addressLine1,

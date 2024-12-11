@@ -2,17 +2,26 @@ package org.eventplanner.users.entities;
 
 import static java.util.Optional.ofNullable;
 
-import lombok.*;
-import org.eventplanner.positions.values.PositionKey;
-import org.eventplanner.qualifications.values.QualificationKey;
-import org.eventplanner.users.values.*;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.qualifications.values.QualificationKey;
+import org.eventplanner.users.values.Address;
+import org.eventplanner.users.values.AuthKey;
+import org.eventplanner.users.values.Diet;
+import org.eventplanner.users.values.Role;
+import org.eventplanner.users.values.UserKey;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

@@ -1,12 +1,12 @@
 package org.eventplanner.settings.rest.dto;
 
+import java.io.Serializable;
+
 import org.eventplanner.settings.values.EmailSettings;
 import org.eventplanner.settings.values.Settings;
 import org.eventplanner.settings.values.UiSettings;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.io.Serializable;
 
 public record UpdateSettingsRequest(
     @NonNull Email email,

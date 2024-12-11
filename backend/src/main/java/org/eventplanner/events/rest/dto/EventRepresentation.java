@@ -1,10 +1,10 @@
 package org.eventplanner.events.rest.dto;
 
-import org.eventplanner.events.entities.Event;
-import org.springframework.lang.NonNull;
-
 import java.io.Serializable;
 import java.util.List;
+
+import org.eventplanner.events.entities.Event;
+import org.springframework.lang.NonNull;
 
 public record EventRepresentation(
     @NonNull String key,

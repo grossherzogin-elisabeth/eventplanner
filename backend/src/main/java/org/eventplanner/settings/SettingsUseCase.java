@@ -1,6 +1,5 @@
 package org.eventplanner.settings;
 
-import lombok.extern.slf4j.Slf4j;
 import org.eventplanner.settings.service.SettingsService;
 import org.eventplanner.settings.values.Settings;
 import org.eventplanner.settings.values.UiSettings;
@@ -9,6 +8,8 @@ import org.eventplanner.users.values.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 @Service

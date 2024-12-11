@@ -1,12 +1,12 @@
 package org.eventplanner.events.rest.dto;
 
-import org.eventplanner.events.spec.CreateEventSpec;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
+
+import org.eventplanner.events.spec.CreateEventSpec;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 public record CreateEventRequest(
     @NonNull String name,

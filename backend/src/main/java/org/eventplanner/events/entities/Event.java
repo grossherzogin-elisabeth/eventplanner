@@ -1,17 +1,23 @@
 package org.eventplanner.events.entities;
 
-import lombok.*;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
 import org.eventplanner.events.values.RegistrationKey;
 import org.springframework.lang.NonNull;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.With;
 
 @Getter
 @Setter

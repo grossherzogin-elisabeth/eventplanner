@@ -1,8 +1,9 @@
 package org.eventplanner.settings.values;
 
-import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
+
+import lombok.Getter;
 
 
 @ConfigurationProperties(prefix = "email")

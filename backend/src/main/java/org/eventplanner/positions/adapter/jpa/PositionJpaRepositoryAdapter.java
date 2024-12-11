@@ -1,14 +1,14 @@
 package org.eventplanner.positions.adapter.jpa;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class PositionJpaRepositoryAdapter implements PositionRepository {

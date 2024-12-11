@@ -1,5 +1,16 @@
 package org.eventplanner.users.adapter.jpa;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.List;
+
+import org.eventplanner.common.EncryptedString;
+import org.eventplanner.users.entities.EncryptedEmergencyContact;
+import org.eventplanner.users.entities.EncryptedUserDetails;
+import org.eventplanner.users.entities.EncryptedUserQualification;
+import org.eventplanner.users.values.EncryptedAddress;
+import org.eventplanner.users.values.UserKey;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,16 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.eventplanner.common.EncryptedString;
-import org.eventplanner.users.entities.EncryptedEmergencyContact;
-import org.eventplanner.users.entities.EncryptedUserDetails;
-import org.eventplanner.users.entities.EncryptedUserQualification;
-import org.eventplanner.users.values.EncryptedAddress;
-import org.eventplanner.users.values.UserKey;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
