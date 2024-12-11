@@ -2,6 +2,8 @@ package org.eventplanner.users.entities;
 
 import static org.eventplanner.common.ObjectUtils.orElse;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -59,6 +61,34 @@ public record SignedInUser(
             }
         }
         throw new MissingPermissionException();
+    }
+
+    public @NonNull SignedInUser withPermission(@NonNull Permission permission) {
+        if (!permissions().contains(permission)) {
+            var permissions = new LinkedList<>(permissions());
+            permissions.add(permission);
+            return new SignedInUser(key, authKey, roles, permissions, email, positions);
+        }
+        return this;
+    }
+
+    public @NonNull SignedInUser withPermissions(@NonNull Permission... permission) {
+        var permissions = Stream.concat(Arrays.stream(permission),permissions().stream())
+            .distinct()
+            .toList();
+        return new SignedInUser(key, authKey, roles, permissions, email, positions);
+    }
+
+    public @NonNull SignedInUser withRole(@NonNull Role role) {
+        if (!roles().contains(role)) {
+            var roles = new LinkedList<>(roles());
+            roles.add(role);
+            var permissions = Stream.concat(role.getPermissions(), permissions().stream())
+                .distinct()
+                .toList();
+            return new SignedInUser(key, authKey, roles, permissions, email, positions);
+        }
+        return this;
     }
 
     public SignedInUser withPermissionsFromAuthentication(@NonNull Authentication authentication) {

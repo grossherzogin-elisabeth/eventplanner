@@ -1,49 +1,42 @@
 package org.eventplanner.events;
 
+import static org.eventplanner.testdata.EventFactory.createEvent;
+import static org.eventplanner.testdata.SignedInUserFactory.createSignedInUser;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.eventplanner.events.adapter.EventRepository;
+import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.services.EventService;
 import org.eventplanner.events.services.ExportService;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.notifications.service.NotificationService;
-import org.eventplanner.testdata.EventFactory;
-import org.eventplanner.users.entities.SignedInUser;
 import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.Permission;
-import org.eventplanner.users.values.UserKey;
 import org.junit.jupiter.api.Test;
 
 class EventUseCaseTest {
-
     private static final int YEAR = ZonedDateTime.now().getYear();
-
-    private SignedInUser mockSignedInUser() {
-        var signedInUser = mock(SignedInUser.class);
-        when(signedInUser.key()).thenReturn(new UserKey());
-        return signedInUser;
-    }
 
     @Test
     void shouldNotReturnDraftEventsForNonAdminUsers() {
-        var signedInUser = mockSignedInUser();
-        when(signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)).thenReturn(false);
+        var signedInUser = createSignedInUser()
+            .withPermissions(Permission.READ_EVENTS);
 
-        var event = EventFactory.createEvent().withState(EventState.DRAFT);
-        var eventRepository = mock(EventRepository.class);
-        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
+        var event = createEvent().withState(EventState.DRAFT);
 
         var testee = new EventUseCase(
-            eventRepository,
+            mockEventRepository(event),
             mock(NotificationService.class),
             mock(UserService.class),
             new EventService(),
@@ -56,15 +49,13 @@ class EventUseCaseTest {
 
     @Test
     void shouldReturnDraftEventsForAdminUsers() {
-        var signedInUser = mockSignedInUser();
-        when(signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)).thenReturn(true);
+        var signedInUser = createSignedInUser()
+            .withPermissions(Permission.READ_EVENTS, Permission.WRITE_EVENT_DETAILS);
 
-        var event = EventFactory.createEvent().withState(EventState.DRAFT);
-        var eventRepository = mock(EventRepository.class);
-        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
+        var event = createEvent().withState(EventState.DRAFT);
 
         var testee = new EventUseCase(
-            eventRepository,
+            mockEventRepository(event),
             mock(NotificationService.class),
             mock(UserService.class),
             new EventService(),
@@ -77,15 +68,13 @@ class EventUseCaseTest {
 
     @Test
     void shouldNotReturnRegistrationNotesForNonAdminUsers() {
-        var signedInUser = mockSignedInUser();
-        when(signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)).thenReturn(false);
+        var signedInUser = createSignedInUser()
+            .withPermissions(Permission.READ_EVENTS);
 
-        var event = EventFactory.createEvent().withState(EventState.PLANNED);
-        var eventRepository = mock(EventRepository.class);
-        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
+        var event = createEvent().withState(EventState.PLANNED);
 
         var testee = new EventUseCase(
-            eventRepository,
+            mockEventRepository(event),
             mock(NotificationService.class),
             mock(UserService.class),
             new EventService(),
@@ -103,16 +92,14 @@ class EventUseCaseTest {
 
     @Test
     void shouldReturnOwnRegistrationNotesForNonAdminUsers() {
-        var signedInUser = mockSignedInUser();
-        when(signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)).thenReturn(false);
+        var signedInUser = createSignedInUser()
+            .withPermissions(Permission.READ_EVENTS);
 
-        var event = EventFactory.createEvent().withState(EventState.PLANNED);
+        var event = createEvent().withState(EventState.PLANNED);
         event.getRegistrations().getFirst().setUserKey(signedInUser.key());
-        var eventRepository = mock(EventRepository.class);
-        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
 
         var testee = new EventUseCase(
-            eventRepository,
+            mockEventRepository(event),
             mock(NotificationService.class),
             mock(UserService.class),
             new EventService(),
@@ -126,16 +113,14 @@ class EventUseCaseTest {
 
     @Test
     void shouldNotReturnAssignmentsForNonAdminUsers() {
-        var signedInUser = mockSignedInUser();
-        when(signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)).thenReturn(false);
+        var signedInUser = createSignedInUser()
+            .withPermissions(Permission.READ_EVENTS);
 
-        var event = EventFactory.createEvent().withState(EventState.OPEN_FOR_SIGNUP);
+        var event = createEvent().withState(EventState.OPEN_FOR_SIGNUP);
         event.getSlots().getFirst().setAssignedRegistration(event.getRegistrations().getFirst().getKey());
-        var eventRepository = mock(EventRepository.class);
-        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
 
         var testee = new EventUseCase(
-            eventRepository,
+            mockEventRepository(event),
             mock(NotificationService.class),
             mock(UserService.class),
             new EventService(),
@@ -152,16 +137,14 @@ class EventUseCaseTest {
 
     @Test
     void shouldReturnAssignmentsForAdminUsers() {
-        var signedInUser = mockSignedInUser();
-        when(signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)).thenReturn(true);
+        var signedInUser = createSignedInUser()
+            .withPermissions(Permission.READ_EVENTS, Permission.WRITE_EVENT_SLOTS);
 
-        var event = EventFactory.createEvent().withState(EventState.OPEN_FOR_SIGNUP);
+        var event = createEvent().withState(EventState.OPEN_FOR_SIGNUP);
         event.getSlots().getFirst().setAssignedRegistration(event.getRegistrations().getFirst().getKey());
-        var eventRepository = mock(EventRepository.class);
-        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
 
         var testee = new EventUseCase(
-            eventRepository,
+            mockEventRepository(event),
             mock(NotificationService.class),
             mock(UserService.class),
             new EventService(),
@@ -170,5 +153,16 @@ class EventUseCaseTest {
 
         var events = testee.getEvents(signedInUser, YEAR);
         assertNotNull(events.getFirst().getSlots().getFirst().getAssignedRegistration());
+    }
+
+    private EventRepository mockEventRepository(Event ...events) {
+        var eventRepository = mock(EventRepository.class);
+        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(events));
+        for (Event event : events) {
+            when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+        }
+        when(eventRepository.create(any())).thenAnswer(mock -> mock.getArgument(0));
+        when(eventRepository.update(any())).thenAnswer(mock -> mock.getArgument(0));
+        return eventRepository;
     }
 }
