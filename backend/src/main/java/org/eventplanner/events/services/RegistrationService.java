@@ -34,25 +34,32 @@ public class RegistrationService {
     private final PositionRepository positionRepository;
 
     public @NonNull Event addRegistration(
-            @NonNull Event event,
-            @NonNull CreateRegistrationSpec spec
+        @NonNull Event event,
+        @NonNull CreateRegistrationSpec spec
     ) {
         var userKey = spec.userKey();
         if (userKey != null) {
             if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUserKey()))) {
-                log.debug("Registration for {} already exists on event {} ({}).", userKey, event.getName(), event.getKey());
+                log.debug(
+                    "Registration for {} already exists on event {} ({}).",
+                    userKey,
+                    event.getName(),
+                    event.getKey()
+                );
                 return event;
             }
             var user = userService.getUserByKey(userKey)
-                    .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not exist"));
+                .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not " +
+                    "exist"));
             event.addRegistration(new Registration(
-                    new RegistrationKey(),
-                    spec.positionKey(),
-                    userKey,
-                    null,
-                    spec.note(),
-                    Registration.generateAccessKey(),
-                    null));
+                new RegistrationKey(),
+                spec.positionKey(),
+                userKey,
+                null,
+                spec.note(),
+                Registration.generateAccessKey(),
+                null
+            ));
             notificationService.sendAddedToWaitingListNotification(user, event);
         } else if (spec.name() != null) {
             if (event.getRegistrations().stream().anyMatch(r -> spec.name().equals(r.getName()))) {
@@ -60,20 +67,21 @@ public class RegistrationService {
             }
             log.info("Adding registration for guest {} on event {} ({})", spec.name(), event.getName(), event.getKey());
             event.addRegistration(new Registration(
-                    new RegistrationKey(),
-                    spec.positionKey(),
-                    null,
-                    spec.name(),
-                    spec.note(),
-                    Registration.generateAccessKey(),
-                    null));
+                new RegistrationKey(),
+                spec.positionKey(),
+                null,
+                spec.name(),
+                spec.note(),
+                Registration.generateAccessKey(),
+                null
+            ));
         }
         return this.eventRepository.update(event);
     }
 
     public @NonNull Event removeRegistration(
-            @NonNull Event event,
-            @NonNull Registration registration
+        @NonNull Event event,
+        @NonNull Registration registration
     ) {
         log.info("Deleting registration {} from event {} ({})", registration.getKey(), event.getName(), event.getKey());
         var hasAssignedSlot = false;
@@ -89,9 +97,9 @@ public class RegistrationService {
         if (hasAssignedSlot) {
             admins = userService.getUsersByRole(Role.TEAM_PLANNER);
             positionName = positionRepository
-                    .findByKey(registration.getPosition())
-                    .map(Position::getName)
-                    .orElse(registration.getPosition().toString());
+                .findByKey(registration.getPosition())
+                .map(Position::getName)
+                .orElse(registration.getPosition().toString());
         }
 
         event.removeRegistration(registration.getKey());
@@ -108,10 +116,11 @@ public class RegistrationService {
                 notificationService.sendRemovedFromCrewNotification(maybeUser.get(), event);
                 for (UserDetails admin : admins) {
                     notificationService.sendCrewRegistrationCanceledNotification(
-                            admin,
-                            event,
-                            maybeUser.get().getFullName(),
-                            positionName);
+                        admin,
+                        event,
+                        maybeUser.get().getFullName(),
+                        positionName
+                    );
                 }
             } else {
                 notificationService.sendRemovedFromWaitingListNotification(maybeUser.get(), event);
@@ -119,10 +128,10 @@ public class RegistrationService {
         } else if (hasAssignedSlot && registration.getName() != null) {
             for (UserDetails admin : admins) {
                 notificationService.sendCrewRegistrationCanceledNotification(
-                        admin,
-                        event,
-                        registration.getName(),
-                        positionName
+                    admin,
+                    event,
+                    registration.getName(),
+                    positionName
                 );
             }
         }
@@ -130,9 +139,9 @@ public class RegistrationService {
     }
 
     public @NonNull Event updateRegistration(
-            @NonNull Event event,
-            @NonNull Registration registration,
-            @NonNull UpdateRegistrationSpec spec
+        @NonNull Event event,
+        @NonNull Registration registration,
+        @NonNull UpdateRegistrationSpec spec
     ) {
         log.info("Updating registration {} on event {} ({})", registration.getKey(), event.getName(), event.getKey());
         registration.setPosition(spec.positionKey());

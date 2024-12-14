@@ -8,7 +8,8 @@ const routeMeta: RouteMetaData = {
 };
 
 const route: RouteRecordRaw = {
-    path: 'details/:eventKey/registrations/:registrationKey',
+    path: ':year/details/:eventKey/registrations/:registrationKey/confirm',
+    alias: ':year/details/:eventKey/registrations/:registrationKey/decline',
     name: Routes.EventConfirmParticipation,
     component: () => import('./ConfirmParticipationView.vue'),
     meta: routeMeta,

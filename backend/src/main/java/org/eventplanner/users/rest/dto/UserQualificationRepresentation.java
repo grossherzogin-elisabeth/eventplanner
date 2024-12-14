@@ -23,8 +23,8 @@ public record UserQualificationRepresentation(
         return new UserQualificationRepresentation(
             userQualification.getQualificationKey().value(),
             ofNullable(userQualification.getExpiresAt())
-                    .map(Instant::toString)
-                    .orElse(null),
+                .map(Instant::toString)
+                .orElse(null),
             userQualification.isExpires()
         );
     }
@@ -33,8 +33,8 @@ public record UserQualificationRepresentation(
         return new UserQualification(
             new QualificationKey(qualificationKey),
             ofNullable(expiresAt)
-                    .map(Instant::parse)
-                    .orElse(null),
+                .map(Instant::parse)
+                .orElse(null),
             expires
         );
     }

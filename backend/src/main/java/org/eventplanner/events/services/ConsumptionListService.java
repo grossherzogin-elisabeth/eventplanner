@@ -33,14 +33,14 @@ public class ConsumptionListService {
 
     public @NonNull ByteArrayOutputStream generateConsumptionList(@NonNull Event event) throws IOException {
         List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
-                .map(Slot::getAssignedRegistration)
-                .filter(Objects::nonNull)
-                .toList();
+            .map(Slot::getAssignedRegistration)
+            .filter(Objects::nonNull)
+            .toList();
 
         List<Registration> crewList = event.getRegistrations()
-                .stream()
-                .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
-                .toList();
+            .stream()
+            .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
+            .toList();
 
         FileInputStream fileTemplate = new FileInputStream("data/templates/ConsumptionList_template.xlsx");
 
@@ -57,22 +57,22 @@ public class ConsumptionListService {
 
     private List<String> getNameList(List<Registration> crewList) {
         var userNames = crewList.stream()
-                .map(Registration::getUserKey)
-                .filter(Objects::nonNull)
-                .map(userService::getUserByKey)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(user ->  user.getNickName() != null
-                            ? user.getNickName()+ "\n" + user.getLastName()
-                            : user.getFirstName()+ "\n" + user.getLastName());
+            .map(Registration::getUserKey)
+            .filter(Objects::nonNull)
+            .map(userService::getUserByKey)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(user -> user.getNickName() != null
+                ? user.getNickName() + "\n" + user.getLastName()
+                : user.getFirstName() + "\n" + user.getLastName());
 
         var guestNames = crewList.stream()
-                .filter(registration -> registration.getUserKey() == null)
-                .map(Registration::getName)
-                .filter(Objects::nonNull)
-                .map(s -> s.contains(",")
-                        ? s.substring(s.indexOf(",") + 1).trim() + "\n" + s.substring(0, s.indexOf(","))
-                        : s.replaceFirst("\\s", "\n"));
+            .filter(registration -> registration.getUserKey() == null)
+            .map(Registration::getName)
+            .filter(Objects::nonNull)
+            .map(s -> s.contains(",")
+                ? s.substring(s.indexOf(",") + 1).trim() + "\n" + s.substring(0, s.indexOf(","))
+                : s.replaceFirst("\\s", "\n"));
 
         return Stream.concat(userNames, guestNames).sorted().toList();
     }

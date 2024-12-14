@@ -10,11 +10,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record EncryptedAddressJsonEntity(
-        @NonNull String addressLine1,
-        @Nullable String addressLine2,
-        @NonNull String town,
-        @NonNull String zipCode,
-        @Nullable String country
+    @NonNull String addressLine1,
+    @Nullable String addressLine2,
+    @NonNull String town,
+    @NonNull String zipCode,
+    @Nullable String country
 ) implements Serializable {
     public static @NonNull EncryptedAddressJsonEntity fromDomain(@NonNull EncryptedAddress domain) {
         return new EncryptedAddressJsonEntity(

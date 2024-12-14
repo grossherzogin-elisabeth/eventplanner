@@ -64,10 +64,10 @@ public class QualificationJpaEntity implements Serializable {
             expires,
             grantsPositions != null
                 ? Arrays.stream(grantsPositions.split(","))
-                    .map(String::trim)
-                    .filter(s -> !s.isBlank())
-                    .map(PositionKey::new)
-                    .toList()
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .map(PositionKey::new)
+                .toList()
                 : Collections.emptyList()
         );
     }

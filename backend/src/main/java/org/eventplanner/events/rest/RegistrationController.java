@@ -50,7 +50,11 @@ public class RegistrationController {
         @PathVariable("registrationKey") String registrationKey
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = registrationUseCase.removeRegistration(signedInUser, new EventKey(eventKey), new RegistrationKey(registrationKey));
+        var event = registrationUseCase.removeRegistration(
+            signedInUser,
+            new EventKey(eventKey),
+            new RegistrationKey(registrationKey)
+        );
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
 
@@ -61,7 +65,12 @@ public class RegistrationController {
         @RequestBody UpdateRegistrationRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = registrationUseCase.updateRegistration(signedInUser, new EventKey(eventKey), new RegistrationKey(registrationKey), spec.toDomain());
+        var event = registrationUseCase.updateRegistration(
+            signedInUser,
+            new EventKey(eventKey),
+            new RegistrationKey(registrationKey),
+            spec.toDomain()
+        );
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
 
@@ -71,17 +80,25 @@ public class RegistrationController {
         @PathVariable("registrationKey") String registrationKey,
         @RequestParam("accessKey") String accessKey
     ) {
-        participationNotificationUseCase.confirmRegistration(new EventKey(eventKey), new RegistrationKey(registrationKey), accessKey);
+        participationNotificationUseCase.confirmRegistration(
+            new EventKey(eventKey),
+            new RegistrationKey(registrationKey),
+            accessKey
+        );
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{eventKey}/registrations/{registrationKey}/decline")
     public ResponseEntity<Void> declineRegistration(
-            @PathVariable("eventKey") String eventKey,
-            @PathVariable("registrationKey") String registrationKey,
-            @RequestParam("accessKey") String accessKey
+        @PathVariable("eventKey") String eventKey,
+        @PathVariable("registrationKey") String registrationKey,
+        @RequestParam("accessKey") String accessKey
     ) {
-        participationNotificationUseCase.declineRegistration(new EventKey(eventKey), new RegistrationKey(registrationKey), accessKey);
+        participationNotificationUseCase.declineRegistration(
+            new EventKey(eventKey),
+            new RegistrationKey(registrationKey),
+            accessKey
+        );
         return ResponseEntity.ok().build();
     }
 }

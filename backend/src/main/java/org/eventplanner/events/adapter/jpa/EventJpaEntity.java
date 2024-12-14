@@ -90,7 +90,10 @@ public class EventJpaEntity {
 
     public static List<Location> deserializeLocations(String json) {
         try {
-            var entities = objectMapper.readValue(json, new TypeReference<List<LocationJsonEntity>>() {});
+            var entities = objectMapper.readValue(
+                json, new TypeReference<List<LocationJsonEntity>>() {
+                }
+            );
             return entities.stream().map(LocationJsonEntity::toDomain).toList();
         } catch (IOException e) {
             return Collections.emptyList();
@@ -108,7 +111,10 @@ public class EventJpaEntity {
 
     public static List<Slot> deserializeSlots(String json) {
         try {
-            var entities = objectMapper.readValue(json, new TypeReference<List<SlotJsonEntity>>() {});
+            var entities = objectMapper.readValue(
+                json, new TypeReference<List<SlotJsonEntity>>() {
+                }
+            );
             return entities.stream().map(SlotJsonEntity::toDomain).toList();
         } catch (IOException e) {
             return Collections.emptyList();
@@ -126,7 +132,10 @@ public class EventJpaEntity {
 
     public static List<Registration> deserializeRegistrations(String json) {
         try {
-            var entities = objectMapper.readValue(json, new TypeReference<List<RegistrationJsonEntity>>() {});
+            var entities = objectMapper.readValue(
+                json, new TypeReference<List<RegistrationJsonEntity>>() {
+                }
+            );
             return entities.stream().map(RegistrationJsonEntity::toDomain).toList();
         } catch (IOException e) {
             return Collections.emptyList();

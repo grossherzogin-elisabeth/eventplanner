@@ -78,7 +78,7 @@
                                         :class="{
                                             'cursor-move': it.registration !== undefined,
                                             'pointer-events-none': it.registration === undefined,
-                                            'text-yellow': it.expiredQualifications.length > 0,
+                                            'text-green': it.expiredQualifications.length === 0,
                                         }"
                                         component="li"
                                         :value="it"
@@ -178,7 +178,7 @@
                                         :class="{
                                             'cursor-move': it.registration !== undefined,
                                             'pointer-events-none': it.registration === undefined,
-                                            'text-yellow': it.expiredQualifications.length > 0,
+                                            'text-secondary': it.expiredQualifications.length === 0,
                                         }"
                                         component="li"
                                         :value="it"
@@ -189,7 +189,8 @@
                                         <i class="fa-solid fa-grip-vertical mr-2 hidden text-sm text-secondary-variant lg:inline"></i>
                                         <span v-if="it.name" class="truncate">{{ it.name }}</span>
                                         <span v-else-if="it.user" class="flex-grow italic text-error"> Unbekannt </span>
-                                        <i v-if="it.expiredQualifications.length > 0" class="fa-solid fa-warning text-yellow"></i>
+                                        <i v-if="it.expiredQualifications.length === 0" class="fa-solid fa-check"></i>
+                                        <i v-if="it.registration?.note" class="fa-solid fa-info-circle"></i>
                                         <span class="flex-grow"></span>
                                         <div>
                                             <ContextMenuButton>

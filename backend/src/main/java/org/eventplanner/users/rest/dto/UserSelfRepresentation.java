@@ -52,8 +52,8 @@ public record UserSelfRepresentation(
             user.getPhoneWork(),
             user.getMobile(),
             ofNullable(user.getDateOfBirth())
-                    .map(LocalDate::toString)
-                    .orElse(null),
+                .map(LocalDate::toString)
+                .orElse(null),
             user.getPlaceOfBirth(),
             user.getPassNr(),
             user.getNationality(),
@@ -62,8 +62,8 @@ public record UserSelfRepresentation(
             user.getIntolerances(),
             user.getMedication(),
             ofNullable(user.getDiet())
-                    .map(Diet::value)
-                    .orElse(null)
+                .map(Diet::value)
+                .orElse(null)
         );
     }
 }

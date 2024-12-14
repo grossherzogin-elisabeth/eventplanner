@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 import lombok.Getter;
 
-
 @ConfigurationProperties(prefix = "email")
 @Getter
 public class DefaultEmailSettings {
@@ -24,18 +23,18 @@ public class DefaultEmailSettings {
 
     @ConstructorBinding
     public DefaultEmailSettings(
-            String from,
-            String fromDisplayName,
-            String replyTo,
-            String replyToDisplayName,
-            String host,
-            Integer port,
-            String protocol,
-            String username,
-            String password,
-            Boolean enableStarttls,
-            Boolean enableSsl,
-            String footer
+        String from,
+        String fromDisplayName,
+        String replyTo,
+        String replyToDisplayName,
+        String host,
+        Integer port,
+        String protocol,
+        String username,
+        String password,
+        Boolean enableStarttls,
+        Boolean enableSsl,
+        String footer
     ) {
         this.from = from;
         this.fromDisplayName = fromDisplayName;

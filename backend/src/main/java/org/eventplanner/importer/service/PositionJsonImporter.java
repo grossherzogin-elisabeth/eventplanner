@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class PositionJsonImporter {
 
     public static @NonNull List<Position> readFromDirectory(
-            @NonNull File dir
+        @NonNull File dir
     ) {
         var repository = new FileSystemJsonRepository<>(PositionJsonEntity.class, dir);
         return repository.findAll().stream().map(PositionJsonEntity::toDomain).toList();
@@ -22,11 +22,11 @@ public class PositionJsonImporter {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private record PositionJsonEntity(
-            @NonNull String key,
-            @NonNull String name,
-            @NonNull String color,
-            int prio,
-            @NonNull String imoListRank
+        @NonNull String key,
+        @NonNull String name,
+        @NonNull String color,
+        int prio,
+        @NonNull String imoListRank
     ) implements Serializable {
         public Position toDomain() {
             return new Position(new PositionKey(key), name, color, prio, imoListRank);

@@ -15,6 +15,7 @@ export enum Routes {
     EventsList = 'app_events-list',
     EventDetails = 'app_event-details',
     EventConfirmParticipation = 'app_event-confirm-participation',
+    EventCancelParticipation = 'app_event-cancel-participation',
     EventEdit = 'app_event-edit',
 
     UsersList = 'app_users',

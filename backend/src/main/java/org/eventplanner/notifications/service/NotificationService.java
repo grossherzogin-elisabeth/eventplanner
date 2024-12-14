@@ -47,17 +47,18 @@ public class NotificationService {
     private final List<String> recipientsWhitelist;
 
     public NotificationService(
-            Configuration freemarkerConfig,
-            SettingsService settingsService,
-            @Value("${frontend.domain}") String frontendDomain,
-            @Value("${email.recipients-whitelist}") String recipientsWhitelist) {
+        Configuration freemarkerConfig,
+        SettingsService settingsService,
+        @Value("${frontend.domain}") String frontendDomain,
+        @Value("${email.recipients-whitelist}") String recipientsWhitelist
+    ) {
         this.freemarkerConfig = freemarkerConfig;
         this.settingsService = settingsService;
         this.frontendDomain = frontendDomain;
         this.recipientsWhitelist = Arrays.stream(recipientsWhitelist.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isBlank())
-                .toList();
+            .map(String::trim)
+            .filter(s -> !s.isBlank())
+            .toList();
     }
 
     private EmailSettings getEmailSettings() {
@@ -146,10 +147,10 @@ public class NotificationService {
     }
 
     public void sendCrewRegistrationCanceledNotification(
-            @NonNull UserDetails to,
-            @NonNull Event event,
-            @NonNull String userName,
-            @NonNull String position
+        @NonNull UserDetails to,
+        @NonNull Event event,
+        @NonNull String userName,
+        @NonNull String position
     ) {
         log.debug("Creating crew registration canceled notification for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CREW_REGISTRATION_CANCELED);
@@ -165,9 +166,9 @@ public class NotificationService {
     }
 
     public void sendFirstParticipationConfirmationRequestNotification(
-            @NonNull UserDetails to,
-            @NonNull Event event,
-            @NonNull Registration registration
+        @NonNull UserDetails to,
+        @NonNull Event event,
+        @NonNull Registration registration
     ) {
         log.debug("Creating first participation confirmation request for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION);
@@ -178,9 +179,9 @@ public class NotificationService {
     }
 
     public void sendSecondParticipationConfirmationRequestNotification(
-            @NonNull UserDetails to,
-            @NonNull Event event,
-            @NonNull Registration registration
+        @NonNull UserDetails to,
+        @NonNull Event event,
+        @NonNull Registration registration
     ) {
         log.debug("Creating second participation confirmation request for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
@@ -204,15 +205,15 @@ public class NotificationService {
     }
 
     private void sendParticipationNotificationBody(
-            @NonNull UserDetails to,
-            @NonNull Event event,
-            @NonNull Registration registration,
-            @NonNull Notification notification
+        @NonNull UserDetails to,
+        @NonNull Event event,
+        @NonNull Registration registration,
+        @NonNull Notification notification
     ) {
         notification.getProps().put("user", to);
         notification.getProps().put("deadline", formatDate(event.getStart().atZone(timezone).minusDays(7)));
         var eventUrl = frontendDomain + "/events/" + event.getStart().atZone(timezone)
-                .getYear() + "/details/" + event.getKey() + "/registrations/" + registration.getKey();
+            .getYear() + "/details/" + event.getKey() + "/registrations/" + registration.getKey();
         notification.getProps().put("confirm_link", eventUrl + "/confirm?accessKey=" + registration.getAccessKey());
         notification.getProps().put("deny_link", eventUrl + "/deny?accessKey=" + registration.getAccessKey());
         try {
@@ -231,7 +232,8 @@ public class NotificationService {
         notification.getProps().put("event_crew_on_board_datetime", formatDateTime(event.getStart().atZone(timezone)));
     }
 
-    public void sendNotification(@NonNull Notification notification, @NonNull UserDetails to) throws IOException, TemplateException, MessagingException {
+    public void sendNotification(@NonNull Notification notification, @NonNull UserDetails to)
+    throws IOException, TemplateException, MessagingException {
         if (to.getEmail() == null) {
             log.warn("Cannot send email notification to user {} due to missing email address", to.getKey());
             return;
@@ -268,7 +270,7 @@ public class NotificationService {
         }
 
         message.setFrom(new InternetAddress(from, fromDisplayName));
-        message.setReplyTo(new Address[]{ new InternetAddress(replyTo, replyToDisplayName) });
+        message.setReplyTo(new Address[] { new InternetAddress(replyTo, replyToDisplayName) });
         message.setRecipients(RecipientType.TO, to.getEmail().trim());
         message.setSubject(notification.getTitle());
 
@@ -287,7 +289,11 @@ public class NotificationService {
                     exec.shutdown();
                 }
             } else {
-                log.warn("Skipped sending email to user {} because notifications are configured to only be sent to whitelisted users", to.getKey());
+                log.warn(
+                    "Skipped sending email to user {} because notifications are configured to only be sent to " +
+                        "whitelisted users",
+                    to.getKey()
+                );
             }
         } else {
             try (var exec = Executors.newSingleThreadExecutor()) {
@@ -306,7 +312,8 @@ public class NotificationService {
         return renderTemplate("partials/base.ftl", baseTemplateParams);
     }
 
-    private String renderTemplate(@NonNull String template, @NonNull Object params) throws TemplateException, IOException {
+    private String renderTemplate(@NonNull String template, @NonNull Object params)
+    throws TemplateException, IOException {
         Template content = freemarkerConfig.getTemplate(template);
         Writer writer = new StringWriter();
         content.process(params, writer);

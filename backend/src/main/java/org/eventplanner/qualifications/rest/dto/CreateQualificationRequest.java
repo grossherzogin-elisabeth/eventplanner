@@ -11,11 +11,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record CreateQualificationRequest(
-        @NonNull String name,
-        @Nullable String icon,
-        @Nullable String description,
-        boolean expires,
-        @Nullable List<String> grantsPositions
+    @NonNull String name,
+    @Nullable String icon,
+    @Nullable String description,
+    boolean expires,
+    @Nullable List<String> grantsPositions
 ) implements Serializable {
 
     public Qualification toDomain() {

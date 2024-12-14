@@ -21,7 +21,8 @@ public class ConsumtionListUseCase {
     private final EventRepository eventRepository;
     private final ConsumptionListService consumptionListService;
 
-    public ByteArrayOutputStream downloadConsumptionList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey) throws IOException {
+    public ByteArrayOutputStream downloadConsumptionList(@NonNull SignedInUser signedInUser, @NonNull EventKey eventKey)
+    throws IOException {
         signedInUser.assertHasPermission(Permission.READ_USERS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 

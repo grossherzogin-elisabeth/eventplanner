@@ -30,7 +30,8 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
     @Override
     public void create(Qualification qualification) {
         if (qualificationJpaRepository.existsById(qualification.getKey().value())) {
-            throw new IllegalArgumentException("Qualification with key " + qualification.getKey().value() + " already exists");
+            throw new IllegalArgumentException("Qualification with key " + qualification.getKey()
+                .value() + " already exists");
         }
         qualificationJpaRepository.save(QualificationJpaEntity.fromDomain(qualification));
     }

@@ -65,11 +65,16 @@ public class UserExcelImporter {
 
     private static final Logger log = LoggerFactory.getLogger(UserExcelImporter.class);
 
-    public static @NonNull List<UserDetails> readFromFile(@NonNull File file, @Nullable String password, List<Qualification> qualifications) {
+    public static @NonNull List<UserDetails> readFromFile(
+        @NonNull File file,
+        @Nullable String password,
+        List<Qualification> qualifications
+    ) {
         try {
             var data = ExcelUtils.readExcelFile(file, password);
             var qualificationMap = new HashMap<QualificationKey, Qualification>();
-            qualifications.stream().forEach(qualification -> qualificationMap.put(qualification.getKey(), qualification));
+            qualifications.stream()
+                .forEach(qualification -> qualificationMap.put(qualification.getKey(), qualification));
             return parseUsers(data, qualificationMap);
         } catch (Exception e) {
             log.error("Failed to read excel file", e);
@@ -77,7 +82,10 @@ public class UserExcelImporter {
         return Collections.emptyList();
     }
 
-    private static @NonNull List<UserDetails> parseUsers(@NonNull String[][] data, Map<QualificationKey, Qualification> qualifications) {
+    private static @NonNull List<UserDetails> parseUsers(
+        @NonNull String[][] data,
+        Map<QualificationKey, Qualification> qualifications
+    ) {
         var users = new HashMap<UserKey, UserDetails>();
         for (int r = 1; r < data[0].length; r++) {
             final var rowIndex = r;
@@ -119,7 +127,6 @@ public class UserExcelImporter {
             if (data[COL_MEMBER].trim().equalsIgnoreCase("ja")) {
                 user.getRoles().add(Role.TEAM_MEMBER);
             }
-
 
             addDetailsToUser(row, user, data);
         }
@@ -254,16 +261,31 @@ public class UserExcelImporter {
         }
 
         var medicalFitness = new QualificationKey("medical-fitness");
-        var added = parseQualificationWithMandatoryExpirationDate(row, user, medicalFitness, data[COL_MEDICAL_FITNESS_EXPIRATION_DATE]);
+        var added = parseQualificationWithMandatoryExpirationDate(
+            row,
+            user,
+            medicalFitness,
+            data[COL_MEDICAL_FITNESS_EXPIRATION_DATE]
+        );
         if (!added) {
             // every user gets an expired medical fitness qualification
             user.addQualification(medicalFitness);
         }
         parseQualificationWithOptionalExpirationDate(row, user, data[COL_POSITION], null);
-        parseQualificationWithOptionalExpirationDate(row, user, data[COL_QUALIFICATION], data[COL_QUALIFICATION_EXPIRATION_DATE]);
+        parseQualificationWithOptionalExpirationDate(
+            row,
+            user,
+            data[COL_QUALIFICATION],
+            data[COL_QUALIFICATION_EXPIRATION_DATE]
+        );
         parseQualificationWithOptionalExpirationDate(row, user, data[COL_FUNK], data[COL_FUNK_EXPIRATION_DATE]);
         parseQualificationWithOptionalExpirationDate(row, user, data[COL_STCW], data[COL_STCW_EXPIRATION_DATE]);
-        parseQualificationWithMandatoryExpirationDate(row, user, new QualificationKey("medical-care"), data[COL_MEDICAL_CARE]);
+        parseQualificationWithMandatoryExpirationDate(
+            row,
+            user,
+            new QualificationKey("medical-care"),
+            data[COL_MEDICAL_CARE]
+        );
         var fistAid = data[COL_FIRST_AID].trim();
         if (!fistAid.isBlank() && !fistAid.equals("-")) {
             user.addQualification(new QualificationKey("first-aid"));
@@ -300,7 +322,12 @@ public class UserExcelImporter {
         // SBF See und Binnen
         raw = addQualificationWhenPresent("sbf see binnen motor segel", raw, usr, "sbf-see");
         raw = addQualificationWhenPresent("sportbootführerschein küste und binnen", raw, usr, "sbf-see");
-        raw = addQualificationWhenPresent("sportbootführerscheine see und binnen und binnen unter segel", raw, usr, "sbf-see");
+        raw = addQualificationWhenPresent(
+            "sportbootführerscheine see und binnen und binnen unter segel",
+            raw,
+            usr,
+            "sbf-see"
+        );
         raw = addQualificationWhenPresent("sportbootführerschein see", raw, usr, "sbf-see");
         raw = addQualificationWhenPresent("sbf see binnen", raw, usr, "sbf-see");
         raw = addQualificationWhenPresent("sbf s b", raw, usr, "sbf-see");
@@ -325,7 +352,12 @@ public class UserExcelImporter {
         raw = addQualificationWhenPresent("lrc", raw, usr, "funk-lrc");
     }
 
-    private static String addQualificationWhenPresent(String keyword, String raw, UserDetails user, String... qualifications) {
+    private static String addQualificationWhenPresent(
+        String keyword,
+        String raw,
+        UserDetails user,
+        String... qualifications
+    ) {
         if (raw.contains(keyword)) {
             for (String qualification : qualifications) {
                 user.addQualification(new QualificationKey(qualification));
@@ -336,23 +368,39 @@ public class UserExcelImporter {
         return raw.trim();
     }
 
-    private static boolean parseQualificationWithMandatoryExpirationDate(int row, UserDetails user, QualificationKey qualification, String expirationDateRaw) {
+    private static boolean parseQualificationWithMandatoryExpirationDate(
+        int row,
+        UserDetails user,
+        QualificationKey qualification,
+        String expirationDateRaw
+    ) {
         try {
             if (expirationDateRaw.equals("ja")) {
                 user.addQualification(qualification, null);
                 return true;
-            } else if (!expirationDateRaw.isBlank() && !expirationDateRaw.equals("-") && !expirationDateRaw.equals("nein")) {
+            } else if (!expirationDateRaw.isBlank() && !expirationDateRaw.equals("-") && !expirationDateRaw.equals(
+                "nein")) {
                 var expirationDate = ExcelUtils.parseExcelDate(expirationDateRaw).orElseThrow();
                 user.addQualification(qualification, expirationDate.toInstant());
                 return true;
             }
         } catch (Exception e) {
-            log.warn("Row {}: Could not parse qualification '{}' with mandatory expiration date set to '{}'", row, qualification.value(), expirationDateRaw);
+            log.warn(
+                "Row {}: Could not parse qualification '{}' with mandatory expiration date set to '{}'",
+                row,
+                qualification.value(),
+                expirationDateRaw
+            );
         }
         return false;
     }
 
-    private static void parseQualificationWithOptionalExpirationDate(int row, UserDetails user, String qualificationRaw, String expirationDateRaw) {
+    private static void parseQualificationWithOptionalExpirationDate(
+        int row,
+        UserDetails user,
+        String qualificationRaw,
+        String expirationDateRaw
+    ) {
         try {
             if (qualificationRaw != null
                 && !qualificationRaw.isBlank()
@@ -362,13 +410,21 @@ public class UserExcelImporter {
                 var qualifications = mapQualifications(qualificationRaw.trim());
                 var qualificationExpires = ExcelUtils.parseExcelDate(expirationDateRaw);
                 if (qualificationExpires.isPresent()) {
-                    qualifications.forEach(qualificationKey -> user.addQualification(qualificationKey, qualificationExpires.get().toInstant()));
+                    qualifications.forEach(qualificationKey -> user.addQualification(
+                        qualificationKey,
+                        qualificationExpires.get().toInstant()
+                    ));
                 } else {
                     qualifications.forEach(user::addQualification);
                 }
             }
         } catch (Exception e) {
-            log.warn("Row {}: Could not parse qualification '{}' with optional expiration date set to '{}'", row, qualificationRaw, expirationDateRaw);
+            log.warn(
+                "Row {}: Could not parse qualification '{}' with optional expiration date set to '{}'",
+                row,
+                qualificationRaw,
+                expirationDateRaw
+            );
         }
     }
 
@@ -426,7 +482,12 @@ public class UserExcelImporter {
             .toList();
     }
 
-    private static void validateRank(int row, UserDetails user, String rank, Map<QualificationKey, Qualification> qualifications) {
+    private static void validateRank(
+        int row,
+        UserDetails user,
+        String rank,
+        Map<QualificationKey, Qualification> qualifications
+    ) {
         var position = switch (rank) {
             case "Master" -> Pos.KAPITAEN;
             case "Mate" -> Pos.STM;
@@ -445,12 +506,12 @@ public class UserExcelImporter {
         }
 
         var parsedPositions = user.getQualifications().stream()
-                .map(UserQualification::getQualificationKey)
-                .map(qualifications::get)
-                .filter(Objects::nonNull)
-                .flatMap(q -> q.getGrantsPositions().stream())
-                .distinct()
-                .toList();
+            .map(UserQualification::getQualificationKey)
+            .map(qualifications::get)
+            .filter(Objects::nonNull)
+            .flatMap(q -> q.getGrantsPositions().stream())
+            .distinct()
+            .toList();
         if (parsedPositions.isEmpty()) {
             user.addQualification(new QualificationKey("lissi-deckshand"));
             parsedPositions = new LinkedList<>(parsedPositions);
@@ -458,7 +519,13 @@ public class UserExcelImporter {
         }
         if (!parsedPositions.contains(position)) {
             var parsedPositionsDisplay = String.join(", ", parsedPositions.stream().map(PositionKey::value).toList());
-            log.warn("Row {}: {} stated position is not granted from parsed qualifications: {} -> {}", row, user.getFullName(), position.value(), parsedPositionsDisplay);
+            log.warn(
+                "Row {}: {} stated position is not granted from parsed qualifications: {} -> {}",
+                row,
+                user.getFullName(),
+                position.value(),
+                parsedPositionsDisplay
+            );
         }
     }
 }

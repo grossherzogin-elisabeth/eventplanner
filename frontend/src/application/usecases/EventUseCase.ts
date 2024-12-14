@@ -10,7 +10,7 @@ import type { ErrorHandlingService } from '@/application/services/ErrorHandlingS
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { formatIcsDate } from '@/common/date';
 import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
-import type { Event, EventKey, EventService, PositionKey, Registration, RegistrationService, UserKey } from '@/domain';
+import type { Event, EventKey, EventService, PositionKey, Registration, RegistrationKey, RegistrationService, UserKey } from '@/domain';
 import { EventState, EventType, SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
@@ -339,5 +339,32 @@ export class EventUseCase {
         ];
         // download ics file
         saveStringToFile(`${event.name}.ics`, lines.join('\n'));
+    }
+
+    public async getEventByAccessKey(eventKey: EventKey, accessKey: string): Promise<Event> {
+        try {
+            return await this.eventRepository.findByKey(eventKey, accessKey);
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
+    public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
+        try {
+            await this.eventRegistrationsRepository.confirmParticipation(eventKey, registrationKey, accessKey);
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
+    public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
+        try {
+            await this.eventRegistrationsRepository.declineParticipation(eventKey, registrationKey, accessKey);
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
     }
 }

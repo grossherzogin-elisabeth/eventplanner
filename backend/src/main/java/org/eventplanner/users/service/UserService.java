@@ -45,8 +45,8 @@ public class UserService {
 
     public @NonNull List<User> getUsers() {
         var qualificationMap = qualificationRepository.findAll()
-                .stream()
-                .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
+            .stream()
+            .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
 
         return getEncryptedUsers().stream()
             .map(userEncryptionService::decrypt)
@@ -61,8 +61,8 @@ public class UserService {
             userRepository.findAll().forEach(it -> cache.put(it.getKey(), it));
         }
         var qualificationMap = qualificationRepository.findAll()
-                .stream()
-                .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
+            .stream()
+            .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
 
         return cache.values().stream()
             .map(userEncryptionService::decrypt)
@@ -87,7 +87,8 @@ public class UserService {
             encryptedUserDetails = userRepository.findByKey(key);
         }
 
-        return encryptedUserDetails.map(userEncryptionService::decrypt).map(this::resolvePositionsAndQualificationExpires);
+        return encryptedUserDetails.map(userEncryptionService::decrypt)
+            .map(this::resolvePositionsAndQualificationExpires);
     }
 
     public @NonNull Optional<UserDetails> getUserByAuthKey(@Nullable AuthKey authKey) {
@@ -170,12 +171,15 @@ public class UserService {
 
     private UserDetails resolvePositionsAndQualificationExpires(UserDetails userDetails) {
         var qualificationMap = qualificationRepository.findAll()
-                .stream()
-                .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
+            .stream()
+            .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
         return resolvePositionsAndQualificationExpires(userDetails, qualificationMap);
     }
 
-    private UserDetails resolvePositionsAndQualificationExpires(UserDetails userDetails, Map<QualificationKey, Qualification> qualificationMap) {
+    private UserDetails resolvePositionsAndQualificationExpires(
+        UserDetails userDetails,
+        Map<QualificationKey, Qualification> qualificationMap
+    ) {
         userDetails.getQualifications().forEach(userQualification -> {
             var qualification = qualificationMap.get(userQualification.getQualificationKey());
             if (qualification != null) {

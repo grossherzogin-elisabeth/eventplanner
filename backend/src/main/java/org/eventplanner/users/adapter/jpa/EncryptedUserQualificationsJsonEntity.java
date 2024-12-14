@@ -13,7 +13,9 @@ public record EncryptedUserQualificationsJsonEntity(
     @NonNull String qualificationKey,
     @Nullable String expiresAt
 ) implements Serializable {
-    public static @NonNull EncryptedUserQualificationsJsonEntity fromDomain(@NonNull EncryptedUserQualification domain) {
+    public static @NonNull EncryptedUserQualificationsJsonEntity fromDomain(
+        @NonNull EncryptedUserQualification domain
+    ) {
         return new EncryptedUserQualificationsJsonEntity(
             domain.getQualificationKey().value(),
             mapNullable(domain.getExpiresAt(), EncryptedString::value)

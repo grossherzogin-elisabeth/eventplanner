@@ -9,12 +9,12 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record QualificationRepresentation(
-        @NonNull String key,
-        @NonNull String name,
-        @Nullable String icon,
-        @Nullable String description,
-        boolean expires,
-        @Nullable List<String> grantsPositions
+    @NonNull String key,
+    @NonNull String name,
+    @Nullable String icon,
+    @Nullable String description,
+    boolean expires,
+    @Nullable List<String> grantsPositions
 ) implements Serializable {
 
     public static QualificationRepresentation fromDomain(@NonNull Qualification qualification) {

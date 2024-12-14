@@ -1,8 +1,8 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { Permission } from '@/domain';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
+import ConfirmParticipation from '@/ui/views/events/confirm/NestedRoute';
 import Calendar from './calendar/NestedRoute';
-import ConfirmParticipation from './confirm-participation/NestedRoute';
 import Details from './details/NestedRoute';
 import Edit from './edit/NestedRoute';
 import ListAdmin from './list-admin/NestedRoute';

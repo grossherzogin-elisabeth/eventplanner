@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/api/v1/settings")
 @EnableMethodSecurity(securedEnabled = true)
@@ -39,7 +38,9 @@ public class SettingsController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "")
-    public ResponseEntity<SettingsRepresentation> updateSettings(@RequestBody UpdateSettingsRequest updateSettingsRequest) {
+    public ResponseEntity<SettingsRepresentation> updateSettings(
+        @RequestBody UpdateSettingsRequest updateSettingsRequest
+    ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var updatedSettings = settingsUseCase.updateSettings(signedInUser, updateSettingsRequest.toDomain());
         return ResponseEntity.ok(SettingsRepresentation.fromDomain(updatedSettings));

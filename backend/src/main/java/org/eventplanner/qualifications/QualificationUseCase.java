@@ -38,7 +38,11 @@ public class QualificationUseCase {
         return qualification;
     }
 
-    public Qualification updateQualification(@NonNull SignedInUser signedInUser, QualificationKey qualificationKey, Qualification qualification) {
+    public Qualification updateQualification(
+        @NonNull SignedInUser signedInUser,
+        QualificationKey qualificationKey,
+        Qualification qualification
+    ) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
         if (!qualificationKey.equals(qualification.getKey())) {

@@ -67,7 +67,8 @@ public class QualificationController {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
         var qualificationSpec = spec.toDomain(qualificationKey);
-        var qualification = qualificationUseCase.updateQualification(signedInUser, qualificationSpec.getKey(), qualificationSpec);
+        var qualification =
+            qualificationUseCase.updateQualification(signedInUser, qualificationSpec.getKey(), qualificationSpec);
         return ResponseEntity.ok(QualificationRepresentation.fromDomain(qualification));
     }
 

@@ -6,10 +6,12 @@ import java.io.IOException;
 import org.eventplanner.ConsumtionListUseCase;
 import org.eventplanner.events.EventUseCase;
 import org.eventplanner.events.ImoListUseCase;
+import org.eventplanner.events.ParticipationNotificationUseCase;
 import org.eventplanner.events.rest.dto.CreateEventRequest;
 import org.eventplanner.events.rest.dto.EventRepresentation;
 import org.eventplanner.events.rest.dto.UpdateEventRequest;
 import org.eventplanner.events.values.EventKey;
+import org.eventplanner.exceptions.UnauthorizedException;
 import org.eventplanner.users.UserUseCase;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,9 +46,13 @@ public class EventController {
     private final EventUseCase eventUseCase;
     private final ImoListUseCase imoListUseCase;
     private final ConsumtionListUseCase consumtionListUseCase;
+    private final ParticipationNotificationUseCase participationNotificationUseCase;
 
     @GetMapping(path = "")
-    public ResponseEntity<?> getEvents(@RequestHeader(HttpHeaders.ACCEPT) String accept, @RequestParam("year") int year) {
+    public ResponseEntity<?> getEvents(
+        @RequestHeader(HttpHeaders.ACCEPT) String accept,
+        @RequestParam("year") int year
+    ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
         if (accept.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
@@ -67,11 +74,21 @@ public class EventController {
 
     @GetMapping(path = "/{eventKey}")
     public ResponseEntity<EventRepresentation> getEventByKey(
-        @PathVariable("eventKey") String eventKey
+        @PathVariable("eventKey") String eventKey,
+        @Nullable @RequestParam("accessKey") String accessKey
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = eventUseCase.getEventByKey(signedInUser, new EventKey(eventKey));
-        return ResponseEntity.ok(EventRepresentation.fromDomain(event));
+        try {
+            var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+            var event = eventUseCase.getEventByKey(signedInUser, new EventKey(eventKey));
+            return ResponseEntity.ok(EventRepresentation.fromDomain(event));
+        } catch (UnauthorizedException e) {
+            if (accessKey != null) {
+                var event = participationNotificationUseCase.getEventByAccessKey(new EventKey(eventKey), accessKey);
+                return ResponseEntity.ok(EventRepresentation.fromDomain(event));
+            } else {
+                throw e;
+            }
+        }
     }
 
     @PostMapping(path = "")
@@ -108,23 +125,25 @@ public class EventController {
         ByteArrayResource resource = new ByteArrayResource(imoListByteArray);
 
         return ResponseEntity.ok()
-                .contentLength(imoListByteArray.length)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
+            .contentLength(imoListByteArray.length)
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/{eventKey}/consumption-list")
-    public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey) throws IOException {
+    public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey)
+    throws IOException {
 
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream consumptionListStream = consumtionListUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
+        ByteArrayOutputStream consumptionListStream =
+            consumtionListUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
         byte[] consumptionListByteArray = consumptionListStream.toByteArray();
 
         ByteArrayResource resource = new ByteArrayResource(consumptionListByteArray);
 
         return ResponseEntity.ok()
-                .contentLength(consumptionListByteArray.length)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
+            .contentLength(consumptionListByteArray.length)
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
     }
 }

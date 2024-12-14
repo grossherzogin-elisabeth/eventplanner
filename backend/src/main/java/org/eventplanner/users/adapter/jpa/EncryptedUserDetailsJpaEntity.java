@@ -149,7 +149,10 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
 
     private static List<EncryptedString> deserializeEncryptedStringList(String json) {
         try {
-            List<String> list = objectMapper.readValue(json, new TypeReference<>() {});
+            List<String> list = objectMapper.readValue(
+                json, new TypeReference<>() {
+                }
+            );
             return list.stream().map(EncryptedString::new).toList();
         } catch (IOException e) {
             throw new RuntimeException("Error deserializing list", e);
@@ -167,7 +170,10 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
 
     private static List<EncryptedUserQualification> deserializeQualifications(String json) {
         try {
-            var entities = objectMapper.readValue(json, new TypeReference<List<EncryptedUserQualificationsJsonEntity>>() {});
+            var entities = objectMapper.readValue(
+                json, new TypeReference<List<EncryptedUserQualificationsJsonEntity>>() {
+                }
+            );
             return entities.stream().map(EncryptedUserQualificationsJsonEntity::toDomain).toList();
         } catch (IOException e) {
             throw new RuntimeException("Error deserializing qualifications", e);
@@ -232,7 +238,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             passNr != null ? new EncryptedString(passNr) : null,
             comment != null ? new EncryptedString(comment) : null,
             nationality != null ? new EncryptedString(nationality) : null,
-            emergencyContactRaw!= null ? deserializeEmergencyContact(emergencyContactRaw) : null,
+            emergencyContactRaw != null ? deserializeEmergencyContact(emergencyContactRaw) : null,
             diseases != null ? new EncryptedString(diseases) : null,
             intolerances != null ? new EncryptedString(intolerances) : null,
             medication != null ? new EncryptedString(medication) : null,

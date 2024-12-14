@@ -7,8 +7,8 @@ import org.eventplanner.users.entities.EncryptedEmergencyContact;
 import org.springframework.lang.NonNull;
 
 public record EncryptedEmergencyContactJsonEntity(
-        @NonNull String name,
-        @NonNull String phone
+    @NonNull String name,
+    @NonNull String phone
 ) implements Serializable {
     public static @NonNull EncryptedEmergencyContactJsonEntity fromDomain(@NonNull EncryptedEmergencyContact domain) {
         return new EncryptedEmergencyContactJsonEntity(

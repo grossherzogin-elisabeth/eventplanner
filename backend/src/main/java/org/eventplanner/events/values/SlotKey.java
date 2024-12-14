@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record SlotKey(
-        @NonNull String value
+    @NonNull String value
 ) implements Serializable {
     public SlotKey() {
         this(null);

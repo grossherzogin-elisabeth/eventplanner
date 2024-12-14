@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record EventKey(
-        @NonNull String value
+    @NonNull String value
 ) implements Serializable {
     public EventKey() {
         this(null);

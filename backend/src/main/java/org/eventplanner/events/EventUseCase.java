@@ -79,26 +79,26 @@ public class EventUseCase {
         signedInUser.assertHasPermission(Permission.CREATE_EVENTS);
 
         var event = new Event(
-                new EventKey(),
-                spec.name(),
-                EventState.DRAFT,
-                orElse(spec.note(), ""),
-                orElse(spec.description(), ""),
-                spec.start(),
-                spec.end(),
-                orElse(spec.locations(), Collections.emptyList()),
-                orElse(spec.slots(), Collections.emptyList()),
-                Collections.emptyList(),
-                0
+            new EventKey(),
+            spec.name(),
+            EventState.DRAFT,
+            orElse(spec.note(), ""),
+            orElse(spec.description(), ""),
+            spec.start(),
+            spec.end(),
+            orElse(spec.locations(), Collections.emptyList()),
+            orElse(spec.slots(), Collections.emptyList()),
+            Collections.emptyList(),
+            0
         );
         log.info("Creating event {}", event.getKey());
         return this.eventRepository.create(event);
     }
 
     public @NonNull Event updateEvent(
-            @NonNull SignedInUser signedInUser,
-            @NonNull EventKey eventKey,
-            @NonNull UpdateEventSpec spec
+        @NonNull SignedInUser signedInUser,
+        @NonNull EventKey eventKey,
+        @NonNull UpdateEventSpec spec
     ) {
         signedInUser.assertHasAnyPermission(Permission.WRITE_EVENT_DETAILS, Permission.WRITE_EVENT_SLOTS);
 
@@ -122,37 +122,43 @@ public class EventUseCase {
             var updatedSlots = spec.slots();
             // notify changed crew members if crew is already published
             if (updatedSlots != null && EventState.PLANNED.equals(event.getState())) {
-                var registrationsWithSlotBefore = event.getSlots().stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
-                var registrationsWithSlotAfter = updatedSlots.stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
+                var registrationsWithSlotBefore =
+                    event.getSlots().stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
+                var registrationsWithSlotAfter =
+                    updatedSlots.stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
 
                 var registrationsAddedToCrew = registrationsWithSlotAfter.stream()
-                        .filter((key -> !registrationsWithSlotBefore.contains(key)))
-                        .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
-                        .toList();
+                    .filter((key -> !registrationsWithSlotBefore.contains(key)))
+                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                    .toList();
                 notifyUsersAddedToCrew = mapRegistrationsToUsers(registrationsAddedToCrew);
 
                 var registrationsRemovedFromCrew = registrationsWithSlotBefore.stream()
-                        .filter((key -> !registrationsWithSlotAfter.contains(key)))
-                        .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
-                        .toList();
+                    .filter((key -> !registrationsWithSlotAfter.contains(key)))
+                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                    .toList();
                 notifyUsersRemovedFromCrew = mapRegistrationsToUsers(registrationsRemovedFromCrew);
             }
             applyNullable(spec.slots(), event::setSlots);
         }
 
         // crew planning has just been published, notify all crew members
-        if (EventState.PLANNED.equals(spec.state()) && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(previousState)) {
+        if (EventState.PLANNED.equals(spec.state()) && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP)
+            .contains(previousState)) {
             var crew = event.getSlots().stream()
-                    .map(Slot::getAssignedRegistration)
-                    .filter(Objects::nonNull)
-                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
-                    .toList();
+                .map(Slot::getAssignedRegistration)
+                .filter(Objects::nonNull)
+                .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                .toList();
             notifyUsersAddedToCrew = mapRegistrationsToUsers(crew);
         }
 
         var updatedEvent = this.eventRepository.update(this.eventService.removeInvalidSlotAssignments(event));
         notifyUsersAddedToCrew.forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
-        notifyUsersRemovedFromCrew.forEach(user -> notificationService.sendRemovedFromCrewNotification(user, updatedEvent));
+        notifyUsersRemovedFromCrew.forEach(user -> notificationService.sendRemovedFromCrewNotification(
+            user,
+            updatedEvent
+        ));
         return updatedEvent;
     }
 
@@ -166,11 +172,11 @@ public class EventUseCase {
 
     private List<UserDetails> mapRegistrationsToUsers(List<Registration> registrations) {
         return registrations.stream().map(Registration::getUserKey)
-                .filter(Objects::nonNull)
-                .map(userService::getUserByKey)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+            .filter(Objects::nonNull)
+            .map(userService::getUserByKey)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .toList();
     }
 
     private boolean filterForVisibility(@NonNull SignedInUser signedInUser, @NonNull Event event) {
@@ -183,7 +189,6 @@ public class EventUseCase {
         }
         return true;
     }
-
 
     private @NonNull Event clearConfidentialData(@NonNull SignedInUser signedInUser, @NonNull Event event) {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)

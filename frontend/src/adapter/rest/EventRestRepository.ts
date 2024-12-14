@@ -19,6 +19,7 @@ interface RegistrationRepresentation {
     name?: string | null;
     userKey?: string | null;
     note?: string | null;
+    confirmed?: boolean | null;
 }
 
 interface LocationRepresentation {
@@ -91,6 +92,7 @@ export class EventRestRepository implements EventRepository {
                 userKey: it.userKey ?? undefined,
                 name: it.name ?? undefined,
                 note: it.note ?? undefined,
+                confirmed: it.confirmed ?? undefined,
             })),
             locations: eventRepresentation.locations.map((locationRepresentation, index) => ({
                 name: locationRepresentation.name,
@@ -134,8 +136,12 @@ export class EventRestRepository implements EventRepository {
         return EventType.MultiDayEvent;
     }
 
-    public async findByKey(key: EventKey): Promise<Event> {
-        const response = await fetch(`/api/v1/events/${key}`, {
+    public async findByKey(key: EventKey, accessKey?: string): Promise<Event> {
+        let url = `/api/v1/events/${key}`;
+        if (accessKey) {
+            url = `${url}?accessKey=${accessKey}`;
+        }
+        const response = await fetch(url, {
             credentials: 'include',
         });
         if (!response.ok) {

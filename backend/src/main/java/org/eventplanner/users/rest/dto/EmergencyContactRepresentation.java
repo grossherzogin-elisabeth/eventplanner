@@ -7,8 +7,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record EmergencyContactRepresentation(
-        @NonNull String name,
-        @NonNull String phone
+    @NonNull String name,
+    @NonNull String phone
 ) implements Serializable {
     public static @NonNull EmergencyContactRepresentation fromDomain(@Nullable EmergencyContact domain) {
         if (domain == null) {

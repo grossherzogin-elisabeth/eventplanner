@@ -44,14 +44,14 @@ public class ImporterUseCase {
     private final String password;
 
     public ImporterUseCase(
-            @Autowired EventRepository eventRepository,
-            @Autowired UserRepository userRepository,
-            @Autowired UserService userService,
-            PositionRepository positionRepository,
-            QualificationRepository qualificationRepository,
-            @Value("${data.import.directory}") String dataImportDirectory,
-            @Value("${data.import.users-excel-password}") String password,
-            @Value("${data.generate-test-data}") boolean generateTestData
+        @Autowired EventRepository eventRepository,
+        @Autowired UserRepository userRepository,
+        @Autowired UserService userService,
+        PositionRepository positionRepository,
+        QualificationRepository qualificationRepository,
+        @Value("${data.import.directory}") String dataImportDirectory,
+        @Value("${data.import.users-excel-password}") String password,
+        @Value("${data.generate-test-data}") boolean generateTestData
     ) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;

@@ -28,7 +28,8 @@ public enum NotificationType {
     CONFIRM_PARTICIPATION("confirm_participation"),
 
     // As a team planner
-    // I want to get a participation confirmation of every team member in case the user did not respond to the first request
+    // I want to get a participation confirmation of every team member in case the user did not respond to the first
+    // request
     // So that I know early if I need to find a replacement
     CONFIRM_PARTICIPATION_REQUEST("confirm_participation_request"),
 

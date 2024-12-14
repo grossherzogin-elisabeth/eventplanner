@@ -47,14 +47,14 @@ public record SignedInUser(
     }
 
     public void assertHasPermission(@NonNull Permission permission)
-        throws UnauthorizedException, MissingPermissionException {
+    throws UnauthorizedException, MissingPermissionException {
         if (!hasPermission(permission)) {
             throw new MissingPermissionException();
         }
     }
 
     public void assertHasAnyPermission(@NonNull Permission... permissions)
-        throws UnauthorizedException, MissingPermissionException {
+    throws UnauthorizedException, MissingPermissionException {
         for (Permission permission : permissions) {
             if (hasPermission(permission)) {
                 return;
@@ -73,7 +73,7 @@ public record SignedInUser(
     }
 
     public @NonNull SignedInUser withPermissions(@NonNull Permission... permission) {
-        var permissions = Stream.concat(Arrays.stream(permission),permissions().stream())
+        var permissions = Stream.concat(Arrays.stream(permission), permissions().stream())
             .distinct()
             .toList();
         return new SignedInUser(key, authKey, roles, permissions, email, positions);

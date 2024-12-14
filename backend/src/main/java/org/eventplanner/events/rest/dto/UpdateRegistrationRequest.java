@@ -19,11 +19,11 @@ public record UpdateRegistrationRequest(
 ) implements Serializable {
     public UpdateRegistrationSpec toDomain() {
         return new UpdateRegistrationSpec(
-                new PositionKey(positionKey),
-                mapNullable(userKey, UserKey::new),
-                name,
-                note,
-                confirmed
+            new PositionKey(positionKey),
+            mapNullable(userKey, UserKey::new),
+            name,
+            note,
+            confirmed
         );
     }
 }

@@ -20,8 +20,8 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
     private final Crypto crypto;
 
     public SettingsJpaRepositoryAdapter(
-            @Autowired SettingsJpaRepository settingsJpaRepository,
-            @Value("${data.encryption-password}") String dataEncryptionPassword
+        @Autowired SettingsJpaRepository settingsJpaRepository,
+        @Value("${data.encryption-password}") String dataEncryptionPassword
     ) {
         this.settingsJpaRepository = settingsJpaRepository;
         this.crypto = new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", dataEncryptionPassword);
@@ -30,11 +30,11 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
     @Override
     public Settings getSettings() {
         var settingsMap = settingsJpaRepository.findAll().stream()
-                .filter(settingsJpaEntity -> settingsJpaEntity.getValue() != null)
-                .collect(Collectors.toMap(
-                    SettingsJpaEntity::getKey,
-                    SettingsJpaEntity::getValue
-                ));
+            .filter(settingsJpaEntity -> settingsJpaEntity.getValue() != null)
+            .collect(Collectors.toMap(
+                SettingsJpaEntity::getKey,
+                SettingsJpaEntity::getValue
+            ));
 
         var emailPassword = settingsMap.get("email.password");
         if (emailPassword != null) {
@@ -85,7 +85,10 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
             entities.add(new SettingsJpaEntity("email.replyTo", settings.emailSettings().getReplyTo()));
         }
         if (settings.emailSettings().getReplyToDisplayName() != null) {
-            entities.add(new SettingsJpaEntity("email.replyToDisplayName", settings.emailSettings().getReplyToDisplayName()));
+            entities.add(new SettingsJpaEntity(
+                "email.replyToDisplayName",
+                settings.emailSettings().getReplyToDisplayName()
+            ));
         }
         if (settings.emailSettings().getHost() != null) {
             entities.add(new SettingsJpaEntity("email.host", settings.emailSettings().getHost()));
@@ -94,10 +97,16 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
             entities.add(new SettingsJpaEntity("email.port", String.valueOf(settings.emailSettings().getPort())));
         }
         if (settings.emailSettings().getEnableSSL() != null) {
-            entities.add(new SettingsJpaEntity("email.enableSSL", String.valueOf(settings.emailSettings().getEnableSSL())));
+            entities.add(new SettingsJpaEntity(
+                "email.enableSSL",
+                String.valueOf(settings.emailSettings().getEnableSSL())
+            ));
         }
         if (settings.emailSettings().getEnableStartTls() != null) {
-            entities.add(new SettingsJpaEntity("email.enableStartTLS", String.valueOf(settings.emailSettings().getEnableStartTls())));
+            entities.add(new SettingsJpaEntity(
+                "email.enableStartTLS",
+                String.valueOf(settings.emailSettings().getEnableStartTls())
+            ));
         }
         if (settings.emailSettings().getUsername() != null) {
             entities.add(new SettingsJpaEntity("email.username", settings.emailSettings().getUsername()));
@@ -121,7 +130,10 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
             entities.add(new SettingsJpaEntity("ui.tabTitle", settings.uiSettings().tabTitle()));
         }
         if (settings.uiSettings().technicalSupportEmail() != null) {
-            entities.add(new SettingsJpaEntity("ui.technicalSupportEmail", settings.uiSettings().technicalSupportEmail()));
+            entities.add(new SettingsJpaEntity(
+                "ui.technicalSupportEmail",
+                settings.uiSettings().technicalSupportEmail()
+            ));
         }
         if (settings.uiSettings().supportEmail() != null) {
             entities.add(new SettingsJpaEntity("ui.supportEmail", settings.uiSettings().supportEmail()));

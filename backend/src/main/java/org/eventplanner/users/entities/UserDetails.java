@@ -82,7 +82,8 @@ public class UserDetails {
     }
 
     public void addQualification(QualificationKey qualificationKey, Instant expirationDate) {
-        var maybeExistingQualification = qualifications.stream().filter(it -> it.getQualificationKey().equals(qualificationKey)).findFirst();
+        var maybeExistingQualification =
+            qualifications.stream().filter(it -> it.getQualificationKey().equals(qualificationKey)).findFirst();
         if (maybeExistingQualification.isPresent()) {
             var existingQualification = maybeExistingQualification.get();
             if (existingQualification.getExpiresAt() != null

@@ -12,8 +12,8 @@ public class SettingsService {
     private final DefaultEmailSettings defaultEmailSettings;
 
     public SettingsService(
-            SettingsRepository settingsRepository,
-            DefaultEmailSettings defaultEmailSettings
+        SettingsRepository settingsRepository,
+        DefaultEmailSettings defaultEmailSettings
     ) {
         this.settingsRepository = settingsRepository;
         this.defaultEmailSettings = defaultEmailSettings;
@@ -38,6 +38,7 @@ public class SettingsService {
         }
         return settings;
     }
+
     public Settings updateSettings(Settings settings) {
         return settingsRepository.updateSettings(settings);
     }

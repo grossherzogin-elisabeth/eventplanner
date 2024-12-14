@@ -111,7 +111,10 @@ public class ExportService {
         return bos;
     }
 
-    private @NonNull Map<String, XSSFCellStyle> getCellStyles(@NonNull XSSFWorkbook workbook, @NonNull List<Position> positions) {
+    private @NonNull Map<String, XSSFCellStyle> getCellStyles(
+        @NonNull XSSFWorkbook workbook,
+        @NonNull List<Position> positions
+    ) {
         Map<String, XSSFCellStyle> cellStyles = new HashMap<>();
 
         var fontBold = workbook.createFont();
@@ -173,7 +176,11 @@ public class ExportService {
         return positionCount;
     }
 
-    private @NonNull List<PositionKey> getRequiredRows(@NonNull List<Event> events, @NonNull List<Position> positions, boolean waitingList) {
+    private @NonNull List<PositionKey> getRequiredRows(
+        @NonNull List<Event> events,
+        @NonNull List<Position> positions,
+        boolean waitingList
+    ) {
         var rowCountByPosition = getRequiredRowCount(events, waitingList);
         var rows = new LinkedList<PositionKey>();
         for (Position position : positions) {
@@ -185,8 +192,15 @@ public class ExportService {
     }
 
     private void fillEvent(
-        @NonNull Event event, @NonNull Map<UserKey, UserDetails> users, @NonNull XSSFSheet sheet, @NonNull Map<String, XSSFCellStyle> cellStyles, List<PositionKey> assignedRows, List<PositionKey> waitingListRows, int column) {
-        for (var it = sheet.rowIterator(); it.hasNext();) {
+        @NonNull Event event,
+        @NonNull Map<UserKey, UserDetails> users,
+        @NonNull XSSFSheet sheet,
+        @NonNull Map<String, XSSFCellStyle> cellStyles,
+        List<PositionKey> assignedRows,
+        List<PositionKey> waitingListRows,
+        int column
+    ) {
+        for (var it = sheet.rowIterator(); it.hasNext(); ) {
             var row = it.next();
             var cell = row.getCell(column, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
             ofNullable(row.getCell(0))
@@ -199,8 +213,8 @@ public class ExportService {
         sheet.getRow(0).getCell(column).setCellStyle(headerStyle);
         sheet.getRow(1).getCell(column).setCellValue(
             event.getStart().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM."))
-            + " - " +
-            event.getEnd().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM."))
+                + " - " +
+                event.getEnd().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM."))
         );
         sheet.getRow(1).getCell(column).setCellStyle(headerStyle);
 

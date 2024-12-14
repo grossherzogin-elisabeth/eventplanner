@@ -2,7 +2,7 @@ import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventRestRepository } from '@/adapter/rest/EventRestRepository';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRegistrationsRepository } from '@/application';
-import type { Event, EventKey, Registration } from '@/domain';
+import type { Event, EventKey, Registration, RegistrationKey } from '@/domain';
 
 interface RegistrationCreateRequest {
     positionKey: string;
@@ -78,5 +78,25 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
         }
         const responseData: EventRepresentation = await response.clone().json();
         return EventRestRepository.mapEventToDomain(responseData);
+    }
+
+    public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/confirm?accessKey=${accessKey}`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            throw response;
+        }
+    }
+
+    public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/decline?accessKey=${accessKey}`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            throw response;
+        }
     }
 }

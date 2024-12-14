@@ -10,8 +10,20 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record UserKey(
-        @NonNull String value
+    @NonNull String value
 ) implements Serializable {
+    public UserKey() {
+        this(null);
+    }
+
+    public UserKey(@Nullable String value) {
+        if (value != null && !value.isBlank()) {
+            this.value = value;
+        } else {
+            this.value = UUID.randomUUID().toString();
+        }
+    }
+
     public static UserKey fromName(String name) {
         var normalizedName = name
             .replace("mit Ü", "")
@@ -40,18 +52,6 @@ public record UserKey(
             return new UserKey(hexString.substring(0, 16));
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException();
-        }
-    }
-
-    public UserKey() {
-        this(null);
-    }
-
-    public UserKey(@Nullable String value) {
-        if (value != null && !value.isBlank()) {
-            this.value = value;
-        } else {
-            this.value = UUID.randomUUID().toString();
         }
     }
 

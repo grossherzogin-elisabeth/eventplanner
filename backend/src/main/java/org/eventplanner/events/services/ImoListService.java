@@ -43,8 +43,8 @@ public class ImoListService {
     private final PositionRepository positionRepository;
 
     public ImoListService(
-            @Autowired UserService userService,
-            @Autowired PositionRepository positionRepository
+        @Autowired UserService userService,
+        @Autowired PositionRepository positionRepository
     ) {
         this.userService = userService;
         this.positionRepository = positionRepository;
@@ -55,23 +55,23 @@ public class ImoListService {
         positionRepository.findAll().forEach(position -> positionMap.put(position.getKey(), position));
 
         List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
-                .map(Slot::getAssignedRegistration)
-                .filter(Objects::nonNull)
-                .toList();
+            .map(Slot::getAssignedRegistration)
+            .filter(Objects::nonNull)
+            .toList();
 
         List<Registration> crewList = event.getRegistrations()
-                .stream()
-                .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
-                .sorted((a, b) -> {
-                    // TODO get crew member name here for sorting
-                    // if (a.getPosition().equals(b.getPosition())) {
-                    //   return a.getName().compareTo(b.getName());
-                    // }
-                    var pa = positionMap.get(a.getPosition());
-                    var pb = positionMap.get(b.getPosition());
-                    return pb.getPriority() - pa.getPriority();
-                })
-                .toList();
+            .stream()
+            .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
+            .sorted((a, b) -> {
+                // TODO get crew member name here for sorting
+                // if (a.getPosition().equals(b.getPosition())) {
+                //   return a.getName().compareTo(b.getName());
+                // }
+                var pa = positionMap.get(a.getPosition());
+                var pb = positionMap.get(b.getPosition());
+                return pb.getPriority() - pa.getPriority();
+            })
+            .toList();
 
         try (FileInputStream fileTemplate = new FileInputStream("data/templates/ImoList_template.xlsx")) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
@@ -107,7 +107,9 @@ public class ImoListService {
                 Cell cell = cellIterator.next();
                 if (cell != null && cell.getCellType() != CellType.BLANK) {
                     break;
-                } else if (cell != null && cell.getCellType() == CellType.STRING && cell.getStringCellValue().trim().isEmpty()) {
+                } else if (cell != null && cell.getCellType() == CellType.STRING && cell.getStringCellValue()
+                    .trim()
+                    .isEmpty()) {
                     break;
                 } else if (!cellIterator.hasNext()) {
                     rowIsEmpty = true;
@@ -117,7 +119,11 @@ public class ImoListService {
         return rowCounter;
     }
 
-    private void writeCrewDataToSheet(XSSFSheet sheet, List<Registration> crewList, Map<PositionKey, Position> positionMap) throws IOException {
+    private void writeCrewDataToSheet(
+        XSSFSheet sheet,
+        List<Registration> crewList,
+        Map<PositionKey, Position> positionMap
+    ) throws IOException {
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
 
@@ -125,9 +131,11 @@ public class ImoListService {
             Row currentRow = sheet.getRow(crewCounter + firstEmptyRow);
             currentRow.getCell(0).setCellValue(crewCounter + 1);
             Registration currentRegistration = crewList.get(crewCounter);
-            String imoListRank = ObjectUtils.mapNullable(positionMap.get(currentRegistration.getPosition()),
-                    Position::getImoListRank,
-                    currentRegistration.getPosition().value());
+            String imoListRank = ObjectUtils.mapNullable(
+                positionMap.get(currentRegistration.getPosition()),
+                Position::getImoListRank,
+                currentRegistration.getPosition().value()
+            );
             UserKey crewMemberKey = currentRegistration.getUserKey();
             if (crewMemberKey != null) {
                 Optional<UserDetails> crewMemberDetails = userService.getUserByKey(crewMemberKey);
@@ -139,7 +147,8 @@ public class ImoListService {
                     currentRow.getCell(4).setCellValue(crewMemberDetails.get().getNationality());
                     var dateOfBirth = crewMemberDetails.get().getDateOfBirth();
                     if (dateOfBirth != null) {
-                        currentRow.getCell(6).setCellValue(dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                        currentRow.getCell(6)
+                            .setCellValue(dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
                     } else {
                         currentRow.getCell(6).setCellValue("");
                     }

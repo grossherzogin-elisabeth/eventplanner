@@ -18,8 +18,8 @@ public enum Diet {
 
     public static Optional<Diet> fromString(String value) {
         return Arrays.stream(Diet.values())
-                .filter(permission -> permission.value().equals(value))
-                .findFirst();
+            .filter(permission -> permission.value().equals(value))
+            .findFirst();
     }
 
     public String value() {

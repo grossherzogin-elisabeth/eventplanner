@@ -95,15 +95,15 @@ public class UserEncryptionService {
             encryptNullable(user.getComment()),
             encryptNullable(user.getNationality()),
             ofNullable(user.getEmergencyContact())
-                    .map(this::encrypt)
-                    .orElse(null),
+                .map(this::encrypt)
+                .orElse(null),
             encryptNullable(user.getDiseases()),
             encryptNullable(user.getIntolerances()),
             encryptNullable(user.getMedication()),
             ofNullable(user.getDiet())
-                    .map(Diet::value)
-                    .map(this::encrypt)
-                    .orElse(null)
+                .map(Diet::value)
+                .map(this::encrypt)
+                .orElse(null)
         );
     }
 
@@ -141,15 +141,15 @@ public class UserEncryptionService {
             decryptNullable(user.getComment()),
             decryptNullable(user.getNationality()),
             ofNullable(user.getEmergencyContact())
-                    .map(this::decrypt)
-                    .orElse(null),
+                .map(this::decrypt)
+                .orElse(null),
             decryptNullable(user.getDiseases()),
             decryptNullable(user.getIntolerances()),
             decryptNullable(user.getMedication()),
             ofNullable(user.getDiet())
-                    .map(this::decrypt)
-                    .flatMap(Diet::fromString)
-                    .orElse(null)
+                .map(this::decrypt)
+                .flatMap(Diet::fromString)
+                .orElse(null)
         );
     }
 
@@ -175,11 +175,11 @@ public class UserEncryptionService {
 
     public @NonNull EncryptedUserQualification encrypt(@NonNull UserQualification value) {
         return new EncryptedUserQualification(
-                encrypt(value.getQualificationKey().value()),
-                Optional.ofNullable(value.getExpiresAt())
-                        .map(Instant::toString)
-                        .map(this::encrypt)
-                        .orElse(null)
+            encrypt(value.getQualificationKey().value()),
+            Optional.ofNullable(value.getExpiresAt())
+                .map(Instant::toString)
+                .map(this::encrypt)
+                .orElse(null)
         );
     }
 
@@ -196,15 +196,15 @@ public class UserEncryptionService {
 
     public @NonNull EncryptedEmergencyContact encrypt(@NonNull EmergencyContact value) {
         return new EncryptedEmergencyContact(
-                encrypt(value.getName()),
-                encrypt(value.getPhone())
+            encrypt(value.getName()),
+            encrypt(value.getPhone())
         );
     }
 
     public @NonNull EmergencyContact decrypt(@NonNull EncryptedEmergencyContact value) {
         return new EmergencyContact(
-                decrypt(value.getName()),
-                decrypt(value.getPhone())
+            decrypt(value.getName()),
+            decrypt(value.getPhone())
         );
     }
 }

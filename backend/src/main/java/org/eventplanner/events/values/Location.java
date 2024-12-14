@@ -21,10 +21,10 @@ public record Location(
     @Nullable Instant etd
 ) implements Serializable {
     public Location(
-            @NonNull String name,
-            @NonNull String icon,
-            @Nullable String address,
-            @Nullable String country
+        @NonNull String name,
+        @NonNull String icon,
+        @Nullable String address,
+        @Nullable String country
     ) {
         this(name, icon, address, country, null, null, null, null, null);
     }

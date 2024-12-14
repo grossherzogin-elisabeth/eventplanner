@@ -23,7 +23,7 @@ public class ExcelUtils {
 
     public static String[][] readExcelFile(@NonNull File file, @Nullable String password) throws IOException {
         if (!file.exists()) {
-            return new String[][]{};
+            return new String[][] {};
         }
         try (InputStream in = new FileInputStream(file)) {
             return readExcelFile(in, password);

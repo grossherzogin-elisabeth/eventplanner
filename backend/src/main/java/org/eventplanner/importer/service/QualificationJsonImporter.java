@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class QualificationJsonImporter {
 
     public static @NonNull List<Qualification> readFromDirectory(
-            @NonNull File dir
+        @NonNull File dir
     ) {
         var repository = new FileSystemJsonRepository<>(QualificationJsonEntity.class, dir);
         return repository.findAll().stream().map(QualificationJsonEntity::toDomain).toList();
@@ -27,12 +27,12 @@ public class QualificationJsonImporter {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private record QualificationJsonEntity(
-            @NonNull String key,
-            @NonNull String name,
-            @Nullable String icon,
-            @Nullable String description,
-            boolean expires,
-            @Nullable List<String> grantsPositions
+        @NonNull String key,
+        @NonNull String name,
+        @Nullable String icon,
+        @Nullable String description,
+        boolean expires,
+        @Nullable List<String> grantsPositions
     ) implements Serializable {
         public Qualification toDomain() {
             return new Qualification(

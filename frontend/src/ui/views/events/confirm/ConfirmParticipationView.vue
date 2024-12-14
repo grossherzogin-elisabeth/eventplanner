@@ -1,18 +1,18 @@
 <template>
     <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
-        <div class="w-full max-w-2xl">
-            <h1 class="mb-4">Hallo Max,</h1>
+        <div v-if="event" class="w-full max-w-2xl">
+            <h1 class="mb-4">Moin liebes Crewmitglied,</h1>
             <p class="mb-8 text-sm sm:text-base">
-                In {{ daysUntilStart }} Tagen startet die Reise {{ event.name }}, bei der du als
-                {{ event.signedInUserAssignedPosition }} eingeplant bist. Bitte bestätige deine Teilnahme bis spätestens 7 Tage vor
-                Reisebeginn, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden.
+                In {{ daysUntilStart }} Tagen startet die Reise {{ event.name }}, bei der du als Crew eingeplant bist. Bitte bestätige deine
+                Teilnahme bis <b>spätestens 7 Tage vor Reisebeginn</b>, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen
+                Ersatz für dich zu finden.
             </p>
 
             <div v-if="showDetails" class="mb-8">
                 <table class="block sm:table">
                     <tbody>
                         <tr class="mb-2 block sm:table-row">
-                            <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Name der Reise:</td>
+                            <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Reise:</td>
                             <td class="block py-1 font-bold sm:table-cell">{{ event.name }}</td>
                         </tr>
                         <tr class="mb-2 block sm:table-row">
@@ -35,23 +35,17 @@
                                 {{ event.locations.map((l) => l.name).join(' - ') }}
                             </td>
                         </tr>
-                        <tr class="mb-2 block sm:table-row">
-                            <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Deine Position:</td>
-                            <td class="block py-1 font-bold sm:table-cell">
-                                {{ event.signedInUserAssignedPosition }}
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
 
             <div v-if="state === null" class="">
                 <div class="hidden items-center gap-4 sm:flex">
-                    <button class="btn-primary" @click="state = true">
+                    <button class="btn-primary" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
                         <span class="py-2 sm:py-0">Ja, ich nehme teil</span>
                     </button>
-                    <button class="btn-danger" @click="state = false">
+                    <button class="btn-danger" @click="decline()">
                         <i class="fa-solid fa-xmark"></i>
                         <span class="py-2 sm:py-0">Ich muss leider absagen</span>
                     </button>
@@ -91,14 +85,6 @@
                     für dich zu finden.
                 </p>
             </div>
-
-            <!--            <div class="mt-16 flex">-->
-            <!--                <button class="btn-primary">-->
-            <!--                    <i class="fa-solid fa-search"></i>-->
-            <!--                    <span>Alle Reisedetails anzeigen</span>-->
-            <!--                </button>-->
-            <!--            </div>-->
-
             <div v-if="state !== null && false" class="-mx-4 mb-8 rounded-lg bg-blue-container p-4 font-bold text-onblue-container">
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-info"></i>
@@ -117,41 +103,27 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { DateTimeFormat, addToDate } from '@/common/date';
-import type { Event } from '@/domain';
-import { EventState, EventType } from '@/domain';
+import { useRoute } from 'vue-router';
+import { DateTimeFormat } from '@/common/date';
+import type { Event, EventKey, RegistrationKey } from '@/domain';
+import { useEventUseCase } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
 type RouteEmits = (e: 'update:title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const route = useRoute();
+const eventUseCase = useEventUseCase();
+
 const state = ref<boolean | null>(null);
 const showDetails = ref<boolean>(true);
-const event = ref<Event>({
-    key: '',
-    start: addToDate(new Date(), { days: 14 }),
-    end: addToDate(new Date(), { days: 20 }),
-    days: 10,
-    name: 'Sommerreise 2',
-    type: EventType.MultiDayEvent,
-    assignedUserCount: 0,
-    canSignedInUserJoin: false,
-    canSignedInUserLeave: false,
-    state: EventState.Planned,
-    description: '',
-    signedInUserWaitingListPosition: undefined,
-    signedInUserAssignedPosition: 'Leichtmatrose:in',
-    locations: [
-        { name: 'Mariehamn', icon: '', order: 1 },
-        { name: 'Ostsee', icon: '', order: 2 },
-        { name: 'Stettin', icon: '', order: 3 },
-    ],
-    registrations: [],
-    slots: [],
-});
+const event = ref<Event | null>(null);
 
 const daysUntilStart = computed<number>(() => {
+    if (!event.value) {
+        return 0;
+    }
     const nowSec = new Date().getTime() / 1000;
     const startSec = event.value.start.getTime() / 1000;
     const diffSec = startSec - nowSec;
@@ -160,6 +132,29 @@ const daysUntilStart = computed<number>(() => {
 
 function init(): void {
     emit('update:title', 'Teilnahme bestätigen');
+    fetchEvent();
+}
+
+async function fetchEvent(): Promise<void> {
+    const eventKey = route.params.eventKey as EventKey;
+    const accessKey = route.query.accessKey as string;
+    event.value = await eventUseCase.getEventByAccessKey(eventKey, accessKey);
+}
+
+async function confirm(): Promise<void> {
+    const eventKey = route.params.eventKey as EventKey;
+    const registrationKey = route.params.registrationKey as RegistrationKey;
+    const accessKey = route.query.accessKey as string;
+    await eventUseCase.confirmParticipation(eventKey, registrationKey, accessKey);
+    state.value = true;
+}
+
+async function decline(): Promise<void> {
+    const eventKey = route.params.eventKey as EventKey;
+    const registrationKey = route.params.registrationKey as RegistrationKey;
+    const accessKey = route.query.accessKey as string;
+    await eventUseCase.declineParticipation(eventKey, registrationKey, accessKey);
+    state.value = false;
 }
 
 init();

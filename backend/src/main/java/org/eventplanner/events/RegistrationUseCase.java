@@ -62,13 +62,28 @@ public class RegistrationUseCase {
 
         if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
-            log.info("User {} removed their registration from event {} ({})", signedInUser.key(), event.getName(), eventKey);
+            log.info(
+                "User {} removed their registration from event {} ({})",
+                signedInUser.key(),
+                event.getName(),
+                eventKey
+            );
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             if (registration.getUserKey() != null) {
-                log.info("Removing registration of {} from event {} ({})", registration.getUserKey(), event.getName(), eventKey);
+                log.info(
+                    "Removing registration of {} from event {} ({})",
+                    registration.getUserKey(),
+                    event.getName(),
+                    eventKey
+                );
             } else if (registration.getName() != null) {
-                log.info("Removing guest registration of {} from event {} ({})", registration.getName(), event.getName(), eventKey);
+                log.info(
+                    "Removing guest registration of {} from event {} ({})",
+                    registration.getName(),
+                    event.getName(),
+                    eventKey
+                );
             }
         }
 
@@ -89,7 +104,12 @@ public class RegistrationUseCase {
 
         if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
-            log.info("User {} updates their registration on event {} ({})", registration.getUserKey(), event.getName(), eventKey);
+            log.info(
+                "User {} updates their registration on event {} ({})",
+                registration.getUserKey(),
+                event.getName(),
+                eventKey
+            );
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             log.info("Updating registration {} on event {} ({})", registrationKey, event.getName(), eventKey);
@@ -97,6 +117,5 @@ public class RegistrationUseCase {
 
         return registrationService.updateRegistration(event, registration, spec);
     }
-
 
 }

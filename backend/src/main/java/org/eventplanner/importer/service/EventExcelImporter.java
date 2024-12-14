@@ -41,10 +41,10 @@ public class EventExcelImporter {
     }
 
     public static @NonNull List<Event> readFromFile(
-            @NonNull File file,
-            int year,
-            List<UserDetails> knownUsers,
-            List<ImportError> errors
+        @NonNull File file,
+        int year,
+        List<UserDetails> knownUsers,
+        List<ImportError> errors
     ) {
         try {
             var data = ExcelUtils.readExcelFile(file);
@@ -56,10 +56,10 @@ public class EventExcelImporter {
     }
 
     private static List<Event> parseEvents(
-            String[][] data,
-            int year,
-            List<UserDetails> knownUsers,
-            List<ImportError> errors
+        String[][] data,
+        int year,
+        List<UserDetails> knownUsers,
+        List<ImportError> errors
     ) {
         loggedUserErrors.clear();
         if (knownUsers.isEmpty()) {
@@ -95,8 +95,8 @@ public class EventExcelImporter {
                 for (int r = 4; r < raw.length; r++) {
                     var name = raw[r];
                     if (name.isBlank()
-                            || name.equals("noch zu benennen")
-                            || name.equals("noch zu besetzen")) {
+                        || name.equals("noch zu benennen")
+                        || name.equals("noch zu besetzen")) {
                         continue;
                     }
                     if (name.contains("Warteliste")) {
@@ -111,8 +111,8 @@ public class EventExcelImporter {
                     var userKey = mapNullable(user, UserDetails::getKey);
                     var positionKey = mapPosition(data[0][r]);
                     var registration = userKey != null
-                            ? Registration.ofUser(userKey, positionKey)
-                            : Registration.ofPerson(name, positionKey);
+                        ? Registration.ofUser(userKey, positionKey)
+                        : Registration.ofPerson(name, positionKey);
                     if (!waitingListReached) {
                         try {
                             slots = assignToFirstMatchingSlot(registration, slots);
@@ -132,17 +132,17 @@ public class EventExcelImporter {
                 locations.set(0, locations.getFirst().withEtd(start.plusHours(2).toInstant()));
                 locations.set(locations.size() - 1, locations.getLast().withEta(end.minusHours(2).toInstant()));
                 var event = new Event(
-                        eventKey,
-                        eventName,
-                        hasWaitinglist ? EventState.PLANNED : EventState.OPEN_FOR_SIGNUP,
-                        raw[3],
-                        findDescription(raw[1]),
-                        start.toInstant(),
-                        end.toInstant(),
-                        locations,
-                        slots,
-                        registrations,
-                        0
+                    eventKey,
+                    eventName,
+                    hasWaitinglist ? EventState.PLANNED : EventState.OPEN_FOR_SIGNUP,
+                    raw[3],
+                    findDescription(raw[1]),
+                    start.toInstant(),
+                    end.toInstant(),
+                    locations,
+                    slots,
+                    registrations,
+                    0
                 );
                 events.add(event);
             } catch (Exception e) {
@@ -154,9 +154,9 @@ public class EventExcelImporter {
 
     private static String removeDuplicateWhitespaces(String in) {
         String result = in.trim()
-                .replaceAll("\t", " ")
-                .replaceAll("\n", " ")
-                .replaceAll("\r", " ");
+            .replaceAll("\t", " ")
+            .replaceAll("\n", " ")
+            .replaceAll("\r", " ");
         while (true) {
             String temp = result.replaceAll("\s\s", " ");
             if (temp.length() == result.length()) {
@@ -174,28 +174,28 @@ public class EventExcelImporter {
             var normalizedName = normalizeName(name);
 
             allUsers.stream()
-                    .map(UserDetails::getFullName)
-                    .map(EventExcelImporter::normalizeName)
-                    .toList();
+                .map(UserDetails::getFullName)
+                .map(EventExcelImporter::normalizeName)
+                .toList();
 
             // search for exact match
             var exactMatch = allUsers.stream()
-                    .filter(user -> {
-                        var usersName = normalizeName(user.getFullName());
-                        return normalizedName.equalsIgnoreCase(usersName);
-                    })
-                    .findFirst();
+                .filter(user -> {
+                    var usersName = normalizeName(user.getFullName());
+                    return normalizedName.equalsIgnoreCase(usersName);
+                })
+                .findFirst();
             if (exactMatch.isPresent()) {
                 return exactMatch;
             }
 
             // search for exact reversed match
             var reversedMatch = allUsers.stream()
-                    .filter(user -> {
-                        var usersName = normalizeName(user.getFullName(), true);
-                        return normalizedName.equalsIgnoreCase(usersName);
-                    })
-                    .findFirst();
+                .filter(user -> {
+                    var usersName = normalizeName(user.getFullName(), true);
+                    return normalizedName.equalsIgnoreCase(usersName);
+                })
+                .findFirst();
             if (reversedMatch.isPresent()) {
                 // log.debug("Found reversed exact match for " + name + " on " + reversedMatch.get().fullName());
                 return reversedMatch;
@@ -203,12 +203,12 @@ public class EventExcelImporter {
 
             // search parts contained match
             var allPartsContainedMatch = allUsers.stream()
-                    .filter(user -> {
-                        var usersName = normalizeName(user.getFullName());
-                        return Arrays.stream(normalizedName.split(" "))
-                                .allMatch(usersName::contains);
-                    })
-                    .findFirst();
+                .filter(user -> {
+                    var usersName = normalizeName(user.getFullName());
+                    return Arrays.stream(normalizedName.split(" "))
+                        .allMatch(usersName::contains);
+                })
+                .findFirst();
             if (allPartsContainedMatch.isPresent()) {
                 // log.debug("Found all parts contained match for " + name + " on " + allPartsContainedMatch.get()
                 // .fullName());
@@ -217,9 +217,9 @@ public class EventExcelImporter {
 
             // search reverse parts contained match
             var reverseAllPartsContainedMatch = allUsers.stream()
-                    .filter(user -> Arrays.stream(normalizeName(user.getFullName()).split(" "))
-                            .allMatch(normalizedName::contains))
-                    .findFirst();
+                .filter(user -> Arrays.stream(normalizeName(user.getFullName()).split(" "))
+                    .allMatch(normalizedName::contains))
+                .findFirst();
             if (reverseAllPartsContainedMatch.isPresent()) {
                 // log.debug("Found reverse all parts contained match for " + name + " on " +
                 // reverseAllPartsContainedMatch.get().fullName());
@@ -241,31 +241,31 @@ public class EventExcelImporter {
 
     private static @NonNull String normalizeName(@NonNull String fullName, boolean reverse) {
         var normalizedName = fullName.trim()
-                .replace("Gellert. Lothar", "Gellert, Lothar")
-                .replace("Weiser, Philine", "Weiser, Philipp")
-                .replace("Staffeldt, Thorsten", "Staffeldt, Torsten")
-                .replace("Lüdecke", "Lüdeke")
-                .replace("Meinecke", "Meinicke")
-                .replace("Siggi", "Siegfried")
-                .replace("Geper", "Gesper")
-                .replace("HaWe", "Hans-Werner")
-                .replace("Kalle", "Karl-Heinz")
-                .replace("K.-H.", "Karl-Heinz")
-                .replace("H.U.", "Hans-Ulrich")
-                .replace("H.-U.", "Hans-Ulrich")
-                .replace("Rudi", "Rudolf")
-                .replace("K.L.", "Karl-Ludwig")
-                .replace("K.-L.", "Karl-Ludwig")
-                .replace("mit Ü", "") // used as flag
-                .replace("u. V.", "") // used as flag
-                .replace("u.V.", "") // used as flag
-                .replace(" ?", "") // used as flag
-                .replace(" fix", "") // used as flag
-                .replace(",", ", ") // there are some names without whitespace after the ','
-                .replace("-", " ") // sometimes the - is missing
-                .replace("ß", "ss")
-                .replaceAll("\\(.*\\)", "") // remove everything in brackets e.g. (this)
-                .replaceAll("[^a-zA-ZöäüÖÄÜ., ]", ""); // keep only a-z characters and a few symbols
+            .replace("Gellert. Lothar", "Gellert, Lothar")
+            .replace("Weiser, Philine", "Weiser, Philipp")
+            .replace("Staffeldt, Thorsten", "Staffeldt, Torsten")
+            .replace("Lüdecke", "Lüdeke")
+            .replace("Meinecke", "Meinicke")
+            .replace("Siggi", "Siegfried")
+            .replace("Geper", "Gesper")
+            .replace("HaWe", "Hans-Werner")
+            .replace("Kalle", "Karl-Heinz")
+            .replace("K.-H.", "Karl-Heinz")
+            .replace("H.U.", "Hans-Ulrich")
+            .replace("H.-U.", "Hans-Ulrich")
+            .replace("Rudi", "Rudolf")
+            .replace("K.L.", "Karl-Ludwig")
+            .replace("K.-L.", "Karl-Ludwig")
+            .replace("mit Ü", "") // used as flag
+            .replace("u. V.", "") // used as flag
+            .replace("u.V.", "") // used as flag
+            .replace(" ?", "") // used as flag
+            .replace(" fix", "") // used as flag
+            .replace(",", ", ") // there are some names without whitespace after the ','
+            .replace("-", " ") // sometimes the - is missing
+            .replace("ß", "ss")
+            .replaceAll("\\(.*\\)", "") // remove everything in brackets e.g. (this)
+            .replaceAll("[^a-zA-ZöäüÖÄÜ., ]", ""); // keep only a-z characters and a few symbols
 
         if (normalizedName.contains(",")) {
             var parts = normalizedName.split(",");
@@ -273,9 +273,9 @@ public class EventExcelImporter {
         }
 
         var parts = Arrays.stream(normalizedName.split(" "))
-                .map(String::trim)
-                .filter(part -> !part.isBlank())
-                .toList();
+            .map(String::trim)
+            .filter(part -> !part.isBlank())
+            .toList();
         if (reverse) {
             return String.join(" ", parts.reversed());
         }
@@ -302,9 +302,9 @@ public class EventExcelImporter {
             log.warn("Unexpected error during date conversion", e);
         }
         var dates = value
-                .replaceAll("\\s", "") // remove whitespace characters
-                .replaceAll("[^0-9.-]", "") // remove all non a-z characters
-                .split("-");
+            .replaceAll("\\s", "") // remove whitespace characters
+            .replaceAll("[^0-9.-]", "") // remove all non a-z characters
+            .split("-");
         var date = dates.length > index ? dates[index] : dates[0];
         var dayMonth = Arrays.stream(date.split("\\.")).filter(it -> !it.isBlank()).toList();
         String format = "yyyy-mm-ddT16:00:00.00Z";
@@ -347,13 +347,13 @@ public class EventExcelImporter {
     }
 
     private static @NonNull List<Slot> assignToFirstMatchingSlot(
-            @NonNull Registration registration,
-            @NonNull List<Slot> slots
+        @NonNull Registration registration,
+        @NonNull List<Slot> slots
     ) {
         var matchingSlot = slots.stream()
-                .filter(slot -> slot.getAssignedRegistration() == null)
-                .filter(slot -> slot.getPositions().contains(registration.getPosition()))
-                .findFirst();
+            .filter(slot -> slot.getAssignedRegistration() == null)
+            .filter(slot -> slot.getPositions().contains(registration.getPosition()))
+            .findFirst();
         if (matchingSlot.isPresent()) {
             matchingSlot.get().setAssignedRegistration(registration.getKey());
             return slots;
@@ -467,18 +467,24 @@ public class EventExcelImporter {
         }
         if (text.contains("-")) {
             return Arrays.stream(text.split("-"))
-                    .map(s -> {
-                        var location = s
-                                .replace("Hochschule OSNABRÜCK", "")
-                                .replaceAll("SR[0-9 ]+", "")
-                                .trim();
-                        var raw = location.toLowerCase();
-                        if (raw.equals("nok")) return nok;
-                        if (raw.equals("nordsee")) return nordsee;
-                        if (raw.equals("ostsee")) return ostsee;
-                        return new Location(location, "fa-anchor", null, null);
-                    })
-                    .toList();
+                .map(s -> {
+                    var location = s
+                        .replace("Hochschule OSNABRÜCK", "")
+                        .replaceAll("SR[0-9 ]+", "")
+                        .trim();
+                    var raw = location.toLowerCase();
+                    if (raw.equals("nok")) {
+                        return nok;
+                    }
+                    if (raw.equals("nordsee")) {
+                        return nordsee;
+                    }
+                    if (raw.equals("ostsee")) {
+                        return ostsee;
+                    }
+                    return new Location(location, "fa-anchor", null, null);
+                })
+                .toList();
         }
 
         return List.of(elsfleth, nordsee, elsfleth);

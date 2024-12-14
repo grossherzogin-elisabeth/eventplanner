@@ -53,7 +53,11 @@ public class UserUseCase {
             if (maybeUser.isPresent()) {
                 var user = maybeUser.get();
                 if (!Objects.equals(user.getEmail(), oidcUser.getEmail())) {
-                    log.warn("Oidc user {} has a different email than the linked internal user {}", authkey, user.getKey());
+                    log.warn(
+                        "Oidc user {} has a different email than the linked internal user {}",
+                        authkey,
+                        user.getKey()
+                    );
                 }
                 return SignedInUser
                     .fromUser(user)
@@ -74,7 +78,11 @@ public class UserUseCase {
             var lastName = oidcUser.getAttributes().get("family_name").toString();
             if (firstName != null && lastName != null) {
                 var newUser = new UserDetails(new UserKey(), firstName, lastName);
-                log.warn("Cannot find match for oidc user {}, creating new user with key {}", authkey, newUser.getKey());
+                log.warn(
+                    "Cannot find match for oidc user {}, creating new user with key {}",
+                    authkey,
+                    newUser.getKey()
+                );
                 newUser.setEmail(oidcUser.getEmail());
                 newUser.setAuthKey(authkey);
                 newUser = userService.createUser(newUser);
