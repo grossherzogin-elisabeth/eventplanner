@@ -35,10 +35,10 @@
 </template>
 
 <script lang="ts" setup>
-import { v4 as uuid4 } from 'uuid';
-import { IconCheck } from '@/ui/icons/bold';
 import { computed, ref } from 'vue';
 import type { ValidationHint } from '@/domain';
+import { IconCheck } from '@/ui/icons/bold';
+import { v4 as uuid4 } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type T = any; // Value type

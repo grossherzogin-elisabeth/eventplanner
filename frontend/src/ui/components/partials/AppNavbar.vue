@@ -33,7 +33,7 @@
     >
         <div class="flex h-full items-center">
             <i class="fa-solid fa-warning" />
-            <p class="ml-4 mr-2 line-clamp-3 w-0 flex-grow flex-grow py-4 text-sm font-bold">
+            <p class="ml-4 mr-2 line-clamp-3 w-0 flex-grow py-4 text-sm font-bold">
                 Du siehst die Anwendung aus Sicht von
                 <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
             </p>

@@ -36,10 +36,10 @@ npm run build
 
 ## Dependencies
 
--   [Node 22](https://nodejs.org/en/)
--   [Vite](https://vitejs.dev/)
--   [Vue 3](https://v3.vuejs.org/)
--   [Tailwind CSS](https://tailwindcss.com/)
--   [ESLint](https://eslint.org/)
--   [Prettier](https://prettier.io/)
--   [Vue I18n](https://vue-i18n.intlify.dev/)
+- [Node 22](https://nodejs.org/en/)
+- [Vite](https://vitejs.dev/)
+- [Vue 3](https://v3.vuejs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [Vue I18n](https://vue-i18n.intlify.dev/)

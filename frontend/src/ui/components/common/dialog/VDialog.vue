@@ -13,11 +13,7 @@
                 <div ref="wrapper" class="dialog-wrapper" @click.stop="" @mousedown.stop="">
                     <slot name="dialog">
                         <div
-                            :class="`
-                            ${props.width || 'w-screen max-w-xl'}
-                            ${props.height || 'h-auto max-h-[95vh]'}
-                            ${$attrs.class}
-                        `"
+                            :class="` ${props.width || 'w-screen max-w-xl'} ${props.height || 'h-auto max-h-[95vh]'} ${$attrs.class} `"
                             class="dialog"
                         >
                             <div class="dialog-header pl-8 lg:pl-10 lg:pr-2">
