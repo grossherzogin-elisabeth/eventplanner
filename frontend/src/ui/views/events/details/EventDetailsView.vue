@@ -292,14 +292,16 @@
                 <i class="fa-solid fa-calendar-alt" />
                 <span>Kalendereintrag erstellen</span>
             </li>
-            <li
-                v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition"
-                class="context-menu-item"
-                @click="editUserRegistration()"
-            >
-                <i class="fa-solid fa-note-sticky" />
-                <span>Notiz fürs Büro hinzufügen</span>
-            </li>
+            <template v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition">
+                <li class="context-menu-item" @click="editUserRegistration()">
+                    <i class="fa-solid fa-edit" />
+                    <span>Anmeldung bearbeiten</span>
+                </li>
+                <li class="context-menu-item" @click="editUserRegistration()">
+                    <i class="fa-solid fa-note-sticky" />
+                    <span>Notiz fürs Büro hinzufügen</span>
+                </li>
+            </template>
             <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
