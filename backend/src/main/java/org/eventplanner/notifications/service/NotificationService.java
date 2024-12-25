@@ -9,12 +9,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
+import org.eventplanner.events.values.Location;
 import org.eventplanner.notifications.values.Notification;
 import org.eventplanner.notifications.values.NotificationType;
 import org.eventplanner.settings.service.SettingsService;
@@ -185,7 +187,7 @@ public class NotificationService {
     ) {
         log.debug("Creating second participation confirmation request for user {}", to.getKey());
         Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
-        notification.setTitle("Bitte sofortige um Rückmeldung: " + event.getName());
+        notification.setTitle("Bitte um sofortige Rückmeldung: " + event.getName());
         addEventDetails(notification, event);
 
         sendParticipationNotificationBody(to, event, registration, notification);
@@ -225,8 +227,14 @@ public class NotificationService {
 
     private void addEventDetails(@NonNull Notification notification, @NonNull Event event) {
         notification.getProps().put("event", event);
-        notification.getProps().put("event_start_date", formatDate(event.getStart().atZone(timezone)));
-        notification.getProps().put("event_start_datetime", formatDateTime(event.getStart().atZone(timezone)));
+        var start = Optional
+            .ofNullable(event.getLocations().getFirst())
+            .flatMap(it -> Optional.ofNullable(it.etd()))
+            .orElse(event.getStart())
+                .atZone(timezone);
+
+        notification.getProps().put("event_start_date", formatDate(start));
+        notification.getProps().put("event_start_datetime", formatDateTime(start));
         notification.getProps().put("event_end_date", formatDate(event.getEnd().atZone(timezone)));
         notification.getProps().put("event_end_datetime", formatDateTime(event.getStart().atZone(timezone)));
         notification.getProps().put("event_crew_on_board_datetime", formatDateTime(event.getStart().atZone(timezone)));
