@@ -52,12 +52,15 @@ export class RegistrationService {
                     hasOverwrittenPosition: false,
                 })
             );
-        return resolved.sort(
-            (a, b) =>
-                b.position.prio - a.position.prio ||
-                (!a.name && b.name ? 1 : 0) ||
-                (!b.name && a.name ? -1 : 0) ||
-                a.name.localeCompare(b.name)
+        return resolved.sort(this.sortRegistrations);
+    }
+
+    private sortRegistrations(a: ResolvedRegistrationSlot, b: ResolvedRegistrationSlot): number {
+        return (
+            b.position.prio - a.position.prio || // sort by slot prio
+            (!a.name && b.name ? 1 : 0) || // sort slots with registrations on top
+            (!b.name && a.name ? -1 : 0) ||
+            a.name.localeCompare(b.name) // sort by name alphabetically
         );
     }
 

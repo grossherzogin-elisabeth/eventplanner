@@ -53,7 +53,7 @@ const open = ref<boolean>(false);
 
 <style>
 .context-menu-item {
-    @apply -mx-4 flex cursor-pointer items-center px-4 py-3 md:py-2;
+    @apply -mx-4 flex cursor-pointer items-center space-x-4 px-4 py-3 md:py-2;
     @apply -mx-3 rounded-lg hover:bg-surface-container-highest hover:no-underline;
 }
 
@@ -62,7 +62,7 @@ const open = ref<boolean>(false);
 }
 
 .context-menu-item > i,
-.context-menu-item > svg {
-    @apply mr-4 block w-6;
+.context-menu-item > svg:first-child {
+    @apply block w-6;
 }
 </style>

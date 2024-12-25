@@ -178,7 +178,15 @@ export class EventAdministrationUseCase {
     }
 
     public filterForWaitingList(registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
-        return registrations.filter((it) => it.registration !== undefined && it.slot === undefined);
+        return registrations
+            .filter((it) => it.registration !== undefined && it.slot === undefined)
+            .sort((a, b) => {
+                return (
+                    b.position.prio - a.position.prio || // sort by slot prio
+                    a.expiredQualifications.length - b.expiredQualifications.length || // sort by expired qualifications count
+                    a.name.localeCompare(b.name) // sort by name alphabetically
+                );
+            });
     }
 
     public filterForCrew(registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {

@@ -6,8 +6,8 @@
                 {{ props.registration.name }}
             </span>
         </h3>
-        <p v-if="props.registration.registration?.note" class="mb-4 line-clamp-6 text-sm">
-            {{ props.registration.registration.note }}
+        <p v-if="props.registration.registration?.note" class="mb-4 line-clamp-6 text-sm italic">
+            "{{ props.registration.registration.note }}"
         </p>
         <template v-if="props.registration.user">
             <h4 class="mb-2 text-sm font-bold">Positionen</h4>
@@ -20,13 +20,20 @@
                 >
                     {{ positions.get(p).name }}
                 </span>
+                <span
+                    v-if="props.registration.hasOverwrittenPosition"
+                    class="position cursor-pointer bg-error-container text-xs text-onerror-container line-through"
+                >
+                    <i class="fa-solid fa-warning"></i>
+                    {{ positions.get(props.registration.registration.positionKey).name }}
+                </span>
             </div>
             <h4 class="mb-2 text-sm font-bold">Qualifikationen</h4>
             <div class="flex flex-wrap items-center gap-1">
                 <span
                     v-for="q in props.registration.user.qualifications"
                     :key="q.qualificationKey"
-                    class="truncate whitespace-nowrap rounded-lg px-2 py-1 font-bold"
+                    class="truncate whitespace-nowrap rounded-lg px-2 py-1 text-xs font-bold"
                     :class="
                         props.registration.expiredQualifications.includes(q.qualificationKey)
                             ? 'bg-error-container text-onerror-container'

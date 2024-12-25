@@ -4,11 +4,26 @@
         <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-surface pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
             <div class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-onsurface-variant md:flex-wrap 2xl:flex-col">
                 <div class="flex items-center rounded-2xl bg-surface-container p-1">
-                    <span class="px-2"> Alle </span>
+                    <span class="px-2"> Crew </span>
                     <span
                         class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
                     >
                         {{ props.event?.assignedUserCount }}
+                    </span>
+                </div>
+                <div
+                    class="flex items-center rounded-2xl p-1"
+                    :class="
+                        secureMinimumCrewMembers >= 8
+                            ? 'bg-secondary-container text-onsecondary-container'
+                            : 'bg-error-container text-onerror-container'
+                    "
+                >
+                    <span class="px-2"> Sichere Besatzung </span>
+                    <span
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                    >
+                        {{ secureMinimumCrewMembers }}
                     </span>
                 </div>
                 <div
@@ -78,7 +93,7 @@
                                         :class="{
                                             'cursor-move': it.registration !== undefined,
                                             'pointer-events-none': it.registration === undefined,
-                                            'text-green': it.expiredQualifications.length === 0,
+                                            '': it.expiredQualifications.length === 0,
                                         }"
                                         component="li"
                                         :value="it"
@@ -87,7 +102,7 @@
                                         @click="editSlotRegistration(it)"
                                     >
                                         <!-- drag icon -->
-                                        <i class="fa-solid fa-grip-vertical hidden text-sm text-secondary-variant lg:inline"></i>
+                                        <i class="fa-solid fa-grip-vertical hidden text-sm text-onsurface-variant opacity-50 lg:inline"></i>
 
                                         <!-- user status -->
                                         <span v-if="it.name && !it.registration?.confirmed" class="">
@@ -105,13 +120,18 @@
                                         <span v-else-if="it.user" class="mx-2 truncate italic text-error"> Gelöschter Nutzer </span>
                                         <span v-else class="mx-2 truncate italic text-error text-opacity-50"> Noch nicht besetzt </span>
 
+                                        <i
+                                            v-if="it.registration?.note"
+                                            class="fa-solid fa-comment-dots text-sm text-onsurface-variant opacity-50"
+                                        ></i>
                                         <!-- user qualification status -->
-                                        <i v-if="it.expiredQualifications.length > 0" class="fa-solid fa-warning"></i>
-                                        <!-- <i v-else class="fa-solid fa-check"></i>-->
+                                        <!--                                        <i v-if="it.expiredQualifications.length > 0" class="fa-solid fa-warning text-error"></i>-->
                                         <!-- user position -->
                                         <span class="flex-grow"></span>
                                         <span :style="{ background: it.position.color }" class="position text-xs">
                                             {{ it.slot?.positionName || it.position.name }}
+                                            <i v-if="it.expiredQualifications.length > 0" class="fa-solid fa-warning text-error"></i>
+                                            <i v-else-if="it.registration" class="fa-solid fa-check"></i>
                                         </span>
                                     </VDraggable>
                                 </template>
@@ -178,7 +198,7 @@
                                         :class="{
                                             'cursor-move': it.registration !== undefined,
                                             'pointer-events-none': it.registration === undefined,
-                                            'text-secondary': it.expiredQualifications.length === 0,
+                                            '': it.expiredQualifications.length === 0,
                                         }"
                                         component="li"
                                         :value="it"
@@ -186,21 +206,30 @@
                                         @dragstart="dragSource = DragSource.FROM_WAITING_LIST"
                                         @click="editSlotRegistration(it)"
                                     >
-                                        <i class="fa-solid fa-grip-vertical mr-2 hidden text-sm text-secondary-variant lg:inline"></i>
+                                        <i
+                                            class="fa-solid fa-grip-vertical mr-2 hidden text-sm text-onsurface-variant opacity-50 lg:inline"
+                                        ></i>
                                         <span v-if="it.name" class="truncate">{{ it.name }}</span>
                                         <span v-else-if="it.user" class="flex-grow italic text-error"> Unbekannt </span>
-                                        <i v-if="it.expiredQualifications.length === 0" class="fa-solid fa-check"></i>
-                                        <i v-if="it.registration?.note" class="fa-solid fa-info-circle"></i>
+                                        <i
+                                            v-if="it.registration?.note"
+                                            class="fa-solid fa-comment-dots text-sm text-onsurface-variant opacity-50"
+                                        ></i>
                                         <span class="flex-grow"></span>
                                         <div>
                                             <ContextMenuButton>
                                                 <template #icon>
                                                     <span
                                                         :style="{ background: it.position.color }"
+                                                        :class="{ '': it.expiredQualifications.length > 0 }"
                                                         class="position cursor-pointer text-xs"
                                                     >
-                                                        <span class="mr-2 flex-grow">{{ it.position.name }}</span>
-                                                        <i class="fa-solid fa-chevron-down"> </i>
+                                                        {{ it.position.name }}
+                                                        <i
+                                                            v-if="it.expiredQualifications.length > 0"
+                                                            class="fa-solid fa-warning text-error"
+                                                        ></i>
+                                                        <i v-else class="fa-solid fa-check"></i>
                                                     </span>
                                                 </template>
                                                 <template #default>
@@ -223,7 +252,7 @@
                                                                     @click="changePosition(it, pos.key)"
                                                                 >
                                                                     <span class="flex-grow">{{ pos.name }}</span>
-                                                                    <i class="fa-solid fa-warning text-yellow"></i>
+                                                                    <i class="fa-solid fa-warning text-error"></i>
                                                                 </li>
                                                             </template>
                                                         </template>
@@ -297,6 +326,10 @@ const summary = computed<Record<PositionKey, number>>(() => {
             sum[it.position.key] = count;
         });
     return sum;
+});
+
+const secureMinimumCrewMembers = computed<number>(() => {
+    return team.value.filter((it) => it.registration).filter((it) => it.expiredQualifications.length === 0).length;
 });
 
 async function init(): Promise<void> {

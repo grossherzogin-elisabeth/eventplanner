@@ -79,7 +79,7 @@
                 <span>Abbrechen</span>
             </button>
             <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Speichern</span>
+                <span>Übernehmen</span>
             </button>
         </template>
     </VDialog>
