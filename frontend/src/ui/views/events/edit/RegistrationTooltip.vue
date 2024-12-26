@@ -25,7 +25,7 @@
                     class="position cursor-pointer bg-error-container text-xs text-onerror-container line-through"
                 >
                     <i class="fa-solid fa-warning"></i>
-                    {{ positions.get(props.registration.registration.positionKey).name }}
+                    {{ positions.get(props.registration.registration?.positionKey).name }}
                 </span>
             </div>
             <h4 class="mb-2 text-sm font-bold">Qualifikationen</h4>
@@ -46,7 +46,7 @@
                 </span>
             </div>
         </template>
-        <p v-else>{{ props.registration.name }} ist Gastcrew. Positionen und Qualifikationen sind daher unbekanne.</p>
+        <p v-else>{{ props.registration.name }} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.</p>
     </div>
 </template>
 <script lang="ts" setup>

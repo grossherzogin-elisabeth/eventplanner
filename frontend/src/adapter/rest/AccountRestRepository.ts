@@ -42,8 +42,8 @@ export class AccountRestRepository implements AccountRepository {
     private mapAccountToSignedInUser(user: AccountRepresentation): SignedInUser {
         return {
             key: user.key,
-            firstname: '?',
-            lastname: '?',
+            firstname: '',
+            lastname: '',
             email: user.email,
             roles: user.roles as Role[],
             permissions: user.permissions as Permission[],

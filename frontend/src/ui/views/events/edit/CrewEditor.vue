@@ -6,7 +6,7 @@
                 <div class="flex items-center rounded-2xl bg-surface-container p-1">
                     <span class="px-2"> Crew </span>
                     <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
                     >
                         {{ props.event?.assignedUserCount }}
                     </span>
@@ -21,7 +21,7 @@
                 >
                     <span class="px-2"> Sichere Besatzung </span>
                     <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
                     >
                         {{ secureMinimumCrewMembers }}
                     </span>
@@ -229,7 +229,8 @@
                                                             v-if="it.expiredQualifications.length > 0"
                                                             class="fa-solid fa-warning text-error"
                                                         ></i>
-                                                        <i v-else class="fa-solid fa-check"></i>
+                                                        <i v-else-if="it.user" class="fa-solid fa-check"></i>
+                                                        <i v-else class="fa-solid fa-question"></i>
                                                     </span>
                                                 </template>
                                                 <template #default>

@@ -342,12 +342,7 @@ export class EventUseCase {
     }
 
     public async getEventByAccessKey(eventKey: EventKey, accessKey: string): Promise<Event> {
-        try {
-            return await this.eventRepository.findByKey(eventKey, accessKey);
-        } catch (e) {
-            this.errorHandlingService.handleRawError(e);
-            throw e;
-        }
+        return await this.eventRepository.findByKey(eventKey, accessKey);
     }
 
     public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {

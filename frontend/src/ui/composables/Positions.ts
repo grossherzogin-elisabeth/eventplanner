@@ -34,14 +34,14 @@ export function usePositions() {
         return [...positions.value.values()].sort((a, b) => b.prio - a.prio);
     });
 
-    function get(positionKey: PositionKey): Position {
+    function get(positionKey?: PositionKey): Position {
         return (
-            positions.value.get(positionKey) || {
-                key: positionKey,
+            positions.value.get(positionKey ?? '') || {
+                key: positionKey ?? '',
                 color: '',
                 prio: 0,
-                name: positionKey,
-                imoListRank: positionKey,
+                name: positionKey ?? '',
+                imoListRank: positionKey ?? '',
             }
         );
     }
