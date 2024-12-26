@@ -24,4 +24,9 @@ public class DefaultExceptionHandlingController {
     public ResponseEntity<Void> handleUnauthorizedException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Void> handleIllegalArgumentException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }
