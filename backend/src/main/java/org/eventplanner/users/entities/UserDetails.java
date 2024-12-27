@@ -61,8 +61,12 @@ public class UserDetails {
         if (title != null) {
             stb.append(title).append(" ");
         }
-        stb.append(ofNullable(nickName).orElse(firstName)).append(" ");
-        if (secondName != null) {
+        if (nickName != null && !nickName.isBlank()) {
+            stb.append(nickName).append(" ");
+        } else {
+            stb.append(firstName).append(" ");
+        }
+        if (secondName != null && !secondName.isBlank()) {
             stb.append(secondName).append(" ");
         }
         stb.append(lastName);

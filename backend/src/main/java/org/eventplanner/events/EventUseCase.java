@@ -6,9 +6,12 @@ import static org.eventplanner.common.ObjectUtils.orElse;
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -106,8 +109,8 @@ public class EventUseCase {
         log.info("Updating event {} ({})", event.getName(), eventKey);
         var previousState = event.getState();
 
-        List<UserDetails> notifyUsersAddedToCrew = new LinkedList<>();
-        List<UserDetails> notifyUsersRemovedFromCrew = new LinkedList<>();
+        Map<Registration, UserDetails> notifyUsersAddedToCrew = new HashMap<>();
+        Map<Registration, UserDetails> notifyUsersRemovedFromCrew = new HashMap<>();
         if (signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
             applyNullable(spec.name(), event::setName);
             applyNullable(spec.description(), event::setDescription);
@@ -145,17 +148,27 @@ public class EventUseCase {
         // crew planning has just been published, notify all crew members
         if (EventState.PLANNED.equals(spec.state()) && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP)
             .contains(previousState)) {
-            var crew = event.getSlots().stream()
-                .map(Slot::getAssignedRegistration)
-                .filter(Objects::nonNull)
-                .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
-                .toList();
+            var crew = event.getAssignedRegistrations();
             notifyUsersAddedToCrew = mapRegistrationsToUsers(crew);
         }
 
         var updatedEvent = this.eventRepository.update(this.eventService.removeInvalidSlotAssignments(event));
-        notifyUsersAddedToCrew.forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
-        notifyUsersRemovedFromCrew.forEach(user -> notificationService.sendRemovedFromCrewNotification(
+        notifyUsersAddedToCrew.values().forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
+        // also send participation confirmation request when event will start within 2 weeks
+        if (event.getStart().isBefore(ZonedDateTime.now().plusWeeks(1).toInstant())) {
+            notifyUsersAddedToCrew.forEach((registration, user) -> notificationService.sendSecondParticipationConfirmationRequestNotification(
+                user,
+                updatedEvent,
+                registration
+            ));
+        } else if (event.getStart().isBefore(ZonedDateTime.now().plusWeeks(2).toInstant())) {
+            notifyUsersAddedToCrew.forEach((registration, user) -> notificationService.sendFirstParticipationConfirmationRequestNotification(
+                user,
+                updatedEvent,
+                registration
+            ));
+        }
+        notifyUsersRemovedFromCrew.values().forEach(user -> notificationService.sendRemovedFromCrewNotification(
             user,
             updatedEvent
         ));
@@ -170,13 +183,13 @@ public class EventUseCase {
         eventRepository.deleteByKey(event.getKey());
     }
 
-    private List<UserDetails> mapRegistrationsToUsers(List<Registration> registrations) {
-        return registrations.stream().map(Registration::getUserKey)
-            .filter(Objects::nonNull)
-            .map(userService::getUserByKey)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .toList();
+    private Map<Registration, UserDetails> mapRegistrationsToUsers(List<Registration> registrations) {
+        var map = new HashMap<Registration, UserDetails>();
+        registrations.forEach(registration -> {
+            var user = userService.getUserByKey(registration.getUserKey());
+            user.ifPresent(userDetails -> map.put(registration, userDetails));
+        });
+        return map;
     }
 
     private boolean filterForVisibility(@NonNull SignedInUser signedInUser, @NonNull Event event) {

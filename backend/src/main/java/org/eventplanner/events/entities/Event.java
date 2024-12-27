@@ -38,6 +38,11 @@ public class Event {
     private @NonNull List<Registration> registrations = Collections.emptyList();
     private @NonNull Integer participationConfirmationsRequestsSent = 0;
 
+    public List<Registration> getAssignedRegistrations() {
+        var keys = getAssignedRegistrationKeys();
+        return registrations.stream().filter(it -> keys.contains(it.getKey())).toList();
+    }
+
     public List<RegistrationKey> getAssignedRegistrationKeys() {
         return getSlots().stream()
             .map(Slot::getAssignedRegistration)
