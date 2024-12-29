@@ -124,6 +124,22 @@
                             </div>
                         </div>
                     </td>
+                    <!-- crew -->
+                    <td class="w-1/6 min-w-24 whitespace-nowrap" :class="{ 'opacity-50': item.isPastEvent }">
+                        <template v-if="[EventState.Draft, EventState.OpenForSignup].includes(item.state)">
+                            <p class="mb-1 pl-4 font-semibold">
+                                <span> {{ item.registrations.length }} </span>
+                            </p>
+                            <p class="pl-4 text-sm">Anmeldungen</p>
+                        </template>
+                        <template v-else>
+                            <p class="mb-1 pl-4 font-semibold">
+                                {{ item.assignedUserCount }}
+                                <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
+                            </p>
+                            <p class="pl-4 text-sm">Crew</p>
+                        </template>
+                    </td>
                     <!-- date -->
                     <td class="w-1/6 whitespace-nowrap" :class="{ 'opacity-50': item.isPastEvent }">
                         <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>

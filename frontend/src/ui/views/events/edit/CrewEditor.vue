@@ -19,7 +19,7 @@
                             : 'bg-error-container text-onerror-container'
                     "
                 >
-                    <span class="px-2"> Sichere Besatzung </span>
+                    <span class="whitespace-nowrap px-2"> Sichere Besatzung </span>
                     <span
                         class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
                     >
