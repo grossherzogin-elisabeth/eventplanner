@@ -1,0 +1,12 @@
+# combine frontend and backend
+FROM eclipse-temurin:21-jdk-alpine
+
+ENV BUILD_COMMIT="?"
+ENV BUILD_BRANCH="main"
+ENV BUILD_TIME="1970-01-01 00:00:00"
+
+WORKDIR /app
+RUN mkdir -p /app/data
+COPY /backend/build/libs/*.jar eventplanner.jar
+EXPOSE 80
+ENTRYPOINT ["java","-XX:+UseContainerSupport","-jar","/app/eventplanner.jar"]

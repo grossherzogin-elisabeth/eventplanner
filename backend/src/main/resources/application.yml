@@ -22,8 +22,8 @@ email:
   recipients-whitelist: ${EMAIL_WHITELIST:}
 
 auth:
-  logout-success-url: ${frontend.domain}/login
-  login-success-url: ${frontend.domain}
+  logout-success-url: ${frontend.url}/login
+  login-success-url: ${frontend.url}
   # OIDC users with this email address in their token will automatically become admins
   admins: ${ADMIN_EMAILS:}
   # 60 * 60 * 24 * 30 seconds
@@ -59,13 +59,7 @@ spring:
             client-id: ${OAUTH_CLIENT_ID:eventplanner}
             client-secret: ${OAUTH_CLIENT_SECRET:********************}
             provider: default
-            redirect-uri: ${frontend.domain}/login/oauth2/code/default
-            scope: openid,email,profile
-          cognito:
-            client-id: ${OAUTH_CLIENT_ID:eventplanner}
-            client-secret: ${OAUTH_CLIENT_SECRET:********************}
-            provider: default
-            redirect-uri: ${frontend.domain}/login/oauth2/code/cognito
+            redirect-uri: ${frontend.url}/login/oauth2/code/default
             scope: openid,email,profile
         provider:
           default:
@@ -81,7 +75,7 @@ server:
   protocol: ${PROTOCOL:http}
   host: ${HOST:localhost}
   port: ${PORT:80}
-  domain: ${HOSTNAME_URL:${server.protocol}://${server.host}:${server.port}}
+  url: ${HOST_URL:${server.protocol}://${server.host}:${server.port}}
   servlet:
     session:
       timeout: ${auth.session-timout}s
@@ -92,7 +86,7 @@ frontend:
   protocol: ${server.protocol}
   host: ${server.host}
   port: ${server.port}
-  domain: ${frontend.protocol}://${frontend.host}:${frontend.port}
+  url: ${HOST_URL:${frontend.protocol}://${frontend.host}:${frontend.port}}
 
 logging:
   file:

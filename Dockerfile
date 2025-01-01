@@ -22,5 +22,6 @@ ENV BUILD_BRANCH=${BRANCH}
 ENV BUILD_TIME=${TIME}
 
 WORKDIR /app
+RUN mkdir -p /app/data
 COPY --from=backend-builder /builder/build/libs/*.jar eventplanner.jar
 ENTRYPOINT ["java","-XX:+UseContainerSupport","-jar","/app/eventplanner.jar"]

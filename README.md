@@ -10,6 +10,7 @@ The following settings can be changed via environment variables:
 ```
 PORT
 HOST
+HOST_URL
 DATA_ENCRYPTION_PASSWORD
 OAUTH_ISSUER_URI
 OAUTH_CLIENT_ID
@@ -30,15 +31,18 @@ generous free tier of 10k users. If you prefer a self-hosted alternative you can
 
 ## Running via Docker
 
+The docker image runs the app on port 80 by default. You can run the service on another port using the `PORT`
+environment variable. If public and internal port are not the same, make sure to also pass the `HOST_URL` variable,
+so that the backend knows how it is accessible in the browser, e.g. for OAuth redirects. 
+
 ```
 docker run \
     -e ADMIN_EMAILS=your@email.de \
     -e OAUTH_ISSUER_URI=xxx \
     -e OAUTH_CLIENT_ID=xxx \
     -e OAUTH_CLIENT_SECRET=xxx \
-    -e DATA_ENCRYPTION_PASSWORD=some-random-password \
-    -p 8080:80 \ 
-    ghcr.io/grossherzogin-elisabeth/eventplanner:latest
+    -e PORT=http://localhost:8080 \
+    -p 8080:80 ghcr.io/grossherzogin-elisabeth/eventplanner:latest
 ```
 
 ## Running from source
@@ -55,7 +59,6 @@ to create an `application-secrets.yml`, but you can also set the variables indiv
 variables are required:
 
 ```yaml
-DATA_ENCRYPTION_PASSWORD: <some-random-password>
 OAUTH_ISSUER_URI: <oidc-issuer-uri>
 OAUTH_CLIENT_ID: <oidc-client-id>
 OAUTH_CLIENT_SECRET: <oidc-client-secret>
