@@ -72,7 +72,7 @@ spring:
     timeout: ${auth.session-timout}
 
 server:
-  protocol: ${PROTOCOL:http}
+  protocol: ${PROTOCOL:https}
   host: ${HOST:localhost}
   port: ${PORT:80}
   url: ${HOST_URL:${server.protocol}://${server.host}:${server.port}}

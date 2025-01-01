@@ -7,17 +7,18 @@ The eventplanner is a web application for planning multi day events with a varii
 
 The following settings can be changed via environment variables:
 
-```
-PORT
-HOST
-HOST_URL
-DATA_ENCRYPTION_PASSWORD
-OAUTH_ISSUER_URI
-OAUTH_CLIENT_ID
-OAUTH_CLIENT_SECRET
-EMAIL_WHITELIST
-ADMIN_EMAILS
-```
+| Variable                 | Description                                                                   | Default value                 | Optional |
+|--------------------------|-------------------------------------------------------------------------------|-------------------------------|----------| 
+| OAUTH_ISSUER_URI         | OIDC issuer uri                                                               | -                             |          |
+| OAUTH_CLIENT_ID          | OIDC client id                                                                | -                             |          |
+| OAUTH_CLIENT_SECRET      | OIDC client secret                                                            | -                             |          |
+| PORT                     | port this service will run on                                                 | 80                            | x        |
+| PROTOCOL                 | http or https                                                                 | https                         | x        |
+| HOST                     | Domain the service runs on                                                    | localhost                     | x        |
+| HOST_URL                 | Full publicly reachable url, usefull when PORT is not the publicly reachable port | ${PROTOCOL}://${HOST}/${PORT} | x        |
+| DATA_ENCRYPTION_PASSWORD | Password to use for PII data encryption                                       | default-encryption-password   | x        |
+| EMAIL_WHITELIST          | Send email notifications only to whitelisted emails                           | -                             | x        |
+| ADMIN_EMAILS             | Make all users with on of these emails to admins                              | -                             | x        |
 
 
 ## Auth
@@ -35,17 +36,21 @@ The docker image runs the app on port 80 by default. You can run the service on 
 environment variable. If public and internal port are not the same, make sure to also pass the `HOST_URL` variable,
 so that the backend knows how it is accessible in the browser, e.g. for OAuth redirects. 
 
-```
+```bash
 docker run \
     -e ADMIN_EMAILS=your@email.de \
     -e OAUTH_ISSUER_URI=xxx \
     -e OAUTH_CLIENT_ID=xxx \
     -e OAUTH_CLIENT_SECRET=xxx \
-    -e PORT=http://localhost:8080 \
+    -e PROTOCOL=http \
+    -e HOST_URL=http://localhost:8080 \
     -p 8080:80 ghcr.io/grossherzogin-elisabeth/eventplanner:latest
 ```
 
 ## Running from source
+
+You can also clone this repository and run everything from source directly. For this we are using the `local` profile
+in Spring, which has some slightly different default values than the ones mentioned above.
 
 ### Prerequisites 
 
@@ -67,7 +72,7 @@ ADMIN_EMAILS: <your-email-address>
 ```
 
 Then use the following commands to start the backend on port 8091 with a SQLite database.
-```
+```bash
 cd backend
 ./gradlew bootRun --args='--spring.profiles.active=local,secrets'
 ```
@@ -75,7 +80,7 @@ cd backend
 ### Starting the frontend
 
 Run the following commands to start the frontend on port 8090.
-```
+```bash
 cd frontend
 npm install
 npm run dev
