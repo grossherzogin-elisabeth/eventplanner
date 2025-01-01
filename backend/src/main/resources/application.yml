@@ -80,7 +80,7 @@ spring:
 server:
   protocol: ${PROTOCOL:http}
   host: ${HOST:localhost}
-  port: ${PORT:8080}
+  port: ${PORT:80}
   domain: ${HOSTNAME_URL:${server.protocol}://${server.host}:${server.port}}
   servlet:
     session:

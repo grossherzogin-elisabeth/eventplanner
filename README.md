@@ -32,12 +32,12 @@ generous free tier of 10k users. If you prefer a self-hosted alternative you can
 
 ```
 docker run \
-    -p 8080:8080 \ 
     -e ADMIN_EMAILS=your@email.de \
     -e OAUTH_ISSUER_URI=xxx \
     -e OAUTH_CLIENT_ID=xxx \
     -e OAUTH_CLIENT_SECRET=xxx \
     -e DATA_ENCRYPTION_PASSWORD=some-random-password \
+    -p 8080:80 \ 
     ghcr.io/grossherzogin-elisabeth/eventplanner:latest
 ```
 
