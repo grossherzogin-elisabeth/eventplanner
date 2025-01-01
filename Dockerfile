@@ -23,5 +23,4 @@ ENV BUILD_TIME=${TIME}
 
 WORKDIR /app
 COPY --from=backend-builder /builder/build/libs/*.jar eventplanner.jar
-ENV PROFILE="prod"
-ENTRYPOINT ["java","-XX:+UseContainerSupport","-jar","/app/eventplanner.jar","--spring.profiles.active=${PROFILE}"]
+ENTRYPOINT ["java","-XX:+UseContainerSupport","-jar","/app/eventplanner.jar"]
