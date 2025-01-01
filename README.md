@@ -7,18 +7,18 @@ The eventplanner is a web application for planning multi day events with a varii
 
 The following settings can be changed via environment variables:
 
-| Variable                 | Description                                                                   | Default value                 | Optional |
-|--------------------------|-------------------------------------------------------------------------------|-------------------------------|----------| 
-| OAUTH_ISSUER_URI         | OIDC issuer uri                                                               | -                             |          |
-| OAUTH_CLIENT_ID          | OIDC client id                                                                | -                             |          |
-| OAUTH_CLIENT_SECRET      | OIDC client secret                                                            | -                             |          |
-| PORT                     | port this service will run on                                                 | 80                            | x        |
-| PROTOCOL                 | http or https                                                                 | https                         | x        |
-| HOST                     | Domain the service runs on                                                    | localhost                     | x        |
+| Variable                 | Description                                                                       | Default value                 | Optional |
+|--------------------------|-----------------------------------------------------------------------------------|-------------------------------|----------| 
+| OAUTH_ISSUER_URI         | OIDC issuer uri                                                                   | -                             |          |
+| OAUTH_CLIENT_ID          | OIDC client id                                                                    | -                             |          |
+| OAUTH_CLIENT_SECRET      | OIDC client secret                                                                | -                             |          |
+| PORT                     | port this service will run on                                                     | 80                            | x        |
+| PROTOCOL                 | http or https                                                                     | https                         | x        |
+| HOST                     | Domain the service runs on                                                        | localhost                     | x        |
 | HOST_URL                 | Full publicly reachable url, usefull when PORT is not the publicly reachable port | ${PROTOCOL}://${HOST}/${PORT} | x        |
-| DATA_ENCRYPTION_PASSWORD | Password to use for PII data encryption                                       | default-encryption-password   | x        |
-| EMAIL_WHITELIST          | Send email notifications only to whitelisted emails                           | -                             | x        |
-| ADMIN_EMAILS             | Make all users with on of these emails to admins                              | -                             | x        |
+| DATA_ENCRYPTION_PASSWORD | Password to use for PII data encryption                                           | default-encryption-password   | x        |
+| EMAIL_WHITELIST          | Send email notifications only to whitelisted emails                               | -                             | x        |
+| ADMIN_EMAILS             | Make all users with on of these emails to admins                                  | -                             | x        |
 
 
 ## Auth
