@@ -33,7 +33,6 @@ generous free tier of 10k users. If you prefer a self-hosted alternative you can
 ```
 docker run \
     -p 8080:8080 \ 
-    -e PROFILE=dev \
     -e ADMIN_EMAILS=your@email.de \
     -e OAUTH_ISSUER_URI=xxx \
     -e OAUTH_CLIENT_ID=xxx \
@@ -46,7 +45,7 @@ docker run \
 
 ### Prerequisites 
 
-In order to run the application locally, you need Java 22 and Node 22 installed. You also need an OIDC provider
+In order to run the application locally, you need Java 21 and Node 22 installed. You also need an OIDC provider
 for the login.
 
 ### Starting the backend
@@ -67,7 +66,7 @@ ADMIN_EMAILS: <your-email-address>
 Then use the following commands to start the backend on port 8091 with a SQLite database.
 ```
 cd backend
-./gradlew bootRun --args='--spring.profiles.active=secrets,local'
+./gradlew bootRun --args='--spring.profiles.active=local,secrets'
 ```
 
 ### Starting the frontend
