@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.values.Location;
 import org.eventplanner.notifications.values.Notification;
 import org.eventplanner.notifications.values.NotificationType;
 import org.eventplanner.settings.service.SettingsService;
@@ -45,18 +44,18 @@ public class NotificationService {
 
     private final Configuration freemarkerConfig;
     private final SettingsService settingsService;
-    private final String frontendDomain;
+    private final String frontendUrl;
     private final List<String> recipientsWhitelist;
 
     public NotificationService(
         Configuration freemarkerConfig,
         SettingsService settingsService,
-        @Value("${frontend.domain}") String frontendDomain,
+        @Value("${frontend.url}") String frontendUrl,
         @Value("${email.recipients-whitelist}") String recipientsWhitelist
     ) {
         this.freemarkerConfig = freemarkerConfig;
         this.settingsService = settingsService;
-        this.frontendDomain = frontendDomain;
+        this.frontendUrl = frontendUrl;
         this.recipientsWhitelist = Arrays.stream(recipientsWhitelist.split(","))
             .map(String::trim)
             .filter(s -> !s.isBlank())
@@ -214,7 +213,7 @@ public class NotificationService {
     ) {
         notification.getProps().put("user", to);
         notification.getProps().put("deadline", formatDate(event.getStart().atZone(timezone).minusDays(7)));
-        var eventUrl = frontendDomain + "/events/" + event.getStart().atZone(timezone)
+        var eventUrl = frontendUrl + "/events/" + event.getStart().atZone(timezone)
             .getYear() + "/details/" + event.getKey() + "/registrations/" + registration.getKey();
         notification.getProps().put("confirm_link", eventUrl + "/confirm?accessKey=" + registration.getAccessKey());
         notification.getProps().put("deny_link", eventUrl + "/deny?accessKey=" + registration.getAccessKey());
@@ -283,7 +282,7 @@ public class NotificationService {
         message.setSubject(notification.getTitle());
 
         notification.getProps().put("title", notification.getTitle());
-        notification.getProps().put("app_link", frontendDomain);
+        notification.getProps().put("app_link", frontendUrl);
         notification.getProps().put("user", to);
         notification.getProps().put("footer", emailSettings.getFooter());
         var htmlContent = renderEmail(notification);

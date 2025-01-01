@@ -1,0 +1,36 @@
+# -----------------
+# Env Variables
+# -----------------
+
+# The password we use to encrypt PII data in our database
+DATA_ENCRYPTION_PASSWORD: super-secret-password
+
+# OIDC configuration
+OAUTH_ISSUER_URI: <oidc-issuer-uri>
+OAUTH_CLIENT_ID: <oidc-client-id>
+OAUTH_CLIENT_SECRET: <oidc-client-secret>
+
+# If not empty email notifications will only be sent to these email addresses
+# comma separated list of email addresses
+EMAIL_WHITELIST: >
+  admin@grossherzogin-elisabeth.de
+
+# OIDC users with this email address in their token will automatically become admins
+# comma separated list of email addresses
+ADMIN_EMAILS: >
+  admin@grossherzogin-elisabeth.de
+
+# -----------------
+# Overwrites
+# -----------------
+
+server:
+  protocol: http
+  host: localhost
+  port: 8091
+
+frontend:
+  port: 8090
+
+security:
+  enable-csrf: false

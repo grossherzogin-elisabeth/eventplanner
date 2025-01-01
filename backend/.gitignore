@@ -5,9 +5,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-application-local.properties
-application-local.yml
-application-local.json
+application-*secrets.*
 
 .apt_generated
 .classpath

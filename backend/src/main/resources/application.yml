@@ -18,11 +18,13 @@ email:
   enable-starttls: ${EMAIL_ENABLE_START_TLS:true}
   enable-ssl: ${EMAIL_ENABLE_SSL:false}
   footer: ${EMAIL_FOOTER:}
-  recipients-whitelist:
+  # If not empty email notifications will only be sent to these email addresses
+  recipients-whitelist: ${EMAIL_WHITELIST:}
 
 auth:
-  logout-success-url: ${frontend.domain}/login
-  login-success-url: ${frontend.domain}
+  logout-success-url: ${frontend.url}/login
+  login-success-url: ${frontend.url}
+  # OIDC users with this email address in their token will automatically become admins
   admins: ${ADMIN_EMAILS:}
   # 60 * 60 * 24 * 30 seconds
   session-timout: 2592000
@@ -57,13 +59,7 @@ spring:
             client-id: ${OAUTH_CLIENT_ID:eventplanner}
             client-secret: ${OAUTH_CLIENT_SECRET:********************}
             provider: default
-            redirect-uri: ${frontend.domain}/login/oauth2/code/default
-            scope: openid,email,profile
-          cognito:
-            client-id: ${OAUTH_CLIENT_ID:eventplanner}
-            client-secret: ${OAUTH_CLIENT_SECRET:********************}
-            provider: default
-            redirect-uri: ${frontend.domain}/login/oauth2/code/cognito
+            redirect-uri: ${frontend.url}/login/oauth2/code/default
             scope: openid,email,profile
         provider:
           default:
@@ -76,10 +72,10 @@ spring:
     timeout: ${auth.session-timout}
 
 server:
-  protocol: ${SERVER_PROTOCOL:http}
-  host: ${SERVER_HOST:localhost}
-  port: ${SERVER_PORT:8080}
-  domain: ${SERVER_URI:${server.protocol}://${server.host}:${server.port}}
+  protocol: ${PROTOCOL:https}
+  host: ${HOST:localhost}
+  port: ${PORT:80}
+  url: ${HOST_URL:${server.protocol}://${server.host}:${server.port}}
   servlet:
     session:
       timeout: ${auth.session-timout}s
@@ -90,4 +86,9 @@ frontend:
   protocol: ${server.protocol}
   host: ${server.host}
   port: ${server.port}
-  domain: ${frontend.protocol}://${frontend.host}:${frontend.port}
+  url: ${HOST_URL:${frontend.protocol}://${frontend.host}:${frontend.port}}
+
+logging:
+  file:
+    path:
+      ./logs
