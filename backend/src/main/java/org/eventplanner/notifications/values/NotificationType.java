@@ -1,5 +1,10 @@
 package org.eventplanner.notifications.values;
 
+import java.util.Arrays;
+import java.util.Optional;
+
+import org.springframework.lang.Nullable;
+
 public enum NotificationType {
 
     // As a team member
@@ -59,6 +64,12 @@ public enum NotificationType {
 
     NotificationType(String value) {
         this.value = value;
+    }
+
+    public static Optional<NotificationType> fromString(@Nullable String value) {
+        return Arrays.stream(values())
+            .filter(state -> state.toString().equals(value))
+            .findFirst();
     }
 
     @Override

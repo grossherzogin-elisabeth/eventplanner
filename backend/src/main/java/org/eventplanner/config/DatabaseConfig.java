@@ -35,13 +35,7 @@ public class DatabaseConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(
-            "org.eventplanner.events.adapter.jpa",
-            "org.eventplanner.positions.adapter.jpa",
-            "org.eventplanner.qualifications.adapter.jpa",
-            "org.eventplanner.users.adapter.jpa",
-            "org.eventplanner.settings.adapter.jpa"
-        );
+        em.setPackagesToScan("org.eventplanner");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);

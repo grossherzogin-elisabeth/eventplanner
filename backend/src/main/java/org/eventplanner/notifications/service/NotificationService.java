@@ -6,35 +6,24 @@ import java.io.Writer;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
-import java.util.concurrent.Executors;
 
-import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
+import org.eventplanner.notifications.adapter.QueuedEmailRepository;
+import org.eventplanner.notifications.entities.QueuedEmail;
 import org.eventplanner.notifications.values.Notification;
 import org.eventplanner.notifications.values.NotificationType;
-import org.eventplanner.settings.service.SettingsService;
-import org.eventplanner.settings.values.EmailSettings;
 import org.eventplanner.users.entities.UserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import jakarta.mail.Address;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMessage.RecipientType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -43,56 +32,17 @@ public class NotificationService {
     private static final ZoneId timezone = ZoneId.of("Europe/Berlin");
 
     private final Configuration freemarkerConfig;
-    private final SettingsService settingsService;
     private final String frontendUrl;
-    private final List<String> recipientsWhitelist;
+    private final QueuedEmailRepository queuedEmailRepository;
 
     public NotificationService(
-        Configuration freemarkerConfig,
-        SettingsService settingsService,
-        @Value("${frontend.url}") String frontendUrl,
-        @Value("${email.recipients-whitelist}") String recipientsWhitelist
+        @Autowired QueuedEmailRepository queuedEmailRepository,
+        @Autowired Configuration freemarkerConfig,
+        @Value("${frontend.url}") String frontendUrl
     ) {
+        this.queuedEmailRepository = queuedEmailRepository;
         this.freemarkerConfig = freemarkerConfig;
-        this.settingsService = settingsService;
         this.frontendUrl = frontendUrl;
-        this.recipientsWhitelist = Arrays.stream(recipientsWhitelist.split(","))
-            .map(String::trim)
-            .filter(s -> !s.isBlank())
-            .toList();
-    }
-
-    private EmailSettings getEmailSettings() {
-        return settingsService.getSettings().emailSettings();
-    }
-
-    private JavaMailSender getMailSender(@NonNull EmailSettings emailSettings) {
-        var host = emailSettings.getHost();
-        var port = emailSettings.getPort();
-        var username = emailSettings.getUsername();
-        var password = emailSettings.getPassword();
-
-        if (username == null || username.isBlank()
-            || password == null || password.isBlank()
-            || host == null || host.isBlank()
-            || port == null || port == 0
-        ) {
-            throw new IllegalStateException("Email settings must contain all the required fields");
-        }
-
-        final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(host);
-        mailSender.setPort(port);
-        mailSender.setProtocol("smtp");
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
-
-        final Properties javaMailProperties = new Properties();
-        javaMailProperties.put("mail.smtp.auth", true);
-        javaMailProperties.put("mail.smtp.starttls.enable", emailSettings.getEnableStartTls());
-        javaMailProperties.put("mail.smtp.ssl.enable", emailSettings.getEnableSSL());
-        mailSender.setJavaMailProperties(javaMailProperties);
-        return mailSender;
     }
 
     public void sendAddedToWaitingListNotification(@NonNull UserDetails to, @NonNull Event event) {
@@ -230,7 +180,7 @@ public class NotificationService {
             .ofNullable(event.getLocations().getFirst())
             .flatMap(it -> Optional.ofNullable(it.etd()))
             .orElse(event.getStart())
-                .atZone(timezone);
+            .atZone(timezone);
 
         notification.getProps().put("event_start_date", formatDate(start));
         notification.getProps().put("event_start_datetime", formatDateTime(start));
@@ -240,74 +190,21 @@ public class NotificationService {
     }
 
     public void sendNotification(@NonNull Notification notification, @NonNull UserDetails to)
-    throws IOException, TemplateException, MessagingException {
+    throws IOException, TemplateException {
         if (to.getEmail() == null) {
             log.warn("Cannot send email notification to user {} due to missing email address", to.getKey());
             return;
         }
-        var emailSettings = getEmailSettings();
-
-        if (Strings.isEmpty(emailSettings.getUsername())) {
-            throw new IllegalStateException("Email settings must contain all the required fields");
-        }
-
-        var mailSender = getMailSender(emailSettings);
-        MimeMessage message = mailSender.createMimeMessage();
-
-        var from = emailSettings.getUsername();
-        var fromDisplayName = emailSettings.getUsername();
-        var replyTo = emailSettings.getUsername();
-        var replyToDisplayName = emailSettings.getUsername();
-        if (emailSettings.getFrom() != null) {
-            from = emailSettings.getFrom();
-            fromDisplayName = emailSettings.getFrom();
-            replyTo = emailSettings.getFrom();
-            replyToDisplayName = emailSettings.getFrom();
-        }
-        if (emailSettings.getFromDisplayName() != null) {
-            fromDisplayName = emailSettings.getFromDisplayName();
-            replyToDisplayName = emailSettings.getFromDisplayName();
-        }
-        if (emailSettings.getReplyTo() != null) {
-            replyTo = emailSettings.getReplyTo();
-            replyToDisplayName = emailSettings.getReplyTo();
-        }
-        if (emailSettings.getReplyToDisplayName() != null) {
-            replyToDisplayName = emailSettings.getReplyToDisplayName();
-        }
-
-        message.setFrom(new InternetAddress(from, fromDisplayName));
-        message.setReplyTo(new Address[] { new InternetAddress(replyTo, replyToDisplayName) });
-        message.setRecipients(RecipientType.TO, to.getEmail().trim());
-        message.setSubject(notification.getTitle());
-
         notification.getProps().put("title", notification.getTitle());
         notification.getProps().put("app_link", frontendUrl);
         notification.getProps().put("user", to);
-        notification.getProps().put("footer", emailSettings.getFooter());
-        var htmlContent = renderEmail(notification);
-        message.setContent(htmlContent, "text/html; charset=utf-8");
-
-        if (!recipientsWhitelist.isEmpty()) {
-            if (recipientsWhitelist.contains(to.getEmail())) {
-                log.info("Sending {} email to whitelisted recipient {}", notification.getType(), to.getEmail());
-                try (var exec = Executors.newSingleThreadExecutor()) {
-                    exec.submit(() -> mailSender.send(message));
-                    exec.shutdown();
-                }
-            } else {
-                log.warn(
-                    "Skipped sending email to user {} because notifications are configured to only be sent to " +
-                        "whitelisted users",
-                    to.getKey()
-                );
-            }
-        } else {
-            try (var exec = Executors.newSingleThreadExecutor()) {
-                exec.submit(() -> mailSender.send(message));
-                exec.shutdown();
-            }
-        }
+        queuedEmailRepository.queue(new QueuedEmail(
+            notification.getType(),
+            to.getEmail().trim(),
+            to.getKey(),
+            notification.getTitle(),
+            renderEmail(notification)
+        ));
     }
 
     private String renderEmail(@NonNull Notification notification) throws IOException, TemplateException {
