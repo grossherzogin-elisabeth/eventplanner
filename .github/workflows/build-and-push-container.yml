@@ -5,14 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch:
-
-permissions:
-  contents: read
-  packages: write
+    branches:
+      - main
 
 jobs:
   build-and-push-container:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
