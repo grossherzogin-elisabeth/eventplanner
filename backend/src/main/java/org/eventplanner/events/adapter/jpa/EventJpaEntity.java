@@ -12,6 +12,7 @@ import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.Location;
+import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +23,6 @@ import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
@@ -65,9 +65,6 @@ public class EventJpaEntity {
     @Column(name = "slots")
     private String slotsRaw;
 
-    @Column(name = "registrations")
-    private String registrationsRaw;
-
     @Column(name = "participation_confirmations_requests_sent")
     private Integer participationConfirmationsRequestsSent;
 
@@ -83,7 +80,6 @@ public class EventJpaEntity {
         eventJpaEntity.setEnd(domain.getEnd().toString());
         eventJpaEntity.setLocationsRaw(serializeLocations(domain.getLocations()));
         eventJpaEntity.setSlotsRaw(serializeSlots(domain.getSlots()));
-        eventJpaEntity.setRegistrationsRaw(serializeRegistrations(domain.getRegistrations()));
         eventJpaEntity.setParticipationConfirmationsRequestsSent(domain.getParticipationConfirmationsRequestsSent());
         return eventJpaEntity;
     }
@@ -130,28 +126,7 @@ public class EventJpaEntity {
         }
     }
 
-    public static List<Registration> deserializeRegistrations(String json) {
-        try {
-            var entities = objectMapper.readValue(
-                json, new TypeReference<List<RegistrationJsonEntity>>() {
-                }
-            );
-            return entities.stream().map(RegistrationJsonEntity::toDomain).toList();
-        } catch (IOException e) {
-            return Collections.emptyList();
-        }
-    }
-
-    public static String serializeRegistrations(List<Registration> registrations) {
-        try {
-            var entities = registrations.stream().map(RegistrationJsonEntity::fromDomain).toList();
-            return objectMapper.writeValueAsString(entities);
-        } catch (IOException e) {
-            return "[]";
-        }
-    }
-
-    public Event toDomain() {
+    public Event toDomain(@NonNull List<Registration> registrations) {
         return new Event(
             new EventKey(key),
             name,
@@ -162,7 +137,7 @@ public class EventJpaEntity {
             Instant.parse(end),
             deserializeLocations(locationsRaw),
             deserializeSlots(slotsRaw),
-            deserializeRegistrations(registrationsRaw),
+            registrations,
             participationConfirmationsRequestsSent
         );
     }

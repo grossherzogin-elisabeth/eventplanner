@@ -3,6 +3,7 @@ package org.eventplanner.events.rest.dto;
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 import org.eventplanner.events.spec.UpdateRegistrationSpec;
 import org.eventplanner.positions.values.PositionKey;
@@ -23,7 +24,7 @@ public record UpdateRegistrationRequest(
             mapNullable(userKey, UserKey::new),
             name,
             note,
-            confirmed
+            confirmed ? Instant.now() : null
         );
     }
 }

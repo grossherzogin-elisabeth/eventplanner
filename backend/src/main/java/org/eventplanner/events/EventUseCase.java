@@ -9,11 +9,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.eventplanner.events.adapter.EventRepository;
 import org.eventplanner.events.entities.Event;
@@ -109,8 +107,6 @@ public class EventUseCase {
         log.info("Updating event {} ({})", event.getName(), eventKey);
         var previousState = event.getState();
 
-        Map<Registration, UserDetails> notifyUsersAddedToCrew = new HashMap<>();
-        Map<Registration, UserDetails> notifyUsersRemovedFromCrew = new HashMap<>();
         if (signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
             applyNullable(spec.name(), event::setName);
             applyNullable(spec.description(), event::setDescription);
@@ -121,57 +117,68 @@ public class EventUseCase {
             applyNullable(spec.locations(), event::setLocations);
         }
 
-        if (signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)) {
-            var updatedSlots = spec.slots();
-            // notify changed crew members if crew is already published
-            if (updatedSlots != null && EventState.PLANNED.equals(event.getState())) {
-                var registrationsWithSlotBefore =
-                    event.getSlots().stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
-                var registrationsWithSlotAfter =
-                    updatedSlots.stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
+        Map<Registration, UserDetails> notifyUsersAddedToCrew = new HashMap<>();
+        Map<Registration, UserDetails> notifyUsersRemovedFromCrew = new HashMap<>();
+        var updatedSlots = spec.slots();
+        if (updatedSlots != null && signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)) {
+            // get changed crew members if crew is already published before updating the slots
+            final var registrationsWithSlotBefore =
+                event.getSlots().stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
+            final var registrationsWithSlotAfter =
+                updatedSlots.stream().map(Slot::getAssignedRegistration).filter(Objects::nonNull).toList();
 
-                var registrationsAddedToCrew = registrationsWithSlotAfter.stream()
-                    .filter((key -> !registrationsWithSlotBefore.contains(key)))
-                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
-                    .toList();
-                notifyUsersAddedToCrew = mapRegistrationsToUsers(registrationsAddedToCrew);
+            final var registrationsAddedToCrew = registrationsWithSlotAfter.stream()
+                .filter((key -> !registrationsWithSlotBefore.contains(key)))
+                .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                .toList();
+            notifyUsersAddedToCrew = mapRegistrationsToUsers(registrationsAddedToCrew);
 
-                var registrationsRemovedFromCrew = registrationsWithSlotBefore.stream()
-                    .filter((key -> !registrationsWithSlotAfter.contains(key)))
-                    .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
-                    .toList();
-                notifyUsersRemovedFromCrew = mapRegistrationsToUsers(registrationsRemovedFromCrew);
-            }
-            applyNullable(spec.slots(), event::setSlots);
-        }
-
-        // crew planning has just been published, notify all crew members
-        if (EventState.PLANNED.equals(spec.state()) && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP)
-            .contains(previousState)) {
-            var crew = event.getAssignedRegistrations();
-            notifyUsersAddedToCrew = mapRegistrationsToUsers(crew);
+            final var registrationsRemovedFromCrew = registrationsWithSlotBefore.stream()
+                .filter((key -> !registrationsWithSlotAfter.contains(key)))
+                .flatMap(key -> event.getRegistrations().stream().filter(r -> r.getKey().equals(key)))
+                .toList();
+            notifyUsersRemovedFromCrew = mapRegistrationsToUsers(registrationsRemovedFromCrew);
+            event.setSlots(updatedSlots);
         }
 
         var updatedEvent = this.eventRepository.update(this.eventService.removeInvalidSlotAssignments(event));
-        notifyUsersAddedToCrew.values().forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
-        // also send participation confirmation request when event will start within 2 weeks
-        if (event.getStart().isBefore(ZonedDateTime.now().plusWeeks(1).toInstant())) {
-            notifyUsersAddedToCrew.forEach((registration, user) -> notificationService.sendSecondParticipationConfirmationRequestNotification(
-                user,
-                updatedEvent,
-                registration
-            ));
-        } else if (event.getStart().isBefore(ZonedDateTime.now().plusWeeks(2).toInstant())) {
-            notifyUsersAddedToCrew.forEach((registration, user) -> notificationService.sendFirstParticipationConfirmationRequestNotification(
-                user,
-                updatedEvent,
-                registration
-            ));
+
+        // crew planning has just been published, notify all crew members
+        if (List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(previousState) && EventState.PLANNED.equals(
+            spec.state())) {
+            var crew = updatedEvent.getAssignedRegistrations();
+            notifyUsersAddedToCrew = mapRegistrationsToUsers(crew);
         }
-        notifyUsersRemovedFromCrew.values().forEach(user -> notificationService.sendRemovedFromCrewNotification(
-            user,
-            updatedEvent
-        ));
+
+        // only send notifications when the event is in planned state
+        if (EventState.PLANNED.equals(updatedEvent.getState())) {
+            // send added to crew notification
+            notifyUsersAddedToCrew.values()
+                .forEach(user -> notificationService.sendAddedToCrewNotification(user, updatedEvent));
+            // send removed from crew notification
+            notifyUsersRemovedFromCrew.values().forEach(user -> notificationService.sendRemovedFromCrewNotification(
+                user,
+                updatedEvent
+            ));
+
+            // also send participation confirmation request when event will start within next 2 weeks
+            if (updatedEvent.getStart().isBefore(ZonedDateTime.now().plusWeeks(1).toInstant())) {
+                notifyUsersAddedToCrew.forEach((registration, user) ->
+                    notificationService.sendSecondParticipationConfirmationRequestNotification(
+                        user,
+                        updatedEvent,
+                        registration
+                    ));
+            } else if (updatedEvent.getStart().isBefore(ZonedDateTime.now().plusWeeks(2).toInstant())) {
+                notifyUsersAddedToCrew.forEach((registration, user) ->
+                    notificationService.sendFirstParticipationConfirmationRequestNotification(
+                        user,
+                        updatedEvent,
+                        registration
+                    ));
+            }
+        }
+
         return updatedEvent;
     }
 
