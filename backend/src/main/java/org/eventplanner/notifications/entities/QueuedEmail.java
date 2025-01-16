@@ -1,21 +1,45 @@
 package org.eventplanner.notifications.entities;
 
+import java.time.Instant;
+import java.util.UUID;
+
+import org.eventplanner.notifications.values.NotificationType;
+import org.eventplanner.users.values.UserKey;
+import org.springframework.lang.NonNull;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
+@AllArgsConstructor
 public class QueuedEmail {
-    private String key;
-    private String email;
-    private String subject;
-    private String body;
+    private final @NonNull String key;
+    private final @NonNull NotificationType type;
+    private final @NonNull String to;
+    private final @NonNull UserKey userKey;
+    private final @NonNull String subject;
+    private final @NonNull String body;
     private int retries;
-    private String createdAt;
+    private @NonNull Instant createdAt;
+
+    public QueuedEmail(
+        @NonNull NotificationType type,
+        @NonNull String to,
+        @NonNull UserKey userKey,
+        @NonNull String subject,
+        @NonNull String body
+    ) {
+        this.key = UUID.randomUUID().toString();
+        this.type = type;
+        this.to = to;
+        this.userKey = userKey;
+        this.subject = subject;
+        this.body = body;
+        this.createdAt = Instant.now();
+        this.retries = 0;
+    }
 }

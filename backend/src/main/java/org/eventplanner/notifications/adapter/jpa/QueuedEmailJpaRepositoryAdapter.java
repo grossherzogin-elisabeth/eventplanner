@@ -16,18 +16,22 @@ public class QueuedEmailJpaRepositoryAdapter implements QueuedEmailRepository {
 
     @Override
     public Optional<QueuedEmail> next() {
-        return repository.findFirstByOrderByCreatedAtAsc().map(this::mapToQueuedEmail);
+        var next = repository.findFirstByOrderByCreatedAtAsc().map(QueuedEmailJpaEntity::toDomain);
+        next.ifPresent(email -> repository.deleteById(email.getKey()));
+        return next;
     }
 
     @Override
     public void queue(QueuedEmail email) {
         repository.save(new QueuedEmailJpaEntity(
             email.getKey(),
-            email.getEmail(),
+            email.getType().toString(),
+            email.getTo(),
+            email.getUserKey().toString(),
             email.getSubject(),
             email.getBody(),
             email.getRetries(),
-            email.getCreatedAt()
+            email.getCreatedAt().toString()
         ));
     }
 
@@ -36,14 +40,4 @@ public class QueuedEmailJpaRepositoryAdapter implements QueuedEmailRepository {
         repository.deleteById(key);
     }
 
-    private QueuedEmail mapToQueuedEmail(QueuedEmailJpaEntity entity) {
-        return new QueuedEmail(
-            entity.getKey(),
-            entity.getEmail(),
-            entity.getSubject(),
-            entity.getBody(),
-            entity.getRetries(),
-            entity.getCreatedAt()
-        );
-    }
 }
