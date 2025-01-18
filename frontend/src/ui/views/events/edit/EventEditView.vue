@@ -328,9 +328,9 @@ async function init(): Promise<void> {
 async function fetchEvent(): Promise<void> {
     const year = parseInt(route.params.year as string, 10);
     const key = route.params.key as string;
-    eventOriginal.value = await eventUseCase.getEventByKey(year, key, true);
-    event.value = deepCopy(eventOriginal.value);
-    emit('update:title', event.value.name);
+    const event = await eventUseCase.getEventByKey(year, key, true);
+    updateState(event);
+    emit('update:title', event.name);
 }
 
 function preventPageUnloadOnUnsavedChanges(): void {
@@ -377,7 +377,8 @@ async function cancelEvent(): Promise<void> {
     if (event.value) {
         const message = await cancelEventDialog.value?.open(event.value);
         if (message !== undefined) {
-            event.value = await eventAdministrationUseCase.cancelEvent(event.value, message);
+            const updatedEvent = await eventAdministrationUseCase.cancelEvent(event.value, message);
+            updateState(updatedEvent);
             await router.push({ name: Routes.EventsListAdmin });
         }
     }
@@ -420,26 +421,33 @@ async function contactTeam(): Promise<void> {
 
 async function openEventForCrewSignup(): Promise<void> {
     if (event.value) {
-        event.value = await eventAdministrationUseCase.updateEvent(event.value.key, {
+        const updatedEvent = await eventAdministrationUseCase.updateEvent(event.value.key, {
             state: EventState.OpenForSignup,
         });
+        updateState(updatedEvent);
     }
 }
 
 async function publishPlannedCrew(): Promise<void> {
     if (event.value) {
-        event.value = await eventAdministrationUseCase.updateEvent(event.value.key, { state: EventState.Planned });
+        const updatedEvent = await eventAdministrationUseCase.updateEvent(event.value.key, { state: EventState.Planned });
+        updateState(updatedEvent);
     }
 }
 
 async function saveIfValid(): Promise<void> {
     if (event.value && validation.isValid.value) {
-        eventOriginal.value = await eventAdministrationUseCase.updateEvent(event.value.key, event.value);
-        event.value = deepCopy(eventOriginal.value);
+        const updatedEvent = await eventAdministrationUseCase.updateEvent(event.value.key, event.value);
+        updateState(updatedEvent);
     } else {
         validation.showErrors.value = true;
         throw validation.errors;
     }
+}
+
+function updateState(value: Event): void {
+    eventOriginal.value = value;
+    event.value = deepCopy(value);
 }
 
 init();
