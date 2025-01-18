@@ -405,6 +405,7 @@ async function addSlot(): Promise<void> {
     const newSlot = await createSlotDialog.value?.open();
     if (event.value && newSlot) {
         event.value.slots.push(newSlot);
+        event.value = deepCopy(event.value); // to make sure the list is updated correctly
     }
 }
 
