@@ -176,8 +176,8 @@ public class NotificationService {
 
     private void addEventDetails(@NonNull Notification notification, @NonNull Event event) {
         notification.getProps().put("event", event);
-        var start = Optional
-            .ofNullable(event.getLocations().getFirst())
+        var start = event.getLocations().stream()
+            .findFirst()
             .flatMap(it -> Optional.ofNullable(it.etd()))
             .orElse(event.getStart())
             .atZone(timezone);

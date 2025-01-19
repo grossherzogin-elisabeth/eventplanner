@@ -21,6 +21,7 @@ import org.eventplanner.common.ObjectUtils;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
+import org.eventplanner.events.values.Location;
 import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.positions.entities.Position;
@@ -78,7 +79,7 @@ public class ImoListService {
             XSSFSheet sheet = workbook.getSheetAt(0);
 
             if (!event.getLocations().isEmpty()) {
-                String departurePort = event.getLocations().getFirst().name();
+                String departurePort = event.getLocations().stream().findFirst().map(Location::name).orElse("");
                 replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", departurePort);
             } else {
                 replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", "");
