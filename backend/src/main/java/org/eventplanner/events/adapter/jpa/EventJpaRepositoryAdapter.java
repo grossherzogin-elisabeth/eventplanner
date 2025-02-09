@@ -30,7 +30,7 @@ public class EventJpaRepositoryAdapter implements EventRepository {
 
     @Override
     public @NonNull List<Event> findAllByYear(int year) {
-        var eventEntities = this.eventJpaRepository.findAllByYear(year).toList();
+        var eventEntities = this.eventJpaRepository.findAllByYear(year);
         var eventKeys = eventEntities.stream().map(EventJpaEntity::getKey).toList();
         var allRegistrationEntities = this.registrationJpaRepository.findAllByEventKeyIn(eventKeys);
         return eventEntities.stream()
