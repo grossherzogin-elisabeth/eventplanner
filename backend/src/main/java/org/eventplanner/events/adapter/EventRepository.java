@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 
 public interface EventRepository {
     @NonNull
-    Optional<Event> findByKey(EventKey key);
+    Optional<Event> findByKey(@NonNull EventKey key);
 
     @NonNull
     List<Event> findAllByYear(int year);
@@ -20,7 +20,7 @@ public interface EventRepository {
     @NonNull
     Event update(@NonNull Event event);
 
-    void deleteByKey(EventKey key);
+    void deleteByKey(@NonNull EventKey key);
 
     void deleteAllByYear(int year);
 }

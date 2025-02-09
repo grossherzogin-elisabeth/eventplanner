@@ -1,13 +1,19 @@
 package org.eventplanner.events;
 
+import java.util.Objects;
+
 import org.eventplanner.events.adapter.EventRepository;
+import org.eventplanner.events.adapter.RegistrationRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.services.RegistrationService;
 import org.eventplanner.events.spec.CreateRegistrationSpec;
 import org.eventplanner.events.spec.UpdateRegistrationSpec;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.RegistrationKey;
+import org.eventplanner.notifications.service.NotificationService;
+import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.users.entities.SignedInUser;
+import org.eventplanner.users.service.UserService;
 import org.eventplanner.users.values.Permission;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -39,14 +45,15 @@ public class RegistrationUseCase {
                 signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
                 log.info("Adding registration for user {} to event {} ({})", userKey, event.getName(), eventKey);
             }
+            return this.registrationService.addRegistration(event, spec);
         } else if (spec.name() != null) {
             // validate permission and request for guest registration
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             log.info("Adding registration for guest {} on event {} ({})", spec.name(), event.getName(), eventKey);
+            return this.registrationService.addGuestRegistration(event, spec);
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
         }
-        return this.registrationService.addRegistration(event, spec);
     }
 
     public @NonNull Event removeRegistration(

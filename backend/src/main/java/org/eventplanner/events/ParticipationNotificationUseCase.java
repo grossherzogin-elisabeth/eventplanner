@@ -15,6 +15,7 @@ import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
 import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.services.RegistrationService;
+import org.eventplanner.events.spec.UpdateRegistrationSpec;
 import org.eventplanner.events.values.EventKey;
 import org.eventplanner.events.values.EventState;
 import org.eventplanner.events.values.RegistrationKey;
@@ -164,9 +165,13 @@ public class ParticipationNotificationUseCase {
             return;
         }
         log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getKey());
-        registration.setConfirmedAt(Instant.now());
-        event.updateRegistration(registrationKey, registration);
-        eventRepository.update(event);
+        registrationService.updateRegistration(event, registration, new UpdateRegistrationSpec(
+            registration.getPosition(),
+            registration.getUserKey(),
+            registration.getName(),
+            registration.getNote(),
+            Instant.now()
+        ));
     }
 
     public void declineRegistration(

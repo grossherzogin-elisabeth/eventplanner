@@ -49,25 +49,4 @@ public class Event {
             .filter(Objects::nonNull)
             .toList();
     }
-
-    public void addRegistration(Registration registration) {
-        var mutableList = new LinkedList<>(registrations);
-        mutableList.add(registration);
-        registrations = mutableList.stream().toList(); // make the list immutable again
-    }
-
-    public void removeRegistration(RegistrationKey registrationKey) {
-        registrations = registrations.stream().filter(r -> !registrationKey.equals(r.getKey())).toList();
-        slots = slots.stream().map(s -> {
-            if (registrationKey.equals(s.getAssignedRegistration())) {
-                s.setAssignedRegistration(null);
-            }
-
-            return s;
-        }).toList();
-    }
-
-    public void updateRegistration(RegistrationKey registrationKey, Registration registration) {
-        registrations = registrations.stream().map(r -> registrationKey.equals(r.getKey()) ? registration : r).toList();
-    }
 }

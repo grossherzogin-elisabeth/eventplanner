@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eventplanner.events.adapter.EventRepository;
+import org.eventplanner.events.adapter.RegistrationRepository;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.services.RegistrationService;
 import org.eventplanner.events.spec.UpdateRegistrationSpec;
@@ -41,12 +42,16 @@ class RegistrationUseCaseTest {
                 mock(NotificationService.class),
                 mock(UserService.class),
                 eventRepository,
+                mock(RegistrationRepository.class),
                 mock(PositionRepository.class)
             )
         );
         var registrationKey = event.getRegistrations().getFirst().getKey();
-        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND,null,null,null, null);
-        assertThrows(MissingPermissionException.class, () -> testee.updateRegistration(signedInUser, event.getKey(), registrationKey, updateSpec));
+        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND, null, null, null, null);
+        assertThrows(
+            MissingPermissionException.class,
+            () -> testee.updateRegistration(signedInUser, event.getKey(), registrationKey, updateSpec)
+        );
     }
 
     @Test
@@ -64,11 +69,12 @@ class RegistrationUseCaseTest {
                 mock(NotificationService.class),
                 mock(UserService.class),
                 eventRepository,
+                mock(RegistrationRepository.class),
                 mock(PositionRepository.class)
             )
         );
         var registrationKey = event.getRegistrations().getFirst().getKey();
-        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND,null,null,null, null);
+        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND, null, null, null, null);
         var updatedEvent = testee.updateRegistration(signedInUser, event.getKey(), registrationKey, updateSpec);
         assertEquals(event.getKey(), updatedEvent.getKey());
         assertEquals(PositionKeys.DECKSHAND, updatedEvent.getRegistrations().getFirst().getPosition());
@@ -88,17 +94,18 @@ class RegistrationUseCaseTest {
                 mock(NotificationService.class),
                 mock(UserService.class),
                 eventRepository,
+                mock(RegistrationRepository.class),
                 mock(PositionRepository.class)
             )
         );
         var registrationKey = event.getRegistrations().getFirst().getKey();
-        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND,null,null,null, null);
+        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND, null, null, null, null);
         var updatedEvent = testee.updateRegistration(signedInUser, event.getKey(), registrationKey, updateSpec);
         assertEquals(event.getKey(), updatedEvent.getKey());
         assertEquals(PositionKeys.DECKSHAND, updatedEvent.getRegistrations().getFirst().getPosition());
     }
 
-    private EventRepository mockEventRepository(Event...events) {
+    private EventRepository mockEventRepository(Event... events) {
         var eventRepository = mock(EventRepository.class);
         when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(events));
         for (Event event : events) {
