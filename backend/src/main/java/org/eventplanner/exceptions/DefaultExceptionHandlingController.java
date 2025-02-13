@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -14,8 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultExceptionHandlingController {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Void> handleException(Exception e) {
-        log.error("An unexpected exception occured", e);
+    public ResponseEntity<Void> handleException(Exception e, HttpServletRequest request) {
+        if (request != null) {
+            log.error("Unhandled exception on request {} {}", request.getMethod(), request.getRequestURI(), e);
+        } else {
+            log.error("An unexpected exception occurred", e);
+        }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
@@ -26,8 +31,12 @@ public class DefaultExceptionHandlingController {
     }
 
     @ExceptionHandler(MissingPermissionException.class)
-    public ResponseEntity<Void> handleMissingPermissionException() {
-        log.warn("Tried to access resource without proper permission");
+    public ResponseEntity<Void> handleMissingPermissionException(HttpServletRequest request) {
+        log.warn(
+            "Tried to access resource at {} {} without proper permission",
+            request.getMethod(),
+            request.getRequestURI()
+        );
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
@@ -37,8 +46,12 @@ public class DefaultExceptionHandlingController {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Void> handleIllegalArgumentException() {
-        log.warn("Received invalid request parameters");
+    public ResponseEntity<Void> handleIllegalArgumentException(HttpServletRequest request) {
+        log.warn(
+            "Received invalid request parameters at {} {}",
+            request.getMethod(),
+            request.getRequestURI()
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }
