@@ -202,6 +202,10 @@
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Verzehrliste generieren</span>
             </li>
+            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainsList(event)">
+                <i class="fa-solid fa-file-medical" />
+                <span>Kapitänsliste generieren</span>
+            </li>
             <li
                 v-if="event?.state === EventState.Draft"
                 class="permission-write-event-details context-menu-item"

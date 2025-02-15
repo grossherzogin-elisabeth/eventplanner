@@ -232,6 +232,10 @@
                         <i class="fa-solid fa-beer-mug-empty" />
                         <span>Verzehrliste generieren</span>
                     </li>
+                    <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainsList(item)">
+                        <i class="fa-solid fa-file-medical" />
+                        <span>Kapitänsliste generieren</span>
+                    </li>
                     <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
                         <i class="fa-solid fa-user-plus" />
                         <span>Anmeldung hinzufügen</span>

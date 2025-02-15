@@ -18,4 +18,6 @@ export interface EventRepository {
     downloadImoList(event: Event): Promise<Blob>;
 
     downloadConsumptionList(event: Event): Promise<Blob>;
+
+    downloadCaptainList(event: Event): Promise<Blob>;
 }

@@ -3,10 +3,7 @@ package org.eventplanner.events.rest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.eventplanner.ConsumtionListUseCase;
-import org.eventplanner.events.EventUseCase;
-import org.eventplanner.events.ImoListUseCase;
-import org.eventplanner.events.ParticipationNotificationUseCase;
+import org.eventplanner.events.*;
 import org.eventplanner.events.rest.dto.CreateEventRequest;
 import org.eventplanner.events.rest.dto.EventRepresentation;
 import org.eventplanner.events.rest.dto.UpdateEventRequest;
@@ -46,6 +43,7 @@ public class EventController {
     private final EventUseCase eventUseCase;
     private final ImoListUseCase imoListUseCase;
     private final ConsumtionListUseCase consumtionListUseCase;
+    private final CaptainListUseCase captainListUseCase;
     private final ParticipationNotificationUseCase participationNotificationUseCase;
 
     @GetMapping(path = "")
@@ -145,5 +143,22 @@ public class EventController {
             .contentLength(consumptionListByteArray.length)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(resource);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/{eventKey}/captain-list")
+    public ResponseEntity<Resource> downloadCaptainList(@PathVariable("eventKey") String eventKey)
+            throws IOException {
+
+        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        ByteArrayOutputStream captainListStream =
+                captainListUseCase.downloadCaptainList(signedInUser, new EventKey(eventKey));
+        byte[] captainListByteArray = captainListStream.toByteArray();
+
+        ByteArrayResource resource = new ByteArrayResource(captainListByteArray);
+
+        return ResponseEntity.ok()
+                .contentLength(captainListByteArray.length)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }
