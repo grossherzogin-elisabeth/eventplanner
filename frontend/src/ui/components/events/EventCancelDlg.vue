@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg" height="max-h-screen h-auto">
+    <VDialog ref="dlg" height="max-h-screen h-auto error-dialog">
         <template #title>
             <h1>Reise absagen</h1>
         </template>
@@ -7,21 +7,27 @@
             <div v-if="event" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
-                        Wenn du die Reise absagst wird vom System automatisch eine Benachrichtigung an die Crew gesendet. Du kannst die zu
-                        versendene Nachricht hier anpassen.
+                        Bist du sicher, das du diese Reise absagen möchtest? Aktuell wird vom System noch keine automatische Mail an die
+                        Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die Reise absagst.
                     </p>
-                    <div class="mb-4">
-                        <VInputLabel>Nachricht an die Crew</VInputLabel>
-                        <VInputTextArea v-model.trim="message" class="min-h-64" />
-                    </div>
                 </section>
+                <!--                <section>-->
+                <!--                    <p class="mb-8 max-w-lg">-->
+                <!--                        Wenn du die Reise absagst wird vom System automatisch eine Benachrichtigung an die Crew gesendet. Du kannst die zu-->
+                <!--                        versendene Nachricht hier anpassen.-->
+                <!--                    </p>-->
+                <!--                    <div class="mb-4">-->
+                <!--                        <VInputLabel>Nachricht an die Crew</VInputLabel>-->
+                <!--                        <VInputTextArea v-model.trim="message" class="min-h-64" />-->
+                <!--                    </div>-->
+                <!--                </section>-->
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
+            <button class="btn-ghost-danger" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-danger" @click="submit">
+            <button class="btn-ghost-danger" @click="submit">
                 <span>Reise absagen</span>
             </button>
         </template>
@@ -34,7 +40,7 @@ import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VDialog, VInputLabel, VInputTextArea } from '@/ui/components/common';
+import { VDialog } from '@/ui/components/common';
 
 const i18n = useI18n();
 
