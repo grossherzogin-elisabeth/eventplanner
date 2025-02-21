@@ -318,6 +318,7 @@
             </li>
         </template>
     </DetailsPage>
+    <VConfirmationDialog ref="confirmationDialog" />
     <PositionSelectDlg ref="positionSelectDialog" />
     <RegistrationEditDlg v-if="event" ref="editRegistrationDialog" :event="event" />
 </template>
@@ -329,7 +330,8 @@ import { DateTimeFormat } from '@/common/date';
 import type { Event, PositionKey, Registration, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
-import type { Dialog } from '@/ui/components/common';
+import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { VConfirmationDialog } from '@/ui/components/common';
 import { ContextMenuButton } from '@/ui/components/common';
 import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
 import VMarkdown from '@/ui/components/common/VMarkdown.vue';
@@ -368,6 +370,7 @@ const team = ref<ResolvedRegistrationSlot[]>([]);
 
 const positionSelectDialog = ref<Dialog<unknown, PositionKey> | null>(null);
 const editRegistrationDialog = ref<Dialog<Registration, Registration | undefined> | null>(null);
+const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
 const waitingListCount = computed<number>(() => {
     if (!event.value) return 0;
@@ -428,6 +431,19 @@ async function joinEvent(): Promise<void> {
 
 async function leaveEvent(): Promise<void> {
     if (event.value) {
+        if (event.value.signedInUserAssignedPosition) {
+            const confirmed = await confirmationDialog.value?.open({
+                title: 'Teilnahme absagen?',
+                message: `Bist du sicher, das du deine Teilnahme an der Reise ${event.value.name} absagen möchtest?
+                    Du hast dann keinen Anspruch mehr auf eine Teilname an der Reise und dein Platz wird an eine
+                    andere Person vergeben.`,
+                submit: 'Reise absagen',
+                danger: true,
+            });
+            if (!confirmed) {
+                return;
+            }
+        }
         event.value = await eventUseCase.leaveEvent(event.value);
     }
 }
