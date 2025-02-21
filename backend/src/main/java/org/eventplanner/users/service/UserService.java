@@ -1,5 +1,6 @@
 package org.eventplanner.users.service;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,16 +19,16 @@ import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Role;
 import org.eventplanner.users.values.UserKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class UserService {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserRepository userRepository;
     private final QualificationRepository qualificationRepository;
     private final UserEncryptionService userEncryptionService;
@@ -73,7 +74,23 @@ public class UserService {
 
     private @NonNull Collection<EncryptedUserDetails> getEncryptedUsers() {
         if (cache.isEmpty()) {
-            userRepository.findAll().forEach(it -> cache.put(it.getKey(), it));
+            userRepository.findAll().stream()
+                .map(u -> {
+                    if (u.getCreatedAt().isBefore(Instant.now().minusSeconds(360))) {
+                        // user does not have a creation date within the last 5 minutes, so he is probably already
+                        // migrated completely
+                        return u;
+                    }
+                    log.info("Finishing migration for user {}", u.getKey());
+                    u.setCreatedAt(Instant.parse("2024-11-27T10:00:00Z")); // the rough time we last imported data
+                    u.setUpdatedAt(Instant.now());
+                    if (u.getEncryptedAuthKey() != null) {
+                        var key = userEncryptionService.decrypt(u.getEncryptedAuthKey());
+                        u.setAuthKey(new AuthKey(key));
+                    }
+                    return userRepository.update(u);
+                })
+                .forEach(u -> cache.put(u.getKey(), u));
         }
         return cache.values();
     }
@@ -96,7 +113,7 @@ public class UserService {
             return Optional.empty();
         }
         return getEncryptedUsers().stream()
-            .filter(it -> authKey.value().equals(userEncryptionService.decryptNullable(it.getAuthKey())))
+            .filter(it -> authKey.equals(it.getAuthKey()))
             .map(userEncryptionService::decrypt)
             .map(this::resolvePositionsAndQualificationExpires)
             .findFirst();
@@ -111,30 +128,6 @@ public class UserService {
             .map(userEncryptionService::decrypt)
             .map(this::resolvePositionsAndQualificationExpires)
             .findFirst();
-    }
-
-    public @NonNull Optional<UserDetails> getUserByName(@NonNull String firstName, @NonNull String lastName) {
-        for (EncryptedUserDetails user : getEncryptedUsers()) {
-            var userLastName = userEncryptionService.decrypt(user.getLastName());
-            if (!userLastName.equalsIgnoreCase(lastName)) {
-                continue;
-            }
-            var userFirstName = userEncryptionService.decrypt(user.getFirstName());
-            if (userFirstName.equalsIgnoreCase(firstName)) {
-                return Optional.of(resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(user)));
-            }
-            if (user.getNickName() != null) {
-                var userNickName = userEncryptionService.decrypt(user.getNickName());
-                if (userNickName.equalsIgnoreCase(firstName)) {
-                    return Optional.of(resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(user)));
-                }
-            }
-            var userSecondName = userEncryptionService.decryptNullable(user.getSecondName());
-            if (userSecondName != null && (userFirstName + " " + userSecondName).equalsIgnoreCase(firstName)) {
-                return Optional.of(resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(user)));
-            }
-        }
-        return Optional.empty();
     }
 
     public UserDetails createUser(UserDetails userDetails) {

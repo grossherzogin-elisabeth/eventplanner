@@ -4,6 +4,7 @@ import static java.util.Optional.ofNullable;
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,7 +39,8 @@ public record UpdateUserRequest(
     @Nullable String diseases,
     @Nullable String intolerances,
     @Nullable String medication,
-    @Nullable String diet
+    @Nullable String diet,
+    @Nullable String verifiedAt
 ) implements Serializable {
 
     public @NonNull UpdateUserSpec toDomain() {
@@ -66,7 +68,8 @@ public record UpdateUserRequest(
             diseases,
             intolerances,
             medication,
-            mapNullable(diet, (String s) -> Diet.fromString(s).orElse(Diet.OMNIVORE))
+            mapNullable(diet, (String s) -> Diet.fromString(s).orElse(Diet.OMNIVORE)),
+            ofNullable(verifiedAt).map(Instant::parse).orElse(null)
         );
     }
 }

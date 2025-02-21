@@ -28,7 +28,7 @@
                 :class="{ active: filterPositions.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterPositions.length === 0" class="">Alle Positionen</span>
+                    <span v-if="filterPositions.length === 0" class="">Nach Positionen filtern...</span>
                     <span v-else-if="filterPositions.length > 4" class="">{{ filterPositions.length }} Positionen</span>
                     <span v-else class="block max-w-64 truncate">
                         {{
@@ -76,6 +76,46 @@
             >
                 <span class="">Abgelaufene Qualifikationen</span>
             </button>
+            <ContextMenuButton
+                anchor-align-x="left"
+                dropdown-position-x="right"
+                class="btn-tag"
+                :class="{ active: filterEvent !== undefined }"
+            >
+                <template #icon>
+                    <span v-if="!filterEvent" class="">Nach Reisen filtern...</span>
+                    <span v-else class="block max-w-64 truncate"> Nimmt teil an {{ filterEvent.name }} </span>
+                </template>
+                <template #default>
+                    <ul>
+                        <li v-if="!filterEvent" class="context-menu-item">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Alle Reisen</span>
+                        </li>
+                        <li v-else class="context-menu-item" @click="filterEvent = undefined">
+                            <i class="w-4"></i>
+                            <span>Alle Reisen</span>
+                        </li>
+                        <template v-for="event in events" :key="event.key">
+                            <li v-if="filterEvent === event" class="context-menu-item" @click="filterEvent = undefined">
+                                <i class="fa-solid fa-check w-4"></i>
+                                <span class="truncate">{{ event.name }}</span>
+                            </li>
+                            <li v-else class="context-menu-item" @click="filterEvent = event">
+                                <i class="w-4"></i>
+                                <span class="truncate">{{ event.name }}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </ContextMenuButton>
+            <button
+                class="btn-tag"
+                :class="{ active: filterPendingVerification }"
+                @click="filterPendingVerification = !filterPendingVerification"
+            >
+                <span class="">Verifizierung ausstehend</span>
+            </button>
         </div>
 
         <div class="w-full">
@@ -89,7 +129,12 @@
             >
                 <template #row="{ item }">
                     <td class="w-1/3 whitespace-nowrap font-semibold">
-                        <p class="mb-2">{{ item.nickName || item.firstName }} {{ item.lastName }}</p>
+                        <p class="mb-2">
+                            {{ item.nickName || item.firstName }} {{ item.lastName }}
+                            <span v-if="item.verified">
+                                <i class="fa-solid fa-check text-primary"></i>
+                            </span>
+                        </p>
                         <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
                             {{ item.rolesStr }}
                         </p>
@@ -262,7 +307,7 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { filterUndefined, hasAnyOverlap } from '@/common';
-import type { Position, PositionKey, QualificationKey, User } from '@/domain';
+import type { Event, Position, PositionKey, QualificationKey, User } from '@/domain';
 import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -317,8 +362,11 @@ const tab = ref<string>(tabs[0]);
 const filter = ref<string>('');
 const filterOnlyActive = ref<boolean>(true);
 const filterExpiredQualifications = ref<boolean>(false);
+const filterPendingVerification = ref<boolean>(false);
 const filterPositions = ref<PositionKey[]>([]);
+const filterEvent = ref<Event | undefined>(undefined);
 
+const events = ref<Event[]>([]);
 const users = ref<UserRegistrations[] | undefined>(undefined);
 
 const createUserDialog = ref<Dialog<void, User | undefined> | null>(null);
@@ -334,6 +382,11 @@ useQueryStateSync<boolean>(
     'expired',
     () => filterExpiredQualifications.value,
     (v) => (filterExpiredQualifications.value = v)
+);
+useQueryStateSync<boolean>(
+    'unverified',
+    () => filterPendingVerification.value,
+    (v) => (filterPendingVerification.value = v)
 );
 useQueryStateSync<string>(
     'positions',
@@ -352,10 +405,23 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
             matchesActiveCategory(it) &&
             (!filterOnlyActive.value || hasAnyEvents(it)) &&
             (!filterExpiredQualifications.value || it.expiredQualifications.length > 0) &&
+            (!filterPendingVerification.value || !it.verified) &&
             (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys)) &&
+            (filterEvent.value === undefined || participatesInEvent(it)) &&
             usersService.doesUserMatchFilter(it, filter.value)
     )
 );
+
+function participatesInEvent(user: UserRegistrations): boolean {
+    if (!filterEvent.value) {
+        return true;
+    }
+    const userRegistration = filterEvent.value.registrations.find((it) => it.userKey === user.key);
+    if (!userRegistration) {
+        return false;
+    }
+    return filterEvent.value.slots.find((it) => it.assignedRegistrationKey === userRegistration.key) !== undefined;
+}
 
 const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
     return filteredUsers.value?.filter((it) => it.selected);
@@ -364,6 +430,7 @@ const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
 async function init(): Promise<void> {
     emit('update:title', 'Nutzer verwalten');
     await fetchUsers();
+    await fetchEvents();
     restoreScrollPosition();
 }
 
@@ -439,6 +506,11 @@ function selectNone(): void {
 
 function selectAll(): void {
     users.value?.forEach((it) => (it.selected = true));
+}
+
+async function fetchEvents(): Promise<void> {
+    const allEvents = await eventUseCase.getFutureEvents();
+    events.value = allEvents.slice(0, 10);
 }
 
 async function fetchUsers(): Promise<void> {

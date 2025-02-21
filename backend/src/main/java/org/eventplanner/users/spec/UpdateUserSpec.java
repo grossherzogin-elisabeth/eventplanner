@@ -1,5 +1,6 @@
 package org.eventplanner.users.spec;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public record UpdateUserSpec(
     @Nullable String diseases,
     @Nullable String intolerances,
     @Nullable String medication,
-    @Nullable Diet diet
+    @Nullable Diet diet,
+    @Nullable Instant verifiedAt
 ) {
 }

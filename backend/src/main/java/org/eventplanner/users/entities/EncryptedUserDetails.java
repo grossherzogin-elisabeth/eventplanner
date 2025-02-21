@@ -1,9 +1,11 @@
 package org.eventplanner.users.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 
 import org.eventplanner.common.EncryptedString;
+import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.EncryptedAddress;
 import org.eventplanner.users.values.UserKey;
 import org.springframework.lang.NonNull;
@@ -22,7 +24,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EncryptedUserDetails implements Serializable {
     private @NonNull UserKey key;
-    private @Nullable EncryptedString authKey; // TODO should this really be encrypted?
+    private @Nullable AuthKey authKey;
+    @Deprecated(forRemoval = true)
+    private @Nullable EncryptedString encryptedAuthKey;
+    private @NonNull Instant createdAt;
+    private @NonNull Instant updatedAt;
+    private @Nullable Instant verifiedAt;
+    private @Nullable Instant lastLoginAt;
     private @Nullable EncryptedString gender;
     private @Nullable EncryptedString title;
     private @NonNull EncryptedString firstName;

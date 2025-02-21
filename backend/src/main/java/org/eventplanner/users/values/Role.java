@@ -6,6 +6,9 @@ import java.util.stream.Stream;
 
 import org.springframework.lang.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Role {
 
     NONE("ROLE_NONE"),
@@ -22,8 +25,9 @@ public enum Role {
         this.value = value;
     }
 
+    @JsonCreator
     public static Optional<Role> fromString(String value) {
-        return Arrays.stream(Role.values())
+        return Arrays.stream(values())
             .filter(role -> role.value().equals(value))
             .findFirst();
     }
@@ -99,6 +103,7 @@ public enum Role {
         };
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return value;

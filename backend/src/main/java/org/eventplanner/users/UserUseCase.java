@@ -2,6 +2,7 @@ package org.eventplanner.users;
 
 import static java.util.Optional.ofNullable;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +53,8 @@ public class UserUseCase {
             var maybeUser = userService.getUserByAuthKey(authkey);
             if (maybeUser.isPresent()) {
                 var user = maybeUser.get();
+                user.setLastLoginAt(Instant.now());
+                userService.updateUser(user);
                 if (!Objects.equals(user.getEmail(), oidcUser.getEmail())) {
                     log.warn(
                         "Oidc user {} has a different email than the linked internal user {}",
@@ -68,6 +71,7 @@ public class UserUseCase {
                 var user = maybeUser.get();
                 log.info("Linking user {} with oidc user {} by email", user.getKey(), authkey);
                 user.setAuthKey(authkey);
+                user.setLastLoginAt(Instant.now());
                 userService.updateUser(user);
                 return SignedInUser
                     .fromUser(user)
@@ -77,7 +81,7 @@ public class UserUseCase {
             var firstName = oidcUser.getAttributes().get("given_name").toString();
             var lastName = oidcUser.getAttributes().get("family_name").toString();
             if (firstName != null && lastName != null) {
-                var newUser = new UserDetails(new UserKey(), firstName, lastName);
+                var newUser = new UserDetails(new UserKey(), Instant.now(), Instant.now(), firstName, lastName);
                 log.warn(
                     "Cannot find match for oidc user {}, creating new user with key {}",
                     authkey,
@@ -85,6 +89,7 @@ public class UserUseCase {
                 );
                 newUser.setEmail(oidcUser.getEmail());
                 newUser.setAuthKey(authkey);
+                newUser.setLastLoginAt(Instant.now());
                 newUser = userService.createUser(newUser);
                 return SignedInUser
                     .fromUser(newUser)
@@ -130,7 +135,7 @@ public class UserUseCase {
 
     public UserDetails createUser(@NonNull SignedInUser signedInUser, @NonNull CreateUserSpec spec) {
         signedInUser.assertHasPermission(Permission.WRITE_USERS);
-        var newUser = new UserDetails(new UserKey(), spec.firstName(), spec.lastName());
+        var newUser = new UserDetails(new UserKey(), Instant.now(), Instant.now(), spec.firstName(), spec.lastName());
         log.info("Creating user {}", newUser.getKey());
         newUser.setEmail(spec.email());
         return userService.createUser(newUser);
@@ -183,6 +188,7 @@ public class UserUseCase {
             ofNullable(spec.comment()).map(String::trim).ifPresent(user::setComment);
             ofNullable(spec.qualifications()).ifPresent(user::setQualifications);
             ofNullable(spec.roles()).ifPresent(user::setRoles);
+            ofNullable(spec.verifiedAt()).ifPresent(user::setVerifiedAt);
         }
         // these may be changed by a user themselves, if there is no value yet
         if (hasWritePermission || user.getDateOfBirth() == null) {
@@ -192,6 +198,7 @@ public class UserUseCase {
             ofNullable(spec.placeOfBirth()).map(String::trim).ifPresent(user::setPlaceOfBirth);
         }
 
+        user.setUpdatedAt(Instant.now());
         return userService.updateUser(user);
 
     }

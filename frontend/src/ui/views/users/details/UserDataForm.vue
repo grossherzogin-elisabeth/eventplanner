@@ -19,6 +19,22 @@
                 :errors-visible="true"
             />
         </div>
+        <div class="mb-4">
+            <VInputLabel>Erstellt am</VInputLabel>
+            <VInputDate v-model.trim="user.createdAt" disabled :errors="props.errors['createdAt']" :errors-visible="true" />
+        </div>
+        <div class="mb-4">
+            <VInputLabel>Letzte Änderung am</VInputLabel>
+            <VInputDate v-model.trim="user.updatedAt" disabled :errors="props.errors['updatedAt']" :errors-visible="true" />
+        </div>
+        <div class="mb-4">
+            <VInputLabel>Letzter Login am</VInputLabel>
+            <VInputDate v-model.trim="user.lastLoginAt" disabled :errors="props.errors['lastLoginAt']" :errors-visible="true" />
+        </div>
+        <div class="mb-4">
+            <VInputLabel>Daten verifiziert am</VInputLabel>
+            <VInputDate v-model.trim="user.verifiedAt" :errors="props.errors['verifiedAt']" :errors-visible="true" />
+        </div>
 
         <h2 class="mb-4 mt-8 font-bold text-secondary">Persönliche Daten</h2>
         <div class="mb-4 sm:w-64">
