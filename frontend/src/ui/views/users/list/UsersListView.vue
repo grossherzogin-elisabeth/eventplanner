@@ -196,7 +196,7 @@
         </div>
 
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
-        <VConfirmationDialog ref="deleteUserDialog" />
+        <VConfirmationDialog ref="confirmationDialog" />
         <CreateUserDlg ref="createUserDialog" />
 
         <div class="flex-1"></div>
@@ -323,7 +323,7 @@ const users = ref<UserRegistrations[] | undefined>(undefined);
 
 const createUserDialog = ref<Dialog<void, User | undefined> | null>(null);
 const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
-const deleteUserDialog = ref<ConfirmationDialog | null>(null);
+const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
 useQueryStateSync<boolean>(
     'active',
@@ -414,7 +414,7 @@ async function createRegistration(user: UserRegistrations): Promise<void> {
 }
 
 async function deleteUser(user: UserRegistrations): Promise<void> {
-    const confirmed = await deleteUserDialog.value?.open({
+    const confirmed = await confirmationDialog.value?.open({
         title: `${user.nickName || user.firstName} ${user.lastName} löschen`,
         message: `Bist du sicher, das du ${user.nickName || user.firstName} ${user.lastName} löschen möchtest? Wenn
             ${user.nickName || user.firstName} sich schon zu Reisen angemeldet hat, wird dies dazu führen, das in den
