@@ -2,12 +2,14 @@ package org.eventplanner.users.adapter.jpa;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 
 import org.eventplanner.common.EncryptedString;
 import org.eventplanner.users.entities.EncryptedEmergencyContact;
 import org.eventplanner.users.entities.EncryptedUserDetails;
 import org.eventplanner.users.entities.EncryptedUserQualification;
+import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.EncryptedAddress;
 import org.eventplanner.users.values.UserKey;
 
@@ -37,8 +39,23 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     @Column(name = "key", nullable = false, updatable = false)
     private String key;
 
-    @Column(name = "auth_key")
+    @Column(name = "oidc_id")
     private String authKey;
+
+    @Column(name = "auth_key")
+    private String encryptedAuthKey;
+
+    @Column(name = "created_at")
+    private String createdAt;
+
+    @Column(name = "updated_at")
+    private String updatedAt;
+
+    @Column(name = "verified_at")
+    private String verifiedAt;
+
+    @Column(name = "last_login_at")
+    private String lastLoginAt;
 
     @Column(name = "gender")
     private String gender;
@@ -113,6 +130,11 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         return new EncryptedUserDetailsJpaEntity(
             domain.getKey().value(),
             domain.getAuthKey() != null ? domain.getAuthKey().value() : null,
+            domain.getEncryptedAuthKey() != null ? domain.getEncryptedAuthKey().value() : null,
+            domain.getCreatedAt().toString(),
+            domain.getUpdatedAt().toString(),
+            domain.getVerifiedAt() != null ? domain.getVerifiedAt().toString() : null,
+            domain.getLastLoginAt() != null ? domain.getLastLoginAt().toString() : null,
             domain.getGender() != null ? domain.getGender().value() : null,
             domain.getTitle() != null ? domain.getTitle().value() : null,
             domain.getFirstName().value(),
@@ -219,7 +241,12 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     public EncryptedUserDetails toDomain() {
         return new EncryptedUserDetails(
             new UserKey(key),
-            authKey != null ? new EncryptedString(authKey) : null,
+            authKey != null ? new AuthKey(authKey) : null,
+            encryptedAuthKey != null ? new EncryptedString(encryptedAuthKey) : null,
+            createdAt != null ? Instant.parse(createdAt) : Instant.now(),
+            updatedAt != null ? Instant.parse(updatedAt) : Instant.now(),
+            verifiedAt != null ? Instant.parse(verifiedAt) : null,
+            lastLoginAt != null ? Instant.parse(lastLoginAt) : null,
             gender != null ? new EncryptedString(gender) : null,
             title != null ? new EncryptedString(title) : null,
             new EncryptedString(firstName),

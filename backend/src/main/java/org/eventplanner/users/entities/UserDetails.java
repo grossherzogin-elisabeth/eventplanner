@@ -1,7 +1,5 @@
 package org.eventplanner.users.entities;
 
-import static java.util.Optional.ofNullable;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -31,6 +29,10 @@ import lombok.Setter;
 public class UserDetails {
     private final @NonNull UserKey key;
     private @Nullable AuthKey authKey;
+    private @NonNull Instant createdAt;
+    private @NonNull Instant updatedAt;
+    private @Nullable Instant verifiedAt;
+    private @Nullable Instant lastLoginAt;
     private @Nullable String gender;
     private @Nullable String title;
     private @NonNull String firstName;

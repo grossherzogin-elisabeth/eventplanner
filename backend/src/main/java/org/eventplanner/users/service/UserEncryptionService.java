@@ -22,7 +22,6 @@ import org.eventplanner.users.entities.EncryptedUserQualification;
 import org.eventplanner.users.entities.UserDetails;
 import org.eventplanner.users.entities.UserQualification;
 import org.eventplanner.users.values.Address;
-import org.eventplanner.users.values.AuthKey;
 import org.eventplanner.users.values.Diet;
 import org.eventplanner.users.values.EncryptedAddress;
 import org.eventplanner.users.values.Role;
@@ -66,7 +65,12 @@ public class UserEncryptionService {
     public @NonNull EncryptedUserDetails encrypt(@NonNull UserDetails user) {
         return new EncryptedUserDetails(
             user.getKey(),
-            ofNullable(user.getAuthKey()).map(AuthKey::value).map(crypto::encrypt).orElse(null),
+            user.getAuthKey(),
+            null,
+            user.getCreatedAt(),
+            user.getUpdatedAt(),
+            user.getVerifiedAt(),
+            user.getLastLoginAt(),
             encryptNullable(user.getGender()),
             encryptNullable(user.getTitle()),
             encrypt(user.getFirstName()),
@@ -110,7 +114,11 @@ public class UserEncryptionService {
     public @NonNull UserDetails decrypt(@NonNull EncryptedUserDetails user) {
         return new UserDetails(
             user.getKey(),
-            ofNullable(user.getAuthKey()).map(this::decrypt).map(AuthKey::new).orElse(null),
+            user.getAuthKey(),
+            user.getCreatedAt(),
+            user.getUpdatedAt(),
+            user.getVerifiedAt(),
+            user.getLastLoginAt(),
             decryptNullable(user.getGender()),
             decryptNullable(user.getTitle()),
             decrypt(user.getFirstName()),

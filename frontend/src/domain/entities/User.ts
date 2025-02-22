@@ -12,11 +12,16 @@ export interface User {
     positionKeys: PositionKey[];
     email?: string;
     qualifications?: UserQualification[];
+    verified?: boolean;
 }
 
 export interface UserDetails {
     key: UserKey;
     authKey?: AuthKey;
+    createdAt: Date;
+    updatedAt: Date;
+    verifiedAt?: Date;
+    lastLoginAt?: Date;
     gender?: string;
     title?: string;
     firstName: string;

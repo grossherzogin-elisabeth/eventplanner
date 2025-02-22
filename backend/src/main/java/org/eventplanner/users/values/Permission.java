@@ -3,6 +3,9 @@ package org.eventplanner.users.values;
 import java.util.Arrays;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Permission {
     READ_EVENTS("events:read"),
     WRITE_EVENTS("events:write"),
@@ -36,8 +39,9 @@ public enum Permission {
         this.value = value;
     }
 
+    @JsonCreator
     public static Optional<Permission> fromString(String value) {
-        return Arrays.stream(Permission.values())
+        return Arrays.stream(values())
             .filter(permission -> permission.value().equals(value))
             .findFirst();
     }
@@ -46,6 +50,7 @@ public enum Permission {
         return value;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return value;

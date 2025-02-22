@@ -11,11 +11,16 @@ interface UserRepresentation {
     roles?: string[];
     qualifications?: UserQualificationRepresentation[];
     email?: string;
+    verified?: boolean;
 }
 
 interface UserDetailsRepresentation {
     readonly key: string;
     readonly authKey: string;
+    createdAt?: string;
+    updatedAt?: string;
+    verifiedAt?: string;
+    lastLoginAt?: string;
     gender?: string;
     title?: string;
     firstName: string;
@@ -64,6 +69,7 @@ interface SignedInUserUpdateRequest {
 
 interface UserDetailsUpdateRequest {
     authKey?: string;
+    verifiedAt?: string;
     gender?: string;
     title?: string;
     firstName?: string;
@@ -148,6 +154,7 @@ export class UserRestRepository implements UserRepository {
                 note: it.note,
             })),
             email: userRepresentation.email,
+            verified: userRepresentation.verified,
         }));
     }
 
@@ -176,6 +183,7 @@ export class UserRestRepository implements UserRepository {
     public async updateUser(userKey: UserKey, user: Partial<UserDetails>): Promise<UserDetails> {
         const requestBody: UserDetailsUpdateRequest = {
             authKey: user.authKey,
+            verifiedAt: user.verifiedAt?.toISOString(),
             gender: user.gender,
             title: user.title,
             firstName: user.firstName,
@@ -334,13 +342,17 @@ export class UserRestRepository implements UserRepository {
 
     private static mapUserDetailsToDomain(representation: UserDetailsRepresentation): UserDetails {
         return {
-            gender: representation.gender || undefined,
-            title: representation.title || undefined,
             key: representation.key,
-            authKey: representation.authKey || undefined,
+            authKey: representation.authKey ?? undefined,
+            createdAt: UserRestRepository.parseDate(representation.createdAt) ?? new Date(),
+            updatedAt: UserRestRepository.parseDate(representation.updatedAt) ?? new Date(),
+            verifiedAt: UserRestRepository.parseDate(representation.verifiedAt),
+            lastLoginAt: UserRestRepository.parseDate(representation.lastLoginAt),
+            gender: representation.gender ?? undefined,
+            title: representation.title ?? undefined,
             firstName: representation.firstName,
-            nickName: representation.nickName || undefined,
-            secondName: representation.secondName || undefined,
+            nickName: representation.nickName ?? undefined,
+            secondName: representation.secondName ?? undefined,
             lastName: representation.lastName,
             positionKeys: representation.positions as PositionKey[],
             roles: representation.roles?.map((r) => r as Role),
@@ -351,16 +363,16 @@ export class UserRestRepository implements UserRepository {
                 note: it.note,
             })),
             email: representation.email,
-            phone: representation.phone || undefined,
-            phoneWork: representation.phoneWork || undefined,
-            mobile: representation.mobile || undefined,
+            phone: representation.phone ?? undefined,
+            phoneWork: representation.phoneWork ?? undefined,
+            mobile: representation.mobile ?? undefined,
             dateOfBirth: UserRestRepository.parseDate(representation.dateOfBirth),
-            placeOfBirth: representation.placeOfBirth || undefined,
-            passNr: representation.passNr || undefined,
-            comment: representation.comment || undefined,
+            placeOfBirth: representation.placeOfBirth ?? undefined,
+            passNr: representation.passNr ?? undefined,
+            comment: representation.comment ?? undefined,
             address: {
                 addressLine1: representation.address?.addressLine1 || '',
-                addressLine2: representation.address?.addressLine2 || undefined,
+                addressLine2: representation.address?.addressLine2 ?? undefined,
                 town: representation.address?.town || '',
                 zipcode: representation.address?.zipCode || '',
                 country: representation.address?.country || representation.nationality || '',

@@ -3,6 +3,7 @@ package org.eventplanner.users.rest.dto;
 import static java.util.Optional.ofNullable;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,6 +18,10 @@ import org.springframework.lang.Nullable;
 public record UserDetailsRepresentation(
     @NonNull String key,
     @Nullable String authKey,
+    @NonNull String createdAt,
+    @NonNull String updatedAt,
+    @Nullable String verifiedAt,
+    @Nullable String lastLoginAt,
     @Nullable String title,
     @Nullable String gender,
     @NonNull String firstName,
@@ -47,6 +52,14 @@ public record UserDetailsRepresentation(
             user.getKey().value(),
             ofNullable(user.getAuthKey())
                 .map(AuthKey::value)
+                .orElse(null),
+            user.getCreatedAt().toString(),
+            user.getUpdatedAt().toString(),
+            ofNullable(user.getVerifiedAt())
+                .map(Instant::toString)
+                .orElse(null),
+            ofNullable(user.getLastLoginAt())
+                .map(Instant::toString)
                 .orElse(null),
             user.getTitle(),
             user.getGender(),

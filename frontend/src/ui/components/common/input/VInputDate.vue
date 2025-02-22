@@ -29,7 +29,7 @@
                     @keydown.esc="showDropdown = false"
                 />
 
-                <div class="input-icon-right">
+                <div v-if="!disabled" class="input-icon-right">
                     <i class="fa-solid fa-calendar-day text-sm text-primary"></i>
                 </div>
             </div>
