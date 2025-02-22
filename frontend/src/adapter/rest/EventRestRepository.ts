@@ -334,13 +334,13 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async downloadCaptainList(event: Event): Promise<Blob> {
-            const response = await fetch(`/api/v1/events/${event.key}/captain-list`, {
-                method: 'GET',
-                credentials: 'include',
-            });
-            if (!response.ok) {
-                throw response;
-            }
-            return response.clone().blob();
+        const response = await fetch(`/api/v1/events/${event.key}/captain-list`, {
+            method: 'GET',
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        return response.clone().blob();
     }
 }

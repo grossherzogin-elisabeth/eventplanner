@@ -202,7 +202,7 @@
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Verzehrliste generieren</span>
             </li>
-            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainsList(event)">
+            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(event)">
                 <i class="fa-solid fa-file-medical" />
                 <span>Kapitänsliste generieren</span>
             </li>
