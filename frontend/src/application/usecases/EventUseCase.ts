@@ -307,6 +307,11 @@ export class EventUseCase {
         saveBlobToFile(`${this.formatDateFileName(event.start)}_Verzehrliste.xlsx`, file);
     }
 
+    public async downloadCaptainList(event: Event): Promise<void> {
+        const file = await this.eventRepository.downloadCaptainList(event);
+        saveBlobToFile(`${this.formatDateFileName(event.start)}_Kapitaensliste.xlsx`, file);
+    }
+
     private formatDateFileName(date: Date | string | number): string {
         const d = new Date(date);
         const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate().toString();

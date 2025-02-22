@@ -1,4 +1,4 @@
-package org.eventplanner;
+package org.eventplanner.events;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -310,6 +310,10 @@
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Verzehrliste generieren</span>
             </li>
+            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(event)">
+                <i class="fa-solid fa-file-medical" />
+                <span>Kapitänsliste generieren</span>
+            </li>
             <li class="permission-write-events">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-edit" />
