@@ -42,9 +42,6 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     @Column(name = "oidc_id")
     private String authKey;
 
-    @Column(name = "auth_key")
-    private String encryptedAuthKey;
-
     @Column(name = "created_at")
     private String createdAt;
 
@@ -130,7 +127,6 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         return new EncryptedUserDetailsJpaEntity(
             domain.getKey().value(),
             domain.getAuthKey() != null ? domain.getAuthKey().value() : null,
-            domain.getEncryptedAuthKey() != null ? domain.getEncryptedAuthKey().value() : null,
             domain.getCreatedAt().toString(),
             domain.getUpdatedAt().toString(),
             domain.getVerifiedAt() != null ? domain.getVerifiedAt().toString() : null,
@@ -242,7 +238,6 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         return new EncryptedUserDetails(
             new UserKey(key),
             authKey != null ? new AuthKey(authKey) : null,
-            encryptedAuthKey != null ? new EncryptedString(encryptedAuthKey) : null,
             createdAt != null ? Instant.parse(createdAt) : Instant.now(),
             updatedAt != null ? Instant.parse(updatedAt) : Instant.now(),
             verifiedAt != null ? Instant.parse(verifiedAt) : null,

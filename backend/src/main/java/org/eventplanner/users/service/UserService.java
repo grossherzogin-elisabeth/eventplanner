@@ -1,6 +1,5 @@
 package org.eventplanner.users.service;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -74,23 +73,7 @@ public class UserService {
 
     private @NonNull Collection<EncryptedUserDetails> getEncryptedUsers() {
         if (cache.isEmpty()) {
-            userRepository.findAll().stream()
-                .map(u -> {
-                    if (u.getCreatedAt().isBefore(Instant.now().minusSeconds(360))) {
-                        // user does not have a creation date within the last 5 minutes, so he is probably already
-                        // migrated completely
-                        return u;
-                    }
-                    log.info("Finishing migration for user {}", u.getKey());
-                    u.setCreatedAt(Instant.parse("2024-11-27T10:00:00Z")); // the rough time we last imported data
-                    u.setUpdatedAt(Instant.now());
-                    if (u.getEncryptedAuthKey() != null) {
-                        var key = userEncryptionService.decrypt(u.getEncryptedAuthKey());
-                        u.setAuthKey(new AuthKey(key));
-                    }
-                    return userRepository.update(u);
-                })
-                .forEach(u -> cache.put(u.getKey(), u));
+            userRepository.findAll().forEach(u -> cache.put(u.getKey(), u));
         }
         return cache.values();
     }
