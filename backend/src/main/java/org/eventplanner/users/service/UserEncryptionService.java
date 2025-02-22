@@ -66,7 +66,6 @@ public class UserEncryptionService {
         return new EncryptedUserDetails(
             user.getKey(),
             user.getAuthKey(),
-            null,
             user.getCreatedAt(),
             user.getUpdatedAt(),
             user.getVerifiedAt(),

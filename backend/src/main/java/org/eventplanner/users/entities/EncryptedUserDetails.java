@@ -25,8 +25,6 @@ import lombok.Setter;
 public class EncryptedUserDetails implements Serializable {
     private @NonNull UserKey key;
     private @Nullable AuthKey authKey;
-    @Deprecated(forRemoval = true)
-    private @Nullable EncryptedString encryptedAuthKey;
     private @NonNull Instant createdAt;
     private @NonNull Instant updatedAt;
     private @Nullable Instant verifiedAt;
