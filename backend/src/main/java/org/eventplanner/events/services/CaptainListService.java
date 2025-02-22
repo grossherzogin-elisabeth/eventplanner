@@ -1,8 +1,24 @@
 package org.eventplanner.events.services;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -10,8 +26,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.common.ObjectUtils;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.entities.Slot;
-import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
@@ -23,15 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -52,15 +58,8 @@ public class CaptainListService {
     public @NonNull ByteArrayOutputStream generateCaptainList(@NonNull Event event) throws IOException {
         var positionMap = new HashMap<PositionKey, Position>();
         positionRepository.findAll().forEach(position -> positionMap.put(position.getKey(), position));
-
-        List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
-            .map(Slot::getAssignedRegistration)
-            .filter(Objects::nonNull)
-            .toList();
-
-        List<Registration> crewList = event.getRegistrations()
+        List<Registration> crewList = event.getAssignedRegistrations()
             .stream()
-            .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
             .sorted((a, b) -> {
                 // TODO get crew member name here for sorting
                 // if (a.getPosition().equals(b.getPosition())) {
@@ -127,9 +126,9 @@ public class CaptainListService {
             currentRow.getCell(0).setCellValue(crewCounter + 1);
             Registration currentRegistration = crewList.get(crewCounter);
             String imoListRank = ObjectUtils.mapNullable(
-                    positionMap.get(currentRegistration.getPosition()),
-                    Position::getImoListRank,
-                    currentRegistration.getPosition().value()
+                positionMap.get(currentRegistration.getPosition()),
+                Position::getImoListRank,
+                currentRegistration.getPosition().value()
             );
             UserKey crewMemberKey = currentRegistration.getUserKey();
             if (crewMemberKey != null) {
@@ -206,7 +205,7 @@ public class CaptainListService {
             String qualificationKeyValue = qualification.getQualificationKey().value();
 
             if ((qualificationKeyValue.contains("medical") || qualificationKeyValue.contains("aid"))
-                    & qualification.getExpiresAt()!=null) {
+                & qualification.getExpiresAt() != null) {
                 switch (qualificationKeyValue) {
                     case "medical-fitness" -> row.getCell(11).setCellValue(date2String(qualification.getExpiresAt()));
                     case "medical-care" -> row.getCell(18).setCellValue(date2String(qualification.getExpiresAt()));
@@ -275,9 +274,9 @@ public class CaptainListService {
 
     private String multipleDates2String(List<Instant> dates) {
         String dateString = dates.stream()
-                .filter(Objects::nonNull)
-                .map(this::date2String)
-                .collect(Collectors.joining(", "));
+            .filter(Objects::nonNull)
+            .map(this::date2String)
+            .collect(Collectors.joining(", "));
         return removeCommaAtStringEnd(dateString);
     }
 
@@ -287,9 +286,12 @@ public class CaptainListService {
         for (int i = 0; i < columnCount; i++) {
             sheet.autoSizeColumn(i);
             sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 256);
-            if (sheet.getColumnWidth(i) > maxColumnWidth) sheet.setColumnWidth(i, maxColumnWidth);
+            if (sheet.getColumnWidth(i) > maxColumnWidth) {
+                sheet.setColumnWidth(i, maxColumnWidth);
+            }
         }
-        for (Row row : sheet) row.setHeight((short) -1);
+        for (Row row : sheet)
+            row.setHeight((short) -1);
     }
 
     private ByteArrayOutputStream getWorkbookBytes(XSSFWorkbook workbook) throws IOException {

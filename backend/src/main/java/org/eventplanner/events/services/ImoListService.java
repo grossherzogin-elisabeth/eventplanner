@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,9 +19,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.common.ObjectUtils;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.entities.Slot;
 import org.eventplanner.events.values.Location;
-import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.positions.adapter.PositionRepository;
 import org.eventplanner.positions.entities.Position;
 import org.eventplanner.positions.values.PositionKey;
@@ -55,14 +52,8 @@ public class ImoListService {
         var positionMap = new HashMap<PositionKey, Position>();
         positionRepository.findAll().forEach(position -> positionMap.put(position.getKey(), position));
 
-        List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
-            .map(Slot::getAssignedRegistration)
-            .filter(Objects::nonNull)
-            .toList();
-
-        List<Registration> crewList = event.getRegistrations()
+        List<Registration> crewList = event.getAssignedRegistrations()
             .stream()
-            .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
             .sorted((a, b) -> {
                 // TODO get crew member name here for sorting
                 // if (a.getPosition().equals(b.getPosition())) {

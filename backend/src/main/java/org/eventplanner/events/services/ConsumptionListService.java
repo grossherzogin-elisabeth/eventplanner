@@ -12,8 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.events.entities.Event;
 import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.entities.Slot;
-import org.eventplanner.events.values.RegistrationKey;
 import org.eventplanner.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -32,16 +30,7 @@ public class ConsumptionListService {
     }
 
     public @NonNull ByteArrayOutputStream generateConsumptionList(@NonNull Event event) throws IOException {
-        List<RegistrationKey> assignedRegistrationsKeys = event.getSlots().stream()
-            .map(Slot::getAssignedRegistration)
-            .filter(Objects::nonNull)
-            .toList();
-
-        List<Registration> crewList = event.getRegistrations()
-            .stream()
-            .filter(registration -> assignedRegistrationsKeys.contains(registration.getKey()))
-            .toList();
-
+        List<Registration> crewList = event.getAssignedRegistrations();
         FileInputStream fileTemplate = new FileInputStream("data/templates/ConsumptionList_template.xlsx");
 
         try (fileTemplate) {
