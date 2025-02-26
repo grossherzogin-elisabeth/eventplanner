@@ -1,0 +1,36 @@
+name: Backend
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: openjdk
+
+      - name: Check tests
+        shell: bash
+        working-directory: backend
+        run: ./gradlew test
+
+      - name: Check build
+        shell: bash
+        working-directory: backend
+        run: ./gradlew build
