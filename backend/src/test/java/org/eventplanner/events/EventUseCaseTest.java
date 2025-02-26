@@ -14,15 +14,16 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.eventplanner.events.adapter.EventRepository;
-import org.eventplanner.events.entities.Event;
-import org.eventplanner.events.entities.Registration;
-import org.eventplanner.events.services.EventService;
-import org.eventplanner.events.services.ExportService;
-import org.eventplanner.events.values.EventState;
-import org.eventplanner.notifications.service.NotificationService;
-import org.eventplanner.users.service.UserService;
-import org.eventplanner.users.values.Permission;
+import org.eventplanner.application.ports.EventRepository;
+import org.eventplanner.application.usecases.EventUseCase;
+import org.eventplanner.domain.entities.Event;
+import org.eventplanner.domain.entities.Registration;
+import org.eventplanner.application.services.EventService;
+import org.eventplanner.application.services.ExportService;
+import org.eventplanner.domain.values.EventState;
+import org.eventplanner.application.services.NotificationService;
+import org.eventplanner.application.services.UserService;
+import org.eventplanner.domain.values.Permission;
 import org.junit.jupiter.api.Test;
 
 class EventUseCaseTest {
@@ -155,7 +156,7 @@ class EventUseCaseTest {
         assertNotNull(events.getFirst().getSlots().getFirst().getAssignedRegistration());
     }
 
-    private EventRepository mockEventRepository(Event ...events) {
+    private EventRepository mockEventRepository(Event... events) {
         var eventRepository = mock(EventRepository.class);
         when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(events));
         for (Event event : events) {

@@ -2,7 +2,7 @@ package org.eventplanner.config;
 
 import java.io.IOException;
 
-import org.eventplanner.users.UserUseCase;
+import org.eventplanner.application.usecases.UserUseCase;
 import org.slf4j.MDC;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;

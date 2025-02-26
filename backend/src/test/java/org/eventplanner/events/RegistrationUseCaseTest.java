@@ -12,18 +12,19 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.eventplanner.events.adapter.EventRepository;
-import org.eventplanner.events.adapter.RegistrationRepository;
-import org.eventplanner.events.entities.Event;
-import org.eventplanner.events.services.RegistrationService;
-import org.eventplanner.events.spec.UpdateRegistrationSpec;
-import org.eventplanner.events.values.EventState;
-import org.eventplanner.exceptions.MissingPermissionException;
-import org.eventplanner.notifications.service.NotificationService;
-import org.eventplanner.positions.adapter.PositionRepository;
+import org.eventplanner.application.ports.EventRepository;
+import org.eventplanner.application.ports.PositionRepository;
+import org.eventplanner.application.ports.RegistrationRepository;
+import org.eventplanner.application.services.NotificationService;
+import org.eventplanner.application.services.RegistrationService;
+import org.eventplanner.application.services.UserService;
+import org.eventplanner.application.usecases.RegistrationUseCase;
+import org.eventplanner.domain.entities.Event;
+import org.eventplanner.domain.exceptions.MissingPermissionException;
+import org.eventplanner.domain.specs.UpdateRegistrationSpec;
+import org.eventplanner.domain.values.EventState;
+import org.eventplanner.domain.values.Permission;
 import org.eventplanner.testdata.PositionKeys;
-import org.eventplanner.users.service.UserService;
-import org.eventplanner.users.values.Permission;
 import org.junit.jupiter.api.Test;
 
 class RegistrationUseCaseTest {

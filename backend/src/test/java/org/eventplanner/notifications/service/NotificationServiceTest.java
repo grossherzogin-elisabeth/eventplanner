@@ -2,10 +2,11 @@ package org.eventplanner.notifications.service;
 
 import java.time.Instant;
 
-import org.eventplanner.notifications.values.Notification;
-import org.eventplanner.notifications.values.NotificationType;
-import org.eventplanner.users.entities.UserDetails;
-import org.eventplanner.users.values.UserKey;
+import org.eventplanner.application.services.NotificationService;
+import org.eventplanner.domain.values.Notification;
+import org.eventplanner.domain.values.NotificationType;
+import org.eventplanner.domain.entities.UserDetails;
+import org.eventplanner.domain.values.UserKey;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

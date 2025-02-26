@@ -1,6 +1,6 @@
 package org.eventplanner.testdata;
 
-import org.eventplanner.positions.values.PositionKey;
+import org.eventplanner.domain.values.PositionKey;
 
 public class PositionKeys {
     public static final PositionKey KAPITAEN = new PositionKey("kapitaen");
