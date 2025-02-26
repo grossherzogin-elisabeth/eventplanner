@@ -3,7 +3,7 @@ package org.eventplanner.testdata;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eventplanner.domain.entities.EventSlot;
+import org.eventplanner.events.domain.entities.EventSlot;
 
 public class SlotFactory {
     public static List<EventSlot> createDefaultSlots() {

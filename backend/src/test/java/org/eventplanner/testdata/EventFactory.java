@@ -1,14 +1,16 @@
 package org.eventplanner.testdata;
 
-import java.time.ZoneId;
+import static org.eventplanner.testdata.RegistrationFactory.createRegistration;
+import static org.eventplanner.testdata.SlotFactory.createDefaultSlots;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.eventplanner.domain.entities.Event;
-import org.eventplanner.domain.values.EventKey;
-import org.eventplanner.domain.values.EventLocation;
-import org.eventplanner.domain.values.EventState;
+import org.eventplanner.events.domain.entities.Event;
+import org.eventplanner.events.domain.values.EventKey;
+import org.eventplanner.events.domain.values.EventLocation;
+import org.eventplanner.events.domain.values.EventState;
 
 public class EventFactory {
 
@@ -23,21 +25,21 @@ public class EventFactory {
             EventState.PLANNED,
             "Note for test event",
             "Description for test event",
-            ZonedDateTime.of(2020, 5, 10, 0, 0, 0, 0, ZoneId.systemDefault()).toInstant(),
-            ZonedDateTime.of(2020, 5, 13, 0, 0, 0, 0, ZoneId.systemDefault()).toInstant(),
+            ZonedDateTime.now().plusMonths(3).toInstant(),
+            ZonedDateTime.now().plusMonths(3).plusDays(3).toInstant(),
             List.of(ELSFLETH, NORDSEE, ELSFLETH),
-            SlotFactory.createDefaultSlots(),
+            createDefaultSlots(),
             List.of(
-                RegistrationFactory.createRegistration(PositionKeys.KAPITAEN),
-                RegistrationFactory.createRegistration(PositionKeys.STM),
-                RegistrationFactory.createRegistration(PositionKeys.MATROSE),
-                RegistrationFactory.createRegistration(PositionKeys.MASCHINIST),
-                RegistrationFactory.createRegistration(PositionKeys.LEICHTMATROSE),
-                RegistrationFactory.createRegistration(PositionKeys.DECKSHAND),
-                RegistrationFactory.createRegistration(PositionKeys.DECKSHAND),
-                RegistrationFactory.createRegistration(PositionKeys.DECKSHAND),
-                RegistrationFactory.createRegistration(PositionKeys.DECKSHAND),
-                RegistrationFactory.createRegistration(PositionKeys.BACKSCHAFT)
+                createRegistration(PositionKeys.KAPITAEN),
+                createRegistration(PositionKeys.STM),
+                createRegistration(PositionKeys.MATROSE),
+                createRegistration(PositionKeys.MASCHINIST),
+                createRegistration(PositionKeys.LEICHTMATROSE),
+                createRegistration(PositionKeys.DECKSHAND),
+                createRegistration(PositionKeys.DECKSHAND),
+                createRegistration(PositionKeys.DECKSHAND),
+                createRegistration(PositionKeys.DECKSHAND),
+                createRegistration(PositionKeys.BACKSCHAFT)
             ),
             0
         );
