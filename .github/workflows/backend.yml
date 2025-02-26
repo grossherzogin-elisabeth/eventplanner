@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 21
-          distribution: OpenJDK
+          distribution: temurin
 
       - name: Check tests
         shell: bash
