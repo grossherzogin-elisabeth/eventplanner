@@ -238,7 +238,7 @@
                                     <div class="mb-4">
                                         <VInputLabel>Land</VInputLabel>
                                         <VInputCombobox
-                                            v-model.trim="userDetails.address.country"
+                                            v-model="userDetails.address.country"
                                             :options="countries.options"
                                             required
                                             placeholder="keine Angabe"

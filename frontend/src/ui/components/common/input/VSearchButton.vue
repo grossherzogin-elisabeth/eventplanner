@@ -1,5 +1,5 @@
 <template>
-    <div class="btn-search" :class="`${$attrs.class || 'w-44'} ${modelValue ? 'active' : ''}`" @click="$refs.input.focus()">
+    <div class="btn-search" :class="`${$attrs.class || 'w-44'} ${modelValue ? 'active' : ''}`" @click="input?.focus()">
         <i class="fa-solid fa-search" />
         <input
             ref="input"
@@ -7,7 +7,7 @@
             :value="props.modelValue"
             :placeholder="placeholder"
             @input="onInput"
-            @keydown.esc="$refs.input.blur()"
+            @keydown.esc="input?.blur()"
         />
         <button v-if="props.modelValue !== ''" @click="emit('update:modelValue', '')">
             <i class="fa-solid fa-xmark"></i>
@@ -15,6 +15,8 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue';
+
 interface Props {
     modelValue?: string;
     placeholder?: string;
@@ -24,6 +26,7 @@ type Emits = (e: 'update:modelValue', value: string) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+const input = ref<HTMLInputElement | null>(null);
 
 function onInput(event: Event): void {
     const element = event.target as HTMLInputElement;
