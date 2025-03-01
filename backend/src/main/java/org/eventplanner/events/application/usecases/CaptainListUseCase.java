@@ -22,14 +22,14 @@ public class CaptainListUseCase {
     private final CaptainListService captainListService;
 
     public @NonNull ByteArrayOutputStream downloadCaptainList(
-        @NonNull SignedInUser signedInUser,
-        @NonNull EventKey eventKey
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final EventKey eventKey
     ) throws IOException {
         signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
-        log.info("Generating Captainlist for event {} ({})", event.getName(), eventKey);
+        log.info("Generating Captainlist for event {}", event.getName());
         return captainListService.generateCaptainList(event);
     }
 }

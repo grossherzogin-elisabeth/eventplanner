@@ -1,7 +1,5 @@
 package org.eventplanner.events.application.usecases;
 
-import static java.util.Optional.ofNullable;
-
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.eventplanner.events.application.services.NotificationService;
+import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.SignedInUser;
 import org.eventplanner.events.domain.entities.User;
 import org.eventplanner.events.domain.entities.UserDetails;
@@ -19,10 +18,8 @@ import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.Permission;
 import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
-import org.eventplanner.events.application.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,20 +28,18 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.common.lang.Nullable;
+import static java.util.Optional.ofNullable;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class UserUseCase {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
     private final NotificationService notificationService;
 
-    public UserUseCase(@Autowired UserService userService, final NotificationService notificationService) {
-        this.userService = userService;
-        this.notificationService = notificationService;
-    }
-
-    public @NonNull SignedInUser getSignedInUser(@Nullable Authentication authentication) {
+    public @NonNull SignedInUser getSignedInUser(@Nullable final Authentication authentication) {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             throw new UnauthorizedException();
         }
@@ -116,24 +111,30 @@ public class UserUseCase {
         throw new UnauthorizedException();
     }
 
-    public @NonNull List<User> getUsers(@NonNull SignedInUser signedInUser) {
+    public @NonNull List<User> getUsers(@NonNull final SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_USERS);
         return userService.getUsers();
     }
 
-    public @NonNull List<UserDetails> getDetailedUsers(@NonNull SignedInUser signedInUser) {
+    public @NonNull List<UserDetails> getDetailedUsers(@NonNull final SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         return userService.getDetailedUsers();
     }
 
-    public Optional<UserDetails> getUserByKey(@NonNull SignedInUser signedInUser, @NonNull UserKey key) {
+    public Optional<UserDetails> getUserByKey(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final UserKey key
+    ) {
         if (!signedInUser.key().equals(key)) {
             signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         }
         return userService.getUserByKey(key);
     }
 
-    public UserDetails createUser(@NonNull SignedInUser signedInUser, @NonNull CreateUserSpec spec) {
+    public UserDetails createUser(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final CreateUserSpec spec
+    ) {
         signedInUser.assertHasPermission(Permission.WRITE_USERS);
         var newUser = new UserDetails(new UserKey(), Instant.now(), Instant.now(), spec.firstName(), spec.lastName());
         log.info("Creating user {}", newUser.getKey());
@@ -142,9 +143,9 @@ public class UserUseCase {
     }
 
     public UserDetails updateUser(
-        @NonNull SignedInUser signedInUser,
-        @NonNull UserKey userKey,
-        @NonNull UpdateUserSpec spec
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final UserKey userKey,
+        @NonNull final UpdateUserSpec spec
     ) {
         if (signedInUser.key().equals(userKey)) {
             signedInUser.assertHasPermission(Permission.WRITE_OWN_USER_DETAILS);
@@ -203,7 +204,10 @@ public class UserUseCase {
 
     }
 
-    public void deleteUser(@NonNull SignedInUser signedInUser, @NonNull UserKey userKey) {
+    public void deleteUser(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final UserKey userKey
+    ) {
         signedInUser.assertHasPermission(Permission.DELETE_USERS);
 
         log.info("Deleting user {}", userKey);

@@ -4,32 +4,32 @@ import java.util.List;
 
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.values.PositionKey;
 import org.eventplanner.events.domain.entities.SignedInUser;
 import org.eventplanner.events.domain.values.Permission;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.eventplanner.events.domain.values.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PositionUseCase {
 
     private final PositionRepository positionRepository;
 
-    public PositionUseCase(@Autowired PositionRepository positionRepository) {
-        this.positionRepository = positionRepository;
-    }
-
-    public List<Position> getPosition(@NonNull SignedInUser signedInUser) {
+    public List<Position> getPosition(@NonNull final SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_POSITIONS);
 
         return positionRepository.findAll();
     }
 
-    public Position createPosition(@NonNull SignedInUser signedInUser, Position position) {
+    public Position createPosition(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final Position position
+    ) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
         position.setKey(new PositionKey());
@@ -38,7 +38,11 @@ public class PositionUseCase {
         return position;
     }
 
-    public Position updatePosition(@NonNull SignedInUser signedInUser, PositionKey positionKey, Position position) {
+    public Position updatePosition(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final PositionKey positionKey,
+        @NonNull final Position position
+    ) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
         if (!positionKey.equals(position.getKey())) {
@@ -50,7 +54,10 @@ public class PositionUseCase {
         return position;
     }
 
-    public void deletePosition(@NonNull SignedInUser signedInUser, PositionKey positionKey) {
+    public void deletePosition(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final PositionKey positionKey
+    ) {
         signedInUser.assertHasPermission(Permission.WRITE_POSITIONS);
 
         log.info("Deleting position {}", positionKey);

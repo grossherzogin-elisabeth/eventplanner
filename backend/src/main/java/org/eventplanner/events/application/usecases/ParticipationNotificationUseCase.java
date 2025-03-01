@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
+import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.Event;
 import org.eventplanner.events.domain.entities.EventSlot;
 import org.eventplanner.events.domain.entities.Registration;
@@ -21,16 +22,15 @@ import org.eventplanner.events.domain.values.EventKey;
 import org.eventplanner.events.domain.values.EventState;
 import org.eventplanner.events.domain.values.RegistrationKey;
 import org.eventplanner.events.domain.values.UserKey;
-import org.eventplanner.events.application.services.UserService;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ParticipationNotificationUseCase {
 
     private final ZoneId timezone = ZoneId.of("Europe/Berlin");
@@ -57,7 +57,7 @@ public class ParticipationNotificationUseCase {
         }
     }
 
-    private void sendParticipationNotifications(@NonNull Event event, int alreadySentRequests) {
+    private void sendParticipationNotifications(@NonNull final Event event, final int alreadySentRequests) {
         log.info("Sending participation notification request for event {}", event.getName());
         var registrationKeys = event.getSlots()
             .stream()
@@ -104,7 +104,7 @@ public class ParticipationNotificationUseCase {
         eventRepository.update(event);
     }
 
-    private List<Event> getEventsToNotify(int alreadySentRequests) {
+    private List<Event> getEventsToNotify(final int alreadySentRequests) {
         var currentYear = Instant.now().atZone(timezone).getYear();
         return Stream.concat(
                 eventRepository.findAllByYear(currentYear + 1).stream(),
@@ -127,8 +127,8 @@ public class ParticipationNotificationUseCase {
     }
 
     public Event getEventByAccessKey(
-        @NonNull EventKey eventKey,
-        @NonNull String accessKey
+        @NonNull final EventKey eventKey,
+        @NonNull final String accessKey
     ) {
         var event = eventRepository.findByKey(eventKey).orElseThrow();
         var registration = event.getRegistrations().stream()
@@ -148,9 +148,9 @@ public class ParticipationNotificationUseCase {
     }
 
     public void confirmRegistration(
-        @NonNull EventKey eventKey,
-        @NonNull RegistrationKey registrationKey,
-        @NonNull String accessKey
+        @NonNull final EventKey eventKey,
+        @NonNull final RegistrationKey registrationKey,
+        @NonNull final String accessKey
     ) {
         var event = eventRepository.findByKey(eventKey).orElseThrow();
         var registration = getRegistrationByKey(event, registrationKey);
@@ -175,9 +175,9 @@ public class ParticipationNotificationUseCase {
     }
 
     public void declineRegistration(
-        @NonNull EventKey eventKey,
-        @NonNull RegistrationKey registrationKey,
-        @NonNull String accessKey
+        @NonNull final EventKey eventKey,
+        @NonNull final RegistrationKey registrationKey,
+        @NonNull final String accessKey
     ) {
         // delete registration, find slot, delete registration key from slot, send email
         var event = eventRepository.findByKey(eventKey).orElseThrow();
@@ -197,8 +197,8 @@ public class ParticipationNotificationUseCase {
     }
 
     private Registration getRegistrationByKey(
-        @NonNull Event event,
-        @NonNull RegistrationKey registrationKey
+        @NonNull final Event event,
+        @NonNull final RegistrationKey registrationKey
     ) {
         return event.getRegistrations().stream()
             .filter(r -> registrationKey.equals(r.getKey()))

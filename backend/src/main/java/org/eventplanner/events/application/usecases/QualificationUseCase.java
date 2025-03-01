@@ -4,32 +4,32 @@ import java.util.List;
 
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.domain.entities.Qualification;
-import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.entities.SignedInUser;
 import org.eventplanner.events.domain.values.Permission;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.eventplanner.events.domain.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class QualificationUseCase {
 
     private final QualificationRepository qualificationRepository;
 
-    public QualificationUseCase(@Autowired QualificationRepository qualificationRepository) {
-        this.qualificationRepository = qualificationRepository;
-    }
-
-    public List<Qualification> getQualifications(@NonNull SignedInUser signedInUser) {
+    public List<Qualification> getQualifications(@NonNull final SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_QUALIFICATIONS);
 
         return this.qualificationRepository.findAll();
     }
 
-    public Qualification createQualification(@NonNull SignedInUser signedInUser, Qualification qualification) {
+    public Qualification createQualification(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final Qualification qualification
+    ) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
         qualification.setKey(new QualificationKey());
@@ -39,9 +39,9 @@ public class QualificationUseCase {
     }
 
     public Qualification updateQualification(
-        @NonNull SignedInUser signedInUser,
-        QualificationKey qualificationKey,
-        Qualification qualification
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final QualificationKey qualificationKey,
+        @NonNull final Qualification qualification
     ) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
@@ -54,7 +54,10 @@ public class QualificationUseCase {
         return qualification;
     }
 
-    public void deleteQualification(@NonNull SignedInUser signedInUser, QualificationKey qualificationKey) {
+    public void deleteQualification(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final QualificationKey qualificationKey
+    ) {
         signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
 
         log.info("Deleting qualification {}", qualificationKey);
