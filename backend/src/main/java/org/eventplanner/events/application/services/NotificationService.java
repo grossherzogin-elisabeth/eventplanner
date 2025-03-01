@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import static java.util.concurrent.CompletableFuture.runAsync;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -50,8 +51,9 @@ public class NotificationService {
         var type = NotificationType.ADDED_TO_WAITING_LIST;
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
+        var link = getEventDeepLink(event);
 
-        createNotification(to, type, title, props);
+        createNotification(to, type, title, props, link);
     }
 
     public void sendRemovedFromWaitingListNotification(@Nullable UserDetails to, @NonNull Event event) {
@@ -59,8 +61,9 @@ public class NotificationService {
         var type = NotificationType.REMOVED_FROM_WAITING_LIST;
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
+        var link = getEventDeepLink(event);
 
-        createNotification(to, type, title, props);
+        createNotification(to, type, title, props, link);
     }
 
     public void sendAddedToCrewNotification(@Nullable UserDetails to, @NonNull Event event) {
@@ -68,8 +71,9 @@ public class NotificationService {
         var type = NotificationType.ADDED_TO_CREW;
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
+        var link = getEventDeepLink(event);
 
-        createNotification(to, type, title, props);
+        createNotification(to, type, title, props, link);
     }
 
     public void sendRemovedFromCrewNotification(@Nullable UserDetails to, @NonNull Event event) {
@@ -77,8 +81,9 @@ public class NotificationService {
         var type = NotificationType.REMOVED_FROM_CREW;
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
+        var link = getEventDeepLink(event);
 
-        createNotification(to, type, title, props);
+        createNotification(to, type, title, props, link);
     }
 
     public void sendCrewRegistrationCanceledNotification(
@@ -93,8 +98,36 @@ public class NotificationService {
         addEventDetails(props, event);
         props.put("userName", userName);
         props.put("position", position);
+        var link = getEventDeepLink(event);
 
-        createNotification(to, type, title, props);
+        createNotification(to, type, title, props, link);
+    }
+
+    public void sendCrewRegistrationAddedNotification(
+        @Nullable UserDetails to,
+        @NonNull Event event,
+        @NonNull String userName,
+        @NonNull String position
+    ) {
+        var title = "Neue Anmeldung zu " + event.getName();
+        var type = NotificationType.CREW_REGISTRATION_ADDED;
+        var props = new HashMap<String, Object>();
+        addEventDetails(props, event);
+        props.put("userName", userName);
+        props.put("position", position);
+        var link = getEventDeepLink(event);
+
+        createNotification(to, type, title, props, link);
+    }
+
+    public void sendUserChangedPersonalDataNotification(@Nullable UserDetails to, @NonNull UserDetails who) {
+        var title = who.getFullName() + " hat seine Daten geändert";
+        var type = NotificationType.USER_DATA_CHANGED;
+        var props = new HashMap<String, Object>();
+        props.put("userName", who.getFullName());
+        var link = getUserDeepLink(who);
+
+        createNotification(to, type, title, props, link);
     }
 
     public void sendFirstParticipationConfirmationRequestNotification(
@@ -107,8 +140,9 @@ public class NotificationService {
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
         addParticipationNotificationDetails(props, event, registration);
+        var link = getEventDeepLink(event);
 
-        createNotification(to, type, title, props);
+        createNotification(to, type, title, props, link);
     }
 
     public void sendSecondParticipationConfirmationRequestNotification(
@@ -121,17 +155,9 @@ public class NotificationService {
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
         addParticipationNotificationDetails(props, event, registration);
+        var link = getEventDeepLink(event);
 
-        createNotification(to, type, title, props);
-    }
-
-    public void sendUserChangedPersonalDataNotification(@Nullable UserDetails to, @NonNull UserDetails who) {
-        var title = who.getFullName() + " hat seine Daten geändert";
-        var type = NotificationType.USER_DATA_CHANGED;
-        var props = new HashMap<String, Object>();
-        props.put("userName", who.getFullName());
-
-        createNotification(to, type, title, props);
+        createNotification(to, type, title, props, link);
     }
 
     private void addParticipationNotificationDetails(
@@ -167,7 +193,8 @@ public class NotificationService {
         @Nullable UserDetails to,
         @NonNull NotificationType type,
         @NonNull String title,
-        @NonNull HashMap<String, Object> props
+        @NonNull HashMap<String, Object> props,
+        @Nullable String link
     ) {
         if (to == null) {
             return;
@@ -179,15 +206,17 @@ public class NotificationService {
             props.put("app_link", frontendUrl);
 
             var content = renderEmailContent(type, props);
-            var summary = "";
+            var summary = renderSummary(type, props);
 
-            var notification = new Notification(to, type, title, summary, content);
+            var notification = new Notification(to, type, title, summary, content, link);
             log.debug(
                 "Dispatching {} notification for user {}",
                 notification.type(),
                 notification.recipient().getKey()
             );
-            notificationDispatchers.forEach(dispatcher -> dispatcher.dispatch(notification));
+
+            notificationDispatchers
+                .forEach(dispatcher -> runAsync(() -> dispatcher.dispatch(notification)));
         } catch (Exception e) {
             log.error(
                 "Failed to create '{}' notification for user {}",
@@ -200,13 +229,26 @@ public class NotificationService {
 
     protected String renderEmailContent(@NonNull NotificationType type, @NonNull HashMap<String, Object> props)
     throws TemplateException, IOException {
-        String content = renderTemplate("emails/" + type + ".ftl", props);
+        String content = renderTemplate("emails/" + type + ".ftl", props).trim();
         var baseTemplateParams = new HashMap<>(props);
         baseTemplateParams.put("content", content);
         return renderTemplate("partials/base.ftl", baseTemplateParams);
     }
 
-    private @NonNull String renderTemplate(@NonNull String template, @NonNull Object params)
+    protected String renderSummary(@NonNull final NotificationType type, @NonNull final HashMap<String, Object> props)
+    throws TemplateException, IOException {
+        return renderTemplate("notifications/" + type + ".ftl", props).trim();
+    }
+
+    private String getUserDeepLink(@NonNull final UserDetails userDetails) {
+        return frontendUrl + "/users/edit/" + userDetails.getKey();
+    }
+
+    private String getEventDeepLink(@NonNull final Event event) {
+        return frontendUrl + "/events/" + event.getStart().atZone(timezone).getYear() + "/details/" + event.getKey();
+    }
+
+    private @NonNull String renderTemplate(@NonNull final String template, @NonNull final Object params)
     throws TemplateException, IOException {
         Template content = freemarkerConfig.getTemplate(template);
         Writer writer = new StringWriter();
@@ -214,15 +256,11 @@ public class NotificationService {
         return writer.toString();
     }
 
-    private @NonNull String formatDate(@NonNull ZonedDateTime zonedDateTime) {
-        var formatted = zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        formatted = formatted.replace(".", "&#8203."); // zero length whitespace to prevent phone number detection
-        return formatted;
+    private @NonNull String formatDate(@NonNull final ZonedDateTime zonedDateTime) {
+        return zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 
-    private @NonNull String formatDateTime(@NonNull ZonedDateTime zonedDateTime) {
-        var formatted = zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
-        formatted = formatted.replace(".", "&#8203."); // zero length whitespace to prevent phone number detection
-        return formatted;
+    private @NonNull String formatDateTime(@NonNull final ZonedDateTime zonedDateTime) {
+        return zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
 }

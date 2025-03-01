@@ -35,11 +35,11 @@ public class RegistrationUseCase {
             if (userKey.equals(signedInUser.key())) {
                 signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
                 log.info("User {} signed up on event {}", userKey, event.getName());
-            } else {
-                signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-                log.info("Adding registration for user {} to event {}", userKey, event.getName());
+                return this.registrationService.addRegistration(event, spec, true);
             }
-            return this.registrationService.addRegistration(event, spec);
+            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
+            log.info("Adding registration for user {} to event {}", userKey, event.getName());
+            return this.registrationService.addRegistration(event, spec, false);
         } else if (spec.name() != null) {
             // validate permission and request for guest registration
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
@@ -60,8 +60,8 @@ public class RegistrationUseCase {
             .filter(r -> registrationKey.equals(r.getKey()))
             .findFirst()
             .orElseThrow();
-
-        if (signedInUser.key().equals(registration.getUserKey())) {
+        var isCanceledByUser = signedInUser.key().equals(registration.getUserKey());
+        if (isCanceledByUser) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
             log.info(
                 "User {} removed their registration from event {}",
@@ -85,7 +85,7 @@ public class RegistrationUseCase {
             }
         }
 
-        return registrationService.removeRegistration(event, registration);
+        return registrationService.removeRegistration(event, registration, isCanceledByUser);
     }
 
     public @NonNull Event updateRegistration(

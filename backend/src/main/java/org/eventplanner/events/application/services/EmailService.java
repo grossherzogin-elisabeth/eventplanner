@@ -9,8 +9,8 @@ import java.util.Properties;
 import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
 import org.eventplanner.events.domain.entities.QueuedEmail;
-import org.eventplanner.events.domain.values.EmailSettings;
 import org.eventplanner.events.domain.values.Notification;
+import org.eventplanner.events.domain.values.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
@@ -69,7 +69,6 @@ public class EmailService implements NotificationDispatcher {
             var message = maybeNext.get();
             try {
                 sendEmail(message);
-                log.info("Successfully sent {} notification to user {}", message.getType(), message.getUserKey());
             } catch (Exception e) {
                 if (message.getRetries() > 10) {
                     log.error(
@@ -96,7 +95,7 @@ public class EmailService implements NotificationDispatcher {
         if (!recipientsWhitelist.isEmpty() && !recipientsWhitelist.contains(notification.getTo())) {
             log.warn(
                 "Skipped sending email to user {} because notifications are configured to only be sent to whitelisted" +
-                    " users",
+                " users",
                 notification.getTo()
             );
             return;
@@ -143,13 +142,14 @@ public class EmailService implements NotificationDispatcher {
             log.info("Sending email to whitelisted recipient {}", notification.getUserKey());
         }
         mailSender.send(message);
+        log.info("Successfully sent {} notification to user {}", notification.getType(), notification.getUserKey());
     }
 
-    private EmailSettings getEmailSettings() {
+    private Settings.EmailSettings getEmailSettings() {
         return settingsService.getSettings().emailSettings();
     }
 
-    private JavaMailSender getMailSender(@NonNull EmailSettings emailSettings) {
+    private JavaMailSender getMailSender(@NonNull Settings.EmailSettings emailSettings) {
         var host = emailSettings.getHost();
         var port = emailSettings.getPort();
         var username = emailSettings.getUsername();

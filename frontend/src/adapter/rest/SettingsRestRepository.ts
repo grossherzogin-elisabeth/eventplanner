@@ -11,6 +11,9 @@ interface UiSettingsRepresentation {
 
 interface SettingsRepresentation {
     ui: UiSettingsRepresentation;
+    notifications: {
+        teamsWebhookUrl?: string;
+    };
     email: {
         from?: string;
         fromDisplayName?: string;
@@ -26,6 +29,9 @@ interface SettingsRepresentation {
 
 interface UpdateSettingsRequest {
     ui: UiSettingsRepresentation;
+    notifications: {
+        teamsWebhookUrl?: string;
+    };
     email: {
         from?: string;
         fromDisplayName?: string;
@@ -43,6 +49,9 @@ interface UpdateSettingsRequest {
 export class SettingsRestRepository implements SettingsRepository {
     private static mapToDomain(representation: SettingsRepresentation): AppSettings {
         return {
+            notifications: {
+                teamsWebhookUrl: representation.notifications.teamsWebhookUrl,
+            },
             email: {
                 from: representation.email.from,
                 fromDisplayName: representation.email.fromDisplayName,
@@ -91,6 +100,9 @@ export class SettingsRestRepository implements SettingsRepository {
 
     public async writeSettings(settings: AppSettings): Promise<AppSettings> {
         const requestBody: UpdateSettingsRequest = {
+            notifications: {
+                teamsWebhookUrl: settings.notifications.teamsWebhookUrl,
+            },
             email: {
                 from: settings.email.from,
                 fromDisplayName: settings.email.fromDisplayName,

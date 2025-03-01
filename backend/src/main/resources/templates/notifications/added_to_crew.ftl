@@ -1,0 +1,1 @@
+Du wurdest für die Reise ${event.name} am ${event_start_date} als Crew eingeplant.

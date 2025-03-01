@@ -78,6 +78,16 @@
                             </section>
                         </div>
                     </template>
+                    <template #[Tab.NOTIFICATIONS]>
+                        <div class="items-start gap-32">
+                            <section class="max-w-2xl">
+                                <div class="mb-4">
+                                    <VInputLabel>MS Teams Webhook</VInputLabel>
+                                    <VInputTextArea v-model.trim="settings.notifications.teamsWebhookUrl" />
+                                </div>
+                            </section>
+                        </div>
+                    </template>
                 </VTabs>
             </template>
             <template #primary-button>
@@ -96,13 +106,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import type { AppSettings } from '@/domain';
-import { AsyncButton, VInputCheckBox, VInputLabel, VInputNumber, VInputText, VTabs } from '@/ui/components/common';
+import { AsyncButton, VInputCheckBox, VInputLabel, VInputNumber, VInputText, VInputTextArea, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAppSettingsUseCase } from '@/ui/composables/Application.ts';
 
 enum Tab {
     GENERAL_SETTINGS = 'Allgemein',
     EMAIL = 'Email',
+    NOTIFICATIONS = 'Notifications',
 }
 
 type RouteEmits = (e: 'update:title', value: string) => void;
@@ -111,7 +122,7 @@ const emit = defineEmits<RouteEmits>();
 
 const appSettingsUseCase = useAppSettingsUseCase();
 
-const tabs = [Tab.GENERAL_SETTINGS, Tab.EMAIL];
+const tabs = [Tab.GENERAL_SETTINGS, Tab.EMAIL, Tab.NOTIFICATIONS];
 const tab = ref<Tab>(tabs[0]);
 const settings = ref<AppSettings | null>(null);
 

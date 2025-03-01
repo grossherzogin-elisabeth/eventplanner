@@ -4,7 +4,7 @@ import org.eventplanner.events.application.services.SettingsService;
 import org.eventplanner.events.domain.entities.SignedInUser;
 import org.eventplanner.events.domain.values.Permission;
 import org.eventplanner.events.domain.values.Settings;
-import org.eventplanner.events.domain.values.UiSettings;
+import org.eventplanner.events.domain.values.Settings.UiSettings;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 

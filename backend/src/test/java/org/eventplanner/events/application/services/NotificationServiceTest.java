@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -64,7 +65,8 @@ class NotificationServiceTest {
             Arguments.of(NotificationType.CONFIRM_PARTICIPATION),
             Arguments.of(NotificationType.CONFIRM_PARTICIPATION_REQUEST),
             Arguments.of(NotificationType.USER_DATA_CHANGED),
-            Arguments.of(NotificationType.CREW_REGISTRATION_CANCELED)
+            Arguments.of(NotificationType.CREW_REGISTRATION_CANCELED),
+            Arguments.of(NotificationType.CREW_REGISTRATION_ADDED)
         );
     }
 
@@ -87,9 +89,10 @@ class NotificationServiceTest {
             case USER_DATA_CHANGED -> testee.sendUserChangedPersonalDataNotification(to, to);
             case CREW_REGISTRATION_CANCELED ->
                 testee.sendCrewRegistrationCanceledNotification(to, event, "Test", "Test");
+            case CREW_REGISTRATION_ADDED -> testee.sendCrewRegistrationAddedNotification(to, event, "Test", "Test");
         }
 
-        verify(dispatcher).dispatch(argThat(notification -> notification.type()
+        verify(dispatcher, timeout(1000).times(1)).dispatch(argThat(notification -> notification.type()
             .equals(type)));
     }
 }

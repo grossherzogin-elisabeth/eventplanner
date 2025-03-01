@@ -2,20 +2,22 @@ package org.eventplanner.events.rest.settings.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.values.EmailSettings;
 import org.eventplanner.events.domain.values.Settings;
-import org.eventplanner.events.domain.values.UiSettings;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record UpdateSettingsRequest(
+    @NonNull Notifications notifications,
     @NonNull Email email,
     @NonNull Ui ui
 ) implements Serializable {
 
     public Settings toDomain() {
         return new Settings(
-            new EmailSettings(
+            new Settings.NotificationSettings(
+                notifications.teamsWebhookUrl()
+            ),
+            new Settings.EmailSettings(
                 email.from(),
                 email.fromDisplayName(),
                 email.replyTo(),
@@ -28,13 +30,18 @@ public record UpdateSettingsRequest(
                 email.password(),
                 email.footer()
             ),
-            new UiSettings(
+            new Settings.UiSettings(
                 ui.menuTitle(),
                 ui.tabTitle(),
                 ui.technicalSupportEmail(),
                 ui.supportEmail()
             )
         );
+    }
+
+    public record Notifications(
+        @Nullable String teamsWebhookUrl
+    ) implements Serializable {
     }
 
     public record Email(

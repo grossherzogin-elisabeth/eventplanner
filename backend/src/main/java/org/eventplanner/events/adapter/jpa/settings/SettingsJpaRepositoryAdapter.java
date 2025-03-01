@@ -6,9 +6,7 @@ import java.util.stream.Collectors;
 import org.eventplanner.common.Crypto;
 import org.eventplanner.common.EncryptedString;
 import org.eventplanner.events.application.ports.SettingsRepository;
-import org.eventplanner.events.domain.values.EmailSettings;
 import org.eventplanner.events.domain.values.Settings;
-import org.eventplanner.events.domain.values.UiSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -48,7 +46,11 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
             // ignore
         }
 
-        var emailSettings = new EmailSettings(
+        var notificationSettings = new Settings.NotificationSettings(
+            settingsMap.get("teams.webhookUrl")
+        );
+
+        var emailSettings = new Settings.EmailSettings(
             settingsMap.get("email.from"),
             settingsMap.get("email.fromDisplayName"),
             settingsMap.get("email.replyTo"),
@@ -62,14 +64,14 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
             settingsMap.get("email.footer")
         );
 
-        var uiSettings = new UiSettings(
+        var uiSettings = new Settings.UiSettings(
             settingsMap.get("ui.menuTitle"),
             settingsMap.get("ui.tabTitle"),
             settingsMap.get("ui.technicalSupportEmail"),
             settingsMap.get("ui.supportEmail")
         );
 
-        return new Settings(emailSettings, uiSettings);
+        return new Settings(notificationSettings, emailSettings, uiSettings);
     }
 
     @Override

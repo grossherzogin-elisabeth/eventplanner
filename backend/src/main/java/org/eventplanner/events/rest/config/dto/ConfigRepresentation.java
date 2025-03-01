@@ -2,7 +2,7 @@ package org.eventplanner.events.rest.config.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.values.UiSettings;
+import org.eventplanner.events.domain.values.Settings.UiSettings;
 import org.springframework.lang.Nullable;
 
 public record ConfigRepresentation(

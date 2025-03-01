@@ -193,7 +193,7 @@ public class ParticipationNotificationUseCase {
         }
 
         log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getKey());
-        registrationService.removeRegistration(event, registration);
+        registrationService.removeRegistration(event, registration, true);
     }
 
     private Registration getRegistrationByKey(

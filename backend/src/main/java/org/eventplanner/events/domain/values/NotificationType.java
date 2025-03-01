@@ -43,6 +43,11 @@ public enum NotificationType {
     // So that I know early if I need to find a replacement
     CREW_REGISTRATION_CANCELED("crew_registration_canceled"),
 
+    // As a team planner
+    // I want to get a notification when someone signs up on an event
+    // So that I know I can add them to the crew
+    CREW_REGISTRATION_ADDED("crew_registration_added"),
+
     // As a user manager
     // I want to get a notification when a user changes their personal data
     // So that I can keep the user data up to date

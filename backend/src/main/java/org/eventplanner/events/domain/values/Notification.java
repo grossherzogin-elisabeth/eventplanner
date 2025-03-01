@@ -1,6 +1,7 @@
 package org.eventplanner.events.domain.values;
 
 import org.eventplanner.events.domain.entities.UserDetails;
+import org.springframework.lang.Nullable;
 
 import lombok.NonNull;
 import lombok.With;
@@ -11,6 +12,7 @@ public record Notification(
     @NonNull NotificationType type,
     @NonNull String title,
     @NonNull String summary,
-    @NonNull String content
+    @NonNull String content,
+    @Nullable String link
 ) {
 }

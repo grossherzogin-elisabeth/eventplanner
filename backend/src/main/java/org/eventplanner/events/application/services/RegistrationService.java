@@ -1,8 +1,7 @@
 package org.eventplanner.events.application.services;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.ports.PositionRepository;
@@ -16,6 +15,7 @@ import org.eventplanner.events.domain.specs.CreateRegistrationSpec;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
 import org.eventplanner.events.domain.values.Role;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,9 @@ public class RegistrationService {
 
     public @NonNull Event addRegistration(
         @NonNull Event event,
-        @NonNull CreateRegistrationSpec spec
+        @NonNull CreateRegistrationSpec spec,
+        boolean isSignupByUser
+
     ) {
         var userKey = Objects.requireNonNull(spec.userKey());
         if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUserKey()))) {
@@ -48,9 +50,13 @@ public class RegistrationService {
         }
         var user = userService.getUserByKey(userKey)
             .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not " +
-                "exist"));
-        registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
+                                                            "exist"));
+        var registration = registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
         notificationService.sendAddedToWaitingListNotification(user, event);
+
+        if (isSignupByUser) {
+            sendRegistrationAddedNotificationToAdmins(event, registration, user);
+        }
 
         // reload the event, because registrations have changed
         return this.eventRepository.findByKey(event.getKey()).orElseThrow();
@@ -72,7 +78,8 @@ public class RegistrationService {
 
     public @NonNull Event removeRegistration(
         @NonNull Event event,
-        @NonNull Registration registration
+        @NonNull Registration registration,
+        boolean isCanceledByUser
     ) {
         log.info("Removing registration {} from event {} ({})", registration.getKey(), event.getName(), event.getKey());
         var hasAssignedSlot = false;
@@ -81,16 +88,6 @@ public class RegistrationService {
                 slot.setAssignedRegistration(null);
                 hasAssignedSlot = true;
             }
-        }
-
-        List<UserDetails> admins = Collections.emptyList();
-        String positionName = "";
-        if (hasAssignedSlot) {
-            admins = userService.getUsersByRole(Role.TEAM_PLANNER);
-            positionName = positionRepository
-                .findByKey(registration.getPosition())
-                .map(Position::getName)
-                .orElse(registration.getPosition().toString());
         }
 
         registrationRepository.deleteRegistration(registration, event.getKey());
@@ -105,25 +102,11 @@ public class RegistrationService {
             }
             if (hasAssignedSlot) {
                 notificationService.sendRemovedFromCrewNotification(maybeUser.get(), event);
-                for (UserDetails admin : admins) {
-                    notificationService.sendCrewRegistrationCanceledNotification(
-                        admin,
-                        event,
-                        maybeUser.get().getFullName(),
-                        positionName
-                    );
+                if (isCanceledByUser) {
+                    sendRegistrationCanceledNotificationToAdmins(event, registration, maybeUser.get());
                 }
             } else {
                 notificationService.sendRemovedFromWaitingListNotification(maybeUser.get(), event);
-            }
-        } else if (hasAssignedSlot && registration.getName() != null) {
-            for (UserDetails admin : admins) {
-                notificationService.sendCrewRegistrationCanceledNotification(
-                    admin,
-                    event,
-                    registration.getName(),
-                    positionName
-                );
             }
         }
         return event;
@@ -141,5 +124,50 @@ public class RegistrationService {
         registration.setConfirmedAt(spec.confirmedAt());
         registrationRepository.updateRegistration(registration, event.getKey());
         return this.eventRepository.findByKey(event.getKey()).orElseThrow();
+    }
+
+    private void sendRegistrationAddedNotificationToAdmins(
+        @NonNull final Event event,
+        @NonNull final Registration registration,
+        @Nullable final UserDetails user
+    ) {
+        userService.getUsersByRole(Role.TEAM_PLANNER)
+            .forEach(admin -> notificationService.sendCrewRegistrationAddedNotification(
+                admin,
+                event,
+                resolveUserName(registration, user),
+                resolvePositionName(registration)
+            ));
+    }
+
+    private void sendRegistrationCanceledNotificationToAdmins(
+        @NonNull final Event event,
+        @NonNull final Registration registration,
+        @Nullable final UserDetails user
+    ) {
+        userService.getUsersByRole(Role.TEAM_PLANNER)
+            .forEach(admin -> notificationService.sendCrewRegistrationCanceledNotification(
+                admin,
+                event,
+                resolveUserName(registration, user),
+                resolvePositionName(registration)
+            ));
+    }
+
+    private @NonNull String resolvePositionName(@NonNull final Registration registration) {
+        return positionRepository
+            .findByKey(registration.getPosition())
+            .map(Position::getName)
+            .orElse(registration.getPosition().toString());
+    }
+
+    private @NonNull String resolveUserName(
+        @NonNull final Registration registration,
+        @Nullable final UserDetails user
+    ) {
+        if (user != null) {
+            return user.getFullName();
+        }
+        return Optional.ofNullable(registration.getName()).orElse("");
     }
 }
