@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.With;
 
 @Getter
@@ -25,6 +26,7 @@ import lombok.With;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Event {
     private @NonNull EventKey key = new EventKey();
     private @NonNull String name = "";

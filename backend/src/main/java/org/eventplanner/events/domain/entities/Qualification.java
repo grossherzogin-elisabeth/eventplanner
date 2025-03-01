@@ -13,12 +13,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Qualification {
     private @NonNull QualificationKey key;
     private @NonNull String name;

@@ -16,12 +16,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString
 public class EncryptedUserDetails implements Serializable {
     private @NonNull UserKey key;
     private @Nullable AuthKey authKey;

@@ -50,9 +50,9 @@ spring:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:${data.directory}/eventplanner.db
   jpa:
-    database-platform: com.sqlite.config.SQLiteDialect
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   flyway:
     enabled: true
     locations: classpath:db/migration

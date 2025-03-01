@@ -1,7 +1,5 @@
 package org.eventplanner.events.domain.entities;
 
-import static java.util.Optional.ofNullable;
-
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -12,15 +10,18 @@ import org.eventplanner.events.domain.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import static java.util.Optional.ofNullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString
 public class EncryptedUserQualification implements Encryptable<UserQualification>, Serializable {
     private @NonNull EncryptedString qualificationKey;
     private @Nullable EncryptedString expiresAt;

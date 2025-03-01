@@ -3,8 +3,8 @@ package org.eventplanner.events.domain.entities;
 import java.time.Instant;
 import java.util.UUID;
 
-import org.eventplanner.events.domain.values.RegistrationKey;
 import org.eventplanner.events.domain.values.PositionKey;
+import org.eventplanner.events.domain.values.RegistrationKey;
 import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.With;
 
 @Getter
@@ -22,6 +23,7 @@ import lombok.With;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Registration {
     private @NonNull RegistrationKey key;
     private @NonNull PositionKey position;

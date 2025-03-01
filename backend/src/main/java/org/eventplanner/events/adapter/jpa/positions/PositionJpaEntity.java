@@ -35,7 +35,7 @@ public class PositionJpaEntity implements Serializable {
     @Column(name = "prio", nullable = false)
     private int prio;
 
-    @Column(name = "imoListRank", nullable = false)
+    @Column(name = "imo_list_name", nullable = false)
     private String imoListRank;
 
     public static PositionJpaEntity fromDomain(Position position) {

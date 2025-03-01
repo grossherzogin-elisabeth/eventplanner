@@ -5,11 +5,11 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Address;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.Diet;
+import org.eventplanner.events.domain.values.PositionKey;
+import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.lang.NonNull;
@@ -20,12 +20,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UserDetails {
     private final @NonNull UserKey key;
     private @Nullable AuthKey authKey;

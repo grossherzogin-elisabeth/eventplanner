@@ -11,11 +11,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @RequiredArgsConstructor
+@ToString
 public class User {
     private @NonNull UserKey key;
     private @NonNull String firstName;
