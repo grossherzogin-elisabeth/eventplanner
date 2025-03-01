@@ -10,6 +10,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
 import org.eventplanner.events.domain.entities.QueuedEmail;
 import org.eventplanner.events.domain.values.EmailSettings;
+import org.eventplanner.events.domain.values.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
@@ -25,12 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class EmailNotificationSender {
+public class EmailService implements NotificationDispatcher {
     private final List<String> recipientsWhitelist;
     private final SettingsService settingsService;
     private final QueuedEmailRepository queuedEmailRepository;
 
-    public EmailNotificationSender(
+    public EmailService(
         @Autowired final SettingsService settingsService,
         @Autowired final QueuedEmailRepository queuedEmailRepository,
         @Value("${email.recipients-whitelist}") final String recipientsWhitelist
@@ -41,6 +42,25 @@ public class EmailNotificationSender {
             .map(String::trim)
             .filter(s -> !s.isBlank())
             .toList();
+    }
+
+    @Override
+    public void dispatch(@NonNull final Notification notification) {
+        var email = notification.recipient().getEmail();
+        if (email == null) {
+            log.warn(
+                "Cannot send email notification to user {} because no email address is specified",
+                notification.recipient().getKey()
+            );
+            return;
+        }
+        queuedEmailRepository.queue(new QueuedEmail(
+            notification.type(),
+            notification.recipient().getEmail().trim(),
+            notification.recipient().getKey(),
+            notification.title(),
+            notification.content()
+        ));
     }
 
     public void sendNextEmail() {

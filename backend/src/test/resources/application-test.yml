@@ -1,0 +1,35 @@
+# -----------------
+# Env Variables
+# -----------------
+
+# The password we use to encrypt PII data in our database
+DATA_ENCRYPTION_PASSWORD: super-secret-password
+
+# OIDC configuration
+OAUTH_ISSUER_URI: https://auth.grossherzogin-elisabeth.de/realms/stammcrew
+OAUTH_CLIENT_ID: test
+OAUTH_CLIENT_SECRET: test
+
+# If not empty email notifications will only be sent to these email addresses
+# comma separated list of email addresses
+EMAIL_WHITELIST: >
+  admin@grossherzogin-elisabeth.de
+
+# OIDC users with this email address in their token will automatically become admins
+# comma separated list of email addresses
+ADMIN_EMAILS: >
+  admin@grossherzogin-elisabeth.de
+
+# -----------------
+# Overwrites
+# -----------------
+
+data:
+  db-url: jdbc:sqlite:eventplanner-test.db
+
+server:
+  protocol: http
+  host: localhost
+
+security:
+  enable-csrf: false

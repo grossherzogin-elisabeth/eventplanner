@@ -7,11 +7,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
-import org.eventplanner.events.application.ports.QueuedEmailRepository;
 import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.QueuedEmail;
 import org.eventplanner.events.domain.entities.Registration;
 import org.eventplanner.events.domain.entities.UserDetails;
 import org.eventplanner.events.domain.values.Notification;
@@ -34,64 +33,52 @@ public class NotificationService {
 
     private final Configuration freemarkerConfig;
     private final String frontendUrl;
-    private final QueuedEmailRepository queuedEmailRepository;
+    private final List<NotificationDispatcher> notificationDispatchers;
 
     public NotificationService(
-        @Autowired QueuedEmailRepository queuedEmailRepository,
+        @Autowired List<NotificationDispatcher> notificationDispatchers,
         @Autowired Configuration freemarkerConfig,
         @Value("${frontend.url}") String frontendUrl
     ) {
-        this.queuedEmailRepository = queuedEmailRepository;
+        this.notificationDispatchers = notificationDispatchers;
         this.freemarkerConfig = freemarkerConfig;
         this.frontendUrl = frontendUrl;
     }
 
     public void sendAddedToWaitingListNotification(@Nullable UserDetails to, @NonNull Event event) {
-        if (to == null) {
-            return;
-        }
-        log.debug("Creating added to waiting list notification for user {}", to.getKey());
-        Notification notification = new Notification(NotificationType.ADDED_TO_WAITING_LIST);
-        notification.setTitle("Deine Anmeldung zu " + event.getName());
-        notification.getProps().put("user", to);
-        addEventDetails(notification, event);
-        createNotification(notification, to);
+        var title = "Deine Anmeldung zu " + event.getName();
+        var type = NotificationType.ADDED_TO_WAITING_LIST;
+        var props = new HashMap<String, Object>();
+        addEventDetails(props, event);
+
+        createNotification(to, type, title, props);
     }
 
     public void sendRemovedFromWaitingListNotification(@Nullable UserDetails to, @NonNull Event event) {
-        if (to == null) {
-            return;
-        }
-        log.debug("Creating removed from waiting list notification for user {}", to.getKey());
-        Notification notification = new Notification(NotificationType.REMOVED_FROM_WAITING_LIST);
-        notification.setTitle("Deine Anmeldung zu " + event.getName());
-        notification.getProps().put("user", to);
-        addEventDetails(notification, event);
-        createNotification(notification, to);
+        var title = "Deine Anmeldung zu " + event.getName();
+        var type = NotificationType.REMOVED_FROM_WAITING_LIST;
+        var props = new HashMap<String, Object>();
+        addEventDetails(props, event);
+
+        createNotification(to, type, title, props);
     }
 
     public void sendAddedToCrewNotification(@Nullable UserDetails to, @NonNull Event event) {
-        if (to == null) {
-            return;
-        }
-        log.debug("Creating added to crew notification for user {}", to.getKey());
-        Notification notification = new Notification(NotificationType.ADDED_TO_CREW);
-        notification.setTitle("Deine Anmeldung zu " + event.getName());
-        addEventDetails(notification, event);
-        notification.getProps().put("user", to);
-        createNotification(notification, to);
+        var title = "Deine Anmeldung zu " + event.getName();
+        var type = NotificationType.ADDED_TO_CREW;
+        var props = new HashMap<String, Object>();
+        addEventDetails(props, event);
+
+        createNotification(to, type, title, props);
     }
 
     public void sendRemovedFromCrewNotification(@Nullable UserDetails to, @NonNull Event event) {
-        if (to == null) {
-            return;
-        }
-        log.debug("Creating removed from crew notification for user {}", to.getKey());
-        Notification notification = new Notification(NotificationType.REMOVED_FROM_CREW);
-        notification.setTitle("Deine Anmeldung zu " + event.getName());
-        notification.getProps().put("user", to);
-        addEventDetails(notification, event);
-        createNotification(notification, to);
+        var title = "Deine Anmeldung zu " + event.getName();
+        var type = NotificationType.REMOVED_FROM_CREW;
+        var props = new HashMap<String, Object>();
+        addEventDetails(props, event);
+
+        createNotification(to, type, title, props);
     }
 
     public void sendCrewRegistrationCanceledNotification(
@@ -100,16 +87,14 @@ public class NotificationService {
         @NonNull String userName,
         @NonNull String position
     ) {
-        if (to == null) {
-            return;
-        }
-        log.debug("Creating crew registration canceled notification for user {}", to.getKey());
-        Notification notification = new Notification(NotificationType.CREW_REGISTRATION_CANCELED);
-        notification.setTitle("Absage zu " + event.getName());
-        addEventDetails(notification, event);
-        notification.getProps().put("userName", userName);
-        notification.getProps().put("position", position);
-        createNotification(notification, to);
+        var title = "Absage zu " + event.getName();
+        var type = NotificationType.CREW_REGISTRATION_CANCELED;
+        var props = new HashMap<String, Object>();
+        addEventDetails(props, event);
+        props.put("userName", userName);
+        props.put("position", position);
+
+        createNotification(to, type, title, props);
     }
 
     public void sendFirstParticipationConfirmationRequestNotification(
@@ -117,15 +102,13 @@ public class NotificationService {
         @NonNull Event event,
         @NonNull Registration registration
     ) {
-        if (to == null || !event.isUpForFirstParticipationConfirmationRequest()) {
-            return;
-        }
-        log.debug("Creating first participation confirmation request for user {}", to.getKey());
-        Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION);
-        notification.setTitle("Bitte um Rückmeldung: " + event.getName());
-        addEventDetails(notification, event);
+        var title = "Bitte um Rückmeldung: " + event.getName();
+        var type = NotificationType.CONFIRM_PARTICIPATION;
+        var props = new HashMap<String, Object>();
+        addEventDetails(props, event);
+        addParticipationNotificationDetails(props, event, registration);
 
-        sendParticipationNotificationBody(to, event, registration, notification);
+        createNotification(to, type, title, props);
     }
 
     public void sendSecondParticipationConfirmationRequestNotification(
@@ -133,93 +116,92 @@ public class NotificationService {
         @NonNull Event event,
         @NonNull Registration registration
     ) {
-        if (to == null || !event.isUpForSecondParticipationConfirmationRequest()) {
-            return;
-        }
-        log.debug("Creating second participation confirmation request for user {}", to.getKey());
-        Notification notification = new Notification(NotificationType.CONFIRM_PARTICIPATION_REQUEST);
-        notification.setTitle("Bitte um sofortige Rückmeldung: " + event.getName());
-        addEventDetails(notification, event);
+        var title = "Bitte um sofortige Rückmeldung: " + event.getName();
+        var type = NotificationType.CONFIRM_PARTICIPATION_REQUEST;
+        var props = new HashMap<String, Object>();
+        addEventDetails(props, event);
+        addParticipationNotificationDetails(props, event, registration);
 
-        sendParticipationNotificationBody(to, event, registration, notification);
+        createNotification(to, type, title, props);
     }
 
     public void sendUserChangedPersonalDataNotification(@Nullable UserDetails to, @NonNull UserDetails who) {
-        if (to == null) {
-            return;
-        }
-        log.debug("Creating user changed personal data notification for user {}", to.getKey());
-        Notification notification = new Notification(NotificationType.USER_DATA_CHANGED);
-        notification.setTitle(who.getFullName() + " hat seine Daten geändert");
-        notification.getProps().put("user", to);
-        notification.getProps().put("userName", who.getFullName());
-        createNotification(notification, to);
+        var title = who.getFullName() + " hat seine Daten geändert";
+        var type = NotificationType.USER_DATA_CHANGED;
+        var props = new HashMap<String, Object>();
+        props.put("userName", who.getFullName());
+
+        createNotification(to, type, title, props);
     }
 
-    private void sendParticipationNotificationBody(
-        @Nullable UserDetails to,
-        @NonNull Event event,
-        @NonNull Registration registration,
-        @NonNull Notification notification
+    private void addParticipationNotificationDetails(
+        @NonNull HashMap<String, Object> props,
+        @NonNull final Event event,
+        @NonNull final Registration registration
     ) {
-        if (to == null) {
-            return;
-        }
-        notification.getProps().put("user", to);
-        notification.getProps().put("deadline", formatDate(event.getStart().atZone(timezone).minusDays(7)));
+        props.put("deadline", formatDate(event.getStart().atZone(timezone).minusDays(7)));
         var eventUrl = frontendUrl + "/events/" + event.getStart().atZone(timezone)
             .getYear() + "/details/" + event.getKey() + "/registrations/" + registration.getKey();
-        notification.getProps().put("confirm_link", eventUrl + "/confirm?accessKey=" + registration.getAccessKey());
-        notification.getProps().put("deny_link", eventUrl + "/deny?accessKey=" + registration.getAccessKey());
-        createNotification(notification, to);
+        props.put("confirm_link", eventUrl + "/confirm?accessKey=" + registration.getAccessKey());
+        props.put("deny_link", eventUrl + "/deny?accessKey=" + registration.getAccessKey());
     }
 
-    private void addEventDetails(@NonNull Notification notification, @NonNull Event event) {
-        notification.getProps().put("event", event);
+    private void addEventDetails(
+        @NonNull HashMap<String, Object> props,
+        @NonNull final Event event
+    ) {
+        props.put("event", event);
         var start = event.getLocations().stream()
             .findFirst()
             .flatMap(it -> Optional.ofNullable(it.etd()))
             .orElse(event.getStart())
             .atZone(timezone);
-
-        notification.getProps().put("event_start_date", formatDate(start));
-        notification.getProps().put("event_start_datetime", formatDateTime(start));
-        notification.getProps().put("event_end_date", formatDate(event.getEnd().atZone(timezone)));
-        notification.getProps().put("event_end_datetime", formatDateTime(event.getStart().atZone(timezone)));
-        notification.getProps().put("event_crew_on_board_datetime", formatDateTime(event.getStart().atZone(timezone)));
+        props.put("event_start_date", formatDate(start));
+        props.put("event_start_datetime", formatDateTime(start));
+        props.put("event_end_date", formatDate(event.getEnd().atZone(timezone)));
+        props.put("event_end_datetime", formatDateTime(event.getStart().atZone(timezone)));
+        props.put("event_crew_on_board_datetime", formatDateTime(event.getStart().atZone(timezone)));
     }
 
-    public void createNotification(@NonNull Notification notification, @NonNull UserDetails to) {
+    public void createNotification(
+        @Nullable UserDetails to,
+        @NonNull NotificationType type,
+        @NonNull String title,
+        @NonNull HashMap<String, Object> props
+    ) {
+        if (to == null) {
+            return;
+        }
         try {
-            if (to.getEmail() == null) {
-                log.warn("Cannot send email notification to user {} due to missing email address", to.getKey());
-                return;
-            }
-            notification.getProps().put("title", notification.getTitle());
-            notification.getProps().put("app_link", frontendUrl);
-            notification.getProps().put("user", to);
-            queuedEmailRepository.queue(new QueuedEmail(
-                notification.getType(),
-                to.getEmail().trim(),
-                to.getKey(),
-                notification.getTitle(),
-                renderEmail(notification)
-            ));
+            // add some default props
+            props.put("title", title);
+            props.put("user", to);
+            props.put("app_link", frontendUrl);
+
+            var content = renderEmailContent(type, props);
+            var summary = "";
+
+            var notification = new Notification(to, type, title, summary, content);
+            log.debug(
+                "Dispatching {} notification for user {}",
+                notification.type(),
+                notification.recipient().getKey()
+            );
+            notificationDispatchers.forEach(dispatcher -> dispatcher.dispatch(notification));
         } catch (Exception e) {
             log.error(
                 "Failed to create '{}' notification for user {}",
-                notification.getType(),
+                type,
                 to.getKey(),
                 e
             );
         }
     }
 
-    private String renderEmail(@NonNull Notification notification) throws IOException, TemplateException {
-        var props = notification.getProps();
-        String content = renderTemplate("emails/" + notification.getType() + ".ftl", props);
-
-        var baseTemplateParams = new HashMap<>(notification.getProps());
+    protected String renderEmailContent(@NonNull NotificationType type, @NonNull HashMap<String, Object> props)
+    throws TemplateException, IOException {
+        String content = renderTemplate("emails/" + type + ".ftl", props);
+        var baseTemplateParams = new HashMap<>(props);
         baseTemplateParams.put("content", content);
         return renderTemplate("partials/base.ftl", baseTemplateParams);
     }
