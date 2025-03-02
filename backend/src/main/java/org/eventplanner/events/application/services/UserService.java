@@ -2,13 +2,13 @@ package org.eventplanner.events.application.services;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eventplanner.events.application.ports.QualificationRepository;
+import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.domain.entities.EncryptedUserDetails;
 import org.eventplanner.events.domain.entities.Qualification;
 import org.eventplanner.events.domain.entities.User;
@@ -17,7 +17,6 @@ import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
-import org.eventplanner.events.application.ports.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -31,7 +30,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final QualificationRepository qualificationRepository;
     private final UserEncryptionService userEncryptionService;
-    private final Map<UserKey, EncryptedUserDetails> cache = new HashMap<>();
 
     public UserService(
         @Autowired UserRepository userRepository,
@@ -57,14 +55,11 @@ public class UserService {
     }
 
     public @NonNull List<UserDetails> getDetailedUsers() {
-        if (cache.isEmpty()) {
-            userRepository.findAll().forEach(it -> cache.put(it.getKey(), it));
-        }
         var qualificationMap = qualificationRepository.findAll()
             .stream()
             .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
 
-        return cache.values().stream()
+        return getEncryptedUsers().stream()
             .map(userEncryptionService::decrypt)
             .map(user -> resolvePositionsAndQualificationExpires(user, qualificationMap))
             .sorted(Comparator.comparing(UserDetails::getFullName))
@@ -72,22 +67,19 @@ public class UserService {
     }
 
     private @NonNull Collection<EncryptedUserDetails> getEncryptedUsers() {
-        if (cache.isEmpty()) {
-            userRepository.findAll().forEach(u -> cache.put(u.getKey(), u));
-        }
-        return cache.values();
+        return userRepository.findAll();
+    }
+
+    private @NonNull Optional<EncryptedUserDetails> getEncryptedUserByKey(@NonNull UserKey key) {
+        return userRepository.findByKey(key);
     }
 
     public Optional<UserDetails> getUserByKey(@Nullable UserKey key) {
         if (key == null) {
             return Optional.empty();
         }
-        var encryptedUserDetails = Optional.ofNullable(cache.get(key));
-        if (encryptedUserDetails.isEmpty()) {
-            encryptedUserDetails = userRepository.findByKey(key);
-        }
-
-        return encryptedUserDetails.map(userEncryptionService::decrypt)
+        return getEncryptedUserByKey(key)
+            .map(userEncryptionService::decrypt)
             .map(this::resolvePositionsAndQualificationExpires);
     }
 
@@ -116,27 +108,18 @@ public class UserService {
     public UserDetails createUser(UserDetails userDetails) {
         var encrypted = userEncryptionService.encrypt(userDetails);
         encrypted = userRepository.create(encrypted);
-        if (!cache.isEmpty()) {
-            cache.put(encrypted.getKey(), encrypted);
-        }
         return userEncryptionService.decrypt(encrypted);
     }
 
     public UserDetails updateUser(UserDetails userDetails) {
         var encrypted = userEncryptionService.encrypt(userDetails);
         encrypted = userRepository.update(encrypted);
-        if (!cache.isEmpty()) {
-            cache.put(encrypted.getKey(), encrypted);
-        }
         return resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(encrypted));
     }
 
     public void deleteUser(UserKey userKey) {
         // TODO should this be a soft delete?
         userRepository.deleteByKey(userKey);
-        if (!cache.isEmpty()) {
-            cache.remove(userKey);
-        }
     }
 
     public List<UserDetails> getUsersByRole(Role role) {
