@@ -1,25 +1,39 @@
 package org.eventplanner.config;
 
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eventplanner.users.values.Role;
+import org.eventplanner.events.application.services.UserService;
+import org.eventplanner.events.domain.values.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
+import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
 public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
 
+    private final UserService userService;
     private final List<String> admins;
 
-    public OAuthUserAuthoritiesMapper(List<String> admins) {
-        this.admins = admins;
+    public OAuthUserAuthoritiesMapper(
+        @Autowired UserService userService,
+        @Value("${auth.admins}") String admins
+    ) {
+        this.userService = userService;
+        this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
     }
 
     @Override
@@ -31,62 +45,43 @@ public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
                 case OAuth2UserAuthority oAuthAuthority -> extractOAuthRoles(oAuthAuthority);
                 default -> Stream.empty();
             })
-            .map(SimpleGrantedAuthority::new)
             .toList();
     }
 
-    private Stream<String> extractOidcRoles(OidcUserAuthority oidcUserAuthority) {
-        if (oidcUserAuthority.getAttributes().get("iss") instanceof URL issuerUrl) {
-            List<String> roles = new LinkedList<>();
-            if (issuerUrl.getAuthority().equals("accounts.google.com")) {
-                roles = extractGoogleRoles(oidcUserAuthority);
-            } else if (issuerUrl.getAuthority().endsWith(".amazonaws.com")) {
-                roles = extractCognitoRoles(oidcUserAuthority);
-            } else if (issuerUrl.getAuthority().endsWith(".microsoft.com")) {
-                roles = extractMicrosoftRoles(oidcUserAuthority);
-            } else if (issuerUrl.getAuthority().endsWith(".apple.com")) {
-                roles = extractAppleRoles(oidcUserAuthority);
-            }
+    private Stream<? extends GrantedAuthority> extractOidcRoles(OidcUserAuthority oidcUserAuthority) {
+        var authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(oidcUserAuthority);
+        authorities.addAll(getRolesByEmail(oidcUserAuthority.getIdToken().getEmail()));
+        return authorities.stream();
+    }
 
-            var email = oidcUserAuthority.getIdToken().getEmail();
+    private Stream<? extends GrantedAuthority> extractOAuthRoles(OAuth2UserAuthority oAuthAuthority) {
+        var authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(oAuthAuthority);
+        authorities.addAll(getRolesByEmail(oAuthAuthority.getAttributes().get("email")));
+        return authorities.stream();
+    }
+
+    private @NonNull List<? extends GrantedAuthority> getRolesByEmail(@Nullable Object email) {
+        var authorities = new ArrayList<GrantedAuthority>();
+        if (email instanceof String) {
             if (admins.contains(email)) {
-                roles.add(Role.ADMIN.value());
+                authorities.add(new SimpleGrantedAuthority(Role.ADMIN.toString()));
             }
-
-            return roles.isEmpty() ? Stream.of(Role.NONE.value()) : roles.stream();
+            // var user = userService.getUserByEmail(email.toString());
+            // if (user.isPresent()) {
+            //     authorities.add(SignedInUser.fromUser(user.get()));
+            //     user.get().getRoles().stream()
+            //         .map(Role::toString)
+            //         .distinct()
+            //         .map(SimpleGrantedAuthority::new)
+            //         .filter(authority -> !authorities.contains(authority))
+            //         .forEach(authorities::add);
+            // }
         }
-
-        // all users will automatically get the role TEAM_MEMBER, if they can be matched to
-        // the team members list
-        return Stream.of(Role.NONE.value());
-    }
-
-    private List<String> extractCognitoRoles(OidcUserAuthority oidcUserAuthority) {
-        var cognitoRoles = oidcUserAuthority.getAttributes().get("cognito:groups");
-        if (cognitoRoles instanceof Collection<?> collection) {
-            return collection.stream().map(r -> "ROLE_" + r)
-                .collect(Collectors.toCollection(LinkedList::new));
+        if (authorities.isEmpty()) {
+            authorities.add(new SimpleGrantedAuthority(Role.NONE.toString()));
         }
-        return new LinkedList<>();
-    }
-
-    private List<String> extractGoogleRoles(OidcUserAuthority oidcUserAuthority) {
-        // we currently don't assign roles in google, so the roles in the token don't matter
-        return new LinkedList<>();
-    }
-
-    private List<String> extractMicrosoftRoles(OidcUserAuthority oidcUserAuthority) {
-        // we currently don't assign roles in azure entra id, so the roles in the token don't matter
-        return new LinkedList<>();
-    }
-
-    private List<String> extractAppleRoles(OidcUserAuthority oidcUserAuthority) {
-        // we currently don't assign roles in apple, so the roles in the token don't matter
-        return new LinkedList<>();
-    }
-
-    private Stream<String> extractOAuthRoles(OAuth2UserAuthority oAuth2UserAuthority) {
-        // is this actually needed?
-        return Stream.of(Role.NONE.value());
+        return authorities;
     }
 }

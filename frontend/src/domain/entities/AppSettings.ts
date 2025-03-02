@@ -1,6 +1,11 @@
 export interface AppSettings {
+    notifications: NotificationSettings;
     email: EmailSettings;
     ui: UiSettings;
+}
+
+export interface NotificationSettings {
+    teamsWebhookUrl?: string;
 }
 
 export interface UiSettings {
