@@ -1,18 +1,21 @@
 package org.eventplanner.events.domain.values;
 
-import org.eventplanner.events.domain.entities.UserDetails;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import lombok.NonNull;
-import lombok.With;
+public interface Notification {
+    @NonNull
+    NotificationType type();
 
-@With
-public record Notification(
-    @NonNull UserDetails recipient,
-    @NonNull NotificationType type,
-    @NonNull String title,
-    @NonNull String summary,
-    @NonNull String content,
-    @Nullable String link
-) {
+    @NonNull
+    String title();
+
+    @NonNull
+    String summary();
+
+    @NonNull
+    String content();
+
+    @Nullable
+    String link();
 }

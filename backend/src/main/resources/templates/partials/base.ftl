@@ -48,6 +48,7 @@
             font-size: 16px;
             vertical-align: top;
         }
+
         /* BODY & CONTAINER */
 
         body {
@@ -126,23 +127,28 @@
             .main span {
                 font-size: 16px !important;
             }
+
             .content {
                 padding: 8px !important;
             }
+
             .container {
                 padding-top: 8px !important;
                 width: 100% !important;
             }
+
             .footer {
                 padding: 8px !important;
             }
         }
+
         /* PRESERVE THESE STYLES IN THE HEAD */
 
         @media all {
             .ExternalClass {
                 width: 100%;
             }
+
             .ExternalClass,
             .ExternalClass p,
             .ExternalClass span,
@@ -151,6 +157,7 @@
             .ExternalClass div {
                 line-height: 100%;
             }
+
             .apple-link a {
                 color: inherit !important;
                 font-family: inherit !important;
@@ -159,6 +166,7 @@
                 line-height: inherit !important;
                 text-decoration: none !important;
             }
+
             #MessageViewBody a {
                 color: inherit;
                 text-decoration: none;
@@ -176,7 +184,18 @@
         <td>&nbsp;</td>
         <td class="container">
             <div class="content">
+                <h1>
+                    <#if user.nickName??>
+                        Moin ${user.nickName},
+                    <#else>
+                        Moin ${user.firstName},
+                    </#if>
+                </h1>
                 ${content}
+                <p>
+                    Mit freundlichen Grüßen<br>
+                    Dein Lissi Büro-Team
+                </p>
             </div>
             <div class="footer">
                 <p>

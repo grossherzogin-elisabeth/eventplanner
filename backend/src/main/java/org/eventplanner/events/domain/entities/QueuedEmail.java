@@ -12,9 +12,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.With;
 
 @Getter
 @Setter
+@With
 @EqualsAndHashCode
 @AllArgsConstructor
 @ToString

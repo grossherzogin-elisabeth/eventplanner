@@ -158,8 +158,7 @@ public class UserUseCase {
         var user = userService.getUserByKey(userKey).orElseThrow();
 
         if (signedInUser.key().equals(userKey)) {
-            userService.getUsersByRole(Role.USER_MANAGER)
-                .forEach(userManager -> notificationService.sendUserChangedPersonalDataNotification(userManager, user));
+            notificationService.sendUserChangedPersonalDataNotification(Role.USER_MANAGER, user);
         }
 
         // these may be changed by a user themselves

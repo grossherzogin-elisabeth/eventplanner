@@ -6,6 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import org.eventplanner.events.domain.values.GlobalNotification;
 import org.eventplanner.events.domain.values.Notification;
 import org.eventplanner.events.domain.values.NotificationType;
 import org.springframework.lang.NonNull;
@@ -23,22 +24,23 @@ public class TeamsNotificationService implements NotificationDispatcher {
 
     @Override
     public void dispatch(@NonNull final Notification notification) {
-        try {
-            // TODO find a nicer way to configure this than hard coding
-            if (!"admin@grossherzogin-elisabeth.de".equals(notification.recipient().getEmail())) {
-                return;
-            }
-            var teamsUrl = settingsService.getSettings().notificationSettings().getTeamsWebhookUrl();
-            if (teamsUrl != null) {
+        var teamsUrl = settingsService.getSettings().notificationSettings().getTeamsWebhookUrl();
+        if (teamsUrl == null) {
+            log.debug("Skipping teams notification, because no teams webhook url is configured");
+            return;
+        }
+        // TODO maybe also specify channel by role?
+        if (notification instanceof GlobalNotification) {
+            try {
                 var uri = URI.create(teamsUrl);
                 switch (notification.type()) {
                     case NotificationType.USER_DATA_CHANGED -> createTeamsAlert(uri, notification);
                     case NotificationType.CREW_REGISTRATION_CANCELED -> createTeamsAlert(uri, notification);
                     case NotificationType.CREW_REGISTRATION_ADDED -> createTeamsAlert(uri, notification);
                 }
+            } catch (Exception e) {
+                log.error("Failed to create MS Teams alert for {} notification", notification.type(), e);
             }
-        } catch (Exception e) {
-            log.error("Failed to create MS Teams alert for {} notification", notification.type(), e);
         }
     }
 

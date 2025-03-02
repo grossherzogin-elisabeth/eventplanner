@@ -13,8 +13,11 @@ import java.util.Optional;
 import org.eventplanner.events.domain.entities.Event;
 import org.eventplanner.events.domain.entities.Registration;
 import org.eventplanner.events.domain.entities.UserDetails;
+import org.eventplanner.events.domain.values.GlobalNotification;
 import org.eventplanner.events.domain.values.Notification;
 import org.eventplanner.events.domain.values.NotificationType;
+import org.eventplanner.events.domain.values.PersonalNotification;
+import org.eventplanner.events.domain.values.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
@@ -87,7 +90,7 @@ public class NotificationService {
     }
 
     public void sendCrewRegistrationCanceledNotification(
-        @Nullable UserDetails to,
+        @NonNull Role to,
         @NonNull Event event,
         @NonNull String userName,
         @NonNull String position
@@ -104,7 +107,7 @@ public class NotificationService {
     }
 
     public void sendCrewRegistrationAddedNotification(
-        @Nullable UserDetails to,
+        @NonNull Role to,
         @NonNull Event event,
         @NonNull String userName,
         @NonNull String position
@@ -120,7 +123,7 @@ public class NotificationService {
         createNotification(to, type, title, props, link);
     }
 
-    public void sendUserChangedPersonalDataNotification(@Nullable UserDetails to, @NonNull UserDetails who) {
+    public void sendUserChangedPersonalDataNotification(@NonNull Role to, @NonNull UserDetails who) {
         var title = who.getFullName() + " hat seine Daten geändert";
         var type = NotificationType.USER_DATA_CHANGED;
         var props = new HashMap<String, Object>();
@@ -190,6 +193,29 @@ public class NotificationService {
     }
 
     public void createNotification(
+        @NonNull Role role,
+        @NonNull NotificationType type,
+        @NonNull String title,
+        @NonNull HashMap<String, Object> props,
+        @Nullable String link
+    ) {
+        try {
+            // add some default props
+            props.put("title", title);
+            props.put("app_link", frontendUrl);
+
+            var content = renderContent(type, props);
+            var summary = renderSummary(type, props);
+            var notification = new GlobalNotification(role, type, title, summary, content, link);
+
+            log.debug("Dispatching {} global notification for users with role {}", type, role);
+            dispatch(notification);
+        } catch (Exception e) {
+            log.error("Failed role create global '{}' notification for users with role {}", type, role, e);
+        }
+    }
+
+    public void createNotification(
         @Nullable UserDetails to,
         @NonNull NotificationType type,
         @NonNull String title,
@@ -205,34 +231,26 @@ public class NotificationService {
             props.put("user", to);
             props.put("app_link", frontendUrl);
 
-            var content = renderEmailContent(type, props);
+            var content = renderContent(type, props);
             var summary = renderSummary(type, props);
+            var notification = new PersonalNotification(to, type, title, summary, content, link);
 
-            var notification = new Notification(to, type, title, summary, content, link);
-            log.debug(
-                "Dispatching {} notification for user {}",
-                notification.type(),
-                notification.recipient().getKey()
-            );
-
-            notificationDispatchers
-                .forEach(dispatcher -> runAsync(() -> dispatcher.dispatch(notification)));
+            log.debug("Dispatching {} notification for user {}", type, to.getKey());
+            dispatch(notification);
         } catch (Exception e) {
-            log.error(
-                "Failed to create '{}' notification for user {}",
-                type,
-                to.getKey(),
-                e
-            );
+            log.error("Failed to create '{}' notification for user {}", type, to.getKey(), e);
         }
     }
 
-    protected String renderEmailContent(@NonNull NotificationType type, @NonNull HashMap<String, Object> props)
+    private void dispatch(@NonNull final Notification notification) {
+        for (var dispatcher : notificationDispatchers) {
+            runAsync(() -> dispatcher.dispatch(notification));
+        }
+    }
+
+    protected String renderContent(@NonNull NotificationType type, @NonNull HashMap<String, Object> props)
     throws TemplateException, IOException {
-        String content = renderTemplate("emails/" + type + ".ftl", props).trim();
-        var baseTemplateParams = new HashMap<>(props);
-        baseTemplateParams.put("content", content);
-        return renderTemplate("partials/base.ftl", baseTemplateParams);
+        return renderTemplate("emails/" + type + ".ftl", props).trim();
     }
 
     protected String renderSummary(@NonNull final NotificationType type, @NonNull final HashMap<String, Object> props)

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eventplanner.events.domain.values.NotificationType;
+import org.eventplanner.events.domain.values.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,7 +52,7 @@ class NotificationServiceTest {
     void shouldThrowExceptionOnMissingProps() throws Exception {
         assertThrows(
             TemplateException.class,
-            () -> testee.renderEmailContent(NotificationType.ADDED_TO_WAITING_LIST, new HashMap<>())
+            () -> testee.renderContent(NotificationType.ADDED_TO_WAITING_LIST, new HashMap<>())
         );
         verify(dispatcher, never()).dispatch(any());
     }
@@ -86,10 +87,11 @@ class NotificationServiceTest {
                 testee.sendFirstParticipationConfirmationRequestNotification(to, event, registration);
             case CONFIRM_PARTICIPATION_REQUEST ->
                 testee.sendSecondParticipationConfirmationRequestNotification(to, event, registration);
-            case USER_DATA_CHANGED -> testee.sendUserChangedPersonalDataNotification(to, to);
+            case USER_DATA_CHANGED -> testee.sendUserChangedPersonalDataNotification(Role.USER_MANAGER, to);
             case CREW_REGISTRATION_CANCELED ->
-                testee.sendCrewRegistrationCanceledNotification(to, event, "Test", "Test");
-            case CREW_REGISTRATION_ADDED -> testee.sendCrewRegistrationAddedNotification(to, event, "Test", "Test");
+                testee.sendCrewRegistrationCanceledNotification(Role.TEAM_PLANNER, event, "Test", "Test");
+            case CREW_REGISTRATION_ADDED ->
+                testee.sendCrewRegistrationAddedNotification(Role.TEAM_PLANNER, event, "Test", "Test");
         }
 
         verify(dispatcher, timeout(1000).times(1)).dispatch(argThat(notification -> notification.type()

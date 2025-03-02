@@ -55,7 +55,12 @@ public class RegistrationService {
         notificationService.sendAddedToWaitingListNotification(user, event);
 
         if (isSignupByUser) {
-            sendRegistrationAddedNotificationToAdmins(event, registration, user);
+            notificationService.sendCrewRegistrationAddedNotification(
+                Role.TEAM_PLANNER,
+                event,
+                resolveUserName(registration, user),
+                resolvePositionName(registration)
+            );
         }
 
         // reload the event, because registrations have changed
@@ -103,7 +108,12 @@ public class RegistrationService {
             if (hasAssignedSlot) {
                 notificationService.sendRemovedFromCrewNotification(maybeUser.get(), event);
                 if (isCanceledByUser) {
-                    sendRegistrationCanceledNotificationToAdmins(event, registration, maybeUser.get());
+                    notificationService.sendCrewRegistrationCanceledNotification(
+                        Role.TEAM_PLANNER,
+                        event,
+                        resolveUserName(registration, maybeUser.get()),
+                        resolvePositionName(registration)
+                    );
                 }
             } else {
                 notificationService.sendRemovedFromWaitingListNotification(maybeUser.get(), event);
@@ -124,34 +134,6 @@ public class RegistrationService {
         registration.setConfirmedAt(spec.confirmedAt());
         registrationRepository.updateRegistration(registration, event.getKey());
         return this.eventRepository.findByKey(event.getKey()).orElseThrow();
-    }
-
-    private void sendRegistrationAddedNotificationToAdmins(
-        @NonNull final Event event,
-        @NonNull final Registration registration,
-        @Nullable final UserDetails user
-    ) {
-        userService.getUsersByRole(Role.TEAM_PLANNER)
-            .forEach(admin -> notificationService.sendCrewRegistrationAddedNotification(
-                admin,
-                event,
-                resolveUserName(registration, user),
-                resolvePositionName(registration)
-            ));
-    }
-
-    private void sendRegistrationCanceledNotificationToAdmins(
-        @NonNull final Event event,
-        @NonNull final Registration registration,
-        @Nullable final UserDetails user
-    ) {
-        userService.getUsersByRole(Role.TEAM_PLANNER)
-            .forEach(admin -> notificationService.sendCrewRegistrationCanceledNotification(
-                admin,
-                event,
-                resolveUserName(registration, user),
-                resolvePositionName(registration)
-            ));
     }
 
     private @NonNull String resolvePositionName(@NonNull final Registration registration) {
