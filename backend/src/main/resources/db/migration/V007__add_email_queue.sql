@@ -1,4 +1,4 @@
-CREATE TABLE queued_emails
+CREATE TABLE IF NOT EXISTS queued_emails
 (
     key        TEXT PRIMARY KEY,
     email      TEXT      NOT NULL,
