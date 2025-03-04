@@ -1,14 +1,14 @@
 import type {
     AuthService,
+    CalendarService,
+    ErrorHandlingService,
+    EventCachingService,
     EventRegistrationsRepository,
     EventRepository,
     NotificationService,
     PositionCachingService,
     UserCachingService,
 } from '@/application';
-import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
-import type { EventCachingService } from '@/application/services/EventCachingService';
-import { formatIcsDate } from '@/common/date';
 import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
 import type { Event, EventKey, EventService, PositionKey, Registration, RegistrationKey, RegistrationService, UserKey } from '@/domain';
 import { EventState, EventType, SlotCriticality } from '@/domain';
@@ -25,6 +25,7 @@ export class EventUseCase {
     private readonly positionCachingService: PositionCachingService;
     private readonly registrationService: RegistrationService;
     private readonly eventRegistrationsRepository: EventRegistrationsRepository;
+    private readonly calendarService: CalendarService;
 
     constructor(params: {
         notificationService: NotificationService;
@@ -37,6 +38,7 @@ export class EventUseCase {
         positionCachingService: PositionCachingService;
         registrationService: RegistrationService;
         eventRegistrationsRepository: EventRegistrationsRepository;
+        calendarService: CalendarService;
     }) {
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
@@ -48,6 +50,7 @@ export class EventUseCase {
         this.positionCachingService = params.positionCachingService;
         this.registrationService = params.registrationService;
         this.eventRegistrationsRepository = params.eventRegistrationsRepository;
+        this.calendarService = params.calendarService;
     }
 
     public async getEvents(year: number): Promise<Event[]> {
@@ -319,31 +322,14 @@ export class EventUseCase {
         return `${d.getFullYear()}-${month}-${day}`;
     }
 
+    public downloadCalendarEntries(events: Event[]): void {
+        const ics = this.calendarService.createCalendarEntries(events);
+        saveStringToFile(`events.ics`, ics);
+    }
+
     public downloadCalendarEntry(event: Event): void {
-        // create ics file
-        const lines = [
-            'BEGIN:VCALENDAR',
-            'VERSION:2.0',
-            'METHOD:PUBLISH',
-            'BEGIN:VEVENT',
-            `UID:${event.key}@großherzogin-elisabeth.de`,
-            `LOCATION:${event.locations[0]?.address || event.locations[0]?.name}`,
-            `DTSTAMP:${formatIcsDate(new Date())}`,
-            'ORGANIZER;CN=Grossherzogin Elisabeth e.V.:MAILTO:office@grossherzogin-elisabeth.de',
-            `DTSTART:${formatIcsDate(event.start)}`,
-            `DTEND:${formatIcsDate(event.end)}`,
-            `SUMMARY:${event.name}`,
-            `DESCRIPTION:${event.description}`,
-            'END:VEVENT',
-            'BEGIN:VALARM',
-            'DESCRIPTION:REMINDER',
-            'TRIGGER;RELATED=START:-P1W', // reminder 1 week before event
-            'ACTION:DISPLAY',
-            'END:VALARM',
-            'END:VCALENDAR',
-        ];
-        // download ics file
-        saveStringToFile(`${event.name}.ics`, lines.join('\n'));
+        const ics = this.calendarService.createCalendarEntries([event]);
+        saveStringToFile(`${event.name}.ics`, ics);
     }
 
     public async getEventByAccessKey(eventKey: EventKey, accessKey: string): Promise<Event> {

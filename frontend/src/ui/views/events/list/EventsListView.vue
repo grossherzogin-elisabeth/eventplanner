@@ -270,10 +270,9 @@
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
-                            <!-- TODO -->
-                            <li class="context-menu-item disabled hidden">
+                            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
                                 <i class="fa-solid fa-calendar-alt" />
-                                <span>Kalendereintrag erstellen*</span>
+                                <span>Kalendereintrag erstellen</span>
                             </li>
                             <li
                                 v-if="signedInUser.positions.length === 1"
