@@ -11,7 +11,7 @@ import type {
 } from '@/application';
 import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
 import type { Event, EventKey, EventService, PositionKey, Registration, RegistrationKey, RegistrationService, UserKey } from '@/domain';
-import { EventState, EventType, SlotCriticality } from '@/domain';
+import { EventState, EventType } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class EventUseCase {
@@ -205,7 +205,7 @@ export class EventUseCase {
 
     public filterForWaitingList(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
         if ([EventState.Draft, EventState.OpenForSignup].includes(event.state)) {
-            // crew is not public yet, so all registrations are on the waiting list-admin
+            // crew is not public yet, so all registrations are on the waiting list
             return registrations.filter((it) => it.registration !== undefined);
         }
         return registrations.filter((it) => it.registration !== undefined && it.slot === undefined);
@@ -213,10 +213,10 @@ export class EventUseCase {
 
     public filterForCrew(event: Event, registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {
         if ([EventState.Draft, EventState.OpenForSignup].includes(event.state)) {
-            // crew is not public yet, so all registrations are on the waiting list-admin
+            // crew is not public yet, so all registrations are on the waiting list
             return [];
         }
-        return registrations.filter((it) => it.slot && (it.registration || it.slot.criticality >= SlotCriticality.Important));
+        return registrations.filter((it) => it.slot !== undefined);
     }
 
     public async leaveEvents(events: Event[]): Promise<void> {
