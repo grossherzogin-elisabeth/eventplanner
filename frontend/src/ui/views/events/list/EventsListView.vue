@@ -491,8 +491,8 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
             selected: false,
             isPastEvent: evt.start.getTime() < new Date().getTime(),
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
-            hasOpenSlots: eventService.hasOpenSlots(evt, signedInUser.value.positions),
-            hasOpenRequiredSlots: eventService.hasOpenImportantSlots(evt, signedInUser.value.positions),
+            hasOpenSlots: eventService.hasOpenSlots(evt),
+            hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
             stateDetails: {
                 name: '',
                 icon: '',
