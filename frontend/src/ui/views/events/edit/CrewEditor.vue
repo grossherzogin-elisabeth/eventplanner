@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="-mx-4 flex-1 gap-16 md:flex xl:pr-8 2xl:w-0">
-            <div class="mb-8 px-4 pb-4 md:w-1/2 lg:mb-0">
+            <div class="crew mb-8 px-4 pb-4 md:w-1/2 lg:mb-0">
                 <h2 class="mb-4 font-bold text-secondary">Crew</h2>
                 <!-- slot list-admin dropzone -->
                 <div class="sticky top-24">
@@ -85,113 +85,24 @@
                     </div>
                     <!-- slot list -->
                     <ul v-else>
-                        <template v-for="it in team" :key="it.slot?.key + it.registration?.key + it.user?.key + it.position.key">
-                            <VTooltip :disabled="it.registration === undefined">
-                                <template #default>
-                                    <ContextMenuButton class="w-full" anchor-align-x="right" dropdown-position-x="left">
-                                        <template #icon>
-                                            <VDraggable
-                                                class="flex items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
-                                                :class="{
-                                                    'cursor-move': it.registration !== undefined,
-                                                    'pointer-events-none': it.registration === undefined,
-                                                    '': it.expiredQualifications.length === 0,
-                                                }"
-                                                component="li"
-                                                :value="it"
-                                                @dragend="dragSource = null"
-                                                @dragstart="dragSource = DragSource.FROM_TEAM"
-                                            >
-                                                <!-- drag icon -->
-                                                <i
-                                                    class="fa-solid fa-grip-vertical hidden text-sm text-onsurface-variant opacity-50 lg:inline"
-                                                ></i>
-
-                                                <!-- user status -->
-                                                <span v-if="it.name && !it.registration?.confirmed" class="">
-                                                    <i class="fa-solid fa-user-clock opacity-50"></i>
-                                                </span>
-                                                <span v-else-if="it.name && it.registration?.confirmed">
-                                                    <i class="fa-solid fa-user-check text-green"></i>
-                                                </span>
-                                                <span v-else>
-                                                    <i class="fa-solid fa-user-xmark text-error text-opacity-50"></i>
-                                                </span>
-
-                                                <!-- user name -->
-                                                <span v-if="it.name" class="mx-2 truncate">{{ it.name }}</span>
-                                                <span v-else-if="it.user" class="mx-2 truncate italic text-error"> Gelöschter Nutzer </span>
-                                                <span v-else class="mx-2 truncate italic text-error text-opacity-50">
-                                                    Noch nicht besetzt
-                                                </span>
-
-                                                <i
-                                                    v-if="it.registration?.note"
-                                                    class="fa-solid fa-comment-dots text-sm text-onsurface-variant opacity-50"
-                                                ></i>
-                                                <!-- user qualification status -->
-                                                <!--                                        <i v-if="it.expiredQualifications.length > 0" class="fa-solid fa-warning text-error"></i>-->
-                                                <!-- user position -->
-                                                <span class="flex-grow"></span>
-                                                <span :style="{ background: it.position.color }" class="position text-xs">
-                                                    {{ it.slot?.positionName || it.position.name }}
-                                                    <i
-                                                        v-if="it.expiredQualifications.length > 0"
-                                                        class="fa-solid fa-warning text-error"
-                                                    ></i>
-                                                    <i v-else-if="it.registration" class="fa-solid fa-check"></i>
-                                                </span>
-                                            </VDraggable>
-                                        </template>
-                                        <template #default>
-                                            <ul>
-                                                <RouterLink
-                                                    :to="{ name: Routes.UserDetails, params: { key: it.user?.key } }"
-                                                    target="_blank"
-                                                    class="context-menu-item"
-                                                    :class="{ disabled: !it.user }"
-                                                >
-                                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                                    <span>Nutzer anzeigen</span>
-                                                </RouterLink>
-                                                <li class="context-menu-item" :class="{ disabled: !it.user }" @click="removeFromTeam(it)">
-                                                    <i class="fa-solid fa-arrow-right"></i>
-                                                    <span>Auf Warteliste setzen</span>
-                                                </li>
-                                                <li
-                                                    class="context-menu-item"
-                                                    :class="{ disabled: !it.user }"
-                                                    @click="editSlotRegistration(it)"
-                                                >
-                                                    <i class="fa-solid fa-edit"></i>
-                                                    <span>Anmeldung bearbeiten</span>
-                                                </li>
-                                                <li class="context-menu-item" @click="editSlot(it)">
-                                                    <i class="fa-solid fa-edit"></i>
-                                                    <span>Slot bearbeiten</span>
-                                                </li>
-                                                <li v-if="it.user" class="context-menu-item text-error" @click="cancelRegistration(it)">
-                                                    <i class="fa-solid fa-user-minus"></i>
-                                                    <span>Anmeldung löschen</span>
-                                                </li>
-                                                <li v-else class="context-menu-item text-error" @click="deleteSlot(it)">
-                                                    <i class="fa-solid fa-trash-alt"></i>
-                                                    <span>Slot löschen</span>
-                                                </li>
-                                            </ul>
-                                        </template>
-                                    </ContextMenuButton>
-                                </template>
-                                <template #tooltip>
-                                    <RegistrationTooltip :registration="it" />
-                                </template>
-                            </VTooltip>
-                        </template>
+                        <RegistrationRow
+                            v-for="it in team"
+                            :key="`${it.slot?.key}_${it.registration?.key}_${it.user?.key}_${it.position.key}`"
+                            :value="it"
+                            @cancel-registration="cancelRegistration(it)"
+                            @edit-registration="editSlotRegistration(it)"
+                            @edit-slot="editSlot(it)"
+                            @delete-slot="deleteSlot(it)"
+                            @add-to-team="addToTeam(it)"
+                            @remove-from-team="removeFromTeam(it)"
+                            @dragend="dragSource = null"
+                            @dragstart="dragSource = DragSource.FROM_TEAM"
+                        />
                     </ul>
                 </div>
             </div>
 
-            <div class="px-4 md:w-1/2">
+            <div class="waiting-list px-4 md:w-1/2">
                 <h2 class="mb-4 font-bold text-secondary">Warteliste</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">
@@ -237,120 +148,19 @@
                     </div>
                     <!-- waitinglist -->
                     <ul>
-                        <template v-for="it in registrations" :key="it.registration?.key + it.user?.key + it.name + it.position.key">
-                            <VTooltip>
-                                <template #default>
-                                    <ContextMenuButton class="w-full" anchor-align-x="right" dropdown-position-x="left">
-                                        <template #icon>
-                                            <VDraggable
-                                                class="flex cursor-move items-center rounded-xl px-4 py-2 hover:bg-surface-container"
-                                                :class="{
-                                                    'cursor-move': it.registration !== undefined,
-                                                    'pointer-events-none': it.registration === undefined,
-                                                    '': it.expiredQualifications.length === 0,
-                                                }"
-                                                component="li"
-                                                :value="it"
-                                                @dragend="dragSource = null"
-                                                @dragstart="dragSource = DragSource.FROM_WAITING_LIST"
-                                            >
-                                                <i
-                                                    class="fa-solid fa-grip-vertical mr-4 hidden text-sm text-onsurface-variant opacity-50 lg:inline"
-                                                ></i>
-                                                <span v-if="it.name" class="truncate">{{ it.name }}</span>
-                                                <span v-else-if="it.user" class="flex-grow italic text-error"> Unbekannt </span>
-                                                <i
-                                                    v-if="it.registration?.note"
-                                                    class="fa-solid fa-comment-dots text-sm text-onsurface-variant opacity-50"
-                                                ></i>
-                                                <span class="flex-grow"></span>
-                                                <div>
-                                                    <ContextMenuButton>
-                                                        <template #icon>
-                                                            <span
-                                                                :style="{ background: it.position.color }"
-                                                                :class="{ '': it.expiredQualifications.length > 0 }"
-                                                                class="position cursor-pointer text-xs"
-                                                            >
-                                                                {{ it.position.name }}
-                                                                <i
-                                                                    v-if="it.expiredQualifications.length > 0"
-                                                                    class="fa-solid fa-warning text-error"
-                                                                ></i>
-                                                                <i v-else-if="it.user" class="fa-solid fa-check"></i>
-                                                                <i v-else class="fa-solid fa-question"></i>
-                                                            </span>
-                                                        </template>
-                                                        <template #default>
-                                                            <ul>
-                                                                <template v-for="pos in positions.all.value" :key="pos.key">
-                                                                    <li
-                                                                        v-if="!it.user || it.user.positionKeys.includes(pos.key)"
-                                                                        class="context-menu-item"
-                                                                        @click="changePosition(it, pos.key)"
-                                                                    >
-                                                                        <span class="flex-grow">{{ pos.name }}</span>
-                                                                    </li>
-                                                                </template>
-                                                                <!-- show also non matching positions ??? -->
-                                                                <template v-if="it.user">
-                                                                    <template v-for="pos in positions.all.value" :key="pos.key">
-                                                                        <li
-                                                                            v-if="!it.user.positionKeys.includes(pos.key)"
-                                                                            class="context-menu-item"
-                                                                            @click="changePosition(it, pos.key)"
-                                                                        >
-                                                                            <span class="flex-grow">{{ pos.name }}</span>
-                                                                            <i class="fa-solid fa-warning text-error"></i>
-                                                                        </li>
-                                                                    </template>
-                                                                </template>
-                                                            </ul>
-                                                        </template>
-                                                    </ContextMenuButton>
-                                                </div>
-                                            </VDraggable>
-                                        </template>
-                                        <template #default>
-                                            <ul>
-                                                <RouterLink
-                                                    :to="{ name: Routes.UserDetails, params: { key: it.user?.key } }"
-                                                    target="_blank"
-                                                    class="context-menu-item"
-                                                    :class="{ disabled: !it.user }"
-                                                >
-                                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                                    <span>Nutzer anzeigen</span>
-                                                </RouterLink>
-                                                <li class="context-menu-item" :class="{ disabled: !it.user }" @click="addToTeam(it)">
-                                                    <i class="fa-solid fa-arrow-left"></i>
-                                                    <span>Zur Crew hinzufügen</span>
-                                                </li>
-                                                <li
-                                                    class="context-menu-item"
-                                                    :class="{ disabled: !it.user }"
-                                                    @click="editSlotRegistration(it)"
-                                                >
-                                                    <i class="fa-solid fa-edit"></i>
-                                                    <span>Anmeldung bearbeiten</span>
-                                                </li>
-                                                <li
-                                                    class="context-menu-item text-error"
-                                                    :class="{ disabled: !it.user }"
-                                                    @click="cancelRegistration(it)"
-                                                >
-                                                    <i class="fa-solid fa-user-minus"></i>
-                                                    <span>Anmeldung löschen</span>
-                                                </li>
-                                            </ul>
-                                        </template>
-                                    </ContextMenuButton>
-                                </template>
-                                <template #tooltip>
-                                    <RegistrationTooltip :registration="it" />
-                                </template>
-                            </VTooltip>
-                        </template>
+                        <RegistrationRow
+                            v-for="it in registrations"
+                            :key="`${it.slot?.key}_${it.registration?.key}_${it.user?.key}_${it.position.key}`"
+                            :value="it"
+                            @cancel-registration="cancelRegistration(it)"
+                            @edit-registration="editSlotRegistration(it)"
+                            @edit-slot="editSlot(it)"
+                            @delete-slot="deleteSlot(it)"
+                            @add-to-team="addToTeam(it)"
+                            @remove-from-team="removeFromTeam(it)"
+                            @dragend="dragSource = null"
+                            @dragstart="dragSource = DragSource.FROM_WAITING_LIST"
+                        />
                     </ul>
                 </div>
             </div>
@@ -366,15 +176,14 @@ import type { Event, PositionKey, Registration, Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
-import { ContextMenuButton, VDraggable, VDropzone, VTooltip } from '@/ui/components/common';
+import { VDropzone } from '@/ui/components/common';
 import { useErrorHandling, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import { Routes } from '@/ui/views/Routes.ts';
+import RegistrationRow from '@/ui/views/events/edit/RegistrationRow.vue';
 import SlotEditDlg from '@/ui/views/events/edit/SlotEditDlg.vue';
 import { v4 as uuid } from 'uuid';
 import RegistrationEditDlg from './RegistrationEditDlg.vue';
-import RegistrationTooltip from './RegistrationTooltip.vue';
 
 enum DragSource {
     FROM_TEAM = 'team',
@@ -505,13 +314,6 @@ async function editSlotRegistration(aggregate: ResolvedRegistrationSlot): Promis
                 registration.name = updatedRegistration.name;
             }
         }
-    }
-}
-
-function changePosition(resolvedRegistration: ResolvedRegistrationSlot, newPositionKey: PositionKey): void {
-    const registration = eventService.findRegistration(props.event, resolvedRegistration.user?.key, resolvedRegistration.name);
-    if (registration) {
-        registration.positionKey = newPositionKey;
     }
 }
 
