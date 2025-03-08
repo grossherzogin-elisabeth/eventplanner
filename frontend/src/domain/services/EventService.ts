@@ -110,6 +110,7 @@ export class EventService {
      * @param event
      */
     private optimizeSlots(event: Event): Event {
+        console.log('🏎️ Optimizing slots');
         // this.debugSlots(event);
         for (let i = 0; i < event.slots.length; i++) {
             const slot = event.slots[i];
@@ -229,20 +230,8 @@ export class EventService {
         return event;
     }
 
-    public isSlotFilled(event: Event | null | undefined, slotkey: SlotKey): boolean {
-        if (!event) {
-            return false;
-        }
-        const slot = event.slots.find((it) => it.key === slotkey);
-        return slot !== undefined && slot.assignedRegistrationKey !== undefined;
-    }
-
     public hasOpenRequiredSlots(event: Event, positions?: PositionKey[]): boolean {
         return this.hasOpenSlots(event, positions, SlotCriticality.Required);
-    }
-
-    public hasOpenImportantSlots(event: Event, positions?: PositionKey[]): boolean {
-        return this.hasOpenSlots(event, positions, SlotCriticality.Important);
     }
 
     public hasOpenSlots(event: Event, positions?: PositionKey[], criticality: number = 0): boolean {
