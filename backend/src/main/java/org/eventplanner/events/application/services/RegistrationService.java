@@ -1,16 +1,13 @@
 package org.eventplanner.events.application.services;
 
-import java.util.Objects;
 import java.util.Optional;
 
-import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.RegistrationRepository;
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.EventSlot;
+import org.eventplanner.events.domain.aggregates.Event;
 import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.entities.UserDetails;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.specs.CreateRegistrationSpec;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
 import org.eventplanner.events.domain.values.Role;
@@ -18,6 +15,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.requireNonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,30 +26,24 @@ public class RegistrationService {
 
     private final NotificationService notificationService;
     private final UserService userService;
-    private final EventRepository eventRepository;
     private final RegistrationRepository registrationRepository;
     private final PositionRepository positionRepository;
 
-    public @NonNull Event addRegistration(
-        @NonNull Event event,
-        @NonNull CreateRegistrationSpec spec,
-        boolean isSignupByUser
-
+    public @NonNull void addUserRegistration(
+        @NonNull final Event event,
+        @NonNull final CreateRegistrationSpec spec,
+        final boolean isSignupByUser
     ) {
-        var userKey = Objects.requireNonNull(spec.userKey());
-        if (event.getRegistrations().stream().anyMatch(r -> spec.userKey().equals(r.getUserKey()))) {
-            log.debug(
-                "Registration for {} already exists on event {} ({}).",
-                userKey,
-                event.getName(),
-                event.getKey()
-            );
-            return event;
+        var userKey = requireNonNull(spec.userKey());
+        if (event.getRegistrationByUserKey(userKey).isPresent()) {
+            log.debug("Registration for user {} already exists on event {}", userKey, event.details().getName());
+            return;
         }
         var user = userService.getUserByKey(userKey)
             .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not " +
-                                                            "exist"));
-        var registration = registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
+                "exist"));
+
+        var registration = registrationRepository.createRegistration(spec.toRegistration());
         notificationService.sendAddedToWaitingListNotification(user, event);
 
         if (isSignupByUser) {
@@ -62,50 +54,38 @@ public class RegistrationService {
                 resolvePositionName(registration)
             );
         }
-
-        // reload the event, because registrations have changed
-        return this.eventRepository.findByKey(event.getKey()).orElseThrow();
     }
 
-    public @NonNull Event addGuestRegistration(
-        @NonNull Event event,
-        @NonNull CreateRegistrationSpec spec
+    public @NonNull void addGuestRegistration(
+        @NonNull final Event event,
+        @NonNull final CreateRegistrationSpec spec
     ) {
-        Objects.requireNonNull(spec.name());
-        if (event.getRegistrations().stream().anyMatch(r -> spec.name().equals(r.getName()))) {
+        requireNonNull(spec.name());
+        if (event.registrations().stream().anyMatch(r -> spec.name().equals(r.getName()))) {
             throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
         }
-        registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
-
-        // reload the event, because registrations have changed
-        return this.eventRepository.findByKey(event.getKey()).orElseThrow();
+        registrationRepository.createRegistration(spec.toRegistration());
     }
 
-    public @NonNull Event removeRegistration(
-        @NonNull Event event,
-        @NonNull Registration registration,
-        boolean isCanceledByUser
+    public @NonNull void removeRegistration(
+        @NonNull final Event event,
+        @NonNull final Registration registration,
+        final boolean isCanceledByUser
     ) {
-        log.info("Removing registration {} from event {} ({})", registration.getKey(), event.getName(), event.getKey());
-        var hasAssignedSlot = false;
-        for (EventSlot slot : event.getSlots()) {
-            if (registration.getKey().equals(slot.getAssignedRegistration())) {
-                slot.setAssignedRegistration(null);
-                hasAssignedSlot = true;
-            }
-        }
+        log.info("Removing registration {} from event {}", registration.getKey(), event.details().getName());
+        var slot = event.getSlotByRegistrationKey(registration.getKey());
+        slot.ifPresent(s -> s.setAssignedRegistration(null));
 
-        registrationRepository.deleteRegistration(registration, event.getKey());
-        event = this.eventRepository.findByKey(event.getKey()).orElseThrow();
+        registrationRepository.deleteRegistration(registration);
 
         var userKey = registration.getUserKey();
         if (userKey != null) {
             var maybeUser = userService.getUserByKey(userKey);
             if (maybeUser.isEmpty()) {
                 log.error("Failed to send notifcations. Cannot find user with key {}", userKey);
-                return event;
+                return;
             }
-            if (hasAssignedSlot) {
+            if (slot.isPresent()) {
                 notificationService.sendRemovedFromCrewNotification(maybeUser.get(), event);
                 if (isCanceledByUser) {
                     notificationService.sendCrewRegistrationCanceledNotification(
@@ -119,21 +99,19 @@ public class RegistrationService {
                 notificationService.sendRemovedFromWaitingListNotification(maybeUser.get(), event);
             }
         }
-        return event;
     }
 
-    public @NonNull Event updateRegistration(
-        @NonNull Event event,
-        @NonNull Registration registration,
-        @NonNull UpdateRegistrationSpec spec
+    public @NonNull void updateRegistration(
+        @NonNull final Event event,
+        @NonNull final Registration registration,
+        @NonNull final UpdateRegistrationSpec spec
     ) {
-        log.info("Updating registration {} on event {} ({})", registration.getKey(), event.getName(), event.getKey());
+        log.info("Updating registration {} on event {}", registration.getKey(), event.details().getName());
         registration.setPosition(spec.positionKey());
         registration.setName(spec.name());
         registration.setNote(spec.note());
         registration.setConfirmedAt(spec.confirmedAt());
-        registrationRepository.updateRegistration(registration, event.getKey());
-        return this.eventRepository.findByKey(event.getKey()).orElseThrow();
+        registrationRepository.updateRegistration(registration);
     }
 
     private @NonNull String resolvePositionName(@NonNull final Registration registration) {

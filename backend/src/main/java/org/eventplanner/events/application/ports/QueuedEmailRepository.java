@@ -2,7 +2,7 @@ package org.eventplanner.events.application.ports;
 
 import java.util.Optional;
 
-import org.eventplanner.events.domain.entities.QueuedEmail;
+import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 
 public interface QueuedEmailRepository {
 

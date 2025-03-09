@@ -2,7 +2,7 @@ package org.eventplanner.events.adapter.jpa.notifications;
 
 import java.time.Instant;
 
-import org.eventplanner.events.domain.entities.QueuedEmail;
+import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.values.NotificationType;
 import org.eventplanner.events.domain.values.UserKey;
 

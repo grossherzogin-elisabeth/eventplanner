@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.eventplanner.events.application.ports.EmailSender;
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
-import org.eventplanner.events.domain.entities.QueuedEmail;
-import org.eventplanner.events.domain.values.GlobalNotification;
-import org.eventplanner.events.domain.values.Notification;
-import org.eventplanner.events.domain.values.PersonalNotification;
+import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
+import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
+import org.eventplanner.events.domain.entities.notifications.Notification;
+import org.eventplanner.events.domain.entities.notifications.PersonalNotification;
 import org.eventplanner.events.domain.values.Settings.EmailSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,8 +100,8 @@ public class EmailService implements NotificationDispatcher {
                 if (!recipientsWhitelist.isEmpty() && !recipientsWhitelist.contains(message.getTo())) {
                     log.warn(
                         "Skipped sending email to user {} because notifications are configured to only be sent to " +
-                        "whitelisted" +
-                        " users",
+                            "whitelisted" +
+                            " users",
                         message.getTo()
                     );
                     return;

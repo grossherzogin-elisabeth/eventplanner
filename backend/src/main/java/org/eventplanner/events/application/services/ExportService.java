@@ -1,7 +1,5 @@
 package org.eventplanner.events.application.services;
 
-import static java.util.Optional.ofNullable;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
@@ -25,15 +23,16 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.events.application.ports.PositionRepository;
-import org.eventplanner.events.domain.entities.Event;
+import org.eventplanner.events.domain.aggregates.Event;
 import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.entities.UserDetails;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import static java.util.Optional.ofNullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -160,7 +159,7 @@ public class ExportService {
         var positionCount = new HashMap<PositionKey, Integer>();
         for (Event event : events) {
             var assignedRegistrationKeys = event.getAssignedRegistrationKeys();
-            var filteredRegistrationPositions = event.getRegistrations().stream()
+            var filteredRegistrationPositions = event.registrations().stream()
                 .filter(it -> !(waitingList && assignedRegistrationKeys.contains(it.getKey())))
                 .map(Registration::getPosition)
                 .toList();
@@ -208,12 +207,12 @@ public class ExportService {
         }
 
         var headerStyle = cellStyles.get("header");
-        sheet.getRow(0).getCell(column).setCellValue(event.getName());
+        sheet.getRow(0).getCell(column).setCellValue(event.details().getName());
         sheet.getRow(0).getCell(column).setCellStyle(headerStyle);
         sheet.getRow(1).getCell(column).setCellValue(
-            event.getStart().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM."))
+            event.details().getStart().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM."))
                 + " - " +
-                event.getEnd().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM."))
+                event.details().getEnd().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM."))
         );
         sheet.getRow(1).getCell(column).setCellStyle(headerStyle);
 
@@ -221,7 +220,7 @@ public class ExportService {
         sheet.getRow(2).getCell(column).setCellStyle(headerStyle);
 
         var assignedRegistrationKeys = event.getAssignedRegistrationKeys();
-        for (var registration : event.getRegistrations()) {
+        for (var registration : event.registrations()) {
             var row = 3;
             if (assignedRegistrationKeys.contains(registration.getKey())) {
                 row += assignedRows.indexOf(registration.getPosition());

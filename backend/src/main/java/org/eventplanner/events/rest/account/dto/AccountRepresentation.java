@@ -3,7 +3,7 @@ package org.eventplanner.events.rest.account.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.SignedInUser;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.values.Permission;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.eventplanner.events.domain.values.Role;

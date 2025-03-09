@@ -1,6 +1,6 @@
 # Frontend
 
-This is the frontend for the event planner app.
+This is the frontend for the eventDetails planner app.
 
 ## Prerequisites
 

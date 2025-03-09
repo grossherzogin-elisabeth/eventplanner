@@ -15,15 +15,15 @@
 
         <div class="h-16 xl:hidden"></div>
         <div
-            class="pointer-events-none fixed bottom-0 left-0 right-0 z-10 flex items-stretch justify-end space-x-2 pb-4 pr-3 pt-6 md:pr-14 lg:pointer-events-auto lg:justify-start lg:border-t lg:border-outline-variant lg:bg-surface lg:px-16 lg:pb-8 xl:sticky xl:px-20"
+            class="pointer-eventDetails-none lg:pointer-eventDetails-auto fixed bottom-0 left-0 right-0 z-10 flex items-stretch justify-end space-x-2 pb-4 pr-3 pt-6 md:pr-14 lg:justify-start lg:border-t lg:border-outline-variant lg:bg-surface lg:px-16 lg:pb-8 xl:sticky xl:px-20"
         >
-            <div class="details-page-primary-button pointer-events-auto w-auto">
+            <div class="details-page-primary-button pointer-eventDetails-auto w-auto">
                 <slot name="primary-button" />
             </div>
-            <div class="pointer-events-auto hidden items-stretch space-x-2 lg:flex">
+            <div class="pointer-eventDetails-auto hidden items-stretch space-x-2 lg:flex">
                 <slot name="secondary-buttons" />
             </div>
-            <PageActionsContextMenu v-if="$slots['actions-menu'] !== undefined" class="pointer-events-auto">
+            <PageActionsContextMenu v-if="$slots['actions-menu'] !== undefined" class="pointer-eventDetails-auto">
                 <ul>
                     <slot name="actions-menu" />
                 </ul>

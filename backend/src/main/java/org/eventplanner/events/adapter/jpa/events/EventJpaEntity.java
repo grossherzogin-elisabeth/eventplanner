@@ -6,9 +6,8 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.EventSlot;
-import org.eventplanner.events.domain.entities.Registration;
+import org.eventplanner.events.domain.entities.events.EventDetails;
+import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.values.EventKey;
 import org.eventplanner.events.domain.values.EventLocation;
 import org.eventplanner.events.domain.values.EventState;
@@ -68,7 +67,7 @@ public class EventJpaEntity {
     @Column(name = "participation_confirmations_requests_sent")
     private Integer participationConfirmationsRequestsSent;
 
-    public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
+    public static @NonNull EventJpaEntity fromDomain(@NonNull EventDetails domain) {
         var eventJpaEntity = new EventJpaEntity();
         eventJpaEntity.setKey(domain.getKey().value());
         eventJpaEntity.setYear(domain.getStart().atZone(ZoneId.systemDefault()).getYear());
@@ -126,8 +125,8 @@ public class EventJpaEntity {
         }
     }
 
-    public Event toDomain(@NonNull List<Registration> registrations) {
-        return new Event(
+    public EventDetails toDomain() {
+        return new EventDetails(
             new EventKey(key),
             name,
             EventState.fromString(state).orElse(EventState.PLANNED),
@@ -137,7 +136,6 @@ public class EventJpaEntity {
             Instant.parse(end),
             deserializeLocations(locationsRaw),
             deserializeSlots(slotsRaw),
-            registrations,
             participationConfirmationsRequestsSent
         );
     }

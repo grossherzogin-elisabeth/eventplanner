@@ -27,7 +27,7 @@
                     <span>Start</span>
                 </RouterLink>
             </li>
-            <li :class="{ expanded: eventsExpanded }" class="permission-read-events menu-item">
+            <li :class="{ expanded: eventsExpanded }" class="permission-read-eventDetails menu-item">
                 <button @click="eventsExpanded = !eventsExpanded">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>Kalender</span>
@@ -46,13 +46,16 @@
                     </li>
                 </ul>
             </li>
-            <li class="permission-read-events menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }">
+            <li class="permission-read-eventDetails menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }">
                 <RouterLink :to="{ name: Routes.EventsList }">
                     <i class="fa-solid fa-compass"></i>
                     <span>Alle Reisen</span>
                 </RouterLink>
             </li>
-            <li class="permission-write-events menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }">
+            <li
+                class="permission-write-eventDetails menu-item"
+                :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }"
+            >
                 <RouterLink :to="{ name: Routes.EventsListAdmin }">
                     <i class="fa-solid fa-compass-drafting"></i>
                     <span>Reisen verwalten</span>

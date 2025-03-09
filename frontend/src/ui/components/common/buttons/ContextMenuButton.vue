@@ -58,7 +58,7 @@ const open = ref<boolean>(false);
 }
 
 .context-menu-item.disabled {
-    @apply pointer-events-none opacity-50;
+    @apply pointer-eventDetails-none opacity-50;
 }
 
 .context-menu-item > i,

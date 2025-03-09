@@ -3,7 +3,7 @@ package org.eventplanner.events.adapter.jpa.users;
 import java.util.List;
 import java.util.Optional;
 
-import org.eventplanner.events.domain.entities.EncryptedUserDetails;
+import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.values.UserKey;
 import org.eventplanner.events.application.ports.UserRepository;
 import org.springframework.lang.NonNull;

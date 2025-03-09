@@ -1,11 +1,11 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.events;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.ConsumptionListService;
-import org.eventplanner.events.domain.entities.SignedInUser;
+import org.eventplanner.events.application.services.EventService;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.values.EventKey;
 import org.eventplanner.events.domain.values.Permission;
 import org.springframework.lang.NonNull;
@@ -17,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ConsumtionListUseCase {
-    private final EventRepository eventRepository;
+public class ConsumptionListUseCase {
+    private final EventService eventService;
     private final ConsumptionListService consumptionListService;
 
     public ByteArrayOutputStream downloadConsumptionList(
@@ -29,8 +29,8 @@ public class ConsumtionListUseCase {
         signedInUser.assertHasPermission(Permission.READ_USERS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
-        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
-        log.info("Generating consumption list for event {}", event.getName());
+        var event = this.eventService.findByKey(eventKey).orElseThrow();
+        log.info("Generating consumption list for event {}", event.details().getName());
         return consumptionListService.generateConsumptionList(event);
     }
 }

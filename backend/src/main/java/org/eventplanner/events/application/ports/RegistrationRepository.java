@@ -1,15 +1,20 @@
 package org.eventplanner.events.application.ports;
 
-import org.eventplanner.events.domain.entities.Registration;
+import java.util.List;
+
+import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.EventKey;
 import org.springframework.lang.NonNull;
 
 public interface RegistrationRepository {
-    @NonNull
-    Registration createRegistration(@NonNull Registration registration, @NonNull EventKey eventKey);
 
-    @NonNull
-    Registration updateRegistration(@NonNull Registration registration, @NonNull EventKey eventKey);
+    public @NonNull List<Registration> findAll(@NonNull EventKey eventkey);
 
-    void deleteRegistration(@NonNull Registration registration, @NonNull EventKey eventKey);
+    public @NonNull List<Registration> findAll(@NonNull List<EventKey> eventKeys);
+
+    public @NonNull Registration createRegistration(@NonNull Registration registration);
+
+    public @NonNull Registration updateRegistration(@NonNull Registration registration);
+
+    public void deleteRegistration(@NonNull Registration registration);
 }

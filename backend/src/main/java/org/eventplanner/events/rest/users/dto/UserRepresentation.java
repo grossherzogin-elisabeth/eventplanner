@@ -3,7 +3,7 @@ package org.eventplanner.events.rest.users.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.User;
+import org.eventplanner.events.domain.entities.users.BasicUser;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -15,7 +15,7 @@ public record UserRepresentation(
     @NonNull String lastName,
     @NonNull List<String> positions
 ) implements Serializable {
-    public static UserRepresentation fromDomain(@NonNull User user) {
+    public static UserRepresentation fromDomain(@NonNull BasicUser user) {
         return new UserRepresentation(
             user.getKey().value(),
             user.getFirstName(),

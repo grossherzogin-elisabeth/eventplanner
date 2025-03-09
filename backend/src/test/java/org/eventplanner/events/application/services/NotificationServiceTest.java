@@ -76,7 +76,7 @@ class NotificationServiceTest {
     void shouldCreateAllNotificationsCorrectly(NotificationType type) {
         var to = createUser();
         var event = createEvent();
-        var registration = createRegistration();
+        var registration = createRegistration(event.details().getKey());
 
         switch (type) {
             case ADDED_TO_WAITING_LIST -> testee.sendAddedToWaitingListNotification(to, event);

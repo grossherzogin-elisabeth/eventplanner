@@ -8,9 +8,9 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
-import org.eventplanner.events.domain.entities.SignedInUser;
-import org.eventplanner.events.domain.entities.User;
-import org.eventplanner.events.domain.entities.UserDetails;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
+import org.eventplanner.events.domain.entities.users.BasicUser;
+import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.specs.CreateUserSpec;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
@@ -111,7 +111,7 @@ public class UserUseCase {
         throw new UnauthorizedException();
     }
 
-    public @NonNull List<User> getUsers(@NonNull final SignedInUser signedInUser) {
+    public @NonNull List<BasicUser> getUsers(@NonNull final SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_USERS);
         return userService.getUsers();
     }

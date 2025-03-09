@@ -1,12 +1,12 @@
 <template>
     <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
         <div class="w-full max-w-2xl">
-            <div v-if="event">
+            <div v-if="eventDetails">
                 <h1 class="mb-4">Moin liebes Crewmitglied,</h1>
                 <p class="mb-8 text-sm sm:text-base">
-                    In {{ daysUntilStart }} Tagen startet die Reise {{ event.name }}, bei der du als Crew eingeplant bist. Bitte bestätige
-                    deine Teilnahme bis <b>spätestens 7 Tage vor Reisebeginn</b>, damit das Büro noch genügend Zeit hat, um gegebenenfalls
-                    einen Ersatz für dich zu finden.
+                    In {{ daysUntilStart }} Tagen startet die Reise {{ eventDetails.name }}, bei der du als Crew eingeplant bist. Bitte
+                    bestätige deine Teilnahme bis <b>spätestens 7 Tage vor Reisebeginn</b>, damit das Büro noch genügend Zeit hat, um
+                    gegebenenfalls einen Ersatz für dich zu finden.
                 </p>
 
                 <div class="mb-8">
@@ -14,26 +14,26 @@
                         <tbody>
                             <tr class="mb-2 block sm:table-row">
                                 <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Reise:</td>
-                                <td class="block py-1 font-bold sm:table-cell">{{ event.name }}</td>
+                                <td class="block py-1 font-bold sm:table-cell">{{ eventDetails.name }}</td>
                             </tr>
                             <tr class="mb-2 block sm:table-row">
                                 <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Crew an Bord:</td>
                                 <td class="block py-1 font-bold sm:table-cell">
-                                    {{ $d(event.start, DateTimeFormat.DD_MM_YYYY) }}
-                                    {{ $d(event.start, DateTimeFormat.hh_mm) }}
+                                    {{ $d(eventDetails.start, DateTimeFormat.DD_MM_YYYY) }}
+                                    {{ $d(eventDetails.start, DateTimeFormat.hh_mm) }}
                                 </td>
                             </tr>
                             <tr class="mb-2 block sm:table-row">
                                 <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Crew von Bord:</td>
                                 <td class="block py-1 font-bold sm:table-cell">
-                                    {{ $d(event.end, DateTimeFormat.DD_MM_YYYY) }}
-                                    {{ $d(event.end, DateTimeFormat.hh_mm) }}
+                                    {{ $d(eventDetails.end, DateTimeFormat.DD_MM_YYYY) }}
+                                    {{ $d(eventDetails.end, DateTimeFormat.hh_mm) }}
                                 </td>
                             </tr>
                             <tr class="mb-2 block sm:table-row">
                                 <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Geplante Route:</td>
                                 <td class="block py-1 font-bold sm:table-cell">
-                                    {{ event.locations.map((l) => l.name).join(' - ') }}
+                                    {{ eventDetails.locations.map((l) => l.name).join(' - ') }}
                                 </td>
                             </tr>
                         </tbody>
@@ -172,15 +172,15 @@ const eventUseCase = useEventUseCase();
 const auth = useAuthUseCase();
 const signedInUserKey = auth.getSignedInUser().key;
 
-const event = ref<Event | null>(null);
+const eventDetails = ref<Event | null>(null);
 const registrationState = ref<State | null>(null);
 
 const daysUntilStart = computed<number>(() => {
-    if (!event.value) {
+    if (!eventDetails.value) {
         return 0;
     }
     const nowSec = new Date().getTime() / 1000;
-    const startSec = event.value.start.getTime() / 1000;
+    const startSec = eventDetails.value.start.getTime() / 1000;
     const diffSec = startSec - nowSec;
     return Math.floor(diffSec / 60 / 60 / 24);
 });
@@ -194,10 +194,10 @@ async function fetchEvent(): Promise<void> {
     try {
         const eventKey = route.params.eventKey as EventKey;
         const accessKey = route.query.accessKey as string;
-        event.value = await eventUseCase.getEventByAccessKey(eventKey, accessKey);
+        eventDetails.value = await eventUseCase.getEventByAccessKey(eventKey, accessKey);
 
         registrationState.value = State.REGISTRATION_UNCONFIRMED;
-        const registration = event.value?.registrations.find((it) => it.key === route.params.registrationKey);
+        const registration = eventDetails.value?.registrations.find((it) => it.key === route.params.registrationKey);
         if (!registration) {
             registrationState.value = State.REGISTRATION_WAS_CANCELED;
         } else if (signedInUserKey && registration.userKey !== signedInUserKey) {

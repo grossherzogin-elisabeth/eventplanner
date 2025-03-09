@@ -19,5 +19,5 @@ public class Position {
     @NonNull String name;
     @NonNull String color;
     int priority;
-    @NonNull String imoListRank;
+    @NonNull String officialName;
 }

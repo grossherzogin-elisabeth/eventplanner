@@ -19,7 +19,7 @@ public record PositionRepresentation(
             position.getName(),
             position.getColor(),
             position.getPriority(),
-            position.getImoListRank()
+            position.getOfficialName()
         );
     }
 }

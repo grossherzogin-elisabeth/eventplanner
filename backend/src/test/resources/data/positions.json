@@ -1,0 +1,79 @@
+[
+  {
+    "key": "steuermann",
+    "name": "Steuermann:frau",
+    "color": "#D9D9D9",
+    "prio": 10,
+    "imoListRank": "Mate"
+  },
+  {
+    "key": "maschinist",
+    "name": "Maschinist:in",
+    "color": "#FCE4D6",
+    "prio": 8,
+    "imoListRank": "Engineer"
+  },
+  {
+    "key": "deckshand",
+    "name": "Deckshand",
+    "color": "#E2EFDA",
+    "prio": 1,
+    "imoListRank": "Deckshand"
+  },
+  {
+    "key": "leichtmatrose",
+    "name": "Leichtmatrose:in",
+    "color": "#BDD7EE",
+    "prio": 2,
+    "imoListRank": "OS"
+  },
+  {
+    "key": "kapitaen",
+    "name": "Kapitän:in",
+    "color": "#D9D9D9",
+    "prio": 11,
+    "imoListRank": "Master"
+  },
+  {
+    "key": "moa",
+    "name": "Maschinist i.A.",
+    "color": "#FCE4D6",
+    "prio": 7,
+    "imoListRank": "Eng. Cadet"
+  },
+  {
+    "key": "matrose",
+    "name": "Matrose:in",
+    "color": "#F8CBAD",
+    "prio": 3,
+    "imoListRank": "AB"
+  },
+  {
+    "key": "backschaft",
+    "name": "Backschafter:in",
+    "color": "#FFCCFF",
+    "prio": 0,
+    "imoListRank": "Steward"
+  },
+  {
+    "key": "ausbilder",
+    "name": "Ausbilder:in",
+    "color": "#F4B084",
+    "prio": 4,
+    "imoListRank": "Trainer"
+  },
+  {
+    "key": "noa",
+    "name": "NOA",
+    "color": "#D9D9D9",
+    "prio": 9,
+    "imoListRank": "Naut. Cadet"
+  },
+  {
+    "key": "koch",
+    "name": "Kombüse",
+    "color": "#FFE699",
+    "prio": 6,
+    "imoListRank": "Cook"
+  }
+]

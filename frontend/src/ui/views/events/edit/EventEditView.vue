@@ -1,20 +1,20 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class">
         <template #header>
-            <div v-if="event" class="">
+            <div v-if="eventDetails" class="">
                 <h1 class="mb-1 mt-8 hidden truncate xl:block">
-                    {{ event.name || 'Err' }}
+                    {{ eventDetails.name || 'Err' }}
                 </h1>
                 <section class="">
-                    <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable clamp>
+                    <VInfo v-if="eventDetails.state === EventState.Draft" class="mt-4" dismissable clamp>
                         Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als
                         Admin allerdings bereits Anmeldungen eintragen.
                     </VInfo>
-                    <VWarning v-if="event.state === EventState.Canceled" class="mt-4" dismissable>
+                    <VWarning v-if="eventDetails.state === EventState.Canceled" class="mt-4" dismissable>
                         Diese Reise wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab Reisedaten
                         zurücknehmen.
                     </VWarning>
-                    <VWarning v-else-if="event.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
+                    <VWarning v-else-if="eventDetails.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
                         Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht erfüllt!
                     </VWarning>
                 </section>
@@ -24,11 +24,11 @@
             <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
-                        <section v-if="event" class="">
+                        <section v-if="eventDetails" class="">
                             <div class="mb-4">
                                 <VInputLabel>Status</VInputLabel>
                                 <VInputSelect
-                                    v-model="event.state"
+                                    v-model="eventDetails.state"
                                     :options="[
                                         { value: EventState.Draft, label: 'Entwurf' },
                                         { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
@@ -44,7 +44,7 @@
                             <div class="mb-4">
                                 <VInputLabel>Name</VInputLabel>
                                 <VInputText
-                                    v-model.trim="event.name"
+                                    v-model.trim="eventDetails.name"
                                     :errors="validation.errors.value['name']"
                                     :errors-visible="validation.showErrors.value"
                                     required
@@ -54,7 +54,7 @@
                             <div class="mb-4">
                                 <VInputLabel>Typ</VInputLabel>
                                 <VInputSelect
-                                    v-model="event.type"
+                                    v-model="eventDetails.type"
                                     :options="[
                                         { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
                                         { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
@@ -70,7 +70,7 @@
                             <div class="mb-4">
                                 <VInputLabel>Beschreibung</VInputLabel>
                                 <VInputTextArea
-                                    v-model.trim="event.description"
+                                    v-model.trim="eventDetails.description"
                                     :errors="validation.errors.value['description']"
                                     :errors-visible="validation.showErrors.value"
                                     :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
@@ -80,25 +80,25 @@
                                 <div class="w-3/5">
                                     <VInputLabel>Startdatum</VInputLabel>
                                     <VInputDate
-                                        :model-value="event.start"
-                                        :highlight-from="event.start"
-                                        :highlight-to="event.end"
+                                        :model-value="eventDetails.start"
+                                        :highlight-from="eventDetails.start"
+                                        :highlight-to="eventDetails.end"
                                         :errors="validation.errors.value['start']"
                                         :errors-visible="validation.showErrors.value"
                                         required
                                         :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                        @update:model-value="event.start = updateDate(event.start, $event)"
+                                        @update:model-value="eventDetails.start = updateDate(eventDetails.start, $eventDetails)"
                                     />
                                 </div>
                                 <div class="w-2/5">
                                     <VInputLabel>Crew an Bord</VInputLabel>
                                     <VInputTime
-                                        :model-value="event.start"
+                                        :model-value="eventDetails.start"
                                         :errors="validation.errors.value['start']"
                                         :errors-visible="validation.showErrors.value"
                                         required
                                         :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                        @update:model-value="event.start = updateTime(event.start, $event, 'minutes')"
+                                        @update:model-value="eventDetails.start = updateTime(eventDetails.start, $eventDetails, 'minutes')"
                                     />
                                 </div>
                             </div>
@@ -107,25 +107,25 @@
                                 <div class="w-3/5">
                                     <VInputLabel>Enddatum</VInputLabel>
                                     <VInputDate
-                                        :model-value="event.end"
-                                        :highlight-from="event.start"
-                                        :highlight-to="event.end"
+                                        :model-value="eventDetails.end"
+                                        :highlight-from="eventDetails.start"
+                                        :highlight-to="eventDetails.end"
                                         :errors="validation.errors.value['end']"
                                         :errors-visible="validation.showErrors.value"
                                         required
                                         :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                        @update:model-value="event.end = updateDate(event.end, $event)"
+                                        @update:model-value="eventDetails.end = updateDate(eventDetails.end, $eventDetails)"
                                     />
                                 </div>
                                 <div class="w-2/5">
                                     <VInputLabel>Crew von Bord</VInputLabel>
                                     <VInputTime
-                                        :model-value="event.end"
+                                        :model-value="eventDetails.end"
                                         :errors="validation.errors.value['end']"
                                         :errors-visible="validation.showErrors.value"
                                         required
                                         :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                        @update:model-value="event.end = updateTime(event.end, $event, 'minutes')"
+                                        @update:model-value="eventDetails.end = updateTime(eventDetails.end, $eventDetails, 'minutes')"
                                     />
                                 </div>
                             </div>
@@ -133,19 +133,19 @@
                     </div>
                 </template>
                 <template #[Tab.EVENT_TEAM]>
-                    <CrewEditor v-if="event" v-model:event="event" />
+                    <CrewEditor v-if="eventDetails" v-model:eventDetails="eventDetails" />
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
                     <div class="xl:max-w-5xl">
                         <div class="-mx-8 md:-mx-16 xl:-mx-20">
-                            <SlotsTable v-if="event" :event="event" />
+                            <SlotsTable v-if="eventDetails" :eventDetails="eventDetails" />
                         </div>
                     </div>
                 </template>
                 <template #[Tab.EVENT_LOCATIONS]>
                     <div class="xl:max-w-5xl">
                         <div class="-mx-8 md:-mx-16 xl:-mx-20">
-                            <LocationsTable v-if="event" :event="event" />
+                            <LocationsTable v-if="eventDetails" :eventDetails="eventDetails" />
                         </div>
                     </div>
                 </template>
@@ -167,11 +167,15 @@
                     <i class="fa-solid fa-user-plus" />
                     <span>Anmeldung hinzufügen</span>
                 </button>
-                <button v-else-if="tab === Tab.EVENT_SLOTS" class="permission-write-event-slots btn-secondary" @click="addSlot()">
+                <button v-else-if="tab === Tab.EVENT_SLOTS" class="permission-write-eventDetails-slots btn-secondary" @click="addSlot()">
                     <i class="fa-solid fa-list" />
                     <span>Crewslot hinzufügen</span>
                 </button>
-                <button v-else-if="tab === Tab.EVENT_LOCATIONS" class="permission-write-event-details btn-secondary" @click="addLocation()">
+                <button
+                    v-else-if="tab === Tab.EVENT_LOCATIONS"
+                    class="permission-write-eventDetails-details btn-secondary"
+                    @click="addLocation()"
+                >
                     <i class="fa-solid fa-route" />
                     <span>Reiseabschnitt hinzufügen</span>
                 </button>
@@ -182,11 +186,11 @@
                 <i class="fa-solid fa-user-plus" />
                 <span>Anmeldung hinzufügen</span>
             </li>
-            <li class="permission-write-event-slots context-menu-item" @click="addSlot()">
+            <li class="permission-write-eventDetails-slots context-menu-item" @click="addSlot()">
                 <i class="fa-solid fa-list" />
                 <span>Crewslot hinzufügen</span>
             </li>
-            <li class="permission-write-event-details context-menu-item" @click="addLocation()">
+            <li class="permission-write-eventDetails-details context-menu-item" @click="addLocation()">
                 <i class="fa-solid fa-route" />
                 <span>Reiseabschnitt hinzufügen</span>
             </li>
@@ -194,39 +198,51 @@
                 <i class="fa-solid fa-envelope" />
                 <span>Crew kontaktieren</span>
             </li>
-            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
+            <li
+                v-if="eventDetails"
+                class="permission-read-user-details context-menu-item"
+                @click="eventUseCase.downloadImoList(eventDetails)"
+            >
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
             </li>
-            <li v-if="event" class="permission-read-users context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
+            <li
+                v-if="eventDetails"
+                class="permission-read-users context-menu-item"
+                @click="eventUseCase.downloadConsumptionList(eventDetails)"
+            >
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Verzehrliste generieren</span>
             </li>
-            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(event)">
+            <li
+                v-if="eventDetails"
+                class="permission-read-user-details context-menu-item"
+                @click="eventUseCase.downloadCaptainList(eventDetails)"
+            >
                 <i class="fa-solid fa-file-medical" />
                 <span>Kapitänsliste generieren</span>
             </li>
             <li
-                v-if="event?.state === EventState.Draft"
-                class="permission-write-event-details context-menu-item"
+                v-if="eventDetails?.state === EventState.Draft"
+                class="permission-write-eventDetails-details context-menu-item"
                 @click="openEventForCrewSignup()"
             >
                 <i class="fa-solid fa-lock-open" />
                 <span>Anmeldungen freischalten</span>
             </li>
             <li
-                v-if="event?.state === EventState.OpenForSignup"
-                class="permission-write-event-details context-menu-item"
+                v-if="eventDetails?.state === EventState.OpenForSignup"
+                class="permission-write-eventDetails-details context-menu-item"
                 @click="publishPlannedCrew()"
             >
                 <i class="fa-solid fa-earth-europe" />
                 <span>Crew veröffentlichen</span>
             </li>
-            <li class="permission-write-event-slots context-menu-item" @click="resetTeam()">
+            <li class="permission-write-eventDetails-slots context-menu-item" @click="resetTeam()">
                 <i class="fa-solid fa-rotate" />
                 <span>Crew zurücksetzen</span>
             </li>
-            <li class="permission-write-event-details context-menu-item text-error" @click="cancelEvent()">
+            <li class="permission-write-eventDetails-details context-menu-item text-error" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
                 <span>Reise absagen</span>
             </li>
@@ -279,7 +295,7 @@ import SlotEditDlg from './SlotEditDlg.vue';
 import SlotsTable from './SlotsTable.vue';
 
 enum Tab {
-    EVENT_DATA = 'app.edit-event.tab.data',
+    EVENT_DATA = 'app.edit-eventDetails.tab.data',
     EVENT_TEAM = 'Crew verwalten',
     EVENT_SLOTS = 'Crew Slots',
     EVENT_LOCATIONS = 'Reiseroute',
@@ -300,8 +316,8 @@ const usersAdminUseCase = useUserAdministrationUseCase();
 const signedInUser = authUseCase.getSignedInUser();
 
 const eventOriginal = ref<Event | null>(null);
-const event = ref<Event | null>(null);
-const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
+const eventDetails = ref<Event | null>(null);
+const validation = useValidation(eventDetails, (evt) => (evt === null ? {} : eventService.validate(evt)));
 const hasChanges = ref<boolean>(false);
 
 const tab = ref<Tab>(Tab.EVENT_TEAM);
@@ -321,7 +337,7 @@ const cancelEventDialog = ref<Dialog<Event, string | undefined> | null>(null);
 const confirmDialog = ref<ConfirmationDialog | null>(null);
 
 const hasEmptyRequiredSlots = computed<boolean>(() => {
-    return event.value !== null && eventService.hasOpenRequiredSlots(event.value);
+    return eventDetails.value !== null && eventService.hasOpenRequiredSlots(eventDetails.value);
 });
 
 async function init(): Promise<void> {
@@ -332,13 +348,13 @@ async function init(): Promise<void> {
 async function fetchEvent(): Promise<void> {
     const year = parseInt(route.params.year as string, 10);
     const key = route.params.key as string;
-    const event = await eventUseCase.getEventByKey(year, key, true);
-    updateState(event);
-    emit('update:title', event.name);
+    const eventDetails = await eventUseCase.getEventByKey(year, key, true);
+    updateState(eventDetails);
+    emit('update:title', eventDetails.name);
 }
 
 function preventPageUnloadOnUnsavedChanges(): void {
-    watch(event, updateHasChanges, { deep: true });
+    watch(eventDetails, updateHasChanges, { deep: true });
     const removeNavigationGuard = router.beforeEach(async (to, from) => {
         if (to.name === from.name) {
             // we stay on the same page and only change
@@ -362,8 +378,8 @@ function preventPageUnloadOnUnsavedChanges(): void {
 }
 
 function updateHasChanges(): void {
-    if (eventOriginal.value !== null && event.value !== null) {
-        const changes = diff(eventOriginal.value, event.value);
+    if (eventOriginal.value !== null && eventDetails.value !== null) {
+        const changes = diff(eventOriginal.value, eventDetails.value);
         hasChanges.value = Object.keys(changes).length > 0;
     } else {
         hasChanges.value = true;
@@ -371,17 +387,17 @@ function updateHasChanges(): void {
 }
 
 function resetTeam(): void {
-    if (event.value) {
-        event.value.slots.forEach((it) => (it.assignedRegistrationKey = undefined));
-        event.value.assignedUserCount = 0;
+    if (eventDetails.value) {
+        eventDetails.value.slots.forEach((it) => (it.assignedRegistrationKey = undefined));
+        eventDetails.value.assignedUserCount = 0;
     }
 }
 
 async function cancelEvent(): Promise<void> {
-    if (event.value) {
-        const message = await cancelEventDialog.value?.open(event.value);
+    if (eventDetails.value) {
+        const message = await cancelEventDialog.value?.open(eventDetails.value);
         if (message !== undefined) {
-            const updatedEvent = await eventAdministrationUseCase.cancelEvent(event.value, message);
+            const updatedEvent = await eventAdministrationUseCase.cancelEvent(eventDetails.value, message);
             updateState(updatedEvent);
             await router.push({ name: Routes.EventsListAdmin });
         }
@@ -389,34 +405,34 @@ async function cancelEvent(): Promise<void> {
 }
 
 async function addRegistration(): Promise<void> {
-    if (event.value) {
-        const result = await createRegistrationDialog.value?.open([event.value]);
+    if (eventDetails.value) {
+        const result = await createRegistrationDialog.value?.open([eventDetails.value]);
         if (result) {
-            event.value.registrations.push(result);
+            eventDetails.value.registrations.push(result);
         }
     }
 }
 
 async function addLocation(): Promise<void> {
     const newLocation = await createLocationDialog.value?.open();
-    if (newLocation && event.value) {
-        newLocation.order = event.value.locations.length + 1;
-        event.value.locations.push(newLocation);
+    if (newLocation && eventDetails.value) {
+        newLocation.order = eventDetails.value.locations.length + 1;
+        eventDetails.value.locations.push(newLocation);
     }
 }
 
 async function addSlot(): Promise<void> {
     const newSlot = await createSlotDialog.value?.open();
-    if (event.value && newSlot) {
-        event.value.slots.push(newSlot);
-        event.value = deepCopy(event.value); // to make sure the list is updated correctly
+    if (eventDetails.value && newSlot) {
+        eventDetails.value.slots.push(newSlot);
+        eventDetails.value = deepCopy(eventDetails.value); // to make sure the list is updated correctly
     }
 }
 
 async function contactTeam(): Promise<void> {
-    if (event.value) {
+    if (eventDetails.value) {
         const userKeys = eventService
-            .getAssignedRegistrations(event.value)
+            .getAssignedRegistrations(eventDetails.value)
             .map((it) => it.userKey)
             .filter(filterUndefined);
         const users = await usersUseCase.getUsers(userKeys);
@@ -425,8 +441,8 @@ async function contactTeam(): Promise<void> {
 }
 
 async function openEventForCrewSignup(): Promise<void> {
-    if (event.value) {
-        const updatedEvent = await eventAdministrationUseCase.updateEvent(event.value.key, {
+    if (eventDetails.value) {
+        const updatedEvent = await eventAdministrationUseCase.updateEvent(eventDetails.value.key, {
             state: EventState.OpenForSignup,
         });
         updateState(updatedEvent);
@@ -434,15 +450,15 @@ async function openEventForCrewSignup(): Promise<void> {
 }
 
 async function publishPlannedCrew(): Promise<void> {
-    if (event.value) {
-        const updatedEvent = await eventAdministrationUseCase.updateEvent(event.value.key, { state: EventState.Planned });
+    if (eventDetails.value) {
+        const updatedEvent = await eventAdministrationUseCase.updateEvent(eventDetails.value.key, { state: EventState.Planned });
         updateState(updatedEvent);
     }
 }
 
 async function saveIfValid(): Promise<void> {
-    if (event.value && validation.isValid.value) {
-        const updatedEvent = await eventAdministrationUseCase.updateEvent(event.value.key, event.value);
+    if (eventDetails.value && validation.isValid.value) {
+        const updatedEvent = await eventAdministrationUseCase.updateEvent(eventDetails.value.key, eventDetails.value);
         updateState(updatedEvent);
     } else {
         validation.showErrors.value = true;
@@ -452,7 +468,7 @@ async function saveIfValid(): Promise<void> {
 
 function updateState(value: Event): void {
     eventOriginal.value = value;
-    event.value = deepCopy(value);
+    eventDetails.value = deepCopy(value);
 }
 
 init();

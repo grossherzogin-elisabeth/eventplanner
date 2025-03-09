@@ -4,8 +4,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.EmergencyContact;
-import org.eventplanner.events.domain.entities.UserQualification;
+import org.eventplanner.events.domain.entities.users.UserEmergencyContact;
+import org.eventplanner.events.domain.entities.users.UserQualification;
 import org.eventplanner.events.domain.values.Address;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.Diet;
@@ -32,7 +32,7 @@ public record UpdateUserSpec(
     @Nullable String passNr,
     @Nullable String comment,
     @Nullable String nationality,
-    @Nullable EmergencyContact emergencyContact,
+    @Nullable UserEmergencyContact emergencyContact,
     @Nullable String diseases,
     @Nullable String intolerances,
     @Nullable String medication,

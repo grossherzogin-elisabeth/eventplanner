@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.ports.UserRepository;
-import org.eventplanner.events.domain.entities.EncryptedUserDetails;
 import org.eventplanner.events.domain.entities.Qualification;
-import org.eventplanner.events.domain.entities.User;
-import org.eventplanner.events.domain.entities.UserDetails;
+import org.eventplanner.events.domain.entities.users.BasicUser;
+import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
+import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Role;
@@ -41,7 +41,7 @@ public class UserService {
         this.userEncryptionService = userEncryptionService;
     }
 
-    public @NonNull List<User> getUsers() {
+    public @NonNull List<BasicUser> getUsers() {
         var qualificationMap = qualificationRepository.findAll()
             .stream()
             .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));

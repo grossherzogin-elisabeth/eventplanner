@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.entities.UserDetails;
-import org.eventplanner.events.domain.values.GlobalNotification;
-import org.eventplanner.events.domain.values.Notification;
+import org.eventplanner.events.domain.aggregates.Event;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
+import org.eventplanner.events.domain.entities.notifications.Notification;
+import org.eventplanner.events.domain.entities.notifications.PersonalNotification;
+import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.NotificationType;
-import org.eventplanner.events.domain.values.PersonalNotification;
 import org.eventplanner.events.domain.values.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,40 +50,40 @@ public class NotificationService {
     }
 
     public void sendAddedToWaitingListNotification(@Nullable UserDetails to, @NonNull Event event) {
-        var title = "Deine Anmeldung zu " + event.getName();
+        var title = "Deine Anmeldung zu " + event.details().getName();
         var type = NotificationType.ADDED_TO_WAITING_LIST;
         var props = new HashMap<String, Object>();
-        addEventDetails(props, event);
+        addEvent(props, event);
         var link = getEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
     }
 
     public void sendRemovedFromWaitingListNotification(@Nullable UserDetails to, @NonNull Event event) {
-        var title = "Deine Anmeldung zu " + event.getName();
+        var title = "Deine Anmeldung zu " + event.details().getName();
         var type = NotificationType.REMOVED_FROM_WAITING_LIST;
         var props = new HashMap<String, Object>();
-        addEventDetails(props, event);
+        addEvent(props, event);
         var link = getEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
     }
 
     public void sendAddedToCrewNotification(@Nullable UserDetails to, @NonNull Event event) {
-        var title = "Deine Anmeldung zu " + event.getName();
+        var title = "Deine Anmeldung zu " + event.details().getName();
         var type = NotificationType.ADDED_TO_CREW;
         var props = new HashMap<String, Object>();
-        addEventDetails(props, event);
+        addEvent(props, event);
         var link = getEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
     }
 
     public void sendRemovedFromCrewNotification(@Nullable UserDetails to, @NonNull Event event) {
-        var title = "Deine Anmeldung zu " + event.getName();
+        var title = "Deine Anmeldung zu " + event.details().getName();
         var type = NotificationType.REMOVED_FROM_CREW;
         var props = new HashMap<String, Object>();
-        addEventDetails(props, event);
+        addEvent(props, event);
         var link = getEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
@@ -95,10 +95,10 @@ public class NotificationService {
         @NonNull String userName,
         @NonNull String position
     ) {
-        var title = "Absage zu " + event.getName();
+        var title = "Absage zu " + event.details().getName();
         var type = NotificationType.CREW_REGISTRATION_CANCELED;
         var props = new HashMap<String, Object>();
-        addEventDetails(props, event);
+        addEvent(props, event);
         props.put("userName", userName);
         props.put("position", position);
         var link = getEventDeepLink(event);
@@ -112,10 +112,10 @@ public class NotificationService {
         @NonNull String userName,
         @NonNull String position
     ) {
-        var title = "Neue Anmeldung zu " + event.getName();
+        var title = "Neue Anmeldung zu " + event.details().getName();
         var type = NotificationType.CREW_REGISTRATION_ADDED;
         var props = new HashMap<String, Object>();
-        addEventDetails(props, event);
+        addEvent(props, event);
         props.put("userName", userName);
         props.put("position", position);
         var link = getEventDeepLink(event);
@@ -138,10 +138,10 @@ public class NotificationService {
         @NonNull Event event,
         @NonNull Registration registration
     ) {
-        var title = "Bitte um Rückmeldung: " + event.getName();
+        var title = "Bitte um Rückmeldung: " + event.details().getName();
         var type = NotificationType.CONFIRM_PARTICIPATION;
         var props = new HashMap<String, Object>();
-        addEventDetails(props, event);
+        addEvent(props, event);
         addParticipationNotificationDetails(props, event, registration);
         var link = getEventDeepLink(event);
 
@@ -153,10 +153,10 @@ public class NotificationService {
         @NonNull Event event,
         @NonNull Registration registration
     ) {
-        var title = "Bitte um sofortige Rückmeldung: " + event.getName();
+        var title = "Bitte um sofortige Rückmeldung: " + event.details().getName();
         var type = NotificationType.CONFIRM_PARTICIPATION_REQUEST;
         var props = new HashMap<String, Object>();
-        addEventDetails(props, event);
+        addEvent(props, event);
         addParticipationNotificationDetails(props, event, registration);
         var link = getEventDeepLink(event);
 
@@ -168,28 +168,28 @@ public class NotificationService {
         @NonNull final Event event,
         @NonNull final Registration registration
     ) {
-        props.put("deadline", formatDate(event.getStart().atZone(timezone).minusDays(7)));
-        var eventUrl = frontendUrl + "/events/" + event.getStart().atZone(timezone)
-            .getYear() + "/details/" + event.getKey() + "/registrations/" + registration.getKey();
+        props.put("deadline", formatDate(event.details().getStart().atZone(timezone).minusDays(7)));
+        var eventUrl = frontendUrl + "/events/" + event.details().getStart().atZone(timezone)
+            .getYear() + "/details/" + event.details().getKey() + "/registrations/" + registration.getKey();
         props.put("confirm_link", eventUrl + "/confirm?accessKey=" + registration.getAccessKey());
         props.put("deny_link", eventUrl + "/deny?accessKey=" + registration.getAccessKey());
     }
 
-    private void addEventDetails(
+    private void addEvent(
         @NonNull HashMap<String, Object> props,
         @NonNull final Event event
     ) {
-        props.put("event", event);
-        var start = event.getLocations().stream()
+        props.put("event", event.details());
+        var start = event.details().getLocations().stream()
             .findFirst()
             .flatMap(it -> Optional.ofNullable(it.etd()))
-            .orElse(event.getStart())
+            .orElse(event.details().getStart())
             .atZone(timezone);
         props.put("event_start_date", formatDate(start));
         props.put("event_start_datetime", formatDateTime(start));
-        props.put("event_end_date", formatDate(event.getEnd().atZone(timezone)));
-        props.put("event_end_datetime", formatDateTime(event.getStart().atZone(timezone)));
-        props.put("event_crew_on_board_datetime", formatDateTime(event.getStart().atZone(timezone)));
+        props.put("event_end_date", formatDate(event.details().getEnd().atZone(timezone)));
+        props.put("event_end_datetime", formatDateTime(event.details().getStart().atZone(timezone)));
+        props.put("event_crew_on_board_datetime", formatDateTime(event.details().getStart().atZone(timezone)));
     }
 
     public void createNotification(
@@ -263,7 +263,9 @@ public class NotificationService {
     }
 
     private String getEventDeepLink(@NonNull final Event event) {
-        return frontendUrl + "/events/" + event.getStart().atZone(timezone).getYear() + "/details/" + event.getKey();
+        return frontendUrl + "/events/" + event.details().getStart()
+            .atZone(timezone)
+            .getYear() + "/details/" + event.details().getKey();
     }
 
     private @NonNull String renderTemplate(@NonNull final String template, @NonNull final Object params)

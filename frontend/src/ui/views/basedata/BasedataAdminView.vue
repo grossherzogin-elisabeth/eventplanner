@@ -42,18 +42,18 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-if="tab === Tab.POSITIONS"
-            class="permission-write-positions pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-write-positions pointer-eventDetails-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
         >
-            <button class="btn-floating pointer-events-auto" @click="createPosition()">
+            <button class="btn-floating pointer-eventDetails-auto" @click="createPosition()">
                 <i class="fa-solid fa-file-circle-plus"></i>
                 <span>Position hinzufügen</span>
             </button>
         </div>
         <div
             v-else-if="tab === Tab.QUALIFICATIONS"
-            class="permission-write-positions pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-write-positions pointer-eventDetails-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
         >
-            <button class="btn-floating pointer-events-auto" @click="createQualification()">
+            <button class="btn-floating pointer-eventDetails-auto" @click="createQualification()">
                 <i class="fa-solid fa-file-circle-plus"></i>
                 <span>Qualifikation hinzufügen</span>
             </button>

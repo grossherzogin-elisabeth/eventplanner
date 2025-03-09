@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.eventplanner.events.domain.entities.EmergencyContact;
-import org.eventplanner.events.domain.entities.UserDetails;
+import org.eventplanner.events.domain.entities.users.UserEmergencyContact;
+import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.Address;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.Diet;
@@ -48,7 +48,7 @@ public class UserFactory {
             "ABC12345",
             null,
             "DE",
-            new EmergencyContact("", ""),
+            new UserEmergencyContact("", ""),
             "",
             "",
             "",

@@ -14,12 +14,12 @@ import java.util.stream.Stream;
 
 import org.eventplanner.common.Crypto;
 import org.eventplanner.common.EncryptedString;
-import org.eventplanner.events.domain.entities.EmergencyContact;
-import org.eventplanner.events.domain.entities.EncryptedEmergencyContact;
-import org.eventplanner.events.domain.entities.EncryptedUserDetails;
-import org.eventplanner.events.domain.entities.EncryptedUserQualification;
-import org.eventplanner.events.domain.entities.UserDetails;
-import org.eventplanner.events.domain.entities.UserQualification;
+import org.eventplanner.events.domain.entities.users.UserEmergencyContact;
+import org.eventplanner.events.domain.entities.users.EncryptedUserEmergencyContact;
+import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
+import org.eventplanner.events.domain.entities.users.EncryptedUserQualification;
+import org.eventplanner.events.domain.entities.users.UserDetails;
+import org.eventplanner.events.domain.entities.users.UserQualification;
 import org.eventplanner.events.domain.values.Address;
 import org.eventplanner.events.domain.values.Diet;
 import org.eventplanner.events.domain.values.EncryptedAddress;
@@ -201,15 +201,15 @@ public class UserEncryptionService {
         );
     }
 
-    public @NonNull EncryptedEmergencyContact encrypt(@NonNull EmergencyContact value) {
-        return new EncryptedEmergencyContact(
+    public @NonNull EncryptedUserEmergencyContact encrypt(@NonNull UserEmergencyContact value) {
+        return new EncryptedUserEmergencyContact(
             encrypt(value.getName()),
             encrypt(value.getPhone())
         );
     }
 
-    public @NonNull EmergencyContact decrypt(@NonNull EncryptedEmergencyContact value) {
-        return new EmergencyContact(
+    public @NonNull UserEmergencyContact decrypt(@NonNull EncryptedUserEmergencyContact value) {
+        return new UserEmergencyContact(
             decrypt(value.getName()),
             decrypt(value.getPhone())
         );

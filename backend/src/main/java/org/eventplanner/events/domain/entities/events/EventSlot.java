@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.events;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,9 +15,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.With;
 
 @Getter
 @Setter
+@With
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -44,21 +46,6 @@ public class EventSlot {
 
     public EventSlot withRequired() {
         this.criticality = 1;
-        return this;
-    }
-
-    public EventSlot withCriticality(int criticality) {
-        this.criticality = criticality;
-        return this;
-    }
-
-    public EventSlot withOrder(int order) {
-        this.order = order;
-        return this;
-    }
-
-    public EventSlot withName(String name) {
-        this.name = name;
         return this;
     }
 }
