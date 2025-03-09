@@ -10,13 +10,13 @@
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
-                    <div v-if="!Number.isNaN(parseInt(tab))" class="permission-read-events hidden lg:block">
+                    <div v-if="!Number.isNaN(parseInt(tab))" class="permission-read-eventDetails hidden lg:block">
                         <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(parseInt(tab))">
                             <i class="fa-solid fa-download"></i>
                             <span class="">Export</span>
                         </button>
                     </div>
-                    <div class="permission-create-events hidden 2xl:block">
+                    <div class="permission-create-eventDetails hidden 2xl:block">
                         <button class="btn-primary ml-2" name="create" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
                             <span class="">Hinzufügen</span>
@@ -35,7 +35,8 @@
             >
                 <template #icon>
                     <span v-if="filterEventType.length === 0" class="">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4" class=""> {{ filterEventType.length }} Reisearten </span>
+                    <span v-else-if="filterEventType.length > 4"
+                          class=""> {{ filterEventType.length }} Reisearten </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -75,7 +76,8 @@
             >
                 <template #icon>
                     <span v-if="filterEventStates.length === 0" class="">Alle Status</span>
-                    <span v-else-if="filterEventStates.length > 4" class=""> {{ filterEventStates.length }} Status </span>
+                    <span v-else-if="filterEventStates.length > 4"
+                          class=""> {{ filterEventStates.length }} Status </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventStates.map(eventStates.getName).join(', ') }}
                     </span>
@@ -110,7 +112,8 @@
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
                 <span class="">Freie Plätze</span>
             </button>
-            <button class="btn-tag" :class="{ active: filterWaitinglist }" @click="filterWaitinglist = !filterWaitinglist">
+            <button class="btn-tag" :class="{ active: filterWaitinglist }"
+                    @click="filterWaitinglist = !filterWaitinglist">
                 <span class="">Warteliste</span>
             </button>
         </div>
@@ -122,12 +125,13 @@
                 query
                 :page-size="20"
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
-                @click="editEvent($event)"
+                @click="editEvent($eventDetails)"
             >
                 <template #row="{ item }">
                     <!-- name -->
                     <td class="w-1/2 whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
-                        <p class="mb-1 truncate" :class="{ 'text-error line-through': item.state === EventState.Canceled }">
+                        <p class="mb-1 truncate"
+                           :class="{ 'text-error line-through': item.state === EventState.Canceled }">
                             <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
                             <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
                             {{ item.name }}
@@ -200,7 +204,7 @@
                     </tr>
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="permission-read-events">
+                    <li class="permission-read-eventDetails">
                         <RouterLink
                             :to="{
                                 name: Routes.EventDetails,
@@ -212,7 +216,7 @@
                             <span>Reise anzeigen</span>
                         </RouterLink>
                     </li>
-                    <li class="permission-write-event-details">
+                    <li class="permission-write-eventDetails-details">
                         <RouterLink
                             :to="{
                                 name: Routes.EventEdit,
@@ -224,15 +228,18 @@
                             <span>Reise bearbeiten</span>
                         </RouterLink>
                     </li>
-                    <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(item)">
+                    <li class="permission-read-user-details context-menu-item"
+                        @click="eventUseCase.downloadImoList(item)">
                         <i class="fa-solid fa-clipboard-user" />
                         <span>IMO Liste generieren</span>
                     </li>
-                    <li class="permission-read-users context-menu-item" @click="eventUseCase.downloadConsumptionList(item)">
+                    <li class="permission-read-users context-menu-item"
+                        @click="eventUseCase.downloadConsumptionList(item)">
                         <i class="fa-solid fa-beer-mug-empty" />
                         <span>Verzehrliste generieren</span>
                     </li>
-                    <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(item)">
+                    <li class="permission-read-user-details context-menu-item"
+                        @click="eventUseCase.downloadCaptainList(item)">
                         <i class="fa-solid fa-file-medical" />
                         <span>Kapitänsliste generieren</span>
                     </li>
@@ -242,7 +249,7 @@
                     </li>
                     <li
                         v-if="item.state === EventState.Draft"
-                        class="permission-write-event-details context-menu-item"
+                        class="permission-write-eventDetails-details context-menu-item"
                         @click="openEventsForSignup([item])"
                     >
                         <i class="fa-solid fa-people-group" />
@@ -250,7 +257,7 @@
                     </li>
                     <li
                         v-else-if="item.state === EventState.OpenForSignup"
-                        class="permission-write-event-details context-menu-item"
+                        class="permission-write-eventDetails-details context-menu-item"
                         @click="publishCrewPlanning([item])"
                     >
                         <i class="fa-solid fa-earth-europe" />
@@ -270,13 +277,14 @@
                     </li>
                     <li
                         v-if="item.state === EventState.Canceled"
-                        class="permission-delete-events context-menu-item text-error"
+                        class="permission-delete-eventDetails context-menu-item text-error"
                         @click="deleteEvent(item)"
                     >
                         <i class="fa-solid fa-trash-alt" />
                         <span>Reise löschen</span>
                     </li>
-                    <li v-else class="permission-delete-events context-menu-item text-error" @click="cancelEvent(item)">
+                    <li v-else class="permission-delete-eventDetails context-menu-item text-error"
+                        @click="cancelEvent(item)">
                         <i class="fa-solid fa-ban" />
                         <span>Reise absagen</span>
                     </li>
@@ -293,7 +301,8 @@
         <div class="flex-1"></div>
 
         <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
-            <div class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20">
+            <div
+                class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20">
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
                     <button class="btn-ghost" @click="selectNone()">
                         <i class="fa-solid fa-xmark" />
@@ -303,7 +312,7 @@
                     <div class="hidden sm:block">
                         <button
                             v-if="showBatchOpenEventForSignup"
-                            class="permission-write-events btn-ghost"
+                            class="permission-write-eventDetails btn-ghost"
                             @click="openEventsForSignup(selectedEvents)"
                         >
                             <i class="fa-solid fa-lock-open"></i>
@@ -311,13 +320,14 @@
                         </button>
                         <button
                             v-else-if="showBatchPublishPlannedCrew"
-                            class="permission-write-events btn-ghost"
+                            class="permission-write-eventDetails btn-ghost"
                             @click="publishCrewPlanning(selectedEvents)"
                         >
                             <i class="fa-solid fa-earth-europe"></i>
                             <span class="truncate">Crew veröffentlichen</span>
                         </button>
-                        <button v-else class="permission-write-events btn-ghost" @click="editBatch(selectedEvents)">
+                        <button v-else class="permission-write-eventDetails btn-ghost"
+                                @click="editBatch(selectedEvents)">
                             <i class="fa-solid fa-edit"></i>
                             <span class="truncate">Ausgewählte bearbeiten</span>
                         </button>
@@ -328,17 +338,19 @@
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
-                            <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
+                            <li class="permission-write-registrations context-menu-item"
+                                @click="addRegistration(selectedEvents)">
                                 <i class="fa-solid fa-user-plus" />
                                 <span>Anmeldung hinzufügen</span>
                             </li>
-                            <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
+                            <li class="permission-write-eventDetails-details context-menu-item"
+                                @click="editBatch(selectedEvents)">
                                 <i class="fa-solid fa-edit" />
                                 <span>Ausgewählte bearbeiten</span>
                             </li>
                             <li
                                 v-if="showBatchOpenEventForSignup"
-                                class="permission-write-event-details context-menu-item"
+                                class="permission-write-eventDetails-details context-menu-item"
                                 @click="openEventsForSignup(selectedEvents)"
                             >
                                 <i class="fa-solid fa-people-group" />
@@ -346,13 +358,13 @@
                             </li>
                             <li
                                 v-if="showBatchPublishPlannedCrew"
-                                class="permission-write-event-details context-menu-item"
+                                class="permission-write-eventDetails-details context-menu-item"
                                 @click="publishCrewPlanning(selectedEvents)"
                             >
                                 <i class="fa-solid fa-earth-europe" />
                                 <span>Crew veröffentlichen</span>
                             </li>
-                            <li class="permission-read-user-details permission-write-events context-menu-item disabled">
+                            <li class="permission-read-user-details permission-write-eventDetails context-menu-item disabled">
                                 <i class="fa-solid fa-users" />
                                 <span>Weitere Crew anfragen*</span>
                             </li>
@@ -360,7 +372,7 @@
                                 <i class="fa-solid fa-envelope" />
                                 <span>Crew kontaktieren*</span>
                             </li>
-                            <li class="permission-delete-events context-menu-item disabled text-error">
+                            <li class="permission-delete-eventDetails context-menu-item disabled text-error">
                                 <i class="fa-solid fa-ban" />
                                 <span>Reisen absagen*</span>
                             </li>
@@ -372,9 +384,9 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
-            class="permission-create-events pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-create-eventDetails pointer-eventDetails-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
         >
-            <button class="btn-floating pointer-events-auto" @click="createEvent()">
+            <button class="btn-floating pointer-eventDetails-auto" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>Reise erstellen</span>
             </button>
@@ -392,17 +404,11 @@ import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
-import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
-import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
-import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
+import CreateRegistrationDlg from '@/ui/components/eventDetails/CreateRegistrationDlg.vue';
+import EventCancelDlg from '@/ui/components/eventDetails/EventCancelDlg.vue';
+import EventCreateDlg from '@/ui/components/eventDetails/EventCreateDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import {
-    useAuthUseCase,
-    useEventAdministrationUseCase,
-    useEventUseCase,
-    useUserAdministrationUseCase,
-    useUsersUseCase,
-} from '@/ui/composables/Application.ts';
+import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
@@ -410,7 +416,8 @@ import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
-import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
+import EventBatchEditDlg from '@/ui/views/eventDetails/list-admin/EventBatchEditDlg.vue';
+
 
 interface StateDetails {
     name: string;
@@ -443,7 +450,7 @@ const signedInUser = authUseCase.getSignedInUser();
 const eventTypes = useEventTypes();
 const eventStates = useEventStates();
 
-const events = ref<EventTableViewItem[] | null>(null);
+const eventDetails = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
 const filterWaitinglist = ref<boolean>(false);
@@ -460,32 +467,32 @@ const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> |
 useQueryStateSync<boolean>(
     'has-free-slots',
     () => filterFreeSlots.value,
-    (v) => (filterFreeSlots.value = v)
+    (v) => (filterFreeSlots.value = v),
 );
 useQueryStateSync<boolean>(
     'has-waitinglist',
     () => filterWaitinglist.value,
-    (v) => (filterWaitinglist.value = v)
+    (v) => (filterWaitinglist.value = v),
 );
 useQueryStateSync<string>(
     'states',
     () => filterEventStates.value.join('_'),
-    (v) => (filterEventStates.value = v.split('_') as EventState[])
+    (v) => (filterEventStates.value = v.split('_') as EventState[]),
 );
 useQueryStateSync<string>(
     'types',
     () => filterEventType.value.join('_'),
-    (v) => (filterEventType.value = v.split('_') as EventType[])
+    (v) => (filterEventType.value = v.split('_') as EventType[]),
 );
 useQueryStateSync<string>(
     'filter',
     () => filter.value,
-    (v) => (filter.value = v)
+    (v) => (filter.value = v),
 );
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
-    return events.value
+    return eventDetails.value
         ?.filter((it) => eventService.doesEventMatchFilter(it, f))
         .filter((it) => filterEventType.value.length === 0 || filterEventType.value.includes(it.type))
         .filter((it) => !filterFreeSlots.value || it.hasOpenSlots)
@@ -527,24 +534,24 @@ async function init(): Promise<void> {
 }
 
 function selectNone(): void {
-    events.value?.forEach((it) => (it.selected = false));
+    eventDetails.value?.forEach((it) => (it.selected = false));
 }
 
 function selectAll(): void {
-    events.value?.forEach((it) => (it.selected = true));
+    eventDetails.value?.forEach((it) => (it.selected = true));
 }
 
 async function fetchEvents(): Promise<void> {
-    events.value = null;
+    eventDetails.value = null;
     if (tab.value === tabs.value[0]) {
         const now = new Date();
         const currentYear = await fetchEventsByYear(now.getFullYear());
         const nextYear = await fetchEventsByYear(now.getFullYear() + 1);
-        events.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
+        eventDetails.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
     } else {
         const year = parseInt(tab.value);
         if (year) {
-            events.value = await fetchEventsByYear(year);
+            eventDetails.value = await fetchEventsByYear(year);
         }
     }
 }
@@ -570,8 +577,8 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
     });
 }
 
-function getStateDetails(event: EventTableViewItem): StateDetails {
-    switch (event.state) {
+function getStateDetails(eventDetails: EventTableViewItem): StateDetails {
+    switch (eventDetails.state) {
         case EventState.Draft:
             return {
                 name: 'Entwurf',
@@ -587,10 +594,10 @@ function getStateDetails(event: EventTableViewItem): StateDetails {
         case EventState.Canceled:
             return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
     }
-    if (event.hasOpenRequiredSlots) {
+    if (eventDetails.hasOpenRequiredSlots) {
         return { name: 'Fehlende Crew', icon: 'fa-warning', color: 'bg-yellow-container text-onyellow-container' };
     }
-    if (event.hasOpenSlots) {
+    if (eventDetails.hasOpenSlots) {
         return {
             name: 'Freie Plätze',
             icon: 'fa-info-circle',
@@ -606,8 +613,8 @@ function getStateDetails(event: EventTableViewItem): StateDetails {
     };
 }
 
-function hasOpenSlots(event: Event): boolean {
-    return event.slots.filter((slt) => !slt.assignedRegistrationKey).length > 0;
+function hasOpenSlots(eventDetails: Event): boolean {
+    return eventDetails.slots.filter((slt) => !slt.assignedRegistrationKey).length > 0;
 }
 
 async function editEvent(evt: EventTableViewItem): Promise<void> {
@@ -625,9 +632,9 @@ async function editEvent(evt: EventTableViewItem): Promise<void> {
 }
 
 async function createEvent(): Promise<void> {
-    const event = await createEventDialog.value?.open().catch();
-    if (event) {
-        await eventAdminUseCase.createEvent(event);
+    const eventDetails = await createEventDialog.value?.open().catch();
+    if (eventDetails) {
+        await eventAdminUseCase.createEvent(eventDetails);
     }
 }
 
@@ -653,34 +660,34 @@ async function cancelEvent(evt: Event): Promise<void> {
     }
 }
 
-async function editBatch(events: Event[]): Promise<void> {
-    const changed = await eventBatchEditDialog.value?.open(events);
+async function editBatch(eventDetails: Event[]): Promise<void> {
+    const changed = await eventBatchEditDialog.value?.open(eventDetails);
     if (changed) {
         await fetchEvents();
     }
 }
 
-async function contactCrew(events: Event[]): Promise<void> {
-    const userKeys = events
-        .flatMap((event) => eventService.getAssignedRegistrations(event))
+async function contactCrew(eventDetails: Event[]): Promise<void> {
+    const userKeys = eventDetails
+        .flatMap((eventDetails) => eventService.getAssignedRegistrations(eventDetails))
         .map((it) => it.userKey)
         .filter(filterUndefined);
     const users = await usersUseCase.getUsers(userKeys);
     await userAdminUseCase.contactUsers(users);
 }
 
-async function addRegistration(events: Event[]): Promise<void> {
-    const result = await createRegistrationDialog.value?.open(events);
+async function addRegistration(eventDetails: Event[]): Promise<void> {
+    const result = await createRegistrationDialog.value?.open(eventDetails);
     if (result) {
-        await eventAdminUseCase.addRegistrations(events, result);
+        await eventAdminUseCase.addRegistrations(eventDetails, result);
         await fetchEvents();
     }
 }
 
-async function openEventsForSignup(events: Event[]): Promise<void> {
-    // filter out those events that already have the desired state
-    let eventsToEdit = events.filter((it) => it.state !== EventState.OpenForSignup);
-    if (eventsToEdit.find((event) => event.state !== EventState.Draft)) {
+async function openEventsForSignup(eventDetails: Event[]): Promise<void> {
+    // filter out those eventDetails that already have the desired state
+    let eventsToEdit = eventDetails.filter((it) => it.state !== EventState.OpenForSignup);
+    if (eventsToEdit.find((eventDetails) => eventDetails.state !== EventState.Draft)) {
         const confirmed = await confirmationDialog.value?.open({
             title: 'Anmeldungen freigeben',
             message: `Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status 'Entwurf' ist. Möchtest du
@@ -692,7 +699,7 @@ async function openEventsForSignup(events: Event[]): Promise<void> {
             return;
         }
         if (confirmed === false) {
-            eventsToEdit = events.filter((it) => it.state === EventState.Draft);
+            eventsToEdit = eventDetails.filter((it) => it.state === EventState.Draft);
         }
     }
     const keys = eventsToEdit.map((it) => it.key);
@@ -700,10 +707,10 @@ async function openEventsForSignup(events: Event[]): Promise<void> {
     await fetchEvents();
 }
 
-async function publishCrewPlanning(events: Event[]): Promise<void> {
-    // filter out those events that already have the desired state
-    let eventsToEdit = events.filter((it) => it.state !== EventState.Planned);
-    if (eventsToEdit.find((event) => event.state !== EventState.OpenForSignup)) {
+async function publishCrewPlanning(eventDetails: Event[]): Promise<void> {
+    // filter out those eventDetails that already have the desired state
+    let eventsToEdit = eventDetails.filter((it) => it.state !== EventState.Planned);
+    if (eventsToEdit.find((eventDetails) => eventDetails.state !== EventState.OpenForSignup)) {
         const confirmed = await confirmationDialog.value?.open({
             title: 'Crew veröffentlichen',
             message: `Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status 'Crew Anmeldung' ist.
@@ -715,7 +722,7 @@ async function publishCrewPlanning(events: Event[]): Promise<void> {
             return;
         }
         if (confirmed === false) {
-            eventsToEdit = events.filter((it) => it.state === EventState.OpenForSignup);
+            eventsToEdit = eventDetails.filter((it) => it.state === EventState.OpenForSignup);
         }
     }
     const keys = eventsToEdit.map((it) => it.key);

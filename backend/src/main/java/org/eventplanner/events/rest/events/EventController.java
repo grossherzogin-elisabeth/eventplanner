@@ -3,12 +3,12 @@ package org.eventplanner.events.rest.events;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.eventplanner.events.application.usecases.CaptainListUseCase;
-import org.eventplanner.events.application.usecases.ConsumtionListUseCase;
-import org.eventplanner.events.application.usecases.EventUseCase;
-import org.eventplanner.events.application.usecases.ImoListUseCase;
-import org.eventplanner.events.application.usecases.ParticipationNotificationUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
+import org.eventplanner.events.application.usecases.events.CaptainListUseCase;
+import org.eventplanner.events.application.usecases.events.ConfirmParticipationUseCase;
+import org.eventplanner.events.application.usecases.events.ConsumptionListUseCase;
+import org.eventplanner.events.application.usecases.events.EventUseCase;
+import org.eventplanner.events.application.usecases.events.ImoListUseCase;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.values.EventKey;
 import org.eventplanner.events.rest.events.dto.CreateEventRequest;
@@ -45,9 +45,9 @@ public class EventController {
     private final UserUseCase userUseCase;
     private final EventUseCase eventUseCase;
     private final ImoListUseCase imoListUseCase;
-    private final ConsumtionListUseCase consumtionListUseCase;
+    private final ConsumptionListUseCase consumptionListUseCase;
     private final CaptainListUseCase captainListUseCase;
-    private final ParticipationNotificationUseCase participationNotificationUseCase;
+    private final ConfirmParticipationUseCase confirmParticipationUseCase;
 
     @GetMapping("")
     public ResponseEntity<?> getEvents(
@@ -84,7 +84,7 @@ public class EventController {
             return ResponseEntity.ok(EventRepresentation.fromDomain(event));
         } catch (UnauthorizedException e) {
             if (accessKey != null) {
-                var event = participationNotificationUseCase.getEventByAccessKey(new EventKey(eventKey), accessKey);
+                var event = eventUseCase.getEventByAccessKey(new EventKey(eventKey), accessKey);
                 return ResponseEntity.ok(EventRepresentation.fromDomain(event));
             } else {
                 throw e;
@@ -137,7 +137,7 @@ public class EventController {
 
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         ByteArrayOutputStream consumptionListStream =
-            consumtionListUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
+            consumptionListUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
         byte[] consumptionListByteArray = consumptionListStream.toByteArray();
 
         ByteArrayResource resource = new ByteArrayResource(consumptionListByteArray);

@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.users;
 
 import java.io.Serializable;
 
@@ -16,7 +16,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @ToString
-public class EncryptedEmergencyContact implements Serializable {
+public class EncryptedUserEmergencyContact implements Serializable {
     private @NonNull EncryptedString name;
     private @NonNull EncryptedString phone;
 }

@@ -1,6 +1,6 @@
 package org.eventplanner.events.application.scheduled;
 
-import org.eventplanner.events.application.usecases.ParticipationNotificationUseCase;
+import org.eventplanner.events.application.usecases.events.ConfirmParticipationUseCase;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -11,12 +11,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ReminderSchedule {
 
-    private final ParticipationNotificationUseCase participationNotificationUseCase;
+    private final ConfirmParticipationUseCase confirmParticipationUseCase;
 
     @Scheduled(cron = "0 0 8 * * *")
     @PostConstruct
     public void sendParticipationNotification() {
-        participationNotificationUseCase.sendParticipationNotificationRequest();
-        participationNotificationUseCase.sendParticipationNotificationRequestReminder();
+        confirmParticipationUseCase.sendParticipationNotificationRequest();
+        confirmParticipationUseCase.sendParticipationNotificationRequestReminder();
     }
 }

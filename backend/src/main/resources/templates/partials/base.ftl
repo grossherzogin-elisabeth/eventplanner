@@ -7,7 +7,7 @@
     <title>${title}</title>
     <style media="all" type="text/css">
         a[x-apple-data-detectors] {
-            pointer-events: none !important;
+            pointer-eventDetails: none !important;
             color: inherit !important;
             text-decoration: none !important;
             font-size: inherit !important;
@@ -17,7 +17,7 @@
         }
 
         .this-is-not-a-phone-number {
-            pointer-events: none !important;
+            pointer-eventDetails: none !important;
             color: inherit !important;
             text-decoration: none !important;
             font-size: inherit !important;

@@ -1,8 +1,8 @@
 package org.eventplanner.events.rest.registrations;
 
-import org.eventplanner.events.application.usecases.ParticipationNotificationUseCase;
 import org.eventplanner.events.application.usecases.RegistrationUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
+import org.eventplanner.events.application.usecases.events.ConfirmParticipationUseCase;
 import org.eventplanner.events.domain.values.EventKey;
 import org.eventplanner.events.domain.values.RegistrationKey;
 import org.eventplanner.events.rest.events.dto.EventRepresentation;
@@ -32,15 +32,16 @@ public class RegistrationController {
 
     private final UserUseCase userUseCase;
     private final RegistrationUseCase registrationUseCase;
-    private final ParticipationNotificationUseCase participationNotificationUseCase;
+    private final ConfirmParticipationUseCase confirmParticipationUseCase;
 
     @PostMapping("/{eventKey}/registrations")
     public ResponseEntity<EventRepresentation> createRegistration(
-        @PathVariable("eventKey") String eventKey,
+        @PathVariable("eventKey") String key,
         @RequestBody CreateRegistrationRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = registrationUseCase.addRegistration(signedInUser, new EventKey(eventKey), spec.toDomain());
+        var eventKey = new EventKey(key);
+        var event = registrationUseCase.addRegistration(signedInUser, eventKey, spec.toDomain(eventKey));
         return ResponseEntity.status(HttpStatus.CREATED).body(EventRepresentation.fromDomain(event));
     }
 
@@ -80,7 +81,7 @@ public class RegistrationController {
         @PathVariable("registrationKey") String registrationKey,
         @RequestParam("accessKey") String accessKey
     ) {
-        participationNotificationUseCase.confirmRegistration(
+        confirmParticipationUseCase.confirmRegistration(
             new EventKey(eventKey),
             new RegistrationKey(registrationKey),
             accessKey
@@ -94,7 +95,7 @@ public class RegistrationController {
         @PathVariable("registrationKey") String registrationKey,
         @RequestParam("accessKey") String accessKey
     ) {
-        participationNotificationUseCase.declineRegistration(
+        confirmParticipationUseCase.declineRegistration(
             new EventKey(eventKey),
             new RegistrationKey(registrationKey),
             accessKey

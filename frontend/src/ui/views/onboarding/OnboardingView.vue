@@ -37,8 +37,8 @@
                 </p>
             </div>
         </div>
-        <div class="pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden">
-            <a href="https://www.grossherzogin-elisabeth.de/mitglied-werden/" class="btn-floating pointer-events-auto">
+        <div class="pointer-eventDetails-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden">
+            <a href="https://www.grossherzogin-elisabeth.de/mitglied-werden/" class="btn-floating pointer-eventDetails-auto">
                 <i class="fa-solid fa-edit"></i>
                 <span class=""> Jetzt Mitglied werden! </span>
             </a>
