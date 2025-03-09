@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.users;
 
 import static org.eventplanner.common.ObjectUtils.orElse;
 

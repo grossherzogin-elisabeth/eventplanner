@@ -182,7 +182,7 @@
                     </tr>
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="permission-read-events">
+                    <li class="permission-read-eventDetails">
                         <RouterLink
                             :to="{
                                 name: Routes.EventDetails,
@@ -330,7 +330,7 @@ import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VInfo } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
-import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
+import PositionSelectDlg from '@/ui/components/eventDetails/PositionSelectDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
@@ -368,7 +368,7 @@ const positions = usePositions();
 const eventTypes = useEventTypes();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
-const events = ref<EventTableViewItem[] | null>(null);
+const eventDetails = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
 const filterAssigned = ref<boolean>(false);
@@ -420,7 +420,7 @@ const hasAnySelectedEventWithSignedInUserInTeam = computed<boolean>(() => {
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
-    return events.value
+    return eventDetails.value
         ?.filter((it) => eventService.doesEventMatchFilter(it, f))
         .filter((it) => filterEventType.value.length === 0 || filterEventType.value.includes(it.type))
         .filter((it) => {
@@ -461,24 +461,24 @@ async function init(): Promise<void> {
 }
 
 function selectNone(): void {
-    events.value?.forEach((it) => (it.selected = false));
+    eventDetails.value?.forEach((it) => (it.selected = false));
 }
 
 function selectAll(): void {
-    events.value?.forEach((it) => (it.selected = true));
+    eventDetails.value?.forEach((it) => (it.selected = true));
 }
 
 async function fetchEvents(): Promise<void> {
-    events.value = null;
+    eventDetails.value = null;
     if (tab.value === tabs.value[0]) {
         const now = new Date();
         const currentYear = await fetchEventsByYear(now.getFullYear());
         const nextYear = await fetchEventsByYear(now.getFullYear() + 1);
-        events.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
+        eventDetails.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
     } else {
         const year = parseInt(tab.value);
         if (year) {
-            events.value = await fetchEventsByYear(year);
+            eventDetails.value = await fetchEventsByYear(year);
         }
     }
 }
@@ -536,28 +536,28 @@ async function openEvent(evt: EventTableViewItem): Promise<void> {
     });
 }
 
-async function choosePositionAndJoinEvents(events: EventTableViewItem[]): Promise<void> {
+async function choosePositionAndJoinEvents(eventDetails: EventTableViewItem[]): Promise<void> {
     const position = await positionSelectDialog.value?.open();
     if (position) {
         // default position might have changed
         signedInUser.value = authUseCase.getSignedInUser();
-        await eventUseCase.joinEvents(events, signedInUser.value.positions[0]);
+        await eventUseCase.joinEvents(eventDetails, signedInUser.value.positions[0]);
         await fetchEvents();
     }
 }
 
-async function joinEvents(events: EventTableViewItem[]): Promise<void> {
-    await eventUseCase.joinEvents(events, signedInUser.value.positions[0]);
+async function joinEvents(eventDetails: EventTableViewItem[]): Promise<void> {
+    await eventUseCase.joinEvents(eventDetails, signedInUser.value.positions[0]);
     await fetchEvents();
 }
 
-async function leaveEventsWaitingListOnly(events: EventTableViewItem[]): Promise<void> {
-    await eventUseCase.leaveEventsWaitingListOnly(events);
+async function leaveEventsWaitingListOnly(eventDetails: EventTableViewItem[]): Promise<void> {
+    await eventUseCase.leaveEventsWaitingListOnly(eventDetails);
     await fetchEvents();
 }
 
-async function leaveEvents(events: EventTableViewItem[]): Promise<void> {
-    await eventUseCase.leaveEvents(events);
+async function leaveEvents(eventDetails: EventTableViewItem[]): Promise<void> {
+    await eventUseCase.leaveEvents(eventDetails);
     await fetchEvents();
 }
 

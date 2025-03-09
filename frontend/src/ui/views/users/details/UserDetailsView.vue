@@ -21,16 +21,17 @@
                     </template>
                     <template #[Tab.USER_EVENTS]>
                         <div class="xl:max-w-5xl">
-                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`" class="">
+                            <div v-for="[year, eventDetails] in eventsByYear" :key="`${year}-${eventDetails?.length}`"
+                                 class="">
                                 <h2 class="mb-4 font-bold text-secondary">
                                     <template v-if="year === 0">Zukünftige Reisen</template>
                                     <template v-else>Reisen {{ year }}</template>
                                 </h2>
                                 <UserEventsTable
                                     v-if="user"
-                                    :events="events"
+                                    :eventDetails="eventDetails"
                                     :user="user"
-                                    @update:events="year === 0 ? fetchUserFutureEvents() : fetchUserEventsOfYear(year)"
+                                    @update:eventDetails="year === 0 ? fetchUserFutureEvents() : fetchUserEventsOfYear(year)"
                                 />
                                 <div class="mb-4 mt-8 flex items-center justify-center">
                                     <div v-if="eventsLoadedUntilYear === year">
@@ -150,11 +151,12 @@ import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';
 import UserQualificationsTable from './UserQualificationsTable.vue';
 import UserRolesTable from './UserRolesTable.vue';
 
+
 enum Tab {
     USER_DATA = 'app.user-details.tab.data',
     USER_CONTACT_DATA = 'app.user-details.tab.contact',
     USER_CERTIFICATES = 'app.user-details.tab.certificates',
-    USER_EVENTS = 'app.user-details.tab.events',
+    USER_EVENTS = 'app.user-details.tab.eventDetails',
     USER_ROLES = 'app.user-details.tab.roles',
     USER_EMERGENCY = 'app.user-details.tab.emergency',
     USER_OTHER = 'app.user-details.tab.other',
@@ -252,20 +254,20 @@ async function fetchNextEvents(): Promise<void> {
 
 async function fetchUserFutureEvents(): Promise<void> {
     eventsByYear.value.set(0, undefined);
-    let events = await eventsUseCase.getFutureEventsByUser(userKey.value);
-    events = events.sort((a, b) => b.start.getTime() - a.start.getTime());
-    eventsByYear.value.set(0, events);
+    let eventDetails = await eventsUseCase.getFutureEventsByUser(userKey.value);
+    eventDetails = eventDetails.sort((a, b) => b.start.getTime() - a.start.getTime());
+    eventsByYear.value.set(0, eventDetails);
 }
 
 async function fetchUserEventsOfYear(year: number): Promise<void> {
     eventsByYear.value.set(year, undefined);
-    let events = await eventsUseCase.getEventsByUser(year, userKey.value);
+    let eventDetails = await eventsUseCase.getEventsByUser(year, userKey.value);
     if (year === new Date().getFullYear()) {
         const loadedEventKeys = eventsByYear.value.get(0)?.map((it) => it.key);
-        events = events.filter((it) => !loadedEventKeys?.includes(it.key));
+        eventDetails = eventDetails.filter((it) => !loadedEventKeys?.includes(it.key));
     }
-    events = events.sort((a, b) => b.start.getTime() - a.start.getTime());
-    eventsByYear.value.set(year, events);
+    eventDetails = eventDetails.sort((a, b) => b.start.getTime() - a.start.getTime());
+    eventsByYear.value.set(year, eventDetails);
 }
 
 async function save(): Promise<void> {

@@ -1,14 +1,11 @@
 package org.eventplanner.events.adapter.jpa.events;
 
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.time.Instant;
 
-import org.eventplanner.events.domain.entities.Registration;
+import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.RegistrationKey;
 import org.eventplanner.events.domain.values.PositionKey;
+import org.eventplanner.events.domain.values.RegistrationKey;
 import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -17,11 +14,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import static java.util.Optional.ofNullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 @Entity
 @Table(name = "event_registrations")
@@ -56,10 +55,10 @@ public class RegistrationJpaEntity {
     @Column(name = "confirmed_at")
     public @Nullable String confirmedAt;
 
-    public static @NonNull RegistrationJpaEntity fromDomain(@NonNull Registration domain, @NonNull EventKey eventKey) {
+    public static @NonNull RegistrationJpaEntity fromDomain(@NonNull Registration domain) {
         return new RegistrationJpaEntity(
             domain.getKey().value(),
-            eventKey.value(),
+            domain.getEventKey().value(),
             domain.getPosition().value(),
             mapNullable(domain.getUserKey(), UserKey::value),
             domain.getName(),
@@ -73,6 +72,7 @@ public class RegistrationJpaEntity {
         return new Registration(
             new RegistrationKey(key),
             new PositionKey(positionKey),
+            new EventKey(eventKey),
             mapNullable(userKey, UserKey::new),
             name,
             note,

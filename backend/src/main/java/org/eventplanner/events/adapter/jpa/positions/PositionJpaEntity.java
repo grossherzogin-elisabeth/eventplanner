@@ -44,7 +44,7 @@ public class PositionJpaEntity implements Serializable {
             position.getName(),
             position.getColor(),
             position.getPriority(),
-            position.getImoListRank()
+            position.getOfficialName()
         );
     }
 

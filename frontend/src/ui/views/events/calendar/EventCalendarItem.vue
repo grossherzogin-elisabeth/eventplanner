@@ -5,21 +5,21 @@
             height: `calc(var(--row-height) * ${props.durationInMonth} - 3px)`,
             top: `calc(var(--row-height) * ${props.start})`,
         }"
-        class="calendar-event-wrapper"
+        class="calendar-eventDetails-wrapper"
     >
-        <div :class="`${$attrs.class}`" class="calendar-event-entry" @click="showDetails()">
-            <div class="calendar-event-entry-bar"></div>
-            <div class="calendar-event-entry-bg">
-                <div class="w-full truncate" :title="props.event.name">
-                    <span v-if="event.state === EventState.Draft" class="opacity-50"> Entwurf: </span>
+        <div :class="`${$attrs.class}`" class="calendar-eventDetails-entry" @click="showDetails()">
+            <div class="calendar-eventDetails-entry-bar"></div>
+            <div class="calendar-eventDetails-entry-bg">
+                <div class="w-full truncate" :title="props.eventDetails.name">
+                    <span v-if="eventDetails.state === EventState.Draft" class="opacity-50"> Entwurf: </span>
                     <span class="">
-                        {{ props.event.name }}
+                        {{ props.eventDetails.name }}
                     </span>
                 </div>
                 <template v-if="props.durationInMonth > 1">
                     <span class="block w-full truncate text-xs font-normal"> {{ props.duration }} Tage </span>
-                    <span v-if="props.event.description" class="block w-full truncate text-xs font-normal">
-                        {{ props.event.description }}
+                    <span v-if="props.eventDetails.description" class="block w-full truncate text-xs font-normal">
+                        {{ props.eventDetails.description }}
                     </span>
                 </template>
             </div>
@@ -38,7 +38,7 @@
                     <div class="-mr-4 mb-4 flex items-center justify-end">
                         <!-- title -->
                         <h2 class="w-0 flex-grow text-lg">
-                            <span>{{ props.event.name }}</span>
+                            <span>{{ props.eventDetails.name }}</span>
                         </h2>
 
                         <button class="icon-button" title="Schließen" @click="showDropdown = false">
@@ -48,24 +48,24 @@
 
                     <!-- state -->
                     <div
-                        v-if="props.event.signedInUserAssignedPosition"
+                        v-if="props.eventDetails.signedInUserAssignedPosition"
                         class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-green-container px-4 py-3 text-ongreen-container"
                     >
                         <i class="fa-solid fa-check w-4" />
                         <p class="text-sm font-bold">
                             Du bist für diese Reise als
-                            {{ positions.get(props.event.signedInUserAssignedPosition).name }}
+                            {{ positions.get(props.eventDetails.signedInUserAssignedPosition).name }}
                             eingeplant
                         </p>
                     </div>
                     <div
-                        v-else-if="props.event.signedInUserWaitingListPosition"
+                        v-else-if="props.eventDetails.signedInUserWaitingListPosition"
                         class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-blue-container px-4 py-3 text-onblue-container"
                     >
                         <i class="fa-solid fa-hourglass-half w-4" />
                         <p class="text-sm font-bold">
                             Du stehst für diese Reise als
-                            {{ positions.get(props.event.signedInUserWaitingListPosition).name }}
+                            {{ positions.get(props.eventDetails.signedInUserWaitingListPosition).name }}
                             auf der Warteliste
                         </p>
                     </div>
@@ -74,29 +74,29 @@
                     <div class="mb-4">
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-calendar-day w-4"></i>
-                            <span>{{ formatDateRange(props.event.start, props.event.end) }}</span>
+                            <span>{{ formatDateRange(props.eventDetails.start, props.eventDetails.end) }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-bell w-4" />
-                            <span>Crew an Board: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
+                            <span>Crew an Board: {{ $d(eventDetails.start, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-bell-slash w-4" />
-                            <span>Crew von Board: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
+                            <span>Crew von Board: {{ $d(eventDetails.end, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
-                        <p v-if="props.event.assignedUserCount" class="items-center space-x-4">
+                        <p v-if="props.eventDetails.assignedUserCount" class="items-center space-x-4">
                             <i class="fa-solid fa-users w-4"></i>
-                            <span>{{ props.event.assignedUserCount }} Crew</span>
+                            <span>{{ props.eventDetails.assignedUserCount }} Crew</span>
                         </p>
-                        <p v-if="props.event.description" class="flex items-baseline space-x-4">
+                        <p v-if="props.eventDetails.description" class="flex items-baseline space-x-4">
                             <i class="fa-solid fa-info-circle mt-0.5 w-4"></i>
-                            <span class="line-clamp-3">{{ props.event.description }}</span>
+                            <span class="line-clamp-3">{{ props.eventDetails.description }}</span>
                         </p>
                     </div>
 
                     <!-- route -->
                     <div class="">
-                        <p v-for="(location, index) in props.event.locations" :key="index" class="flex items-center space-x-4">
+                        <p v-for="(location, index) in props.eventDetails.locations" :key="index" class="flex items-center space-x-4">
                             <i :class="location.icon" class="fa-solid w-4" />
                             <span class="flex-grow">{{ location.name }}</span>
                         </p>
@@ -109,8 +109,8 @@
                     <VInfo
                         v-if="
                             signedInUser.positions.length > 1 &&
-                            !props.event.signedInUserAssignedPosition &&
-                            !props.event.signedInUserWaitingListPosition
+                            !props.eventDetails.signedInUserAssignedPosition &&
+                            !props.eventDetails.signedInUserWaitingListPosition
                         "
                         class="-mx-4 my-4 text-sm"
                     >
@@ -118,7 +118,7 @@
                             Anmeldungen werden mit deiner aktuellen Standardposition
                             <i>{{ positions.get(signedInUser.positions[0]).name }}</i> angelegt.
                         </p>
-                        <button class="" @click="choosePositionAndJoinEvent(props.event)">
+                        <button class="" @click="choosePositionAndJoinEvent(props.eventDetails)">
                             <span class="underline"> Mit einer andere Position anmelden? </span>
                         </button>
                     </VInfo>
@@ -127,7 +127,7 @@
                     <div class="-mx-8 mt-8 flex flex-wrap justify-end px-4">
                         <div class="flex-grow"></div>
                         <button
-                            v-if="props.event.signedInUserAssignedPosition"
+                            v-if="props.eventDetails.signedInUserAssignedPosition"
                             class="btn-ghost-danger text-sm"
                             title="Event absagen"
                             @click="leaveEvent()"
@@ -136,7 +136,7 @@
                             <span class="">Absagen</span>
                         </button>
                         <button
-                            v-else-if="props.event.signedInUserWaitingListPosition && props.event.canSignedInUserLeave"
+                            v-else-if="props.eventDetails.signedInUserWaitingListPosition && props.eventDetails.canSignedInUserLeave"
                             class="btn-ghost-danger text-sm"
                             title="Warteliste verlassen"
                             @click="leaveEvent()"
@@ -145,17 +145,17 @@
                             <span class="">Warteliste verlassen</span>
                         </button>
                         <button
-                            v-else-if="props.event.canSignedInUserJoin && signedInUser.positions.length >= 1"
+                            v-else-if="props.eventDetails.canSignedInUserJoin && signedInUser.positions.length >= 1"
                             class="btn-ghost max-w-80 text-sm"
                             title="Anmelden"
-                            @click="joinEvent(props.event)"
+                            @click="joinEvent(props.eventDetails)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
                             <span class="truncate"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }}</span>
                         </button>
                         <RouterLink
-                            v-if="event.state === EventState.Draft && signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
-                            :to="{ name: Routes.EventEdit, params: { key: props.event.key } }"
+                            v-if="eventDetails.state === EventState.Draft && signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
+                            :to="{ name: Routes.EventEdit, params: { key: props.eventDetails.key } }"
                             class="btn-ghost text-sm"
                             title="Detailansicht"
                         >
@@ -164,7 +164,7 @@
                         </RouterLink>
                         <RouterLink
                             v-else
-                            :to="{ name: Routes.EventDetails, params: { key: props.event.key } }"
+                            :to="{ name: Routes.EventDetails, params: { key: props.eventDetails.key } }"
                             class="btn-ghost text-sm"
                             title="Detailansicht"
                         >
@@ -193,13 +193,13 @@ import { usePositions } from '@/ui/composables/Positions';
 import { Routes } from '@/ui/views/Routes';
 
 interface Props {
-    event: Event;
+    eventDetails: Event;
     duration: number;
     durationInMonth: number;
     start: number;
 }
 
-type Emits = (e: 'update:event', value: Event) => void;
+type Emits = (e: 'update:eventDetails', value: Event) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
@@ -226,7 +226,7 @@ function showDetails(): void {
     if (window.innerWidth < 640) {
         router.push({
             name: Routes.EventDetails,
-            params: { year: props.event.start.getFullYear(), key: props.event.key },
+            params: { year: props.eventDetails.start.getFullYear(), key: props.eventDetails.key },
         });
     } else {
         showDropdown.value = true;
@@ -240,19 +240,19 @@ async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
         // default position might have changed
         signedInUser.value = authUseCase.getSignedInUser();
         const updatedEvent = await eventUseCase.joinEvent(evt, position);
-        emit('update:event', updatedEvent);
+        emit('update:eventDetails', updatedEvent);
     }
 }
 
 async function joinEvent(evt: Event): Promise<void> {
     const updatedEvent = await eventUseCase.joinEvent(evt, signedInUser.value.positions[0]);
-    emit('update:event', updatedEvent);
+    emit('update:eventDetails', updatedEvent);
     showDropdown.value = false;
 }
 
 async function leaveEvent(): Promise<void> {
-    const updatedEvent = await eventUseCase.leaveEvent(props.event);
-    emit('update:event', updatedEvent);
+    const updatedEvent = await eventUseCase.leaveEvent(props.eventDetails);
+    emit('update:eventDetails', updatedEvent);
     showDropdown.value = false;
 }
 
@@ -260,13 +260,13 @@ init();
 </script>
 
 <style scoped>
-.calendar-event-wrapper {
+.calendar-eventDetails-wrapper {
     @apply absolute left-0 right-0 top-px z-10;
     @apply rounded-md bg-surface-container-lowest hover:shadow;
     @apply overflow-hidden;
 }
 
-.calendar-event-entry-bar {
+.calendar-eventDetails-entry-bar {
     @apply w-2 bg-current opacity-10;
     --color-1: rgb(0 0 0 / 0.25);
     --color-2: rgb(255 255 255 / 0.25);
@@ -283,7 +283,7 @@ init();
     background-size: 10px 10px;
 }
 
-.calendar-event-entry-bg {
+.calendar-eventDetails-entry-bg {
     @apply h-full w-0 flex-grow py-1 pl-2 pr-4 sm:px-2;
     @apply text-sm font-semibold;
     --color-1: rgb(0 0 0 / 0.5);
@@ -301,45 +301,45 @@ init();
     background-size: 10px 10px;
 }
 
-.calendar-event-entry {
+.calendar-eventDetails-entry {
     @apply flex h-full w-full items-stretch;
     @apply cursor-pointer;
     @apply bg-surface-container-high;
     @apply font-bold text-onsurface;
 }
 
-.calendar-event-entry.assigned {
+.calendar-eventDetails-entry.assigned {
     @apply bg-primary-container;
     @apply text-onprimary-container;
 }
 
-.calendar-event-entry.waiting-list {
+.calendar-eventDetails-entry.waiting-list {
     @apply bg-primary-container bg-opacity-50;
     @apply text-onsecondary-container;
 }
 
-.calendar-event-entry.waiting-list .calendar-event-entry-bar {
+.calendar-eventDetails-entry.waiting-list .calendar-eventDetails-entry-bar {
     @apply bg-primary-container bg-opacity-50;
     @apply opacity-100;
     background-image: var(--pattern);
 }
 
-.calendar-event-entry.draft {
+.calendar-eventDetails-entry.draft {
     @apply bg-surface-container-low;
 }
 
-.calendar-event-entry.draft .calendar-event-entry-bar {
+.calendar-eventDetails-entry.draft .calendar-eventDetails-entry-bar {
     @apply bg-surface-container-low bg-opacity-50;
     @apply opacity-100;
     background-image: var(--pattern);
 }
 
-.calendar-event-entry.small .calendar-event-entry-bg {
+.calendar-eventDetails-entry.small .calendar-eventDetails-entry-bg {
     @apply flex items-center py-0;
     font-size: 0.6rem;
 }
 
-.calendar-event-entry.in-past {
+.calendar-eventDetails-entry.in-past {
     @apply border-opacity-10 opacity-50 hover:opacity-100;
 }
 </style>

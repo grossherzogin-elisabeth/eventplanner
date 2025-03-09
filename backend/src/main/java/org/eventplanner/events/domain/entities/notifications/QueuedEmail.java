@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.notifications;
 
 import java.time.Instant;
 import java.util.UUID;

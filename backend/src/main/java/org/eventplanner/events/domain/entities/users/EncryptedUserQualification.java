@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.users;
 
 import java.io.Serializable;
 import java.time.Instant;

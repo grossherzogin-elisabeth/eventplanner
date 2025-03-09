@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.users;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @ToString
-public class User {
+public class BasicUser {
     private @NonNull UserKey key;
     private @NonNull String firstName;
     private @NonNull String lastName;

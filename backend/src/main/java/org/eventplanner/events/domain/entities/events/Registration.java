@@ -1,8 +1,9 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.events;
 
 import java.time.Instant;
 import java.util.UUID;
 
+import org.eventplanner.events.domain.values.EventKey;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.eventplanner.events.domain.values.RegistrationKey;
 import org.eventplanner.events.domain.values.UserKey;
@@ -27,19 +28,12 @@ import lombok.With;
 public class Registration {
     private @NonNull RegistrationKey key;
     private @NonNull PositionKey position;
+    private @NonNull EventKey eventKey;
     private @Nullable UserKey userKey;
     private @Nullable String name;
     private @Nullable String note;
     private @Nullable String accessKey;
     private @Nullable Instant confirmedAt;
-
-    public static Registration ofUser(@NonNull UserKey user, @NonNull PositionKey position) {
-        return new Registration(new RegistrationKey(), position, user, null, null, generateAccessKey(), null);
-    }
-
-    public static Registration ofPerson(@NonNull String name, @NonNull PositionKey position) {
-        return new Registration(new RegistrationKey(), position, null, name, null, generateAccessKey(), null);
-    }
 
     public static String generateAccessKey() {
         return UUID.randomUUID().toString();

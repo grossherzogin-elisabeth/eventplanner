@@ -6,9 +6,9 @@ import java.time.Instant;
 import java.util.List;
 
 import org.eventplanner.common.EncryptedString;
-import org.eventplanner.events.domain.entities.EncryptedEmergencyContact;
-import org.eventplanner.events.domain.entities.EncryptedUserDetails;
-import org.eventplanner.events.domain.entities.EncryptedUserQualification;
+import org.eventplanner.events.domain.entities.users.EncryptedUserEmergencyContact;
+import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
+import org.eventplanner.events.domain.entities.users.EncryptedUserQualification;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.EncryptedAddress;
 import org.eventplanner.events.domain.values.UserKey;
@@ -216,7 +216,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         }
     }
 
-    private static String serializeEmergencyContact(EncryptedEmergencyContact address) {
+    private static String serializeEmergencyContact(EncryptedUserEmergencyContact address) {
         try {
             var entity = EncryptedEmergencyContactJsonEntity.fromDomain(address);
             return objectMapper.writeValueAsString(entity);
@@ -225,7 +225,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         }
     }
 
-    private static EncryptedEmergencyContact deserializeEmergencyContact(String json) {
+    private static EncryptedUserEmergencyContact deserializeEmergencyContact(String json) {
         try {
             var entity = objectMapper.readValue(json, EncryptedEmergencyContactJsonEntity.class);
             return entity.toDomain();
