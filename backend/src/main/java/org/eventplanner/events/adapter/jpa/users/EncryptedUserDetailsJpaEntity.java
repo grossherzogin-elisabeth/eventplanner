@@ -192,21 +192,25 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
 
     public EncryptedUserDetails toDomain() {
         var roles = new Encrypted[] {};
-        try {
-            roles = objectMapper.readValue(rolesRaw, Encrypted[].class);
-        } catch (JsonProcessingException e) {
-            log.error("Failed to deserialize roles for user {}", key, e);
+        if (rolesRaw != null && rolesRaw.startsWith("[") && rolesRaw.endsWith("]")) {
+            try {
+                roles = objectMapper.readValue(rolesRaw, Encrypted[].class);
+            } catch (JsonProcessingException e) {
+                log.error("Failed to deserialize roles for user {}", key, e);
+            }
         }
 
         var qualifications = new EncryptedUserQualification[] {};
-        try {
-            qualifications = objectMapper.readValue(qualificationsRaw, EncryptedUserQualification[].class);
-        } catch (JsonProcessingException e) {
-            log.error("Failed to deserialize qualifications for user {}", key, e);
+        if (qualificationsRaw != null && qualificationsRaw.startsWith("[") && qualificationsRaw.endsWith("]")) {
+            try {
+                qualifications = objectMapper.readValue(qualificationsRaw, EncryptedUserQualification[].class);
+            } catch (JsonProcessingException e) {
+                log.error("Failed to deserialize qualifications for user {}", key, e);
+            }
         }
 
         EncryptedEmergencyContact emergencyContact = null;
-        if (emergencyContactRaw != null) {
+        if (emergencyContactRaw != null && emergencyContactRaw.startsWith("{") && emergencyContactRaw.endsWith("}")) {
             try {
                 emergencyContact = objectMapper.readValue(emergencyContactRaw, EncryptedEmergencyContact.class);
             } catch (JsonProcessingException e) {
@@ -215,7 +219,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         }
 
         EncryptedAddress address = null;
-        if (addressRaw != null) {
+        if (addressRaw != null && addressRaw.startsWith("{") && addressRaw.endsWith("}")) {
             try {
                 address = objectMapper.readValue(addressRaw, EncryptedAddress.class);
             } catch (JsonProcessingException e) {

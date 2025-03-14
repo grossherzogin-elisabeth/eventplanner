@@ -1,5 +1,6 @@
 package org.eventplanner.events.application.services;
 
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.AlgorithmParameters;
 import java.security.spec.KeySpec;
@@ -86,12 +87,23 @@ public class EncryptionService {
         }
     }
 
-    public <T> @NonNull Encrypted<T> encrypt(@Nullable final T value) {
+    public <T extends Serializable> @Nullable Encrypted<T> encrypt(@Nullable final T value) {
         if (value == null) {
             return null;
         }
         try {
-            var json = objectMapper.convertValue(value, String.class);
+            String json;
+            if (value.getClass().isEnum()
+                || value instanceof Short
+                || value instanceof Integer
+                || value instanceof Long
+                || value instanceof Float
+                || value instanceof Double
+                || value instanceof String) {
+                json = objectMapper.convertValue(value, String.class);
+            } else {
+                json = objectMapper.writeValueAsString(value);
+            }
             return new Encrypted<>(encryptWithSecretKey(json, secretKey));
         } catch (Exception e) {
             throw new RuntimeException(e);

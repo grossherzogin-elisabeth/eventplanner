@@ -33,6 +33,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import lombok.extern.slf4j.Slf4j;
 
@@ -171,23 +172,23 @@ public class UserService {
             user.getLastLoginAt(),
             encryptionService.encrypt(user.getGender()),
             encryptionService.encrypt(user.getTitle()),
-            encryptionService.encrypt(user.getFirstName()),
+            requireNonNull(encryptionService.encrypt(user.getFirstName())),
             encryptionService.encrypt(user.getNickName()),
             encryptionService.encrypt(user.getSecondName()),
-            encryptionService.encrypt(user.getLastName()),
+            requireNonNull(encryptionService.encrypt(user.getLastName())),
             user.getRoles().stream().map(encryptionService::encrypt).toList(),
             user.getQualifications().stream()
                 .map(it -> new EncryptedUserQualification(
-                    encryptionService.encrypt(it.getQualificationKey()),
+                    requireNonNull(encryptionService.encrypt(it.getQualificationKey())),
                     encryptionService.encrypt(it.getExpiresAt())
                 ))
                 .toList(),
             ofNullable(user.getAddress())
                 .map(it -> new EncryptedAddress(
-                    encryptionService.encrypt(it.addressLine1()),
+                    requireNonNull(encryptionService.encrypt(it.addressLine1())),
                     encryptionService.encrypt(it.addressLine2()),
-                    encryptionService.encrypt(it.town()),
-                    encryptionService.encrypt(it.zipCode()),
+                    requireNonNull(encryptionService.encrypt(it.town())),
+                    requireNonNull(encryptionService.encrypt(it.zipCode())),
                     encryptionService.encrypt(it.country())
                 ))
                 .orElse(null),

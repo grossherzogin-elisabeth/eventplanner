@@ -1,24 +1,23 @@
 package org.eventplanner.events.application.services;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.eventplanner.events.domain.entities.Qualification;
 import org.eventplanner.events.domain.values.QualificationKey;
+import org.eventplanner.events.domain.values.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
 
@@ -87,18 +86,21 @@ public class EncryptionServiceTest {
     }
 
     @Test
-    void shouldEncryptAndDecryptNull() {
+    void shouldKeepNullValues() {
         var encrypted = testee.encrypt(null);
-        assertThat(encrypted.value()).isNotNull();
-        assertThat(testee.decrypt(encrypted, String.class)).isNull();
-        assertThat(testee.decrypt(encrypted, Long.class)).isNull();
-        assertThat(testee.decrypt(encrypted, Float.class)).isNull();
-        assertThat(testee.decrypt(encrypted, TestRecord.class)).isNull();
+        assertThat(encrypted).isNull();
+        assertThat(testee.decrypt(null, String.class)).isNull();
+        assertThat(testee.decrypt(null, Long.class)).isNull();
+        assertThat(testee.decrypt(null, Float.class)).isNull();
+        assertThat(testee.decrypt(null, TestRecord.class)).isNull();
     }
 
     @Test
     void shouldEncryptAndDecryptLists() {
-        var value = List.of("Teststring", "Teststring2", "Teststring3");
+        var value = new ArrayList<String>();
+        value.add("Teststring");
+        value.add("Teststring2");
+        value.add("Teststring3");
         var encrypted = testee.encrypt(value);
         assertThat(encrypted.value()).isNotNull().isNotEqualTo(value);
         var decrypted = testee.decrypt(encrypted, List.class);
@@ -107,7 +109,10 @@ public class EncryptionServiceTest {
 
     @Test
     void shouldEncryptAndDecryptMaps() {
-        var value = Map.of("a", 1, "b", 2, "c", 3);
+        var value = new HashMap<String, Integer>();
+        value.put("a", 1);
+        value.put("b", 2);
+        value.put("c", 3);
         var encrypted = testee.encrypt(value);
         assertThat(encrypted.value()).isNotNull().isNotEqualTo(value);
         var decrypted = testee.decrypt(encrypted, Map.class);
@@ -124,11 +129,29 @@ public class EncryptionServiceTest {
     }
 
     @Test
+    void shouldEncryptAndDecryptInstants() {
+        var value = Instant.now();
+        var encrypted = testee.encrypt(value);
+        assertThat(encrypted.value()).isNotNull().isNotEqualTo(value);
+        var decrypted = testee.decrypt(encrypted, Instant.class);
+        assertThat(decrypted).isNotNull().isEqualTo(value);
+    }
+
+    @Test
     void shouldEncryptAndDecryptLocales() {
         var value = Locale.GERMAN;
         var encrypted = testee.encrypt(value);
         assertThat(encrypted.value()).isNotNull().isNotEqualTo(value);
         var decrypted = testee.decrypt(encrypted, Locale.class);
+        assertThat(decrypted).isNotNull().isEqualTo(value);
+    }
+
+    @Test
+    void shouldEncryptAndDecryptEnums() {
+        var value = Role.ADMIN;
+        var encrypted = testee.encrypt(value);
+        assertThat(encrypted.value()).isNotNull().isNotEqualTo(value);
+        var decrypted = testee.decrypt(encrypted, Role.class);
         assertThat(decrypted).isNotNull().isEqualTo(value);
     }
 
@@ -163,16 +186,6 @@ public class EncryptionServiceTest {
         var encryptedA = testee.encrypt(value);
         var encryptedB = testee.encrypt(value);
         assertThat(encryptedA.value()).isNotEqualTo(encryptedB.value());
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @EqualsAndHashCode
-    public class TestObject {
-        String string;
-        Integer integer;
     }
 
     public record TestRecord(String string, Integer integer) implements Serializable {

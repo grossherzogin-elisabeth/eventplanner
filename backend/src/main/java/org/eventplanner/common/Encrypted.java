@@ -7,12 +7,12 @@ import org.springframework.lang.NonNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public record Encrypted<T>(
+public record Encrypted<T extends Serializable>(
     @NonNull String value
 ) implements Serializable {
 
     @JsonCreator
-    public static <T> Encrypted<T> fromString(@NonNull String value) {
+    public static <T extends Serializable> Encrypted<T> fromString(@NonNull String value) {
         return new Encrypted<>(value);
     }
 
