@@ -1,20 +1,19 @@
 package org.eventplanner.events.adapter.jpa.users;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.List;
+import java.util.Arrays;
 
-import org.eventplanner.common.EncryptedString;
+import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.domain.entities.EncryptedEmergencyContact;
 import org.eventplanner.events.domain.entities.EncryptedUserDetails;
 import org.eventplanner.events.domain.entities.EncryptedUserQualification;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.EncryptedAddress;
+import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +23,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Table(name = "users")
 @Getter
@@ -124,6 +125,38 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     private String diet;
 
     public static EncryptedUserDetailsJpaEntity fromDomain(EncryptedUserDetails domain) {
+        String roles = "[]";
+        try {
+            roles = objectMapper.writeValueAsString(domain.getRoles());
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize roles for user {}", domain.getKey(), e);
+        }
+
+        String qualifications = "[]";
+        try {
+            qualifications = objectMapper.writeValueAsString(domain.getQualifications());
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize qualifications for user {}", domain.getKey(), e);
+        }
+
+        String emergencyContact = "{}";
+        if (domain.getEmergencyContact() != null) {
+            try {
+                emergencyContact = objectMapper.writeValueAsString(domain.getEmergencyContact());
+            } catch (JsonProcessingException e) {
+                log.error("Failed to serialize emergency contact for user {}", domain.getKey(), e);
+            }
+        }
+
+        String address = "{}";
+        if (domain.getAddress() != null) {
+            try {
+                address = objectMapper.writeValueAsString(domain.getAddress());
+            } catch (JsonProcessingException e) {
+                log.error("Failed to serialize address for user {}", domain.getKey(), e);
+            }
+        }
+
         return new EncryptedUserDetailsJpaEntity(
             domain.getKey().value(),
             domain.getAuthKey() != null ? domain.getAuthKey().value() : null,
@@ -137,9 +170,9 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             domain.getNickName() != null ? domain.getNickName().value() : null,
             domain.getSecondName() != null ? domain.getSecondName().value() : null,
             domain.getLastName().value(),
-            serializeEncryptedStringList(domain.getRoles()),
-            serializeQualifications(domain.getQualifications()),
-            domain.getAddress() != null ? serializeAddress(domain.getAddress()) : null,
+            roles,
+            qualifications,
+            address,
             domain.getEmail() != null ? domain.getEmail().value() : null,
             domain.getPhone() != null ? domain.getPhone().value() : null,
             domain.getPhoneWork() != null ? domain.getPhoneWork().value() : null,
@@ -149,7 +182,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             domain.getPassNr() != null ? domain.getPassNr().value() : null,
             domain.getComment() != null ? domain.getComment().value() : null,
             domain.getNationality() != null ? domain.getNationality().value() : null,
-            domain.getEmergencyContact() != null ? serializeEmergencyContact(domain.getEmergencyContact()) : null,
+            emergencyContact,
             domain.getDiseases() != null ? domain.getDiseases().value() : null,
             domain.getIntolerances() != null ? domain.getIntolerances().value() : null,
             domain.getMedication() != null ? domain.getMedication().value() : null,
@@ -157,84 +190,43 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         );
     }
 
-    private static String serializeEncryptedStringList(List<EncryptedString> list) {
-        try {
-            return objectMapper.writeValueAsString(list.stream().map(EncryptedString::value).toList());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing list", e);
-        }
-    }
-
-    private static List<EncryptedString> deserializeEncryptedStringList(String json) {
-        try {
-            List<String> list = objectMapper.readValue(
-                json, new TypeReference<>() {
-                }
-            );
-            return list.stream().map(EncryptedString::new).toList();
-        } catch (IOException e) {
-            throw new RuntimeException("Error deserializing list", e);
-        }
-    }
-
-    private static String serializeQualifications(List<EncryptedUserQualification> qualifications) {
-        try {
-            var entities = qualifications.stream().map(EncryptedUserQualificationsJsonEntity::fromDomain).toList();
-            return objectMapper.writeValueAsString(entities);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing qualifications", e);
-        }
-    }
-
-    private static List<EncryptedUserQualification> deserializeQualifications(String json) {
-        try {
-            var entities = objectMapper.readValue(
-                json, new TypeReference<List<EncryptedUserQualificationsJsonEntity>>() {
-                }
-            );
-            return entities.stream().map(EncryptedUserQualificationsJsonEntity::toDomain).toList();
-        } catch (IOException e) {
-            throw new RuntimeException("Error deserializing qualifications", e);
-        }
-    }
-
-    private static String serializeAddress(EncryptedAddress address) {
-        try {
-            var entity = EncryptedAddressJsonEntity.fromDomain(address);
-            return objectMapper.writeValueAsString(entity);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing address", e);
-        }
-    }
-
-    private static EncryptedAddress deserializeAddress(String json) {
-        try {
-            var entity = objectMapper.readValue(json, EncryptedAddressJsonEntity.class);
-            return entity.toDomain();
-        } catch (IOException e) {
-            throw new RuntimeException("Error deserializing address", e);
-        }
-    }
-
-    private static String serializeEmergencyContact(EncryptedEmergencyContact address) {
-        try {
-            var entity = EncryptedEmergencyContactJsonEntity.fromDomain(address);
-            return objectMapper.writeValueAsString(entity);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing address", e);
-        }
-    }
-
-    private static EncryptedEmergencyContact deserializeEmergencyContact(String json) {
-        try {
-            var entity = objectMapper.readValue(json, EncryptedEmergencyContactJsonEntity.class);
-            return entity.toDomain();
-        } catch (IOException e) {
-            throw new RuntimeException("Error deserializing address", e);
-        }
-    }
-
     public EncryptedUserDetails toDomain() {
+        var roles = new Encrypted[] {};
+        if (rolesRaw != null && rolesRaw.startsWith("[") && rolesRaw.endsWith("]")) {
+            try {
+                roles = objectMapper.readValue(rolesRaw, Encrypted[].class);
+            } catch (JsonProcessingException e) {
+                log.error("Failed to deserialize roles for user {}", key, e);
+            }
+        }
+
+        var qualifications = new EncryptedUserQualification[] {};
+        if (qualificationsRaw != null && qualificationsRaw.startsWith("[") && qualificationsRaw.endsWith("]")) {
+            try {
+                qualifications = objectMapper.readValue(qualificationsRaw, EncryptedUserQualification[].class);
+            } catch (JsonProcessingException e) {
+                log.error("Failed to deserialize qualifications for user {}", key, e);
+            }
+        }
+
+        EncryptedEmergencyContact emergencyContact = null;
+        if (emergencyContactRaw != null && emergencyContactRaw.startsWith("{") && emergencyContactRaw.endsWith("}")) {
+            try {
+                emergencyContact = objectMapper.readValue(emergencyContactRaw, EncryptedEmergencyContact.class);
+            } catch (JsonProcessingException e) {
+                log.error("Failed to deserialize emergency contact for user {}", key, e);
+            }
+        }
+
+        EncryptedAddress address = null;
+        if (addressRaw != null && addressRaw.startsWith("{") && addressRaw.endsWith("}")) {
+            try {
+                address = objectMapper.readValue(addressRaw, EncryptedAddress.class);
+            } catch (JsonProcessingException e) {
+                log.error("Failed to deserialize address for user {}", key, e);
+            }
+        }
+
         return new EncryptedUserDetails(
             new UserKey(key),
             authKey != null ? new AuthKey(authKey) : null,
@@ -242,29 +234,29 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             updatedAt != null ? Instant.parse(updatedAt) : Instant.now(),
             verifiedAt != null ? Instant.parse(verifiedAt) : null,
             lastLoginAt != null ? Instant.parse(lastLoginAt) : null,
-            gender != null ? new EncryptedString(gender) : null,
-            title != null ? new EncryptedString(title) : null,
-            new EncryptedString(firstName),
-            nickName != null ? new EncryptedString(nickName) : null,
-            secondName != null ? new EncryptedString(secondName) : null,
-            new EncryptedString(lastName),
-            deserializeEncryptedStringList(rolesRaw),
-            deserializeQualifications(qualificationsRaw),
-            addressRaw != null ? deserializeAddress(addressRaw) : null,
-            email != null ? new EncryptedString(email) : null,
-            phone != null ? new EncryptedString(phone) : null,
-            phoneWork != null ? new EncryptedString(phoneWork) : null,
-            mobile != null ? new EncryptedString(mobile) : null,
-            dateOfBirth != null ? new EncryptedString(dateOfBirth) : null,
-            placeOfBirth != null ? new EncryptedString(placeOfBirth) : null,
-            passNr != null ? new EncryptedString(passNr) : null,
-            comment != null ? new EncryptedString(comment) : null,
-            nationality != null ? new EncryptedString(nationality) : null,
-            emergencyContactRaw != null ? deserializeEmergencyContact(emergencyContactRaw) : null,
-            diseases != null ? new EncryptedString(diseases) : null,
-            intolerances != null ? new EncryptedString(intolerances) : null,
-            medication != null ? new EncryptedString(medication) : null,
-            diet != null ? new EncryptedString(diet) : null
+            gender != null ? new Encrypted<>(gender) : null,
+            title != null ? new Encrypted<>(title) : null,
+            new Encrypted<>(firstName),
+            nickName != null ? new Encrypted<>(nickName) : null,
+            secondName != null ? new Encrypted<>(secondName) : null,
+            new Encrypted<>(lastName),
+            Arrays.stream(roles).map(it -> (Encrypted<Role>) it).toList(),
+            Arrays.stream(qualifications).toList(),
+            address,
+            email != null ? new Encrypted<>(email) : null,
+            phone != null ? new Encrypted<>(phone) : null,
+            phoneWork != null ? new Encrypted<>(phoneWork) : null,
+            mobile != null ? new Encrypted<>(mobile) : null,
+            dateOfBirth != null ? new Encrypted<>(dateOfBirth) : null,
+            placeOfBirth != null ? new Encrypted<>(placeOfBirth) : null,
+            passNr != null ? new Encrypted<>(passNr) : null,
+            comment != null ? new Encrypted<>(comment) : null,
+            nationality != null ? new Encrypted<>(nationality) : null,
+            emergencyContact,
+            diseases != null ? new Encrypted<>(diseases) : null,
+            intolerances != null ? new Encrypted<>(intolerances) : null,
+            medication != null ? new Encrypted<>(medication) : null,
+            diet != null ? new Encrypted<>(diet) : null
         );
     }
 }

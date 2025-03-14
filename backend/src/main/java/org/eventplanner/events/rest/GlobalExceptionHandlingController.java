@@ -48,7 +48,7 @@ public class GlobalExceptionHandlingController {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Void> handleIllegalArgumentException(HttpServletRequest request) {
+    public ResponseEntity<Void> handleIllegalArgumentException(HttpServletRequest request, Exception e) {
         log.warn(
             "Received invalid request parameters at {} {}",
             request.getMethod(),

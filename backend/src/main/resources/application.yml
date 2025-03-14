@@ -36,6 +36,7 @@ security:
 
 data:
   directory: ${DATA_DIRECTORY:data}
+  encryption-salt: ${DATA_ENCRYPTION_SALT:99066439-9e45-48e7-bb3d-7abff0e9cb9c}
   encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
   db-url: jdbc:sqlite:${data.directory}/eventplanner.db
 
