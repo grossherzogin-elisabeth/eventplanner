@@ -2,7 +2,7 @@ package org.eventplanner.events.adapter.jpa.users;
 
 import java.io.Serializable;
 
-import org.eventplanner.common.EncryptedString;
+import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.domain.entities.EncryptedEmergencyContact;
 import org.springframework.lang.NonNull;
 
@@ -19,8 +19,8 @@ public record EncryptedEmergencyContactJsonEntity(
 
     public EncryptedEmergencyContact toDomain() {
         return new EncryptedEmergencyContact(
-            new EncryptedString(name),
-            new EncryptedString(phone)
+            new Encrypted<>(name),
+            new Encrypted<>(phone)
         );
     }
 }

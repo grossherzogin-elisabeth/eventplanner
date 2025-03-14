@@ -1,13 +1,13 @@
 package org.eventplanner.events.adapter.jpa.users;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.io.Serializable;
 
-import org.eventplanner.common.EncryptedString;
+import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.domain.entities.EncryptedUserQualification;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record EncryptedUserQualificationsJsonEntity(
     @NonNull String qualificationKey,
@@ -18,14 +18,14 @@ public record EncryptedUserQualificationsJsonEntity(
     ) {
         return new EncryptedUserQualificationsJsonEntity(
             domain.getQualificationKey().value(),
-            mapNullable(domain.getExpiresAt(), EncryptedString::value)
+            mapNullable(domain.getExpiresAt(), Encrypted::value)
         );
     }
 
     public EncryptedUserQualification toDomain() {
         return new EncryptedUserQualification(
-            new EncryptedString(qualificationKey),
-            mapNullable(expiresAt, EncryptedString::new)
+            new Encrypted<>(qualificationKey),
+            mapNullable(expiresAt, Encrypted::new)
         );
     }
 }

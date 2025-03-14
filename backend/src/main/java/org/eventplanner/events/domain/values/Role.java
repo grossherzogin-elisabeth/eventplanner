@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -26,7 +27,11 @@ public enum Role {
     }
 
     @JsonCreator
-    public static Optional<Role> fromString(String value) {
+    public static @NonNull Role parse(@NonNull String value) {
+        return fromString(value).orElseThrow(() -> new IllegalArgumentException("Cannot parse unknown role " + value));
+    }
+
+    public static @NonNull Optional<Role> fromString(@Nullable String value) {
         return Arrays.stream(values())
             .filter(role -> role.value().equals(value))
             .findFirst();

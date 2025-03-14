@@ -1,19 +1,10 @@
 package org.eventplanner.events.application.services;
 
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-import static org.eventplanner.common.ObjectUtils.streamNullable;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eventplanner.common.Crypto;
-import org.eventplanner.common.EncryptedString;
 import org.eventplanner.events.domain.entities.EmergencyContact;
 import org.eventplanner.events.domain.entities.EncryptedEmergencyContact;
 import org.eventplanner.events.domain.entities.EncryptedUserDetails;
@@ -25,42 +16,16 @@ import org.eventplanner.events.domain.values.Diet;
 import org.eventplanner.events.domain.values.EncryptedAddress;
 import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Role;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import static java.util.Optional.ofNullable;
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserEncryptionService {
-    private final Crypto crypto;
-
-    public UserEncryptionService(
-        @Value("${data.encryption-password}") String password
-    ) {
-        this.crypto = new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password);
-    }
-
-    public @NonNull EncryptedString encrypt(@NonNull String value) {
-        return crypto.encrypt(value);
-    }
-
-    public @NonNull String decrypt(@NonNull EncryptedString value) {
-        return crypto.decrypt(value);
-    }
-
-    public @Nullable EncryptedString encryptNullable(@Nullable String value) {
-        if (value == null) {
-            return null;
-        }
-        return crypto.encrypt(value);
-    }
-
-    public @Nullable String decryptNullable(@Nullable EncryptedString value) {
-        if (value == null) {
-            return null;
-        }
-        return crypto.decrypt(value);
-    }
+    private final EncryptionService encryptionService;
 
     public @NonNull EncryptedUserDetails encrypt(@NonNull UserDetails user) {
         return new EncryptedUserDetails(
@@ -70,43 +35,47 @@ public class UserEncryptionService {
             user.getUpdatedAt(),
             user.getVerifiedAt(),
             user.getLastLoginAt(),
-            encryptNullable(user.getGender()),
-            encryptNullable(user.getTitle()),
-            encrypt(user.getFirstName()),
-            encryptNullable(user.getNickName()),
-            encryptNullable(user.getSecondName()),
-            encrypt(user.getLastName()),
-            streamNullable(user.getRoles(), Stream.empty())
-                .map(Role::value)
-                .map(crypto::encrypt)
-                .collect(Collectors.toCollection(LinkedList::new)),
-            user.getQualifications()
-                .stream()
-                .map(this::encrypt)
-                .collect(Collectors.toCollection(LinkedList::new)),
-            mapNullable(user.getAddress(), this::encrypt),
-            encryptNullable(user.getEmail()),
-            encryptNullable(user.getPhone()),
-            encryptNullable(user.getPhoneWork()),
-            encryptNullable(user.getMobile()),
-            ofNullable(user.getDateOfBirth())
-                .map(LocalDate::toString)
-                .map(this::encrypt)
+            encryptionService.encrypt(user.getGender()),
+            encryptionService.encrypt(user.getTitle()),
+            encryptionService.encrypt(user.getFirstName()),
+            encryptionService.encrypt(user.getNickName()),
+            encryptionService.encrypt(user.getSecondName()),
+            encryptionService.encrypt(user.getLastName()),
+            user.getRoles().stream().map(encryptionService::encrypt).toList(),
+            user.getQualifications().stream()
+                .map(it -> new EncryptedUserQualification(
+                    encryptionService.encrypt(it.getQualificationKey()),
+                    encryptionService.encrypt(it.getExpiresAt())
+                ))
+                .toList(),
+            ofNullable(user.getAddress())
+                .map(it -> new EncryptedAddress(
+                    encryptionService.encrypt(it.addressLine1()),
+                    encryptionService.encrypt(it.addressLine2()),
+                    encryptionService.encrypt(it.town()),
+                    encryptionService.encrypt(it.zipCode()),
+                    encryptionService.encrypt(it.country())
+                ))
                 .orElse(null),
-            encryptNullable(user.getPlaceOfBirth()),
-            encryptNullable(user.getPassNr()),
-            encryptNullable(user.getComment()),
-            encryptNullable(user.getNationality()),
+            encryptionService.encrypt(user.getEmail()),
+            encryptionService.encrypt(user.getPhone()),
+            encryptionService.encrypt(user.getPhoneWork()),
+            encryptionService.encrypt(user.getMobile()),
+            encryptionService.encrypt(user.getDateOfBirth()),
+            encryptionService.encrypt(user.getPlaceOfBirth()),
+            encryptionService.encrypt(user.getPassNr()),
+            encryptionService.encrypt(user.getComment()),
+            encryptionService.encrypt(user.getNationality()),
             ofNullable(user.getEmergencyContact())
-                .map(this::encrypt)
+                .map(it -> new EncryptedEmergencyContact(
+                    encryptionService.encrypt(it.getName()),
+                    encryptionService.encrypt(it.getPhone())
+                ))
                 .orElse(null),
-            encryptNullable(user.getDiseases()),
-            encryptNullable(user.getIntolerances()),
-            encryptNullable(user.getMedication()),
-            ofNullable(user.getDiet())
-                .map(Diet::value)
-                .map(this::encrypt)
-                .orElse(null)
+            encryptionService.encrypt(user.getDiseases()),
+            encryptionService.encrypt(user.getIntolerances()),
+            encryptionService.encrypt(user.getMedication()),
+            encryptionService.encrypt(user.getDiet())
         );
     }
 
@@ -118,100 +87,52 @@ public class UserEncryptionService {
             user.getUpdatedAt(),
             user.getVerifiedAt(),
             user.getLastLoginAt(),
-            decryptNullable(user.getGender()),
-            decryptNullable(user.getTitle()),
-            decrypt(user.getFirstName()),
-            decryptNullable(user.getNickName()),
-            decryptNullable(user.getSecondName()),
-            decrypt(user.getLastName()),
+            encryptionService.decrypt(user.getGender()),
+            encryptionService.decrypt(user.getTitle()),
+            ofNullable(encryptionService.decrypt(user.getFirstName())).orElse(""),
+            encryptionService.decrypt(user.getNickName()),
+            encryptionService.decrypt(user.getSecondName()),
+            ofNullable(encryptionService.decrypt(user.getLastName())).orElse(""),
             Collections.emptyList(),
-            streamNullable(user.getRoles(), Stream.empty())
-                .map(this::decrypt)
-                .map(Role::fromString)
-                .flatMap(Optional::stream)
-                .collect(Collectors.toCollection(LinkedList::new)),
-            user.getQualifications()
-                .stream()
-                .map(this::decrypt)
-                .collect(Collectors.toCollection(LinkedList::new)),
-            mapNullable(user.getAddress(), this::decrypt),
-            decryptNullable(user.getEmail()),
-            decryptNullable(user.getPhone()),
-            decryptNullable(user.getPhoneWork()),
-            decryptNullable(user.getMobile()),
-            ofNullable(user.getDateOfBirth())
-                .map(this::decrypt)
-                .map(LocalDate::parse)
+            user.getRoles().stream().map(r -> encryptionService.decrypt(r, Role.class)).toList(),
+            user.getQualifications().stream()
+                .flatMap((it) -> {
+                    var key = encryptionService.decrypt(it.getQualificationKey(), QualificationKey.class);
+                    if (key == null) {
+                        return Stream.empty();
+                    }
+                    var expiresAt = encryptionService.decrypt(it.getExpiresAt(), Instant.class);
+                    return Stream.of(new UserQualification(key, expiresAt, expiresAt != null));
+                })
+                .toList(),
+            ofNullable(user.getAddress())
+                .map(it -> new Address(
+                    ofNullable(encryptionService.decrypt(it.addressLine1())).orElse(""),
+                    encryptionService.decrypt(it.addressLine2()),
+                    ofNullable(encryptionService.decrypt(it.town())).orElse(""),
+                    ofNullable(encryptionService.decrypt(it.zipCode())).orElse(""),
+                    encryptionService.decrypt(it.country())
+                ))
                 .orElse(null),
-            decryptNullable(user.getPlaceOfBirth()),
-            decryptNullable(user.getPassNr()),
-            decryptNullable(user.getComment()),
-            decryptNullable(user.getNationality()),
+            encryptionService.decrypt(user.getEmail()),
+            encryptionService.decrypt(user.getPhone()),
+            encryptionService.decrypt(user.getPhoneWork()),
+            encryptionService.decrypt(user.getMobile()),
+            encryptionService.decrypt(user.getDateOfBirth(), LocalDate.class),
+            encryptionService.decrypt(user.getPlaceOfBirth()),
+            encryptionService.decrypt(user.getPassNr()),
+            encryptionService.decrypt(user.getComment()),
+            encryptionService.decrypt(user.getNationality()),
             ofNullable(user.getEmergencyContact())
-                .map(this::decrypt)
+                .map(it -> new EmergencyContact(
+                    ofNullable(encryptionService.decrypt(it.getName())).orElse(""),
+                    ofNullable(encryptionService.decrypt(it.getPhone())).orElse("")
+                ))
                 .orElse(null),
-            decryptNullable(user.getDiseases()),
-            decryptNullable(user.getIntolerances()),
-            decryptNullable(user.getMedication()),
-            ofNullable(user.getDiet())
-                .map(this::decrypt)
-                .flatMap(Diet::fromString)
-                .orElse(null)
-        );
-    }
-
-    public @NonNull EncryptedAddress encrypt(@NonNull Address value) {
-        return new EncryptedAddress(
-            encrypt(value.addressLine1()),
-            encryptNullable(value.addressLine2()),
-            encrypt(value.town()),
-            encrypt(value.zipCode()),
-            encryptNullable(value.country())
-        );
-    }
-
-    public @NonNull Address decrypt(@NonNull EncryptedAddress value) {
-        return new Address(
-            decrypt(value.addressLine1()),
-            decryptNullable(value.addressLine2()),
-            decrypt(value.town()),
-            decrypt(value.zipCode()),
-            decryptNullable(value.country())
-        );
-    }
-
-    public @NonNull EncryptedUserQualification encrypt(@NonNull UserQualification value) {
-        return new EncryptedUserQualification(
-            encrypt(value.getQualificationKey().value()),
-            Optional.ofNullable(value.getExpiresAt())
-                .map(Instant::toString)
-                .map(this::encrypt)
-                .orElse(null)
-        );
-    }
-
-    public @NonNull UserQualification decrypt(@NonNull EncryptedUserQualification value) {
-        return new UserQualification(
-            new QualificationKey(decrypt(value.getQualificationKey())),
-            Optional.ofNullable(value.getExpiresAt())
-                .map(this::decrypt)
-                .map(Instant::parse)
-                .orElse(null),
-            value.getExpiresAt() != null
-        );
-    }
-
-    public @NonNull EncryptedEmergencyContact encrypt(@NonNull EmergencyContact value) {
-        return new EncryptedEmergencyContact(
-            encrypt(value.getName()),
-            encrypt(value.getPhone())
-        );
-    }
-
-    public @NonNull EmergencyContact decrypt(@NonNull EncryptedEmergencyContact value) {
-        return new EmergencyContact(
-            decrypt(value.getName()),
-            decrypt(value.getPhone())
+            encryptionService.decrypt(user.getDiseases()),
+            encryptionService.decrypt(user.getIntolerances()),
+            encryptionService.decrypt(user.getMedication()),
+            encryptionService.decrypt(user.getDiet(), Diet.class)
         );
     }
 }
