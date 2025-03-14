@@ -5,7 +5,7 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 import java.io.Serializable;
 
 import org.eventplanner.common.EncryptedString;
-import org.eventplanner.events.domain.entities.EncryptedUserQualification;
+import org.eventplanner.events.domain.entities.users.EncryptedUserQualification;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

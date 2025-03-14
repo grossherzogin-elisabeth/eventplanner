@@ -1,6 +1,6 @@
 package org.eventplanner.events.application.services;
 
-import org.eventplanner.events.domain.values.Notification;
+import org.eventplanner.events.domain.entities.notifications.Notification;
 import org.springframework.lang.NonNull;
 
 public interface NotificationDispatcher {

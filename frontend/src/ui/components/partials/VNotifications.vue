@@ -1,6 +1,6 @@
 <template>
     <div
-        class="pointer-events-none fixed left-0 right-0 top-12 z-30 flex w-full flex-col items-stretch px-4 py-2 sm:left-auto sm:w-96 xl:right-16 xl:top-2"
+        class="pointer-eventDetails-none fixed left-0 right-0 top-12 z-30 flex w-full flex-col items-stretch px-4 py-2 sm:left-auto sm:w-96 xl:right-16 xl:top-2"
     >
         <template v-for="(notification, index) in notifications" :key="index">
             <div v-if="!notification.hidden" :class="notification.class">
@@ -84,7 +84,7 @@ init();
 }
 
 .notification button {
-    @apply pointer-events-auto;
+    @apply pointer-eventDetails-auto;
 }
 
 .success .notification {

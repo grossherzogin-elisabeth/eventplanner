@@ -1,6 +1,6 @@
 package org.eventplanner.events.application.ports;
 
-import org.eventplanner.events.domain.entities.QueuedEmail;
+import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.values.Settings;
 import org.springframework.lang.NonNull;
 

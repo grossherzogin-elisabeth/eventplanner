@@ -5,7 +5,7 @@
     <VDropdownWrapper
         v-if="showTooltip"
         :anchor="element"
-        class="pointer-events-none pt-8"
+        class="pointer-eventDetails-none pt-8"
         min-width="0rem"
         max-width="min(25rem, 90vw)"
         anchor-align-x="center"
@@ -13,12 +13,12 @@
         dropdown-position-x="center"
         dropdown-position-y="bottom"
         :prefer-anchor-width="false"
-        background-class="pointer-events-none"
+        background-class="pointer-eventDetails-none"
     >
         <template #default>
             <slot name="tooltip">
                 <div
-                    class="pointer-events-none rounded-xl bg-surface-container-high p-2 text-sm text-onsurface shadow-xl"
+                    class="pointer-eventDetails-none rounded-xl bg-surface-container-high p-2 text-sm text-onsurface shadow-xl"
                     :class="$attrs.class"
                 >
                     <slot name="text" />

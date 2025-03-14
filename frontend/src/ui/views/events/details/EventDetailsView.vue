@@ -2,32 +2,41 @@
     <DetailsPage :back-to="{ name: Routes.EventsCalendar }" :class="$attrs.class">
         <template #header>
             <h1 class="mb-2 hidden w-full truncate pt-8 xl:block">
-                {{ event?.name }}
+                {{ eventDetails?.name }}
             </h1>
         </template>
         <template #content>
-            <div v-if="event" class="space-y-4 px-8 pb-8 pt-6 md:grid md:grid-cols-2 md:gap-x-20 md:gap-y-4 md:space-y-0 md:px-16 xl:px-20">
+            <div
+                v-if="eventDetails"
+                class="space-y-4 px-8 pb-8 pt-6 md:grid md:grid-cols-2 md:gap-x-20 md:gap-y-4 md:space-y-0 md:px-16 xl:px-20"
+            >
                 <!-- state info banner -->
-                <section v-if="event.state === EventState.OpenForSignup" class="col-start-2">
+                <section v-if="eventDetails.state === EventState.OpenForSignup" class="col-start-2">
                     <VInfo clamp>
                         Diese Reise befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Reise! Sobald die
                         Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.
                     </VInfo>
                 </section>
-                <section v-if="event.state === EventState.Canceled" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
-                    <VWarning> Diese Reise wurde abgesagt! </VWarning>
+                <section v-if="eventDetails.state === EventState.Canceled" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
+                    <VWarning> Diese Reise wurde abgesagt!</VWarning>
                 </section>
-                <section v-else-if="event.signedInUserAssignedPosition" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
+                <section
+                    v-else-if="eventDetails.signedInUserAssignedPosition"
+                    class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static"
+                >
                     <VInfo>
                         Du bist für diese Reise als
-                        {{ positions.get(event.signedInUserAssignedPosition).name }}
+                        {{ positions.get(eventDetails.signedInUserAssignedPosition).name }}
                         eingeplant
                     </VInfo>
                 </section>
-                <section v-else-if="event.signedInUserWaitingListPosition" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
+                <section
+                    v-else-if="eventDetails.signedInUserWaitingListPosition"
+                    class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static"
+                >
                     <VInfo>
                         Du stehst für diese Reise als
-                        {{ positions.get(event.signedInUserWaitingListPosition).name }}
+                        {{ positions.get(eventDetails.signedInUserWaitingListPosition).name }}
                         auf der Warteliste
                     </VInfo>
                 </section>
@@ -35,37 +44,39 @@
                 <!-- details -->
                 <section class="pt-4 md:col-start-2">
                     <h2 class="mb-2 font-bold text-secondary">
-                        {{ $t('app.event-details.title') }}
+                        {{ $t('app.eventDetails-details.title') }}
                     </h2>
                     <div class="space-y-1 rounded-2xl bg-surface-container-low p-4">
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-route w-4" />
-                            <span class="truncate">{{ event.name }}</span>
+                            <span class="truncate">{{ eventDetails.name }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-calendar-day w-4" />
-                            <span>{{ formatDateRange(event.start, event.end) }}</span>
+                            <span>{{ formatDateRange(eventDetails.start, eventDetails.end) }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-bell w-4" />
-                            <span>Crew an Bord: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
+                            <span>Crew an Bord: {{ $d(eventDetails.start, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-bell-slash w-4" />
-                            <span>Crew von Bord: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
+                            <span>Crew von Bord: {{ $d(eventDetails.end, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
                             <i class="fa-solid fa-users w-4" />
-                            <span v-if="event.state === EventState.OpenForSignup"> {{ event.registrations.length }} Anmeldungen </span>
-                            <span v-else-if="event.assignedUserCount && waitingListCount">
-                                {{ event.assignedUserCount }} Crew, {{ waitingListCount }} Warteliste
+                            <span v-if="eventDetails.state === EventState.OpenForSignup">
+                                {{ eventDetails.registrations.length }} Anmeldungen
                             </span>
-                            <span v-else-if="event.assignedUserCount"> {{ event.assignedUserCount }} Crew </span>
-                            <span v-else> {{ event.registrations.length }} Anmeldungen </span>
+                            <span v-else-if="eventDetails.assignedUserCount && waitingListCount">
+                                {{ eventDetails.assignedUserCount }} Crew, {{ waitingListCount }} Warteliste
+                            </span>
+                            <span v-else-if="eventDetails.assignedUserCount"> {{ eventDetails.assignedUserCount }} Crew </span>
+                            <span v-else> {{ eventDetails.registrations.length }} Anmeldungen </span>
                         </p>
-                        <p v-if="event.description" class="flex items-center space-x-4">
+                        <p v-if="eventDetails.description" class="flex items-center space-x-4">
                             <i class="fa-solid fa-info-circle w-4" />
-                            <span>{{ event.description }} </span>
+                            <span>{{ eventDetails.description }} </span>
                         </p>
                     </div>
                 </section>
@@ -73,11 +84,11 @@
                 <!-- route -->
                 <section class="pt-4 md:col-start-2">
                     <h2 class="mb-2 font-bold text-secondary">
-                        <template v-if="event.locations.length === 1">Ort</template>
+                        <template v-if="eventDetails.locations.length === 1">Ort</template>
                         <template v-else>Route</template>
                     </h2>
                     <div class="space-y-1 rounded-2xl bg-surface-container-low p-4">
-                        <p v-if="event.locations.length === 0" class="text-sm">
+                        <p v-if="eventDetails.locations.length === 0" class="text-sm">
                             Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar sind, kannst
                             du sie hier sehen.
                         </p>
@@ -87,7 +98,7 @@
                                 <div class="border-r-2 border-dashed border-current"></div>
                             </div>
                             <div
-                                v-for="(location, index) in event.locations"
+                                v-for="(location, index) in eventDetails.locations"
                                 :key="index"
                                 class="relative mb-4 flex items-center last:mb-0"
                             >
@@ -97,7 +108,10 @@
                                     >
                                         <i class="fa-solid text-sm" :class="location.icon"></i>
                                     </div>
-                                    <div v-if="index === event.locations.length - 1" class="w-full flex-1 bg-surface-container-low"></div>
+                                    <div
+                                        v-if="index === eventDetails.locations.length - 1"
+                                        class="w-full flex-1 bg-surface-container-low"
+                                    ></div>
                                 </div>
                                 <div class="w-0 flex-grow">
                                     <h3 class="mb-1 flex items-center justify-between space-x-2">
@@ -142,14 +156,14 @@
                 <!-- crew -->
                 <section class="col-start-1 row-span-6 pt-4 md:row-start-1 md:pt-0">
                     <h2
-                        v-if="statesWithHiddenCrew.includes(event.state)"
+                        v-if="statesWithHiddenCrew.includes(eventDetails.state)"
                         class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0"
                     >
                         <span>Anmeldungen</span>
                     </h2>
                     <h2 v-else class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
                         <button class="hover:text-primary" :class="{ 'text-primary underline': tab === Tab.Team }" @click="tab = Tab.Team">
-                            Crew ({{ event.assignedUserCount }})
+                            Crew ({{ eventDetails.assignedUserCount }})
                         </button>
                         <button
                             class="hover:text-primary"
@@ -160,7 +174,7 @@
                         </button>
                     </h2>
                     <div
-                        v-if="event.assignedUserCount === 0 && waitingListCount === 0"
+                        v-if="eventDetails.assignedUserCount === 0 && waitingListCount === 0"
                         class="rounded-2xl bg-surface-container-low px-4 md:-mx-4 md:-mt-4"
                     >
                         <div class="flex items-center py-4">
@@ -229,7 +243,9 @@
                                 </li>
                             </ul>
                             <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container-low p-4 text-sm">
-                                <p v-if="statesWithHiddenCrew.includes(event.state)">Für diesen Termin gibt es noch keine Anmeldungen.</p>
+                                <p v-if="statesWithHiddenCrew.includes(eventDetails.state)">
+                                    Für diesen Termin gibt es noch keine Anmeldungen.
+                                </p>
                                 <p v-else>Für diesen Termin gibt es keine Anmeldungen auf der Warteliste.</p>
                             </div>
                         </template>
@@ -237,34 +253,34 @@
                 </section>
             </div>
         </template>
-        <template v-if="event && signedInUser.permissions.includes(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
-            <AsyncButton v-if="event.signedInUserAssignedPosition" class="btn-danger" :action="() => leaveEvent()">
+        <template v-if="eventDetails && signedInUser.permissions.includes(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
+            <AsyncButton v-if="eventDetails.signedInUserAssignedPosition" class="btn-danger" :action="() => leaveEvent()">
                 <template #icon><i class="fa-solid fa-cancel" /></template>
                 <template #label>Reise absagen</template>
             </AsyncButton>
             <AsyncButton
-                v-else-if="event.signedInUserWaitingListPosition"
+                v-else-if="eventDetails.signedInUserWaitingListPosition"
                 class="btn-danger"
-                :disabled="!event.canSignedInUserLeave"
+                :disabled="!eventDetails.canSignedInUserLeave"
                 :action="() => leaveEvent()"
             >
                 <template #icon>
                     <i class="fa-solid fa-user-minus" />
                 </template>
-                <template #label> Warteliste verlassen </template>
+                <template #label> Warteliste verlassen</template>
             </AsyncButton>
-            <div v-else-if="event.canSignedInUserJoin && signedInUser.positions.length > 1" class="btn-split">
+            <div v-else-if="eventDetails.canSignedInUserJoin && signedInUser.positions.length > 1" class="btn-split">
                 <AsyncButton class="btn-primary max-w-64 sm:max-w-80" :action="() => joinEvent()">
                     <template #icon>
                         <i class="fa-solid fa-user-plus" />
                     </template>
-                    <template #label> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </template>
+                    <template #label> Anmelden als {{ positions.get(signedInUser.positions[0]).name }}</template>
                 </AsyncButton>
-                <button v-if="signedInUser.positions.length > 1" class="btn-primary" @click="choosePositionAndJoinEvent(event)">
+                <button v-if="signedInUser.positions.length > 1" class="btn-primary" @click="choosePositionAndJoinEvent(eventDetails)">
                     <i class="fa-solid fa-chevron-down" />
                 </button>
             </div>
-            <AsyncButton v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" :action="() => joinEvent()">
+            <AsyncButton v-else class="btn-primary max-w-80" :disabled="!eventDetails.canSignedInUserJoin" :action="() => joinEvent()">
                 <template #icon>
                     <i class="fa-solid fa-user-plus" />
                 </template>
@@ -273,7 +289,7 @@
                 </template>
             </AsyncButton>
         </template>
-        <template v-if="event" #secondary-buttons>
+        <template v-if="eventDetails" #secondary-buttons>
             <RouterLink
                 v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
                 :to="{ name: Routes.EventEdit }"
@@ -282,17 +298,17 @@
                 <i class="fa-solid fa-edit" />
                 <span>Reise bearbeiten</span>
             </RouterLink>
-            <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
+            <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(eventDetails)">
                 <i class="fa-solid fa-calendar-alt" />
                 <span>In Kalender speichern</span>
             </button>
         </template>
-        <template v-if="event" #actions-menu>
-            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
+        <template v-if="eventDetails" #actions-menu>
+            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(eventDetails)">
                 <i class="fa-solid fa-calendar-alt" />
                 <span>Kalendereintrag erstellen</span>
             </li>
-            <template v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition">
+            <template v-if="eventDetails.signedInUserAssignedPosition || eventDetails.signedInUserWaitingListPosition">
                 <li class="context-menu-item" @click="editUserRegistration()">
                     <i class="fa-solid fa-edit" />
                     <span>Anmeldung bearbeiten</span>
@@ -302,19 +318,19 @@
                     <span>Notiz fürs Büro hinzufügen</span>
                 </li>
             </template>
-            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
+            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(eventDetails)">
                 <i class="fa-solid fa-clipboard-user" />
                 <span>IMO Liste generieren</span>
             </li>
-            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
+            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(eventDetails)">
                 <i class="fa-solid fa-beer-mug-empty" />
                 <span>Verzehrliste generieren</span>
             </li>
-            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(event)">
+            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(eventDetails)">
                 <i class="fa-solid fa-file-medical" />
                 <span>Kapitänsliste generieren</span>
             </li>
-            <li class="permission-write-events">
+            <li class="permission-write-eventDetails">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-edit" />
                     <span>Reise bearbeiten</span>
@@ -324,7 +340,7 @@
     </DetailsPage>
     <VConfirmationDialog ref="confirmationDialog" />
     <PositionSelectDlg ref="positionSelectDialog" />
-    <RegistrationEditDlg v-if="event" ref="editRegistrationDialog" :event="event" />
+    <RegistrationEditDlg v-if="eventDetails" ref="editRegistrationDialog" :eventDetails="eventDetails" />
 </template>
 
 <script lang="ts" setup>
@@ -339,14 +355,14 @@ import { VConfirmationDialog } from '@/ui/components/common';
 import { ContextMenuButton } from '@/ui/components/common';
 import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
 import VMarkdown from '@/ui/components/common/VMarkdown.vue';
-import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
+import PositionSelectDlg from '@/ui/components/eventDetails/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
-import RegistrationEditDlg from '@/ui/views/events/details/RegistrationEditDlg.vue';
+import RegistrationEditDlg from '@/ui/views/eventDetails/details/RegistrationEditDlg.vue';
 
 enum Tab {
     Team = 'team',
@@ -366,7 +382,7 @@ const eventService = useEventService();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const statesWithHiddenCrew = [EventState.OpenForSignup, EventState.Draft];
-const event = ref<Event | null>(null);
+const eventDetails = ref<Event | null>(null);
 const tab = ref<Tab>(Tab.Team);
 
 const waitingList = ref<ResolvedRegistrationSlot[]>([]);
@@ -377,20 +393,20 @@ const editRegistrationDialog = ref<Dialog<Registration, Registration | undefined
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
 const waitingListCount = computed<number>(() => {
-    if (!event.value) return 0;
-    return event.value.registrations.length - event.value.assignedUserCount;
+    if (!eventDetails.value) return 0;
+    return eventDetails.value.registrations.length - eventDetails.value.assignedUserCount;
 });
 
 function init(): void {
     fetchEvent();
-    watch(event, onEventChanged);
+    watch(eventDetails, onEventChanged);
 }
 
 async function fetchEvent(): Promise<void> {
     try {
         const key = route.params.key as string;
         const year = parseInt(route.params.year as string, 10) || new Date().getFullYear();
-        event.value = await eventUseCase.getEventByKey(year, key);
+        eventDetails.value = await eventUseCase.getEventByKey(year, key);
     } catch (e) {
         console.error(e);
         await router.push({ name: Routes.EventsCalendar });
@@ -398,21 +414,21 @@ async function fetchEvent(): Promise<void> {
 }
 
 async function onEventChanged(): Promise<void> {
-    emit('update:title', event.value?.name || '');
-    if (!event.value) {
+    emit('update:title', eventDetails.value?.name || '');
+    if (!eventDetails.value) {
         return;
     }
 
-    if (statesWithHiddenCrew.includes(event.value.state)) {
+    if (statesWithHiddenCrew.includes(eventDetails.value.state)) {
         tab.value = Tab.WaitingList;
     }
-    await fetchTeam(event.value);
+    await fetchTeam(eventDetails.value);
 }
 
-async function fetchTeam(event: Event): Promise<void> {
-    const registrations = await eventUseCase.resolveRegistrations(event);
-    team.value = eventUseCase.filterForCrew(event, registrations);
-    waitingList.value = eventUseCase.filterForWaitingList(event, registrations);
+async function fetchTeam(eventDetails: Event): Promise<void> {
+    const registrations = await eventUseCase.resolveRegistrations(eventDetails);
+    team.value = eventUseCase.filterForCrew(eventDetails, registrations);
+    waitingList.value = eventUseCase.filterForWaitingList(eventDetails, registrations);
 }
 
 async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
@@ -420,22 +436,22 @@ async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
     if (position) {
         // default position might have changed
         signedInUser.value = authUseCase.getSignedInUser();
-        event.value = await eventUseCase.joinEvent(evt, position);
+        eventDetails.value = await eventUseCase.joinEvent(evt, position);
     }
 }
 
 async function joinEvent(): Promise<void> {
-    if (event.value) {
-        event.value = await eventUseCase.joinEvent(event.value, signedInUser.value.positions[0]);
+    if (eventDetails.value) {
+        eventDetails.value = await eventUseCase.joinEvent(eventDetails.value, signedInUser.value.positions[0]);
     }
 }
 
 async function leaveEvent(): Promise<void> {
-    if (event.value) {
-        if (event.value.signedInUserAssignedPosition) {
+    if (eventDetails.value) {
+        if (eventDetails.value.signedInUserAssignedPosition) {
             const confirmed = await confirmationDialog.value?.open({
                 title: 'Teilnahme absagen?',
-                message: `Bist du sicher, das du deine Teilnahme an der Reise ${event.value.name} absagen möchtest?
+                message: `Bist du sicher, das du deine Teilnahme an der Reise ${eventDetails.value.name} absagen möchtest?
                     Du hast dann keinen Anspruch mehr auf eine Teilname an der Reise und dein Platz wird an eine
                     andere Person vergeben.`,
                 submit: 'Reise absagen',
@@ -445,17 +461,17 @@ async function leaveEvent(): Promise<void> {
                 return;
             }
         }
-        event.value = await eventUseCase.leaveEvent(event.value);
+        eventDetails.value = await eventUseCase.leaveEvent(eventDetails.value);
     }
 }
 
 async function editUserRegistration(): Promise<void> {
-    if (event.value) {
-        const registration = eventService.findRegistration(event.value, signedInUser.value.key);
+    if (eventDetails.value) {
+        const registration = eventService.findRegistration(eventDetails.value, signedInUser.value.key);
         const updatedRegistration = await editRegistrationDialog.value?.open(registration);
         if (updatedRegistration) {
-            await eventUseCase.updateRegistration(event.value, updatedRegistration);
-            await fetchTeam(event.value);
+            await eventUseCase.updateRegistration(eventDetails.value, updatedRegistration);
+            await fetchTeam(eventDetails.value);
         }
     }
 }

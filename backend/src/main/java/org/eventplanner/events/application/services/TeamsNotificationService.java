@@ -6,8 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import org.eventplanner.events.domain.values.GlobalNotification;
-import org.eventplanner.events.domain.values.Notification;
+import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
+import org.eventplanner.events.domain.entities.notifications.Notification;
 import org.eventplanner.events.domain.values.NotificationType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;

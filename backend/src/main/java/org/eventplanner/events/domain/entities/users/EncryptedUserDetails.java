@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.users;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -49,7 +49,7 @@ public class EncryptedUserDetails implements Serializable {
     private @Nullable EncryptedString passNr;
     private @Nullable EncryptedString comment;
     private @Nullable EncryptedString nationality;
-    private @Nullable EncryptedEmergencyContact emergencyContact;
+    private @Nullable EncryptedUserEmergencyContact emergencyContact;
     private @Nullable EncryptedString diseases;
     private @Nullable EncryptedString intolerances;
     private @Nullable EncryptedString medication;

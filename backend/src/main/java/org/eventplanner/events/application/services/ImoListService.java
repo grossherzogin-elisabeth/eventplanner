@@ -18,10 +18,10 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.common.ObjectUtils;
 import org.eventplanner.events.application.ports.PositionRepository;
-import org.eventplanner.events.domain.entities.Event;
+import org.eventplanner.events.domain.aggregates.Event;
 import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.entities.UserDetails;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.EventLocation;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.eventplanner.events.domain.values.UserKey;
@@ -68,13 +68,15 @@ public class ImoListService {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
             XSSFSheet sheet = workbook.getSheetAt(0);
 
-            if (!event.getLocations().isEmpty()) {
-                String departurePort = event.getLocations().stream().findFirst().map(EventLocation::name).orElse("");
+            if (!event.details().getLocations().isEmpty()) {
+                String departurePort =
+                    event.details().getLocations().stream().findFirst().map(EventLocation::name).orElse("");
                 replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", departurePort);
             } else {
                 replacePlaceHolderInSheet(sheet, "{{Port_a/d}}", "");
             }
-            String departureDate = event.getStart().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            String departureDate =
+                event.details().getStart().atZone(timezone).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             replacePlaceHolderInSheet(sheet, "{{Date_a/d}}", departureDate);
 
             writeCrewDataToSheet(sheet, crewList, positionMap);
@@ -124,7 +126,7 @@ public class ImoListService {
             Registration currentRegistration = crewList.get(crewCounter);
             String imoListRank = ObjectUtils.mapNullable(
                 positionMap.get(currentRegistration.getPosition()),
-                Position::getImoListRank,
+                Position::getOfficialName,
                 currentRegistration.getPosition().value()
             );
             UserKey crewMemberKey = currentRegistration.getUserKey();

@@ -1,7 +1,7 @@
 package org.eventplanner.events.application.usecases;
 
 import org.eventplanner.events.application.services.SettingsService;
-import org.eventplanner.events.domain.entities.SignedInUser;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.values.Permission;
 import org.eventplanner.events.domain.values.Settings;
 import org.eventplanner.events.domain.values.Settings.UiSettings;

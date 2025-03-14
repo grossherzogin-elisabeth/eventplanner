@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.UserDetails;
+import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.Diet;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.springframework.lang.NonNull;

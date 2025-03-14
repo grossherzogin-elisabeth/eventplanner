@@ -5,7 +5,7 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.EventSlot;
+import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.eventplanner.events.domain.values.RegistrationKey;
 import org.eventplanner.events.domain.values.SlotKey;

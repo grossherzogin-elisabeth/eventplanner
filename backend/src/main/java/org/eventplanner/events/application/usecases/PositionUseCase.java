@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.entities.SignedInUser;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.values.Permission;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.springframework.lang.NonNull;

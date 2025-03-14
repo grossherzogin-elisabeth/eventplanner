@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.users;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -9,7 +9,6 @@ import org.eventplanner.events.domain.values.Address;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.Diet;
 import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.lang.NonNull;
@@ -21,9 +20,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.With;
 
 @Getter
 @Setter
+@With
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -54,7 +55,7 @@ public class UserDetails {
     private @Nullable String passNr;
     private @Nullable String comment;
     private @Nullable String nationality;
-    private @Nullable EmergencyContact emergencyContact;
+    private @Nullable UserEmergencyContact emergencyContact;
     private @Nullable String diseases;
     private @Nullable String intolerances;
     private @Nullable String medication;
@@ -77,40 +78,15 @@ public class UserDetails {
         return stb.toString();
     }
 
-    public @NonNull User cropToUser() {
-        return new User(key, firstName, lastName, positions);
+    public @NonNull BasicUser cropToUser() {
+        return new BasicUser(key, firstName, lastName, positions);
     }
 
     public void addPosition(PositionKey positionKey) {
         if (!positions.contains(positionKey)) {
             var mutableList = new LinkedList<>(positions);
             mutableList.add(positionKey);
-            positions = mutableList;
+            positions = mutableList.stream().toList();
         }
-    }
-
-    public void addQualification(QualificationKey qualificationKey, Instant expirationDate) {
-        var maybeExistingQualification =
-            qualifications.stream().filter(it -> it.getQualificationKey().equals(qualificationKey)).findFirst();
-        if (maybeExistingQualification.isPresent()) {
-            var existingQualification = maybeExistingQualification.get();
-            if (existingQualification.getExpiresAt() != null
-                && expirationDate != null
-                && expirationDate.isAfter(existingQualification.getExpiresAt())
-            ) {
-                qualifications.remove(existingQualification);
-                qualifications.add(new UserQualification(qualificationKey, expirationDate, true));
-            }
-            if (existingQualification.getExpiresAt() == null && expirationDate != null) {
-                qualifications.remove(existingQualification);
-                qualifications.add(new UserQualification(qualificationKey, expirationDate, true));
-            }
-        } else {
-            qualifications.add(new UserQualification(qualificationKey, expirationDate, expirationDate != null));
-        }
-    }
-
-    public void addQualification(QualificationKey qualificationKey) {
-        addQualification(qualificationKey, null);
     }
 }

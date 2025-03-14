@@ -96,14 +96,15 @@
                             <i class="w-4"></i>
                             <span>Alle Reisen</span>
                         </li>
-                        <template v-for="event in events" :key="event.key">
-                            <li v-if="filterEvent === event" class="context-menu-item" @click="filterEvent = undefined">
+                        <template v-for="eventDetails in eventDetails" :key="eventDetails.key">
+                            <li v-if="filterEvent === eventDetails" class="context-menu-item"
+                                @click="filterEvent = undefined">
                                 <i class="fa-solid fa-check w-4"></i>
-                                <span class="truncate">{{ event.name }}</span>
+                                <span class="truncate">{{ eventDetails.name }}</span>
                             </li>
-                            <li v-else class="context-menu-item" @click="filterEvent = event">
+                            <li v-else class="context-menu-item" @click="filterEvent = eventDetails">
                                 <i class="w-4"></i>
-                                <span class="truncate">{{ event.name }}</span>
+                                <span class="truncate">{{ eventDetails.name }}</span>
                             </li>
                         </template>
                     </ul>
@@ -125,7 +126,7 @@
                 query
                 multiselection
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
-                @click="editUser($event)"
+                @click="editUser($eventDetails)"
             >
                 <template #row="{ item }">
                     <td class="w-1/3 whitespace-nowrap font-semibold">
@@ -178,7 +179,8 @@
                     </td>
                     <td class="w-1/12">
                         <div class="flex items-center justify-end">
-                            <div v-if="item.qualifications?.length === 0" class="status-panel bg-surface-container-highest text-onsurface">
+                            <div v-if="item.qualifications?.length === 0"
+                                 class="status-panel bg-surface-container-highest text-onsurface">
                                 <i class="fa-solid fa-question-circle"></i>
                                 <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
                             </div>
@@ -197,8 +199,10 @@
                             >
                                 <i class="fa-solid fa-warning"></i>
                                 <span class="whitespace-nowrap font-semibold">
-                                    <template v-if="item.soonExpiringQualifications.length === 1"> 1 läuft bald ab </template>
-                                    <template v-else> {{ item.soonExpiringQualifications.length }} laufen bald ab </template>
+                                    <template
+                                        v-if="item.soonExpiringQualifications.length === 1"> 1 läuft bald ab </template>
+                                    <template
+                                        v-else> {{ item.soonExpiringQualifications.length }} laufen bald ab </template>
                                 </span>
                             </div>
                             <div v-else class="status-panel bg-green-container text-ongreen-container">
@@ -247,7 +251,8 @@
         <div class="flex-1"></div>
 
         <div v-if="selectedUsers && selectedUsers.length > 0" class="sticky bottom-0 z-20">
-            <div class="h-full border-t border-outline-variant bg-surface px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20">
+            <div
+                class="h-full border-t border-outline-variant bg-surface px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20">
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap">
                     <button class="btn-ghost" @click="selectNone()">
                         <i class="fa-solid fa-xmark w-6" />
@@ -273,7 +278,8 @@
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
-                            <li class="permission-read-user-details context-menu-item" @click="contactUsers(selectedUsers)">
+                            <li class="permission-read-user-details context-menu-item"
+                                @click="contactUsers(selectedUsers)">
                                 <i class="fa-solid fa-envelope" />
                                 <span>Email schreiben</span>
                             </li>
@@ -293,9 +299,9 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
-            class="permission-write-users pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-write-users pointer-eventDetails-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
         >
-            <button class="btn-floating pointer-events-auto" @click="createUser()">
+            <button class="btn-floating pointer-eventDetails-auto" @click="createUser()">
                 <i class="fa-solid fa-user-plus"></i>
                 <span>Nutzer hinzufügen</span>
             </button>
@@ -324,6 +330,7 @@ import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
 import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
 import UsersListSkeletonLoader from '@/ui/views/users/list/UsersListSkeletonLoader.vue';
+
 
 enum Tab {
     TEAM_MEMBERS = 'Stammcrew',
@@ -366,7 +373,7 @@ const filterPendingVerification = ref<boolean>(false);
 const filterPositions = ref<PositionKey[]>([]);
 const filterEvent = ref<Event | undefined>(undefined);
 
-const events = ref<Event[]>([]);
+const eventDetails = ref<Event[]>([]);
 const users = ref<UserRegistrations[] | undefined>(undefined);
 
 const createUserDialog = ref<Dialog<void, User | undefined> | null>(null);
@@ -376,27 +383,27 @@ const confirmationDialog = ref<ConfirmationDialog | null>(null);
 useQueryStateSync<boolean>(
     'active',
     () => filterOnlyActive.value,
-    (v) => (filterOnlyActive.value = v)
+    (v) => (filterOnlyActive.value = v),
 );
 useQueryStateSync<boolean>(
     'expired',
     () => filterExpiredQualifications.value,
-    (v) => (filterExpiredQualifications.value = v)
+    (v) => (filterExpiredQualifications.value = v),
 );
 useQueryStateSync<boolean>(
     'unverified',
     () => filterPendingVerification.value,
-    (v) => (filterPendingVerification.value = v)
+    (v) => (filterPendingVerification.value = v),
 );
 useQueryStateSync<string>(
     'positions',
     () => filterPositions.value.join('_'),
-    (v) => (filterPositions.value = v.split('_'))
+    (v) => (filterPositions.value = v.split('_')),
 );
 useQueryStateSync<string>(
     'filter',
     () => filter.value,
-    (v) => (filter.value = v)
+    (v) => (filter.value = v),
 );
 
 const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
@@ -408,8 +415,8 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
             (!filterPendingVerification.value || !it.verified) &&
             (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys)) &&
             (filterEvent.value === undefined || participatesInEvent(it)) &&
-            usersService.doesUserMatchFilter(it, filter.value)
-    )
+            usersService.doesUserMatchFilter(it, filter.value),
+    ),
 );
 
 function participatesInEvent(user: UserRegistrations): boolean {
@@ -510,14 +517,14 @@ function selectAll(): void {
 
 async function fetchEvents(): Promise<void> {
     const allEvents = await eventUseCase.getFutureEvents();
-    events.value = allEvents.slice(0, 10);
+    eventDetails.value = allEvents.slice(0, 10);
 }
 
 async function fetchUsers(): Promise<void> {
     const positions = await usersUseCase.resolvePositionNames();
     const userlist: User[] = await usersUseCase.getUsers();
     const currentYear = new Date().getFullYear();
-    const events = (
+    const eventDetails = (
         await Promise.all([
             eventUseCase.getEvents(currentYear - 2),
             eventUseCase.getEvents(currentYear - 1),
@@ -525,16 +532,16 @@ async function fetchUsers(): Promise<void> {
             eventUseCase.getEvents(currentYear + 1),
         ])
     ).flatMap((evts) => evts);
-    const registrationsSingleDayEventsWithSlot = events
+    const registrationsSingleDayEventsWithSlot = eventDetails
         .filter((evt) => evt.type === EventType.SingleDayEvent)
         .flatMap((evt) => eventService.getAssignedRegistrations(evt));
-    const registrationsWeekendEventsWithSlot = events
+    const registrationsWeekendEventsWithSlot = eventDetails
         .filter((evt) => evt.type === EventType.WeekendEvent)
         .flatMap((evt) => eventService.getAssignedRegistrations(evt));
-    const registrationsMultiDayEventsWithSlot = events
+    const registrationsMultiDayEventsWithSlot = eventDetails
         .filter((evt) => evt.type === EventType.MultiDayEvent)
         .flatMap((evt) => eventService.getAssignedRegistrations(evt));
-    const registrationsWaitinglist = events.flatMap((evt) => eventService.getRegistrationsOnWaitinglist(evt));
+    const registrationsWaitinglist = eventDetails.flatMap((evt) => eventService.getRegistrationsOnWaitinglist(evt));
 
     users.value = userlist.map((user: User) => {
         return {
