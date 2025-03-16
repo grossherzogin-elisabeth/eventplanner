@@ -70,7 +70,7 @@ class UserIntegrationTest {
             .andExpect(content().json(
                 """
                     [
-                      { "key": "3449174e-c8e1-49b7-8ef0-35c8c5f23a0c", "firstName": "Bruce", "nickName": null, "lastName": "Benner" },
+                      { "key": "break", "firstName": "Bruce", "nickName": null, "lastName": "Benner" },
                       { "key": "80717734-d546-4b7b-a756-5f4f266b5ae6", "firstName": "Stephen", "nickName": "Doctor", "lastName": "Strange" },
                       { "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98", "firstName": "Anthony", "nickName": "Tony", "lastName": "Stark" },
                       { "key": "b0c4bf2d-d390-4490-8a77-59214eb9a81c", "firstName": "Loki", "nickName": null, "lastName": "Odinson" },
