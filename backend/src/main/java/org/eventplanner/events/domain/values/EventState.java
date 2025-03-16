@@ -3,7 +3,11 @@ package org.eventplanner.events.domain.values;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EventState {
 
@@ -18,6 +22,12 @@ public enum EventState {
         this.value = value;
     }
 
+    @JsonCreator
+    public static EventState parse(@NonNull String value) {
+        return fromString(value)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid event state value " + value));
+    }
+
     public static Optional<EventState> fromString(@Nullable String value) {
         return Arrays.stream(EventState.values())
             .filter(state -> state.value().equals(value))
@@ -28,6 +38,7 @@ public enum EventState {
         return value;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return value;

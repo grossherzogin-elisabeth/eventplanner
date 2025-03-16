@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eventplanner.common.Crypto;
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.domain.entities.EncryptedUserDetails;
@@ -18,6 +19,7 @@ import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -34,11 +36,13 @@ public class UserService {
     public UserService(
         @Autowired UserRepository userRepository,
         @Autowired QualificationRepository qualificationRepository,
-        @Autowired UserEncryptionService userEncryptionService
+        @Value("${data.encryption-password}") String password
     ) {
         this.userRepository = userRepository;
         this.qualificationRepository = qualificationRepository;
-        this.userEncryptionService = userEncryptionService;
+        this.userEncryptionService = new UserEncryptionService(
+            new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password)
+        );
     }
 
     public @NonNull List<User> getUsers() {

@@ -26,6 +26,11 @@ public enum Role {
     }
 
     @JsonCreator
+    public static Role parse(@NonNull String value) {
+        return fromString(value)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid role value " + value));
+    }
+
     public static Optional<Role> fromString(String value) {
         return Arrays.stream(values())
             .filter(role -> role.value().equals(value))

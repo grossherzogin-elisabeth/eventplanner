@@ -78,7 +78,7 @@ public class UserDetails {
     }
 
     public @NonNull User cropToUser() {
-        return new User(key, firstName, lastName, positions);
+        return new User(key, firstName, lastName, nickName);
     }
 
     public void addPosition(PositionKey positionKey) {

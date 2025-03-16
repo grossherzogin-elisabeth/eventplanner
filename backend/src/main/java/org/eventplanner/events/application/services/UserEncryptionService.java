@@ -1,9 +1,5 @@
 package org.eventplanner.events.application.services;
 
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-import static org.eventplanner.common.ObjectUtils.streamNullable;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -25,20 +21,17 @@ import org.eventplanner.events.domain.values.Diet;
 import org.eventplanner.events.domain.values.EncryptedAddress;
 import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Role;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
 
-@Service
+import static java.util.Optional.ofNullable;
+import lombok.RequiredArgsConstructor;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
+import static org.eventplanner.common.ObjectUtils.streamNullable;
+
+@RequiredArgsConstructor
 public class UserEncryptionService {
     private final Crypto crypto;
-
-    public UserEncryptionService(
-        @Value("${data.encryption-password}") String password
-    ) {
-        this.crypto = new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password);
-    }
 
     public @NonNull EncryptedString encrypt(@NonNull String value) {
         return crypto.encrypt(value);
