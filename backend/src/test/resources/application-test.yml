@@ -25,7 +25,7 @@ ADMIN_EMAILS: >
 # -----------------
 
 data:
-  db-url: jdbc:sqlite:src/test/resources/test.db
+  db-url: jdbc:sqlite:${data.directory}/eventplanner-test.db
 
 server:
   protocol: http

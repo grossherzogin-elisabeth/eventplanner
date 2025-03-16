@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eventplanner.events.domain.functions.EncryptFunc;
 import org.eventplanner.events.domain.values.Address;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.Diet;
@@ -15,6 +16,8 @@ import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -112,5 +115,45 @@ public class UserDetails {
 
     public void addQualification(QualificationKey qualificationKey) {
         addQualification(qualificationKey, null);
+    }
+
+    public @NonNull EncryptedUserDetails encrypt(@NonNull final EncryptFunc encryptFunc) {
+        return new EncryptedUserDetails(
+            key,
+            authKey,
+            createdAt,
+            updatedAt,
+            verifiedAt,
+            lastLoginAt,
+            encryptFunc.apply(gender),
+            encryptFunc.apply(title),
+            requireNonNull(encryptFunc.apply(firstName)),
+            encryptFunc.apply(nickName),
+            encryptFunc.apply(secondName),
+            requireNonNull(encryptFunc.apply(lastName)),
+            roles.stream().map(encryptFunc::apply).toList(),
+            qualifications.stream()
+                .map(qualification -> qualification.encrypt(encryptFunc))
+                .toList(),
+            ofNullable(address)
+                .map(address -> address.encrypt(encryptFunc))
+                .orElse(null),
+            encryptFunc.apply(email),
+            encryptFunc.apply(phone),
+            encryptFunc.apply(phoneWork),
+            encryptFunc.apply(mobile),
+            encryptFunc.apply(dateOfBirth),
+            encryptFunc.apply(placeOfBirth),
+            encryptFunc.apply(passNr),
+            encryptFunc.apply(comment),
+            encryptFunc.apply(nationality),
+            ofNullable(emergencyContact)
+                .map(emergencyContact -> emergencyContact.encrypt(encryptFunc))
+                .orElse(null),
+            encryptFunc.apply(diseases),
+            encryptFunc.apply(intolerances),
+            encryptFunc.apply(medication),
+            encryptFunc.apply(diet)
+        );
     }
 }

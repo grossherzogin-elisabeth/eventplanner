@@ -1,5 +1,6 @@
 package org.eventplanner.events.domain.entities;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,8 +22,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
-public class Qualification {
+public class Qualification implements Serializable {
     private @NonNull QualificationKey key;
     private @NonNull String name;
     private @Nullable String icon;

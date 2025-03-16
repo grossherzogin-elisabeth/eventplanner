@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -31,7 +32,7 @@ public enum Role {
             .orElseThrow(() -> new IllegalArgumentException("Invalid role value " + value));
     }
 
-    public static Optional<Role> fromString(String value) {
+    public static @NonNull Optional<Role> fromString(@Nullable String value) {
         return Arrays.stream(values())
             .filter(role -> role.value().equals(value))
             .findFirst();

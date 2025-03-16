@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.eventplanner.common.Crypto;
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.domain.entities.EncryptedUserDetails;
@@ -19,7 +18,6 @@ import org.eventplanner.events.domain.values.QualificationKey;
 import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -31,18 +29,16 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
     private final UserRepository userRepository;
     private final QualificationRepository qualificationRepository;
-    private final UserEncryptionService userEncryptionService;
+    private final EncryptionService encryptionService;
 
     public UserService(
         @Autowired UserRepository userRepository,
         @Autowired QualificationRepository qualificationRepository,
-        @Value("${data.encryption-password}") String password
+        @Autowired EncryptionService encryptionService
     ) {
         this.userRepository = userRepository;
         this.qualificationRepository = qualificationRepository;
-        this.userEncryptionService = new UserEncryptionService(
-            new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password)
-        );
+        this.encryptionService = encryptionService;
     }
 
     public @NonNull List<User> getUsers() {
@@ -51,7 +47,7 @@ public class UserService {
             .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
 
         return getEncryptedUsers().stream()
-            .map(userEncryptionService::decrypt)
+            .map(user -> user.decrypt(encryptionService::decrypt))
             .map(user -> resolvePositionsAndQualificationExpires(user, qualificationMap))
             .sorted(Comparator.comparing(UserDetails::getFullName))
             .map(UserDetails::cropToUser)
@@ -64,7 +60,7 @@ public class UserService {
             .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
 
         return getEncryptedUsers().stream()
-            .map(userEncryptionService::decrypt)
+            .map(user -> user.decrypt(encryptionService::decrypt))
             .map(user -> resolvePositionsAndQualificationExpires(user, qualificationMap))
             .sorted(Comparator.comparing(UserDetails::getFullName))
             .toList();
@@ -83,7 +79,7 @@ public class UserService {
             return Optional.empty();
         }
         return getEncryptedUserByKey(key)
-            .map(userEncryptionService::decrypt)
+            .map(user -> user.decrypt(encryptionService::decrypt))
             .map(this::resolvePositionsAndQualificationExpires);
     }
 
@@ -93,7 +89,7 @@ public class UserService {
         }
         return getEncryptedUsers().stream()
             .filter(it -> authKey.equals(it.getAuthKey()))
-            .map(userEncryptionService::decrypt)
+            .map(user -> user.decrypt(encryptionService::decrypt))
             .map(this::resolvePositionsAndQualificationExpires)
             .findFirst();
     }
@@ -103,22 +99,22 @@ public class UserService {
             return Optional.empty();
         }
         return getEncryptedUsers().stream()
-            .filter(it -> email.equals(userEncryptionService.decryptNullable(it.getEmail())))
-            .map(userEncryptionService::decrypt)
+            .filter(it -> email.equals(encryptionService.decrypt(it.getEmail())))
+            .map(user -> user.decrypt(encryptionService::decrypt))
             .map(this::resolvePositionsAndQualificationExpires)
             .findFirst();
     }
 
     public UserDetails createUser(UserDetails userDetails) {
-        var encrypted = userEncryptionService.encrypt(userDetails);
+        var encrypted = userDetails.encrypt(encryptionService::encrypt);
         encrypted = userRepository.create(encrypted);
-        return userEncryptionService.decrypt(encrypted);
+        return encrypted.decrypt(encryptionService::decrypt);
     }
 
     public UserDetails updateUser(UserDetails userDetails) {
-        var encrypted = userEncryptionService.encrypt(userDetails);
+        var encrypted = userDetails.encrypt(encryptionService::encrypt);
         encrypted = userRepository.update(encrypted);
-        return resolvePositionsAndQualificationExpires(userEncryptionService.decrypt(encrypted));
+        return resolvePositionsAndQualificationExpires(encrypted.decrypt(encryptionService::decrypt));
     }
 
     public void deleteUser(UserKey userKey) {

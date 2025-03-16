@@ -1,5 +1,6 @@
-package org.eventplanner.common;
+package org.eventplanner.events.application.services;
 
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.AlgorithmParameters;
 import java.security.spec.KeySpec;
@@ -12,39 +13,32 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.eventplanner.common.Encrypted;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Service;
 
-public class Crypto {
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Service
+public class EncryptionService {
 
     private static final int ITERATION_COUNT = 512;
     private static final int KEY_LENGTH = 256;
 
+    private final ObjectMapper objectMapper;
     private final SecretKeySpec secretKey;
 
-    public Crypto(@NonNull final String salt, @NonNull final String password) {
-        secretKey = deriveSecretKey(salt, password);
-    }
-
-    public static @NonNull EncryptedString encrypt(
-        @NonNull final String value,
-        @NonNull final String salt,
-        @NonNull final String password
+    public EncryptionService(
+        @NonNull final ObjectMapper objectMapper,
+        @Value("${data.encryption-password}") final String password
     ) {
-        var secretKey = deriveSecretKey(salt, password);
-        return encryptWithSecretKey(value, secretKey);
+        this.objectMapper = objectMapper;
+        this.secretKey = deriveSecretKey("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password);
     }
 
-    public static @NonNull String decrypt(
-        @NonNull final EncryptedString encrypted,
-        @NonNull final String salt,
-        @NonNull final String password
-    ) {
-        var secretKey = deriveSecretKey(salt, password);
-        return decryptWithSecretKey(encrypted, secretKey);
-    }
-
-    private @NonNull
-    static SecretKeySpec deriveSecretKey(@NonNull final String salt, @NonNull final String password) {
+    private static @NonNull SecretKeySpec deriveSecretKey(@NonNull final String salt, @NonNull final String password) {
         try {
             byte[] saltBytes = salt.getBytes(StandardCharsets.UTF_8);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -56,7 +50,7 @@ public class Crypto {
         }
     }
 
-    private static @NonNull EncryptedString encryptWithSecretKey(
+    private static @NonNull String encryptWithSecretKey(
         @NonNull final String value,
         @NonNull final SecretKey secretKey
     ) {
@@ -70,18 +64,18 @@ public class Crypto {
             byte[] finalByteArray = new byte[ivBytes.length + encryptedTextBytes.length];
             System.arraycopy(ivBytes, 0, finalByteArray, 0, ivBytes.length);
             System.arraycopy(encryptedTextBytes, 0, finalByteArray, ivBytes.length, encryptedTextBytes.length);
-            return new EncryptedString(Base64.getEncoder().encodeToString(finalByteArray));
+            return Base64.getEncoder().encodeToString(finalByteArray);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private static @NonNull String decryptWithSecretKey(
-        @NonNull final EncryptedString encrypted,
+        @NonNull final String encrypted,
         @NonNull final SecretKey secretKey
     ) {
         try {
-            byte[] cipherTextBytes = Base64.getDecoder().decode(encrypted.value());
+            byte[] cipherTextBytes = Base64.getDecoder().decode(encrypted);
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             IvParameterSpec iv = new IvParameterSpec(cipherTextBytes, 0, 16);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
@@ -92,11 +86,45 @@ public class Crypto {
         }
     }
 
-    public @NonNull EncryptedString encrypt(@NonNull final String value) {
-        return encryptWithSecretKey(value, secretKey);
+    public <T extends Serializable> @Nullable Encrypted<T> encrypt(@Nullable final T value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            String json;
+            if (value.getClass().isEnum()
+                || value instanceof Short
+                || value instanceof Integer
+                || value instanceof Long
+                || value instanceof Float
+                || value instanceof Double
+                || value instanceof String) {
+                json = objectMapper.convertValue(value, String.class);
+            } else {
+                json = objectMapper.writeValueAsString(value);
+            }
+            return new Encrypted<>(encryptWithSecretKey(json, secretKey));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public @NonNull String decrypt(@NonNull final EncryptedString encrypted) {
-        return decryptWithSecretKey(encrypted, secretKey);
+    public @Nullable String decrypt(@Nullable final Encrypted<String> encrypted) {
+        return decrypt(encrypted, String.class);
+    }
+
+    public <T> @Nullable T decrypt(
+        @Nullable final Encrypted<?> encrypted,
+        @NonNull final Class<? extends T> type
+    ) {
+        if (encrypted == null) {
+            return null;
+        }
+        var plain = decryptWithSecretKey(encrypted.value(), secretKey);
+        try {
+            return objectMapper.readValue(plain, type);
+        } catch (Exception e) {
+            return objectMapper.convertValue(plain, type);
+        }
     }
 }

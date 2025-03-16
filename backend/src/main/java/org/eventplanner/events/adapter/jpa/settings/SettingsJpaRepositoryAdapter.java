@@ -4,30 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eventplanner.common.Crypto;
-import org.eventplanner.common.EncryptedString;
+import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.application.ports.SettingsRepository;
+import org.eventplanner.events.application.services.EncryptionService;
 import org.eventplanner.events.domain.values.Settings;
 import org.eventplanner.events.domain.values.Settings.EmailSettings;
 import org.eventplanner.events.domain.values.Settings.NotificationSettings;
 import org.eventplanner.events.domain.values.Settings.UiSettings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class SettingsJpaRepositoryAdapter implements SettingsRepository {
 
     private final SettingsJpaRepository settingsJpaRepository;
-    private final Crypto crypto;
-
-    public SettingsJpaRepositoryAdapter(
-        @Autowired SettingsJpaRepository settingsJpaRepository,
-        @Value("${data.encryption-password}") String dataEncryptionPassword
-    ) {
-        this.settingsJpaRepository = settingsJpaRepository;
-        this.crypto = new Crypto("99066439-9e45-48e7-bb3d-7abff0e9cb9c", dataEncryptionPassword);
-    }
+    private final EncryptionService encryptionService;
 
     @Override
     public Settings getSettings() {
@@ -40,7 +33,7 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
 
         var emailPassword = settingsMap.get("email.password");
         if (emailPassword != null) {
-            emailPassword = crypto.decrypt(new EncryptedString(emailPassword));
+            emailPassword = encryptionService.decrypt(new Encrypted<>(emailPassword));
         }
 
         Integer emailPort = null;
@@ -52,7 +45,7 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
 
         var teamsWebhookUrl = settingsMap.get("notifications.teamsWebhookUrl");
         if (teamsWebhookUrl != null) {
-            teamsWebhookUrl = crypto.decrypt(new EncryptedString(teamsWebhookUrl));
+            teamsWebhookUrl = encryptionService.decrypt(new Encrypted<>(teamsWebhookUrl));
         }
         var notificationSettings = new NotificationSettings(teamsWebhookUrl);
 
@@ -116,7 +109,7 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
             if (settings.getTeamsWebhookUrl().isBlank()) {
                 entities.add(new SettingsJpaEntity("notifications.teamsWebhookUrl", null));
             } else {
-                var encryptedWebhookUrl = crypto.encrypt(settings.getTeamsWebhookUrl()).value();
+                var encryptedWebhookUrl = encryptionService.encrypt(settings.getTeamsWebhookUrl()).value();
                 entities.add(new SettingsJpaEntity("notifications.teamsWebhookUrl", encryptedWebhookUrl));
             }
         }
@@ -165,7 +158,7 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
             if (settings.getPassword().isBlank()) {
                 entities.add(new SettingsJpaEntity("email.password", null));
             } else {
-                var encryptedPassword = crypto.encrypt(settings.getPassword()).value();
+                var encryptedPassword = encryptionService.encrypt(settings.getPassword()).value();
                 entities.add(new SettingsJpaEntity("email.password", encryptedPassword));
             }
         }

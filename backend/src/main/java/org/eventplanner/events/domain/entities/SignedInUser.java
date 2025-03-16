@@ -1,7 +1,5 @@
 package org.eventplanner.events.domain.entities;
 
-import static org.eventplanner.common.ObjectUtils.orElse;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +16,8 @@ import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+
+import static org.eventplanner.common.ObjectUtils.orElse;
 
 public record SignedInUser(
     @NonNull UserKey key,
@@ -95,8 +95,7 @@ public record SignedInUser(
         var permissions = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .map(Role::fromString)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .flatMap(Optional::stream)
             .flatMap(Role::getPermissions);
         var mergedPermissions = Stream.concat(permissions, permissions().stream())
             .distinct()
