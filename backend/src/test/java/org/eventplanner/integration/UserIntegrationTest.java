@@ -35,6 +35,21 @@ class UserIntegrationTest {
     }
 
     @Test
+    void shouldReturnForbidden() throws Exception {
+        webMvc.perform(get("/api/v1/users")
+                .with(Auth.withAuthentication(Auth.TestUser.UNKNOWN_USER))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldReturnUnauthorized() throws Exception {
+        webMvc.perform(get("/api/v1/users")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void shouldReturnListOfMinimalUsers() throws Exception {
         webMvc.perform(get("/api/v1/users")
                 .with(Auth.withAuthentication(Auth.TestUser.TEAM_MEMBER))
