@@ -2,15 +2,21 @@ package org.eventplanner.events.domain.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
-import org.eventplanner.common.EncryptedString;
+import org.eventplanner.common.Encrypted;
+import org.eventplanner.events.domain.functions.DecryptFunc;
 import org.eventplanner.events.domain.values.AuthKey;
+import org.eventplanner.events.domain.values.Diet;
 import org.eventplanner.events.domain.values.EncryptedAddress;
+import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import static java.util.Optional.ofNullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,27 +37,70 @@ public class EncryptedUserDetails implements Serializable {
     private @NonNull Instant updatedAt;
     private @Nullable Instant verifiedAt;
     private @Nullable Instant lastLoginAt;
-    private @Nullable EncryptedString gender;
-    private @Nullable EncryptedString title;
-    private @NonNull EncryptedString firstName;
-    private @Nullable EncryptedString nickName;
-    private @Nullable EncryptedString secondName;
-    private @NonNull EncryptedString lastName;
-    private @NonNull List<EncryptedString> roles;
+    private @Nullable Encrypted<String> gender;
+    private @Nullable Encrypted<String> title;
+    private @NonNull Encrypted<String> firstName;
+    private @Nullable Encrypted<String> nickName;
+    private @Nullable Encrypted<String> secondName;
+    private @NonNull Encrypted<String> lastName;
+    private @NonNull List<Encrypted<Role>> roles;
     private @NonNull List<EncryptedUserQualification> qualifications;
     private @Nullable EncryptedAddress address;
-    private @Nullable EncryptedString email;
-    private @Nullable EncryptedString phone;
-    private @Nullable EncryptedString phoneWork;
-    private @Nullable EncryptedString mobile;
-    private @Nullable EncryptedString dateOfBirth;
-    private @Nullable EncryptedString placeOfBirth;
-    private @Nullable EncryptedString passNr;
-    private @Nullable EncryptedString comment;
-    private @Nullable EncryptedString nationality;
+    private @Nullable Encrypted<String> email;
+    private @Nullable Encrypted<String> phone;
+    private @Nullable Encrypted<String> phoneWork;
+    private @Nullable Encrypted<String> mobile;
+    private @Nullable Encrypted<LocalDate> dateOfBirth;
+    private @Nullable Encrypted<String> placeOfBirth;
+    private @Nullable Encrypted<String> passNr;
+    private @Nullable Encrypted<String> comment;
+    private @Nullable Encrypted<String> nationality;
     private @Nullable EncryptedEmergencyContact emergencyContact;
-    private @Nullable EncryptedString diseases;
-    private @Nullable EncryptedString intolerances;
-    private @Nullable EncryptedString medication;
-    private @Nullable EncryptedString diet;
+    private @Nullable Encrypted<String> diseases;
+    private @Nullable Encrypted<String> intolerances;
+    private @Nullable Encrypted<String> medication;
+    private @Nullable Encrypted<Diet> diet;
+
+    public @NonNull UserDetails decrypt(DecryptFunc decryptFunc) {
+        return new UserDetails(
+            key,
+            authKey,
+            createdAt,
+            updatedAt,
+            verifiedAt,
+            lastLoginAt,
+            decryptFunc.apply(gender, String.class),
+            decryptFunc.apply(title, String.class),
+            ofNullable(decryptFunc.apply(firstName, String.class)).orElse(""),
+            decryptFunc.apply(nickName, String.class),
+            decryptFunc.apply(secondName, String.class),
+            ofNullable(decryptFunc.apply(lastName, String.class)).orElse(""),
+            Collections.emptyList(),
+            roles.stream()
+                .map(r -> decryptFunc.apply(r, Role.class))
+                .toList(),
+            qualifications.stream()
+                .map(qualifications -> qualifications.decrypt(decryptFunc))
+                .toList(),
+            ofNullable(address)
+                .map(address -> address.decrypt(decryptFunc))
+                .orElse(null),
+            decryptFunc.apply(email, String.class),
+            decryptFunc.apply(phone, String.class),
+            decryptFunc.apply(phoneWork, String.class),
+            decryptFunc.apply(mobile, String.class),
+            decryptFunc.apply(dateOfBirth, LocalDate.class),
+            decryptFunc.apply(placeOfBirth, String.class),
+            decryptFunc.apply(passNr, String.class),
+            decryptFunc.apply(comment, String.class),
+            decryptFunc.apply(nationality, String.class),
+            ofNullable(emergencyContact)
+                .map(emergencyContact -> emergencyContact.decrypt(decryptFunc))
+                .orElse(null),
+            decryptFunc.apply(diseases, String.class),
+            decryptFunc.apply(intolerances, String.class),
+            decryptFunc.apply(medication, String.class),
+            decryptFunc.apply(diet, Diet.class)
+        );
+    }
 }

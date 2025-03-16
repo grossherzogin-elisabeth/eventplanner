@@ -1,5 +1,9 @@
 package org.eventplanner.integration;
 
+import java.io.IOException;
+
+import org.eventplanner.testdata.TestDb;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import lombok.extern.slf4j.Slf4j;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
@@ -26,6 +32,11 @@ class UserIntegrationTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @BeforeAll
+    static void setUpTestDb() throws IOException {
+        TestDb.setup();
+    }
 
     @BeforeEach
     void setup() {
@@ -37,7 +48,7 @@ class UserIntegrationTest {
     @Test
     void shouldReturnForbidden() throws Exception {
         webMvc.perform(get("/api/v1/users")
-                .with(Auth.withAuthentication(Auth.TestUser.UNKNOWN_USER))
+                .with(Auth.withAuthentication(Auth.TestUser.USER_WITHOUT_ROLE))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
@@ -62,6 +73,7 @@ class UserIntegrationTest {
                       { "key": "3449174e-c8e1-49b7-8ef0-35c8c5f23a0c", "firstName": "Bruce", "nickName": null, "lastName": "Benner" },
                       { "key": "80717734-d546-4b7b-a756-5f4f266b5ae6", "firstName": "Stephen", "nickName": "Doctor", "lastName": "Strange" },
                       { "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98", "firstName": "Anthony", "nickName": "Tony", "lastName": "Stark" },
+                      { "key": "b0c4bf2d-d390-4490-8a77-59214eb9a81c", "firstName": "Loki", "nickName": null, "lastName": "Odinson" },
                       { "key": "5bfe85c9-f0e6-4033-9ba3-cfdb677ddaee", "firstName": "Natasha", "nickName": null, "lastName": "Romanoff" },
                       { "key": "684e0bf5-c720-4c9a-a95d-9378351c35ee", "firstName": "Nick", "nickName": null, "lastName": "Fury" },
                       { "key": "c45ba65f-fb7f-474d-b86b-ca6f3143084a", "firstName": "Peter", "nickName": null, "lastName": "Parker" },
@@ -146,6 +158,17 @@ class UserIntegrationTest {
                           }
                         ],
                         "email": "tony.stark@test.email",
+                        "verified": false
+                      },
+                      {
+                        "key": "b0c4bf2d-d390-4490-8a77-59214eb9a81c",
+                        "firstName": "Loki",
+                        "nickName": null,
+                        "lastName": "Odinson",
+                        "positions": [],
+                        "roles": [],
+                        "qualifications": [],
+                        "email": "loki.odinson@asgard.email",
                         "verified": false
                       },
                       {

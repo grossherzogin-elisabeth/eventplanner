@@ -1,8 +1,5 @@
 package org.eventplanner.events.rest.users.dto;
 
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -14,6 +11,9 @@ import org.eventplanner.events.domain.values.Diet;
 import org.eventplanner.events.domain.values.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import static java.util.Optional.ofNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UpdateUserRequest(
     @Nullable String authKey,
@@ -52,7 +52,7 @@ public record UpdateUserRequest(
             nickName,
             secondName,
             lastName,
-            mapNullable(roles, (String s) -> Role.fromString(s).orElseThrow()),
+            mapNullable(roles, Role::parse),
             mapNullable(qualifications, UserQualificationRepresentation::toDomain),
             mapNullable(address, AddressRepresentation::toDomain),
             email,

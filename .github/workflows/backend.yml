@@ -1,7 +1,7 @@
 name: Backend
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
     - main
     types:
@@ -28,7 +28,9 @@ jobs:
     - name: Set up test db
       shell: bash
       working-directory: backend
-      run: mkdir data && cp src/test/resources/eventplanner-test.db data/eventplanner-test.db
+      run: |
+        mkdir data
+        cp src/test/resources/eventplanner-test.db data/eventplanner-test.db
 
     - name: Check tests
       shell: bash
