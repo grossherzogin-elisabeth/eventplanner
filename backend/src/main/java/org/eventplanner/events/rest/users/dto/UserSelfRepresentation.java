@@ -1,7 +1,5 @@
 package org.eventplanner.events.rest.users.dto;
 
-import static java.util.Optional.ofNullable;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -11,6 +9,9 @@ import org.eventplanner.events.domain.values.Diet;
 import org.eventplanner.events.domain.values.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import static java.util.Optional.ofNullable;
+import static org.eventplanner.common.StringUtils.trimToNull;
 
 public record UserSelfRepresentation(
     @NonNull String key,
@@ -39,28 +40,28 @@ public record UserSelfRepresentation(
     public static UserSelfRepresentation fromDomain(@NonNull UserDetails user) {
         return new UserSelfRepresentation(
             user.getKey().value(),
-            user.getGender(),
+            trimToNull(user.getGender()),
             user.getFirstName(),
-            user.getNickName(),
-            user.getSecondName(),
+            trimToNull(user.getNickName()),
+            trimToNull(user.getSecondName()),
             user.getLastName(),
             user.getPositions().stream().map(PositionKey::value).toList(),
             user.getQualifications().stream().map(UserQualificationRepresentation::fromDomain).toList(),
             AddressRepresentation.fromDomain(user.getAddress()),
-            user.getEmail(),
-            user.getPhone(),
-            user.getPhoneWork(),
-            user.getMobile(),
+            trimToNull(user.getEmail()),
+            trimToNull(user.getPhone()),
+            trimToNull(user.getPhoneWork()),
+            trimToNull(user.getMobile()),
             ofNullable(user.getDateOfBirth())
                 .map(LocalDate::toString)
                 .orElse(null),
-            user.getPlaceOfBirth(),
-            user.getPassNr(),
-            user.getNationality(),
+            trimToNull(user.getPlaceOfBirth()),
+            trimToNull(user.getPassNr()),
+            trimToNull(user.getNationality()),
             EmergencyContactRepresentation.fromDomain(user.getEmergencyContact()),
-            user.getDiseases(),
-            user.getIntolerances(),
-            user.getMedication(),
+            trimToNull(user.getDiseases()),
+            trimToNull(user.getIntolerances()),
+            trimToNull(user.getMedication()),
             ofNullable(user.getDiet())
                 .map(Diet::value)
                 .orElse(null)

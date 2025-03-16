@@ -3,6 +3,8 @@ package org.eventplanner.events.domain.values;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.springframework.lang.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -41,6 +43,11 @@ public enum Permission {
     }
 
     @JsonCreator
+    public static Permission parse(@NonNull String value) {
+        return fromString(value)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid permission value " + value));
+    }
+
     public static Optional<Permission> fromString(String value) {
         return Arrays.stream(values())
             .filter(permission -> permission.value().equals(value))
