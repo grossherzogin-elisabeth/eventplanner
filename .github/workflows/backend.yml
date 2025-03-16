@@ -3,11 +3,11 @@ name: Backend
 on:
   pull_request_target:
     branches:
-      - main
+    - main
     types:
-      - opened
-      - reopened
-      - synchronize
+    - opened
+    - reopened
+    - synchronize
 
 jobs:
   validate:
@@ -16,21 +16,35 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: 21
-          distribution: temurin
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: 21
+        distribution: temurin
 
-      - name: Check tests
-        shell: bash
-        working-directory: backend
-        run: ./gradlew test
+    - name: Set up test db
+      shell: bash
+      working-directory: backend
+      run: mkdir data && cp src/test/resources/eventplanner-test.db data/eventplanner-test.db
 
-      - name: Check build
-        shell: bash
-        working-directory: backend
-        run: ./gradlew build
+    - name: Check tests
+      shell: bash
+      working-directory: backend
+      run: ./gradlew test
+
+    - name: Check build
+      shell: bash
+      working-directory: backend
+      run: ./gradlew build
+
+    - name: Store reports
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: |
+          **/build/reports/
+          **/build/test-results
