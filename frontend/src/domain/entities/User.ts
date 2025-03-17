@@ -9,7 +9,7 @@ export interface User {
     nickName?: string;
     lastName: string;
     roles?: Role[];
-    positionKeys: PositionKey[];
+    positionKeys?: PositionKey[];
     email?: string;
     qualifications?: UserQualification[];
     verified?: boolean;

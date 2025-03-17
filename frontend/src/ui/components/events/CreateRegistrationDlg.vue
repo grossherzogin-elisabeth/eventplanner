@@ -38,7 +38,7 @@
                             <template #item="{ item }">
                                 <span class="flex-grow">{{ item.label }}</span>
                                 <i
-                                    v-if="selectedUser && item.value && !selectedUser.positionKeys.includes(item.value)"
+                                    v-if="selectedUser && item.value && !selectedUser.positionKeys?.includes(item.value)"
                                     class="fa-solid fa-warning mr-4 text-yellow"
                                 />
                             </template>
@@ -54,7 +54,7 @@
                     </div>
                     <template v-if="selectedUser !== undefined">
                         <VWarning
-                            v-if="registration.positionKey && !selectedUser?.positionKeys.includes(registration.positionKey)"
+                            v-if="registration.positionKey && !selectedUser?.positionKeys?.includes(registration.positionKey)"
                             class="my-4"
                         >
                             {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die Position
@@ -172,7 +172,7 @@ async function init(): Promise<void> {
     await fetchUsers();
     watch(selectedUser, () => {
         if (selectedUser.value && !registration.value.positionKey) {
-            registration.value.positionKey = selectedUser.value.positionKeys[0];
+            registration.value.positionKey = selectedUser.value.positionKeys?.[0] ?? '';
         }
     });
 }

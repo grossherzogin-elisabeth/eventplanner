@@ -120,7 +120,7 @@ async function open(user: User): Promise<boolean> {
     validation.reset();
     registration.value = {
         user: user,
-        positionKey: user.positionKeys[0],
+        positionKey: user.positionKeys?.[0] ?? '',
         eventKey: undefined,
         note: '',
     };
