@@ -26,7 +26,7 @@
                             <template #item="{ item }">
                                 <span class="flex-grow">{{ item.label }}</span>
                                 <i
-                                    v-if="selectedUser && item.value && !selectedUser.positionKeys.includes(item.value)"
+                                    v-if="selectedUser && item.value && !selectedUser.positionKeys?.includes(item.value)"
                                     class="fa-solid fa-warning mr-4 text-yellow"
                                 />
                             </template>
@@ -41,7 +41,7 @@
                         />
                     </div>
                     <template v-if="selectedUser !== undefined">
-                        <VWarning v-if="!selectedUser?.positionKeys.includes(registration.positionKey)" class="my-4">
+                        <VWarning v-if="!selectedUser?.positionKeys?.includes(registration.positionKey)" class="my-4">
                             {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die Position
                             <i>{{ selectedPosition?.name }}</i>
                         </VWarning>
