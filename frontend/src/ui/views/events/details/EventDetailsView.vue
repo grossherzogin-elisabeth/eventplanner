@@ -353,7 +353,7 @@ enum Tab {
     WaitingList = 'waitinglist',
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -398,7 +398,7 @@ async function fetchEvent(): Promise<void> {
 }
 
 async function onEventChanged(): Promise<void> {
-    emit('update:title', event.value?.name || '');
+    emit('update:tab-title', event.value?.name || '');
     if (!event.value) {
         return;
     }
