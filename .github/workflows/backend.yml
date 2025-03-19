@@ -8,6 +8,10 @@ on:
     - opened
     - reopened
     - synchronize
+    paths:
+    - 'backend/build.gradle'
+    - 'backend/settings.gradle'
+    - 'backend/src/**'
 
 jobs:
   validate:
