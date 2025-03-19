@@ -42,7 +42,7 @@ export class EventService {
         if (!slot) {
             throw new Error('Failed to resolve slot');
         }
-        if (!slot.positionKeys.find((positionkey) => user.positionKeys.includes(positionkey))) {
+        if (!slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey))) {
             console.warn(`Assigning ${user.firstName} ${user.lastName} to slot with mismatching positions!`);
             // throw new Error('User does not have the required position');
         }
@@ -97,7 +97,7 @@ export class EventService {
         if (!registration) {
             return false;
         }
-        return slot.positionKeys.find((positionkey) => user.positionKeys.includes(positionkey)) !== undefined;
+        return slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey)) !== undefined;
     }
 
     public getOpenSlots(event: Event): Slot[] {

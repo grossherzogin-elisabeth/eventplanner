@@ -406,7 +406,7 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
             (!filterOnlyActive.value || hasAnyEvents(it)) &&
             (!filterExpiredQualifications.value || it.expiredQualifications.length > 0) &&
             (!filterPendingVerification.value || !it.verified) &&
-            (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys)) &&
+            (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys ?? [])) &&
             (filterEvent.value === undefined || participatesInEvent(it)) &&
             usersService.doesUserMatchFilter(it, filter.value)
     )
@@ -544,7 +544,7 @@ async function fetchUsers(): Promise<void> {
             multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,
             singleDayEventsCount: registrationsSingleDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
-            positions: user.positionKeys.map((key) => positions.get(key)).filter(filterUndefined),
+            positions: user.positionKeys?.map((key) => positions.get(key)).filter(filterUndefined) ?? [],
             expiredQualifications: usersService.getExpiredQualifications(user),
             soonExpiringQualifications: usersService.getSoonExpiringQualifications(user),
         };
