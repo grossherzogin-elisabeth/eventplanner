@@ -163,7 +163,7 @@ enum State {
     REGISTRATION_BELONGS_TO_OTHER_USER = 'registration_belongs_to_other_user',
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -186,7 +186,7 @@ const daysUntilStart = computed<number>(() => {
 });
 
 function init(): void {
-    emit('update:title', 'Teilnahme bestätigen');
+    emit('update:tab-title', 'Teilnahme bestätigen');
     fetchEvent();
 }
 

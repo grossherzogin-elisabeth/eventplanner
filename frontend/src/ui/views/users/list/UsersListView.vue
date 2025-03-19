@@ -342,7 +342,7 @@ interface UserRegistrations extends User, Selectable {
     soonExpiringQualifications: QualificationKey[];
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -406,7 +406,7 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
             (!filterOnlyActive.value || hasAnyEvents(it)) &&
             (!filterExpiredQualifications.value || it.expiredQualifications.length > 0) &&
             (!filterPendingVerification.value || !it.verified) &&
-            (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys)) &&
+            (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys ?? [])) &&
             (filterEvent.value === undefined || participatesInEvent(it)) &&
             usersService.doesUserMatchFilter(it, filter.value)
     )
@@ -428,7 +428,7 @@ const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
 });
 
 async function init(): Promise<void> {
-    emit('update:title', 'Nutzer verwalten');
+    emit('update:tab-title', 'Nutzer verwalten');
     await fetchUsers();
     await fetchEvents();
     restoreScrollPosition();
@@ -544,7 +544,7 @@ async function fetchUsers(): Promise<void> {
             multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,
             singleDayEventsCount: registrationsSingleDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
-            positions: user.positionKeys.map((key) => positions.get(key)).filter(filterUndefined),
+            positions: user.positionKeys?.map((key) => positions.get(key)).filter(filterUndefined) ?? [],
             expiredQualifications: usersService.getExpiredQualifications(user),
             soonExpiringQualifications: usersService.getSoonExpiringQualifications(user),
         };

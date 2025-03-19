@@ -356,7 +356,7 @@ interface EventTableViewItem extends Event {
     stateDetails: StateDetails;
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -453,7 +453,7 @@ const tabs = computed<string[]>(() => {
 });
 
 async function init(): Promise<void> {
-    emit('update:title', 'Alle Reisen');
+    emit('update:tab-title', 'Alle Reisen');
     watch(tab, () => fetchEvents());
     await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();

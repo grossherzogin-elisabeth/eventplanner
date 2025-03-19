@@ -7,7 +7,7 @@ interface UserRepresentation {
     firstName: string;
     nickName?: string;
     lastName: string;
-    positions: string[];
+    positions?: string[];
     roles?: string[];
     qualifications?: UserQualificationRepresentation[];
     email?: string;

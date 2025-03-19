@@ -65,7 +65,7 @@ export class RegistrationService {
     }
 
     private hasOverwrittenPosition(registration: Registration, user?: User): boolean {
-        return user !== undefined && !user.positionKeys.includes(registration.positionKey);
+        return user !== undefined && !user.positionKeys?.includes(registration.positionKey);
     }
 
     private filterExpiredQualifications(user?: User, date: Date = new Date()): QualificationKey[] {
