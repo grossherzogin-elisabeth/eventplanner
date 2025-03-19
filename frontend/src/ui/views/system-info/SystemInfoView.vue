@@ -78,7 +78,7 @@ interface SystemInfo {
     buildCommit?: string;
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -86,7 +86,7 @@ const config = useConfig();
 const systemInfo = ref<SystemInfo>({});
 
 function init(): void {
-    emit('update:title', 'Feedback');
+    emit('update:tab-title', 'Feedback');
     fetchStatus();
 }
 
