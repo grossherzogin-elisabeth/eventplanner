@@ -285,7 +285,7 @@ enum Tab {
     EVENT_LOCATIONS = 'Reiseroute',
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -334,7 +334,7 @@ async function fetchEvent(): Promise<void> {
     const key = route.params.key as string;
     const event = await eventUseCase.getEventByKey(year, key, true);
     updateState(event);
-    emit('update:title', event.name);
+    emit('update:tab-title', event.name);
 }
 
 function preventPageUnloadOnUnsavedChanges(): void {

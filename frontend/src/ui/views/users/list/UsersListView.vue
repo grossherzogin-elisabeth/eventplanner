@@ -342,7 +342,7 @@ interface UserRegistrations extends User, Selectable {
     soonExpiringQualifications: QualificationKey[];
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -428,7 +428,7 @@ const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
 });
 
 async function init(): Promise<void> {
-    emit('update:title', 'Nutzer verwalten');
+    emit('update:tab-title', 'Nutzer verwalten');
     await fetchUsers();
     await fetchEvents();
     restoreScrollPosition();

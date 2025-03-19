@@ -98,7 +98,7 @@ interface CalendarDayEvent {
     offset: number;
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -124,7 +124,7 @@ const calendarStyle = ref({
 });
 
 function init(): void {
-    emit('update:title', `Alle Reisen ${route.params.year}`);
+    emit('update:tab-title', `Alle Reisen ${route.params.year}`);
     watch(route, () => fetchEvents());
     watch(
         () => events.value,

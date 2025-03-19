@@ -116,7 +116,7 @@ enum Tab {
     NOTIFICATIONS = 'Notifications',
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -127,7 +127,7 @@ const tab = ref<Tab>(tabs[0]);
 const settings = ref<AppSettings | null>(null);
 
 function init(): void {
-    emit('update:title', 'Einstellungen');
+    emit('update:tab-title', 'Einstellungen');
     fetchSettings();
 }
 
