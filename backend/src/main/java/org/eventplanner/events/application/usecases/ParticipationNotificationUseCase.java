@@ -97,7 +97,9 @@ public class ParticipationNotificationUseCase {
         var userKeyRegistrationMap = new HashMap<UserKey, Registration>();
         registrations.forEach(registration -> userKeyRegistrationMap.put(registration.getUserKey(), registration));
         var users = registrations.stream()
-            .map(registration -> userService.getUserByKey(registration.getUserKey()))
+            .map(Registration::getUserKey)
+            .distinct()
+            .map(userService::getUserByKey)
             .flatMap(Optional::stream)
             .toList();
 
