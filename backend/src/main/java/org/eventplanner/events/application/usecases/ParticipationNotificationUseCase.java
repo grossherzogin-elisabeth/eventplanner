@@ -16,7 +16,6 @@ import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.EventSlot;
 import org.eventplanner.events.domain.entities.Registration;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
 import org.eventplanner.events.domain.values.EventKey;
@@ -46,7 +45,17 @@ public class ParticipationNotificationUseCase {
         if (eventsToNotify.isEmpty()) {
             log.info("No events to notify for participation confirmation");
         } else {
-            eventsToNotify.forEach(event -> sendParticipationNotifications(event, 0));
+            for (final Event event : eventsToNotify) {
+                try {
+                    sendParticipationNotifications(event, 0);
+                } catch (Exception e) {
+                    log.error(
+                        "Failed to send participation confirmation requests for event {}",
+                        event.getName(),
+                        e
+                    );
+                }
+            }
         }
     }
 
@@ -55,56 +64,66 @@ public class ParticipationNotificationUseCase {
         if (eventsToNotify.isEmpty()) {
             log.info("No events to notify for participation confirmation reminder");
         } else {
-            eventsToNotify.forEach(event -> sendParticipationNotifications(event, 1));
+            for (final Event event : eventsToNotify) {
+                try {
+                    sendParticipationNotifications(event, 1);
+                } catch (Exception e) {
+                    log.error(
+                        "Failed to send participation confirmation requests for event {}",
+                        event.getName(),
+                        e
+                    );
+                }
+            }
         }
     }
 
     private void sendParticipationNotifications(@NonNull final Event event, final int alreadySentRequests) {
-        log.info("Sending participation notification request for event {}", event.getName());
-        var registrationKeys = event.getSlots()
-            .stream()
-            .map(EventSlot::getAssignedRegistration)
-            .filter(Objects::nonNull)
-            .toList();
-        var userKeyRegistrationMap = new HashMap<UserKey, Registration>();
-        event.getRegistrations().stream()
-            .filter(registration -> registrationKeys.contains(registration.getKey()) && registration.getUserKey() != null)
+        log.info("Sending participation confirmation requests for event {}", event.getName());
+        var registrations = event.getAssignedRegistrations().stream()
             .filter(registration -> registration.getConfirmedAt() == null)
-            .forEach(registration -> userKeyRegistrationMap.put(registration.getUserKey(), registration));
-        var users = event.getRegistrations().stream()
-            .filter(registration -> registrationKeys.contains(registration.getKey()))
-            .map(Registration::getUserKey)
-            .filter(Objects::nonNull)
-            .map(userService::getUserByKey)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
             .toList();
 
         // make sure every userKey has a registration with accessKey
         // needed for legacy registrations, where accessKey was not generated
-        userKeyRegistrationMap.entrySet().stream()
-            .filter(entry -> entry.getValue().getAccessKey() == null)
-            .forEach(entry -> {
-                var registration = entry.getValue();
+        registrations.stream()
+            .filter(registration -> registration.getAccessKey() == null)
+            .forEach(registration -> {
                 log.info("Generating missing access key for registration {}", registration.getKey());
                 registration.setAccessKey(Registration.generateAccessKey());
                 registrationRepository.updateRegistration(registration, event.getKey());
             });
 
-        if (alreadySentRequests == 0) {
-            users.forEach(user -> notificationService
-                .sendFirstParticipationConfirmationRequestNotification(
-                    user,
-                    event,
-                    userKeyRegistrationMap.get(user.getKey())
-                ));
-        } else if (alreadySentRequests == 1) {
-            users.forEach(user -> notificationService
-                .sendSecondParticipationConfirmationRequestNotification(
-                    user,
-                    event,
-                    userKeyRegistrationMap.get(user.getKey())
-                ));
+        var userKeyRegistrationMap = new HashMap<UserKey, Registration>();
+        registrations.forEach(registration -> userKeyRegistrationMap.put(registration.getUserKey(), registration));
+        var users = registrations.stream()
+            .map(Registration::getUserKey)
+            .distinct()
+            .map(userService::getUserByKey)
+            .flatMap(Optional::stream)
+            .toList();
+
+        for (var user : users) {
+            var registration = userKeyRegistrationMap.get(user.getKey());
+            try {
+                if (alreadySentRequests == 0) {
+                    notificationService
+                        .sendFirstParticipationConfirmationRequestNotification(
+                            user,
+                            event,
+                            registration
+                        );
+                } else if (alreadySentRequests == 1) {
+                    notificationService
+                        .sendSecondParticipationConfirmationRequestNotification(
+                            user,
+                            event,
+                            registration
+                        );
+                }
+            } catch (Exception e) {
+                log.error("Failed to create participation confirmation notification for user {}", user.getKey(), e);
+            }
         }
 
         event.setParticipationConfirmationsRequestsSent(alreadySentRequests + 1);
