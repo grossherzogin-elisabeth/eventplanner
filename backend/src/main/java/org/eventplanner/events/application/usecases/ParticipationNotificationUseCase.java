@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.eventplanner.events.application.ports.EventRepository;
+import org.eventplanner.events.application.ports.RegistrationRepository;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
@@ -38,6 +39,7 @@ public class ParticipationNotificationUseCase {
     private final NotificationService notificationService;
     private final UserService userService;
     private final RegistrationService registrationService;
+    private final RegistrationRepository registrationRepository;
 
     public void sendParticipationNotificationRequest() {
         var eventsToNotify = getEventsToNotify(0);
@@ -82,7 +84,12 @@ public class ParticipationNotificationUseCase {
         // needed for legacy registrations, where accessKey was not generated
         userKeyRegistrationMap.entrySet().stream()
             .filter(entry -> entry.getValue().getAccessKey() == null)
-            .forEach(entry -> entry.getValue().setAccessKey(Registration.generateAccessKey()));
+            .forEach(entry -> {
+                var registration = entry.getValue();
+                log.info("Generating missing access key for registration {}", registration.getKey());
+                registration.setAccessKey(Registration.generateAccessKey());
+                registrationRepository.updateRegistration(registration, event.getKey());
+            });
 
         if (alreadySentRequests == 0) {
             users.forEach(user -> notificationService
