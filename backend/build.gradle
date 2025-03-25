@@ -38,7 +38,7 @@ dependencies {
     implementation "org.apache.poi:poi-ooxml:5.4.0"
 
     // tests
-    testImplementation "org.springframework.boot:spring-boot-starter-test:3.4.3"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:3.4.4"
     testImplementation "org.springframework.security:spring-security-test:6.4.3"
 
     // silence "unknown enum constant javax.annotation.meta.When.MAYBE" warning
