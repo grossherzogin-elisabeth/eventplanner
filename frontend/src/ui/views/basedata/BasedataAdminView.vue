@@ -73,7 +73,7 @@ enum Tab {
     POSITIONS = 'Positionen',
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -85,7 +85,7 @@ const qualificationsTable = ref<{ createQualification(): void } | null>(null);
 const positionsTable = ref<{ createPosition(): void } | null>(null);
 
 function init(): void {
-    emit('update:title', 'Stammdaten');
+    emit('update:tab-title', 'Stammdaten');
 }
 
 function createQualification(): void {

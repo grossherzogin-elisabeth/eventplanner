@@ -20,16 +20,3 @@ export function formatDate(date?: Date | string | number, delimiter: string = '.
     const year = d.getFullYear();
     return `${day}${delimiter}${month}${delimiter}${year}`;
 }
-
-export function formatIcsDate(date: Date): string {
-    const year = String(date.getFullYear());
-    let month = String(date.getMonth() + 1);
-    if (month.length === 1) month = `0${month}`;
-    let day = String(date.getDate());
-    if (day.length === 1) day = `0${day}`;
-    let hour = String(date.getHours());
-    if (hour.length === 1) hour = `0${hour}`;
-    let minute = String(date.getMinutes());
-    if (minute.length === 1) minute = `0${minute}`;
-    return `${year}${month}${day}T${hour}${minute}00Z`;
-}

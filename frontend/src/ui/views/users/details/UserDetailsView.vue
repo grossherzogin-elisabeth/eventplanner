@@ -160,7 +160,7 @@ enum Tab {
     USER_OTHER = 'app.user-details.tab.other',
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -204,7 +204,7 @@ function init(): void {
 async function fetchUser(): Promise<void> {
     userOriginal.value = await userAdministrationUseCase.getUserDetailsByKey(userKey.value);
     user.value = deepCopy(userOriginal.value);
-    emit('update:title', `${user.value.firstName} ${user.value.lastName}`);
+    emit('update:tab-title', `${user.value.firstName} ${user.value.lastName}`);
     validation.showErrors.value = true;
 }
 

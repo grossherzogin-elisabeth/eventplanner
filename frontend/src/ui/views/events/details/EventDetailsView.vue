@@ -202,7 +202,7 @@
                                         </RouterLink>
                                         <span v-else-if="it.name" class="truncate">{{ it.name }}</span>
                                         <span v-else-if="it.user?.key" class="italic text-error"> Unbekannter Nutzer </span>
-                                        <span v-else class="truncate italic text-error">Noch nicht besetzt</span>
+                                        <span v-else class="truncate italic text-error text-opacity-75">Noch nicht besetzt</span>
                                         <span class="flex-grow"></span>
                                         <span :style="{ background: it.position.color }" class="position ml-auto text-xs">
                                             {{ it.position.name }}
@@ -353,7 +353,7 @@ enum Tab {
     WaitingList = 'waitinglist',
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -398,7 +398,7 @@ async function fetchEvent(): Promise<void> {
 }
 
 async function onEventChanged(): Promise<void> {
-    emit('update:title', event.value?.name || '');
+    emit('update:tab-title', event.value?.name || '');
     if (!event.value) {
         return;
     }
@@ -413,9 +413,6 @@ async function fetchTeam(event: Event): Promise<void> {
     const registrations = await eventUseCase.resolveRegistrations(event);
     team.value = eventUseCase.filterForCrew(event, registrations);
     waitingList.value = eventUseCase.filterForWaitingList(event, registrations);
-    // const slots = await usersUseCase.resolveEventSlots(event);
-    // team.value = slots.filter((it) => it.criticality >= 1 || it.userName);
-    // waitingList.value = await usersUseCase.resolveWaitingList(event);
 }
 
 async function choosePositionAndJoinEvent(evt: Event): Promise<void> {

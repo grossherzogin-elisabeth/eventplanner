@@ -37,6 +37,10 @@ security:
 data:
   directory: ${DATA_DIRECTORY:data}
   encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
+  encryption-rotation:
+    rotate-users: ${ROTATE_USER_ENCRYPTION:false}
+    old-secret: ${DATA_ENCRYPTION_PASSWORD_OLD:}
+    new-secret: ${DATA_ENCRYPTION_PASSWORD:}
   db-url: jdbc:sqlite:${data.directory}/eventplanner.db
 
 spring:

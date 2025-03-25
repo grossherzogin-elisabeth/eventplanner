@@ -46,7 +46,7 @@ export function usePositions() {
         );
     }
 
-    update();
+    const loading = update();
 
-    return { positions, options, optionsIncludingNone, get, update, all };
+    return { positions, options, optionsIncludingNone, get, update, all, loading };
 }

@@ -9,6 +9,8 @@ import org.eventplanner.events.domain.values.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import static org.eventplanner.common.StringUtils.trimToNull;
+
 public record UserAdminListRepresentation(
     @NonNull String key,
     @NonNull String firstName,
@@ -24,14 +26,14 @@ public record UserAdminListRepresentation(
         return new UserAdminListRepresentation(
             user.getKey().value(),
             user.getFirstName(),
-            user.getNickName(),
+            trimToNull(user.getNickName()),
             user.getLastName(),
             user.getPositions().stream().map(PositionKey::value).toList(),
             user.getRoles().stream().map(Role::value).toList(),
             user.getQualifications().stream()
                 .map(UserQualificationRepresentation::fromDomain)
                 .toList(),
-            user.getEmail(),
+            trimToNull(user.getEmail()),
             user.getVerifiedAt() != null
         );
     }

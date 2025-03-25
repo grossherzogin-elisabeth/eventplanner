@@ -400,7 +400,7 @@ enum Tab {
     QUALIFICATIONS = 'app.account.tab.qualifications',
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -441,7 +441,7 @@ async function save(): Promise<void> {
 }
 
 function init(): void {
-    emit('update:title', 'Meine Daten');
+    emit('update:tab-title', 'Meine Daten');
     fetchUserDetails();
 }
 

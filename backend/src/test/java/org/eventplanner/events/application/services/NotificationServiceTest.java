@@ -1,11 +1,14 @@
 package org.eventplanner.events.application.services;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.eventplanner.events.domain.values.NotificationType;
 import org.eventplanner.events.domain.values.Role;
+import org.eventplanner.testdata.TestDb;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,6 +40,11 @@ class NotificationServiceTest {
 
     private NotificationService testee;
     private NotificationDispatcher dispatcher;
+
+    @BeforeAll
+    static void setUpTestDb() throws IOException {
+        TestDb.setup();
+    }
 
     @BeforeEach
     void setUp() {

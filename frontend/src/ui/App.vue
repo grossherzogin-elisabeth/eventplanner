@@ -12,7 +12,7 @@
                 <AppMenu class="relative z-10" />
             </div>
             <div class="relative flex w-0 flex-grow flex-col bg-surface xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl">
-                <RouterView id="router-view" v-model:title="title" class="flex flex-1 flex-col" />
+                <RouterView id="router-view" v-model:tab-title="title" class="flex flex-1 flex-col" />
             </div>
         </div>
     </div>

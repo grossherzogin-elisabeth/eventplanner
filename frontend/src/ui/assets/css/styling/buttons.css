@@ -85,6 +85,10 @@ a.btn-danger,
     @apply bg-secondary-container text-onsecondary-container;
 }
 
+.btn-ghost:disabled {
+    @apply opacity-50;
+}
+
 .btn-ghost-danger {
     @apply text-error;
 }

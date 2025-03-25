@@ -52,7 +52,7 @@ import { VInfo } from '@/ui/components/common';
 import { useAuthUseCase, useConfig } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -62,7 +62,7 @@ const auth = useAuthUseCase();
 const signedInUser = auth.getSignedInUser();
 
 function init(): void {
-    emit('update:title', 'Start');
+    emit('update:tab-title', 'Start');
     if (signedInUser.roles.includes(Role.TEAM_MEMBER)) {
         router.push({ name: Routes.Home });
     } else if (signedInUser.roles.includes(Role.USER_MANAGER)) {

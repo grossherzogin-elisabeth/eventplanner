@@ -3,16 +3,16 @@ package org.eventplanner.events.domain.entities;
 import java.io.Serializable;
 import java.time.Instant;
 
-import org.eventplanner.common.Crypto;
-import org.eventplanner.common.Encryptable;
-import org.eventplanner.common.EncryptedString;
+import org.eventplanner.common.Encrypted;
+import org.eventplanner.events.domain.functions.DecryptFunc;
 import org.eventplanner.events.domain.values.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import static java.util.Optional.ofNullable;
+import static java.util.Objects.requireNonNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,17 +21,15 @@ import lombok.ToString;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
-public class EncryptedUserQualification implements Encryptable<UserQualification>, Serializable {
-    private @NonNull EncryptedString qualificationKey;
-    private @Nullable EncryptedString expiresAt;
+public class EncryptedUserQualification implements Serializable {
+    private @NonNull Encrypted<QualificationKey> qualificationKey;
+    private @Nullable Encrypted<Instant> expiresAt;
 
-    @Override
-    public @NonNull UserQualification decrypt(@NonNull Crypto crypto) {
-        return new UserQualification(
-            new QualificationKey(crypto.decrypt(qualificationKey)),
-            ofNullable(expiresAt).map(crypto::decrypt).map(Instant::parse).orElse(null),
-            expiresAt != null
-        );
+    public @NonNull UserQualification decrypt(DecryptFunc decryptFunc) {
+        var decryptedKey = requireNonNull(decryptFunc.apply(qualificationKey, QualificationKey.class));
+        var decryptedExpiresAt = decryptFunc.apply(expiresAt, Instant.class);
+        return new UserQualification(decryptedKey, decryptedExpiresAt, decryptedExpiresAt != null);
     }
 }

@@ -17,6 +17,7 @@ import type {
     SettingsRepository,
     UserRepository,
 } from '@/application';
+import { CalendarService } from '@/application';
 import { QualificationUseCase } from '@/application';
 import { PositionAdministrationUseCase, PositionUseCase, QualificationAdministrationUseCase } from '@/application';
 import { NotificationService } from '@/application';
@@ -113,6 +114,7 @@ async function init(): Promise<void> {
     });
     const notificationService = new NotificationService();
     const errorHandlingService = new ErrorHandlingService(() => accountRepository.login(location.pathname));
+    const calendarService = new CalendarService();
 
     const application: Application = {
         config: config,
@@ -141,6 +143,7 @@ async function init(): Promise<void> {
                 positionCachingService: positionCachingService,
                 registrationService: domain.services.registrations,
                 eventService: domain.services.events,
+                calendarService: calendarService,
             }),
             users: new UsersUseCase({
                 config: config,

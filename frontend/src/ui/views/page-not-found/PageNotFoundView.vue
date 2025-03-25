@@ -29,12 +29,12 @@
     </div>
 </template>
 <script lang="ts" setup>
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
 function init(): void {
-    emit('update:title', '404 - Seite nicht gefunden');
+    emit('update:tab-title', '404 - Seite nicht gefunden');
 }
 
 init();

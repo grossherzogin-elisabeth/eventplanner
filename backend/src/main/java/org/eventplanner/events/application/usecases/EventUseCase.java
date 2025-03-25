@@ -78,6 +78,8 @@ public class EventUseCase {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
         var event = this.eventRepository.findByKey(key)
             .filter(evt -> filterForVisibility(signedInUser, evt))
+            .map(eventService::removeInvalidSlotAssignments)
+            .map(evt -> clearConfidentialData(signedInUser, evt))
             .orElseThrow();
         return clearConfidentialData(signedInUser, event);
     }
@@ -114,6 +116,7 @@ public class EventUseCase {
 
         var event = this.eventRepository.findByKey(eventKey).orElseThrow();
         log.info("Updating event {}", event.getName());
+        event = eventService.removeInvalidSlotAssignments(event);
         var previousState = event.getState();
 
         if (signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {

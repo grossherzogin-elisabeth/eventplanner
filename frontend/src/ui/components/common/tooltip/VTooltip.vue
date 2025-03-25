@@ -5,7 +5,7 @@
     <VDropdownWrapper
         v-if="showTooltip"
         :anchor="element"
-        class="pointer-events-none pt-8"
+        class="pointer-events-none pt-4"
         min-width="0rem"
         max-width="min(25rem, 90vw)"
         anchor-align-x="center"

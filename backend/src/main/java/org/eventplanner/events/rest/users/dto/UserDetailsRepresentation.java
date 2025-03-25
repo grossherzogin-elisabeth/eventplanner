@@ -1,7 +1,5 @@
 package org.eventplanner.events.rest.users.dto;
 
-import static java.util.Optional.ofNullable;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -14,6 +12,9 @@ import org.eventplanner.events.domain.values.PositionKey;
 import org.eventplanner.events.domain.values.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import static java.util.Optional.ofNullable;
+import static org.eventplanner.common.StringUtils.trimToNull;
 
 public record UserDetailsRepresentation(
     @NonNull String key,
@@ -61,31 +62,31 @@ public record UserDetailsRepresentation(
             ofNullable(user.getLastLoginAt())
                 .map(Instant::toString)
                 .orElse(null),
-            user.getTitle(),
-            user.getGender(),
+            trimToNull(user.getTitle()),
+            trimToNull(user.getGender()),
             user.getFirstName(),
-            user.getNickName(),
-            user.getSecondName(),
+            trimToNull(user.getNickName()),
+            trimToNull(user.getSecondName()),
             user.getLastName(),
             user.getPositions().stream().map(PositionKey::value).toList(),
             user.getRoles().stream().map(Role::value).toList(),
             user.getQualifications().stream().map(UserQualificationRepresentation::fromDomain).toList(),
             AddressRepresentation.fromDomain(user.getAddress()),
-            user.getEmail(),
-            user.getPhone(),
-            user.getPhoneWork(),
-            user.getMobile(),
+            trimToNull(user.getEmail()),
+            trimToNull(user.getPhone()),
+            trimToNull(user.getPhoneWork()),
+            trimToNull(user.getMobile()),
             ofNullable(user.getDateOfBirth())
                 .map(LocalDate::toString)
                 .orElse(null),
-            user.getPlaceOfBirth(),
-            user.getPassNr(),
-            user.getComment(),
-            user.getNationality(),
+            trimToNull(user.getPlaceOfBirth()),
+            trimToNull(user.getPassNr()),
+            trimToNull(user.getComment()),
+            trimToNull(user.getNationality()),
             EmergencyContactRepresentation.fromDomain(user.getEmergencyContact()),
-            user.getDiseases(),
-            user.getIntolerances(),
-            user.getMedication(),
+            trimToNull(user.getDiseases()),
+            trimToNull(user.getIntolerances()),
+            trimToNull(user.getMedication()),
             ofNullable(user.getDiet())
                 .map(Diet::value)
                 .orElse(null)

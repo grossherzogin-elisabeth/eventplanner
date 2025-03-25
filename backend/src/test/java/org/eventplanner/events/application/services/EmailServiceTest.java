@@ -1,5 +1,6 @@
 package org.eventplanner.events.application.services;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,8 @@ import org.eventplanner.events.domain.values.PersonalNotification;
 import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.Settings;
 import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.testdata.TestDb;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,11 @@ class EmailServiceTest {
     private EmailSender emailSender;
 
     private EmailService testee;
+
+    @BeforeAll
+    static void setUpTestDb() throws IOException {
+        TestDb.setup();
+    }
 
     @BeforeEach
     void setUp() {

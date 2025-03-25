@@ -140,15 +140,26 @@
                             <template v-if="item.locations.length === 0">keine Reiseroute angegeben</template>
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
+                        <div class="flex w-full items-center gap-px pt-2">
+                            <template v-for="position in item.assignedPositions" :key="position.key + index">
+                                <div class="w-1 flex-grow">
+                                    <VTooltip class="" :delay="50">
+                                        <template #tooltip>
+                                            <div class="position text-sm shadow-xl" :style="{ backgroundColor: position.color }">
+                                                {{ position.name }}
+                                            </div>
+                                        </template>
+                                        <template #default>
+                                            <div class="h-2 rounded" :style="{ backgroundColor: position.color }" />
+                                        </template>
+                                    </VTooltip>
+                                </div>
+                            </template>
+                        </div>
                     </td>
                     <!-- status -->
                     <td class="w-1/6">
-                        <div class="flex items-center justify-end">
-                            <div class="status-panel" :class="item.stateDetails.color">
-                                <i class="fa-solid w-4" :class="item.stateDetails.icon"></i>
-                                <span class="whitespace-nowrap font-semibold">{{ item.stateDetails.name }}</span>
-                            </div>
-                        </div>
+                        <EventStateBadge :event="item" />
                     </td>
                     <!-- crew -->
                     <td class="w-1/6 min-w-24 whitespace-nowrap">
@@ -387,9 +398,11 @@ import { computed, nextTick, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, EventType, Registration } from '@/domain';
+import type { Event, EventType, Position, Registration } from '@/domain';
+import { SlotCriticality } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { VTooltip } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
@@ -407,17 +420,12 @@ import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
+import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
-
-interface StateDetails {
-    name: string;
-    color: string;
-    icon: string;
-    iconMobile?: string;
-}
+import EventStateBadge from '@/ui/views/events/list-admin/EventStateBadge.vue';
 
 interface EventTableViewItem extends Event {
     selected: boolean;
@@ -425,10 +433,10 @@ interface EventTableViewItem extends Event {
     waitingListCount: number;
     hasOpenSlots: boolean;
     hasOpenRequiredSlots: boolean;
-    stateDetails: StateDetails;
+    assignedPositions: Position[];
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -438,6 +446,7 @@ const usersUseCase = useUsersUseCase();
 const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
 const eventService = useEventService();
+const positions = usePositions();
 const router = useRouter();
 const signedInUser = authUseCase.getSignedInUser();
 const eventTypes = useEventTypes();
@@ -519,8 +528,9 @@ const tabs = computed<string[]>(() => {
 });
 
 async function init(): Promise<void> {
-    emit('update:title', 'Reisen verwalten');
+    emit('update:tab-title', 'Reisen verwalten');
     watch(tab, () => fetchEvents());
+    await positions.loading;
     await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();
     restoreScrollPosition();
@@ -552,62 +562,25 @@ async function fetchEvents(): Promise<void> {
 async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
     const evts = await eventUseCase.getEvents(year);
     return evts.map((evt) => {
+        const openSlots = eventService.getOpenSlots(evt);
+        const openRequiredSlots = openSlots.filter((slot) => slot.criticality !== SlotCriticality.Optional);
+        const openOptionalSlots = openSlots.filter((slot) => slot.criticality === SlotCriticality.Optional);
+
         const tableItem: EventTableViewItem = {
             ...evt,
             selected: false,
             isPastEvent: evt.start.getTime() < new Date().getTime(),
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
-            hasOpenSlots: hasOpenSlots(evt),
-            hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
-            stateDetails: {
-                name: '',
-                icon: '',
-                color: '',
-            },
+            hasOpenSlots: openOptionalSlots.length > 0,
+            hasOpenRequiredSlots: openRequiredSlots.length > 0,
+            assignedPositions: eventService
+                .getAssignedRegistrations(evt)
+                .map((reg) => positions.get(reg.positionKey))
+                .filter(filterUndefined)
+                .sort((a, b) => b.prio - a.prio),
         };
-        tableItem.stateDetails = getStateDetails(tableItem);
         return tableItem;
     });
-}
-
-function getStateDetails(event: EventTableViewItem): StateDetails {
-    switch (event.state) {
-        case EventState.Draft:
-            return {
-                name: 'Entwurf',
-                icon: 'fa-compass-drafting',
-                color: 'bg-surface-container-highest text-onsurface',
-            };
-        case EventState.OpenForSignup:
-            return {
-                name: 'Crew Anmeldung',
-                icon: 'fa-people-group',
-                color: 'bg-surface-container-highest text-onsurface',
-            };
-        case EventState.Canceled:
-            return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
-    }
-    if (event.hasOpenRequiredSlots) {
-        return { name: 'Fehlende Crew', icon: 'fa-warning', color: 'bg-yellow-container text-onyellow-container' };
-    }
-    if (event.hasOpenSlots) {
-        return {
-            name: 'Freie Plätze',
-            icon: 'fa-info-circle',
-            iconMobile: 'fa-info',
-            color: 'bg-blue-container text-onblue-container',
-        };
-    }
-    return {
-        name: 'Voll belegt',
-        icon: 'fa-check-circle',
-        iconMobile: 'fa-check',
-        color: 'bg-green-container text-ongreen-container',
-    };
-}
-
-function hasOpenSlots(event: Event): boolean {
-    return event.slots.filter((slt) => !slt.assignedRegistrationKey).length > 0;
 }
 
 async function editEvent(evt: EventTableViewItem): Promise<void> {

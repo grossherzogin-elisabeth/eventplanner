@@ -270,10 +270,9 @@
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
-                            <!-- TODO -->
-                            <li class="context-menu-item disabled hidden">
+                            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
                                 <i class="fa-solid fa-calendar-alt" />
-                                <span>Kalendereintrag erstellen*</span>
+                                <span>Kalendereintrag erstellen</span>
                             </li>
                             <li
                                 v-if="signedInUser.positions.length === 1"
@@ -357,7 +356,7 @@ interface EventTableViewItem extends Event {
     stateDetails: StateDetails;
 }
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -454,7 +453,7 @@ const tabs = computed<string[]>(() => {
 });
 
 async function init(): Promise<void> {
-    emit('update:title', 'Alle Reisen');
+    emit('update:tab-title', 'Alle Reisen');
     watch(tab, () => fetchEvents());
     await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();
@@ -492,8 +491,8 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
             selected: false,
             isPastEvent: evt.start.getTime() < new Date().getTime(),
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
-            hasOpenSlots: eventService.hasOpenSlots(evt, signedInUser.value.positions),
-            hasOpenRequiredSlots: eventService.hasOpenImportantSlots(evt, signedInUser.value.positions),
+            hasOpenSlots: eventService.hasOpenSlots(evt),
+            hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
             stateDetails: {
                 name: '',
                 icon: '',

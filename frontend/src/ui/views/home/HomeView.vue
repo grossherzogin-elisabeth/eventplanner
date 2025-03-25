@@ -63,7 +63,7 @@ import { useEventService } from '@/ui/composables/Domain';
 import { Routes } from '@/ui/views/Routes';
 import EventCard from '@/ui/views/home/EventCard.vue';
 
-type RouteEmits = (e: 'update:title', value: string) => void;
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
@@ -113,7 +113,7 @@ function isNextMonth(date: Date): boolean {
 }
 
 function init(): void {
-    emit('update:title', 'Meine nächsten Reisen');
+    emit('update:tab-title', 'Meine nächsten Reisen');
     if (user.permissions.includes(Permission.READ_EVENTS)) {
         fetchEvents();
     } else {
