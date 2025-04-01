@@ -46,12 +46,12 @@ module.exports = {
                 container: '#713f12',
             },
             green: {
-                DEFAULT: '#14522d',
-                container: '#c6ecd3',
+                DEFAULT: colors.lime['800'],
+                container: 'rgba(101,163,13,0.1)',
             },
             ongreen: {
-                DEFAULT: '#c6ecd3',
-                container: '#14532d',
+                DEFAULT: colors.green['50'],
+                container: colors.lime['800'],
             },
 
             p: {

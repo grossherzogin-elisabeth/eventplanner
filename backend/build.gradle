@@ -3,7 +3,7 @@ plugins {
     id "jacoco"
     id "org.springframework.boot" version "3.4.4"
     id "io.spring.dependency-management" version "1.1.7"
-    id "io.freefair.lombok" version "8.13"
+    id "io.freefair.lombok" version "8.13.1"
 }
 
 group = "org.eventplanner"
@@ -15,7 +15,7 @@ java {
 
 ext {
     springBootVersion = "3.4.4"
-    hibernateVersion = "6.6.11.Final"
+    hibernateVersion = "6.6.12.Final"
     apachePoiVersion = "5.4.0"
 }
 
@@ -34,7 +34,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
 
     // sqlite
-    implementation "org.xerial:sqlite-jdbc:3.46.1.3"
+    implementation "org.xerial:sqlite-jdbc:3.49.1.0"
     implementation "org.hibernate.orm:hibernate-core:${hibernateVersion}"
     implementation "org.hibernate.orm:hibernate-community-dialects:${hibernateVersion}"
     implementation "org.flywaydb:flyway-core:10.20.0"
@@ -45,7 +45,7 @@ dependencies {
 
     // tests
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    testImplementation "org.springframework.security:spring-security-test:6.4.3"
+    testImplementation "org.springframework.security:spring-security-test:6.4.4"
 
     // silence "unknown enum constant javax.annotation.meta.When.MAYBE" warning
     // https://stackoverflow.com/questions/53326271/spring-nullable-annotation-generates-unknown-enum-constant-warning

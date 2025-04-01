@@ -21,10 +21,10 @@
                         <template v-if="props.value.slot">
                             <!-- user status -->
                             <span v-if="props.value.name && !props.value.registration?.confirmed" class="">
-                                <i class="fa-solid fa-user-clock opacity-50"></i>
+                                <i class="fa-solid fa-user-clock opacity-25"></i>
                             </span>
                             <span v-else-if="props.value.name && props.value.registration?.confirmed">
-                                <i class="fa-solid fa-user-check text-green"></i>
+                                <i class="fa-solid fa-user-check text-green opacity-60"></i>
                             </span>
                             <span v-else>
                                 <i class="fa-solid fa-user-xmark text-error text-opacity-50"></i>
