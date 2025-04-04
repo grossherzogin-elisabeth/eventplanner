@@ -15,6 +15,7 @@ export { default as VInputLabel } from './input/VInputLabel.vue';
 export { default as VInputMultiSelection } from './input/VInputMultiSelection.vue';
 export { default as VInputRadio } from './input/VInputRadio.vue';
 export { default as VInputNumber } from './input/VInputNumber.vue';
+export { default as VInputSlider } from './input/VInputSlider.vue';
 export { default as VInputSelect } from './input/VInputSelect.vue';
 export { default as VInputText } from './input/VInputText.vue';
 export { default as VInputTextArea } from './input/VInputTextArea.vue';
