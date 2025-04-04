@@ -1,112 +1,119 @@
 <template>
     <div class="xl:overflow-auto">
-        <div class="px-8 pb-8 pt-10 md:px-16 xl:px-20">
-            <h1 class="mb-10">Der geheime Windrechner</h1>
-            <div class="flex flex-col items-stretch gap-8 xl:flex-row">
-                <div class="w-full xl:max-w-sm">
-                    <h2 class="mb-4 font-bold text-secondary">Schiffsdaten</h2>
-                    <div class="mb-4">
-                        <VInputLabel>Heading (HDG)</VInputLabel>
-                        <VInputSlider v-model="hdg" :min="0" :max="360">
-                            <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
-                        </VInputSlider>
-                    </div>
-                    <div class="mb-4">
-                        <VInputLabel>Course over ground(COG)</VInputLabel>
-                        <VInputSlider v-model="cog" :min="0" :max="360">
-                            <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
-                        </VInputSlider>
-                    </div>
-                    <div class="mb-8">
-                        <VInputLabel>Speed over ground (SOG)</VInputLabel>
-                        <VInputNumber v-model="sog">
-                            <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
-                        </VInputNumber>
-                    </div>
+        <div class="px-8 py-4 md:px-16 lg:pt-10 xl:px-20">
+            <div class="flex flex-col items-stretch gap-8 xl:flex-row xl:gap-16">
+                <div class="w-full md:max-w-sm">
+                    <section>
+                        <h2 class="mb-4 font-bold text-secondary">Schiffsdaten</h2>
+                        <div class="mb-4">
+                            <VInputLabel>Heading (HDG)</VInputLabel>
+                            <VInputSlider v-model="hdg" :min="0" :max="360">
+                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
+                            </VInputSlider>
+                        </div>
+                        <div class="mb-4">
+                            <VInputLabel>Course over ground(COG)</VInputLabel>
+                            <VInputSlider v-model="cog" :min="0" :max="360">
+                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
+                            </VInputSlider>
+                        </div>
+                        <div class="mb-8">
+                            <VInputLabel>Speed over ground (SOG)</VInputLabel>
+                            <VInputNumber v-model="sog">
+                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
+                            </VInputNumber>
+                        </div>
+                    </section>
 
-                    <h2 class="mb-4 font-bold text-secondary">Scheinbarer Wind</h2>
-                    <div class="mb-4">
-                        <VInputLabel>Scheinbare Windgeschwindigkeit</VInputLabel>
-                        <VInputNumber
-                            :model-value="relativeWindSpeed"
-                            @update:model-value="recalculateFromRelativeWind($event, relativeWindDirection)"
-                        >
-                            <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
-                        </VInputNumber>
-                    </div>
-                    <div class="mb-8">
-                        <VInputLabel>Scheinbare Windrichtung</VInputLabel>
-                        <VInputSlider
-                            :model-value="relativeWindDirection"
-                            :min="-180"
-                            :max="180"
-                            @update:model-value="recalculateFromRelativeWind(relativeWindSpeed, $event)"
-                        >
-                            <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
-                        </VInputSlider>
-                    </div>
+                    <section>
+                        <h2 class="mb-4 font-bold text-secondary">Scheinbarer Wind</h2>
+                        <div class="mb-4">
+                            <VInputLabel>Scheinbare Windgeschwindigkeit</VInputLabel>
+                            <VInputNumber
+                                :model-value="relativeWindSpeed"
+                                @update:model-value="recalculateFromRelativeWind($event, relativeWindDirection)"
+                            >
+                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
+                            </VInputNumber>
+                        </div>
+                        <div class="mb-8">
+                            <VInputLabel>Scheinbare Windrichtung</VInputLabel>
+                            <VInputSlider
+                                :model-value="relativeWindDirection"
+                                :min="-180"
+                                :max="180"
+                                @update:model-value="recalculateFromRelativeWind(relativeWindSpeed, $event)"
+                            >
+                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
+                            </VInputSlider>
+                        </div>
+                    </section>
 
-                    <h2 class="mb-4 font-bold text-secondary">Wahrer Wind</h2>
-                    <div class="mb-4">
-                        <VInputLabel>Wahre Windgeschwindigkeit</VInputLabel>
-                        <VInputNumber
-                            :model-value="absoluteWindSpeed"
-                            @update:model-value="recalculateFromAbsoluteWind($event, absoluteWindDirection)"
-                        >
-                            <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
-                        </VInputNumber>
-                    </div>
-                    <div class="mb-4">
-                        <VInputLabel>Wahre Windrichtung</VInputLabel>
-                        <VInputSlider
-                            :model-value="absoluteWindDirection"
-                            :min="0"
-                            :max="360"
-                            @update:model-value="recalculateFromAbsoluteWind(absoluteWindSpeed, $event)"
-                        >
-                            <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
-                        </VInputSlider>
-                    </div>
+                    <section>
+                        <h2 class="mb-4 font-bold text-secondary">Wahrer Wind</h2>
+                        <div class="mb-4">
+                            <VInputLabel>Wahre Windgeschwindigkeit</VInputLabel>
+                            <VInputNumber
+                                :model-value="absoluteWindSpeed"
+                                @update:model-value="recalculateFromAbsoluteWind($event, absoluteWindDirection)"
+                            >
+                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
+                            </VInputNumber>
+                        </div>
+                        <div class="mb-4">
+                            <VInputLabel>Wahre Windrichtung</VInputLabel>
+                            <VInputSlider
+                                :model-value="absoluteWindDirection"
+                                :min="0"
+                                :max="360"
+                                @update:model-value="recalculateFromAbsoluteWind(absoluteWindSpeed, $event)"
+                            >
+                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
+                            </VInputSlider>
+                        </div>
+                    </section>
                 </div>
-                <div class="relative flex min-h-[60vh] flex-grow items-stretch rounded-2xl bg-surface-container-low">
-                    <div class="absolute right-4 top-4 flex gap-2">
-                        <button class="btn-secondary" @click="scale -= 2">-</button>
-                        <button class="btn-secondary" @click="scale += 2">+</button>
+                <section class="flex-grow">
+                    <div class="relative flex min-h-[85vh] items-stretch rounded-2xl bg-surface-container-low lg:min-h-[75vh]">
+                        <div class="absolute right-4 top-4 flex gap-2">
+                            <button class="btn-secondary" @click="scale -= 2">-</button>
+                            <button class="btn-secondary" @click="scale += 2">+</button>
+                        </div>
+                        <svg ref="chart" xmlns="http://www.w3.org/2000/svg" width="100%">
+                            <g :transform="`translate(${dx}, ${dy})`">
+                                <line x1="-3000" y1="0" x2="3000" y2="0" stroke-width="1px" class="stroke-onsurface-variant opacity-10" />
+                                <line x1="0" y1="-3000" x2="0" y2="3000" stroke-width="1px" class="stroke-onsurface-variant opacity-10" />
+                                <PointerArrow :pointer="course" :dash="4" arrow-end class="text-primary" />
+                                <PointerArrow :pointer="heading" :dash="4" class="text-onsurface-variant opacity-50" />
+                                <PointerArrow :pointer="movementWind" arrow-end class="text-primary" />
+                                <PointerArrow :pointer="relativeWind" arrow-start class="text-secondary" />
+                                <PointerArrow :pointer="absoluteWind" arrow-start class="text-error" />
+                            </g>
+                        </svg>
+                        <div class="absolute bottom-4 right-4 text-sm">
+                            <div class="flex items-center gap-2">
+                                <hr class="my-0 w-4 border border-dashed border-primary" />
+                                <span class="text-primary">Kurs über Grund</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <hr class="my-0 w-4 border border-dashed border-onsurface-variant opacity-50" />
+                                <span class="text-onsurface-variant">Heading</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <hr class="my-0 w-4 border border-primary" />
+                                <span class="text-primary">Fahrtwind</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <hr class="my-0 w-4 border border-secondary" />
+                                <span class="text-secondary">Scheinbarer Wind</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <hr class="my-0 w-4 border border-error" />
+                                <span class="text-error">Wahrer Wind</span>
+                            </div>
+                        </div>
                     </div>
-                    <svg ref="chart" xmlns="http://www.w3.org/2000/svg" width="100%">
-                        <g :transform="`translate(${dx}, ${dy})`">
-                            <line x1="-3000" y1="0" x2="3000" y2="0" stroke-width="1px" class="stroke-onsurface-variant opacity-10" />
-                            <line x1="0" y1="-3000" x2="0" y2="3000" stroke-width="1px" class="stroke-onsurface-variant opacity-10" />
-                            <PointerArrow :pointer="course" :dash="4" arrow-end class="text-primary" />
-                            <PointerArrow :pointer="heading" :dash="4" class="text-onsurface-variant opacity-50" />
-                            <PointerArrow :pointer="movementWind" arrow-end class="text-primary" />
-                            <PointerArrow :pointer="relativeWind" arrow-start class="text-secondary" />
-                            <PointerArrow :pointer="absoluteWind" arrow-start class="text-error" />
-                        </g>
-                    </svg>
-                    <div class="absolute bottom-4 right-4 text-sm">
-                        <div class="flex items-center gap-2">
-                            <hr class="my-0 w-4 border border-dashed border-primary" />
-                            <span class="text-primary">Kurs über Grund</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <hr class="my-0 w-4 border border-onsurface-variant opacity-50" />
-                            <span class="text-onsurface-variant opacity-50">Heading</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <hr class="my-0 w-4 border border-primary" />
-                            <span class="text-primary">Fahrtwind</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <hr class="my-0 w-4 border border-secondary" />
-                            <span class="text-secondary">Scheinbarer Wind</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <hr class="my-0 w-4 border border-error" />
-                            <span class="text-error">Wahrer Wind</span>
-                        </div>
-                    </div>
-                </div>
+                </section>
             </div>
         </div>
     </div>
@@ -118,6 +125,9 @@ import type { Pointer } from '@/ui/views/wind-calculator/Pointer.ts';
 import { calculatePointerDirection } from '@/ui/views/wind-calculator/Pointer.ts';
 import { calculatePointer } from '@/ui/views/wind-calculator/Pointer.ts';
 import PointerArrow from '@/ui/views/wind-calculator/PointerArrow.vue';
+
+type RouteEmits = (e: 'update:tab-title', value: string) => void;
+const emit = defineEmits<RouteEmits>();
 
 const hdg = ref<number>(310);
 const cog = ref<number>(315);
@@ -207,6 +217,7 @@ const dy = computed<number>(() => {
 });
 
 function init(): void {
+    emit('update:tab-title', 'Windrechner');
     watch(movementWind, recalculate);
     recalculate();
 }
