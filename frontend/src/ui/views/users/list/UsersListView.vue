@@ -76,32 +76,27 @@
             >
                 <span class="">Abgelaufene Qualifikationen</span>
             </button>
-            <ContextMenuButton
-                anchor-align-x="left"
-                dropdown-position-x="right"
-                class="btn-tag"
-                :class="{ active: filterEvent !== undefined }"
-            >
+            <ContextMenuButton anchor-align-x="left" dropdown-position-x="right" class="btn-tag" :class="{ active: filterEventKey }">
                 <template #icon>
-                    <span v-if="!filterEvent" class="">Nach Reisen filtern...</span>
-                    <span v-else class="block max-w-64 truncate"> Nimmt teil an {{ filterEvent.name }} </span>
+                    <span v-if="!filterEventKey" class="">Nach Reisen filtern...</span>
+                    <span v-else class="block max-w-64 truncate"> Nimmt teil an {{ filterEvent?.name }} </span>
                 </template>
                 <template #default>
                     <ul>
-                        <li v-if="!filterEvent" class="context-menu-item">
+                        <li v-if="!filterEventKey" class="context-menu-item">
                             <i class="fa-solid fa-check"></i>
                             <span>Alle Reisen</span>
                         </li>
-                        <li v-else class="context-menu-item" @click="filterEvent = undefined">
+                        <li v-else class="context-menu-item" @click="filterEventKey = ''">
                             <i class="w-4"></i>
                             <span>Alle Reisen</span>
                         </li>
                         <template v-for="event in events" :key="event.key">
-                            <li v-if="filterEvent === event" class="context-menu-item" @click="filterEvent = undefined">
+                            <li v-if="filterEventKey === event.key" class="context-menu-item" @click="filterEventKey = ''">
                                 <i class="fa-solid fa-check w-4"></i>
                                 <span class="truncate">{{ event.name }}</span>
                             </li>
-                            <li v-else class="context-menu-item" @click="filterEvent = event">
+                            <li v-else class="context-menu-item" @click="filterEventKey = event.key">
                                 <i class="w-4"></i>
                                 <span class="truncate">{{ event.name }}</span>
                             </li>
@@ -307,7 +302,7 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { filterUndefined, hasAnyOverlap } from '@/common';
-import type { Event, Position, PositionKey, QualificationKey, User } from '@/domain';
+import type { Event, EventKey, Position, PositionKey, QualificationKey, User } from '@/domain';
 import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -364,7 +359,7 @@ const filterOnlyActive = ref<boolean>(true);
 const filterExpiredQualifications = ref<boolean>(false);
 const filterPendingVerification = ref<boolean>(false);
 const filterPositions = ref<PositionKey[]>([]);
-const filterEvent = ref<Event | undefined>(undefined);
+const filterEventKey = ref<EventKey>('');
 
 const events = ref<Event[]>([]);
 const users = ref<UserRegistrations[] | undefined>(undefined);
@@ -398,6 +393,13 @@ useQueryStateSync<string>(
     () => filter.value,
     (v) => (filter.value = v)
 );
+useQueryStateSync<string>(
+    'event',
+    () => filterEventKey.value,
+    (v) => (filterEventKey.value = v)
+);
+
+const filterEvent = computed<Event | undefined>(() => events.value.find((evt) => evt.key === filterEventKey.value));
 
 const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
     users.value?.filter(

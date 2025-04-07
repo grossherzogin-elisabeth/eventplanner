@@ -58,6 +58,7 @@ export class UserAdministrationUseCase {
                     roles: savedUser.roles,
                     email: savedUser.email,
                     qualifications: savedUser.qualifications,
+                    verified: savedUser.verifiedAt !== undefined,
                 });
                 this.notificationService.success('Änderungen gespeichert');
                 return savedUser;
