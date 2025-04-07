@@ -126,8 +126,11 @@
                     <td class="w-1/3 whitespace-nowrap font-semibold">
                         <p class="mb-2">
                             {{ item.nickName || item.firstName }} {{ item.lastName }}
-                            <span v-if="item.verified">
-                                <i class="fa-solid fa-check text-primary"></i>
+                            <span
+                                v-if="item.verified"
+                                class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-container"
+                            >
+                                <i class="fa-solid fa-check text-xs text-ongreen-container"></i>
                             </span>
                         </p>
                         <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
