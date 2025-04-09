@@ -37,7 +37,7 @@ dependencies {
     implementation "org.xerial:sqlite-jdbc:3.49.1.0"
     implementation "org.hibernate.orm:hibernate-core:${hibernateVersion}"
     implementation "org.hibernate.orm:hibernate-community-dialects:${hibernateVersion}"
-    implementation "org.flywaydb:flyway-core:10.20.0"
+    implementation "org.flywaydb:flyway-core:11.7.0"
 
     // excel
     implementation "org.apache.poi:poi:${apachePoiVersion}"
