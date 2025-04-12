@@ -137,7 +137,7 @@
                             <span class="">Warteliste verlassen</span>
                         </button>
                         <button
-                            v-else-if="signedInUser.positions.length >= 1"
+                            v-else
                             class="btn-ghost max-w-80 text-sm"
                             title="Anmelden"
                             :disabled="!props.event.canSignedInUserJoin"
