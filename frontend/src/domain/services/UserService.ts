@@ -1,4 +1,4 @@
-import { addToDate } from '@/common';
+import { addToDate, compareBoolean } from '@/common';
 import type { Qualification, QualificationKey, User, UserDetails } from '@/domain';
 import type { ResolvedUserQualification } from '@/domain/aggregates/ResolvedUserQualification';
 
@@ -26,33 +26,40 @@ export class UserService {
         const now = new Date();
         const expiresSoonDate = addToDate(now, { months: 3 });
 
-        return user.qualifications.map((it) => {
-            const qualification = qualifications.get(it.qualificationKey);
-            const isExpired = it.expires && (!it.expiresAt || it.expiresAt.getTime() < now.getTime());
-            const willExpireSoon = it.expires && (it.expiresAt ? it.expiresAt.getTime() < expiresSoonDate.getTime() : false);
+        return user.qualifications
+            .map((it) => {
+                const qualification = qualifications.get(it.qualificationKey);
+                const isExpired = it.expires && (!it.expiresAt || it.expiresAt.getTime() < now.getTime());
+                const willExpireSoon = it.expires && (it.expiresAt ? it.expiresAt.getTime() < expiresSoonDate.getTime() : false);
 
-            if (qualification) {
+                if (qualification) {
+                    return {
+                        ...qualification,
+                        expiresAt: it.expiresAt,
+                        note: it.note,
+                        isExpired,
+                        willExpireSoon,
+                    };
+                }
+
                 return {
-                    ...qualification,
+                    key: it.qualificationKey,
+                    name: it.qualificationKey,
+                    icon: 'fa-circle-question',
+                    description: 'Unbekannte Qualification',
+                    expires: it.expiresAt !== undefined,
                     expiresAt: it.expiresAt,
-                    note: it.note,
                     isExpired,
                     willExpireSoon,
+                    grantsPositions: [],
                 };
-            }
-
-            return {
-                key: it.qualificationKey,
-                name: it.qualificationKey,
-                icon: 'fa-circle-question',
-                description: 'Unbekannte Qualification',
-                expires: it.expiresAt !== undefined,
-                expiresAt: it.expiresAt,
-                isExpired,
-                willExpireSoon,
-                grantsPositions: [],
-            };
-        });
+            })
+            .sort(
+                (a, b) =>
+                    compareBoolean(a.isExpired, b.isExpired) ||
+                    compareBoolean(a.willExpireSoon, b.willExpireSoon) ||
+                    a.name.localeCompare(b.name)
+            );
     }
 
     public getExpiredQualifications(user?: User, at: Date = new Date()): QualificationKey[] {

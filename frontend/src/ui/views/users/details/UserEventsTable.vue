@@ -4,7 +4,7 @@
             :items="renderedEvents"
             :page-size="-1"
             class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
-            @click="openEvent($event)"
+            @click="openEvent($event.item, $event.event)"
         >
             <template #row="{ item }">
                 <td class="w-0 text-xl opacity-50">
@@ -125,6 +125,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
@@ -235,17 +236,21 @@ async function deleteRegistration(item: EventTableViewItem): Promise<void> {
     }
 }
 
-async function openEvent(event: EventTableViewItem): Promise<void> {
+async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {
+    let to: RouteLocationRaw = {
+        name: Routes.EventDetails,
+        params: { year: item.start.getFullYear(), key: item.eventKey },
+    };
     if (signedInUser.permissions.includes(Permission.WRITE_EVENTS)) {
-        await router.push({
+        to = {
             name: Routes.EventEdit,
-            params: { year: event.start.getFullYear(), key: event.eventKey },
-        });
+            params: { year: item.start.getFullYear(), key: item.eventKey },
+        };
+    }
+    if (evt.metaKey || evt.ctrlKey) {
+        window.open(router.resolve(to).href, '_blank');
     } else {
-        await router.push({
-            name: Routes.EventDetails,
-            params: { year: event.start.getFullYear(), key: event.eventKey },
-        });
+        await router.push(to);
     }
 }
 </script>

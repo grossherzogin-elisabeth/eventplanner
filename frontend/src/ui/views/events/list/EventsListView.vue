@@ -80,7 +80,7 @@
                 query
                 :page-size="20"
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
-                @click="openEvent($event)"
+                @click="openEvent($event.item, $event.event)"
             >
                 <template #row="{ item }">
                     <!-- name -->
@@ -321,6 +321,7 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, ref, watch } from 'vue';
+import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, PositionKey, SignedInUser } from '@/domain';
@@ -528,11 +529,16 @@ function getStateDetails(event: EventTableViewItem): StateDetails {
     return { name: 'Voll belegt', icon: 'fa-info-circle', color: 'bg-surface-container-highest text-onsurface' };
 }
 
-async function openEvent(evt: EventTableViewItem): Promise<void> {
-    await router.push({
+async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {
+    const to: RouteLocationRaw = {
         name: Routes.EventDetails,
-        params: { year: evt.start.getFullYear(), key: evt.key },
-    });
+        params: { year: item.start.getFullYear(), key: item.key },
+    };
+    if (evt.ctrlKey || evt.metaKey) {
+        window.open(router.resolve(to).href, '_blank');
+    } else {
+        await router.push(to);
+    }
 }
 
 async function choosePositionAndJoinEvents(events: EventTableViewItem[]): Promise<void> {

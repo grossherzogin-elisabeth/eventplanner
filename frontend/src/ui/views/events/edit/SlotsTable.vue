@@ -5,7 +5,7 @@
         :class="$attrs.class"
         :page-size="-1"
         sortable
-        @click="editSlot($event)"
+        @click="editSlot($event.item)"
         @reordered="updatePrios"
     >
         <template #row="{ item, index }">

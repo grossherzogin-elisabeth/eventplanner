@@ -2,7 +2,7 @@
     <VTable
         :items="userQualifications"
         class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
-        @click="editUserQualification($event)"
+        @click="editUserQualification($event.item)"
     >
         <template #row="{ item }">
             <td :key="item.icon" class="text-xl">
@@ -64,7 +64,7 @@
             </li>
             <li class="context-menu-item text-error" @click="deleteUserQualification(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>Qualifikation löschen</span>
+                <span>Qualifikation entfernen</span>
             </li>
         </template>
     </VTable>

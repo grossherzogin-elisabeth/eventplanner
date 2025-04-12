@@ -2,7 +2,7 @@
     <VTable
         :items="qualifications"
         class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
-        @click="editQualification($event)"
+        @click="editQualification($event.item)"
     >
         <template #row="{ item }">
             <td :key="item.icon" class="text-xl">

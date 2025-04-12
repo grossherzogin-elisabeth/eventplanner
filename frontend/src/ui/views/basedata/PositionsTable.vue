@@ -2,7 +2,7 @@
     <VTable
         :items="positions"
         class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
-        @click="editPosition($event)"
+        @click="editPosition($event.item)"
     >
         <template #row="{ item }">
             <td>

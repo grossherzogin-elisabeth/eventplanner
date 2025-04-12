@@ -165,7 +165,7 @@ interface Props<T> {
 }
 
 interface Emits {
-    (e: 'click', value: T): void;
+    (e: 'click', param: { item: T; event: MouseEvent }): void;
     (e: 'reordered'): void;
     (e: 'update:page', value: number): void;
 }
@@ -347,14 +347,14 @@ function onClick(event: MouseEvent, row: T & Selectable): void {
     }
     event.stopPropagation();
     if (props.multiselection) {
-        if (event.ctrlKey || event.metaKey || event.shiftKey || selected.value.length > 0) {
+        if (event.shiftKey || selected.value.length > 0) {
             event.preventDefault();
             event.stopPropagation();
             row.selected = !row.selected;
             return;
         }
     }
-    emit('click', row);
+    emit('click', { item: row, event: event });
 }
 
 function onReorder(): void {

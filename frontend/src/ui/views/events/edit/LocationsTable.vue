@@ -5,7 +5,7 @@
         :class="$attrs.class"
         :sortable="signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
         @reordered="updateOrders"
-        @click="editLocation($event)"
+        @click="editLocation($event.item)"
     >
         <template #row="{ item, first, last }">
             <td class="hidden py-0">
