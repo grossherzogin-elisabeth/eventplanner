@@ -298,11 +298,8 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
         }
 
         // add user event relation class
-        if (event.signedInUserAssignedPosition) {
-            calendarDayEvent.class += ' assigned';
-        }
-        if (event.signedInUserWaitingListPosition) {
-            calendarDayEvent.class += ' waiting-list';
+        if (event.signedInUserRegistration) {
+            calendarDayEvent.class += event.signedInUserAssignedSlot ? ' assigned' : ' waiting-list';
         }
         if (event.end.getTime() < new Date().getTime()) {
             calendarDayEvent.class += ' in-past';

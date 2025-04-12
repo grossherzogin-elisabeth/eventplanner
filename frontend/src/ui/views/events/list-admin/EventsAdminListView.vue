@@ -122,7 +122,7 @@
                 query
                 :page-size="20"
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
-                @click="editEvent($event)"
+                @click="editEvent($event.item, $event.event)"
             >
                 <template #row="{ item }">
                     <!-- name -->
@@ -395,6 +395,7 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, ref, watch } from 'vue';
+import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
@@ -583,17 +584,21 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
     });
 }
 
-async function editEvent(evt: EventTableViewItem): Promise<void> {
+async function editEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {
+    let to: RouteLocationRaw = {
+        name: Routes.EventDetails,
+        params: { year: item.start.getFullYear(), key: item.key },
+    };
     if (signedInUser.permissions.includes(Permission.WRITE_EVENTS)) {
-        await router.push({
+        to = {
             name: Routes.EventEdit,
-            params: { year: evt.start.getFullYear(), key: evt.key },
-        });
+            params: { year: item.start.getFullYear(), key: item.key },
+        };
+    }
+    if (evt.ctrlKey || evt.metaKey) {
+        window.open(router.resolve(to).href, '_blank');
     } else {
-        await router.push({
-            name: Routes.EventDetails,
-            params: { year: evt.start.getFullYear(), key: evt.key },
-        });
+        await router.push(to);
     }
 }
 

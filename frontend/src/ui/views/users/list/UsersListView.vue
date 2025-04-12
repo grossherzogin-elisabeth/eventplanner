@@ -120,7 +120,7 @@
                 query
                 multiselection
                 class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
-                @click="editUser($event)"
+                @click="editUser($event.item, $event.event)"
             >
                 <template #row="{ item }">
                     <td class="w-1/3 whitespace-nowrap font-semibold">
@@ -223,7 +223,7 @@
                         <i class="fa-solid fa-calendar-plus" />
                         <span>Anmeldung hinzufügen</span>
                     </li>
-                    <li class="permission-write-users context-menu-item" @click="editUser(item)">
+                    <li class="permission-write-users context-menu-item" @click="editUser(item, $event)">
                         <i class="fa-solid fa-edit" />
                         <span>Nutzer bearbeiten</span>
                     </li>
@@ -302,6 +302,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { filterUndefined, hasAnyOverlap } from '@/common';
@@ -466,11 +467,16 @@ function createUser(): void {
     createUserDialog.value?.open().catch();
 }
 
-async function editUser(user: UserRegistrations): Promise<void> {
-    if (signedInUser.permissions.includes(Permission.WRITE_USERS)) {
-        await router.push({ name: Routes.UserDetails, params: { key: user.key } });
-    } else {
+async function editUser(user: UserRegistrations, evt: MouseEvent): Promise<void> {
+    if (!signedInUser.permissions.includes(Permission.WRITE_USERS)) {
         console.error('User has no permission to edit users.');
+        return;
+    }
+    const to: RouteLocationRaw = { name: Routes.UserDetails, params: { key: user.key } };
+    if (evt.ctrlKey || evt.metaKey) {
+        window.open(router.resolve(to).href, '_blank');
+    } else {
+        await router.push(to);
     }
 }
 

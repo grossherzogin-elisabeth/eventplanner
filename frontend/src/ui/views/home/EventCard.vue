@@ -7,8 +7,8 @@
         <div
             class="event-card"
             :class="{
-                'assigned': props.event.signedInUserAssignedPosition,
-                'waiting-list': props.event.signedInUserWaitingListPosition,
+                'assigned': props.event.signedInUserAssignedSlot,
+                'waiting-list': props.event.signedInUserRegistration && !props.event.signedInUserAssignedSlot,
             }"
         >
             <div class="flex">
@@ -35,7 +35,7 @@
                         </div>
 
                         <div
-                            v-if="props.event.signedInUserWaitingListPosition"
+                            v-if="!props.event.signedInUserAssignedSlot"
                             class="flex rounded-xl bg-surface-container-highest px-4 py-2 sm:-mx-4"
                         >
                             <p class="flex items-center gap-2">

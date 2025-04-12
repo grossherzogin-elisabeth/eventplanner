@@ -73,7 +73,9 @@ const validation = useValidation(userQualification, (value) => {
 });
 
 const qualificationOptions = computed<InputSelectOption<QualificationKey>[]>(() => {
-    return [...qualifications.value.values()].map((it) => ({ label: it.name, value: it.key }));
+    return [...qualifications.value.values()]
+        .map((it) => ({ label: it.name, value: it.key }))
+        .sort((a, b) => a.label.localeCompare(b.label));
 });
 
 const selectedQualification = computed<Qualification | undefined>(() => {
@@ -106,6 +108,7 @@ async function open(value?: UserQualification): Promise<UserQualification | unde
 
 function submit(): void {
     if (validation.isValid.value) {
+        userQualification.value.expires = selectedQualification.value?.expires ?? false;
         dlg.value?.submit(userQualification.value);
     } else {
         validation.showErrors.value = true;

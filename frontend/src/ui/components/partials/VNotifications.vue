@@ -1,16 +1,18 @@
 <template>
     <div
-        class="pointer-events-none fixed left-0 right-0 top-12 z-30 flex w-full flex-col items-stretch px-4 py-2 sm:left-auto sm:w-96 xl:right-16 xl:top-2"
+        class="pointer-events-none fixed left-0 right-0 top-12 z-40 flex w-full flex-col items-stretch px-4 py-2 sm:left-auto sm:w-96 xl:right-16 xl:top-2"
     >
         <template v-for="(notification, index) in notifications" :key="index">
-            <div v-if="!notification.hidden" :class="notification.class">
-                <div class="notification">
-                    <i class="fa-solid text-xl" :class="notification.icon" />
-                    <p class="text-sm font-bold">{{ notification.text }}</p>
-                    <div class="w-0 flex-grow"></div>
-                    <button class="self-stretch" @click="hideNotification(index)">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
+            <div v-if="!notification.hidden">
+                <div class="notification-wrapper" :class="notification.class">
+                    <div class="notification">
+                        <i class="fa-solid text-xl" :class="notification.icon" />
+                        <p class="text-sm font-bold">{{ notification.text }}</p>
+                        <div class="w-0 flex-grow"></div>
+                        <button class="self-stretch" @click="hideNotification(index)">
+                            <i class="fa-solid fa-xmark text-xl"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </template>
@@ -53,7 +55,7 @@ async function showNotification(message: string, type: 'success' | 'warning' | '
     const notification: Notification = {
         icon: icon,
         text: message,
-        class: `h-20 pb-4 ${type}`,
+        class: `${type}`,
         hidden: false,
     };
     const index = notifications.value.push(notification) - 1;
@@ -75,12 +77,12 @@ init();
 </script>
 
 <style>
-.notification {
-    @apply flex h-full items-center gap-4 overflow-hidden px-6 py-0;
+.notification-wrapper {
+    @apply mb-4 h-20 overflow-hidden rounded-xl bg-surface shadow-xl;
 }
 
-.fixed .notification {
-    @apply rounded-xl shadow-xl;
+.notification {
+    @apply flex h-full items-center gap-4 overflow-hidden px-6 py-0;
 }
 
 .notification button {

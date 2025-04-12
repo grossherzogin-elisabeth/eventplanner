@@ -244,7 +244,10 @@ export class EventUseCase {
     public async leaveEventsWaitingListOnly(events: Event[]): Promise<void> {
         try {
             await Promise.all(
-                events.filter((event) => event.signedInUserWaitingListPosition).map((event) => this.leaveEventInternal(event))
+                events
+                    .filter((event) => event.signedInUserRegistration)
+                    .filter((event) => !event.signedInUserAssignedSlot)
+                    .map((event) => this.leaveEventInternal(event))
             );
             this.notificationService.success('Du stehst für die ausgewählten Reisen nicht mehr auf der Warteliste');
         } catch (e) {
