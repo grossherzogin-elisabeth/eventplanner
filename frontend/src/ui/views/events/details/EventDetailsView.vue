@@ -21,14 +21,15 @@
                     v-else-if="event.signedInUserRegistration && event.signedInUserAssignedSlot"
                     class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static"
                 >
-                    <VSuccess>
+                    <VSuccess icon="fa-check">
                         Du bist für diese Reise als
                         <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
-                        eingeplant
+                        eingeplant.
+                        <template v-if="event.signedInUserRegistration.confirmed"> Du hast deine Teilnahme bestätigt. </template>
                     </VSuccess>
                 </section>
                 <section v-else-if="event.signedInUserRegistration" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
-                    <VInfo>
+                    <VInfo icon="fa-hourglass-half">
                         Du stehst für diese Reise als
                         <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
                         auf der Warteliste
@@ -236,8 +237,8 @@
                                 </li>
                             </ul>
                             <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container-low p-4 text-sm">
-                                <p v-if="statesWithHiddenCrew.includes(event.state)">Für diesen Termin gibt es noch keine Anmeldungen.</p>
-                                <p v-else>Für diesen Termin gibt es keine Anmeldungen auf der Warteliste.</p>
+                                <p v-if="statesWithHiddenCrew.includes(event.state)">Für diese Reise gibt es noch keine Anmeldungen.</p>
+                                <p v-else>Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.</p>
                             </div>
                         </template>
                     </div>

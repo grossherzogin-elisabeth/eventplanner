@@ -48,7 +48,7 @@
     "app.event-details.note-canceled": "Diese Reise fällt aus.",
     "app.event-details.note-assigned": "Du bist für diese Reise eingeplant.",
     "app.event-details.note-assigned-position": "Du bist für diese Reise als <i>{position}</i> eingeplant.",
-    "app.event-details.note-waitinglist": "Du stehst für diese Reise auf der Warteliste.",
+    "app.event-details.note-waitinglist": "Du stehst auf der Warteliste.",
     "app.event-details.note-waitinglist-position": "Du stehst für diese Reise als <i>{position}</i> auf der Warteliste.",
     "app.event-details.title": "Reisedetails",
     "app.event-quickfilter.all-events": "Alle Reisen",

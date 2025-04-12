@@ -1,47 +1,17 @@
 <template>
     <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
         <div class="w-full max-w-2xl">
-            <div v-if="event">
-                <h1 class="mb-4">Moin liebes Crewmitglied,</h1>
-                <p class="mb-8 text-sm sm:text-base">
-                    In {{ daysUntilStart }} Tagen startet die Reise {{ event.name }}, bei der du als Crew eingeplant bist. Bitte bestätige
-                    deine Teilnahme bis <b>spätestens 7 Tage vor Reisebeginn</b>, damit das Büro noch genügend Zeit hat, um gegebenenfalls
-                    einen Ersatz für dich zu finden.
-                </p>
-
-                <div class="mb-8">
-                    <table class="block sm:table">
-                        <tbody>
-                            <tr class="mb-2 block sm:table-row">
-                                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Reise:</td>
-                                <td class="block py-1 font-bold sm:table-cell">{{ event.name }}</td>
-                            </tr>
-                            <tr class="mb-2 block sm:table-row">
-                                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Crew an Bord:</td>
-                                <td class="block py-1 font-bold sm:table-cell">
-                                    {{ $d(event.start, DateTimeFormat.DD_MM_YYYY) }}
-                                    {{ $d(event.start, DateTimeFormat.hh_mm) }}
-                                </td>
-                            </tr>
-                            <tr class="mb-2 block sm:table-row">
-                                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Crew von Bord:</td>
-                                <td class="block py-1 font-bold sm:table-cell">
-                                    {{ $d(event.end, DateTimeFormat.DD_MM_YYYY) }}
-                                    {{ $d(event.end, DateTimeFormat.hh_mm) }}
-                                </td>
-                            </tr>
-                            <tr class="mb-2 block sm:table-row">
-                                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">Geplante Route:</td>
-                                <td class="block py-1 font-bold sm:table-cell">
-                                    {{ event.locations.map((l) => l.name).join(' - ') }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <div v-if="registrationState === State.REGISTRATION_UNCONFIRMED" class="">
+                <div class="mb-8 rounded-2xl">
+                    <h1 class="mb-4 text-lg">Bitte bestätige deine Teilnahme</h1>
+                    <p class="mb-4">
+                        In {{ daysUntilStart }} Tagen startet die Reise {{ event?.name }}, bei der du als Crew eingeplant bist. Bitte
+                        bestätige deine Teilnahme bis <b>spätestens 7 Tage vor Reisebeginn</b>, damit das Büro noch genügend Zeit hat, um
+                        gegebenenfalls einen Ersatz für dich zu finden.
+                    </p>
+                </div>
+                <EventDetails v-if="event" :event="event" class="mb-8" />
+
                 <div class="hidden items-center gap-4 sm:flex">
                     <button class="btn-primary" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
@@ -52,19 +22,19 @@
                         <span class="py-2 sm:py-0">Ich muss leider absagen</span>
                     </button>
                 </div>
-                <div class="ms:hidden h-20"></div>
-                <div class="fixed bottom-0 left-0 right-0 flex items-stretch gap-4 bg-surface px-4 py-2 sm:hidden">
-                    <button class="btn-primary w-1/2" @click="confirm()">
+                <div class="h-20 sm:hidden"></div>
+                <div class="fixed bottom-0 left-0 right-0 flex flex-col items-stretch gap-4 bg-surface px-4 py-2 sm:hidden">
+                    <button class="btn-primary" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
                         <span class="whitespace-normal py-2 text-sm">Ja, ich nehme teil</span>
                     </button>
-                    <button class="btn-danger w-1/2" @click="decline()">
+                    <button class="btn-danger" @click="decline()">
                         <i class="fa-solid fa-xmark"></i>
                         <span class="whitespace-normal py-2 text-sm">Ich muss leider absagen</span>
                     </button>
                 </div>
             </div>
-            <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED && !signedInUserKey">
+            <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED && !signedInUser.key">
                 <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
@@ -78,7 +48,7 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED">
-                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container">
+                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">Anmeldung wurde bereits abgesagt</span>
@@ -90,7 +60,7 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.SIGNED_IN_USER_HAS_NO_REGISTRATION">
-                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container">
+                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">Keine Anmeldung zur Reise gefunden</span>
@@ -103,7 +73,7 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.REGISTRATION_BELONGS_TO_OTHER_USER">
-                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container">
+                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">Ungültiger Link</span>
@@ -116,23 +86,24 @@
                     </p>
                 </div>
             </div>
-            <div
-                v-else-if="registrationState === State.REGISTRATION_WAS_CONFIRMED"
-                class="-mx-4 mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container"
-            >
-                <p class="mb-4 text-lg">
-                    <i class="fa-solid fa-check"></i>
-                    <span class="ml-4">Teilnahme bestätigt</span>
-                </p>
-                <p class="mb-4">
-                    Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte denk daran, deine
-                    Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew einen
-                    angenehmen Törn und immer eine handbreit Wasser unterm Kiel!
-                </p>
-            </div>
+            <template v-else-if="registrationState === State.REGISTRATION_WAS_CONFIRMED">
+                <div class="-mx-4 mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container md:p-8">
+                    <p class="mb-4 text-lg">
+                        <i class="fa-solid fa-check"></i>
+                        <span class="ml-4">Teilnahme bestätigt</span>
+                    </p>
+                    <p class="mb-8">
+                        Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte denk daran,
+                        deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew
+                        einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!
+                    </p>
+                    <h2 class="mb-4 text-base">Hier noch einmal die wichtigsten Details zur Reise:</h2>
+                    <EventDetails v-if="event" :event="event" class="" />
+                </div>
+            </template>
             <div
                 v-else-if="registrationState === State.REGISTRATION_WAS_JUST_CANCELED"
-                class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container"
+                class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container md:p-8"
             >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-xmark"></i>
@@ -150,9 +121,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { DateTimeFormat } from '@/common/date';
-import type { Event, EventKey, RegistrationKey } from '@/domain';
+import type { Event, EventKey, RegistrationKey, SignedInUser } from '@/domain';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
+import EventDetails from '@/ui/views/events/confirm/EventDetails.vue';
 
 enum State {
     REGISTRATION_UNCONFIRMED = 'registration_unconfirmed',
@@ -170,7 +141,7 @@ const emit = defineEmits<RouteEmits>();
 const route = useRoute();
 const eventUseCase = useEventUseCase();
 const auth = useAuthUseCase();
-const signedInUserKey = auth.getSignedInUser().key;
+const signedInUser = ref<SignedInUser>(auth.getSignedInUser());
 
 const event = ref<Event | null>(null);
 const registrationState = ref<State | null>(null);
@@ -186,7 +157,7 @@ const daysUntilStart = computed<number>(() => {
 });
 
 function init(): void {
-    emit('update:tab-title', 'Teilnahme bestätigen');
+    auth.onLogin().then((user) => (signedInUser.value = user));
     fetchEvent();
 }
 
@@ -195,12 +166,12 @@ async function fetchEvent(): Promise<void> {
         const eventKey = route.params.eventKey as EventKey;
         const accessKey = route.query.accessKey as string;
         event.value = await eventUseCase.getEventByAccessKey(eventKey, accessKey);
-
+        emit('update:tab-title', event.value.name);
         registrationState.value = State.REGISTRATION_UNCONFIRMED;
         const registration = event.value?.registrations.find((it) => it.key === route.params.registrationKey);
         if (!registration) {
             registrationState.value = State.REGISTRATION_WAS_CANCELED;
-        } else if (signedInUserKey && registration.userKey !== signedInUserKey) {
+        } else if (signedInUser.value.key && registration.userKey !== signedInUser.value.key) {
             registrationState.value = State.REGISTRATION_BELONGS_TO_OTHER_USER;
         } else if (registration.confirmed) {
             registrationState.value = State.REGISTRATION_WAS_CONFIRMED;
