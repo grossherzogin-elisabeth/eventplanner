@@ -46,58 +46,50 @@
                         </button>
                     </div>
 
-                    <!-- state -->
-                    <div
-                        v-if="props.event.signedInUserAssignedPosition"
-                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-green-container px-4 py-3 text-ongreen-container"
+                    <!-- user registration state -->
+                    <VSuccess
+                        v-if="props.event.signedInUserRegistration && props.event.signedInUserAssignedSlot"
+                        class="-mx-4 my-4 text-sm"
+                        icon="fa-check"
                     >
-                        <i class="fa-solid fa-check w-4" />
-                        <p class="text-sm font-bold">
-                            Du bist für diese Reise als
-                            {{ positions.get(props.event.signedInUserAssignedPosition).name }}
-                            eingeplant
-                        </p>
-                    </div>
-                    <div
-                        v-else-if="props.event.signedInUserWaitingListPosition"
-                        class="-mx-4 mb-4 flex items-center space-x-4 rounded-xl bg-blue-container px-4 py-3 text-onblue-container"
-                    >
-                        <i class="fa-solid fa-hourglass-half w-4" />
-                        <p class="text-sm font-bold">
-                            Du stehst für diese Reise als
-                            {{ positions.get(props.event.signedInUserWaitingListPosition).name }}
-                            auf der Warteliste
-                        </p>
-                    </div>
+                        Du bist für diese Reise als
+                        <b>{{ positions.get(props.event.signedInUserRegistration.positionKey).name }}</b>
+                        eingeplant
+                    </VSuccess>
+                    <VInfo v-else-if="props.event.signedInUserRegistration" class="-mx-4 my-4 text-sm" icon="fa-hourglass-half">
+                        Du stehst für diese Reise als
+                        <b>{{ positions.get(props.event.signedInUserRegistration.positionKey).name }}</b>
+                        auf der Warteliste
+                    </VInfo>
 
-                    <!-- info -->
+                    <!-- event details -->
                     <div class="mb-4">
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-calendar-day w-4"></i>
+                            <i class="fa-solid fa-calendar-day w-4 opacity-75"></i>
                             <span>{{ formatDateRange(props.event.start, props.event.end) }}</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-bell w-4" />
+                            <i class="fa-solid fa-bell w-4 opacity-75" />
                             <span>Crew an Board: {{ $d(event.start, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p class="flex items-center space-x-4">
-                            <i class="fa-solid fa-bell-slash w-4" />
+                            <i class="fa-solid fa-bell-slash w-4 opacity-75" />
                             <span>Crew von Board: {{ $d(event.end, DateTimeFormat.hh_mm) }} Uhr</span>
                         </p>
                         <p v-if="props.event.assignedUserCount" class="items-center space-x-4">
-                            <i class="fa-solid fa-users w-4"></i>
+                            <i class="fa-solid fa-users w-4 opacity-75"></i>
                             <span>{{ props.event.assignedUserCount }} Crew</span>
                         </p>
                         <p v-if="props.event.description" class="flex items-baseline space-x-4">
-                            <i class="fa-solid fa-info-circle mt-0.5 w-4"></i>
+                            <i class="fa-solid fa-info-circle mt-0.5 w-4 opacity-75"></i>
                             <span class="line-clamp-3">{{ props.event.description }}</span>
                         </p>
                     </div>
 
-                    <!-- route -->
+                    <!-- event route -->
                     <div class="">
                         <p v-for="(location, index) in props.event.locations" :key="index" class="flex items-center space-x-4">
-                            <i :class="location.icon" class="fa-solid w-4" />
+                            <i :class="location.icon" class="fa-solid w-4 opacity-75" />
                             <span class="flex-grow">{{ location.name }}</span>
                         </p>
                     </div>
@@ -105,13 +97,11 @@
                     <VInfo v-if="signedInUser.positions.length === 0" class="-mx-4 my-4 text-sm" clamp>
                         Deinem Benutzerkonto wurde noch keine Position zugewiesen. Du kannst dich deshalb nicht selber für Reisen anmelden.
                     </VInfo>
-
+                    <VInfo v-else-if="props.event.isInPast" class="-mx-4 my-4 text-sm" clamp>
+                        Diese Reise liegt in der Vergangenheit. Eine An- oder Abmeldung ist daher nicht mehr möglich.
+                    </VInfo>
                     <VInfo
-                        v-if="
-                            signedInUser.positions.length > 1 &&
-                            !props.event.signedInUserAssignedPosition &&
-                            !props.event.signedInUserWaitingListPosition
-                        "
+                        v-else-if="signedInUser.positions.length > 1 && !props.event.signedInUserRegistration"
                         class="-mx-4 my-4 text-sm"
                     >
                         <p class="mb-2">
@@ -127,27 +117,30 @@
                     <div class="-mx-8 mt-8 flex flex-wrap justify-end px-4">
                         <div class="flex-grow"></div>
                         <button
-                            v-if="props.event.signedInUserAssignedPosition"
+                            v-if="props.event.signedInUserAssignedSlot"
                             class="btn-ghost-danger text-sm"
                             title="Event absagen"
+                            :disabled="!props.event.canSignedInUserLeave"
                             @click="leaveEvent()"
                         >
                             <i class="fa-solid fa-ban"></i>
                             <span class="">Absagen</span>
                         </button>
                         <button
-                            v-else-if="props.event.signedInUserWaitingListPosition && props.event.canSignedInUserLeave"
+                            v-else-if="props.event.signedInUserRegistration"
                             class="btn-ghost-danger text-sm"
                             title="Warteliste verlassen"
+                            :disabled="!props.event.canSignedInUserLeave"
                             @click="leaveEvent()"
                         >
                             <i class="fa-solid fa-user-minus"></i>
                             <span class="">Warteliste verlassen</span>
                         </button>
                         <button
-                            v-else-if="props.event.canSignedInUserJoin && signedInUser.positions.length >= 1"
+                            v-else-if="signedInUser.positions.length >= 1"
                             class="btn-ghost max-w-80 text-sm"
                             title="Anmelden"
+                            :disabled="!props.event.canSignedInUserJoin"
                             @click="joinEvent(props.event)"
                         >
                             <i class="fa-solid fa-user-plus"></i>
@@ -185,7 +178,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, PositionKey, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
-import { type Dialog, VDropdownWrapper, VInfo } from '@/ui/components/common';
+import { type Dialog, VDropdownWrapper, VInfo, VSuccess } from '@/ui/components/common';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';

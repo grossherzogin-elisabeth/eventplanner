@@ -17,17 +17,20 @@
                 <section v-if="event.state === EventState.Canceled" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
                     <VWarning> Diese Reise wurde abgesagt! </VWarning>
                 </section>
-                <section v-else-if="event.signedInUserAssignedPosition" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
-                    <VInfo>
+                <section
+                    v-else-if="event.signedInUserRegistration && event.signedInUserAssignedSlot"
+                    class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static"
+                >
+                    <VSuccess>
                         Du bist für diese Reise als
-                        {{ positions.get(event.signedInUserAssignedPosition).name }}
+                        <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
                         eingeplant
-                    </VInfo>
+                    </VSuccess>
                 </section>
-                <section v-else-if="event.signedInUserWaitingListPosition" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
+                <section v-else-if="event.signedInUserRegistration" class="sticky left-4 right-4 top-14 z-10 col-start-2 md:static">
                     <VInfo>
                         Du stehst für diese Reise als
-                        {{ positions.get(event.signedInUserWaitingListPosition).name }}
+                        <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
                         auf der Warteliste
                     </VInfo>
                 </section>
@@ -202,9 +205,13 @@
                                         </RouterLink>
                                         <span v-else-if="it.name" class="truncate">{{ it.name }}</span>
                                         <span v-else-if="it.user?.key" class="italic text-error"> Unbekannter Nutzer </span>
-                                        <span v-else class="truncate italic text-error text-opacity-75">Noch nicht besetzt</span>
+                                        <span v-else class="truncate italic text-error text-opacity-60">Noch nicht besetzt</span>
                                         <span class="flex-grow"></span>
-                                        <span :style="{ background: it.position.color }" class="position ml-auto text-xs">
+                                        <span
+                                            :style="{ background: it.position.color }"
+                                            class="position ml-auto text-xs"
+                                            :class="{ 'opacity-50': !it.registration }"
+                                        >
                                             {{ it.position.name }}
                                         </span>
                                     </li>
@@ -238,12 +245,17 @@
             </div>
         </template>
         <template v-if="event && signedInUser.permissions.includes(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
-            <AsyncButton v-if="event.signedInUserAssignedPosition" class="btn-danger" :action="() => leaveEvent()">
+            <AsyncButton
+                v-if="event.signedInUserAssignedSlot"
+                class="btn-danger"
+                :disabled="!event.canSignedInUserLeave"
+                :action="() => leaveEvent()"
+            >
                 <template #icon><i class="fa-solid fa-cancel" /></template>
                 <template #label>Reise absagen</template>
             </AsyncButton>
             <AsyncButton
-                v-else-if="event.signedInUserWaitingListPosition"
+                v-else-if="event.signedInUserRegistration"
                 class="btn-danger"
                 :disabled="!event.canSignedInUserLeave"
                 :action="() => leaveEvent()"
@@ -253,14 +265,19 @@
                 </template>
                 <template #label> Warteliste verlassen </template>
             </AsyncButton>
-            <div v-else-if="event.canSignedInUserJoin && signedInUser.positions.length > 1" class="btn-split">
-                <AsyncButton class="btn-primary max-w-64 sm:max-w-80" :action="() => joinEvent()">
+            <div v-else-if="signedInUser.positions.length > 1" class="btn-split">
+                <AsyncButton class="btn-primary max-w-64 sm:max-w-80" :disabled="!event.canSignedInUserJoin" :action="() => joinEvent()">
                     <template #icon>
                         <i class="fa-solid fa-user-plus" />
                     </template>
                     <template #label> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </template>
                 </AsyncButton>
-                <button v-if="signedInUser.positions.length > 1" class="btn-primary" @click="choosePositionAndJoinEvent(event)">
+                <button
+                    v-if="signedInUser.positions.length > 1"
+                    class="btn-primary"
+                    :disabled="!event.canSignedInUserJoin"
+                    @click="choosePositionAndJoinEvent(event)"
+                >
                     <i class="fa-solid fa-chevron-down" />
                 </button>
             </div>
@@ -292,7 +309,7 @@
                 <i class="fa-solid fa-calendar-alt" />
                 <span>Kalendereintrag erstellen</span>
             </li>
-            <template v-if="event.signedInUserAssignedPosition || event.signedInUserWaitingListPosition">
+            <template v-if="event.signedInUserRegistration">
                 <li class="context-menu-item" @click="editUserRegistration()">
                     <i class="fa-solid fa-edit" />
                     <span>Anmeldung bearbeiten</span>
@@ -335,6 +352,7 @@ import type { Event, PositionKey, Registration, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { VSuccess } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import { ContextMenuButton } from '@/ui/components/common';
 import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
@@ -343,7 +361,6 @@ import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import RegistrationEditDlg from '@/ui/views/events/details/RegistrationEditDlg.vue';
@@ -362,7 +379,6 @@ const router = useRouter();
 const positions = usePositions();
 const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
-const eventService = useEventService();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const statesWithHiddenCrew = [EventState.OpenForSignup, EventState.Draft];
@@ -432,7 +448,7 @@ async function joinEvent(): Promise<void> {
 
 async function leaveEvent(): Promise<void> {
     if (event.value) {
-        if (event.value.signedInUserAssignedPosition) {
+        if (event.value.signedInUserAssignedSlot) {
             const confirmed = await confirmationDialog.value?.open({
                 title: 'Teilnahme absagen?',
                 message: `Bist du sicher, das du deine Teilnahme an der Reise ${event.value.name} absagen möchtest?
@@ -450,9 +466,8 @@ async function leaveEvent(): Promise<void> {
 }
 
 async function editUserRegistration(): Promise<void> {
-    if (event.value) {
-        const registration = eventService.findRegistration(event.value, signedInUser.value.key);
-        const updatedRegistration = await editRegistrationDialog.value?.open(registration);
+    if (event.value && event.value.signedInUserRegistration) {
+        const updatedRegistration = await editRegistrationDialog.value?.open(event.value.signedInUserRegistration);
         if (updatedRegistration) {
             await eventUseCase.updateRegistration(event.value, updatedRegistration);
             await fetchTeam(event.value);

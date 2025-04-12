@@ -20,11 +20,6 @@
     @apply hover:bg-opacity-100 hover:shadow;
 }
 
-.btn-primary.disabled,
-.btn-primary:disabled {
-    @apply bg-onsurface bg-opacity-15 text-onsurface text-opacity-40;
-}
-
 .btn-secondary {
     @apply bg-secondary-container bg-opacity-90 text-onsecondary-container;
 }
@@ -51,6 +46,13 @@ a.btn-danger,
 .btn-floating-danger {
     @apply gap-5 p-5 md:gap-6 md:p-6;
     @apply rounded-2xl shadow-lg hover:shadow-xl;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled,
+.btn-danger.disabled,
+.btn-danger:disabled {
+    @apply text-opacity-75 opacity-25 !important;
 }
 
 .btn-floating:disabled,
@@ -85,7 +87,8 @@ a.btn-danger,
     @apply bg-secondary-container text-onsecondary-container;
 }
 
-.btn-ghost:disabled {
+.btn-ghost:disabled,
+.btn-ghost-danger:disabled{
     @apply opacity-50;
 }
 

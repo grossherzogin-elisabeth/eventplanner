@@ -97,14 +97,14 @@
                             <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
                             {{ item.name }}
                         </p>
-                        <p v-if="item.signedInUserAssignedPosition" class="truncate text-sm font-light">
+                        <p v-if="item.signedInUserAssignedSlot" class="truncate text-sm font-light">
                             Du bist als
-                            <i>{{ positions.get(item.signedInUserAssignedPosition).name }}</i>
+                            <i>{{ positions.get(item.signedInUserRegistration?.positionKey).name }}</i>
                             eingeplant.
                         </p>
-                        <p v-else-if="item.signedInUserWaitingListPosition" class="truncate text-sm font-light">
+                        <p v-else-if="item.signedInUserRegistration" class="truncate text-sm font-light">
                             Du stehst als
-                            <i>{{ positions.get(item.signedInUserWaitingListPosition).name }}</i>
+                            <i>{{ positions.get(item.signedInUserRegistration.positionKey).name }}</i>
                             auf der Warteliste.
                         </p>
                         <p v-else-if="item.description" class="truncate text-sm font-light">
@@ -198,7 +198,7 @@
                         <i class="fa-solid fa-calendar-alt" />
                         <span>Kalendereintrag erstellen</span>
                     </li>
-                    <template v-if="!item.signedInUserWaitingListPosition && !item.signedInUserAssignedPosition">
+                    <template v-if="!item.signedInUserRegistration">
                         <li
                             v-if="signedInUser.positions.length === 1"
                             class="permission-write-own-registrations context-menu-item"
@@ -219,7 +219,16 @@
                         </li>
                     </template>
                     <li
-                        v-if="item.signedInUserWaitingListPosition"
+                        v-if="item.signedInUserAssignedSlot"
+                        class="permission-write-own-registrations context-menu-item text-error"
+                        :class="{ disabled: item.isPastEvent }"
+                        @click="leaveEvents([item])"
+                    >
+                        <i class="fa-solid fa-ban" />
+                        <span>Reise absagen</span>
+                    </li>
+                    <li
+                        v-else-if="item.signedInUserRegistration"
                         class="permission-write-own-registrations context-menu-item"
                         :class="{ disabled: item.isPastEvent }"
                         @click="leaveEvents([item])"
@@ -227,16 +236,6 @@
                         <i class="fa-solid fa-user-minus" />
                         <span>Warteliste verlassen</span>
                     </li>
-                    <template v-else-if="item.signedInUserAssignedPosition">
-                        <li
-                            class="permission-write-own-registrations context-menu-item text-error"
-                            :class="{ disabled: item.isPastEvent }"
-                            @click="leaveEvents([item])"
-                        >
-                            <i class="fa-solid fa-ban" />
-                            <span>Reise absagen</span>
-                        </li>
-                    </template>
                 </template>
             </VTable>
         </div>
@@ -411,11 +410,11 @@ const hasAnySelectedEventInFuture = computed<boolean>(() => {
 });
 
 const hasAnySelectedEventWithSignedInUserOnWaitingList = computed<boolean>(() => {
-    return selectedEvents.value?.find((it) => it.signedInUserWaitingListPosition) !== undefined;
+    return selectedEvents.value?.find((it) => it.signedInUserRegistration && !it.signedInUserAssignedSlot) !== undefined;
 });
 
 const hasAnySelectedEventWithSignedInUserInTeam = computed<boolean>(() => {
-    return selectedEvents.value?.find((it) => it.signedInUserAssignedPosition) !== undefined;
+    return selectedEvents.value?.find((it) => it.signedInUserRegistration && it.signedInUserAssignedSlot) !== undefined;
 });
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
@@ -426,9 +425,9 @@ const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
         .filter((it) => {
             if (filterAssigned.value || filterWaitingList.value || filterFreeSlots.value) {
                 let state = 0;
-                if (it.signedInUserAssignedPosition) {
+                if (it.signedInUserAssignedSlot) {
                     state = 1;
-                } else if (it.signedInUserWaitingListPosition) {
+                } else if (it.signedInUserRegistration) {
                     state = 2;
                 } else if (it.hasOpenSlots) {
                     state = 3;
@@ -508,10 +507,10 @@ function getStateDetails(event: EventTableViewItem): StateDetails {
     if (event.state === EventState.Canceled) {
         return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
     }
-    if (event.signedInUserAssignedPosition) {
+    if (event.signedInUserAssignedSlot) {
         return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-container text-ongreen-container' };
     }
-    if (event.signedInUserWaitingListPosition) {
+    if (event.signedInUserRegistration) {
         return { name: 'Warteliste', icon: 'fa-hourglass-half', color: 'bg-surface-container-highest text-onsurface' };
     }
     if (event.state === EventState.Draft) {

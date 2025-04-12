@@ -1,10 +1,10 @@
 <template>
     <div
-        class="flex items-center overflow-hidden rounded-2xl bg-secondary-container bg-opacity-75 text-onsecondary-container backdrop-blur"
+        class="flex items-center overflow-hidden rounded-2xl bg-secondary-container text-onsecondary-container"
         :class="{ hidden: dismissed }"
         @click="clampActive = !clampActive"
     >
-        <i class="fa-solid fa-info-circle my-5 ml-4 self-start"></i>
+        <i class="fa-solid my-5 ml-4 w-4 self-start" :class="props.icon ?? 'fa-info-circle'"></i>
         <span
             class="mx-4 my-4 mr-1 w-0 flex-grow text-sm"
             :class="{
@@ -25,6 +25,7 @@ import { ref } from 'vue';
 interface Props {
     dismissable?: boolean;
     clamp?: boolean;
+    icon?: string;
 }
 
 type Emits = (e: 'dismiss') => void;

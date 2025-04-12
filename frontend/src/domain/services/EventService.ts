@@ -289,24 +289,33 @@ export class EventService {
     }
 
     public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {
-        const registration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
-        if (registration !== undefined) {
+        event.isInPast = event.start.getTime() < new Date().getTime();
+        event.signedInUserRegistration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
+        if (event.signedInUserRegistration !== undefined) {
+            // singed in user has a registration
             event.canSignedInUserJoin = false;
-            const slot = event.slots.find((it) => it.assignedRegistrationKey === registration.key);
-            if (slot) {
-                event.signedInUserAssignedPosition = registration.positionKey;
-                event.canSignedInUserLeave = event.start.getTime() > addToDate(new Date(), { days: 7 }).getTime();
+            event.signedInUserAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === event.signedInUserRegistration?.key);
+            if (event.signedInUserAssignedSlot) {
+                const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
+                const isLessThan14daysInFuture =
+                    isLessThan7daysInFuture || event.start.getTime() < addToDate(new Date(), { days: 14 }).getTime();
+                event.canSignedInUserLeave = !isLessThan7daysInFuture;
+                if (isLessThan14daysInFuture) {
+                    // event.canSignedInUserLeave;
+                }
             } else {
-                event.signedInUserWaitingListPosition = registration.positionKey;
                 event.canSignedInUserLeave = event.start.getTime() > new Date().getTime();
             }
         } else {
+            // singed in user has no registration
             event.canSignedInUserLeave = false;
             event.canSignedInUserJoin =
                 (signedInUser?.positions || []).length > 0 &&
                 event.start.getTime() > new Date().getTime() &&
                 ![EventState.Canceled].includes(event.state);
         }
+
+        // canceled events cannot be joined
         if (event.state === EventState.Canceled) {
             event.canSignedInUserJoin = false;
         }
