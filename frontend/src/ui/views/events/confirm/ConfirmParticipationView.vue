@@ -1,7 +1,7 @@
 <template>
     <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
         <div class="w-full max-w-2xl">
-            <div v-if="registrationState === State.REGISTRATION_UNCONFIRMED" class="">
+            <div v-if="registrationState === State.REGISTRATION_UNCONFIRMED">
                 <div class="mb-8 rounded-2xl">
                     <h1 class="mb-4 text-lg">Bitte bestätige deine Teilnahme</h1>
                     <p class="mb-4">
@@ -98,7 +98,7 @@
                         einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!
                     </p>
                     <h2 class="mb-4 text-base">Hier noch einmal die wichtigsten Details zur Reise:</h2>
-                    <EventDetails v-if="event" :event="event" class="" />
+                    <EventDetails v-if="event" :event="event" />
                 </div>
             </template>
             <div

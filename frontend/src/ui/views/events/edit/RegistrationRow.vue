@@ -1,5 +1,5 @@
 <template>
-    <VTooltip :disabled="props.value.registration === undefined">
+    <VTooltip :disabled="props.value.registration === undefined" :delay="500">
         <template #default>
             <ContextMenuButton class="w-full" anchor-align-x="right" dropdown-position-x="left">
                 <template #icon>
@@ -20,7 +20,7 @@
 
                         <template v-if="props.value.slot">
                             <!-- user status -->
-                            <span v-if="props.value.name && !props.value.registration?.confirmed" class="">
+                            <span v-if="props.value.name && !props.value.registration?.confirmed">
                                 <i class="fa-solid fa-user-clock opacity-25"></i>
                             </span>
                             <span v-else-if="props.value.name && props.value.registration?.confirmed">

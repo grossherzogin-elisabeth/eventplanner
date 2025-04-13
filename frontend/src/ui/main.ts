@@ -1,23 +1,13 @@
 import { createApp } from 'vue';
-import type { Application } from '@/application';
-import type { Domain } from '@/domain';
-import {
-    APP_SETTINGS_USE_CASE,
-    AUTH_USE_CASE,
-    CONFIG,
-    ERROR_HANDLING_SERVICE,
-    EVENT_ADMIN_USE_CASE,
-    EVENT_USE_CASE,
-    NOTIFICATION_SERVICE,
-    POSITION_ADMIN_USE_CASE,
-    POSITION_USE_CASE,
-    QUALIFICATION_ADMIN_USE_CASE,
-    QUALIFICATION_USE_CASE,
-    USER_ADMIN_USE_CASE,
-    USER_USE_CASE,
-} from '@/ui/composables/Application';
-import { EVENT_SERVICE, POSITION_SERVICE, QUALIFICATION_SERVICE, REGISTRATION_SERVICE, USER_SERVICE } from '@/ui/composables/Domain';
-import { setupTooltips } from '@/ui/plugins/tooltip.ts';
+import type { Config } from '@/application';
+import type { ApplicationServices } from '@/initApplicationServices';
+import type { DomainServices } from '@/initDomainServices';
+import type { UseCases } from '@/initUseCases';
+import { CONFIG } from '@/ui/composables/Application';
+import { provideApplicationServices } from '@/ui/plugins/provideApplicationServices';
+import { provideDomainServices } from '@/ui/plugins/provideDomainServices';
+import { provideUseCases } from '@/ui/plugins/provideUseCases';
+import { setupTooltips } from '@/ui/plugins/tooltip';
 import App from './App.vue';
 import './assets/css/main.css';
 import './plugins/countries';
@@ -26,30 +16,19 @@ import { setupI18n } from './plugins/i18n';
 import { setupRouter } from './plugins/router';
 import './plugins/shortcuts';
 
-export function setupVue(context: { domain: Domain; application: Application }): void {
+export function setupVue(params: {
+    config: Config;
+    domainServices: DomainServices;
+    useCases: UseCases;
+    applicationServices: ApplicationServices;
+}): void {
     const app = createApp(App);
-    app.use(setupI18n(context.application.config));
-    app.use(setupRouter(context.application.usecases.auth));
+    app.use(setupI18n(params.config));
+    app.use(setupRouter(params.useCases.authUseCase));
     app.use(setupTooltips());
-
-    app.provide(USER_SERVICE, context.domain.services.users);
-    app.provide(REGISTRATION_SERVICE, context.domain.services.registrations);
-    app.provide(EVENT_SERVICE, context.domain.services.events);
-    app.provide(QUALIFICATION_SERVICE, context.domain.services.qualifications);
-    app.provide(POSITION_SERVICE, context.domain.services.positions);
-
-    app.provide(CONFIG, context.application.config);
-    app.provide(AUTH_USE_CASE, context.application.usecases.auth);
-    app.provide(EVENT_USE_CASE, context.application.usecases.events);
-    app.provide(EVENT_ADMIN_USE_CASE, context.application.usecases.eventAdmin);
-    app.provide(USER_USE_CASE, context.application.usecases.users);
-    app.provide(USER_ADMIN_USE_CASE, context.application.usecases.userAdmin);
-    app.provide(APP_SETTINGS_USE_CASE, context.application.usecases.appSettings);
-    app.provide(QUALIFICATION_USE_CASE, context.application.usecases.qualifications);
-    app.provide(QUALIFICATION_ADMIN_USE_CASE, context.application.usecases.qualificationAdmin);
-    app.provide(POSITION_USE_CASE, context.application.usecases.positions);
-    app.provide(POSITION_ADMIN_USE_CASE, context.application.usecases.positionAdmin);
-    app.provide(NOTIFICATION_SERVICE, context.application.services.notifications);
-    app.provide(ERROR_HANDLING_SERVICE, context.application.services.errorHandling);
+    app.use(provideDomainServices(params.domainServices));
+    app.use(provideApplicationServices(params.applicationServices));
+    app.use(provideUseCases(params.useCases));
+    app.provide(CONFIG, params.config);
     app.mount('#app');
 }

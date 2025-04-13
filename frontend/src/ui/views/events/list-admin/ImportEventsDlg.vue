@@ -27,7 +27,7 @@
                     <p class="mb-4">
                         Hier kannst du Reisen aus einer Excel Datei importieren. Die Verarbeitung der Datei dauert ein paar Minuten.
                     </p>
-                    <VWarning class="">
+                    <VWarning>
                         Wenn du Reisen aus einer Excel Datei importierts, werden dadurch alle anderen Reisen für das ausgewählte Jahr
                         überschrieben!
                     </VWarning>

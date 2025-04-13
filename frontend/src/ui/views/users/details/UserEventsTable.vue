@@ -35,7 +35,7 @@
                     </div>
                     <p class="text-sm">{{ item.duration }} Tage</p>
                 </td>
-                <td class="">
+                <td>
                     <div :style="{ background: item.position.color }" class="position inline-flex">
                         <span class="px-2 text-sm">{{ item.positionName }}</span>
                     </div>
@@ -91,12 +91,12 @@
                             <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
                         </p>
                     </td>
-                    <td class="">
+                    <td>
                         <!-- crew -->
                         <p class="mb-1 h-5 w-12 rounded-lg bg-surface-container-highest"></p>
                         <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
                     </td>
-                    <td class="">
+                    <td>
                         <!-- date -->
                         <div class="mb-1 font-semibold">
                             <p class="hidden h-5 w-56 rounded-lg bg-surface-container-highest lg:block"></p>
@@ -105,7 +105,7 @@
                         <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
                     </td>
 
-                    <td class="">
+                    <td>
                         <!-- role -->
                         <div
                             class="inline-flex h-6 w-32 items-center space-x-2 rounded-full bg-surface-container-highest py-1 pl-3 pr-4"

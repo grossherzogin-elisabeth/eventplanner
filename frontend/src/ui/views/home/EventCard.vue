@@ -18,7 +18,7 @@
                 </div>
                 <div class="flex w-0 flex-grow flex-col py-3 sm:px-8">
                     <h3 class="mb-2 flex items-center space-x-2">
-                        <span class="">{{ props.event.name }}</span>
+                        <span>{{ props.event.name }}</span>
                     </h3>
                     <p class="mb-4 flex text-sm opacity-50">
                         <span class="flex-grow">

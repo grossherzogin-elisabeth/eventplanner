@@ -1,4 +1,3 @@
-export * from './Domain';
 export * from './entities/Event';
 export * from './entities/Slot';
 export * from './entities/Registration';

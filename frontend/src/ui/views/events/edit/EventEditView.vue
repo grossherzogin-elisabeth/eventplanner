@@ -1,11 +1,11 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class">
         <template #header>
-            <div v-if="event" class="">
+            <div v-if="event">
                 <h1 class="mb-1 mt-8 hidden truncate xl:block">
                     {{ event.name || 'Err' }}
                 </h1>
-                <section class="">
+                <section>
                     <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable clamp>
                         Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als
                         Admin allerdings bereits Anmeldungen eintragen.
@@ -24,7 +24,7 @@
             <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
-                        <section v-if="event" class="">
+                        <section v-if="event">
                             <div class="mb-4">
                                 <VInputLabel>Status</VInputLabel>
                                 <VInputSelect
