@@ -13,13 +13,13 @@
                     <div v-if="!Number.isNaN(parseInt(tab))" class="permission-read-events hidden lg:block">
                         <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(parseInt(tab))">
                             <i class="fa-solid fa-download"></i>
-                            <span class="">Export</span>
+                            <span>Export</span>
                         </button>
                     </div>
                     <div class="permission-create-events hidden 2xl:block">
                         <button class="btn-primary ml-2" name="create" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
-                            <span class="">Hinzufügen</span>
+                            <span>Hinzufügen</span>
                         </button>
                     </div>
                 </div>
@@ -34,8 +34,8 @@
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventType.length === 0" class="">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4" class=""> {{ filterEventType.length }} Reisearten </span>
+                    <span v-if="filterEventType.length === 0">Alle Reisearten</span>
+                    <span v-else-if="filterEventType.length > 4"> {{ filterEventType.length }} Reisearten </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -74,8 +74,8 @@
                 :class="{ active: filterEventStates.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventStates.length === 0" class="">Alle Status</span>
-                    <span v-else-if="filterEventStates.length > 4" class=""> {{ filterEventStates.length }} Status </span>
+                    <span v-if="filterEventStates.length === 0">Alle Status</span>
+                    <span v-else-if="filterEventStates.length > 4"> {{ filterEventStates.length }} Status </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventStates.map(eventStates.getName).join(', ') }}
                     </span>
@@ -108,10 +108,10 @@
                 </template>
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
-                <span class="">Freie Plätze</span>
+                <span>Freie Plätze</span>
             </button>
             <button class="btn-tag" :class="{ active: filterWaitinglist }" @click="filterWaitinglist = !filterWaitinglist">
-                <span class="">Warteliste</span>
+                <span>Warteliste</span>
             </button>
         </div>
 
@@ -129,7 +129,7 @@
                     <td class="w-1/2 whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
                         <p class="mb-1 truncate" :class="{ 'text-error line-through': item.state === EventState.Canceled }">
                             <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
-                            <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
+                            <span v-else-if="item.state === EventState.Canceled">Abgesagt: </span>
                             {{ item.name }}
                         </p>
 
@@ -141,9 +141,9 @@
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
                         <div class="flex w-full items-center gap-px pt-2">
-                            <template v-for="position in item.assignedPositions" :key="position.key + index">
+                            <template v-for="position in item.assignedPositions" :key="position.key">
                                 <div class="w-1 flex-grow">
-                                    <VTooltip class="" :delay="50">
+                                    <VTooltip :delay="50">
                                         <template #tooltip>
                                             <div class="position text-sm shadow-xl" :style="{ backgroundColor: position.color }">
                                                 {{ position.name }}
@@ -202,7 +202,7 @@
                             <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
                         </td>
 
-                        <td class="">
+                        <td>
                             <div class="px-4 py-2">
                                 <i class="fa-solid fa-circle text-surface-container-highest"></i>
                             </div>

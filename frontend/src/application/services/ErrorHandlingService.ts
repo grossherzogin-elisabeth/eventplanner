@@ -1,3 +1,5 @@
+import type { AccountRepository } from '@/application';
+
 export interface ErrorDetails {
     title?: string;
     message?: string;
@@ -8,10 +10,10 @@ export interface ErrorDetails {
 }
 
 export class ErrorHandlingService {
-    private readonly login: () => void;
+    private readonly accountRepository: AccountRepository;
 
-    public constructor(login: () => void) {
-        this.login = login;
+    public constructor(params: { accountRepository: AccountRepository }) {
+        this.accountRepository = params.accountRepository;
     }
 
     private errorHandler: (error: ErrorDetails) => void = (error: ErrorDetails) => {
@@ -38,7 +40,7 @@ export class ErrorHandlingService {
         if (e instanceof Response) {
             const response = e as Response;
             if (response.status === 401) {
-                this.login();
+                this.accountRepository.login(location.pathname);
             } else {
                 this.handleError({ error: e });
             }

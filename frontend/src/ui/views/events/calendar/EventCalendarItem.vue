@@ -12,7 +12,7 @@
             <div class="calendar-event-entry-bg">
                 <div class="w-full truncate" :title="props.event.name">
                     <span v-if="event.state === EventState.Draft" class="opacity-50"> Entwurf: </span>
-                    <span class="">
+                    <span>
                         {{ props.event.name }}
                     </span>
                 </div>
@@ -87,7 +87,7 @@
                     </div>
 
                     <!-- event route -->
-                    <div class="">
+                    <div>
                         <p v-for="(location, index) in props.event.locations" :key="index" class="flex items-center space-x-4">
                             <i :class="location.icon" class="fa-solid w-4 opacity-75" />
                             <span class="flex-grow">{{ location.name }}</span>
@@ -108,7 +108,7 @@
                             Anmeldungen werden mit deiner aktuellen Standardposition
                             <i>{{ positions.get(signedInUser.positions[0]).name }}</i> angelegt.
                         </p>
-                        <button class="" @click="choosePositionAndJoinEvent(props.event)">
+                        <button @click="choosePositionAndJoinEvent(props.event)">
                             <span class="underline"> Mit einer andere Position anmelden? </span>
                         </button>
                     </VInfo>
@@ -124,7 +124,7 @@
                             @click="leaveEvent()"
                         >
                             <i class="fa-solid fa-ban"></i>
-                            <span class="">Absagen</span>
+                            <span>Absagen</span>
                         </button>
                         <button
                             v-else-if="props.event.signedInUserRegistration"
@@ -134,7 +134,7 @@
                             @click="leaveEvent()"
                         >
                             <i class="fa-solid fa-user-minus"></i>
-                            <span class="">Warteliste verlassen</span>
+                            <span>Warteliste verlassen</span>
                         </button>
                         <button
                             v-else
@@ -153,7 +153,7 @@
                             title="Detailansicht"
                         >
                             <i class="fa-solid fa-edit"></i>
-                            <span class="">Bearbeiten</span>
+                            <span>Bearbeiten</span>
                         </RouterLink>
                         <RouterLink
                             v-else
@@ -162,7 +162,7 @@
                             title="Detailansicht"
                         >
                             <i class="fa-solid fa-search"></i>
-                            <span class="">Details</span>
+                            <span>Details</span>
                         </RouterLink>
                     </div>
                 </div>

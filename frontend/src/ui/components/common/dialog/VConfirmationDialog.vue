@@ -1,7 +1,7 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto modal" :class="{ 'error-dialog': content?.danger }">
         <template #title>
-            <h1 class="">
+            <h1>
                 <slot name="title">{{ content?.title }}</slot>
             </h1>
         </template>

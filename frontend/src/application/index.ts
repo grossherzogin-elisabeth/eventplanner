@@ -1,4 +1,3 @@
-export * from './Application';
 export * from './values/Config';
 
 export * from './ports/AccountRepository';

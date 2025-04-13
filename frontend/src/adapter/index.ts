@@ -4,3 +4,4 @@ export * from './rest/PositionRestRepository';
 export * from './rest/UserRestRepository';
 export * from './rest/QualificationRestRepository';
 export * from './rest/EventRegistrationRestRepository';
+export * from './rest/SettingsRestRepository';

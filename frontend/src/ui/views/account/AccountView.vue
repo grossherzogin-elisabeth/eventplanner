@@ -293,7 +293,7 @@
                     <template #[Tab.EMERGENCY]>
                         <div v-if="userDetails" class="items-start gap-16 md:flex lg:gap-20 xl:max-w-5xl">
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
-                                <section class="">
+                                <section>
                                     <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Name des Notfallkontakts</VInputLabel>
@@ -314,7 +314,7 @@
                                         />
                                     </div>
                                 </section>
-                                <section class="">
+                                <section>
                                     <h2 class="mb-4 font-bold text-secondary">Wichtige gesundheitliche Informationen</h2>
                                     <div class="mb-4">
                                         <VInputLabel>Krankheiten</VInputLabel>

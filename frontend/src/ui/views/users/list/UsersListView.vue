@@ -13,7 +13,7 @@
                     <div class="permission-write-users hidden 2xl:block">
                         <button class="btn-primary" name="create" @click="createUser()">
                             <i class="fa-solid fa-user-plus"></i>
-                            <span class="">Hinzufügen</span>
+                            <span>Hinzufügen</span>
                         </button>
                     </div>
                 </div>
@@ -28,8 +28,8 @@
                 :class="{ active: filterPositions.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterPositions.length === 0" class="">Nach Positionen filtern...</span>
-                    <span v-else-if="filterPositions.length > 4" class="">{{ filterPositions.length }} Positionen</span>
+                    <span v-if="filterPositions.length === 0">Nach Positionen filtern...</span>
+                    <span v-else-if="filterPositions.length > 4">{{ filterPositions.length }} Positionen</span>
                     <span v-else class="block max-w-64 truncate">
                         {{
                             filterPositions
@@ -67,18 +67,18 @@
                 </template>
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterOnlyActive }" @click="filterOnlyActive = !filterOnlyActive">
-                <span class="">Aktive Stammcrew</span>
+                <span>Aktive Stammcrew</span>
             </button>
             <button
                 class="btn-tag"
                 :class="{ active: filterExpiredQualifications }"
                 @click="filterExpiredQualifications = !filterExpiredQualifications"
             >
-                <span class="">Abgelaufene Qualifikationen</span>
+                <span>Abgelaufene Qualifikationen</span>
             </button>
             <ContextMenuButton anchor-align-x="left" dropdown-position-x="right" class="btn-tag" :class="{ active: filterEventKey }">
                 <template #icon>
-                    <span v-if="!filterEventKey" class="">Nach Reisen filtern...</span>
+                    <span v-if="!filterEventKey">Nach Reisen filtern...</span>
                     <span v-else class="block max-w-64 truncate"> Nimmt teil an {{ filterEvent?.name }} </span>
                 </template>
                 <template #default>
@@ -109,7 +109,7 @@
                 :class="{ active: filterPendingVerification }"
                 @click="filterPendingVerification = !filterPendingVerification"
             >
-                <span class="">Verifizierung ausstehend</span>
+                <span>Verifizierung ausstehend</span>
             </button>
         </div>
 
@@ -256,13 +256,13 @@
                     <div class="permission-read-user-details hidden sm:block">
                         <button class="btn-ghost" @click="contactUsers(selectedUsers)">
                             <i class="fa-solid fa-envelope" />
-                            <span class="">Email schreiben</span>
+                            <span>Email schreiben</span>
                         </button>
                     </div>
                     <div class="permission-write-users hidden lg:block xl:hidden 2xl:block">
                         <button class="btn-ghost" disabled>
                             <i class="fa-solid fa-screwdriver-wrench"></i>
-                            <span class="">Arbeitsdienst eintragen*</span>
+                            <span>Arbeitsdienst eintragen*</span>
                         </button>
                     </div>
                     <ContextMenuButton class="btn-ghost">

@@ -1,5 +1,5 @@
 <template>
-    <section v-if="user" class="">
+    <section v-if="user">
         <h2 class="mb-4 font-bold text-secondary">App</h2>
         <div class="mb-4">
             <VInputLabel>OpenID Connect Subject ID</VInputLabel>

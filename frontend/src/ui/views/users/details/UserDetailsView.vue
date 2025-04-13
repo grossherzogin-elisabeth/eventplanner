@@ -21,7 +21,7 @@
                     </template>
                     <template #[Tab.USER_EVENTS]>
                         <div class="xl:max-w-5xl">
-                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`" class="">
+                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`">
                                 <h2 class="mb-4 font-bold text-secondary">
                                     <template v-if="year === 0">Zukünftige Reisen</template>
                                     <template v-else>Reisen {{ year }}</template>

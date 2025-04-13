@@ -29,8 +29,8 @@
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventType.length === 0" class="">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4" class=""> {{ filterEventType.length }} Reisearten </span>
+                    <span v-if="filterEventType.length === 0">Alle Reisearten</span>
+                    <span v-else-if="filterEventType.length > 4"> {{ filterEventType.length }} Reisearten </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -63,13 +63,13 @@
                 </template>
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterAssigned }" @click="filterAssigned = !filterAssigned">
-                <span class="">Eingeplant</span>
+                <span>Eingeplant</span>
             </button>
             <button class="btn-tag" :class="{ active: filterWaitingList }" @click="filterWaitingList = !filterWaitingList">
-                <span class="">Warteliste</span>
+                <span>Warteliste</span>
             </button>
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
-                <span class="">Freie Plätze</span>
+                <span>Freie Plätze</span>
             </button>
         </div>
 
@@ -94,7 +94,7 @@
                             :class="{ 'text-error line-through': item.state === EventState.Canceled }"
                         >
                             <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
-                            <span v-else-if="item.state === EventState.Canceled" class="">Abgesagt: </span>
+                            <span v-else-if="item.state === EventState.Canceled">Abgesagt: </span>
                             {{ item.name }}
                         </p>
                         <p v-if="item.signedInUserAssignedSlot" class="truncate text-sm font-light">
@@ -173,7 +173,7 @@
                             <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
                         </td>
 
-                        <td class="">
+                        <td>
                             <div class="px-4 py-2">
                                 <i class="fa-solid fa-circle text-surface-container-highest"></i>
                             </div>
