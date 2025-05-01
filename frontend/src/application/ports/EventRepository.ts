@@ -1,4 +1,4 @@
-import type { Event, EventKey, ImportError } from '@/domain';
+import type { Event, EventKey } from '@/domain';
 
 export interface EventRepository {
     findByKey(key: EventKey, accessKey?: string): Promise<Event>;
@@ -12,8 +12,6 @@ export interface EventRepository {
     deleteEvent(eventKey: EventKey): Promise<void>;
 
     createEvent(event: Event): Promise<Event>;
-
-    importEvents(year: number, file: Blob): Promise<ImportError[]>;
 
     downloadImoList(event: Event): Promise<Blob>;
 

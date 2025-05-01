@@ -1,7 +1,7 @@
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
 import { cropToPrecision, deserializeDate } from '@/common';
-import type { Event, EventKey, EventState, ImportError } from '@/domain';
+import type { Event, EventKey, EventState } from '@/domain';
 import { EventType } from '@/domain';
 
 interface SlotRepresentation {
@@ -65,14 +65,6 @@ interface EventUpdateRequest {
     end?: string | null;
     locations?: LocationRepresentation[];
     slots?: SlotRepresentation[];
-}
-
-interface ImportErrorRepresentation {
-    eventKey: string;
-    eventName: string;
-    start: string;
-    end: string;
-    message: string;
 }
 
 export class EventRestRepository implements EventRepository {
@@ -176,38 +168,6 @@ export class EventRestRepository implements EventRepository {
             throw response;
         }
         return await response.clone().blob();
-    }
-
-    public async importEvents(year: number, file: Blob): Promise<ImportError[]> {
-        const formParams = new FormData();
-        formParams.append('file', file);
-        // don't add 'Content-Type': 'multipart/form-data' header, as this will break the upload!
-        const response = await fetch(`/api/v1/import/events/${year}`, {
-            method: 'POST',
-            credentials: 'include',
-            body: formParams,
-            headers: {
-                'Accept': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
-            },
-        });
-        if (!response.ok) {
-            throw response;
-        }
-        const errors: ImportErrorRepresentation[] = await response.clone().json();
-
-        const map = new Map<string, ImportError>();
-        errors.forEach((err) => {
-            const eventErrs = map.get(err.eventKey) || {
-                eventName: err.eventName,
-                messages: [],
-                start: deserializeDate(err.start),
-                end: deserializeDate(err.end),
-            };
-            map.set(err.eventKey, eventErrs);
-            eventErrs.messages.push(err.message);
-        });
-        return [...map.values()].sort((a, b) => b.start.getTime() - a.start.getTime());
     }
 
     public async createEvent(event: Event): Promise<Event> {

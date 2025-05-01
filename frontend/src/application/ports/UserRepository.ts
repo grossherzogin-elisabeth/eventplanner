@@ -14,6 +14,4 @@ export interface UserRepository {
     deleteUser(userKey: UserKey): Promise<void>;
 
     updateSignedInUser(user: Partial<UserDetails>): Promise<UserDetails>;
-
-    importUsers(file: Blob): Promise<void>;
 }

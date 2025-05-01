@@ -2,7 +2,7 @@ import type { AuthService, EventRegistrationsRepository, EventRepository, Notifi
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { filterUndefined } from '@/common';
-import type { Event, EventKey, EventService, ImportError, Registration } from '@/domain';
+import type { Event, EventKey, EventService, Registration } from '@/domain';
 import { EventState } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
@@ -157,24 +157,6 @@ export class EventAdministrationUseCase {
             this.errorHandlingService.handleRawError(e);
             throw e;
         }
-    }
-
-    public async importEvents(year: number, file: Blob): Promise<ImportError[]> {
-        const errors = await this.eventRepository.importEvents(year, file);
-        if (errors.length === 0) {
-            this.notificationService.success('Events wurden erfolgreich importiert');
-        } else {
-            this.notificationService.warning('Beim Import traten einige Warnungen auf!');
-        }
-        return errors;
-    }
-
-    public async contactTeam(event: Event): Promise<void> {
-        console.log('Contact team of event ' + event.key);
-        this.errorHandlingService.handleError({
-            title: 'TODO',
-            message: 'Diese Funktion ist derzeit noch nicht implementiert',
-        });
     }
 
     public filterForWaitingList(registrations: ResolvedRegistrationSlot[]): ResolvedRegistrationSlot[] {

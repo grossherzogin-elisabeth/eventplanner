@@ -90,15 +90,6 @@ export class UserAdministrationUseCase {
         }
     }
 
-    public async importUsers(file: Blob): Promise<void> {
-        try {
-            return this.userRepository.importUsers(file);
-        } catch (e) {
-            this.errorHandlingService.handleRawError(e);
-            throw e;
-        }
-    }
-
     public async contactUsers(users: User[], ignoreMissingEmails: boolean = false): Promise<void> {
         let mailtoLink: string;
         if (users.length === 1) {
