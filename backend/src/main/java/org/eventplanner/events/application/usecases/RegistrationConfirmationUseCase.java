@@ -31,26 +31,27 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ParticipationNotificationUseCase {
+public class RegistrationConfirmationUseCase {
 
     private final ZoneId timezone = ZoneId.of("Europe/Berlin");
+
     private final EventRepository eventRepository;
     private final NotificationService notificationService;
     private final UserService userService;
     private final RegistrationService registrationService;
     private final RegistrationRepository registrationRepository;
 
-    public void sendParticipationNotificationRequest() {
+    public void sendConfirmationRequests() {
         var eventsToNotify = getEventsToNotify(0);
         if (eventsToNotify.isEmpty()) {
-            log.info("No events to notify for participation confirmation");
+            log.debug("No events to notify for registration confirmation request");
         } else {
             for (final Event event : eventsToNotify) {
                 try {
-                    sendParticipationNotifications(event, 0);
+                    sendNotifications(event, 0);
                 } catch (Exception e) {
                     log.error(
-                        "Failed to send participation confirmation requests for event {}",
+                        "Failed to send registration confirmation requests for event {}",
                         event.getName(),
                         e
                     );
@@ -59,17 +60,17 @@ public class ParticipationNotificationUseCase {
         }
     }
 
-    public void sendParticipationNotificationRequestReminder() {
+    public void sendConfirmationReminders() {
         var eventsToNotify = getEventsToNotify(1);
         if (eventsToNotify.isEmpty()) {
-            log.info("No events to notify for participation confirmation reminder");
+            log.debug("No events to notify for registration confirmation reminder");
         } else {
             for (final Event event : eventsToNotify) {
                 try {
-                    sendParticipationNotifications(event, 1);
+                    sendNotifications(event, 1);
                 } catch (Exception e) {
                     log.error(
-                        "Failed to send participation confirmation requests for event {}",
+                        "Failed to send registration confirmation reminder for event {}",
                         event.getName(),
                         e
                     );
@@ -78,8 +79,12 @@ public class ParticipationNotificationUseCase {
         }
     }
 
-    private void sendParticipationNotifications(@NonNull final Event event, final int alreadySentRequests) {
-        log.info("Sending participation confirmation requests for event {}", event.getName());
+    private void sendNotifications(@NonNull final Event event, final int alreadySentRequests) {
+        log.info(
+            "Sending registration confirmation requests #{} for event {}",
+            alreadySentRequests + 1,
+            event.getName()
+        );
         var registrations = event.getAssignedRegistrations().stream()
             .filter(registration -> registration.getConfirmedAt() == null)
             .toList();
@@ -108,21 +113,21 @@ public class ParticipationNotificationUseCase {
             try {
                 if (alreadySentRequests == 0) {
                     notificationService
-                        .sendFirstParticipationConfirmationRequestNotification(
+                        .sendConfirmationRequestNotification(
                             user,
                             event,
                             registration
                         );
                 } else if (alreadySentRequests == 1) {
                     notificationService
-                        .sendSecondParticipationConfirmationRequestNotification(
+                        .sendConfirmationReminderNotification(
                             user,
                             event,
                             registration
                         );
                 }
             } catch (Exception e) {
-                log.error("Failed to create participation confirmation notification for user {}", user.getKey(), e);
+                log.error("Failed to create registration confirmation notification for user {}", user.getKey(), e);
             }
         }
 
@@ -181,14 +186,14 @@ public class ParticipationNotificationUseCase {
         var event = eventRepository.findByKey(eventKey).orElseThrow();
         var registration = getRegistrationByKey(event, registrationKey);
         if (!Objects.equals(registration.getAccessKey(), accessKey)) {
-            log.warn("User tried to edit registration {} with invalid access key {}", registrationKey, accessKey);
+            log.warn("User tried to confirm registration {} with invalid access key {}", registrationKey, accessKey);
             throw new NoSuchElementException();
         }
         if (registration.getConfirmedAt() != null) {
-            log.info("User tried to confirm registration {} another time, but was already confirmed", registrationKey);
+            log.info("User tried to confirm registration {}, which was already confirmed", registrationKey);
             return;
         }
-        log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getKey());
+        log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getName());
         registrationService.updateRegistration(
             event, registration, new UpdateRegistrationSpec(
                 registration.getPosition(),
@@ -215,10 +220,10 @@ public class ParticipationNotificationUseCase {
         // TODO should this be allowed?
         if (registration.getConfirmedAt() != null) {
             log.warn("User tried to decline registration {}, but was already confirmed", registrationKey);
-            throw new IllegalStateException("User already confirmed their participation on event " + event.getKey());
+            throw new IllegalStateException("User already confirmed their participation on event " + event.getName());
         }
 
-        log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getKey());
+        log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getName());
         registrationService.removeRegistration(event, registration, true);
     }
 

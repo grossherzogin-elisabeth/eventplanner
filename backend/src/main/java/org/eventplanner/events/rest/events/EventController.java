@@ -7,7 +7,7 @@ import org.eventplanner.events.application.usecases.CaptainListUseCase;
 import org.eventplanner.events.application.usecases.ConsumtionListUseCase;
 import org.eventplanner.events.application.usecases.EventUseCase;
 import org.eventplanner.events.application.usecases.ImoListUseCase;
-import org.eventplanner.events.application.usecases.ParticipationNotificationUseCase;
+import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.values.EventKey;
@@ -47,7 +47,7 @@ public class EventController {
     private final ImoListUseCase imoListUseCase;
     private final ConsumtionListUseCase consumtionListUseCase;
     private final CaptainListUseCase captainListUseCase;
-    private final ParticipationNotificationUseCase participationNotificationUseCase;
+    private final RegistrationConfirmationUseCase registrationConfirmationUseCase;
 
     @GetMapping("")
     public ResponseEntity<?> getEvents(
@@ -84,7 +84,7 @@ public class EventController {
             return ResponseEntity.ok(EventRepresentation.fromDomain(event));
         } catch (UnauthorizedException e) {
             if (accessKey != null) {
-                var event = participationNotificationUseCase.getEventByAccessKey(new EventKey(eventKey), accessKey);
+                var event = registrationConfirmationUseCase.getEventByAccessKey(new EventKey(eventKey), accessKey);
                 return ResponseEntity.ok(EventRepresentation.fromDomain(event));
             } else {
                 throw e;

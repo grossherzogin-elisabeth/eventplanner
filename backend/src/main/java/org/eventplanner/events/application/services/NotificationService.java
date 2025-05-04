@@ -1,5 +1,7 @@
 package org.eventplanner.events.application.services;
 
+import static java.util.concurrent.CompletableFuture.runAsync;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -27,7 +29,6 @@ import org.springframework.stereotype.Service;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import static java.util.concurrent.CompletableFuture.runAsync;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -133,13 +134,13 @@ public class NotificationService {
         createNotification(to, type, title, props, link);
     }
 
-    public void sendFirstParticipationConfirmationRequestNotification(
+    public void sendConfirmationRequestNotification(
         @Nullable UserDetails to,
         @NonNull Event event,
         @NonNull Registration registration
     ) {
         var title = "Bitte um Rückmeldung: " + event.getName();
-        var type = NotificationType.CONFIRM_PARTICIPATION;
+        var type = NotificationType.CONFIRM_REGISTRATION_REQUEST;
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
         addParticipationNotificationDetails(props, event, registration);
@@ -148,13 +149,13 @@ public class NotificationService {
         createNotification(to, type, title, props, link);
     }
 
-    public void sendSecondParticipationConfirmationRequestNotification(
+    public void sendConfirmationReminderNotification(
         @Nullable UserDetails to,
         @NonNull Event event,
         @NonNull Registration registration
     ) {
         var title = "Bitte um sofortige Rückmeldung: " + event.getName();
-        var type = NotificationType.CONFIRM_PARTICIPATION_REQUEST;
+        var type = NotificationType.CONFIRM_REGISTRATION_REMINDER;
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
         addParticipationNotificationDetails(props, event, registration);

@@ -52,11 +52,11 @@ public class Event {
             .toList();
     }
 
-    public boolean isUpForFirstParticipationConfirmationRequest() {
+    public boolean isUpForConfirmationRequest() {
         return startsWithinNextDays(14);
     }
 
-    public boolean isUpForSecondParticipationConfirmationRequest() {
+    public boolean isUpForConfirmationReminder() {
         return startsWithinNextDays(7);
     }
 
