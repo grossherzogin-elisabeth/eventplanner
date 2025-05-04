@@ -55,12 +55,16 @@ public class UpdateEventUseCase {
         List<RegistrationKey> unassignedRegistrations = new LinkedList<>();
 
         updateEventDetails(signedInUser, event, spec);
+
+        // make sure we have a clean state
+        event.removeInvalidSlotAssignments();
+        // make sure all registrations are added and up to date  before updating crew assignments
         addRegistrations(signedInUser, event, spec, registrations);
         updateRegistrations(signedInUser, event, spec);
         updateCrewAssignments(signedInUser, event, spec, assignedRegistrations, unassignedRegistrations);
+        // remove registrations last, so removals don't interfere with crew assignments
         removeRegistrations(signedInUser, event, spec);
 
-        event.removeInvalidSlotAssignments();
         event.optimizeSlots();
 
         // save changes
