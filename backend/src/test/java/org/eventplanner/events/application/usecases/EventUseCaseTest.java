@@ -189,9 +189,9 @@ class EventUseCaseTest {
         verify(notificationService, never())
             .sendRemovedFromWaitingListNotification(any(), any());
         verify(notificationService, never())
-            .sendFirstParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationRequestNotification(any(), any(), any());
         verify(notificationService, never())
-            .sendSecondParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationReminderNotification(any(), any(), any());
     }
 
     @Test
@@ -221,9 +221,9 @@ class EventUseCaseTest {
         verify(notificationService, times(1))
             .sendRemovedFromCrewNotification(any(), any());
         verify(notificationService, never())
-            .sendFirstParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationRequestNotification(any(), any(), any());
         verify(notificationService, never())
-            .sendSecondParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationReminderNotification(any(), any(), any());
     }
 
     @Test
@@ -252,9 +252,9 @@ class EventUseCaseTest {
         verify(notificationService, never())
             .sendRemovedFromCrewNotification(any(), any());
         verify(notificationService, times(1))
-            .sendFirstParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationRequestNotification(any(), any(), any());
         verify(notificationService, never())
-            .sendSecondParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationReminderNotification(any(), any(), any());
     }
 
     @Test
@@ -283,9 +283,9 @@ class EventUseCaseTest {
         verify(notificationService, never())
             .sendRemovedFromCrewNotification(any(), any());
         verify(notificationService, never())
-            .sendFirstParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationRequestNotification(any(), any(), any());
         verify(notificationService, times(1))
-            .sendSecondParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationReminderNotification(any(), any(), any());
     }
 
     @ParameterizedTest
@@ -327,9 +327,9 @@ class EventUseCaseTest {
         verify(notificationService, never())
             .sendRemovedFromCrewNotification(any(), any());
         verify(notificationService, never())
-            .sendFirstParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationRequestNotification(any(), any(), any());
         verify(notificationService, never())
-            .sendSecondParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationReminderNotification(any(), any(), any());
     }
 
     @Test
@@ -366,9 +366,9 @@ class EventUseCaseTest {
         verify(notificationService, never())
             .sendRemovedFromCrewNotification(any(), any());
         verify(notificationService, never())
-            .sendFirstParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationRequestNotification(any(), any(), any());
         verify(notificationService, never())
-            .sendSecondParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationReminderNotification(any(), any(), any());
     }
 
     @Test
@@ -408,9 +408,9 @@ class EventUseCaseTest {
         verify(notificationService, never())
             .sendRemovedFromCrewNotification(any(), any());
         verify(notificationService, never())
-            .sendFirstParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationRequestNotification(any(), any(), any());
         verify(notificationService, never())
-            .sendSecondParticipationConfirmationRequestNotification(any(), any(), any());
+            .sendConfirmationReminderNotification(any(), any(), any());
     }
 
     private void assignRegistration(List<EventSlot> slots, List<Registration> registrations, int index) {

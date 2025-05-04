@@ -38,7 +38,7 @@ public class Event {
     private @NonNull List<EventLocation> locations = Collections.emptyList();
     private @NonNull List<EventSlot> slots = Collections.emptyList();
     private @NonNull List<Registration> registrations = Collections.emptyList();
-    private @NonNull Integer participationConfirmationsRequestsSent = 0;
+    private @NonNull Integer confirmationsRequestsSent = 0;
 
     public List<Registration> getAssignedRegistrations() {
         var keys = getAssignedRegistrationKeys();
@@ -52,11 +52,11 @@ public class Event {
             .toList();
     }
 
-    public boolean isUpForFirstParticipationConfirmationRequest() {
+    public boolean isUpForConfirmationRequest() {
         return startsWithinNextDays(14);
     }
 
-    public boolean isUpForSecondParticipationConfirmationRequest() {
+    public boolean isUpForConfirmationReminder() {
         return startsWithinNextDays(7);
     }
 

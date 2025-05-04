@@ -1,5 +1,7 @@
 package org.eventplanner.events.application.usecases;
 
+import static org.eventplanner.common.ObjectUtils.orElse;
+
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -29,7 +31,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static org.eventplanner.common.ObjectUtils.orElse;
 
 @Slf4j
 @Service
@@ -156,16 +157,16 @@ public class EventUseCase {
                 .forEach(user -> notificationService.sendRemovedFromCrewNotification(user, updatedEvent));
 
             // also send participation confirmation request when event will start within next 2 weeks
-            if (updatedEvent.isUpForSecondParticipationConfirmationRequest()) {
+            if (updatedEvent.isUpForConfirmationReminder()) {
                 notifyAssignedRegistrations.forEach(registration ->
-                    notificationService.sendSecondParticipationConfirmationRequestNotification(
+                    notificationService.sendConfirmationReminderNotification(
                         users.get(registration.getUserKey()),
                         updatedEvent,
                         registration
                     ));
-            } else if (updatedEvent.isUpForFirstParticipationConfirmationRequest()) {
+            } else if (updatedEvent.isUpForConfirmationRequest()) {
                 notifyAssignedRegistrations.forEach(registration ->
-                    notificationService.sendFirstParticipationConfirmationRequestNotification(
+                    notificationService.sendConfirmationRequestNotification(
                         users.get(registration.getUserKey()),
                         updatedEvent,
                         registration

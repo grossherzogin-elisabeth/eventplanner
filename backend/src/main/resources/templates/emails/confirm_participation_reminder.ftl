@@ -1,7 +1,7 @@
 <p>
-    Du bist für die Reise ${event.name} am
+    Du hast bisher noch nicht deine Teilname an ${event.name} am
     <a class="this-is-not-a-phone-number">${event_start_date}</a>
-    als Crew eingeplant. Bitte bestätige deine Teilnahme an der Reise
+    bestätigt. Bitte bestätige deine Teilnahme an der Reise
     <b>bis spätestens <a class="this-is-not-a-phone-number">${deadline}</a></b>
     durch Klick auf den unten stehenden Link. Wir wünschen dir eine schöne Reise!
 </p>
