@@ -45,13 +45,23 @@ public class LogRequestsFilter extends OncePerRequestFilter {
             return false;
         }
         return request.getRequestURI().equals("/")
-            || request.getRequestURI().equals("/favicon.svg")
+            || request.getRequestURI().equals("/index.html")
+            // images
+            || request.getRequestURI().endsWith(".svg")
+            || request.getRequestURI().endsWith(".png")
+            || request.getRequestURI().endsWith(".ico")
+            // js files
             || request.getRequestURI().endsWith(".js")
             || request.getRequestURI().endsWith(".css")
             || request.getRequestURI().endsWith(".json")
+            // everything else in assets
             || request.getRequestURI().startsWith("/assets/")
+            // other static files
+            || request.getRequestURI().startsWith("/manifest.webmanifest")
+            // oauth endpoints
             || request.getRequestURI().startsWith("/auth")
             || request.getRequestURI().startsWith("/login")
+            // frontend routes
             || request.getRequestURI().startsWith("/events")
             || request.getRequestURI().startsWith("/users")
             || request.getRequestURI().startsWith("/settings")
