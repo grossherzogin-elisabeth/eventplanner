@@ -1,10 +1,7 @@
 package org.eventplanner.events.application.usecases;
 
-import static org.eventplanner.common.ObjectUtils.orElse;
-
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -48,15 +45,10 @@ public class EventUseCase {
     ) {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
-        var currentYear = Instant.now().atZone(ZoneId.of("Europe/Berlin")).getYear();
-        if (year < currentYear - 10 || year > currentYear + 10) {
-            throw new IllegalArgumentException("Invalid year");
-        }
-
-        return this.eventRepository.findAllByYear(year).stream()
-            .filter(event -> filterForVisibility(signedInUser, event))
-            .map(eventService::removeInvalidSlotAssignments)
-            .map(event -> clearConfidentialData(signedInUser, event))
+        return eventRepository.findAllByYear(year).stream()
+            .filter(evt -> evt.isVisibleForUser(signedInUser))
+            .peek(Event::removeInvalidSlotAssignments)
+            .peek(evt -> evt.clearConfidentialData(signedInUser))
             .toList();
     }
 
@@ -67,8 +59,8 @@ public class EventUseCase {
         signedInUser.assertHasPermission(Permission.READ_USERS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
-        var events = this.getEvents(signedInUser, year); // we want the exact same permission checks here
-        log.info("Generating excel export for events of year {}", year);
+        var events = getEvents(signedInUser, year); // we want the exact same permission checks here
+        log.info("Generating excel export for {} events of year {}", events.size(), year);
         return exportService.exportEvents(events, year);
     }
 
@@ -77,12 +69,15 @@ public class EventUseCase {
         @NonNull final EventKey key
     ) {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
-        var event = this.eventRepository.findByKey(key)
-            .filter(evt -> filterForVisibility(signedInUser, evt))
-            .map(eventService::removeInvalidSlotAssignments)
-            .map(evt -> clearConfidentialData(signedInUser, evt))
+
+        return eventRepository.findByKey(key)
+            .filter(evt -> evt.isVisibleForUser(signedInUser))
+            .map(evt -> {
+                evt.removeInvalidSlotAssignments();
+                evt.clearConfidentialData(signedInUser);
+                return evt;
+            })
             .orElseThrow();
-        return clearConfidentialData(signedInUser, event);
     }
 
     public @NonNull Event createEvent(
@@ -95,17 +90,17 @@ public class EventUseCase {
             new EventKey(),
             spec.name(),
             EventState.DRAFT,
-            orElse(spec.note(), ""),
-            orElse(spec.description(), ""),
+            spec.note() != null ? spec.note() : "",
+            spec.description() != null ? spec.description() : "",
             spec.start(),
             spec.end(),
-            orElse(spec.locations(), Collections.emptyList()),
-            orElse(spec.slots(), Collections.emptyList()),
+            spec.locations() != null ? spec.locations() : Collections.emptyList(),
+            spec.slots() != null ? spec.slots() : Collections.emptyList(),
             Collections.emptyList(),
             0
         );
-        log.info("Creating event {}", event.getKey());
-        return this.eventRepository.create(event);
+        log.info("Creating new event {}", event.getName());
+        return eventRepository.create(event);
     }
 
     public @NonNull Event updateEvent(
@@ -183,41 +178,18 @@ public class EventUseCase {
     ) {
         signedInUser.assertHasPermission(Permission.DELETE_EVENTS);
 
-        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
+        var event = eventRepository.findByKey(eventKey).orElseThrow();
         log.info("Deleting event {}", event.getName());
         eventRepository.deleteByKey(event.getKey());
     }
 
-    private boolean filterForVisibility(
+    public @NonNull Event optimizeEventSlots(
         @NonNull final SignedInUser signedInUser,
         @NonNull final Event event
     ) {
-        if (EventState.DRAFT.equals(event.getState()) && !signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
-            return false;
-        }
-        if (EventState.CANCELED.equals(event.getState()) && event.getRegistrations()
-            .stream().noneMatch(reg -> signedInUser.key().equals(reg.getUserKey()))) {
-            return false;
-        }
-        return true;
-    }
+        signedInUser.assertHasPermission(Permission.WRITE_EVENT_SLOTS);
 
-    private @NonNull Event clearConfidentialData(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final Event event
-    ) {
-        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
-            && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(event.getState())) {
-            // clear assigned registrations on slots if crew is not published yet
-            event.getSlots().forEach(slot -> slot.setAssignedRegistration(null));
-        }
-        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)) {
-            // clear notes of all but the signed in user
-            event.getRegistrations().stream()
-                .filter(it -> it.getNote() != null)
-                .filter(it -> !signedInUser.key().equals(it.getUserKey()))
-                .forEach(it -> it.setNote(null));
-        }
+        event.optimizeSlots();
         return event;
     }
 }

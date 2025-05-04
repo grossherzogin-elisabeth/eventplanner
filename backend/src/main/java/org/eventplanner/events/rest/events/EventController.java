@@ -2,6 +2,7 @@ package org.eventplanner.events.rest.events;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import org.eventplanner.events.application.usecases.CaptainListUseCase;
 import org.eventplanner.events.application.usecases.ConsumtionListUseCase;
@@ -13,6 +14,8 @@ import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.values.EventKey;
 import org.eventplanner.events.rest.events.dto.CreateEventRequest;
 import org.eventplanner.events.rest.events.dto.EventRepresentation;
+import org.eventplanner.events.rest.events.dto.EventSlotRepresentation;
+import org.eventplanner.events.rest.events.dto.OptimizeEventSlotsRequest;
 import org.eventplanner.events.rest.events.dto.UpdateEventRequest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -163,5 +166,17 @@ public class EventController {
             .contentLength(captainListByteArray.length)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(resource);
+    }
+
+    @PostMapping("/{eventKey}/optimized-slots")
+    public ResponseEntity<List<EventSlotRepresentation>> optimizeEventSlots(
+        @PathVariable("eventKey") String eventKey,
+        @RequestBody OptimizeEventSlotsRequest request
+    ) {
+        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var event = request.toDomain(eventUseCase.getEventByKey(signedInUser, new EventKey(eventKey)));
+        event = eventUseCase.optimizeEventSlots(signedInUser, event);
+        var representations = event.getSlots().stream().map(EventSlotRepresentation::fromDomain).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(representations);
     }
 }
