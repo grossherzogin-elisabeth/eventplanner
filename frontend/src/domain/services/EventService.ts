@@ -37,47 +37,6 @@ export class EventService {
         return false;
     }
 
-    public assignUserToSlot(event: Event, user: User, slotKey: SlotKey): Event {
-        const slot = event.slots.find((it) => it.key === slotKey);
-        if (!slot) {
-            throw new Error('Failed to resolve slot');
-        }
-        if (!slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey))) {
-            console.warn(`Assigning ${user.firstName} ${user.lastName} to slot with mismatching positions!`);
-            // throw new Error('User does not have the required position');
-        }
-        const registration = event.registrations.find((it) => it.userKey === user.key);
-        if (!registration) {
-            throw new Error('Failed to resolve user registration');
-        }
-        slot.assignedRegistrationKey = registration.key;
-        event.assignedUserCount = event.slots.filter((it) => it.assignedRegistrationKey).length;
-        return this.optimizeSlots(event);
-    }
-
-    public assignGuestToSlot(event: Event, name: string, slotKey: SlotKey): Event {
-        const slot = event.slots.find((it) => it.key === slotKey);
-        if (!slot) {
-            throw new Error('Failed to resolve slot');
-        }
-        const registration = event.registrations.find((it) => it.name === name);
-        if (!registration) {
-            throw new Error('Failed to resolve guest registration');
-        }
-        slot.assignedRegistrationKey = registration.key;
-        event.assignedUserCount = event.slots.filter((it) => it.assignedRegistrationKey).length;
-        return this.optimizeSlots(event);
-    }
-
-    public unassignSlot(event: Event, slotKey: SlotKey): Event {
-        const slot = event.slots.find((it) => it.key === slotKey);
-        if (!slot) {
-            throw new Error('Failed to resolve slot');
-        }
-        slot.assignedRegistrationKey = undefined;
-        return this.optimizeSlots(event);
-    }
-
     public cancelUserRegistration(event: Event, userKey?: UserKey): Event {
         event.registrations = event.registrations.filter((it) => it.userKey !== userKey);
         return event;
@@ -103,43 +62,6 @@ export class EventService {
     public getOpenSlots(event: Event): Slot[] {
         return event.slots.filter((it) => !it.assignedRegistrationKey);
     }
-
-    /**
-     * Reorders slots to make sure the higher ranked slots are filled first, making space for lower qualified
-     * team members
-     * @param event
-     */
-    private optimizeSlots(event: Event): Event {
-        console.log('🏎️ Optimizing slots');
-        // this.debugSlots(event);
-        for (let i = 0; i < event.slots.length; i++) {
-            const slot = event.slots[i];
-            if (!slot.assignedRegistrationKey) {
-                // try to fill slot with a registration from a slot with lesser prio
-                for (let j = i + 1; j < event.slots.length; j++) {
-                    const lowerPrioSlot = event.slots[j];
-                    if (!lowerPrioSlot.assignedRegistrationKey) {
-                        continue;
-                    }
-                    const registration = event.registrations.find((r) => r.key === lowerPrioSlot.assignedRegistrationKey);
-                    if (registration && slot.positionKeys.includes(registration.positionKey)) {
-                        // the registration of a lower prio slot can also be assigned to this slot, move it up
-                        slot.assignedRegistrationKey = lowerPrioSlot.assignedRegistrationKey;
-                        lowerPrioSlot.assignedRegistrationKey = undefined;
-                        break;
-                    }
-                }
-            }
-        }
-        // this.debugSlots(event);
-        return event;
-    }
-
-    // private debugSlots(event: Event): void {
-    //     event.slots.forEach((s) => {
-    //         console.log(s.order, s.positionKeys, s.assignedRegistrationKey);
-    //     });
-    // }
 
     public updateSlot(event: Event, slot: Slot): Event {
         const index = event.slots.findIndex((it) => it.key === slot.key);

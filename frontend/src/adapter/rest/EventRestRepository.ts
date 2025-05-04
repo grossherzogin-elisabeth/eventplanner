@@ -1,7 +1,8 @@
+import type { RegistrationCreateRequest, RegistrationUpdateRequest } from '@/adapter';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
 import { cropToPrecision, deserializeDate } from '@/common';
-import type { Event, EventKey, EventState } from '@/domain';
+import type { Event, EventKey, EventState, Registration, Slot } from '@/domain';
 import { EventType } from '@/domain';
 
 interface SlotRepresentation {
@@ -65,6 +66,14 @@ interface EventUpdateRequest {
     end?: string | null;
     locations?: LocationRepresentation[];
     slots?: SlotRepresentation[];
+    registrationsToRemove?: string[];
+    registrationsToAdd?: RegistrationCreateRequest[];
+    registrationsToUpdate?: RegistrationUpdateRequest[];
+}
+
+interface OptimizeEventSlotsRequest {
+    slots: SlotRepresentation[];
+    registrations: RegistrationRepresentation[];
 }
 
 export class EventRestRepository implements EventRepository {
@@ -98,20 +107,24 @@ export class EventRestRepository implements EventRepository {
                 eta: locationRepresentation.eta ? deserializeDate(locationRepresentation.eta) : undefined,
                 etd: locationRepresentation.etd ? deserializeDate(locationRepresentation.etd) : undefined,
             })),
-            slots: eventRepresentation.slots.map((slotRepresentation) => ({
-                key: slotRepresentation.key,
-                order: slotRepresentation.order,
-                criticality: slotRepresentation.criticality,
-                positionKeys: slotRepresentation.positionKeys,
-                positionName: slotRepresentation.name ?? undefined,
-                assignedRegistrationKey: slotRepresentation.assignedRegistrationKey ?? undefined,
-            })),
+            slots: EventRestRepository.mapSlotsToDomain(eventRepresentation.slots),
             assignedUserCount: eventRepresentation.slots.filter((it) => it.assignedRegistrationKey).length,
             canSignedInUserJoin: false,
             canSignedInUserLeave: false,
         };
         event.type = EventRestRepository.mapEventType(event);
         return event;
+    }
+
+    private static mapSlotsToDomain(slots: SlotRepresentation[]): Slot[] {
+        return slots.map((slotRepresentation) => ({
+            key: slotRepresentation.key,
+            order: slotRepresentation.order,
+            criticality: slotRepresentation.criticality,
+            positionKeys: slotRepresentation.positionKeys,
+            positionName: slotRepresentation.name ?? undefined,
+            assignedRegistrationKey: slotRepresentation.assignedRegistrationKey ?? undefined,
+        }));
     }
 
     private static mapEventType(event: Event): EventType {
@@ -214,7 +227,13 @@ export class EventRestRepository implements EventRepository {
         return EventRestRepository.mapEventToDomain(responseData);
     }
 
-    public async updateEvent(eventKey: EventKey, updateRequest: Partial<Event>): Promise<Event> {
+    public async updateEvent(
+        eventKey: EventKey,
+        updateRequest: Partial<Event>,
+        registrationsToRemove?: Registration[],
+        registrationsToAdd?: Registration[],
+        registrationsToUpdate?: Registration[]
+    ): Promise<Event> {
         const requestBody: EventUpdateRequest = {
             state: updateRequest.state,
             name: updateRequest.name,
@@ -239,6 +258,21 @@ export class EventRestRepository implements EventRepository {
                 positionKeys: it.positionKeys,
                 name: it.positionName,
                 assignedRegistrationKey: it.assignedRegistrationKey,
+            })),
+            registrationsToRemove: registrationsToRemove?.map((it) => it.key),
+            registrationsToAdd: registrationsToAdd?.map((it) => ({
+                registrationKey: it.key,
+                positionKey: it.positionKey,
+                name: it.name,
+                userKey: it.userKey,
+                note: it.note,
+            })),
+            registrationsToUpdate: registrationsToUpdate?.map((it) => ({
+                registrationKey: it.key,
+                positionKey: it.positionKey,
+                name: it.name,
+                userKey: it.userKey,
+                note: it.note,
             })),
         };
         const response = await fetch(`/api/v1/events/${eventKey}`, {
@@ -302,5 +336,41 @@ export class EventRestRepository implements EventRepository {
             throw response;
         }
         return response.clone().blob();
+    }
+
+    public async optimizeSlots(event: Event): Promise<Slot[]> {
+        const requestBody: OptimizeEventSlotsRequest = {
+            slots: event.slots?.map((it) => ({
+                key: it.key,
+                order: it.order,
+                criticality: it.criticality,
+                positionKeys: it.positionKeys,
+                name: it.positionName,
+                assignedRegistrationKey: it.assignedRegistrationKey,
+            })),
+            registrations: event.registrations.map((it) => ({
+                key: it.key,
+                positionKey: it.positionKey,
+                name: it.name,
+                userKey: it.userKey,
+                note: it.note,
+                confirmed: it.confirmed,
+            })),
+        };
+        const response = await fetch(`/api/v1/events/${event.key}/optimized-slots`, {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': getCsrfToken(),
+            },
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        const responseData: SlotRepresentation[] = await response.clone().json();
+        return EventRestRepository.mapSlotsToDomain(responseData);
     }
 }

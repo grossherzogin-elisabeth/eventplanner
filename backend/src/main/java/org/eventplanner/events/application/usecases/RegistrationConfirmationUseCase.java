@@ -195,13 +195,16 @@ public class RegistrationConfirmationUseCase {
         }
         log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getName());
         registrationService.updateRegistration(
-            event, registration, new UpdateRegistrationSpec(
+            new UpdateRegistrationSpec(
+                event.getKey(),
+                registration.getKey(),
                 registration.getPosition(),
                 registration.getUserKey(),
                 registration.getName(),
                 registration.getNote(),
                 Instant.now()
-            )
+            ),
+            event
         );
     }
 
@@ -224,7 +227,8 @@ public class RegistrationConfirmationUseCase {
         }
 
         log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getName());
-        registrationService.removeRegistration(event, registration, true);
+        registrationService.removeRegistration(registration.getKey(), event, true);
+        eventRepository.update(event);
     }
 
     private Registration getRegistrationByKey(

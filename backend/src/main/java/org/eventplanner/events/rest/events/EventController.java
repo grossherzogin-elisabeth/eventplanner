@@ -9,6 +9,7 @@ import org.eventplanner.events.application.usecases.ConsumtionListUseCase;
 import org.eventplanner.events.application.usecases.EventUseCase;
 import org.eventplanner.events.application.usecases.ImoListUseCase;
 import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
+import org.eventplanner.events.application.usecases.UpdateEventUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.values.EventKey;
@@ -47,6 +48,7 @@ public class EventController {
 
     private final UserUseCase userUseCase;
     private final EventUseCase eventUseCase;
+    private final UpdateEventUseCase updateEventUseCase;
     private final ImoListUseCase imoListUseCase;
     private final ConsumtionListUseCase consumtionListUseCase;
     private final CaptainListUseCase captainListUseCase;
@@ -108,7 +110,7 @@ public class EventController {
         @RequestBody UpdateEventRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = eventUseCase.updateEvent(signedInUser, new EventKey(eventKey), spec.toDomain());
+        var event = updateEventUseCase.updateEvent(signedInUser, spec.toDomain(new EventKey(eventKey)));
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
 

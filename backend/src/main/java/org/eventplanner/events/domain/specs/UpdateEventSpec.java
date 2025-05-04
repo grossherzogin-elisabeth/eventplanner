@@ -6,16 +6,18 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eventplanner.events.domain.entities.EventSlot;
+import org.eventplanner.events.domain.values.EventKey;
 import org.eventplanner.events.domain.values.EventLocation;
 import org.eventplanner.events.domain.values.EventState;
 import org.eventplanner.events.domain.values.RegistrationKey;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import lombok.NonNull;
 import lombok.With;
 
 @With
 public record UpdateEventSpec(
+    @NonNull EventKey eventKey,
     @Nullable String name,
     @Nullable EventState state,
     @Nullable String note,
@@ -23,16 +25,19 @@ public record UpdateEventSpec(
     @Nullable Instant start,
     @Nullable Instant end,
     @Nullable List<EventLocation> locations,
-    @Nullable List<EventSlot> slots
+    @Nullable List<EventSlot> slots,
+    @Nullable List<RegistrationKey> registrationsToRemove,
+    @Nullable List<CreateRegistrationSpec> registrationsToAdd,
+    @Nullable List<UpdateRegistrationSpec> registrationsToUpdate
 ) {
-    public UpdateEventSpec() {
-        this(null, null, null, null, null, null, null, null);
+    public UpdateEventSpec(@NonNull final EventKey eventKey) {
+        this(eventKey, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     public @NonNull List<RegistrationKey> getAssignedRegistrationKeys() {
-        if (slots() == null || slots().isEmpty()) {
+        if (slots == null || slots.isEmpty()) {
             return Collections.emptyList();
         }
-        return slots().stream().map(EventSlot::getAssignedRegistration).filter(Objects::nonNull).toList();
+        return slots.stream().map(EventSlot::getAssignedRegistration).filter(Objects::nonNull).toList();
     }
 }
