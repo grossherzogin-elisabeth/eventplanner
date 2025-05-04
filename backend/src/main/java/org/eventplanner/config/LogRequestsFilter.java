@@ -46,7 +46,9 @@ public class LogRequestsFilter extends OncePerRequestFilter {
         }
         return request.getRequestURI().equals("/")
             || request.getRequestURI().equals("/favicon.svg")
-            || request.getRequestURI().equals("/registerSW.js")
+            || request.getRequestURI().endsWith(".js")
+            || request.getRequestURI().endsWith(".css")
+            || request.getRequestURI().endsWith(".json")
             || request.getRequestURI().startsWith("/assets/")
             || request.getRequestURI().startsWith("/auth")
             || request.getRequestURI().startsWith("/login")
