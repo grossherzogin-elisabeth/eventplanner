@@ -32,6 +32,7 @@ public class EmailService implements NotificationDispatcher {
     private final EmailSender emailSender;
     private final Configuration freemarkerConfig;
     private final List<String> recipientsWhitelist;
+    private final String titlePrefix;
 
     public EmailService(
         @Autowired final SettingsService settingsService,
@@ -39,7 +40,8 @@ public class EmailService implements NotificationDispatcher {
         @Autowired final QueuedEmailRepository queuedEmailRepository,
         @Autowired final EmailSender emailSender,
         @Autowired final Configuration freemarkerConfig,
-        @Value("${email.recipients-whitelist}") final String recipientsWhitelist
+        @Value("${email.recipients-whitelist}") final String recipientsWhitelist,
+        @Value("${email.title-prefix}") final String titlePrefix
     ) {
         this.settingsService = settingsService;
         this.userService = userService;
@@ -50,6 +52,7 @@ public class EmailService implements NotificationDispatcher {
             .map(String::trim)
             .filter(s -> !s.isBlank())
             .toList();
+        this.titlePrefix = titlePrefix;
     }
 
     @Override
@@ -96,30 +99,31 @@ public class EmailService implements NotificationDispatcher {
         var maybeNext = queuedEmailRepository.next();
         if (maybeNext.isPresent()) {
             var message = maybeNext.get();
+            if (titlePrefix != null && !titlePrefix.isEmpty()) {
+                message = message.withSubject(titlePrefix + message.getSubject());
+            }
             try {
-                if (!recipientsWhitelist.isEmpty() && !recipientsWhitelist.contains(message.getTo())) {
-                    log.warn(
-                        "Skipped sending email to user {} because notifications are configured to only be sent to " +
-                        "whitelisted" +
-                        " users",
+                if (recipientsWhitelist.isEmpty()) {
+                    log.info(
+                        "Sending {} notification email to user {}",
+                        message.getType(),
+                        message.getUserKey()
+                    );
+                } else if (recipientsWhitelist.contains(message.getTo())) {
+                    log.info(
+                        "Sending {} notification email to whitelisted recipient {}",
+                        message.getType(),
                         message.getTo()
+                    );
+                } else {
+                    log.warn(
+                        "Skipped sending {} notification email to user {}, because user is not whitelisted",
+                        message.getType(),
+                        message.getUserKey()
                     );
                     return;
                 }
                 emailSender.sendEmail(message, getEmailSettings());
-                if (!recipientsWhitelist.isEmpty()) {
-                    log.info(
-                        "Successfully sent {} notification email to whitelisted recipient {}",
-                        message.getType(),
-                        message.getUserKey()
-                    );
-                } else {
-                    log.info(
-                        "Successfully sent {} notification email to user {}",
-                        message.getType(),
-                        message.getUserKey()
-                    );
-                }
             } catch (Exception e) {
                 if (message.getRetries() >= 10) {
                     log.error(
