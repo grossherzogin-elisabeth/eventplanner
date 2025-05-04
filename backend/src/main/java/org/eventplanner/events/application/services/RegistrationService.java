@@ -50,7 +50,7 @@ public class RegistrationService {
         }
         var user = userService.getUserByKey(userKey)
             .orElseThrow(() -> new IllegalArgumentException("User with key " + userKey.value() + " does not " +
-                                                            "exist"));
+                "exist"));
         var registration = registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
         notificationService.sendAddedToWaitingListNotification(user, event);
 
@@ -95,7 +95,7 @@ public class RegistrationService {
             }
         }
 
-        registrationRepository.deleteRegistration(registration, event.getKey());
+        registrationRepository.deleteRegistration(registration.getKey(), event.getKey());
         event = this.eventRepository.findByKey(event.getKey()).orElseThrow();
 
         var userKey = registration.getUserKey();
