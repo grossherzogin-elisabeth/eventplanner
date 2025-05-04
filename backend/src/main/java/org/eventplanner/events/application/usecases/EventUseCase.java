@@ -220,4 +220,14 @@ public class EventUseCase {
         }
         return event;
     }
+
+    public @NonNull Event optimizeEventSlots(
+        @NonNull final SignedInUser signedInUser,
+        @NonNull final Event event
+    ) {
+        signedInUser.assertHasPermission(Permission.WRITE_EVENT_SLOTS);
+
+        event.optimizeSlots();
+        return event;
+    }
 }
