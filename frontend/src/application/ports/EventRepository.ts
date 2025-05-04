@@ -1,4 +1,4 @@
-import type { Event, EventKey } from '@/domain';
+import type { Event, EventKey, Registration, Slot } from '@/domain';
 
 export interface EventRepository {
     findByKey(key: EventKey, accessKey?: string): Promise<Event>;
@@ -7,7 +7,13 @@ export interface EventRepository {
 
     export(year: number): Promise<Blob>;
 
-    updateEvent(eventKey: EventKey, event: Partial<Event>): Promise<Event>;
+    updateEvent(
+        eventKey: EventKey,
+        event: Partial<Event>,
+        registrationsToRemove?: Registration[],
+        registrationsToAdd?: Registration[],
+        registrationsToUpdate?: Registration[]
+    ): Promise<Event>;
 
     deleteEvent(eventKey: EventKey): Promise<void>;
 
@@ -18,4 +24,6 @@ export interface EventRepository {
     downloadConsumptionList(event: Event): Promise<Blob>;
 
     downloadCaptainList(event: Event): Promise<Blob>;
+
+    optimizeSlots(event: Event): Promise<Slot[]>;
 }

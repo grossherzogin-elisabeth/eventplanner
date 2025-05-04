@@ -2,7 +2,7 @@ import type { AuthService, EventRegistrationsRepository, EventRepository, Notifi
 import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
 import type { EventCachingService } from '@/application/services/EventCachingService';
 import { filterUndefined } from '@/common';
-import type { Event, EventKey, EventService, Registration } from '@/domain';
+import type { Event, EventKey, EventService, Registration, SlotKey, User } from '@/domain';
 import { EventState } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
@@ -117,30 +117,28 @@ export class EventAdministrationUseCase {
             // workaround: we don't have the original cached yet, because for example a reload on a details page happened
             original = await this.eventRepository.findByKey(eventKey);
         }
+        let newRegistrations: Registration[] = [];
+        let deletedRegistrations: Registration[] = [];
+        let changedRegistrations: Registration[] = [];
         if (original && event.registrations) {
             const originalRegistrationKeys = original.registrations.map((r) => r.key);
             const newRegistrationKeys = event.registrations.map((r) => r.key);
 
-            const newRegistrations = event.registrations.filter((r) => !originalRegistrationKeys.includes(r.key));
-            const deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
-            const changedRegistrations = event.registrations.filter((a) => {
+            newRegistrations = event.registrations.filter((r) => !originalRegistrationKeys.includes(r.key));
+            deletedRegistrations = original.registrations.filter((r) => !newRegistrationKeys.includes(r.key));
+            changedRegistrations = event.registrations.filter((a) => {
                 const b = original.registrations.find((it) => it.key === a.key);
-                console.log(a.note, b?.note);
                 return b !== undefined && (a.name !== b.name || a.positionKey !== b.positionKey || a.note !== b.note);
             });
-
-            for (const r of newRegistrations) {
-                await this.eventRegistrationsRepository.createRegistration(eventKey, r);
-            }
-            for (const r of changedRegistrations) {
-                await this.eventRegistrationsRepository.updateRegistration(eventKey, r);
-            }
-            for (const r of deletedRegistrations) {
-                await this.eventRegistrationsRepository.deleteRegistration(eventKey, r);
-            }
         }
 
-        let savedEvent = await this.eventRepository.updateEvent(eventKey, event);
+        let savedEvent = await this.eventRepository.updateEvent(
+            eventKey,
+            event,
+            deletedRegistrations,
+            newRegistrations,
+            changedRegistrations
+        );
         savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());
         savedEvent = await this.eventCachingService.updateCache(savedEvent);
         return savedEvent;
@@ -209,5 +207,49 @@ export class EventAdministrationUseCase {
             this.errorHandlingService.handleRawError(e);
             throw e;
         }
+    }
+
+    public async assignUserToSlot(event: Event, user: User, slotKey: SlotKey): Promise<Event> {
+        const slot = event.slots.find((it) => it.key === slotKey);
+        if (!slot) {
+            throw new Error('Failed to resolve slot');
+        }
+        if (!slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey))) {
+            console.warn(`Assigning ${user.firstName} ${user.lastName} to slot with mismatching positions!`);
+            // throw new Error('User does not have the required position');
+        }
+        const registration = event.registrations.find((it) => it.userKey === user.key);
+        if (!registration) {
+            throw new Error('Failed to resolve user registration');
+        }
+        slot.assignedRegistrationKey = registration.key;
+        event.assignedUserCount = event.slots.filter((it) => it.assignedRegistrationKey).length;
+        event.slots = await this.eventRepository.optimizeSlots(event);
+        return event;
+    }
+
+    public async assignGuestToSlot(event: Event, name: string, slotKey: SlotKey): Promise<Event> {
+        const slot = event.slots.find((it) => it.key === slotKey);
+        if (!slot) {
+            throw new Error('Failed to resolve slot');
+        }
+        const registration = event.registrations.find((it) => it.name === name);
+        if (!registration) {
+            throw new Error('Failed to resolve guest registration');
+        }
+        slot.assignedRegistrationKey = registration.key;
+        event.assignedUserCount = event.slots.filter((it) => it.assignedRegistrationKey).length;
+        event.slots = await this.eventRepository.optimizeSlots(event);
+        return event;
+    }
+
+    public async unassignSlot(event: Event, slotKey: SlotKey): Promise<Event> {
+        const slot = event.slots.find((it) => it.key === slotKey);
+        if (!slot) {
+            throw new Error('Failed to resolve slot');
+        }
+        slot.assignedRegistrationKey = undefined;
+        event.slots = await this.eventRepository.optimizeSlots(event);
+        return event;
     }
 }

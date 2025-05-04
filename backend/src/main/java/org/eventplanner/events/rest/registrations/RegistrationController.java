@@ -1,5 +1,7 @@
 package org.eventplanner.events.rest.registrations;
 
+import java.util.Objects;
+
 import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.RegistrationUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
@@ -40,7 +42,9 @@ public class RegistrationController {
         @RequestBody CreateRegistrationRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = registrationUseCase.addRegistration(signedInUser, new EventKey(eventKey), spec.toDomain());
+        var isSelfSignup = Objects.equals(signedInUser.key().value(), spec.userKey());
+        var event =
+            registrationUseCase.createRegistration(signedInUser, spec.toDomain(new EventKey(eventKey), isSelfSignup));
         return ResponseEntity.status(HttpStatus.CREATED).body(EventRepresentation.fromDomain(event));
     }
 
@@ -67,9 +71,9 @@ public class RegistrationController {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var event = registrationUseCase.updateRegistration(
             signedInUser,
-            new EventKey(eventKey),
-            new RegistrationKey(registrationKey),
-            spec.toDomain()
+            spec.toDomain(
+                new EventKey(eventKey)
+            )
         );
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }

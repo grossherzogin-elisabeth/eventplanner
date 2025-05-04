@@ -4,14 +4,16 @@ import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRegistrationsRepository } from '@/application';
 import type { Event, EventKey, Registration, RegistrationKey } from '@/domain';
 
-interface RegistrationCreateRequest {
+export interface RegistrationCreateRequest {
+    registrationKey: string;
     positionKey: string;
     name?: string;
     userKey?: string;
     note?: string;
 }
 
-interface RegistrationUpdateRequest {
+export interface RegistrationUpdateRequest {
+    registrationKey: string;
     positionKey: string;
     name?: string;
     userKey?: string;
@@ -21,6 +23,7 @@ interface RegistrationUpdateRequest {
 export class EventRegistrationRestRepository implements EventRegistrationsRepository {
     public async createRegistration(eventKey: EventKey, registration: Registration): Promise<Event> {
         const requestBody: RegistrationCreateRequest = {
+            registrationKey: registration.key,
             positionKey: registration.positionKey,
             userKey: registration.userKey,
             name: registration.name,
@@ -44,6 +47,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
 
     public async updateRegistration(eventKey: EventKey, registration: Registration): Promise<Event> {
         const requestBody: RegistrationUpdateRequest = {
+            registrationKey: registration.key,
             positionKey: registration.positionKey,
             userKey: registration.userKey,
             name: registration.name,
