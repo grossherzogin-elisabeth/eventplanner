@@ -143,7 +143,7 @@ public class NotificationService {
         var type = NotificationType.CONFIRM_REGISTRATION_REQUEST;
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
-        addParticipationNotificationDetails(props, event, registration);
+        addRegistrationConfirmationDetails(props, event, registration);
         var link = getEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
@@ -158,13 +158,13 @@ public class NotificationService {
         var type = NotificationType.CONFIRM_REGISTRATION_REMINDER;
         var props = new HashMap<String, Object>();
         addEventDetails(props, event);
-        addParticipationNotificationDetails(props, event, registration);
+        addRegistrationConfirmationDetails(props, event, registration);
         var link = getEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
     }
 
-    private void addParticipationNotificationDetails(
+    private void addRegistrationConfirmationDetails(
         @NonNull HashMap<String, Object> props,
         @NonNull final Event event,
         @NonNull final Registration registration

@@ -22,7 +22,7 @@ public class RegistrationConfirmationScheduler {
             registrationConfirmationUseCase.sendConfirmationRequests();
             registrationConfirmationUseCase.sendConfirmationReminders();
         } catch (Exception e) {
-            log.error("Failed to send participation confirmation requests", e);
+            log.error("Failed to send registration confirmation requests", e);
         }
     }
 }

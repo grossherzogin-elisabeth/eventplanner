@@ -131,7 +131,7 @@ public class RegistrationConfirmationUseCase {
             }
         }
 
-        event.setParticipationConfirmationsRequestsSent(alreadySentRequests + 1);
+        event.setConfirmationsRequestsSent(alreadySentRequests + 1);
         eventRepository.update(event);
     }
 
@@ -143,7 +143,7 @@ public class RegistrationConfirmationUseCase {
             )
             .filter(event -> event.getState().equals(EventState.PLANNED))
             .filter(event -> event.getEnd().isAfter(Instant.now()))
-            .filter(event -> event.getParticipationConfirmationsRequestsSent() == alreadySentRequests)
+            .filter(event -> event.getConfirmationsRequestsSent() == alreadySentRequests)
             .filter(event -> {
                 var start = event.getStart().atZone(timezone);
                 if (alreadySentRequests == 0) {
