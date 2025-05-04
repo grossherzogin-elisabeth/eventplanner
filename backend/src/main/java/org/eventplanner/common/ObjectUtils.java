@@ -3,7 +3,6 @@ package org.eventplanner.common;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -56,12 +55,5 @@ public class ObjectUtils {
             return fallback;
         }
         return nullable.stream().map(function).toList();
-    }
-
-    public static @NonNull <T> Stream<T> streamNullable(@Nullable List<T> nullable, @NonNull Stream<T> fallback) {
-        if (nullable == null) {
-            return fallback;
-        }
-        return nullable.stream();
     }
 }
