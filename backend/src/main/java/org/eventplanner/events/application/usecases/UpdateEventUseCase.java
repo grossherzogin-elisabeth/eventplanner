@@ -253,10 +253,12 @@ public class UpdateEventUseCase {
         for (final Registration registration : registrations) {
             var user = userService.getUserByKey(registration.getUserKey()).orElse(null);
             if (user == null) {
-                log.error(
-                    "Skipping notifications for user {}, because user details could not be found",
-                    registration.getUserKey()
-                );
+                if (registration.getUserKey() != null) {
+                    log.error(
+                        "Skipping notifications for user {}, because user details could not be found",
+                        registration.getUserKey()
+                    );
+                }
                 continue;
             }
 
