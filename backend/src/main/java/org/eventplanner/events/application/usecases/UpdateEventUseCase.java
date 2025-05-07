@@ -119,7 +119,7 @@ public class UpdateEventUseCase {
             changedAttributes.add("locations");
         }
         if (!changedAttributes.isEmpty()) {
-            log.info("Updating attributes {} on event {}", String.join(", ", changedAttributes), event.getName());
+            log.info("Updated attributes {} on event {}", String.join(", ", changedAttributes), event.getName());
         }
     }
 
@@ -149,7 +149,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!createdRegistrations.isEmpty()) {
-            log.info("Adding {} registrations to event {}", createdRegistrations.size(), event.getName());
+            log.info("Added {} registrations to event {}", createdRegistrations.size(), event.getName());
         }
     }
 
@@ -173,7 +173,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!updatedRegistrations.isEmpty()) {
-            log.info("Updating {} registrations on event {}", updatedRegistrations.size(), event.getName());
+            log.info("Updated {} registrations on event {}", updatedRegistrations.size(), event.getName());
         }
     }
 
@@ -197,7 +197,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!removedRegistrations.isEmpty()) {
-            log.info("Removing {} registrations from event {}", removedRegistrations.size(), event.getName());
+            log.info("Removed {} registrations from event {}", removedRegistrations.size(), event.getName());
         }
     }
 
@@ -224,14 +224,14 @@ public class UpdateEventUseCase {
             event.setSlots(spec.slots());
             if (!assignedRegistrations.isEmpty()) {
                 log.info(
-                    "Assigning {} registrations to crew of event {}",
+                    "Assigned {} registrations to crew of event {}",
                     assignedRegistrations.size(),
                     event.getName()
                 );
             }
             if (!unassignedRegistrations.isEmpty()) {
                 log.info(
-                    "Unassigning {} registrations from crew of event {}",
+                    "Unassigned {} registrations from crew of event {}",
                     unassignedRegistrations.size(),
                     event.getName()
                 );
