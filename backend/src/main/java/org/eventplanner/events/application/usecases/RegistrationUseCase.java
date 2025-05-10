@@ -1,5 +1,7 @@
 package org.eventplanner.events.application.usecases;
 
+import java.util.NoSuchElementException;
+
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.domain.entities.Event;
@@ -23,82 +25,89 @@ public class RegistrationUseCase {
     private final EventRepository eventRepository;
     private final RegistrationService registrationService;
 
-    public @NonNull Event addRegistration(
+    /**
+     * @param signedInUser the user performing this action
+     * @param spec         the specification for the registration to add
+     * @return the updated event
+     * @throws IllegalArgumentException when the spec is invalid
+     * @throws NoSuchElementException   when the event does not exist
+     * @throws IllegalStateException    when the event cannot be reloaded after adding the registration
+     */
+    public @NonNull Event createRegistration(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final EventKey eventKey,
         @NonNull final CreateRegistrationSpec spec
-    ) {
-        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
-        var userKey = spec.userKey();
-        if (userKey != null) {
-            // validate permission and request for user registration
-            if (userKey.equals(signedInUser.key())) {
-                signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
-                log.info("User {} signed up on event {}", userKey, event.getName());
-                return this.registrationService.addRegistration(event, spec, true);
-            }
+    ) throws IllegalArgumentException, NoSuchElementException, IllegalStateException {
+        var event = eventRepository.findByKey(spec.eventKey())
+            .orElseThrow(() -> new NoSuchElementException("Event does not exist"));
+
+        if (spec.isSelfSignup()) {
+            signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
+            log.info("User {} signed up on event {}", spec.userKey(), event.getName());
+            registrationService.createUserRegistration(spec, event);
+        } else if (spec.userKey() != null) {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-            log.info("Adding registration for user {} to event {}", userKey, event.getName());
-            return this.registrationService.addRegistration(event, spec, false);
+            log.info("Adding registration for user {} on event {}", spec.userKey(), event.getName());
+            registrationService.createUserRegistration(spec, event);
         } else if (spec.name() != null) {
-            // validate permission and request for guest registration
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             log.info("Adding registration for guest {} on event {}", spec.name(), event.getName());
-            return this.registrationService.addGuestRegistration(event, spec);
+            registrationService.createGuestRegistration(spec, event);
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
         }
+
+        return eventRepository.findByKey(spec.eventKey())
+            .orElseThrow(() -> new IllegalStateException("Event does not exist after update"));
     }
 
+    /**
+     * @param signedInUser    the user performing this action
+     * @param eventKey        the key of the event to remove the registration from
+     * @param registrationKey the key of the registration to remove
+     * @return the updated event
+     * @throws NoSuchElementException when the event or the registration does not exist
+     */
     public @NonNull Event removeRegistration(
         @NonNull final SignedInUser signedInUser,
         @NonNull final EventKey eventKey,
         @NonNull final RegistrationKey registrationKey
-    ) {
-        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
-        var registration = event.getRegistrations().stream()
-            .filter(r -> registrationKey.equals(r.getKey()))
-            .findFirst()
-            .orElseThrow();
-        var isCanceledByUser = signedInUser.key().equals(registration.getUserKey());
-        if (isCanceledByUser) {
+    ) throws NoSuchElementException {
+        var event = eventRepository.findByKey(eventKey)
+            .orElseThrow(() -> new NoSuchElementException("Event does not exist"));
+        var registration = event.findRegistrationByKey(registrationKey)
+            .orElseThrow(() -> new NoSuchElementException("Registration does not exist"));
+
+        var isRemovedByUser = signedInUser.key().equals(registration.getUserKey());
+        if (isRemovedByUser) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
-            log.info(
-                "User {} removed their registration from event {}",
-                signedInUser.key(),
-                event.getName()
-            );
-        } else {
+            log.info("User {} removed their registration from event {}", signedInUser.key(), event.getName());
+        } else if (registration.getUserKey() != null) {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-            if (registration.getUserKey() != null) {
-                log.info(
-                    "Removing registration of {} from event {}",
-                    registration.getUserKey(),
-                    event.getName()
-                );
-            } else if (registration.getName() != null) {
-                log.info(
-                    "Removing guest registration of {} from event {}",
-                    registration.getName(),
-                    event.getName()
-                );
-            }
+            log.info("Removing registration of {} from event {}", registration.getUserKey(), event.getName());
+        } else if (registration.getName() != null) {
+            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
+            log.info("Removing guest registration of {} from event {}", registration.getName(), event.getName());
         }
 
-        return registrationService.removeRegistration(event, registration, isCanceledByUser);
+        registrationService.removeRegistration(registrationKey, event, isRemovedByUser);
+        return eventRepository.update(event);
     }
 
+    /**
+     * @param signedInUser the user performing this action
+     * @param spec         the update specification
+     * @return the updated event
+     * @throws NoSuchElementException when the event or the registration does not exist
+     * @throws IllegalStateException  when the event cannot be reloaded after removing the registration
+     */
     public @NonNull Event updateRegistration(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final EventKey eventKey,
-        @NonNull final RegistrationKey registrationKey,
         @NonNull final UpdateRegistrationSpec spec
-    ) {
-        var event = this.eventRepository.findByKey(eventKey).orElseThrow();
-        var registration = event.getRegistrations().stream()
-            .filter(r -> registrationKey.equals(r.getKey()))
-            .findFirst()
-            .orElseThrow();
+    ) throws NoSuchElementException, IllegalStateException {
+        var event = eventRepository.findByKey(spec.eventKey())
+            .orElseThrow(() -> new NoSuchElementException("Event does not exist"));
+        var registration = event.findRegistrationByKey(spec.registrationKey())
+            .orElseThrow(() -> new NoSuchElementException("Registration does not exist"));
 
         if (signedInUser.key().equals(registration.getUserKey())) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
@@ -109,10 +118,12 @@ public class RegistrationUseCase {
             );
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-            log.info("Updating registration {} on event {}", registrationKey, event.getName());
+            log.info("Updating registration {} on event {}", spec.registrationKey(), event.getName());
         }
 
-        return registrationService.updateRegistration(event, registration, spec);
+        registrationService.updateRegistration(spec, event);
+        return eventRepository.findByKey(spec.eventKey())
+            .orElseThrow(() -> new IllegalStateException("Event does not exist after update"));
     }
 
 }

@@ -1,5 +1,16 @@
 package org.eventplanner.events.application.services;
 
+import static org.eventplanner.testdata.EventFactory.createEvent;
+import static org.eventplanner.testdata.RegistrationFactory.createRegistration;
+import static org.eventplanner.testdata.UserFactory.createUser;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +31,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
 import freemarker.template.TemplateException;
-import static org.eventplanner.testdata.EventFactory.createEvent;
-import static org.eventplanner.testdata.RegistrationFactory.createRegistration;
-import static org.eventplanner.testdata.UserFactory.createUser;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ActiveProfiles(profiles = { "test" })
@@ -71,8 +72,8 @@ class NotificationServiceTest {
             Arguments.of(NotificationType.REMOVED_FROM_WAITING_LIST),
             Arguments.of(NotificationType.ADDED_TO_CREW),
             Arguments.of(NotificationType.REMOVED_FROM_CREW),
-            Arguments.of(NotificationType.CONFIRM_PARTICIPATION),
-            Arguments.of(NotificationType.CONFIRM_PARTICIPATION_REQUEST),
+            Arguments.of(NotificationType.CONFIRM_REGISTRATION_REQUEST),
+            Arguments.of(NotificationType.CONFIRM_REGISTRATION_REMINDER),
             Arguments.of(NotificationType.USER_DATA_CHANGED),
             Arguments.of(NotificationType.CREW_REGISTRATION_CANCELED),
             Arguments.of(NotificationType.CREW_REGISTRATION_ADDED)
@@ -91,10 +92,8 @@ class NotificationServiceTest {
             case REMOVED_FROM_WAITING_LIST -> testee.sendRemovedFromWaitingListNotification(to, event);
             case ADDED_TO_CREW -> testee.sendAddedToCrewNotification(to, event);
             case REMOVED_FROM_CREW -> testee.sendRemovedFromCrewNotification(to, event);
-            case CONFIRM_PARTICIPATION ->
-                testee.sendFirstParticipationConfirmationRequestNotification(to, event, registration);
-            case CONFIRM_PARTICIPATION_REQUEST ->
-                testee.sendSecondParticipationConfirmationRequestNotification(to, event, registration);
+            case CONFIRM_REGISTRATION_REQUEST -> testee.sendConfirmationRequestNotification(to, event, registration);
+            case CONFIRM_REGISTRATION_REMINDER -> testee.sendConfirmationReminderNotification(to, event, registration);
             case USER_DATA_CHANGED -> testee.sendUserChangedPersonalDataNotification(Role.USER_MANAGER, to);
             case CREW_REGISTRATION_CANCELED ->
                 testee.sendCrewRegistrationCanceledNotification(Role.TEAM_PLANNER, event, "Test", "Test");

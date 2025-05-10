@@ -1,5 +1,15 @@
 package org.eventplanner.events.application.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.eventplanner.testdata.UserFactory.createUser;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -21,16 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.testdata.UserFactory.createUser;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles(profiles = { "test" })
@@ -63,7 +63,8 @@ class EmailServiceTest {
             queuedEmailRepository,
             emailSender,
             freeMarkerConfig.getConfiguration(),
-            ""
+            "",
+            "[TEST]"
         );
     }
 

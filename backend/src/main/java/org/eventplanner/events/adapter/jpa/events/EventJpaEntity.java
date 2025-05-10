@@ -66,7 +66,7 @@ public class EventJpaEntity {
     private String slotsRaw;
 
     @Column(name = "participation_confirmations_requests_sent")
-    private Integer participationConfirmationsRequestsSent;
+    private Integer confirmationsRequestsSent;
 
     public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
         var eventJpaEntity = new EventJpaEntity();
@@ -80,7 +80,7 @@ public class EventJpaEntity {
         eventJpaEntity.setEnd(domain.getEnd().toString());
         eventJpaEntity.setLocationsRaw(serializeLocations(domain.getLocations()));
         eventJpaEntity.setSlotsRaw(serializeSlots(domain.getSlots()));
-        eventJpaEntity.setParticipationConfirmationsRequestsSent(domain.getParticipationConfirmationsRequestsSent());
+        eventJpaEntity.setConfirmationsRequestsSent(domain.getConfirmationsRequestsSent());
         return eventJpaEntity;
     }
 
@@ -138,7 +138,7 @@ public class EventJpaEntity {
             deserializeLocations(locationsRaw),
             deserializeSlots(slotsRaw),
             registrations,
-            participationConfirmationsRequestsSent
+            confirmationsRequestsSent
         );
     }
 }

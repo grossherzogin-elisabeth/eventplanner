@@ -39,9 +39,10 @@ public class GlobalExceptionHandlingController {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Void> handleNoSuchElementException(NoSuchElementException e, HttpServletRequest request) {
         log.error(
-            "Tried to access non existing element on request {} {}",
+            "Tried to access non existing element on request {} {}: {}",
             request.getMethod(),
-            request.getRequestURI()
+            request.getRequestURI(),
+            e.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }

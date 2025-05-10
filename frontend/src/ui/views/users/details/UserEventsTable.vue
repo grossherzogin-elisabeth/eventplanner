@@ -207,7 +207,7 @@ async function addUserToCrew(item: EventTableViewItem): Promise<void> {
         }
         const slot = eventService.getOpenSlots(event).find((it) => it.positionKeys.includes(item.position.key));
         if (slot) {
-            event = eventService.assignUserToSlot(event, props.user, slot.key);
+            event = await eventAdministrationUseCase.assignUserToSlot(event, props.user, slot.key);
             await eventAdministrationUseCase.updateEvent(event.key, event);
             item.crewCount = item.crewCount + 1;
             item.waitingListCount = item.waitingListCount - 1;

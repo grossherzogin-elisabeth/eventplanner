@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.eventplanner.events.application.ports.RegistrationRepository;
 import org.eventplanner.events.domain.entities.Registration;
 import org.eventplanner.events.domain.values.EventKey;
+import org.eventplanner.events.domain.values.RegistrationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +38,8 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
     }
 
     @Override
-    public void deleteRegistration(@NonNull Registration registration, @NonNull EventKey eventKey) {
-        registrationJpaRepository.deleteById(registration.getKey().value());
+    public void deleteRegistration(@NonNull RegistrationKey registrationKey, @NonNull EventKey eventKey) {
+        registrationJpaRepository.deleteByKeyAndEventKey(registrationKey.value(), eventKey.value());
     }
 
     @PostConstruct

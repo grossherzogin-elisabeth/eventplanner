@@ -260,17 +260,17 @@ async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
             },
         });
     } else if (aggregate.user) {
-        emit('update:event', eventService.assignUserToSlot(props.event, aggregate.user, slot.key));
+        emit('update:event', await eventAdminUseCase.assignUserToSlot(props.event, aggregate.user, slot.key));
         await fetchTeam();
     } else {
-        emit('update:event', eventService.assignGuestToSlot(props.event, aggregate.name, slot.key));
+        emit('update:event', await eventAdminUseCase.assignGuestToSlot(props.event, aggregate.name, slot.key));
         await fetchTeam();
     }
 }
 
 async function removeFromTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (aggregate.slot) {
-        emit('update:event', eventService.unassignSlot(props.event, aggregate.slot.key));
+        emit('update:event', await eventAdminUseCase.unassignSlot(props.event, aggregate.slot.key));
         await fetchTeam();
     }
 }

@@ -33,14 +33,6 @@ public class Registration {
     private @Nullable String accessKey;
     private @Nullable Instant confirmedAt;
 
-    public static Registration ofUser(@NonNull UserKey user, @NonNull PositionKey position) {
-        return new Registration(new RegistrationKey(), position, user, null, null, generateAccessKey(), null);
-    }
-
-    public static Registration ofPerson(@NonNull String name, @NonNull PositionKey position) {
-        return new Registration(new RegistrationKey(), position, null, name, null, generateAccessKey(), null);
-    }
-
     public static String generateAccessKey() {
         return UUID.randomUUID().toString();
     }

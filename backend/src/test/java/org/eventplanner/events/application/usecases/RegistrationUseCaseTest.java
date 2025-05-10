@@ -1,8 +1,8 @@
 package org.eventplanner.events.application.usecases;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testdata.EventFactory.createEvent;
 import static org.eventplanner.testdata.SignedInUserFactory.createSignedInUser;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -24,33 +24,54 @@ import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
 import org.eventplanner.events.domain.values.EventState;
 import org.eventplanner.events.domain.values.Permission;
 import org.eventplanner.testdata.PositionKeys;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationUseCaseTest {
     private static final int YEAR = ZonedDateTime.now().getYear();
 
-    @Test
-    void shouldNotAllowUpdatingOtherPersonsRegistration() {
-        var signedInUser = createSignedInUser().withPermission(Permission.WRITE_OWN_REGISTRATIONS);
+    private Event event;
+    private EventRepository eventRepository;
+    private RegistrationUseCase testee;
 
-        var event = createEvent().withState(EventState.OPEN_FOR_SIGNUP);
-        var eventRepository = mockEventRepository(event);
+    @BeforeEach
+    void setup() {
+        event = createEvent().withState(EventState.OPEN_FOR_SIGNUP);
 
-        var testee = new RegistrationUseCase(
+        eventRepository = mock(EventRepository.class);
+        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
+        when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+        when(eventRepository.create(any())).thenAnswer(mock -> mock.getArgument(0));
+        when(eventRepository.update(any())).thenAnswer(mock -> mock.getArgument(0));
+
+        testee = new RegistrationUseCase(
             eventRepository,
             new RegistrationService(
                 mock(NotificationService.class),
                 mock(UserService.class),
-                eventRepository,
                 mock(RegistrationRepository.class),
                 mock(PositionRepository.class)
             )
         );
-        var registrationKey = event.getRegistrations().getFirst().getKey();
-        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND, null, null, null, null);
+    }
+
+    @Test
+    void shouldNotAllowUpdatingOtherPersonsRegistration() {
+        var signedInUser = createSignedInUser().withPermission(Permission.WRITE_OWN_REGISTRATIONS);
+        var registration = event.getRegistrations().getFirst();
+        var updateSpec = new UpdateRegistrationSpec(
+            event.getKey(),
+            registration.getKey(),
+            PositionKeys.DECKSHAND,
+            registration.getUserKey(),
+            null,
+            "Test",
+            null
+        );
+        
         assertThrows(
             MissingPermissionException.class,
-            () -> testee.updateRegistration(signedInUser, event.getKey(), registrationKey, updateSpec)
+            () -> testee.updateRegistration(signedInUser, updateSpec)
         );
     }
 
@@ -58,61 +79,46 @@ class RegistrationUseCaseTest {
     void shouldAllowUpdatingOwnRegistration() {
         var signedInUser = createSignedInUser().withPermission(Permission.WRITE_OWN_REGISTRATIONS);
 
-        var event = createEvent().withState(EventState.OPEN_FOR_SIGNUP);
-        event.getRegistrations().getFirst().setUserKey(signedInUser.key());
-        event.getRegistrations().getFirst().setPosition(PositionKeys.BACKSCHAFT);
-        var eventRepository = mockEventRepository(event);
+        var registration = event.getRegistrations().getFirst();
+        registration.setUserKey(signedInUser.key());
+        registration.setPosition(PositionKeys.BACKSCHAFT);
 
-        var testee = new RegistrationUseCase(
-            eventRepository,
-            new RegistrationService(
-                mock(NotificationService.class),
-                mock(UserService.class),
-                eventRepository,
-                mock(RegistrationRepository.class),
-                mock(PositionRepository.class)
-            )
+        var updateSpec = new UpdateRegistrationSpec(
+            event.getKey(),
+            registration.getKey(),
+            PositionKeys.DECKSHAND,
+            null,
+            null,
+            "Test",
+            null
         );
-        var registrationKey = event.getRegistrations().getFirst().getKey();
-        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND, null, null, null, null);
-        var updatedEvent = testee.updateRegistration(signedInUser, event.getKey(), registrationKey, updateSpec);
-        assertEquals(event.getKey(), updatedEvent.getKey());
-        assertEquals(PositionKeys.DECKSHAND, updatedEvent.getRegistrations().getFirst().getPosition());
+        var updatedEvent = testee.updateRegistration(signedInUser, updateSpec);
+
+        assertThat(updatedEvent.getKey()).isEqualTo(event.getKey());
+        assertThat(updatedEvent.getRegistrations().getFirst().getPosition()).isEqualTo(PositionKeys.DECKSHAND);
+        assertThat(updatedEvent.getRegistrations().getFirst().getNote()).isEqualTo("Test");
     }
 
     @Test
     void shouldAllowUpdatingOtherPersonsRegistrationForAdmins() {
         var signedInUser = createSignedInUser().withPermission(Permission.WRITE_REGISTRATIONS);
 
-        var event = createEvent().withState(EventState.OPEN_FOR_SIGNUP);
-        event.getRegistrations().getFirst().setPosition(PositionKeys.BACKSCHAFT);
-        var eventRepository = mockEventRepository(event);
+        var registration = event.getRegistrations().getFirst();
+        registration.setPosition(PositionKeys.BACKSCHAFT);
 
-        var testee = new RegistrationUseCase(
-            eventRepository,
-            new RegistrationService(
-                mock(NotificationService.class),
-                mock(UserService.class),
-                eventRepository,
-                mock(RegistrationRepository.class),
-                mock(PositionRepository.class)
-            )
+        var updateSpec = new UpdateRegistrationSpec(
+            event.getKey(),
+            registration.getKey(),
+            PositionKeys.DECKSHAND,
+            null,
+            null,
+            null,
+            null
         );
-        var registrationKey = event.getRegistrations().getFirst().getKey();
-        var updateSpec = new UpdateRegistrationSpec(PositionKeys.DECKSHAND, null, null, null, null);
-        var updatedEvent = testee.updateRegistration(signedInUser, event.getKey(), registrationKey, updateSpec);
-        assertEquals(event.getKey(), updatedEvent.getKey());
-        assertEquals(PositionKeys.DECKSHAND, updatedEvent.getRegistrations().getFirst().getPosition());
-    }
+        var updatedEvent = testee.updateRegistration(signedInUser, updateSpec);
 
-    private EventRepository mockEventRepository(Event... events) {
-        var eventRepository = mock(EventRepository.class);
-        when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(events));
-        for (Event event : events) {
-            when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
-        }
-        when(eventRepository.create(any())).thenAnswer(mock -> mock.getArgument(0));
-        when(eventRepository.update(any())).thenAnswer(mock -> mock.getArgument(0));
-        return eventRepository;
+        assertThat(updatedEvent.getKey()).isEqualTo(event.getKey());
+        assertThat(updatedEvent.getRegistrations().getFirst().getPosition()).isEqualTo(PositionKeys.DECKSHAND);
+        assertThat(updatedEvent.getRegistrations().getFirst().getUserKey()).isNotEqualTo(signedInUser.key());
     }
 }

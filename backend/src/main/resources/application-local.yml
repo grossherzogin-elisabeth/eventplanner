@@ -24,6 +24,9 @@ ADMIN_EMAILS: >
 # Overwrites
 # -----------------
 
+email:
+  title-prefix: '[TEST] '
+
 server:
   protocol: http
   host: localhost
@@ -34,3 +37,7 @@ frontend:
 
 security:
   enable-csrf: false
+
+#logging:
+#  level:
+#    org.eventplanner: DEBUG

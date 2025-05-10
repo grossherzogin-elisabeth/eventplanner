@@ -1,6 +1,8 @@
 package org.eventplanner.events.rest.registrations;
 
-import org.eventplanner.events.application.usecases.ParticipationNotificationUseCase;
+import java.util.Objects;
+
+import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.RegistrationUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
 import org.eventplanner.events.domain.values.EventKey;
@@ -32,7 +34,7 @@ public class RegistrationController {
 
     private final UserUseCase userUseCase;
     private final RegistrationUseCase registrationUseCase;
-    private final ParticipationNotificationUseCase participationNotificationUseCase;
+    private final RegistrationConfirmationUseCase registrationConfirmationUseCase;
 
     @PostMapping("/{eventKey}/registrations")
     public ResponseEntity<EventRepresentation> createRegistration(
@@ -40,7 +42,9 @@ public class RegistrationController {
         @RequestBody CreateRegistrationRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var event = registrationUseCase.addRegistration(signedInUser, new EventKey(eventKey), spec.toDomain());
+        var isSelfSignup = Objects.equals(signedInUser.key().value(), spec.userKey());
+        var event =
+            registrationUseCase.createRegistration(signedInUser, spec.toDomain(new EventKey(eventKey), isSelfSignup));
         return ResponseEntity.status(HttpStatus.CREATED).body(EventRepresentation.fromDomain(event));
     }
 
@@ -67,9 +71,9 @@ public class RegistrationController {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var event = registrationUseCase.updateRegistration(
             signedInUser,
-            new EventKey(eventKey),
-            new RegistrationKey(registrationKey),
-            spec.toDomain()
+            spec.toDomain(
+                new EventKey(eventKey)
+            )
         );
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
@@ -80,7 +84,7 @@ public class RegistrationController {
         @PathVariable("registrationKey") String registrationKey,
         @RequestParam("accessKey") String accessKey
     ) {
-        participationNotificationUseCase.confirmRegistration(
+        registrationConfirmationUseCase.confirmRegistration(
             new EventKey(eventKey),
             new RegistrationKey(registrationKey),
             accessKey
@@ -94,7 +98,7 @@ public class RegistrationController {
         @PathVariable("registrationKey") String registrationKey,
         @RequestParam("accessKey") String accessKey
     ) {
-        participationNotificationUseCase.declineRegistration(
+        registrationConfirmationUseCase.declineRegistration(
             new EventKey(eventKey),
             new RegistrationKey(registrationKey),
             accessKey

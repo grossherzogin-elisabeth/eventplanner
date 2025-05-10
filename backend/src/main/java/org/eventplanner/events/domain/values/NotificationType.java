@@ -30,13 +30,13 @@ public enum NotificationType {
     // As a team planner
     // I want to get a participation confirmation of every team member
     // So that I know early if I need to find a replacement
-    CONFIRM_PARTICIPATION("confirm_participation"),
+    CONFIRM_REGISTRATION_REQUEST("confirm_participation_request"),
 
     // As a team planner
     // I want to get a participation confirmation of every team member in case the user did not respond to the first
     // request
     // So that I know early if I need to find a replacement
-    CONFIRM_PARTICIPATION_REQUEST("confirm_participation_request"),
+    CONFIRM_REGISTRATION_REMINDER("confirm_participation_reminder"),
 
     // As a team planner
     // I want to get a notification when someone cancels an event signup
