@@ -150,7 +150,7 @@ public class RegistrationService {
         @NonNull final Event event,
         final boolean isRemovedByUser
     ) throws NoSuchElementException {
-        log.info("Removing registration for user {} from event {}", registrationKey, event.getName());
+        log.info("Removing registration {} from event {}", registrationKey, event.getName());
         var registration = event.findRegistrationByKey(registrationKey)
             .orElseThrow(() -> new NoSuchElementException("Registration does not exist"));
         registrationRepository.deleteRegistration(registration.getKey(), event.getKey());

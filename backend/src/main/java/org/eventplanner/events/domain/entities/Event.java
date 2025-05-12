@@ -176,7 +176,7 @@ public class Event {
             }
         }
         if (counter > 0) {
-            log.info("Moved {} slot assignments for event {}", counter, name);
+            log.info("Optimized slots by moving {} assignments on event {}", counter, name);
         }
     }
 }
