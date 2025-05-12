@@ -194,7 +194,7 @@
                             <span>Reise anzeigen</span>
                         </RouterLink>
                     </li>
-                    <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(item)">
+                    <li class="context-menu-item" @click="events.useCase.downloadCalendarEntry(item)">
                         <i class="fa-solid fa-calendar-alt" />
                         <span>Kalendereintrag erstellen</span>
                     </li>
@@ -248,7 +248,7 @@
         <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
             <div class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20">
                 <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
-                    <button class="btn-ghost" @click="selectNone()">
+                    <button class="btn-ghost" @click="events.selectNone()">
                         <i class="fa-solid fa-xmark" />
                     </button>
                     <span class="self-center font-bold">{{ selectedEvents.length }} ausgewählt</span>
@@ -265,11 +265,11 @@
                     </div>
                     <ContextMenuButton class="btn-ghost">
                         <template #default>
-                            <li class="context-menu-item" @click="selectAll">
+                            <li class="context-menu-item" @click="events.selectAll()">
                                 <i class="fa-solid fa-list-check" />
                                 <span>Alle auswählen</span>
                             </li>
-                            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
+                            <li class="context-menu-item" @click="events.useCase.downloadCalendarEntries(selectedEvents)">
                                 <i class="fa-solid fa-calendar-alt" />
                                 <span>Kalendereintrag erstellen</span>
                             </li>
@@ -332,10 +332,10 @@ import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/comp
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
+import { useAuthUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
+import { useEvents } from '@/ui/composables/Events.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
@@ -360,15 +360,13 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
-const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
-const eventService = useEventService();
 const router = useRouter();
 const positions = usePositions();
 const eventTypes = useEventTypes();
+const events = useEvents();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
-const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('Zukünftige');
 const filter = ref<string>('');
 const filterAssigned = ref<boolean>(false);
@@ -418,10 +416,28 @@ const hasAnySelectedEventWithSignedInUserInTeam = computed<boolean>(() => {
     return selectedEvents.value?.find((it) => it.signedInUserRegistration && it.signedInUserAssignedSlot) !== undefined;
 });
 
+const showAllFutureEvents = computed<boolean>(() => tab.value === tabs.value[0]);
+
+const eventTableItems = computed<EventTableViewItem[] | undefined>(() => {
+    const now = new Date().getTime();
+    return events.events.value
+        ?.filter((it) => !showAllFutureEvents.value || it.end.getTime() > now)
+        .map((evt) => ({
+            ...evt,
+            selected: false,
+            isPastEvent: evt.start.getTime() < new Date().getTime(),
+            waitingListCount: evt.registrations.length - evt.assignedUserCount,
+            hasOpenSlots: events.service.hasOpenSlots(evt),
+            hasOpenRequiredSlots: events.service.hasOpenRequiredSlots(evt),
+            stateDetails: { name: '', icon: '', color: '' },
+        }))
+        .map((evt) => updateStateDetails(evt));
+});
+
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
-    return events.value
-        ?.filter((it) => eventService.doesEventMatchFilter(it, f))
+    return eventTableItems.value
+        ?.filter((it) => events.service.doesEventMatchFilter(it, f))
         .filter((it) => filterEventType.value.length === 0 || filterEventType.value.includes(it.type))
         .filter((it) => {
             if (filterAssigned.value || filterWaitingList.value || filterFreeSlots.value) {
@@ -460,73 +476,34 @@ async function init(): Promise<void> {
     restoreScrollPosition();
 }
 
-function selectNone(): void {
-    events.value?.forEach((it) => (it.selected = false));
-}
-
-function selectAll(): void {
-    events.value?.forEach((it) => (it.selected = true));
-}
-
 async function fetchEvents(): Promise<void> {
-    events.value = null;
-    if (tab.value === tabs.value[0]) {
+    if (showAllFutureEvents.value) {
         const now = new Date();
-        const currentYear = await fetchEventsByYear(now.getFullYear());
-        const nextYear = await fetchEventsByYear(now.getFullYear() + 1);
-        events.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
+        await events.fetch(now.getFullYear(), now.getFullYear() + 1);
     } else {
-        const year = parseInt(tab.value);
-        if (year) {
-            events.value = await fetchEventsByYear(year);
-        }
+        await events.fetch(parseInt(tab.value));
     }
 }
 
-async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
-    const evts = await eventUseCase.getEvents(year);
-    return evts.map((evt) => {
-        const tableItem: EventTableViewItem = {
-            ...evt,
-            selected: false,
-            isPastEvent: evt.start.getTime() < new Date().getTime(),
-            waitingListCount: evt.registrations.length - evt.assignedUserCount,
-            hasOpenSlots: eventService.hasOpenSlots(evt),
-            hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
-            stateDetails: {
-                name: '',
-                icon: '',
-                color: '',
-            },
-        };
-        tableItem.stateDetails = getStateDetails(tableItem);
-        return tableItem;
-    });
-}
-
-function getStateDetails(event: EventTableViewItem): StateDetails {
+function updateStateDetails(event: EventTableViewItem): EventTableViewItem {
     if (event.state === EventState.Canceled) {
-        return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
+        event.stateDetails = { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
+    } else if (event.signedInUserAssignedSlot) {
+        event.stateDetails = { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-container text-ongreen-container' };
+    } else if (event.signedInUserRegistration) {
+        event.stateDetails = { name: 'Warteliste', icon: 'fa-hourglass-half', color: 'bg-surface-container-highest text-onsurface' };
+    } else if (event.state === EventState.Draft) {
+        event.stateDetails = { name: 'Entwurf', icon: 'fa-compass-drafting', color: 'bg-surface-container-highest text-onsurface' };
+    } else if (event.state === EventState.OpenForSignup) {
+        event.stateDetails = { name: 'Crew Anmeldung', icon: 'fa-people-group', color: 'bg-blue-container text-onblue-container' };
+    } else if (event.hasOpenRequiredSlots) {
+        event.stateDetails = { name: 'Crew gesucht', icon: 'fa-info-circle', color: 'bg-yellow-container text-onyellow-container' };
+    } else if (event.hasOpenSlots) {
+        event.stateDetails = { name: 'Freie Plätze', icon: 'fa-info-circle', color: 'bg-blue-container text-onblue-container' };
+    } else {
+        event.stateDetails = { name: 'Voll belegt', icon: 'fa-info-circle', color: 'bg-surface-container-highest text-onsurface' };
     }
-    if (event.signedInUserAssignedSlot) {
-        return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-container text-ongreen-container' };
-    }
-    if (event.signedInUserRegistration) {
-        return { name: 'Warteliste', icon: 'fa-hourglass-half', color: 'bg-surface-container-highest text-onsurface' };
-    }
-    if (event.state === EventState.Draft) {
-        return { name: 'Entwurf', icon: 'fa-compass-drafting', color: 'bg-surface-container-highest text-onsurface' };
-    }
-    if (event.state === EventState.OpenForSignup) {
-        return { name: 'Crew Anmeldung', icon: 'fa-people-group', color: 'bg-blue-container text-onblue-container' };
-    }
-    if (event.hasOpenRequiredSlots) {
-        return { name: 'Crew gesucht', icon: 'fa-info-circle', color: 'bg-yellow-container text-onyellow-container' };
-    }
-    if (event.hasOpenSlots) {
-        return { name: 'Freie Plätze', icon: 'fa-info-circle', color: 'bg-blue-container text-onblue-container' };
-    }
-    return { name: 'Voll belegt', icon: 'fa-info-circle', color: 'bg-surface-container-highest text-onsurface' };
+    return event;
 }
 
 async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {
@@ -541,28 +518,28 @@ async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
     }
 }
 
-async function choosePositionAndJoinEvents(events: EventTableViewItem[]): Promise<void> {
+async function choosePositionAndJoinEvents(evts: EventTableViewItem[]): Promise<void> {
     const position = await positionSelectDialog.value?.open();
     if (position) {
         // default position might have changed
         signedInUser.value = authUseCase.getSignedInUser();
-        await eventUseCase.joinEvents(events, signedInUser.value.positions[0]);
+        await events.useCase.joinEvents(evts, signedInUser.value.positions[0]);
         await fetchEvents();
     }
 }
 
-async function joinEvents(events: EventTableViewItem[]): Promise<void> {
-    await eventUseCase.joinEvents(events, signedInUser.value.positions[0]);
+async function joinEvents(evts: EventTableViewItem[]): Promise<void> {
+    await events.useCase.joinEvents(evts, signedInUser.value.positions[0]);
     await fetchEvents();
 }
 
-async function leaveEventsWaitingListOnly(events: EventTableViewItem[]): Promise<void> {
-    await eventUseCase.leaveEventsWaitingListOnly(events);
+async function leaveEventsWaitingListOnly(evts: EventTableViewItem[]): Promise<void> {
+    await events.useCase.leaveEventsWaitingListOnly(evts);
     await fetchEvents();
 }
 
-async function leaveEvents(events: EventTableViewItem[]): Promise<void> {
-    await eventUseCase.leaveEvents(events);
+async function leaveEvents(evts: EventTableViewItem[]): Promise<void> {
+    await events.useCase.leaveEvents(evts);
     await fetchEvents();
 }
 
