@@ -220,22 +220,25 @@ public class UpdateEventUseCase {
             .filter(key -> !after.contains(key))
             .forEach(unassignedRegistrations::add);
 
-        if (!assignedRegistrations.isEmpty() || !unassignedRegistrations.isEmpty()) {
+        if (!assignedRegistrations.isEmpty()
+            || !unassignedRegistrations.isEmpty()
+            || !event.getSlots().equals(spec.slots())) {
             event.setSlots(spec.slots());
-            if (!assignedRegistrations.isEmpty()) {
-                log.info(
-                    "Assigned {} registrations to crew of event {}",
-                    assignedRegistrations.size(),
-                    event.getName()
-                );
-            }
-            if (!unassignedRegistrations.isEmpty()) {
-                log.info(
-                    "Unassigned {} registrations from crew of event {}",
-                    unassignedRegistrations.size(),
-                    event.getName()
-                );
-            }
+            log.info("Updated slots of event {}", event.getName());
+        }
+        if (!assignedRegistrations.isEmpty()) {
+            log.info(
+                "Assigned {} registrations to crew of event {}",
+                assignedRegistrations.size(),
+                event.getName()
+            );
+        }
+        if (!unassignedRegistrations.isEmpty()) {
+            log.info(
+                "Unassigned {} registrations from crew of event {}",
+                unassignedRegistrations.size(),
+                event.getName()
+            );
         }
     }
 
