@@ -15,9 +15,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.With;
 
 @Getter
 @Setter
+@With
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -44,21 +46,6 @@ public class EventSlot {
 
     public EventSlot withRequired() {
         this.criticality = 1;
-        return this;
-    }
-
-    public EventSlot withCriticality(int criticality) {
-        this.criticality = criticality;
-        return this;
-    }
-
-    public EventSlot withOrder(int order) {
-        this.order = order;
-        return this;
-    }
-
-    public EventSlot withName(String name) {
-        this.name = name;
         return this;
     }
 }
