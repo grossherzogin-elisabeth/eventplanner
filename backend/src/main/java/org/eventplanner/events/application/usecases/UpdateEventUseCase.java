@@ -119,7 +119,7 @@ public class UpdateEventUseCase {
             changedAttributes.add("locations");
         }
         if (!changedAttributes.isEmpty()) {
-            log.info("Updating attributes {} on event {}", String.join(", ", changedAttributes), event.getName());
+            log.info("Updated attributes {} on event {}", String.join(", ", changedAttributes), event.getName());
         }
     }
 
@@ -149,7 +149,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!createdRegistrations.isEmpty()) {
-            log.info("Adding {} registrations to event {}", createdRegistrations.size(), event.getName());
+            log.info("Added {} registrations to event {}", createdRegistrations.size(), event.getName());
         }
     }
 
@@ -173,7 +173,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!updatedRegistrations.isEmpty()) {
-            log.info("Updating {} registrations on event {}", updatedRegistrations.size(), event.getName());
+            log.info("Updated {} registrations on event {}", updatedRegistrations.size(), event.getName());
         }
     }
 
@@ -197,7 +197,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!removedRegistrations.isEmpty()) {
-            log.info("Removing {} registrations from event {}", removedRegistrations.size(), event.getName());
+            log.info("Removed {} registrations from event {}", removedRegistrations.size(), event.getName());
         }
     }
 
@@ -220,22 +220,25 @@ public class UpdateEventUseCase {
             .filter(key -> !after.contains(key))
             .forEach(unassignedRegistrations::add);
 
-        if (!assignedRegistrations.isEmpty() || !unassignedRegistrations.isEmpty()) {
+        if (!assignedRegistrations.isEmpty()
+            || !unassignedRegistrations.isEmpty()
+            || !event.getSlots().equals(spec.slots())) {
             event.setSlots(spec.slots());
-            if (!assignedRegistrations.isEmpty()) {
-                log.info(
-                    "Assigning {} registrations to crew of event {}",
-                    assignedRegistrations.size(),
-                    event.getName()
-                );
-            }
-            if (!unassignedRegistrations.isEmpty()) {
-                log.info(
-                    "Unassigning {} registrations from crew of event {}",
-                    unassignedRegistrations.size(),
-                    event.getName()
-                );
-            }
+            log.info("Updated slots of event {}", event.getName());
+        }
+        if (!assignedRegistrations.isEmpty()) {
+            log.info(
+                "Assigned {} registrations to crew of event {}",
+                assignedRegistrations.size(),
+                event.getName()
+            );
+        }
+        if (!unassignedRegistrations.isEmpty()) {
+            log.info(
+                "Unassigned {} registrations from crew of event {}",
+                unassignedRegistrations.size(),
+                event.getName()
+            );
         }
     }
 
@@ -253,10 +256,12 @@ public class UpdateEventUseCase {
         for (final Registration registration : registrations) {
             var user = userService.getUserByKey(registration.getUserKey()).orElse(null);
             if (user == null) {
-                log.error(
-                    "Skipping notifications for user {}, because user details could not be found",
-                    registration.getUserKey()
-                );
+                if (registration.getUserKey() != null) {
+                    log.error(
+                        "Skipping notifications for user {}, because user details could not be found",
+                        registration.getUserKey()
+                    );
+                }
                 continue;
             }
 
