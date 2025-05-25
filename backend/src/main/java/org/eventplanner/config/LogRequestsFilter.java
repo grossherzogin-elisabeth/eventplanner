@@ -46,6 +46,9 @@ public class LogRequestsFilter extends OncePerRequestFilter {
         }
         return request.getRequestURI().equals("/")
             || request.getRequestURI().equals("/index.html")
+            // expected crawler requests
+            || request.getRequestURI().equals("/robots.txt")
+            || request.getRequestURI().equals("/sitemap.xml")
             // images
             || request.getRequestURI().endsWith(".svg")
             || request.getRequestURI().endsWith(".png")
