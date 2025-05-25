@@ -7,6 +7,7 @@ import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -31,9 +32,9 @@ public class GlobalExceptionHandlingController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    private boolean isBrokenPipe(Throwable e) {
+    private boolean isBrokenPipe(@Nullable Throwable e) {
         return (e instanceof IOException && e.getMessage().contains("Broken pipe"))
-            || isBrokenPipe(e.getCause());
+            || (e != null && isBrokenPipe(e.getCause()));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
