@@ -24,8 +24,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class EncryptedUserQualification implements Serializable {
-    private @NonNull Encrypted<QualificationKey> qualificationKey;
-    private @Nullable Encrypted<Instant> expiresAt;
+    private @NonNull Encrypted qualificationKey;
+    private @Nullable Encrypted expiresAt;
 
     public @NonNull UserQualification decrypt(DecryptFunc decryptFunc) {
         var decryptedKey = requireNonNull(decryptFunc.apply(qualificationKey, QualificationKey.class));

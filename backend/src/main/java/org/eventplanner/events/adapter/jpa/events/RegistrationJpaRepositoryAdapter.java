@@ -43,7 +43,7 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
     }
 
     @PostConstruct
-    public @NonNull void generateMissingAccessKeys() {
+    public void generateMissingAccessKeys() {
         var registrations = registrationJpaRepository.findAllByAccessKeyNull();
         registrations.forEach(registration -> {
             log.info("Generating missing access key for registration {}", registration.getKey());

@@ -34,9 +34,13 @@ public class TeamsNotificationService implements NotificationDispatcher {
             try {
                 var uri = URI.create(teamsUrl);
                 switch (notification.type()) {
-                    case NotificationType.USER_DATA_CHANGED -> createTeamsAlert(uri, notification);
-                    case NotificationType.CREW_REGISTRATION_CANCELED -> createTeamsAlert(uri, notification);
-                    case NotificationType.CREW_REGISTRATION_ADDED -> createTeamsAlert(uri, notification);
+                    case NotificationType.USER_DATA_CHANGED,
+                         NotificationType.CREW_REGISTRATION_ADDED,
+                         NotificationType.CREW_REGISTRATION_CANCELED -> createTeamsAlert(uri, notification);
+                    default -> log.warn(
+                        "No MS Teams alert created for {} notification. This notification type is not supported.",
+                        notification.type()
+                    );
                 }
             } catch (Exception e) {
                 log.error("Failed to create MS Teams alert for {} notification", notification.type(), e);

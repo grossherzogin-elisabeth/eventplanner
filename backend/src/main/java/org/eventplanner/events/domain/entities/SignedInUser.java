@@ -1,7 +1,8 @@
 package org.eventplanner.events.domain.entities;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -65,7 +66,7 @@ public record SignedInUser(
 
     public @NonNull SignedInUser withPermission(@NonNull Permission permission) {
         if (!permissions().contains(permission)) {
-            var permissions = new LinkedList<>(permissions());
+            var permissions = new ArrayList<>(permissions());
             permissions.add(permission);
             return new SignedInUser(key, authKey, roles, permissions, email, positions);
         }
@@ -81,7 +82,7 @@ public record SignedInUser(
 
     public @NonNull SignedInUser withRole(@NonNull Role role) {
         if (!roles().contains(role)) {
-            var roles = new LinkedList<>(roles());
+            var roles = new ArrayList<>(roles());
             roles.add(role);
             var permissions = Stream.concat(role.getPermissions(), permissions().stream())
                 .distinct()

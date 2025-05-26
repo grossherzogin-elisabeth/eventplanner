@@ -204,7 +204,7 @@ public class CaptainListService {
             String qualificationKeyValue = qualification.getQualificationKey().value();
 
             if ((qualificationKeyValue.contains("medical") || qualificationKeyValue.contains("aid"))
-                & qualification.getExpiresAt() != null) {
+                && qualification.getExpiresAt() != null) {
                 switch (qualificationKeyValue) {
                     case "medical-fitness" -> row.getCell(11).setCellValue(date2String(qualification.getExpiresAt()));
                     case "medical-care" -> row.getCell(18).setCellValue(date2String(qualification.getExpiresAt()));

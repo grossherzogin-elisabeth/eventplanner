@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.lang.NonNull;
@@ -29,7 +30,7 @@ public record UserKey(
             .replace("mit Ü", "")
             .replace("u. V.", "")
             .replace("?", "")
-            .toLowerCase()
+            .toLowerCase(Locale.GERMAN)
             .replaceAll("\\s", "") // remove whitespace characters
             .replaceAll("\\(.*\\)", "") // remove everything in brackets e.g. (this)
             .replaceAll("[^a-zA-ZöäüÖÄÜß\\-., ]", ""); // remove all non a-z characters

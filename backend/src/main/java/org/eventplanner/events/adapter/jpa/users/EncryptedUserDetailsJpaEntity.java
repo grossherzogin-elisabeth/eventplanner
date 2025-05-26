@@ -10,7 +10,6 @@ import org.eventplanner.events.domain.entities.EncryptedUserDetails;
 import org.eventplanner.events.domain.entities.EncryptedUserQualification;
 import org.eventplanner.events.domain.values.AuthKey;
 import org.eventplanner.events.domain.values.EncryptedAddress;
-import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -234,29 +233,29 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
             updatedAt != null ? Instant.parse(updatedAt) : Instant.now(),
             verifiedAt != null ? Instant.parse(verifiedAt) : null,
             lastLoginAt != null ? Instant.parse(lastLoginAt) : null,
-            gender != null ? new Encrypted<>(gender) : null,
-            title != null ? new Encrypted<>(title) : null,
-            new Encrypted<>(firstName),
-            nickName != null ? new Encrypted<>(nickName) : null,
-            secondName != null ? new Encrypted<>(secondName) : null,
-            new Encrypted<>(lastName),
-            Arrays.stream(roles).map(it -> (Encrypted<Role>) it).toList(),
+            gender != null ? new Encrypted(gender) : null,
+            title != null ? new Encrypted(title) : null,
+            new Encrypted(firstName),
+            nickName != null ? new Encrypted(nickName) : null,
+            secondName != null ? new Encrypted(secondName) : null,
+            new Encrypted(lastName),
+            Arrays.stream(roles).map(it -> (Encrypted) it).toList(),
             Arrays.stream(qualifications).toList(),
             address,
-            email != null ? new Encrypted<>(email) : null,
-            phone != null ? new Encrypted<>(phone) : null,
-            phoneWork != null ? new Encrypted<>(phoneWork) : null,
-            mobile != null ? new Encrypted<>(mobile) : null,
-            dateOfBirth != null ? new Encrypted<>(dateOfBirth) : null,
-            placeOfBirth != null ? new Encrypted<>(placeOfBirth) : null,
-            passNr != null ? new Encrypted<>(passNr) : null,
-            comment != null ? new Encrypted<>(comment) : null,
-            nationality != null ? new Encrypted<>(nationality) : null,
+            email != null ? new Encrypted(email) : null,
+            phone != null ? new Encrypted(phone) : null,
+            phoneWork != null ? new Encrypted(phoneWork) : null,
+            mobile != null ? new Encrypted(mobile) : null,
+            dateOfBirth != null ? new Encrypted(dateOfBirth) : null,
+            placeOfBirth != null ? new Encrypted(placeOfBirth) : null,
+            passNr != null ? new Encrypted(passNr) : null,
+            comment != null ? new Encrypted(comment) : null,
+            nationality != null ? new Encrypted(nationality) : null,
             emergencyContact,
-            diseases != null ? new Encrypted<>(diseases) : null,
-            intolerances != null ? new Encrypted<>(intolerances) : null,
-            medication != null ? new Encrypted<>(medication) : null,
-            diet != null ? new Encrypted<>(diet) : null
+            diseases != null ? new Encrypted(diseases) : null,
+            intolerances != null ? new Encrypted(intolerances) : null,
+            medication != null ? new Encrypted(medication) : null,
+            diet != null ? new Encrypted(diet) : null
         );
     }
 }

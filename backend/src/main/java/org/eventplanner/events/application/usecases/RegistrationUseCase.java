@@ -26,6 +26,7 @@ public class RegistrationUseCase {
     private final RegistrationService registrationService;
 
     /**
+     * Creates a new registration for an event.
      * @param signedInUser the user performing this action
      * @param spec         the specification for the registration to add
      * @return the updated event
@@ -61,6 +62,7 @@ public class RegistrationUseCase {
     }
 
     /**
+     * Removes a registration from an event.
      * @param signedInUser    the user performing this action
      * @param eventKey        the key of the event to remove the registration from
      * @param registrationKey the key of the registration to remove
@@ -94,6 +96,7 @@ public class RegistrationUseCase {
     }
 
     /**
+     * Updates an existing registration for an event.
      * @param signedInUser the user performing this action
      * @param spec         the update specification
      * @return the updated event

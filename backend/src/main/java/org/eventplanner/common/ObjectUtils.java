@@ -15,12 +15,6 @@ public class ObjectUtils {
         return nullable;
     }
 
-    public static @Nullable <T> void applyNullable(@Nullable T nullable, @NonNull Consumer<T> applier) {
-        if (nullable != null) {
-            applier.accept(nullable);
-        }
-    }
-
     public static @Nullable <T, E> T mapNullable(@Nullable E nullable, @NonNull Function<E, T> function) {
         if (nullable == null) {
             return null;
@@ -39,11 +33,11 @@ public class ObjectUtils {
         return function.apply(nullable);
     }
 
-    public static @Nullable <T, E> List<T> mapNullable(@Nullable List<E> nullable, Function<E, T> Function) {
+    public static @Nullable <T, E> List<T> mapNullable(@Nullable List<E> nullable, Function<E, T> callback) {
         if (nullable == null) {
             return null;
         }
-        return nullable.stream().map(Function).toList();
+        return nullable.stream().map(callback).toList();
     }
 
     public static @NonNull <T, E> List<T> mapNullable(

@@ -20,19 +20,14 @@ ext {
     apachePoiVersion = "5.4.1"
 }
 
-import net.ltgt.gradle.errorprone.CheckSeverity
-
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.errorprone {
-        check("NullAway", CheckSeverity.ERROR)
-        option("NullAway:AnnotatedPackages", "com.uber")
+        option("NullAway:AnnotatedPackages", "net.ltgt")
     }
-    // Include to disable NullAway on test code
-    if (name.toLowerCase().contains("test")) {
-        options.errorprone {
-            disable("NullAway")
-        }
-    }
+}
+tasks.compileJava {
+    // The check defaults to a warning, bump it up to an error for the main sources
+    options.errorprone.error("NullAway")
 }
 
 repositories {

@@ -3,7 +3,7 @@ package org.eventplanner.events.domain.entities;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,13 +71,13 @@ public class Event {
     }
 
     public void addRegistration(@NonNull final Registration registration) {
-        var temp = new LinkedList<>(registrations);
+        var temp = new ArrayList<>(registrations);
         temp.add(registration);
         registrations = temp.stream().toList();
     }
 
     public void removeRegistration(@NonNull final Registration registration) {
-        var temp = new LinkedList<>(registrations);
+        var temp = new ArrayList<>(registrations);
         temp.removeIf(it -> it.getKey().equals(registration.getKey()));
         registrations = temp.stream().toList();
 
