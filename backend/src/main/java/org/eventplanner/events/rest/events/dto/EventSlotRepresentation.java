@@ -26,7 +26,7 @@ public record EventSlotRepresentation(
             domain.getKey().value(),
             domain.getOrder(),
             domain.getCriticality(),
-            domain.getPositions().stream().map((PositionKey::value)).toList(),
+            domain.getPositions().stream().map(PositionKey::value).toList(),
             domain.getName(),
             mapNullable(domain.getAssignedRegistration(), RegistrationKey::value)
         );
@@ -37,7 +37,7 @@ public record EventSlotRepresentation(
             new SlotKey(key),
             order,
             criticality,
-            positionKeys().stream().map((PositionKey::new)).toList(),
+            positionKeys().stream().map(PositionKey::new).toList(),
             name,
             mapNullable(assignedRegistrationKey, RegistrationKey::new)
         );

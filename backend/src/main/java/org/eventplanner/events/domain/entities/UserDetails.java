@@ -2,7 +2,7 @@ package org.eventplanner.events.domain.entities;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eventplanner.events.domain.functions.EncryptFunc;
@@ -44,9 +44,9 @@ public class UserDetails {
     private @Nullable String nickName;
     private @Nullable String secondName;
     private @NonNull String lastName;
-    private @NonNull List<PositionKey> positions = new LinkedList<>();
-    private @NonNull List<Role> roles = new LinkedList<>();
-    private @NonNull List<UserQualification> qualifications = new LinkedList<>();
+    private @NonNull List<PositionKey> positions = new ArrayList<>();
+    private @NonNull List<Role> roles = new ArrayList<>();
+    private @NonNull List<UserQualification> qualifications = new ArrayList<>();
     private @Nullable Address address;
     private @Nullable String email;
     private @Nullable String phone;
@@ -86,7 +86,7 @@ public class UserDetails {
 
     public void addPosition(PositionKey positionKey) {
         if (!positions.contains(positionKey)) {
-            var mutableList = new LinkedList<>(positions);
+            var mutableList = new ArrayList<>(positions);
             mutableList.add(positionKey);
             positions = mutableList;
         }

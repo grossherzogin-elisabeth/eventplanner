@@ -86,7 +86,7 @@ public class EncryptionService {
         }
     }
 
-    public <T extends Serializable> @Nullable Encrypted<T> encrypt(@Nullable final T value) {
+    public <T extends Serializable> @Nullable Encrypted encrypt(@Nullable final T value) {
         if (value == null) {
             return null;
         }
@@ -103,18 +103,18 @@ public class EncryptionService {
             } else {
                 json = objectMapper.writeValueAsString(value);
             }
-            return new Encrypted<>(encryptWithSecretKey(json, secretKey));
+            return new Encrypted(encryptWithSecretKey(json, secretKey));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public @Nullable String decrypt(@Nullable final Encrypted<String> encrypted) {
+    public @Nullable String decrypt(@Nullable final Encrypted encrypted) {
         return decrypt(encrypted, String.class);
     }
 
     public <T> @Nullable T decrypt(
-        @Nullable final Encrypted<?> encrypted,
+        @Nullable final Encrypted encrypted,
         @NonNull final Class<? extends T> type
     ) {
         if (encrypted == null) {

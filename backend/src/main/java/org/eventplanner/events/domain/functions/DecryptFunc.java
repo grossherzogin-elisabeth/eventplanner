@@ -8,5 +8,5 @@ import org.springframework.lang.Nullable;
 
 @FunctionalInterface
 public interface DecryptFunc {
-    <T extends Serializable> @Nullable T apply(@Nullable Encrypted<T> encrypted, @NonNull Class<T> clazz);
+    <T extends Serializable> @Nullable T apply(@Nullable Encrypted encrypted, @NonNull Class<T> clazz);
 }
