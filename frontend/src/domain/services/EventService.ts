@@ -156,6 +156,10 @@ export class EventService {
         return this.hasOpenSlots(event, positions, SlotCriticality.Required);
     }
 
+    public hasOpenImportantSlots(event: Event, positions?: PositionKey[]): boolean {
+        return this.hasOpenSlots(event, positions, SlotCriticality.Important);
+    }
+
     public hasOpenSlots(event: Event, positions?: PositionKey[], criticality: number = 0): boolean {
         const openSlots = event.slots.filter(
             (it) =>
