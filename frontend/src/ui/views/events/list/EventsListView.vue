@@ -352,7 +352,7 @@ interface EventTableViewItem extends Event {
     isPastEvent: boolean;
     waitingListCount: number;
     hasOpenSlots: boolean;
-    hasOpenRequiredSlots: boolean;
+    hasOpenImportantSlots: boolean;
     stateDetails: StateDetails;
 }
 
@@ -492,7 +492,7 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
             isPastEvent: evt.start.getTime() < new Date().getTime(),
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
             hasOpenSlots: eventService.hasOpenSlots(evt),
-            hasOpenRequiredSlots: eventService.hasOpenRequiredSlots(evt),
+            hasOpenImportantSlots: eventService.hasOpenImportantSlots(evt),
             stateDetails: {
                 name: '',
                 icon: '',
@@ -520,7 +520,7 @@ function getStateDetails(event: EventTableViewItem): StateDetails {
     if (event.state === EventState.OpenForSignup) {
         return { name: 'Crew Anmeldung', icon: 'fa-people-group', color: 'bg-blue-container text-onblue-container' };
     }
-    if (event.hasOpenRequiredSlots) {
+    if (event.hasOpenImportantSlots) {
         return { name: 'Crew gesucht', icon: 'fa-info-circle', color: 'bg-yellow-container text-onyellow-container' };
     }
     if (event.hasOpenSlots) {
