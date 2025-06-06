@@ -22,8 +22,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class EncryptedEmergencyContact implements Serializable {
-    private @Nullable Encrypted<String> name;
-    private @Nullable Encrypted<String> phone;
+    private @Nullable Encrypted name;
+    private @Nullable Encrypted phone;
 
     public @NonNull EmergencyContact decrypt(@NonNull DecryptFunc decryptFunc) {
         return new EmergencyContact(

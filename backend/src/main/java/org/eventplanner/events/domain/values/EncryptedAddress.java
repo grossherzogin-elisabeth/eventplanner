@@ -10,11 +10,11 @@ import org.springframework.lang.Nullable;
 import static java.util.Optional.ofNullable;
 
 public record EncryptedAddress(
-    @NonNull Encrypted<String> addressLine1,
-    @Nullable Encrypted<String> addressLine2,
-    @NonNull Encrypted<String> town,
-    @NonNull Encrypted<String> zipCode,
-    @Nullable Encrypted<String> country
+    @NonNull Encrypted addressLine1,
+    @Nullable Encrypted addressLine2,
+    @NonNull Encrypted town,
+    @NonNull Encrypted zipCode,
+    @Nullable Encrypted country
 ) implements Serializable {
 
     public @NonNull Address decrypt(@NonNull DecryptFunc decryptFunc) {

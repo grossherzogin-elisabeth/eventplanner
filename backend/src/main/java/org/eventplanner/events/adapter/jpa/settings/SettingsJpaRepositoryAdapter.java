@@ -33,7 +33,7 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
 
         var emailPassword = settingsMap.get("email.password");
         if (emailPassword != null) {
-            emailPassword = encryptionService.decrypt(new Encrypted<>(emailPassword));
+            emailPassword = encryptionService.decrypt(new Encrypted(emailPassword));
         }
 
         Integer emailPort = null;
@@ -45,7 +45,7 @@ public class SettingsJpaRepositoryAdapter implements SettingsRepository {
 
         var teamsWebhookUrl = settingsMap.get("notifications.teamsWebhookUrl");
         if (teamsWebhookUrl != null) {
-            teamsWebhookUrl = encryptionService.decrypt(new Encrypted<>(teamsWebhookUrl));
+            teamsWebhookUrl = encryptionService.decrypt(new Encrypted(teamsWebhookUrl));
         }
         var notificationSettings = new NotificationSettings(teamsWebhookUrl);
 

@@ -85,11 +85,11 @@ public class FileSystemJsonRepository<E> {
             return cache.get(dir.getAbsolutePath());
         }
         if (!dir.exists() || !dir.isDirectory()) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
         var files = dir.listFiles();
         if (files == null) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
 
         var entities = new ArrayList<E>();

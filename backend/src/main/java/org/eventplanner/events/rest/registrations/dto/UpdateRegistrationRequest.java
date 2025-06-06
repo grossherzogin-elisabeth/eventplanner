@@ -17,7 +17,7 @@ public record UpdateRegistrationRequest(
     @Nullable String userKey,
     @Nullable String name,
     @Nullable String note,
-    @Nullable boolean confirmed
+    @Nullable Boolean confirmed
 ) implements Serializable {
     public @NonNull UpdateRegistrationSpec toDomain(
         @NonNull final EventKey eventKey
@@ -31,7 +31,7 @@ public record UpdateRegistrationRequest(
                 : null,
             name,
             note,
-            confirmed ? Instant.now() : null
+            Boolean.TRUE.equals(confirmed) ? Instant.now() : null
         );
     }
 }
