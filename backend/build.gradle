@@ -4,6 +4,7 @@ plugins {
     id "org.springframework.boot" version "3.5.0"
     id "io.spring.dependency-management" version "1.1.7"
     id "io.freefair.lombok" version "8.13.1"
+    id "net.ltgt.errorprone" version "4.2.0"
 }
 
 group = "org.eventplanner"
@@ -17,6 +18,16 @@ ext {
     springBootVersion = "3.5.0"
     hibernateVersion = "6.6.13.Final"
     apachePoiVersion = "5.4.1"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.errorprone {
+        option("NullAway:AnnotatedPackages", "net.ltgt")
+    }
+}
+tasks.compileJava {
+    // The check defaults to a warning, bump it up to an error for the main sources
+    options.errorprone.error("NullAway")
 }
 
 repositories {
@@ -57,6 +68,13 @@ dependencies {
 
     // util
     implementation "org.apache.commons:commons-lang3:3.17.0"
+    // https://mvnrepository.com/artifact/org.jspecify/jspecify
+    implementation("org.jspecify:jspecify:1.0.0")
+
+    // https://mvnrepository.com/artifact/com.google.errorprone/error_prone_core
+    errorprone "com.google.errorprone:error_prone_core:2.38.0"
+
+    errorprone "com.uber.nullaway:nullaway:0.12.7"
 }
 
 test {

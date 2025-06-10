@@ -4,7 +4,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
 import java.time.Instant;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -50,9 +50,9 @@ public class UpdateEventUseCase {
         log.info("Updating event {}", event.getName());
 
         var previousState = event.getState();
-        List<Registration> registrations = new LinkedList<>(event.getRegistrations());
-        List<RegistrationKey> assignedRegistrations = new LinkedList<>();
-        List<RegistrationKey> unassignedRegistrations = new LinkedList<>();
+        List<Registration> registrations = new ArrayList<>(event.getRegistrations());
+        List<RegistrationKey> assignedRegistrations = new ArrayList<>();
+        List<RegistrationKey> unassignedRegistrations = new ArrayList<>();
 
         updateEventDetails(signedInUser, event, spec);
 
@@ -89,7 +89,7 @@ public class UpdateEventUseCase {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
             return;
         }
-        var changedAttributes = new LinkedList<String>();
+        var changedAttributes = new ArrayList<String>();
         if (spec.name() != null && !spec.name().equals(event.getName())) {
             event.setName(spec.name());
             changedAttributes.add("name");
@@ -134,7 +134,7 @@ public class UpdateEventUseCase {
         }
 
         // add new registrations
-        List<RegistrationKey> createdRegistrations = new LinkedList<>();
+        List<RegistrationKey> createdRegistrations = new ArrayList<>();
         for (final var createSpec : ofNullable(spec.registrationsToAdd()).orElse(emptyList())) {
             try {
                 var registration = registrationService.createRegistration(createSpec, event);
@@ -163,7 +163,7 @@ public class UpdateEventUseCase {
         }
 
         // update registrations
-        List<RegistrationKey> updatedRegistrations = new LinkedList<>();
+        List<RegistrationKey> updatedRegistrations = new ArrayList<>();
         for (final var updateSpec : ofNullable(spec.registrationsToUpdate()).orElse(emptyList())) {
             try {
                 var registration = registrationService.updateRegistration(updateSpec, event);
@@ -187,7 +187,7 @@ public class UpdateEventUseCase {
         }
 
         // remove registrations
-        List<RegistrationKey> removedRegistrations = new LinkedList<>();
+        List<RegistrationKey> removedRegistrations = new ArrayList<>();
         for (final var registrationKey : ofNullable(spec.registrationsToRemove()).orElse(emptyList())) {
             try {
                 registrationService.removeRegistration(registrationKey, event, false);

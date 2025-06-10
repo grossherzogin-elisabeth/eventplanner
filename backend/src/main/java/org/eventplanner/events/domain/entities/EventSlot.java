@@ -1,6 +1,6 @@
 package org.eventplanner.events.domain.entities;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eventplanner.events.domain.values.PositionKey;
@@ -29,7 +29,7 @@ public class EventSlot {
     private @NonNull SlotKey key = new SlotKey();
     private int order = 0;
     private int criticality = 0;
-    private @NonNull List<PositionKey> positions = new LinkedList<>();
+    private @NonNull List<PositionKey> positions = new ArrayList<>();
     private @Nullable String name = null;
     private @Nullable RegistrationKey assignedRegistration = null;
 

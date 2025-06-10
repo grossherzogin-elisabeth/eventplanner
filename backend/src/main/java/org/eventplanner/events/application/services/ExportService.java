@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class ExportService {
         XSSFSheet sheet = workbook.createSheet("Einsatzmatrix");
         sheet.setDefaultColumnWidth(18);
 
-        var positions = new LinkedList<>(positionRepository.findAll());
+        var positions = new ArrayList<>(positionRepository.findAll());
         positions.sort((a, b) -> b.getPriority() - a.getPriority());
         var positionsByKey = new HashMap<PositionKey, Position>();
         var cellStyles = getCellStyles(workbook, positions);
@@ -131,7 +131,7 @@ public class ExportService {
             int red = Integer.valueOf(position.getColor().substring(1, 3), 16);
             int green = Integer.valueOf(position.getColor().substring(3, 5), 16);
             int blue = Integer.valueOf(position.getColor().substring(5, 7), 16);
-            var rgb = new byte[] { (byte) (red), (byte) (green), (byte) (blue) };
+            var rgb = new byte[] { (byte) red, (byte) green, (byte) blue };
             var color = new XSSFColor(rgb, new DefaultIndexedColorMap());
 
             var styleNormal = workbook.createCellStyle();
@@ -181,7 +181,7 @@ public class ExportService {
         boolean waitingList
     ) {
         var rowCountByPosition = getRequiredRowCount(events, waitingList);
-        var rows = new LinkedList<PositionKey>();
+        var rows = new ArrayList<PositionKey>();
         for (Position position : positions) {
             for (int i = 0; i < rowCountByPosition.getOrDefault(position.getKey(), 0); i++) {
                 rows.add(position.getKey());

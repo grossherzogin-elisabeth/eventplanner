@@ -10,6 +10,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.eventplanner.events.domain.entities.Event;
@@ -165,7 +166,7 @@ public class NotificationService {
     }
 
     private void addRegistrationConfirmationDetails(
-        @NonNull HashMap<String, Object> props,
+        @NonNull Map<String, Object> props,
         @NonNull final Event event,
         @NonNull final Registration registration
     ) {
@@ -177,7 +178,7 @@ public class NotificationService {
     }
 
     private void addEventDetails(
-        @NonNull HashMap<String, Object> props,
+        @NonNull Map<String, Object> props,
         @NonNull final Event event
     ) {
         props.put("event", event);
@@ -197,7 +198,7 @@ public class NotificationService {
         @NonNull Role role,
         @NonNull NotificationType type,
         @NonNull String title,
-        @NonNull HashMap<String, Object> props,
+        @NonNull Map<String, Object> props,
         @Nullable String link
     ) {
         try {
@@ -220,7 +221,7 @@ public class NotificationService {
         @Nullable UserDetails to,
         @NonNull NotificationType type,
         @NonNull String title,
-        @NonNull HashMap<String, Object> props,
+        @NonNull Map<String, Object> props,
         @Nullable String link
     ) {
         if (to == null) {
@@ -245,16 +246,16 @@ public class NotificationService {
 
     private void dispatch(@NonNull final Notification notification) {
         for (var dispatcher : notificationDispatchers) {
-            runAsync(() -> dispatcher.dispatch(notification));
+            var unused = runAsync(() -> dispatcher.dispatch(notification));
         }
     }
 
-    protected String renderContent(@NonNull NotificationType type, @NonNull HashMap<String, Object> props)
+    protected String renderContent(@NonNull NotificationType type, @NonNull Map<String, Object> props)
     throws TemplateException, IOException {
         return renderTemplate("emails/" + type + ".ftl", props).trim();
     }
 
-    protected String renderSummary(@NonNull final NotificationType type, @NonNull final HashMap<String, Object> props)
+    protected String renderSummary(@NonNull final NotificationType type, @NonNull final Map<String, Object> props)
     throws TemplateException, IOException {
         return renderTemplate("notifications/" + type + ".ftl", props).trim();
     }

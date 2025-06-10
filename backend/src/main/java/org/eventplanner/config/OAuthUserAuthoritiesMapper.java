@@ -25,14 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
 
-    private final UserService userService;
+    // private final UserService userService;
     private final List<String> admins;
 
     public OAuthUserAuthoritiesMapper(
-        @Autowired UserService userService,
+        // @Autowired UserService userService,
         @Value("${auth.admins}") String admins
     ) {
-        this.userService = userService;
+        // this.userService = userService;
         this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
     }
 

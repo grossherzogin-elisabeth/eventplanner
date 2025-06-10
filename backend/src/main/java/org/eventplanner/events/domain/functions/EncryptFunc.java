@@ -7,5 +7,5 @@ import org.springframework.lang.Nullable;
 
 @FunctionalInterface
 public interface EncryptFunc {
-    <T extends Serializable> @Nullable Encrypted<T> apply(@Nullable T plain);
+    <T extends Serializable> @Nullable Encrypted apply(@Nullable T plain);
 }
