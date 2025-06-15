@@ -25,12 +25,12 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.events.application.ports.PositionRepository;
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.entities.UserDetails;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.entities.positions.Position;
+import org.eventplanner.events.domain.entities.users.UserDetails;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 

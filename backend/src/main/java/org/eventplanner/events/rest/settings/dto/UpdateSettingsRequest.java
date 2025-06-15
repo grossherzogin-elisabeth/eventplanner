@@ -3,9 +3,9 @@ package org.eventplanner.events.rest.settings.dto;
 import java.io.Serializable;
 
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
-import org.eventplanner.events.domain.values.settings.EmailConfig;
-import org.eventplanner.events.domain.values.settings.FrontendConfig;
-import org.eventplanner.events.domain.values.settings.NotificationConfig;
+import org.eventplanner.events.domain.values.config.EmailConfig;
+import org.eventplanner.events.domain.values.config.FrontendConfig;
+import org.eventplanner.events.domain.values.config.NotificationConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

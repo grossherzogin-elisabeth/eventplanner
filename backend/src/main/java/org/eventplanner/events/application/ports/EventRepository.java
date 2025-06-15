@@ -3,8 +3,8 @@ package org.eventplanner.events.application.ports;
 import java.util.List;
 import java.util.Optional;
 
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.values.EventKey;
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.values.events.EventKey;
 import org.springframework.lang.NonNull;
 
 public interface EventRepository {

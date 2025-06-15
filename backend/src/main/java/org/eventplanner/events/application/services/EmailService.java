@@ -7,11 +7,11 @@ import java.util.HashMap;
 
 import org.eventplanner.events.application.ports.EmailSender;
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
-import org.eventplanner.events.domain.entities.QueuedEmail;
-import org.eventplanner.events.domain.values.GlobalNotification;
-import org.eventplanner.events.domain.values.Notification;
-import org.eventplanner.events.domain.values.PersonalNotification;
-import org.eventplanner.events.domain.values.settings.EmailConfig;
+import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
+import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
+import org.eventplanner.events.domain.entities.notifications.Notification;
+import org.eventplanner.events.domain.entities.notifications.PersonalNotification;
+import org.eventplanner.events.domain.values.config.EmailConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;

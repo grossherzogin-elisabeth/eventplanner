@@ -5,11 +5,11 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 import java.time.Instant;
 
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.RegistrationKey;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

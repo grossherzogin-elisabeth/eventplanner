@@ -5,9 +5,9 @@ import java.time.Instant;
 import java.util.List;
 
 import org.eventplanner.events.domain.specs.UpdateEventSpec;
-import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.EventState;
-import org.eventplanner.events.domain.values.RegistrationKey;
+import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.EventState;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.rest.registrations.dto.CreateRegistrationRequest;
 import org.eventplanner.events.rest.registrations.dto.UpdateRegistrationRequest;
 import org.springframework.lang.NonNull;

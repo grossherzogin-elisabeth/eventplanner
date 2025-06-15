@@ -1,9 +1,9 @@
 package org.eventplanner.testdata;
 
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.RegistrationKey;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 
 public class RegistrationFactory {
     public static Registration createRegistration() {

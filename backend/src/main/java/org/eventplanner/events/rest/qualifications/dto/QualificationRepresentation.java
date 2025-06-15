@@ -3,8 +3,8 @@ package org.eventplanner.events.rest.qualifications.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.Qualification;
-import org.eventplanner.events.domain.values.PositionKey;
+import org.eventplanner.events.domain.entities.qualifications.Qualification;
+import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

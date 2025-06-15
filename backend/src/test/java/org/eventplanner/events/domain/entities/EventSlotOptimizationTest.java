@@ -6,6 +6,9 @@ import static org.eventplanner.testdata.RegistrationFactory.createRegistration;
 
 import java.util.List;
 
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.EventSlot;
+import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.testdata.PositionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

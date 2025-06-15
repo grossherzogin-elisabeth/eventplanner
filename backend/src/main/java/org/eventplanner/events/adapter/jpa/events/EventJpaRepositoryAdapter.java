@@ -5,9 +5,9 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EventRepository;
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.EventKey;
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.events.EventKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

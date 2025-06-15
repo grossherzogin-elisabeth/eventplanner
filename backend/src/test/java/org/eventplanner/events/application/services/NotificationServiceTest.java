@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.eventplanner.events.domain.values.NotificationType;
-import org.eventplanner.events.domain.values.Role;
+import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.eventplanner.testdata.TestDb;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ class NotificationServiceTest {
 
     @Autowired
     private ConfigurationService configurationService;
-    
+
     private NotificationService testee;
     private NotificationDispatcher dispatcher;
 

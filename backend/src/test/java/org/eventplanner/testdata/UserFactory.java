@@ -6,13 +6,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.eventplanner.events.domain.entities.EmergencyContact;
-import org.eventplanner.events.domain.entities.UserDetails;
-import org.eventplanner.events.domain.values.Address;
-import org.eventplanner.events.domain.values.AuthKey;
-import org.eventplanner.events.domain.values.Diet;
-import org.eventplanner.events.domain.values.Role;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.users.EmergencyContact;
+import org.eventplanner.events.domain.entities.users.UserDetails;
+import org.eventplanner.events.domain.values.users.Address;
+import org.eventplanner.events.domain.values.users.AuthKey;
+import org.eventplanner.events.domain.values.users.Diet;
+import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.users.UserKey;
 
 public class UserFactory {
     public static UserDetails createUser() {

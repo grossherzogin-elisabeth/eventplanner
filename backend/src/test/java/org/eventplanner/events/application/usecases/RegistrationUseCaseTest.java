@@ -18,11 +18,11 @@ import org.eventplanner.events.application.ports.RegistrationRepository;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
-import org.eventplanner.events.domain.entities.Event;
+import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
-import org.eventplanner.events.domain.values.EventState;
-import org.eventplanner.events.domain.values.Permission;
+import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.testdata.PositionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +68,7 @@ class RegistrationUseCaseTest {
             "Test",
             null
         );
-        
+
         assertThrows(
             MissingPermissionException.class,
             () -> testee.updateRegistration(signedInUser, updateSpec)

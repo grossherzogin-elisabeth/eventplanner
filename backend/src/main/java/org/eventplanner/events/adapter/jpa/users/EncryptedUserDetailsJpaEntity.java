@@ -6,13 +6,13 @@ import java.util.Arrays;
 
 import org.eventplanner.common.Encrypted;
 import org.eventplanner.config.ObjectMapperFactory;
-import org.eventplanner.events.domain.entities.EncryptedEmergencyContact;
-import org.eventplanner.events.domain.entities.EncryptedUserDetails;
-import org.eventplanner.events.domain.entities.EncryptedUserQualification;
-import org.eventplanner.events.domain.values.AuthKey;
-import org.eventplanner.events.domain.values.EncryptedAddress;
-import org.eventplanner.events.domain.values.Role;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.users.EncryptedEmergencyContact;
+import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
+import org.eventplanner.events.domain.entities.users.EncryptedUserQualification;
+import org.eventplanner.events.domain.values.users.AuthKey;
+import org.eventplanner.events.domain.values.users.EncryptedAddress;
+import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.users.UserKey;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

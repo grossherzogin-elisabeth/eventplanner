@@ -1,9 +1,9 @@
 package org.eventplanner.events.domain.aggregates;
 
-import org.eventplanner.events.domain.values.settings.AuthConfig;
-import org.eventplanner.events.domain.values.settings.EmailConfig;
-import org.eventplanner.events.domain.values.settings.FrontendConfig;
-import org.eventplanner.events.domain.values.settings.NotificationConfig;
+import org.eventplanner.events.domain.values.config.AuthConfig;
+import org.eventplanner.events.domain.values.config.EmailConfig;
+import org.eventplanner.events.domain.values.config.FrontendConfig;
+import org.eventplanner.events.domain.values.config.NotificationConfig;
 import org.springframework.lang.NonNull;
 
 public record ApplicationConfig(

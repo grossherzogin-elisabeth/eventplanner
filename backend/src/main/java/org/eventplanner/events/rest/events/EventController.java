@@ -12,7 +12,7 @@ import org.eventplanner.events.application.usecases.RegistrationConfirmationUseC
 import org.eventplanner.events.application.usecases.UpdateEventUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
-import org.eventplanner.events.domain.values.EventKey;
+import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.rest.events.dto.CreateEventRequest;
 import org.eventplanner.events.rest.events.dto.EventRepresentation;
 import org.eventplanner.events.rest.events.dto.EventSlotRepresentation;

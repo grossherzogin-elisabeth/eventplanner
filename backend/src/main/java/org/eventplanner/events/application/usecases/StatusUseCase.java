@@ -2,7 +2,7 @@ package org.eventplanner.events.application.usecases;
 
 import java.time.Instant;
 
-import org.eventplanner.events.domain.entities.SystemStatus;
+import org.eventplanner.events.domain.values.config.SystemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

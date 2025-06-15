@@ -2,7 +2,7 @@ package org.eventplanner.events.rest.users.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.entities.User;
+import org.eventplanner.events.domain.entities.users.User;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

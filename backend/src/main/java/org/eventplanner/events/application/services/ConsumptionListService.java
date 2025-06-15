@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.Registration;
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.Registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
