@@ -2,8 +2,6 @@ package org.eventplanner.events.domain.entities.users;
 
 import static java.util.Objects.requireNonNull;
 
-import static java.util.Objects.requireNonNull;
-
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -31,7 +29,7 @@ public class EncryptedUserQualification implements Serializable {
     private @Nullable Encrypted<Instant> expiresAt;
     private @Nullable Encrypted<UserQualification.State> state;
 
-    public @NonNull UserQualification decrypt(DecryptFunc decryptFunc) {
+    public @NonNull UserQualification decrypt(@NonNull final DecryptFunc decryptFunc) {
         var decryptedKey = requireNonNull(decryptFunc.apply(qualificationKey, QualificationKey.class));
         var decryptedExpiresAt = decryptFunc.apply(expiresAt, Instant.class);
         var decryptedState = decryptFunc.apply(state, UserQualification.State.class);
