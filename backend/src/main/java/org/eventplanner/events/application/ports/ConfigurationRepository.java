@@ -6,7 +6,7 @@ import org.springframework.lang.NonNull;
 
 public interface ConfigurationRepository {
     public void updateConfig(
-        @NonNull final ApplicationConfig.UpdateRequest spec,
+        @NonNull final ApplicationConfig.UpdateSpec spec,
         @NonNull final EncryptFunc encryptFunc
     );
 }

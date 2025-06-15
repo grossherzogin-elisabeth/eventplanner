@@ -32,7 +32,7 @@ public class ConfigurationService {
         return applicationConfig;
     }
 
-    public @NonNull ApplicationConfig updateConfig(@NonNull final ApplicationConfig.UpdateRequest spec) {
+    public @NonNull ApplicationConfig updateConfig(@NonNull final ApplicationConfig.UpdateSpec spec) {
         var changed = spec.clearUnchanged(getConfig());
         configurationRepository.updateConfig(changed, encryptionService::encrypt);
         applicationConfig = readConfig();

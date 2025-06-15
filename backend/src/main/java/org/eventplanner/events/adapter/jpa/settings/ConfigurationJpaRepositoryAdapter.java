@@ -10,10 +10,10 @@ import org.eventplanner.events.application.ports.ConfigurationSource;
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
 import org.eventplanner.events.domain.functions.DecryptFunc;
 import org.eventplanner.events.domain.functions.EncryptFunc;
-import org.eventplanner.events.domain.values.settings.AuthSettings;
-import org.eventplanner.events.domain.values.settings.EmailSettings;
-import org.eventplanner.events.domain.values.settings.FrontendSettings;
-import org.eventplanner.events.domain.values.settings.NotificationSettings;
+import org.eventplanner.events.domain.values.settings.AuthConfig;
+import org.eventplanner.events.domain.values.settings.EmailConfig;
+import org.eventplanner.events.domain.values.settings.FrontendConfig;
+import org.eventplanner.events.domain.values.settings.NotificationConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -55,12 +55,12 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
         if (teamsWebhookUrl != null) {
             teamsWebhookUrl = decryptFunc.apply(new Encrypted<>(teamsWebhookUrl), String.class);
         }
-        var notificationSettings = new NotificationSettings(
+        var notificationSettings = new NotificationConfig(
             teamsWebhookUrl,
             null
         );
 
-        var emailSettings = new EmailSettings(
+        var emailSettings = new EmailConfig(
             null,
             null,
             null,
@@ -76,7 +76,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
             emailPassword
         );
 
-        var uiSettings = new FrontendSettings(
+        var uiSettings = new FrontendConfig(
             settingsMap.get("ui.menuTitle"),
             settingsMap.get("ui.tabTitle"),
             settingsMap.get("ui.technicalSupportEmail"),
@@ -88,13 +88,13 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
             notificationSettings,
             emailSettings,
             uiSettings,
-            new AuthSettings()
+            new AuthConfig()
         );
     }
 
     @Override
     public void updateConfig(
-        @NonNull final ApplicationConfig.UpdateRequest spec,
+        @NonNull final ApplicationConfig.UpdateSpec spec,
         @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
@@ -105,7 +105,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapFrontendSettings(
-        @NonNull final FrontendSettings.UpdateRequest spec
+        @NonNull final FrontendConfig.UpdateSpec spec
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
         if (spec.getMenuTitle() != null) {
@@ -127,7 +127,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapNotificationSettings(
-        @NonNull final NotificationSettings.UpdateRequest spec,
+        @NonNull final NotificationConfig.UpdateSpec spec,
         @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
@@ -148,7 +148,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapEmailSettings(
-        @NonNull final EmailSettings.UpdateRequest spec,
+        @NonNull final EmailConfig.UpdateSpec spec,
         @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();

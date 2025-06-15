@@ -9,19 +9,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-public record FrontendSettings(
+public record FrontendConfig(
     @Nullable String menuTitle,
     @Nullable String tabTitle,
     @Nullable String technicalSupportEmail,
     @Nullable String supportEmail,
     @Nullable String url
 ) {
-    public FrontendSettings() {
+    public FrontendConfig() {
         this(null, null, null, null, null);
     }
 
-    public @NonNull FrontendSettings apply(@NonNull final FrontendSettings other) {
-        return new FrontendSettings(
+    public @NonNull FrontendConfig apply(@NonNull final FrontendConfig other) {
+        return new FrontendConfig(
             other.menuTitle != null ? other.menuTitle : menuTitle,
             other.tabTitle != null ? other.tabTitle : tabTitle,
             other.technicalSupportEmail != null ? other.technicalSupportEmail : technicalSupportEmail,
@@ -33,13 +33,13 @@ public record FrontendSettings(
     @Getter
     @Setter
     @AllArgsConstructor
-    public static final class UpdateRequest {
+    public static final class UpdateSpec {
         private @Nullable String menuTitle;
         private @Nullable String tabTitle;
         private @Nullable String technicalSupportEmail;
         private @Nullable String supportEmail;
 
-        public @NonNull UpdateRequest clearUnchanged(@NonNull final FrontendSettings current) {
+        public @NonNull UpdateSpec clearUnchanged(@NonNull final FrontendConfig current) {
             if (Objects.equals(menuTitle, current.menuTitle)) {
                 menuTitle = null;
             }

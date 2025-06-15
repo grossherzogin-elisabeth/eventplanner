@@ -8,10 +8,10 @@ import org.eventplanner.events.application.ports.ConfigurationSource;
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
 import org.eventplanner.events.domain.functions.DecryptFunc;
 import org.eventplanner.events.domain.values.NotificationType;
-import org.eventplanner.events.domain.values.settings.AuthSettings;
-import org.eventplanner.events.domain.values.settings.EmailSettings;
-import org.eventplanner.events.domain.values.settings.FrontendSettings;
-import org.eventplanner.events.domain.values.settings.NotificationSettings;
+import org.eventplanner.events.domain.values.settings.AuthConfig;
+import org.eventplanner.events.domain.values.settings.EmailConfig;
+import org.eventplanner.events.domain.values.settings.FrontendConfig;
+import org.eventplanner.events.domain.values.settings.NotificationConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -38,21 +38,21 @@ public class ApplicationPropertiesAdapter implements ConfigurationSource {
         );
     }
 
-    private @NonNull NotificationSettings getNotificationSettings() {
+    private @NonNull NotificationConfig getNotificationSettings() {
         var enabledNotifications = properties.getNotifications().entrySet().stream()
             .filter(it -> it.getValue().enabled())
             .map(it -> it.getKey().replace("-", "_"))
             .map(NotificationType::fromString)
             .flatMap(Optional::stream)
             .toList();
-        return new NotificationSettings(
+        return new NotificationConfig(
             null,
             enabledNotifications
         );
     }
 
-    private @NonNull EmailSettings getEmailSettings() {
-        return new EmailSettings(
+    private @NonNull EmailConfig getEmailSettings() {
+        return new EmailConfig(
             properties.getEmailEnabled(),
             asList(properties.getEmailRecipientsWhitelist()),
             properties.getEmailTitlePrefix(),
@@ -69,8 +69,8 @@ public class ApplicationPropertiesAdapter implements ConfigurationSource {
         );
     }
 
-    private @NonNull FrontendSettings getFrontendSettings() {
-        return new FrontendSettings(
+    private @NonNull FrontendConfig getFrontendSettings() {
+        return new FrontendConfig(
             null,
             null,
             null,
@@ -79,8 +79,8 @@ public class ApplicationPropertiesAdapter implements ConfigurationSource {
         );
     }
 
-    private @NonNull AuthSettings getAuthSettings() {
-        return new AuthSettings(
+    private @NonNull AuthConfig getAuthSettings() {
+        return new AuthConfig(
             properties.getAuthLoginSuccessUrl(),
             properties.getAuthLogoutSuccessUrl(),
             asList(properties.getAuthAdmins())

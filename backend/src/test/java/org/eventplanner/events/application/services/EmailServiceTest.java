@@ -23,10 +23,10 @@ import org.eventplanner.events.domain.values.NotificationType;
 import org.eventplanner.events.domain.values.PersonalNotification;
 import org.eventplanner.events.domain.values.Role;
 import org.eventplanner.events.domain.values.UserKey;
-import org.eventplanner.events.domain.values.settings.AuthSettings;
-import org.eventplanner.events.domain.values.settings.EmailSettings;
-import org.eventplanner.events.domain.values.settings.FrontendSettings;
-import org.eventplanner.events.domain.values.settings.NotificationSettings;
+import org.eventplanner.events.domain.values.settings.AuthConfig;
+import org.eventplanner.events.domain.values.settings.EmailConfig;
+import org.eventplanner.events.domain.values.settings.FrontendConfig;
+import org.eventplanner.events.domain.values.settings.NotificationConfig;
 import org.eventplanner.testdata.TestDb;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -151,11 +151,11 @@ class EmailServiceTest {
 
     private ApplicationConfig createSettings() {
         return new ApplicationConfig(
-            new NotificationSettings(),
-            new EmailSettings(
+            new NotificationConfig(),
+            new EmailConfig(
                 true,
                 null,
-                "[TEST]",
+                "[TEST] ",
                 "from@email.com",
                 "from",
                 "reply@email.com",
@@ -167,14 +167,14 @@ class EmailServiceTest {
                 "username",
                 "password"
             ),
-            new FrontendSettings(
+            new FrontendConfig(
                 "Title",
                 "Title",
                 "test@test.de",
                 "test@test.de",
                 "http://localhost:8080"
             ),
-            new AuthSettings()
+            new AuthConfig()
         );
     }
 

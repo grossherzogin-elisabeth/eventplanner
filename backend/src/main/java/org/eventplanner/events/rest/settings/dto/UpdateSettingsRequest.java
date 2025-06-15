@@ -3,9 +3,9 @@ package org.eventplanner.events.rest.settings.dto;
 import java.io.Serializable;
 
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
-import org.eventplanner.events.domain.values.settings.EmailSettings;
-import org.eventplanner.events.domain.values.settings.FrontendSettings;
-import org.eventplanner.events.domain.values.settings.NotificationSettings;
+import org.eventplanner.events.domain.values.settings.EmailConfig;
+import org.eventplanner.events.domain.values.settings.FrontendConfig;
+import org.eventplanner.events.domain.values.settings.NotificationConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -15,12 +15,12 @@ public record UpdateSettingsRequest(
     @NonNull Ui ui
 ) implements Serializable {
 
-    public ApplicationConfig.UpdateRequest toDomain() {
-        return new ApplicationConfig.UpdateRequest(
-            new NotificationSettings.UpdateRequest(
+    public ApplicationConfig.UpdateSpec toDomain() {
+        return new ApplicationConfig.UpdateSpec(
+            new NotificationConfig.UpdateSpec(
                 notifications.teamsWebhookUrl()
             ),
-            new EmailSettings.UpdateRequest(
+            new EmailConfig.UpdateSpec(
                 email.from(),
                 email.fromDisplayName(),
                 email.replyTo(),
@@ -32,7 +32,7 @@ public record UpdateSettingsRequest(
                 email.username(),
                 email.password()
             ),
-            new FrontendSettings.UpdateRequest(
+            new FrontendConfig.UpdateSpec(
                 ui.menuTitle(),
                 ui.tabTitle(),
                 ui.technicalSupportEmail(),

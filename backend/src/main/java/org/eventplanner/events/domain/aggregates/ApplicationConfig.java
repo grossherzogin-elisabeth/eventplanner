@@ -1,26 +1,33 @@
 package org.eventplanner.events.domain.aggregates;
 
-import org.eventplanner.events.domain.values.settings.AuthSettings;
-import org.eventplanner.events.domain.values.settings.EmailSettings;
-import org.eventplanner.events.domain.values.settings.FrontendSettings;
-import org.eventplanner.events.domain.values.settings.NotificationSettings;
+import org.eventplanner.events.domain.values.settings.AuthConfig;
+import org.eventplanner.events.domain.values.settings.EmailConfig;
+import org.eventplanner.events.domain.values.settings.FrontendConfig;
+import org.eventplanner.events.domain.values.settings.NotificationConfig;
 import org.springframework.lang.NonNull;
 
 public record ApplicationConfig(
-    @NonNull NotificationSettings notifications,
-    @NonNull EmailSettings email,
-    @NonNull FrontendSettings frontend,
-    @NonNull AuthSettings auth
+    @NonNull NotificationConfig notifications,
+    @NonNull EmailConfig email,
+    @NonNull FrontendConfig frontend,
+    @NonNull AuthConfig auth
 ) {
     public ApplicationConfig() {
         this(
-            new NotificationSettings(),
-            new EmailSettings(),
-            new FrontendSettings(),
-            new AuthSettings()
+            new NotificationConfig(),
+            new EmailConfig(),
+            new FrontendConfig(),
+            new AuthConfig()
         );
     }
 
+    /**
+     * Merges two application configs together by overwriting values of this instance with values from the other
+     * instance.
+     *
+     * @param other higher priority application config
+     * @return merged application config
+     */
     public @NonNull ApplicationConfig apply(@NonNull final ApplicationConfig other) {
         return new ApplicationConfig(
             notifications.apply(other.notifications),
@@ -30,13 +37,13 @@ public record ApplicationConfig(
         );
     }
 
-    public record UpdateRequest(
-        @NonNull NotificationSettings.UpdateRequest notifications,
-        @NonNull EmailSettings.UpdateRequest email,
-        @NonNull FrontendSettings.UpdateRequest frontend
+    public record UpdateSpec(
+        @NonNull NotificationConfig.UpdateSpec notifications,
+        @NonNull EmailConfig.UpdateSpec email,
+        @NonNull FrontendConfig.UpdateSpec frontend
     ) {
-        public @NonNull UpdateRequest clearUnchanged(@NonNull final ApplicationConfig current) {
-            return new UpdateRequest(
+        public @NonNull UpdateSpec clearUnchanged(@NonNull final ApplicationConfig current) {
+            return new UpdateSpec(
                 notifications.clearUnchanged(current.notifications),
                 email.clearUnchanged(current.email),
                 frontend.clearUnchanged(current.frontend)

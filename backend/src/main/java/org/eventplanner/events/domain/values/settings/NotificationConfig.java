@@ -11,11 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-public record NotificationSettings(
+public record NotificationConfig(
     @Nullable String teamsWebhookUrl,
     @Nullable List<NotificationType> enabledNotifications
 ) {
-    public NotificationSettings() {
+    public NotificationConfig() {
         this(null, null);
     }
 
@@ -23,8 +23,8 @@ public record NotificationSettings(
         return enabledNotifications != null && enabledNotifications.contains(type);
     }
 
-    public @NonNull NotificationSettings apply(@NonNull final NotificationSettings other) {
-        return new NotificationSettings(
+    public @NonNull NotificationConfig apply(@NonNull final NotificationConfig other) {
+        return new NotificationConfig(
             other.teamsWebhookUrl != null ? other.teamsWebhookUrl : teamsWebhookUrl,
             other.enabledNotifications != null ? other.enabledNotifications : enabledNotifications
         );
@@ -33,10 +33,10 @@ public record NotificationSettings(
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class UpdateRequest {
+    public static class UpdateSpec {
         private @Nullable String teamsWebhookUrl;
 
-        public @NonNull UpdateRequest clearUnchanged(@NonNull final NotificationSettings defaults) {
+        public @NonNull UpdateSpec clearUnchanged(@NonNull final NotificationConfig defaults) {
             if (Objects.equals(teamsWebhookUrl, defaults.teamsWebhookUrl)) {
                 teamsWebhookUrl = null;
             }

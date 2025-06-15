@@ -4,7 +4,7 @@ import org.eventplanner.events.application.services.ConfigurationService;
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
 import org.eventplanner.events.domain.entities.SignedInUser;
 import org.eventplanner.events.domain.values.Permission;
-import org.eventplanner.events.domain.values.settings.FrontendSettings;
+import org.eventplanner.events.domain.values.settings.FrontendConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +26,15 @@ public class SettingsUseCase {
 
     public @NonNull ApplicationConfig updateSettings(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final ApplicationConfig.UpdateRequest updateRequest
+        @NonNull final ApplicationConfig.UpdateSpec updateSpec
     ) {
         signedInUser.assertHasPermission(Permission.WRITE_APP_SETTINGS);
 
         log.info("Updating settings");
-        return configurationService.updateConfig(updateRequest);
+        return configurationService.updateConfig(updateSpec);
     }
 
-    public @NonNull FrontendSettings getUiSettings() {
+    public @NonNull FrontendConfig getUiSettings() {
         return configurationService.getConfig().frontend();
     }
 }

@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-public record EmailSettings(
+public record EmailConfig(
     @Nullable Boolean enabled,
     @Nullable List<String> recipientsWhitelist,
     @Nullable String titlePrefix,
@@ -25,7 +25,7 @@ public record EmailSettings(
     @Nullable String username,
     @Nullable String password
 ) {
-    public EmailSettings() {
+    public EmailConfig() {
         this(
             null,
             null,
@@ -43,8 +43,8 @@ public record EmailSettings(
         );
     }
 
-    public @NonNull EmailSettings apply(@NonNull final EmailSettings other) {
-        return new EmailSettings(
+    public @NonNull EmailConfig apply(@NonNull final EmailConfig other) {
+        return new EmailConfig(
             other.enabled != null ? other.enabled : enabled,
             other.recipientsWhitelist != null ? other.recipientsWhitelist : recipientsWhitelist,
             other.titlePrefix != null ? other.titlePrefix : titlePrefix,
@@ -64,7 +64,7 @@ public record EmailSettings(
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class UpdateRequest {
+    public static class UpdateSpec {
         private @Nullable String from;
         private @Nullable String fromDisplayName;
         private @Nullable String replyTo;
@@ -76,7 +76,7 @@ public record EmailSettings(
         private @Nullable String username;
         private @Nullable String password;
 
-        public @NonNull UpdateRequest clearUnchanged(@NonNull final EmailSettings current) {
+        public @NonNull UpdateSpec clearUnchanged(@NonNull final EmailConfig current) {
             if (Objects.equals(from, current.from)) {
                 from = null;
             }

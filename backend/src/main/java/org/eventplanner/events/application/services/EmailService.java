@@ -11,7 +11,7 @@ import org.eventplanner.events.domain.entities.QueuedEmail;
 import org.eventplanner.events.domain.values.GlobalNotification;
 import org.eventplanner.events.domain.values.Notification;
 import org.eventplanner.events.domain.values.PersonalNotification;
-import org.eventplanner.events.domain.values.settings.EmailSettings;
+import org.eventplanner.events.domain.values.settings.EmailConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -142,7 +142,7 @@ public class EmailService implements NotificationDispatcher {
         }
     }
 
-    private EmailSettings getEmailSettings() {
+    private EmailConfig getEmailSettings() {
         return configurationService.getConfig().email();
     }
 
