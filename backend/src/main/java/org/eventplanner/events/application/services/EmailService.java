@@ -3,9 +3,7 @@ package org.eventplanner.events.application.services;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import org.eventplanner.events.application.ports.EmailSender;
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
@@ -13,9 +11,8 @@ import org.eventplanner.events.domain.entities.QueuedEmail;
 import org.eventplanner.events.domain.values.GlobalNotification;
 import org.eventplanner.events.domain.values.Notification;
 import org.eventplanner.events.domain.values.PersonalNotification;
-import org.eventplanner.events.domain.values.Settings.EmailSettings;
+import org.eventplanner.events.domain.values.settings.EmailSettings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -26,33 +23,24 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class EmailService implements NotificationDispatcher {
-    private final SettingsService settingsService;
+    private final ConfigurationService configurationService;
     private final UserService userService;
     private final QueuedEmailRepository queuedEmailRepository;
     private final EmailSender emailSender;
     private final Configuration freemarkerConfig;
-    private final List<String> recipientsWhitelist;
-    private final String titlePrefix;
 
     public EmailService(
-        @Autowired final SettingsService settingsService,
+        @Autowired final ConfigurationService configurationService,
         @Autowired final UserService userService,
         @Autowired final QueuedEmailRepository queuedEmailRepository,
         @Autowired final EmailSender emailSender,
-        @Autowired final Configuration freemarkerConfig,
-        @Value("${email.recipients-whitelist}") final String recipientsWhitelist,
-        @Value("${email.title-prefix}") final String titlePrefix
+        @Autowired final Configuration freemarkerConfig
     ) {
-        this.settingsService = settingsService;
+        this.configurationService = configurationService;
         this.userService = userService;
         this.queuedEmailRepository = queuedEmailRepository;
         this.emailSender = emailSender;
         this.freemarkerConfig = freemarkerConfig;
-        this.recipientsWhitelist = Arrays.stream(recipientsWhitelist.split(","))
-            .map(String::trim)
-            .filter(s -> !s.isBlank())
-            .toList();
-        this.titlePrefix = titlePrefix;
     }
 
     @Override
@@ -96,20 +84,28 @@ public class EmailService implements NotificationDispatcher {
     }
 
     public void sendNextEmail() {
+
         var maybeNext = queuedEmailRepository.next();
         if (maybeNext.isPresent()) {
+            var config = configurationService.getConfig().email();
             var message = maybeNext.get();
-            if (titlePrefix != null && !titlePrefix.isEmpty()) {
-                message = message.withSubject(titlePrefix + message.getSubject());
+            if (config.titlePrefix() != null && !config.titlePrefix().isEmpty()) {
+                message = message.withSubject(config.titlePrefix() + message.getSubject());
             }
+
+            if (!Boolean.TRUE.equals(config.enabled())) {
+                log.info(
+                    "Skipped sending {} notification email to user {}, because email notifications are disabled",
+                    message.getType(),
+                    message.getUserKey()
+                );
+                return;
+            }
+
             try {
-                if (recipientsWhitelist.isEmpty()) {
-                    log.info(
-                        "Sending {} notification email to user {}",
-                        message.getType(),
-                        message.getUserKey()
-                    );
-                } else if (recipientsWhitelist.contains(message.getTo())) {
+                if (config.recipientsWhitelist() == null || config.recipientsWhitelist().isEmpty()) {
+                    log.info("Sending {} notification email to user {}", message.getType(), message.getUserKey());
+                } else if (config.recipientsWhitelist().contains(message.getTo())) {
                     log.info(
                         "Sending {} notification email to whitelisted recipient {}",
                         message.getType(),
@@ -147,7 +143,7 @@ public class EmailService implements NotificationDispatcher {
     }
 
     private EmailSettings getEmailSettings() {
-        return settingsService.getSettings().emailSettings();
+        return configurationService.getConfig().email();
     }
 
     protected String renderEmailContent(@NonNull PersonalNotification notification)

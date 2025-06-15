@@ -29,7 +29,7 @@ public enum EventState {
     }
 
     public static Optional<EventState> fromString(@Nullable String value) {
-        return Arrays.stream(EventState.values())
+        return Arrays.stream(values())
             .filter(state -> state.value().equals(value))
             .findFirst();
     }

@@ -2,7 +2,7 @@ package org.eventplanner.events.rest.config.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.values.Settings.UiSettings;
+import org.eventplanner.events.domain.values.settings.FrontendSettings;
 import org.springframework.lang.Nullable;
 
 public record ConfigRepresentation(
@@ -11,7 +11,7 @@ public record ConfigRepresentation(
     @Nullable String technicalSupportEmail,
     @Nullable String supportEmail
 ) implements Serializable {
-    public static ConfigRepresentation fromDomain(UiSettings domain) {
+    public static ConfigRepresentation fromDomain(FrontendSettings domain) {
         return new ConfigRepresentation(
             domain.menuTitle(),
             domain.tabTitle(),

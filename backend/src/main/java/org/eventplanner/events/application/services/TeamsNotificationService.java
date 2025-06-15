@@ -20,17 +20,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TeamsNotificationService implements NotificationDispatcher {
 
-    private final SettingsService settingsService;
+    private final ConfigurationService configurationService;
 
     @Override
     public void dispatch(@NonNull final Notification notification) {
-        var teamsUrl = settingsService.getSettings().notificationSettings().getTeamsWebhookUrl();
-        if (teamsUrl == null) {
-            log.debug("Skipping teams notification, because no teams webhook url is configured");
-            return;
-        }
         // TODO maybe also specify channel by role?
         if (notification instanceof GlobalNotification) {
+            var teamsUrl = configurationService.getConfig().notifications().teamsWebhookUrl();
+            if (teamsUrl == null) {
+                log.debug(
+                    "Skipping teams notification for {}, because no teams webhook url is configured",
+                    notification.type()
+                );
+                return;
+            }
             try {
                 var uri = URI.create(teamsUrl);
                 switch (notification.type()) {

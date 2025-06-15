@@ -1,13 +1,13 @@
 package org.eventplanner.events.application.ports;
 
 import org.eventplanner.events.domain.entities.QueuedEmail;
-import org.eventplanner.events.domain.values.Settings;
+import org.eventplanner.events.domain.values.settings.EmailSettings;
 import org.springframework.lang.NonNull;
 
 public interface EmailSender {
-    void sendEmail(
+    public void sendEmail(
         @NonNull final QueuedEmail notification,
-        @NonNull final Settings.EmailSettings emailSettings
+        @NonNull final EmailSettings emailSettings
     )
     throws Exception;
 }

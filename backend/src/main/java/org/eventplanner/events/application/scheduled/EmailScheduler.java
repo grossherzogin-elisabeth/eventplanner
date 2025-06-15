@@ -6,11 +6,11 @@ import org.eventplanner.events.application.services.EmailService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Component
-@AllArgsConstructor
-public class EmailNotificationScheduler {
+@RequiredArgsConstructor
+public class EmailScheduler {
 
     private final EmailService emailService;
 

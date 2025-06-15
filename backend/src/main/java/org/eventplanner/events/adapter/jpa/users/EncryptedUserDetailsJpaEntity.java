@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.Arrays;
 
 import org.eventplanner.common.Encrypted;
+import org.eventplanner.config.ObjectMapperFactory;
 import org.eventplanner.events.domain.entities.EncryptedEmergencyContact;
 import org.eventplanner.events.domain.entities.EncryptedUserDetails;
 import org.eventplanner.events.domain.entities.EncryptedUserQualification;
@@ -34,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class EncryptedUserDetailsJpaEntity implements Serializable {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = ObjectMapperFactory.defaultObjectMapper();
 
     @Id
     @Column(name = "key", nullable = false, updatable = false)

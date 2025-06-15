@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SettingsJpaEntity {
+public class ConfigurationJpaEntity {
     @Id
     @Column(name = "key", nullable = false)
     private @NonNull String key;

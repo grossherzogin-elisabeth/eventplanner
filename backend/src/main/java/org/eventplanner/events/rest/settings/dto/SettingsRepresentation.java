@@ -2,8 +2,10 @@ package org.eventplanner.events.rest.settings.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.values.Settings;
-import org.eventplanner.events.domain.values.Settings.UiSettings;
+import org.eventplanner.events.domain.aggregates.ApplicationConfig;
+import org.eventplanner.events.domain.values.settings.EmailSettings;
+import org.eventplanner.events.domain.values.settings.FrontendSettings;
+import org.eventplanner.events.domain.values.settings.NotificationSettings;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -13,20 +15,20 @@ public record SettingsRepresentation(
     @NonNull Ui ui
 ) implements Serializable {
 
-    public static SettingsRepresentation fromDomain(Settings domain) {
+    public static SettingsRepresentation fromDomain(ApplicationConfig domain) {
         return new SettingsRepresentation(
-            Notifications.fromDomain(domain.notificationSettings()),
-            Email.fromDomain(domain.emailSettings()),
-            Ui.fromDomain(domain.uiSettings())
+            Notifications.fromDomain(domain.notifications()),
+            Email.fromDomain(domain.email()),
+            Ui.fromDomain(domain.frontend())
         );
     }
 
     public record Notifications(
         @Nullable String teamsWebhookUrl
     ) implements Serializable {
-        public static Notifications fromDomain(Settings.NotificationSettings domain) {
+        public static Notifications fromDomain(NotificationSettings domain) {
             return new Notifications(
-                domain.getTeamsWebhookUrl()
+                domain.teamsWebhookUrl()
             );
         }
     }
@@ -42,17 +44,17 @@ public record SettingsRepresentation(
         @Nullable Boolean enableStartTls,
         @Nullable String username
     ) implements Serializable {
-        public static Email fromDomain(Settings.EmailSettings domain) {
+        public static Email fromDomain(EmailSettings domain) {
             return new Email(
-                domain.getFrom(),
-                domain.getFromDisplayName(),
-                domain.getReplyTo(),
-                domain.getReplyToDisplayName(),
-                domain.getHost(),
-                domain.getPort(),
-                domain.getEnableSSL(),
-                domain.getEnableStartTls(),
-                domain.getUsername()
+                domain.from(),
+                domain.fromDisplayName(),
+                domain.replyTo(),
+                domain.replyToDisplayName(),
+                domain.host(),
+                domain.port(),
+                domain.enableSSL(),
+                domain.enableStartTls(),
+                domain.username()
             );
         }
     }
@@ -63,7 +65,7 @@ public record SettingsRepresentation(
         @Nullable String technicalSupportEmail,
         @Nullable String supportEmail
     ) implements Serializable {
-        public static Ui fromDomain(UiSettings domain) {
+        public static Ui fromDomain(FrontendSettings domain) {
             return new Ui(
                 domain.menuTitle(),
                 domain.tabTitle(),

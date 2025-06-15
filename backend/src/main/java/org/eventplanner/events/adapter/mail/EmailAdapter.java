@@ -5,7 +5,7 @@ import java.util.Properties;
 import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.application.ports.EmailSender;
 import org.eventplanner.events.domain.entities.QueuedEmail;
-import org.eventplanner.events.domain.values.Settings.EmailSettings;
+import org.eventplanner.events.domain.values.settings.EmailSettings;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -23,33 +23,33 @@ public class EmailAdapter implements EmailSender {
     @Override
     public void sendEmail(@NonNull final QueuedEmail notification, @NonNull final EmailSettings emailSettings)
     throws Exception {
-        if (Strings.isEmpty(emailSettings.getUsername())) {
+        if (Strings.isEmpty(emailSettings.username())) {
             throw new IllegalStateException("Email settings must contain all the required fields");
         }
 
         var mailSender = getMailSender(emailSettings);
         MimeMessage message = mailSender.createMimeMessage();
 
-        var from = emailSettings.getUsername();
-        var fromDisplayName = emailSettings.getUsername();
-        var replyTo = emailSettings.getUsername();
-        var replyToDisplayName = emailSettings.getUsername();
-        if (emailSettings.getFrom() != null) {
-            from = emailSettings.getFrom();
-            fromDisplayName = emailSettings.getFrom();
-            replyTo = emailSettings.getFrom();
-            replyToDisplayName = emailSettings.getFrom();
+        var from = emailSettings.username();
+        var fromDisplayName = emailSettings.username();
+        var replyTo = emailSettings.username();
+        var replyToDisplayName = emailSettings.username();
+        if (emailSettings.from() != null) {
+            from = emailSettings.from();
+            fromDisplayName = emailSettings.from();
+            replyTo = emailSettings.from();
+            replyToDisplayName = emailSettings.from();
         }
-        if (emailSettings.getFromDisplayName() != null) {
-            fromDisplayName = emailSettings.getFromDisplayName();
-            replyToDisplayName = emailSettings.getFromDisplayName();
+        if (emailSettings.fromDisplayName() != null) {
+            fromDisplayName = emailSettings.fromDisplayName();
+            replyToDisplayName = emailSettings.fromDisplayName();
         }
-        if (emailSettings.getReplyTo() != null) {
-            replyTo = emailSettings.getReplyTo();
-            replyToDisplayName = emailSettings.getReplyTo();
+        if (emailSettings.replyTo() != null) {
+            replyTo = emailSettings.replyTo();
+            replyToDisplayName = emailSettings.replyTo();
         }
-        if (emailSettings.getReplyToDisplayName() != null) {
-            replyToDisplayName = emailSettings.getReplyToDisplayName();
+        if (emailSettings.replyToDisplayName() != null) {
+            replyToDisplayName = emailSettings.replyToDisplayName();
         }
 
         message.setFrom(new InternetAddress(from, fromDisplayName));
@@ -62,10 +62,10 @@ public class EmailAdapter implements EmailSender {
     }
 
     private JavaMailSender getMailSender(@NonNull EmailSettings emailSettings) {
-        var host = emailSettings.getHost();
-        var port = emailSettings.getPort();
-        var username = emailSettings.getUsername();
-        var password = emailSettings.getPassword();
+        var host = emailSettings.host();
+        var port = emailSettings.port();
+        var username = emailSettings.username();
+        var password = emailSettings.password();
 
         if (username == null || username.isBlank()
             || password == null || password.isBlank()
@@ -84,8 +84,8 @@ public class EmailAdapter implements EmailSender {
 
         final Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.auth", true);
-        javaMailProperties.put("mail.smtp.starttls.enable", emailSettings.getEnableStartTls());
-        javaMailProperties.put("mail.smtp.ssl.enable", emailSettings.getEnableSSL());
+        javaMailProperties.put("mail.smtp.starttls.enable", emailSettings.enableStartTls());
+        javaMailProperties.put("mail.smtp.ssl.enable", emailSettings.enableSSL());
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
     }

@@ -2,7 +2,10 @@ package org.eventplanner.events.rest.settings.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.values.Settings;
+import org.eventplanner.events.domain.aggregates.ApplicationConfig;
+import org.eventplanner.events.domain.values.settings.EmailSettings;
+import org.eventplanner.events.domain.values.settings.FrontendSettings;
+import org.eventplanner.events.domain.values.settings.NotificationSettings;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -12,12 +15,12 @@ public record UpdateSettingsRequest(
     @NonNull Ui ui
 ) implements Serializable {
 
-    public Settings toDomain() {
-        return new Settings(
-            new Settings.NotificationSettings(
+    public ApplicationConfig.UpdateRequest toDomain() {
+        return new ApplicationConfig.UpdateRequest(
+            new NotificationSettings.UpdateRequest(
                 notifications.teamsWebhookUrl()
             ),
-            new Settings.EmailSettings(
+            new EmailSettings.UpdateRequest(
                 email.from(),
                 email.fromDisplayName(),
                 email.replyTo(),
@@ -27,10 +30,9 @@ public record UpdateSettingsRequest(
                 email.enableSSL(),
                 email.enableStartTls(),
                 email.username(),
-                email.password(),
-                email.footer()
+                email.password()
             ),
-            new Settings.UiSettings(
+            new FrontendSettings.UpdateRequest(
                 ui.menuTitle(),
                 ui.tabTitle(),
                 ui.technicalSupportEmail(),
@@ -54,8 +56,7 @@ public record UpdateSettingsRequest(
         @Nullable Boolean enableSSL,
         @Nullable Boolean enableStartTls,
         @Nullable String username,
-        @Nullable String password,
-        @Nullable String footer
+        @Nullable String password
     ) implements Serializable {
     }
 

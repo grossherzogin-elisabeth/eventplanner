@@ -39,6 +39,9 @@ class NotificationServiceTest {
     @Autowired
     private FreeMarkerConfig freeMarkerConfig;
 
+    @Autowired
+    private ConfigurationService configurationService;
+    
     private NotificationService testee;
     private NotificationDispatcher dispatcher;
 
@@ -51,9 +54,9 @@ class NotificationServiceTest {
     void setUp() {
         dispatcher = mock(NotificationDispatcher.class);
         testee = new NotificationService(
-            List.of(dispatcher),
-            freeMarkerConfig.getConfiguration(),
-            "https://localhost:8080"
+            freeMarkerConfig,
+            configurationService,
+            List.of(dispatcher)
         );
     }
 
