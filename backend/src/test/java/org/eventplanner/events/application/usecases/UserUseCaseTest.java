@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.PositionRepository;
@@ -68,6 +69,14 @@ class UserUseCaseTest {
             EXPIRING_NEW_QUALIFICATION
         );
         when(qualificationRepository.findAll()).thenReturn(qualifications);
+        when(qualificationRepository.findAllAsMap()).thenReturn(Map.of(
+            NON_EXPIRING_QUALIFICATION.getKey(), NON_EXPIRING_QUALIFICATION,
+            EXPIRING_QUALIFICATION.getKey(), EXPIRING_QUALIFICATION,
+            SOON_EXPIRING_QUALIFICATION.getKey(), SOON_EXPIRING_QUALIFICATION,
+            EXPIRED_QUALIFICATION.getKey(), EXPIRED_QUALIFICATION,
+            NON_EXPIRING_NEW_QUALIFICATION.getKey(), NON_EXPIRING_NEW_QUALIFICATION,
+            EXPIRING_NEW_QUALIFICATION.getKey(), EXPIRING_NEW_QUALIFICATION
+        ));
 
         user = UserFactory.createUser();
         user.addQualification(NON_EXPIRING_QUALIFICATION);
