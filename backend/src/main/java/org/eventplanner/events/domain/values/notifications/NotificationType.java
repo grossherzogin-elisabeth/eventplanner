@@ -51,7 +51,7 @@ public enum NotificationType {
     // As a user manager
     // I want to get a notification when a user changes their personal data
     // So that I can keep the user data up to date
-    USER_DATA_CHANGED("user_data_changed");
+    USER_DATA_CHANGED("user_data_changed"),
 
     // As a user manager
     // I want to get a notification when a new user registers
@@ -62,8 +62,29 @@ public enum NotificationType {
     // So that I have all information I need and can plan accordingly
 
     // As a team member
-    // I want to get notified when one of my qualifications expires or is close to expire
+    // I want to get notified when a qualifications gets assigned to my account
+    // So that I always know which qualifications I have
+    QUALIFICATION_ADDED("qualification_added"),
+
+    // As a team member
+    // I want to get notified when a qualifications gets updated on my account
+    // So that I always know which qualifications I have
+    QUALIFICATION_UPDATED("qualification_updated"),
+
+    // As a team member
+    // I want to get notified when a qualifications gets removed from my account
+    // So that I always know which qualifications I have
+    QUALIFICATION_REMOVED("qualification_removed"),
+
+    // As a team member
+    // I want to get notified when one of my qualifications is close to expire
     // So that I can renew it in time
+    QUALIFICATION_CLOSE_TO_EXPIRED("qualification_close_to_expired"),
+
+    // As a team member
+    // I want to get notified when one of my qualifications expires
+    // So that I can renew it in time
+    QUALIFICATION_EXPIRED("qualification_expired");
 
     private final String value;
 

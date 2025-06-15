@@ -2,6 +2,8 @@ package org.eventplanner.events.domain.entities.users;
 
 import static java.util.Objects.requireNonNull;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -27,10 +29,15 @@ import lombok.ToString;
 public class EncryptedUserQualification implements Serializable {
     private @NonNull Encrypted<QualificationKey> qualificationKey;
     private @Nullable Encrypted<Instant> expiresAt;
+    private @Nullable Encrypted<UserQualification.State> state;
 
     public @NonNull UserQualification decrypt(DecryptFunc decryptFunc) {
         var decryptedKey = requireNonNull(decryptFunc.apply(qualificationKey, QualificationKey.class));
         var decryptedExpiresAt = decryptFunc.apply(expiresAt, Instant.class);
-        return new UserQualification(decryptedKey, decryptedExpiresAt, decryptedExpiresAt != null);
+        var decryptedState = decryptFunc.apply(state, UserQualification.State.class);
+        if (decryptedState == null) {
+            decryptedState = UserQualification.State.VALID;
+        }
+        return new UserQualification(decryptedKey, decryptedExpiresAt, null, decryptedState);
     }
 }
