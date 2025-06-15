@@ -29,7 +29,7 @@ notifications:
   qualification-updated:
     enabled: true
   qualification-removed:
-    enabled: false
+    enabled: true
   qualification-close-to-expired:
     enabled: true
   qualification-expired:
