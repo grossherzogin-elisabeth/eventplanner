@@ -8,7 +8,7 @@ public record AuthKey(
     @NonNull String value
 ) implements Serializable {
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return value;
     }
 }
