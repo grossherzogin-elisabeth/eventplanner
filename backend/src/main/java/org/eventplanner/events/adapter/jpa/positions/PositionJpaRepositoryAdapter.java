@@ -1,6 +1,10 @@
 package org.eventplanner.events.adapter.jpa.positions;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.PositionRepository;
@@ -20,7 +24,7 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
     }
 
     @Override
-    public @NonNull Optional<Position> findByKey(@Nullable PositionKey key) {
+    public @NonNull Optional<Position> findByKey(@Nullable final PositionKey key) {
         if (key == null) {
             return Optional.empty();
         }
@@ -33,7 +37,14 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
     }
 
     @Override
-    public void create(@NonNull Position position) {
+    public @NonNull Map<PositionKey, Position> findAllAsMap() {
+        return positionJpaRepository.findAll().stream()
+            .map(PositionJpaEntity::toDomain)
+            .collect(toMap(Position::getKey, identity()));
+    }
+
+    @Override
+    public void create(@NonNull final Position position) {
         if (positionJpaRepository.existsById(position.getKey().value())) {
             throw new IllegalArgumentException("Position with key " + position.getKey().value() + " already exists");
         }
@@ -41,12 +52,12 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
     }
 
     @Override
-    public void update(@NonNull Position position) {
+    public void update(@NonNull final Position position) {
         positionJpaRepository.save(PositionJpaEntity.fromDomain(position));
     }
 
     @Override
-    public void deleteByKey(@NonNull PositionKey key) {
+    public void deleteByKey(@NonNull final PositionKey key) {
         positionJpaRepository.deleteById(key.value());
     }
 
