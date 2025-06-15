@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.Qualification;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.QualificationKey;
+import org.eventplanner.events.domain.entities.qualifications.Qualification;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

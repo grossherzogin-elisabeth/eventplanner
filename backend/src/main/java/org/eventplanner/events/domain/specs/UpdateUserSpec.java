@@ -4,12 +4,12 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.EmergencyContact;
-import org.eventplanner.events.domain.entities.UserQualification;
-import org.eventplanner.events.domain.values.Address;
-import org.eventplanner.events.domain.values.AuthKey;
-import org.eventplanner.events.domain.values.Diet;
-import org.eventplanner.events.domain.values.Role;
+import org.eventplanner.events.domain.entities.users.EmergencyContact;
+import org.eventplanner.events.domain.entities.users.UserQualification;
+import org.eventplanner.events.domain.values.users.Address;
+import org.eventplanner.events.domain.values.users.AuthKey;
+import org.eventplanner.events.domain.values.users.Diet;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.springframework.lang.Nullable;
 
 public record UpdateUserSpec(

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.eventplanner.events.domain.entities.Qualification;
-import org.eventplanner.events.domain.values.QualificationKey;
+import org.eventplanner.events.domain.entities.qualifications.Qualification;
+import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.springframework.lang.NonNull;
 
 public interface QualificationRepository {

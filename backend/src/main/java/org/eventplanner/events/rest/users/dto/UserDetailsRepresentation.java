@@ -1,20 +1,20 @@
 package org.eventplanner.events.rest.users.dto;
 
+import static java.util.Optional.ofNullable;
+import static org.eventplanner.common.StringUtils.trimToNull;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.UserDetails;
-import org.eventplanner.events.domain.values.AuthKey;
-import org.eventplanner.events.domain.values.Diet;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.Role;
+import org.eventplanner.events.domain.entities.users.UserDetails;
+import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.AuthKey;
+import org.eventplanner.events.domain.values.users.Diet;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.StringUtils.trimToNull;
 
 public record UserDetailsRepresentation(
     @NonNull String key,

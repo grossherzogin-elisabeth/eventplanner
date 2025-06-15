@@ -1,5 +1,9 @@
 package org.eventplanner.events.application.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
+import static org.eventplanner.testdata.UserFactory.createUser;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -10,17 +14,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eventplanner.events.domain.entities.Qualification;
-import org.eventplanner.events.domain.values.QualificationKey;
-import org.eventplanner.events.domain.values.Role;
+import org.eventplanner.events.domain.entities.qualifications.Qualification;
+import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
-import static org.eventplanner.testdata.UserFactory.createUser;
 
 public class EncryptionServiceTest {
 

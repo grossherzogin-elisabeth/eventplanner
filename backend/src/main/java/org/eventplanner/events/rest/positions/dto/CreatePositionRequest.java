@@ -2,8 +2,8 @@ package org.eventplanner.events.rest.positions.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.values.PositionKey;
+import org.eventplanner.events.domain.entities.positions.Position;
+import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.springframework.lang.NonNull;
 
 public record CreatePositionRequest(

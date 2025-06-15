@@ -4,8 +4,8 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.application.ports.EmailSender;
-import org.eventplanner.events.domain.entities.QueuedEmail;
-import org.eventplanner.events.domain.values.Settings.EmailSettings;
+import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
+import org.eventplanner.events.domain.values.config.EmailConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -21,35 +21,35 @@ import lombok.RequiredArgsConstructor;
 public class EmailAdapter implements EmailSender {
 
     @Override
-    public void sendEmail(@NonNull final QueuedEmail notification, @NonNull final EmailSettings emailSettings)
+    public void sendEmail(@NonNull final QueuedEmail notification, @NonNull final EmailConfig emailConfig)
     throws Exception {
-        if (Strings.isEmpty(emailSettings.getUsername())) {
+        if (Strings.isEmpty(emailConfig.username())) {
             throw new IllegalStateException("Email settings must contain all the required fields");
         }
 
-        var mailSender = getMailSender(emailSettings);
+        var mailSender = getMailSender(emailConfig);
         MimeMessage message = mailSender.createMimeMessage();
 
-        var from = emailSettings.getUsername();
-        var fromDisplayName = emailSettings.getUsername();
-        var replyTo = emailSettings.getUsername();
-        var replyToDisplayName = emailSettings.getUsername();
-        if (emailSettings.getFrom() != null) {
-            from = emailSettings.getFrom();
-            fromDisplayName = emailSettings.getFrom();
-            replyTo = emailSettings.getFrom();
-            replyToDisplayName = emailSettings.getFrom();
+        var from = emailConfig.username();
+        var fromDisplayName = emailConfig.username();
+        var replyTo = emailConfig.username();
+        var replyToDisplayName = emailConfig.username();
+        if (emailConfig.from() != null) {
+            from = emailConfig.from();
+            fromDisplayName = emailConfig.from();
+            replyTo = emailConfig.from();
+            replyToDisplayName = emailConfig.from();
         }
-        if (emailSettings.getFromDisplayName() != null) {
-            fromDisplayName = emailSettings.getFromDisplayName();
-            replyToDisplayName = emailSettings.getFromDisplayName();
+        if (emailConfig.fromDisplayName() != null) {
+            fromDisplayName = emailConfig.fromDisplayName();
+            replyToDisplayName = emailConfig.fromDisplayName();
         }
-        if (emailSettings.getReplyTo() != null) {
-            replyTo = emailSettings.getReplyTo();
-            replyToDisplayName = emailSettings.getReplyTo();
+        if (emailConfig.replyTo() != null) {
+            replyTo = emailConfig.replyTo();
+            replyToDisplayName = emailConfig.replyTo();
         }
-        if (emailSettings.getReplyToDisplayName() != null) {
-            replyToDisplayName = emailSettings.getReplyToDisplayName();
+        if (emailConfig.replyToDisplayName() != null) {
+            replyToDisplayName = emailConfig.replyToDisplayName();
         }
 
         message.setFrom(new InternetAddress(from, fromDisplayName));
@@ -61,11 +61,11 @@ public class EmailAdapter implements EmailSender {
         mailSender.send(message);
     }
 
-    private JavaMailSender getMailSender(@NonNull EmailSettings emailSettings) {
-        var host = emailSettings.getHost();
-        var port = emailSettings.getPort();
-        var username = emailSettings.getUsername();
-        var password = emailSettings.getPassword();
+    private JavaMailSender getMailSender(@NonNull EmailConfig emailConfig) {
+        var host = emailConfig.host();
+        var port = emailConfig.port();
+        var username = emailConfig.username();
+        var password = emailConfig.password();
 
         if (username == null || username.isBlank()
             || password == null || password.isBlank()
@@ -84,8 +84,8 @@ public class EmailAdapter implements EmailSender {
 
         final Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.auth", true);
-        javaMailProperties.put("mail.smtp.starttls.enable", emailSettings.getEnableStartTls());
-        javaMailProperties.put("mail.smtp.ssl.enable", emailSettings.getEnableSSL());
+        javaMailProperties.put("mail.smtp.starttls.enable", emailConfig.enableStartTls());
+        javaMailProperties.put("mail.smtp.ssl.enable", emailConfig.enableSSL());
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
     }

@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.PositionRepository;
-import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.values.PositionKey;
+import org.eventplanner.events.domain.entities.positions.Position;
+import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;

@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.ExportService;
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.SignedInUser;
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.specs.CreateEventSpec;
-import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.EventState;
-import org.eventplanner.events.domain.values.Permission;
+import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.EventState;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 

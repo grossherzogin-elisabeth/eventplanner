@@ -1,15 +1,15 @@
 package org.eventplanner.events.rest.users.dto;
 
+import static org.eventplanner.common.StringUtils.trimToNull;
+
 import java.io.Serializable;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.UserDetails;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.Role;
+import org.eventplanner.events.domain.entities.users.UserDetails;
+import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import static org.eventplanner.common.StringUtils.trimToNull;
 
 public record UserAdminListRepresentation(
     @NonNull String key,

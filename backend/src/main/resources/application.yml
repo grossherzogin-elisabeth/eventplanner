@@ -5,20 +5,29 @@ build:
   commit: ${BUILD_COMMIT:local}
   branch: ${BUILD_BRANCH:main}
 
+notifications:
+  added-to-waiting-list:
+    enabled: true
+  removed-from-waiting-list:
+    enabled: true
+  added-to-crew:
+    enabled: true
+  removed-from-crew:
+    enabled: true
+  confirm-participation-request:
+    enabled: true
+  confirm-participation-reminder:
+    enabled: true
+  crew-registration-canceled:
+    enabled: true
+  crew-registration-added:
+    enabled: true
+  user-data-changed:
+    enabled: true
+
 email:
-  from: ${EMAIL_FROM:}
-  from-display-name: ${EMAIL_FROM_DISPLAY_NAME:}
-  reply-to: ${EMAIL_REPLY_TO:}
-  reply-to-display-name: ${EMAIL_REPLY_TO_DISPLAY_NAME:}
-  host: ${EMAIL_HOST:}
-  port: ${EMAIL_PORT:587}
-  protocol: ${EMAIL_PROTOCOL:smtp}
-  username: ${EMAIL_USERNAME:}
-  password: ${EMAIL_PASSWORD:}
-  enable-starttls: ${EMAIL_ENABLE_START_TLS:true}
-  enable-ssl: ${EMAIL_ENABLE_SSL:false}
-  footer: ${EMAIL_FOOTER:}
-  # If not empty email notifications will only be sent to these email addresses
+  # If not empty, email notifications will only be sent to these email addresses
+  enabled: true
   recipients-whitelist: ${EMAIL_WHITELIST:}
   title-prefix: ''
 
