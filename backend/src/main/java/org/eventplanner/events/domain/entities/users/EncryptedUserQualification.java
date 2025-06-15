@@ -27,10 +27,15 @@ import lombok.ToString;
 public class EncryptedUserQualification implements Serializable {
     private @NonNull Encrypted<QualificationKey> qualificationKey;
     private @Nullable Encrypted<Instant> expiresAt;
+    private @Nullable Encrypted<UserQualification.State> state;
 
-    public @NonNull UserQualification decrypt(DecryptFunc decryptFunc) {
+    public @NonNull UserQualification decrypt(@NonNull final DecryptFunc decryptFunc) {
         var decryptedKey = requireNonNull(decryptFunc.apply(qualificationKey, QualificationKey.class));
         var decryptedExpiresAt = decryptFunc.apply(expiresAt, Instant.class);
-        return new UserQualification(decryptedKey, decryptedExpiresAt, decryptedExpiresAt != null);
+        var decryptedState = decryptFunc.apply(state, UserQualification.State.class);
+        if (decryptedState == null) {
+            decryptedState = UserQualification.State.VALID;
+        }
+        return new UserQualification(decryptedKey, decryptedExpiresAt, null, decryptedState);
     }
 }

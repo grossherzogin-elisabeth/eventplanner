@@ -16,9 +16,11 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.With;
 
 @Getter
 @Setter
+@With
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor

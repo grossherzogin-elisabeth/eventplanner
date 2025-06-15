@@ -24,6 +24,37 @@ ADMIN_EMAILS: >
 # Overwrites
 # -----------------
 
+
+notifications:
+  added-to-waiting-list:
+    enabled: true
+  removed-from-waiting-list:
+    enabled: true
+  added-to-crew:
+    enabled: true
+  removed-from-crew:
+    enabled: true
+  confirm-participation-request:
+    enabled: true
+  confirm-participation-reminder:
+    enabled: true
+  crew-registration-canceled:
+    enabled: true
+  crew-registration-added:
+    enabled: true
+  user-data-changed:
+    enabled: true
+  qualification-added:
+    enabled: true
+  qualification-updated:
+    enabled: true
+  qualification-removed:
+    enabled: true
+  qualification-close-to-expired:
+    enabled: true
+  qualification-expired:
+    enabled: true
+
 data:
   db-url: jdbc:sqlite:${data.directory}/eventplanner-test.db
 
