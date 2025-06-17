@@ -36,6 +36,11 @@ public class UserQualificationExpirationUseCase {
         var qualifications = qualificationRepository.findAllAsMap();
         var positions = positionRepository.findAllAsMap();
         for (var user : users) {
+            // only send these notifications to active users
+            if (user.getAuthKey() == null) {
+                log.debug("Skipping notifications for user {}, because user is not active", user);
+                continue;
+            }
             var updatedQualifications = new ArrayList<UserQualification>();
             // send notifications for already expired qualifications
             user.getQualifications().stream()

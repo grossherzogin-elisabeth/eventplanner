@@ -1,1 +1,1 @@
-${userName} hat seine persönlichen Daten geändert.
+${userName} hat seine/ihre persönlichen Daten geändert.

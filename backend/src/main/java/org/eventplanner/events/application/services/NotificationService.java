@@ -367,7 +367,11 @@ public class NotificationService {
             // add some default props
             props.put("title", title);
             props.put("user", to);
-            props.put("app_link", configurationService.getConfig().frontend().url());
+            if (link != null) {
+                props.put("app_link", link);
+            } else {
+                props.put("app_link", configurationService.getConfig().frontend().url());
+            }
 
             var content = renderContent(type, props);
             var summary = renderSummary(type, props);

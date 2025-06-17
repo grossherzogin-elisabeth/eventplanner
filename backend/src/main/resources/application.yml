@@ -31,9 +31,9 @@ notifications:
   qualification-removed:
     enabled: true
   qualification-close-to-expired:
-    enabled: true
+    enabled: false
   qualification-expired:
-    enabled: true
+    enabled: false
 
 email:
   # If not empty, email notifications will only be sent to these email addresses
