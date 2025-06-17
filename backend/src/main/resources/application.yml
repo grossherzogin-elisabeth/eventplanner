@@ -24,6 +24,16 @@ notifications:
     enabled: true
   user-data-changed:
     enabled: true
+  qualification-added:
+    enabled: true
+  qualification-updated:
+    enabled: true
+  qualification-removed:
+    enabled: true
+  qualification-close-to-expired:
+    enabled: false
+  qualification-expired:
+    enabled: false
 
 email:
   # If not empty, email notifications will only be sent to these email addresses

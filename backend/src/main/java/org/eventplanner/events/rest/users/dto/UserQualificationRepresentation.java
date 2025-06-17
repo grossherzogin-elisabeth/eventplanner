@@ -25,7 +25,7 @@ public record UserQualificationRepresentation(
             ofNullable(userQualification.getExpiresAt())
                 .map(Instant::toString)
                 .orElse(null),
-            userQualification.isExpires()
+            Boolean.TRUE.equals(userQualification.getExpires())
         );
     }
 
@@ -35,7 +35,8 @@ public record UserQualificationRepresentation(
             ofNullable(expiresAt)
                 .map(Instant::parse)
                 .orElse(null),
-            expires
+            null,
+            null
         );
     }
 }

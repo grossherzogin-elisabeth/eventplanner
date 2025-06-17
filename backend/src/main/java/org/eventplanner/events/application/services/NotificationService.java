@@ -11,15 +11,21 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
 import org.eventplanner.events.domain.entities.notifications.Notification;
 import org.eventplanner.events.domain.entities.notifications.PersonalNotification;
+import org.eventplanner.events.domain.entities.positions.Position;
+import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.entities.users.UserDetails;
+import org.eventplanner.events.domain.entities.users.UserQualification;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
+import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -175,6 +181,81 @@ public class NotificationService {
         createNotification(to, type, title, props, link);
     }
 
+    public void sendQualificationAddedNotification(
+        @Nullable final UserDetails to,
+        @NonNull final Qualification qualification,
+        @NonNull final Map<PositionKey, Position> positions
+    ) {
+        var title = "Dir wurde die Qualifikation " + qualification.getName() + " zugewiesen";
+        var type = NotificationType.QUALIFICATION_ADDED;
+        var props = new HashMap<String, Object>();
+        addRecipientDetails(props, to);
+        addQualificationDetails(props, qualification, to, positions);
+        var link = createQualificationsDeepLink();
+
+        createNotification(to, type, title, props, link);
+    }
+
+    public void sendQualificationUpdatedNotification(
+        @Nullable final UserDetails to,
+        @NonNull final Qualification qualification,
+        @NonNull final Map<PositionKey, Position> positions
+    ) {
+        var title = "Deine Qualifikation " + qualification.getName() + " wurde aktualisiert";
+        var type = NotificationType.QUALIFICATION_UPDATED;
+        var props = new HashMap<String, Object>();
+        addRecipientDetails(props, to);
+        addQualificationDetails(props, qualification, to, positions);
+        var link = createQualificationsDeepLink();
+
+        createNotification(to, type, title, props, link);
+    }
+
+    public void sendQualificationRemovedNotification(
+        @Nullable final UserDetails to,
+        @NonNull final Qualification qualification,
+        @NonNull final Map<PositionKey, Position> positions
+    ) {
+        var title = "Deine Qualifikation " + qualification.getName() + " wurde entfernt";
+        var type = NotificationType.QUALIFICATION_REMOVED;
+        var props = new HashMap<String, Object>();
+        addRecipientDetails(props, to);
+        addQualificationDetails(props, qualification, to, positions);
+        var link = createQualificationsDeepLink();
+
+        createNotification(to, type, title, props, link);
+    }
+
+    public void sendQualificationWillExpireSoonNotification(
+        @Nullable final UserDetails to,
+        @NonNull final Qualification qualification,
+        @NonNull final Map<PositionKey, Position> positions
+    ) {
+        var title = "Deine Qualifikation " + qualification.getName() + " läuft bald ab";
+        var type = NotificationType.QUALIFICATION_CLOSE_TO_EXPIRED;
+        var props = new HashMap<String, Object>();
+        addRecipientDetails(props, to);
+        addQualificationDetails(props, qualification, to, positions);
+        var link = createQualificationsDeepLink();
+
+        createNotification(to, type, title, props, link);
+    }
+
+    public void sendQualificationExpiredNotification(
+        @Nullable final UserDetails to,
+        @NonNull final Qualification qualification,
+        @NonNull final Map<PositionKey, Position> positions
+    ) {
+        var title = "Deine Qualifikation " + qualification.getName() + " ist abgelaufen";
+        var type = NotificationType.QUALIFICATION_EXPIRED;
+        var props = new HashMap<String, Object>();
+        addRecipientDetails(props, to);
+        addQualificationDetails(props, qualification, to, positions);
+        var link = createQualificationsDeepLink();
+
+        createNotification(to, type, title, props, link);
+    }
+
     private void addRecipientDetails(
         @NonNull HashMap<String, Object> props,
         @Nullable final UserDetails to
@@ -213,6 +294,36 @@ public class NotificationService {
         props.put("event_end_date", formatDate(event.getEnd().atZone(timezone)));
         props.put("event_end_datetime", formatDateTime(event.getStart().atZone(timezone)));
         props.put("event_crew_on_board_datetime", formatDateTime(event.getStart().atZone(timezone)));
+    }
+
+    private void addQualificationDetails(
+        @NonNull HashMap<String, Object> props,
+        @NonNull final Qualification qualification,
+        @Nullable final UserDetails user,
+        @NonNull final Map<PositionKey, Position> positions
+    ) {
+        props.put("qualification", qualification);
+
+        var positionNames = qualification.getGrantsPositions().stream()
+            .map(positions::get)
+            .filter(Objects::nonNull)
+            .map(Position::getName)
+            .toList();
+        var joinedPositionNames = new StringBuilder();
+        for (int i = 0; i < positionNames.size(); i++) {
+            joinedPositionNames.append(positionNames.get(i));
+            if (i < positionNames.size() - 2) {
+                joinedPositionNames.append(", ");
+            } else if (i < positionNames.size() - 1) {
+                joinedPositionNames.append(" und ");
+            }
+        }
+        props.put("granted_positions", joinedPositionNames.toString());
+
+        ofNullable(user)
+            .flatMap(u -> u.getQualification(qualification.getKey()))
+            .map(UserQualification::getExpiresAt)
+            .ifPresent(exp -> props.put("expiration_date", formatDate(exp.atZone(timezone))));
     }
 
     private void createNotification(
@@ -256,7 +367,11 @@ public class NotificationService {
             // add some default props
             props.put("title", title);
             props.put("user", to);
-            props.put("app_link", configurationService.getConfig().frontend().url());
+            if (link != null) {
+                props.put("app_link", link);
+            } else {
+                props.put("app_link", configurationService.getConfig().frontend().url());
+            }
 
             var content = renderContent(type, props);
             var summary = renderSummary(type, props);
@@ -298,6 +413,11 @@ public class NotificationService {
         return configurationService.getConfig().frontend().url()
             + "/events/" + event.getStart().atZone(timezone).getYear()
             + "/details/" + event.getKey();
+    }
+
+    private @NonNull String createQualificationsDeepLink() {
+        return configurationService.getConfig().frontend().url()
+            + "/account?tab=app.account.tab.qualifications";
     }
 
     private @NonNull String renderTemplate(@NonNull final String template, @NonNull final Object params)

@@ -1,13 +1,19 @@
 package org.eventplanner.events.application.usecases;
 
+import static java.util.Optional.ofNullable;
+
 import java.time.Instant;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.eventplanner.events.application.ports.PositionRepository;
+import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
+import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.User;
 import org.eventplanner.events.domain.entities.users.UserDetails;
@@ -28,7 +34,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.common.lang.Nullable;
-import static java.util.Optional.ofNullable;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,6 +43,8 @@ public class UserUseCase {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
     private final NotificationService notificationService;
+    private final QualificationRepository qualificationRepository;
+    private final PositionRepository positionRepository;
 
     public @NonNull SignedInUser getSignedInUser(@Nullable final Authentication authentication) {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
@@ -186,7 +193,7 @@ public class UserUseCase {
             ofNullable(spec.lastName()).map(String::trim).ifPresent(user::setLastName);
             ofNullable(spec.email()).map(String::trim).ifPresent(user::setEmail);
             ofNullable(spec.comment()).map(String::trim).ifPresent(user::setComment);
-            ofNullable(spec.qualifications()).ifPresent(user::setQualifications);
+            ofNullable(spec.qualifications()).ifPresent(specs -> updateUserQualifications(user, specs));
             ofNullable(spec.roles()).ifPresent(user::setRoles);
             ofNullable(spec.verifiedAt()).ifPresent(user::setVerifiedAt);
         }
@@ -200,7 +207,67 @@ public class UserUseCase {
 
         user.setUpdatedAt(Instant.now());
         return userService.updateUser(user);
+    }
 
+    /**
+     * Adds, updates and removes qualifications on the user and sends corresponding notifications
+     *
+     * @param user  the user to update
+     * @param specs updated qualifications
+     */
+    private void updateUserQualifications(
+        @NonNull final UserDetails user,
+        @NonNull final List<UpdateUserSpec.UpdateUserQualificationSpec> specs
+    ) {
+        var qualifications = qualificationRepository.findAllAsMap();
+        var positions = positionRepository.findAllAsMap();
+
+        var addedQualifications = new LinkedList<Qualification>();
+        var updatedQualifications = new LinkedList<Qualification>();
+        var removedQualifications = new LinkedList<Qualification>();
+
+        for (final var spec : specs) {
+            var qualification = qualifications.get(spec.qualificationKey());
+            if (qualification == null) {
+                log.error("Cannot assign unknown qualification {} to user {}", spec.qualificationKey(), user.getKey());
+                continue;
+            }
+            var existingUserQualification = user.getQualification(qualification.getKey());
+            if (existingUserQualification.isPresent()) {
+                var oldExpiration = existingUserQualification.get().getExpiresAt();
+                var newExpiration = spec.expiresAt();
+                if (!Objects.equals(oldExpiration, newExpiration)) {
+                    user.updateQualification(qualification, spec.expiresAt());
+                    updatedQualifications.add(qualification);
+                }
+            } else {
+                user.addQualification(qualification, spec.expiresAt());
+                addedQualifications.add(qualification);
+            }
+        }
+
+        var keys = specs.stream().map(UpdateUserSpec.UpdateUserQualificationSpec::qualificationKey).toList();
+        for (final var userQualification : user.getQualifications()) {
+            if (!keys.contains(userQualification.getQualificationKey())) {
+                user.removeQualification(userQualification.getQualificationKey());
+                var qualification = qualifications.get(userQualification.getQualificationKey());
+                if (qualification != null) {
+                    removedQualifications.add(qualification);
+                }
+            }
+        }
+
+        addedQualifications.forEach(q -> notificationService.sendQualificationAddedNotification(user, q, positions));
+        removedQualifications.forEach(q -> notificationService.sendQualificationRemovedNotification(
+            user,
+            q,
+            positions
+        ));
+        updatedQualifications.forEach(q -> notificationService.sendQualificationUpdatedNotification(
+            user,
+            q,
+            positions
+        ));
     }
 
     public void deleteUser(

@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class EmailAdapter implements EmailSender {
+public class JavaEmailAdapter implements EmailSender {
 
     @Override
     public void sendEmail(@NonNull final QueuedEmail notification, @NonNull final EmailConfig emailConfig)

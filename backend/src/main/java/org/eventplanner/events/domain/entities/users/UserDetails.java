@@ -7,7 +7,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
+import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.functions.EncryptFunc;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.positions.PositionKey;
@@ -93,29 +95,62 @@ public class UserDetails {
         }
     }
 
-    public void addQualification(QualificationKey qualificationKey, Instant expirationDate) {
-        var maybeExistingQualification =
-            qualifications.stream().filter(it -> it.getQualificationKey().equals(qualificationKey)).findFirst();
-        if (maybeExistingQualification.isPresent()) {
-            var existingQualification = maybeExistingQualification.get();
-            if (existingQualification.getExpiresAt() != null
-                && expirationDate != null
-                && expirationDate.isAfter(existingQualification.getExpiresAt())
-            ) {
-                qualifications.remove(existingQualification);
-                qualifications.add(new UserQualification(qualificationKey, expirationDate, true));
-            }
-            if (existingQualification.getExpiresAt() == null && expirationDate != null) {
-                qualifications.remove(existingQualification);
-                qualifications.add(new UserQualification(qualificationKey, expirationDate, true));
-            }
-        } else {
-            qualifications.add(new UserQualification(qualificationKey, expirationDate, expirationDate != null));
+    public void updateQualification(
+        @NonNull final Qualification qualification,
+        @Nullable final Instant expirationDate
+    ) {
+        var maybeExistingQualification = getQualification(qualification.getKey());
+        if (maybeExistingQualification.isEmpty()) {
+            throw new IllegalStateException("Qualification with key " + qualification.getKey() + " not found");
         }
+        var mutableList = new LinkedList<>(qualifications);
+        mutableList.remove(maybeExistingQualification.get());
+        var userQualification = new UserQualification(
+            qualification.getKey(),
+            expirationDate,
+            qualification.isExpires(),
+            UserQualification.State.VALID
+        );
+        if (userQualification.isExpired()) {
+            userQualification.setState(UserQualification.State.EXPIRED);
+        }
+        mutableList.add(userQualification);
+        qualifications = mutableList.stream().toList();
     }
 
-    public void addQualification(QualificationKey qualificationKey) {
-        addQualification(qualificationKey, null);
+    public void addQualification(@NonNull final Qualification qualification, @Nullable final Instant expirationDate) {
+        var maybeExistingQualification = getQualification(qualification.getKey());
+        if (maybeExistingQualification.isPresent()) {
+            throw new IllegalStateException("Qualification with key " + qualification.getKey() + " already assigned");
+        }
+        var userQualification = new UserQualification(
+            qualification.getKey(),
+            expirationDate,
+            qualification.isExpires(),
+            UserQualification.State.VALID
+        );
+        if (userQualification.isExpired()) {
+            userQualification.setState(UserQualification.State.EXPIRED);
+        }
+        var mutableList = new LinkedList<>(qualifications);
+        mutableList.add(userQualification);
+        qualifications = mutableList.stream().toList();
+    }
+
+    public void addQualification(@NonNull Qualification qualification) {
+        addQualification(qualification, null);
+    }
+
+    public void removeQualification(@NonNull final QualificationKey qualificationKey) {
+        var mutableList = new LinkedList<>(qualifications);
+        mutableList.removeIf(it -> it.getQualificationKey().equals(qualificationKey));
+        qualifications = mutableList.stream().toList();
+    }
+
+    public Optional<UserQualification> getQualification(@NonNull QualificationKey qualificationKey) {
+        return qualifications.stream()
+            .filter(it -> qualificationKey.equals(it.getQualificationKey()))
+            .findFirst();
     }
 
     public @NonNull EncryptedUserDetails encrypt(@NonNull final EncryptFunc encryptFunc) {
