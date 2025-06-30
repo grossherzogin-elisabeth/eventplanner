@@ -34,7 +34,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
 
     // sqlite
-    implementation "org.xerial:sqlite-jdbc:3.49.1.0"
+    implementation "org.xerial:sqlite-jdbc:3.50.2.0"
     implementation "org.hibernate.orm:hibernate-core:${hibernateVersion}"
     implementation "org.hibernate.orm:hibernate-community-dialects:${hibernateVersion}"
     implementation "org.flywaydb:flyway-core:11.8.2"
