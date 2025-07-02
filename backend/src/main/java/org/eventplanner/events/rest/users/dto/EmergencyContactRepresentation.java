@@ -2,7 +2,7 @@ package org.eventplanner.events.rest.users.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.entities.EmergencyContact;
+import org.eventplanner.events.domain.entities.users.EmergencyContact;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

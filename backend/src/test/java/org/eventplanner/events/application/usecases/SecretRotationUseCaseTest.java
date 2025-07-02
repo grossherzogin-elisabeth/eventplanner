@@ -8,10 +8,10 @@ import java.util.UUID;
 
 import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.application.services.EncryptionService;
-import org.eventplanner.events.domain.entities.EncryptedUserDetails;
-import org.eventplanner.events.domain.values.AuthKey;
-import org.eventplanner.events.domain.values.Diet;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
+import org.eventplanner.events.domain.values.users.AuthKey;
+import org.eventplanner.events.domain.values.users.Diet;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 

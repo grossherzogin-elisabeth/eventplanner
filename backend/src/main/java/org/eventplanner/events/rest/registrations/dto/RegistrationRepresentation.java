@@ -4,8 +4,8 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

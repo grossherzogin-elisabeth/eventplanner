@@ -5,8 +5,8 @@ import static java.util.Optional.ofNullable;
 import java.io.Serializable;
 import java.time.Instant;
 
-import org.eventplanner.events.domain.entities.UserQualification;
-import org.eventplanner.events.domain.values.QualificationKey;
+import org.eventplanner.events.domain.entities.users.UserQualification;
+import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -25,7 +25,7 @@ public record UserQualificationRepresentation(
             ofNullable(userQualification.getExpiresAt())
                 .map(Instant::toString)
                 .orElse(null),
-            userQualification.isExpires()
+            Boolean.TRUE.equals(userQualification.getExpires())
         );
     }
 
@@ -35,7 +35,8 @@ public record UserQualificationRepresentation(
             ofNullable(expiresAt)
                 .map(Instant::parse)
                 .orElse(null),
-            expires
+            null,
+            null
         );
     }
 }

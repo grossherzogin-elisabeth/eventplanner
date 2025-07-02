@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eventplanner.events.application.services.UserService;
-import org.eventplanner.events.domain.values.Role;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;

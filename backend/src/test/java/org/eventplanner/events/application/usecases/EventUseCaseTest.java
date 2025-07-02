@@ -13,11 +13,11 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.ExportService;
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.EventSlot;
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.EventState;
-import org.eventplanner.events.domain.values.Permission;
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.EventSlot;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.events.EventState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

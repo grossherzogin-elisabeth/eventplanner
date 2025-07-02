@@ -3,7 +3,7 @@ package org.eventplanner.events.rest.events.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.Event;
+import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.rest.registrations.dto.RegistrationRepresentation;
 import org.springframework.lang.NonNull;
 

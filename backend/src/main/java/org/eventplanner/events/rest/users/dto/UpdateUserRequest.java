@@ -1,19 +1,20 @@
 package org.eventplanner.events.rest.users.dto;
 
+import static java.util.Optional.ofNullable;
+import static org.eventplanner.common.ObjectUtils.mapNullable;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
-import org.eventplanner.events.domain.values.AuthKey;
-import org.eventplanner.events.domain.values.Diet;
-import org.eventplanner.events.domain.values.Role;
+import org.eventplanner.events.domain.values.users.AuthKey;
+import org.eventplanner.events.domain.values.users.Diet;
+import org.eventplanner.events.domain.values.qualifications.QualificationKey;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 public record UpdateUserRequest(
     @Nullable String authKey,
@@ -24,7 +25,7 @@ public record UpdateUserRequest(
     @Nullable String secondName,
     @Nullable String lastName,
     @Nullable List<String> roles,
-    @Nullable List<UserQualificationRepresentation> qualifications,
+    @Nullable List<UpdateUserQualificationRepresentation> qualifications,
     @Nullable AddressRepresentation address,
     @Nullable String email,
     @Nullable String phone,
@@ -53,7 +54,7 @@ public record UpdateUserRequest(
             secondName,
             lastName,
             mapNullable(roles, Role::parse),
-            mapNullable(qualifications, UserQualificationRepresentation::toDomain),
+            mapNullable(qualifications, UpdateUserQualificationRepresentation::toDomain),
             mapNullable(address, AddressRepresentation::toDomain),
             email,
             phone,
@@ -71,5 +72,20 @@ public record UpdateUserRequest(
             mapNullable(diet, (String s) -> Diet.fromString(s).orElse(Diet.OMNIVORE)),
             ofNullable(verifiedAt).map(Instant::parse).orElse(null)
         );
+    }
+
+    public record UpdateUserQualificationRepresentation(
+        @NonNull String qualificationKey,
+        @Nullable String expiresAt
+    ) implements Serializable {
+
+        public @NonNull UpdateUserSpec.UpdateUserQualificationSpec toDomain() {
+            return new UpdateUserSpec.UpdateUserQualificationSpec(
+                new QualificationKey(qualificationKey),
+                ofNullable(expiresAt)
+                    .map(Instant::parse)
+                    .orElse(null)
+            );
+        }
     }
 }

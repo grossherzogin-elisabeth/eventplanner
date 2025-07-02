@@ -5,10 +5,10 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 import java.io.Serializable;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.EventSlot;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.RegistrationKey;
-import org.eventplanner.events.domain.values.SlotKey;
+import org.eventplanner.events.domain.entities.events.EventSlot;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
+import org.eventplanner.events.domain.values.events.SlotKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

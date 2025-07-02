@@ -4,8 +4,8 @@ import java.net.URI;
 import java.util.List;
 
 import org.eventplanner.events.application.usecases.UserUseCase;
-import org.eventplanner.events.domain.values.Permission;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.eventplanner.events.rest.users.dto.CreateUserRequest;
 import org.eventplanner.events.rest.users.dto.UpdateUserRequest;
 import org.eventplanner.events.rest.users.dto.UserAdminListRepresentation;

@@ -6,9 +6,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import org.eventplanner.events.domain.values.GlobalNotification;
-import org.eventplanner.events.domain.values.Notification;
-import org.eventplanner.events.domain.values.NotificationType;
+import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
+import org.eventplanner.events.domain.entities.notifications.Notification;
+import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +20,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TeamsNotificationService implements NotificationDispatcher {
 
-    private final SettingsService settingsService;
+    private final ConfigurationService configurationService;
 
     @Override
     public void dispatch(@NonNull final Notification notification) {
-        var teamsUrl = settingsService.getSettings().notificationSettings().getTeamsWebhookUrl();
-        if (teamsUrl == null) {
-            log.debug("Skipping teams notification, because no teams webhook url is configured");
-            return;
-        }
         // TODO maybe also specify channel by role?
         if (notification instanceof GlobalNotification) {
+            var teamsUrl = configurationService.getConfig().notifications().teamsWebhookUrl();
+            if (teamsUrl == null) {
+                log.debug(
+                    "Skipping teams notification for {}, because no teams webhook url is configured",
+                    notification.type()
+                );
+                return;
+            }
             try {
                 var uri = URI.create(teamsUrl);
                 switch (notification.type()) {

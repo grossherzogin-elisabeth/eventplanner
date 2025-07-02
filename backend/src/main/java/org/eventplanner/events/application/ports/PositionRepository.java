@@ -1,25 +1,26 @@
 package org.eventplanner.events.application.ports;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import org.eventplanner.events.domain.entities.Position;
-import org.eventplanner.events.domain.values.PositionKey;
+import org.eventplanner.events.domain.entities.positions.Position;
+import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public interface PositionRepository {
-    @NonNull
-    Optional<Position> findByKey(@Nullable PositionKey key);
+    public @NonNull Optional<Position> findByKey(@Nullable final PositionKey key);
 
-    @NonNull
-    List<Position> findAll();
+    public @NonNull List<Position> findAll();
 
-    void create(@NonNull Position position);
+    public @NonNull Map<PositionKey, Position> findAllAsMap();
 
-    void update(@NonNull Position position);
+    public void create(@NonNull final Position position);
 
-    void deleteByKey(@NonNull PositionKey key);
+    public void update(@NonNull final Position position);
 
-    void deleteAll();
+    public void deleteByKey(@NonNull final PositionKey key);
+
+    public void deleteAll();
 }

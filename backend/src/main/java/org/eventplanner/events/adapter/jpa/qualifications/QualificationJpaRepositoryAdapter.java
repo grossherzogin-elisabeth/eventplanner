@@ -1,11 +1,16 @@
 package org.eventplanner.events.adapter.jpa.qualifications;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.QualificationRepository;
-import org.eventplanner.events.domain.entities.Qualification;
-import org.eventplanner.events.domain.values.QualificationKey;
+import org.eventplanner.events.domain.entities.qualifications.Qualification;
+import org.eventplanner.events.domain.values.qualifications.QualificationKey;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,17 +23,24 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
     }
 
     @Override
-    public Optional<Qualification> findByKey(QualificationKey qualificationKey) {
+    public @NonNull Optional<Qualification> findByKey(@NonNull final QualificationKey qualificationKey) {
         return qualificationJpaRepository.findById(qualificationKey.value()).map(QualificationJpaEntity::toDomain);
     }
 
     @Override
-    public List<Qualification> findAll() {
+    public @NonNull List<Qualification> findAll() {
         return qualificationJpaRepository.findAll().stream().map(QualificationJpaEntity::toDomain).toList();
     }
 
     @Override
-    public void create(Qualification qualification) {
+    public @NonNull Map<QualificationKey, Qualification> findAllAsMap() {
+        return qualificationJpaRepository.findAll().stream()
+            .map(QualificationJpaEntity::toDomain)
+            .collect(toMap(Qualification::getKey, identity()));
+    }
+
+    @Override
+    public void create(@NonNull final Qualification qualification) {
         if (qualificationJpaRepository.existsById(qualification.getKey().value())) {
             throw new IllegalArgumentException("Qualification with key " + qualification.getKey()
                 .value() + " already exists");
@@ -37,12 +49,12 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
     }
 
     @Override
-    public void update(Qualification qualification) {
+    public void update(@NonNull final Qualification qualification) {
         qualificationJpaRepository.save(QualificationJpaEntity.fromDomain(qualification));
     }
 
     @Override
-    public void deleteByKey(QualificationKey key) {
+    public void deleteByKey(@NonNull final QualificationKey key) {
         qualificationJpaRepository.deleteById(key.value());
     }
 

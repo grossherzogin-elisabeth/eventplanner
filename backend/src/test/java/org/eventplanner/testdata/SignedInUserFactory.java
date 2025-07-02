@@ -2,9 +2,9 @@ package org.eventplanner.testdata;
 
 import java.util.Collections;
 
-import org.eventplanner.events.domain.entities.SignedInUser;
-import org.eventplanner.events.domain.values.AuthKey;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
+import org.eventplanner.events.domain.values.users.AuthKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 
 public class SignedInUserFactory {
     public static SignedInUser createSignedInUser() {
