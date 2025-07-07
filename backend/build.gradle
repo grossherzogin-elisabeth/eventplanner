@@ -15,7 +15,7 @@ java {
 
 ext {
     springBootVersion = "3.5.0"
-    hibernateVersion = "6.6.13.Final"
+    hibernateVersion = "7.0.5.Final"
     apachePoiVersion = "5.4.1"
 }
 
