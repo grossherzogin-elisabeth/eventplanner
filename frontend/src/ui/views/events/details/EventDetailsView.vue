@@ -267,12 +267,10 @@
                 <template #label> Warteliste verlassen </template>
             </AsyncButton>
             <div v-else-if="signedInUser.positions.length > 1" class="btn-split">
-                <AsyncButton class="btn-primary max-w-64 sm:max-w-80" :disabled="!event.canSignedInUserJoin" :action="() => joinEvent()">
-                    <template #icon>
-                        <i class="fa-solid fa-user-plus" />
-                    </template>
-                    <template #label> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </template>
-                </AsyncButton>
+                <button class="btn-primary max-w-64 sm:max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
+                    <i class="fa-solid fa-user-plus" />
+                    <span>Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
+                </button>
                 <button
                     v-if="signedInUser.positions.length > 1"
                     class="btn-primary"
@@ -282,14 +280,10 @@
                     <i class="fa-solid fa-chevron-down" />
                 </button>
             </div>
-            <AsyncButton v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" :action="() => joinEvent()">
-                <template #icon>
-                    <i class="fa-solid fa-user-plus" />
-                </template>
-                <template #label>
-                    <span class="truncate text-left"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
-                </template>
-            </AsyncButton>
+            <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
+                <i class="fa-solid fa-user-plus" />
+                <span class="truncate text-left"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
+            </button>
         </template>
         <template v-if="event" #secondary-buttons>
             <RouterLink
@@ -342,7 +336,7 @@
     </DetailsPage>
     <VConfirmationDialog ref="confirmationDialog" />
     <PositionSelectDlg ref="positionSelectDialog" />
-    <RegistrationEditDlg v-if="event" ref="editRegistrationDialog" :event="event" />
+    <RegistrationDetailsSheet v-if="event" ref="editRegistrationDialog" :event="event" />
 </template>
 
 <script lang="ts" setup>
@@ -364,7 +358,7 @@ import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
-import RegistrationEditDlg from '@/ui/views/events/details/RegistrationEditDlg.vue';
+import RegistrationDetailsSheet from '@/ui/views/events/details/RegistrationDetailsSheet.vue';
 
 enum Tab {
     Team = 'team',
@@ -442,9 +436,16 @@ async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
 }
 
 async function joinEvent(): Promise<void> {
-    if (event.value) {
-        event.value = await eventUseCase.joinEvent(event.value, signedInUser.value.positions[0]);
-    }
+    const registration = await editRegistrationDialog.value?.open({
+        key: '',
+        positionKey: signedInUser.value.positions[0],
+        userKey: signedInUser.value.key,
+        arrival: event.value?.start,
+    } as Registration);
+    alert(JSON.stringify(registration));
+    // if (event.value) {
+    //     event.value = await eventUseCase.joinEvent(event.value, signedInUser.value.positions[0]);
+    // }
 }
 
 async function leaveEvent(): Promise<void> {

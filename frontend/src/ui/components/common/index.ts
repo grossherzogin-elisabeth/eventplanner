@@ -2,6 +2,7 @@ export { default as AsyncButton } from './buttons/AsyncButton.vue';
 export { default as ContextMenuButton } from './buttons/ContextMenuButton.vue';
 export { default as VCollapsiblePane } from './collapsible/VCollapsiblePane.vue';
 export { default as VDialog } from './dialog/VDialog.vue';
+export { default as VSheet } from './dialog/VSheet.vue';
 export { default as VErrorDialog } from './dialog/VErrorDialog.vue';
 export { default as VConfirmationDialog } from './dialog/VConfirmationDialog.vue';
 export * from './dialog/ConfirmationDialog.ts';

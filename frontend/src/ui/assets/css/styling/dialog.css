@@ -4,11 +4,6 @@
     @apply bg-surface;
 }
 
-.dialog.modal {
-    @apply rounded-3xl shadow-lg;
-    max-width: min(calc(100vw - 2rem), 35rem);
-}
-
 .dialog-back-button-wrapper {
     @apply hidden;
 }
@@ -107,35 +102,42 @@
 }
 
 @media (max-width: 639px) {
-    .dialog-wrapper:not(:has(.modal)) {
-        @apply w-full overflow-hidden;
-        height: var(--viewport-height);
+    .modal .dialog {
+        @apply rounded-3xl shadow-lg;
+        max-width: min(calc(100vw - 2rem), 35rem);
     }
+}
 
-    .dialog-background:not(:has(.modal)) {
+@media (max-width: 639px) {
+    .fullscreen.dialog-background {
         --open-close-animation-diff-x: 100vw;
         --open-close-animation-diff-y: 0;
     }
 
-    .dialog:not(.modal) {
+    .fullscreen .dialog-wrapper {
+        @apply w-full overflow-hidden;
+        height: var(--viewport-height);
+    }
+
+    .fullscreen .dialog {
         @apply h-full max-h-full w-full max-w-full !important;
         /*background: none;*/
     }
 
-    .dialog:not(.modal) .dialog-header {
+    .fullscreen .dialog .dialog-header {
         height: var(--nav-height);
         @apply truncate bg-primary text-onprimary;
     }
 
-    .dialog:not(.modal) .dialog-close-button {
+    .fullscreen .dialog .dialog-close-button {
         @apply text-white;
     }
 
-    .dialog:not(.modal) .dialog-back-button-wrapper {
+    .fullscreen .dialog .dialog-back-button-wrapper {
         @apply block;
     }
 
-    .dialog:not(.modal) .dialog-close-button-wrapper {
+    .fullscreen .dialog .dialog-close-button-wrapper {
         @apply hidden;
     }
 }

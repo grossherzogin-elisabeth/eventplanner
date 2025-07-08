@@ -9,4 +9,5 @@ export interface Registration {
     name?: string;
     note?: string;
     confirmed?: boolean;
+    arrival?: Date;
 }
