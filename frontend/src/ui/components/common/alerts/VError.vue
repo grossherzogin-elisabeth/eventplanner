@@ -4,7 +4,7 @@
         :class="{ hidden: dismissed }"
         @click="clampActive = !clampActive"
     >
-        <i class="fa-solid fa-exclamation-circle my-5 ml-4 self-start text-xl"></i>
+        <i class="fa-solid fa-exclamation-circle my-5 ml-4 w-4 self-start text-xl"></i>
         <span
             class="mx-4 my-4 mr-1 w-0 flex-grow text-sm"
             :class="{

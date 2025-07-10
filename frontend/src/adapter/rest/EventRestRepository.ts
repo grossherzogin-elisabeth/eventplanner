@@ -21,6 +21,8 @@ interface RegistrationRepresentation {
     userKey?: string | null;
     note?: string | null;
     confirmed?: boolean | null;
+    overnightStay?: boolean | null;
+    arrival?: Date | null;
 }
 
 interface LocationRepresentation {
@@ -94,6 +96,8 @@ export class EventRestRepository implements EventRepository {
                 name: it.name ?? undefined,
                 note: it.note ?? undefined,
                 confirmed: it.confirmed ?? undefined,
+                overnightStay: it.overnightStay ?? undefined,
+                arrival: it.arrival ?? undefined,
             })),
             locations: eventRepresentation.locations.map((locationRepresentation, index) => ({
                 name: locationRepresentation.name,

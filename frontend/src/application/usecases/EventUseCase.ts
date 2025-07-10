@@ -148,9 +148,9 @@ export class EventUseCase {
         }
     }
 
-    public async joinEvent(event: Event, positionKey: PositionKey): Promise<Event> {
+    public async joinEvent(event: Event, registration: Registration): Promise<Event> {
         try {
-            const savedEvent = await this.joinEventInternal(event, positionKey);
+            const savedEvent = await this.joinEventInternal(event, registration);
             if (savedEvent.type === EventType.WorkEvent) {
                 this.notificationService.success('Deine Anmeldung wurde gespeichert');
             } else {
@@ -165,7 +165,16 @@ export class EventUseCase {
 
     public async joinEvents(events: Event[], positionKey: PositionKey): Promise<void> {
         try {
-            await Promise.all(events.map((event) => this.joinEventInternal(event, positionKey)));
+            const signedInUser = this.authService.getSignedInUser();
+            await Promise.all(
+                events.map((event) =>
+                    this.joinEventInternal(event, {
+                        key: '',
+                        userKey: signedInUser?.key,
+                        positionKey: positionKey,
+                    })
+                )
+            );
             this.notificationService.success('Deine Anmeldungen wurde gespeichert');
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
@@ -173,17 +182,13 @@ export class EventUseCase {
         }
     }
 
-    private async joinEventInternal(event: Event, positionKey: PositionKey): Promise<Event> {
+    private async joinEventInternal(event: Event, registration: Registration): Promise<Event> {
         const signedInUser = this.authService.getSignedInUser();
         if (event.registrations.find((it) => it.userKey === signedInUser?.key)) {
             // There already is a registration for this user. Nothing to do here to get required state.
             return this.eventService.updateComputedValues(event, signedInUser);
         }
-        let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
-            key: '',
-            positionKey: positionKey,
-            userKey: signedInUser?.key,
-        });
+        let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, registration);
         savedEvent = this.eventService.updateComputedValues(savedEvent, signedInUser);
         savedEvent = await this.eventCachingService.updateCache(savedEvent);
         return savedEvent;

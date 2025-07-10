@@ -1,6 +1,7 @@
 package org.eventplanner.events.domain.specs;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
@@ -16,6 +17,8 @@ public record UpdateRegistrationSpec(
     @Nullable UserKey userKey,
     @Nullable String name,
     @Nullable String note,
-    @Nullable Instant confirmedAt
+    @Nullable Instant confirmedAt,
+    @Nullable Boolean overnightStay,
+    @Nullable LocalDate arrival
 ) {
 }

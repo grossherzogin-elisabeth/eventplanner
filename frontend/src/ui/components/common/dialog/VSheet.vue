@@ -1,14 +1,15 @@
 <template>
-    <div>
-        <teleport v-if="renderContent" to="#app">
+    <div v-if="renderContent">
+        <teleport to="body">
             <div
                 ref="background"
                 :class="`${sheetOpen ? 'open' : 'closed'}`"
-                class="sheet-background scrollbar-invisible fixed bottom-0 left-0 right-0 top-0 z-40 overflow-y-auto sm:flex"
+                class="sheet-background scrollbar-invisible fixed bottom-0 left-0 right-0 top-0 z-40 overflow-y-auto overscroll-contain sm:flex"
                 :style="{
                     '--open-close-animation-duration': `${animationDuration}ms`,
                 }"
                 @scroll.passive="detectScrollClose($event)"
+                @click="reject()"
             >
                 <div
                     ref="wrapper"
@@ -16,34 +17,38 @@
                     @click.stop=""
                     @mousedown.stop=""
                 >
-                    <slot name="sheet">
-                        <div class="h-screen sm:hidden" @mousedown="reject()"></div>
-                        <!--                        <div :style="{ height: `calc(100vh - ${sheetMinHeight})` }" class="h-screen sm:hidden" @mousedown="reject()"></div>-->
-                        <div
-                            :class="$attrs.class"
-                            class="flex max-h-screen flex-col overflow-clip rounded-t-3xl bg-surface pt-8 shadow-lg sm:h-full sm:max-h-full sm:rounded-3xl sm:pb-0 sm:pt-4"
-                            :style="{ minHeight: `${sheetMinHeight}` }"
-                        >
-                            <div class="mx-auto mb-4 h-1 w-8 rounded-full bg-onsurface-variant sm:hidden"></div>
-                            <div class="hidden h-16 w-full items-center justify-between pl-8 sm:flex lg:pl-10 lg:pr-2">
+                    <div class="h-screen w-screen sm:hidden" @click="reject()" @pointerdown="reject()"></div>
+                    <div
+                        :class="$attrs.class"
+                        class="flex max-h-screen flex-col overflow-clip rounded-t-3xl bg-surface-container-lowest pt-8 shadow-lg sm:h-full sm:max-h-full sm:rounded-3xl sm:pb-0 sm:pt-4"
+                        :style="{ minHeight: `${sheetMinHeight}` }"
+                    >
+                        <div class="handle mx-auto mb-4 h-1 min-h-1 w-8 rounded-full bg-onsurface-variant sm:hidden"></div>
+                        <div class="flex flex-1 flex-col overflow-clip" style="max-height: calc(100vh - 3.25rem)">
+                            <div class="flex h-16 w-full items-center justify-between pl-8 lg:pl-10 lg:pr-2">
+                                <div v-if="props.showBackButton" class="-ml-4 mr-4">
+                                    <button class="icon-button" @click="back()">
+                                        <i class="fa-solid fa-arrow-left"></i>
+                                    </button>
+                                </div>
                                 <div class="flex w-0 flex-grow items-center overflow-hidden">
                                     <slot name="title"></slot>
                                 </div>
-                                <div class="sheet-close-button-wrapper flex w-20 items-center justify-center lg:w-16">
+                                <div class="sheet-close-button-wrapper hidden w-20 items-center justify-center sm:flex lg:w-16">
                                     <button class="sheet-close-button icon-button" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="flex flex-1 flex-col overflow-y-auto">
+                            <div class="flex flex-1 flex-col" :class="{ 'overflow-y-auto': isFullScreen }">
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>
-                            <div class="sticky bottom-0 z-50 bg-surface">
+                            <div class="sticky bottom-0 z-50 bg-surface-container-lowest">
                                 <slot name="bottom"></slot>
                             </div>
                         </div>
-                    </slot>
+                    </div>
                 </div>
             </div>
         </teleport>
@@ -54,7 +59,7 @@
 import type { Ref } from 'vue';
 import { computed } from 'vue';
 import { nextTick, ref } from 'vue';
-import { disableScrolling, enableScrolling, wait } from '@/common';
+import { wait } from '@/common';
 import type { Dialog } from './Dialog';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,20 +69,24 @@ type E = any; // Error type
 
 interface Props {
     minHeight?: string;
+    showBackButton?: boolean;
 }
 
 interface Emits {
-    // Dialog is opening with animation
+    // The sheet starts the opening animation
     (e: 'opening'): void;
 
-    // Dialogs open animation finished
+    // The sheets open animation finished
     (e: 'opened'): void;
 
-    // Dialog is closing with animation
+    // The sheet starts the closing animation
     (e: 'closing'): void;
 
-    // Dialogs close animation finished
+    // The sheets close animation finished
     (e: 'closed'): void;
+
+    // The back button of the sheet has been clicked
+    (e: 'back'): void;
 }
 
 /**
@@ -101,6 +110,7 @@ const sheetOpening: Ref<boolean> = ref(false);
 const background: Ref<HTMLElement | null> = ref(null);
 const wrapper: Ref<HTMLElement | null> = ref(null);
 const renderContent: Ref<boolean> = ref(false);
+const isFullScreen: Ref<boolean> = ref(false);
 let promiseResolve: ((result: T) => void) | null = null;
 let promiseReject: ((reason: T) => void) | null = null;
 let closeTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
@@ -108,7 +118,6 @@ const sheetMinHeight = computed<string>(() => props.minHeight || '10rem');
 
 async function open(): Promise<T> {
     sheetOpening.value = true;
-    disableScrolling();
     clearTimeout(closeTimeout);
     emit('opening');
     renderContent.value = true;
@@ -117,7 +126,6 @@ async function open(): Promise<T> {
     await wait(animationDuration);
     sheetOpening.value = false;
     emit('opened');
-    wrapper.value?.querySelector('input')?.focus();
     window.addEventListener('cancel', close, { once: true });
 
     // this promise is resolved, when the dialog is closed
@@ -141,6 +149,10 @@ async function reject(reason?: E): Promise<void> {
     await close();
 }
 
+function back(): void {
+    emit('back');
+}
+
 async function close(): Promise<void> {
     if (sheetOpening.value || !sheetOpen.value) {
         return;
@@ -152,14 +164,20 @@ async function close(): Promise<void> {
     closeTimeout = setTimeout(() => {
         renderContent.value = false;
         emit('closed');
-        enableScrolling();
     }, animationDuration + 100);
 }
 
 function detectScrollClose(event: Event): void {
     const element = event.target as HTMLElement;
-    if (element.scrollTop < 200 && !element.contains(document.activeElement)) {
-        close();
+    if (element.scrollTop > window.innerHeight) {
+        isFullScreen.value = true;
+    } else {
+        isFullScreen.value = false;
+    }
+    if (element.scrollTop < 25) {
+        reject();
+    } else if (element.scrollTop < 100 && !element.contains(document.activeElement)) {
+        reject();
     }
 }
 </script>

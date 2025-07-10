@@ -73,3 +73,7 @@ export function deserializeDate(date: string): Date {
     }
     return new Date(date);
 }
+
+export function isSameDate(a: Date, b: Date): boolean {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
