@@ -4,24 +4,24 @@
             <template v-if="props.event.locations.length === 1">Ort</template>
             <template v-else>Route</template>
         </h2>
-        <div class="space-y-1 rounded-2xl bg-surface-container-low p-4">
+        <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow">
             <p v-if="props.event.locations.length === 0" class="text-sm">
                 Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar sind, kannst du sie hier
                 sehen.
             </p>
 
             <div v-else class="relative -ml-4">
-                <div class="absolute bottom-4 left-0 top-4 flex w-12 justify-center">
-                    <div class="border-r-2 border-dashed border-current"></div>
-                </div>
-                <div v-for="(location, index) in props.event.locations" :key="index" class="relative mb-4 flex items-center last:mb-0">
+                <div v-for="(location, index) in props.event.locations" :key="index" class="relative flex items-center">
                     <div class="flex w-12 flex-col items-center self-stretch">
-                        <div class="-mt-1 flex h-7 w-7 items-center justify-center rounded-full border-current bg-surface-container-low">
+                        <div class="my-1 flex h-7 w-7 items-center justify-center border-current">
                             <i class="fa-solid text-sm" :class="location.icon"></i>
                         </div>
-                        <div v-if="index === props.event.locations.length - 1" class="w-full flex-1 bg-surface-container-low"></div>
+                        <div
+                            class="my-1 h-full"
+                            :class="{ 'border-r-2 border-dashed border-current': index < props.event.locations.length - 1 }"
+                        ></div>
                     </div>
-                    <div class="w-0 flex-grow">
+                    <div class="mb-4 w-0 flex-grow">
                         <h3 class="mb-1 flex items-center justify-between space-x-2">
                             <span>{{ location.name }}</span>
                             <ContextMenuButton v-if="location.information">

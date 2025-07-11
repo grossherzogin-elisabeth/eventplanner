@@ -26,8 +26,8 @@
                     auf der Warteliste
                 </VInfo>
 
-                <EventDetails :event="event" class="-mx-4" />
-                <EventRoute :event="event" class="-mx-4" />
+                <EventDetailsCard :event="event" class="-mx-4" />
+                <EventRouteCard :event="event" class="-mx-4" />
             </div>
         </template>
         <template #bottom>
@@ -46,8 +46,8 @@ import type { Event, Position } from '@/domain';
 import type { Sheet } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VInfo, VSheet, VSuccess } from '@/ui/components/common';
-import EventDetails from '@/ui/components/events/EventDetails.vue';
-import EventRoute from '@/ui/components/events/EventRoute.vue';
+import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
+import EventRouteCard from '@/ui/components/events/EventRouteCard.vue';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';

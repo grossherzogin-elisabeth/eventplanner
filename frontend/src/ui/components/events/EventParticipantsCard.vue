@@ -41,7 +41,10 @@
                 </li>
             </ul>
         </div>
-        <div v-else class="rounded-2xl bg-surface-container-low p-4 md:rounded-none md:bg-transparent md:p-0">
+        <div
+            v-else
+            class="rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow md:rounded-none md:bg-transparent md:p-0 md:shadow-none"
+        >
             <template v-if="tab === Tab.Team">
                 <ul class="space-y-2">
                     <template v-for="it in team" :key="it.slot?.key || ''">

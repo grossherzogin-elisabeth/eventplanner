@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex items-center overflow-hidden rounded-2xl bg-error-container bg-opacity-75 text-onerror-container backdrop-blur"
+        class="flex items-center overflow-hidden rounded-2xl bg-error-container bg-opacity-75 text-onerror-container shadow backdrop-blur"
         :class="{ hidden: dismissed }"
         @click="clampActive = !clampActive"
     >

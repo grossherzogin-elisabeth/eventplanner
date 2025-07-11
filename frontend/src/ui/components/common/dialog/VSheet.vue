@@ -20,7 +20,7 @@
                     <div class="h-screen w-screen sm:hidden" @click="reject()" @pointerdown="reject()"></div>
                     <div
                         :class="$attrs.class"
-                        class="flex max-h-screen flex-col overflow-clip rounded-t-3xl bg-surface-container-lowest pt-8 shadow-lg sm:h-full sm:max-h-full sm:rounded-3xl sm:pb-0 sm:pt-4"
+                        class="flex max-h-screen flex-col overflow-clip rounded-t-3xl bg-surface-container-low pt-8 shadow-lg sm:h-full sm:max-h-full sm:rounded-3xl sm:pb-0 sm:pt-4"
                         :style="{ minHeight: `${sheetMinHeight}` }"
                     >
                         <div class="handle mx-auto mb-4 h-1 min-h-1 w-8 rounded-full bg-onsurface-variant sm:hidden"></div>
@@ -44,7 +44,7 @@
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>
-                            <div class="sticky bottom-0 z-50 bg-surface-container-lowest">
+                            <div class="sticky bottom-0 z-50 bg-surface-container-low sm:bottom-4">
                                 <slot name="bottom"></slot>
                             </div>
                         </div>

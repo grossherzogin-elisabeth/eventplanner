@@ -71,7 +71,7 @@ init();
 <style scoped>
 .calendar-event-wrapper {
     @apply absolute left-0 right-0 top-px z-10;
-    @apply rounded-md bg-surface-container-lowest hover:shadow;
+    @apply rounded-md bg-surface-container shadow;
     @apply overflow-hidden;
 }
 
@@ -113,7 +113,7 @@ init();
 .calendar-event-entry {
     @apply flex h-full w-full items-stretch;
     @apply cursor-pointer;
-    @apply bg-surface-container-high;
+    @apply bg-surface-container;
     @apply font-bold text-onsurface;
 }
 

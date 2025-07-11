@@ -42,9 +42,9 @@
                     </VWarning>
                 </section>
 
-                <EventDetails :event="event" class="pt-4 md:col-start-2" />
-                <EventRoute :event="event" class="pt-4 md:col-start-2" />
-                <EventParticipants :event="event" class="col-start-1 row-span-6 pt-4 md:row-start-1 md:pt-0" />
+                <EventDetailsCard :event="event" class="pt-4 md:col-start-2" />
+                <EventRouteCard :event="event" class="pt-4 md:col-start-2" />
+                <EventParticipantsCard :event="event" class="col-start-1 row-span-6 pt-4 md:row-start-1 md:pt-0" />
             </div>
         </template>
         <template v-if="event && signedInUser.permissions.includes(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
@@ -136,9 +136,9 @@ import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VSuccess } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
-import EventDetails from '@/ui/components/events/EventDetails.vue';
-import EventParticipants from '@/ui/components/events/EventParticipants.vue';
-import EventRoute from '@/ui/components/events/EventRoute.vue';
+import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
+import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.vue';
+import EventRouteCard from '@/ui/components/events/EventRouteCard.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';

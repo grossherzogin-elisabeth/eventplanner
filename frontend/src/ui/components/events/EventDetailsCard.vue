@@ -3,7 +3,7 @@
         <h2 class="mb-2 font-bold text-secondary">
             {{ $t('app.event-details.title') }}
         </h2>
-        <div class="space-y-1 rounded-2xl bg-surface-container-low p-4">
+        <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow">
             <p class="flex items-center space-x-4">
                 <i class="fa-solid fa-calendar-day w-4" />
                 <span>{{ $d(props.event.start, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
