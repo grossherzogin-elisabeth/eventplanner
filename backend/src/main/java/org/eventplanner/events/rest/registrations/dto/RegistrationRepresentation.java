@@ -15,7 +15,9 @@ public record RegistrationRepresentation(
     @Nullable String userKey,
     @Nullable String name,
     @Nullable String note,
-    @Nullable Boolean confirmed
+    @Nullable Boolean confirmed,
+    @Nullable Boolean overnightStay,
+    @Nullable String arrival
 ) implements Serializable {
 
     public static @NonNull RegistrationRepresentation fromDomain(@NonNull Registration domain) {
@@ -25,7 +27,9 @@ public record RegistrationRepresentation(
             mapNullable(domain.getUserKey(), UserKey::value),
             domain.getName(),
             domain.getNote(),
-            domain.getConfirmedAt() != null
+            domain.getConfirmedAt() != null,
+            domain.getOvernightStay(),
+            domain.getArrival() != null ? domain.getArrival().toString() : null
         );
     }
 }

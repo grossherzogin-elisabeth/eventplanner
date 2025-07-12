@@ -3,6 +3,7 @@
 @import 'lib/dropdown.css';
 @import 'lib/collapsible-pane.css';
 
+@import 'styling/animations.css';
 @import 'styling/inputs.css';
 @import 'styling/typography.css';
 @import 'styling/buttons.css';
@@ -13,7 +14,6 @@
 @import 'styling/status-panels.css';
 
 @import 'domain/role.css';
-@import 'domain/event.css';
 @import 'domain/permission.css';
 
 html {

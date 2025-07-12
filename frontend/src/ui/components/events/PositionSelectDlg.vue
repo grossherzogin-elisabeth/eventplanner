@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg" height="h-auto max-h-screen" class="modal" :class="$attrs.class">
+    <VDialog ref="dlg" height="h-auto max-h-screen" type="modal" :class="$attrs.class">
         <template #title>
             <h1>Position auswählen</h1>
         </template>

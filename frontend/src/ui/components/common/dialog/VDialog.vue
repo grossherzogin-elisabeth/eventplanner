@@ -3,11 +3,11 @@
         <teleport to="#app">
             <div
                 v-if="renderContent"
-                :class="dialogOpen ? 'open' : 'closed'"
+                :class="`${dialogOpen ? 'open' : 'closed'} ${props.type || 'fullscreen'}`"
                 :style="{
                     '--open-close-animation-duration': `${animationDuration}ms`,
                 }"
-                class="dialog-background"
+                class="dialog-background scrollbar-invisible"
                 @mousedown="reject()"
             >
                 <div ref="wrapper" class="dialog-wrapper" @click.stop="" @mousedown.stop="">
@@ -62,6 +62,8 @@ interface Props {
     width?: string;
     // dialog height css class
     height?: string;
+    // how should this dialog behave on mobile screens
+    type?: 'fullscreen' | 'modal';
 }
 
 interface Emits {

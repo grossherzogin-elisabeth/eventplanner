@@ -31,7 +31,9 @@ public record OptimizeEventSlotsRequest(
                     it.name(),
                     it.note(),
                     originalRegistration.map(Registration::getAccessKey).orElse(null),
-                    originalRegistration.map(Registration::getConfirmedAt).orElse(null)
+                    originalRegistration.map(Registration::getConfirmedAt).orElse(null),
+                    originalRegistration.map(Registration::getOvernightStay).orElse(null),
+                    originalRegistration.map(Registration::getArrival).orElse(null)
                 );
             })
             .toList());

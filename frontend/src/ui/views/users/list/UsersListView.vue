@@ -244,50 +244,35 @@
 
         <div class="flex-1"></div>
 
-        <div v-if="selectedUsers && selectedUsers.length > 0" class="sticky bottom-0 z-20">
-            <div class="h-full border-t border-outline-variant bg-surface px-4 py-2 md:px-12 xl:rounded-bl-3xl xl:py-4 xl:pl-16 xl:pr-20">
-                <div class="flex h-full items-stretch gap-2 whitespace-nowrap">
-                    <button class="btn-ghost" @click="selectNone()">
-                        <i class="fa-solid fa-xmark w-6" />
+        <VMultiSelectActions
+            v-if="selectedUsers && selectedUsers.length > 0"
+            :count="selectedUsers.length"
+            @select-all="selectAll()"
+            @select-none="selectNone()"
+        >
+            <template #action>
+                <div class="permission-read-user-details hidden sm:block">
+                    <button class="btn-ghost" @click="contactUsers(selectedUsers)">
+                        <i class="fa-solid fa-envelope" />
+                        <span>Email schreiben</span>
                     </button>
-                    <span class="self-center font-bold">{{ selectedUsers.length }} ausgewählt</span>
-                    <div class="flex-grow"></div>
-
-                    <div class="permission-read-user-details hidden sm:block">
-                        <button class="btn-ghost" @click="contactUsers(selectedUsers)">
-                            <i class="fa-solid fa-envelope" />
-                            <span>Email schreiben</span>
-                        </button>
-                    </div>
-                    <div class="permission-write-users hidden lg:block xl:hidden 2xl:block">
-                        <button class="btn-ghost" disabled>
-                            <i class="fa-solid fa-screwdriver-wrench"></i>
-                            <span>Arbeitsdienst eintragen*</span>
-                        </button>
-                    </div>
-                    <ContextMenuButton class="btn-ghost">
-                        <template #default>
-                            <li class="context-menu-item" @click="selectAll">
-                                <i class="fa-solid fa-list-check" />
-                                <span>Alle auswählen</span>
-                            </li>
-                            <li class="permission-read-user-details context-menu-item" @click="contactUsers(selectedUsers)">
-                                <i class="fa-solid fa-envelope" />
-                                <span>Email schreiben</span>
-                            </li>
-                            <li class="permission-write-users context-menu-item disabled">
-                                <i class="fa-solid fa-screwdriver-wrench" />
-                                <span>Arbeitsdienst eintragen*</span>
-                            </li>
-                            <li class="permission-delete-users context-menu-item disabled text-error">
-                                <i class="fa-solid fa-trash-alt" />
-                                <span>Nutzer löschen*</span>
-                            </li>
-                        </template>
-                    </ContextMenuButton>
                 </div>
-            </div>
-        </div>
+            </template>
+            <template #menu>
+                <li class="permission-read-user-details context-menu-item" @click="contactUsers(selectedUsers)">
+                    <i class="fa-solid fa-envelope" />
+                    <span>Email schreiben</span>
+                </li>
+                <li class="permission-write-users context-menu-item disabled">
+                    <i class="fa-solid fa-screwdriver-wrench" />
+                    <span>Arbeitsdienst eintragen*</span>
+                </li>
+                <li class="permission-delete-users context-menu-item disabled text-error">
+                    <i class="fa-solid fa-trash-alt" />
+                    <span>Nutzer löschen*</span>
+                </li>
+            </template>
+        </VMultiSelectActions>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
@@ -310,6 +295,7 @@ import type { Event, EventKey, Position, PositionKey, QualificationKey, User } f
 import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { VMultiSelectActions } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';

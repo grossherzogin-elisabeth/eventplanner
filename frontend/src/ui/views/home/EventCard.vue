@@ -85,3 +85,37 @@ interface Props {
 
 const props = defineProps<Props>();
 </script>
+<style>
+.event-card {
+    @apply overflow-hidden rounded-xl shadow;
+    @apply cursor-pointer;
+    @apply text-sm font-semibold;
+    @apply bg-surface-container bg-opacity-50 hover:bg-opacity-75;
+}
+
+.event-card .border-event-card {
+    @apply border-surface-container;
+}
+
+.event-card > * {
+    @apply h-full w-full py-1 pl-2 pr-4 sm:px-2;
+    @apply border-l-[0.5rem] border-surface-container;
+}
+
+.event-card.loading {
+    @apply hover:shadow-none;
+    @apply cursor-default;
+}
+
+.event-card.assigned {
+    @apply bg-primary-container bg-opacity-50 text-onprimary-container hover:bg-opacity-75;
+}
+
+.event-card.assigned .border-event-card {
+    @apply border-onprimary-container border-opacity-20;
+}
+
+.event-card.assigned > * {
+    @apply border-l-[0.5rem] border-onprimary-container border-opacity-20;
+}
+</style>

@@ -7,17 +7,21 @@ import type { Event, EventKey, Registration, RegistrationKey } from '@/domain';
 export interface RegistrationCreateRequest {
     registrationKey: string;
     positionKey: string;
-    name?: string;
-    userKey?: string;
-    note?: string;
+    name?: string | null;
+    userKey?: string | null;
+    note?: string | null;
+    overnightStay?: boolean | null;
+    arrival?: string | null;
 }
 
 export interface RegistrationUpdateRequest {
     registrationKey: string;
     positionKey: string;
-    name?: string;
-    userKey?: string;
-    note?: string;
+    name?: string | null;
+    userKey?: string | null;
+    note?: string | null;
+    overnightStay?: boolean | null;
+    arrival?: string | null;
 }
 
 export class EventRegistrationRestRepository implements EventRegistrationsRepository {
@@ -28,6 +32,8 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             userKey: registration.userKey,
             name: registration.name,
             note: registration.note,
+            overnightStay: registration.overnightStay,
+            arrival: registration.arrival?.toISOString().substring(0, 10),
         };
         const response = await fetch(`/api/v1/events/${eventKey}/registrations`, {
             method: 'POST',
@@ -52,6 +58,8 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             userKey: registration.userKey,
             name: registration.name,
             note: registration.note,
+            overnightStay: registration.overnightStay,
+            arrival: registration.arrival?.toISOString().substring(0, 10),
         };
         const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
             method: 'PUT',

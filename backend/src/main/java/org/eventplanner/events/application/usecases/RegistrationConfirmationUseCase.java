@@ -202,7 +202,9 @@ public class RegistrationConfirmationUseCase {
                 registration.getUserKey(),
                 registration.getName(),
                 registration.getNote(),
-                Instant.now()
+                Instant.now(),
+                registration.getOvernightStay(),
+                registration.getArrival()
             ),
             event
         );

@@ -1,10 +1,10 @@
 <template>
-    <div :class="$attrs.class" class="flex items-start">
+    <div :class="$attrs.class" class="">
         <label v-if="props.label" class="input-label">
             {{ props.label }}
         </label>
-        <div class="input-radio">
-            <label v-for="(option, index) in props.options" :key="index" :for="`${id}-${index}`" class="my-4 flex items-center">
+        <div class="flex flex-wrap items-start gap-4" :class="props.orientation === 'vertical' ? 'flex-col' : 'flex-row'">
+            <label v-for="(option, index) in props.options" :key="index" :for="`${id}-${index}`" class="flex items-center">
                 <input
                     :id="`${id}-${index}`"
                     :aria-checked="props.modelValue === option.value"
@@ -14,14 +14,18 @@
                     :checked="props.modelValue === option.value"
                     :disabled="props.disabled"
                     :required="props.required"
-                    class="check-box-input hidden"
+                    class="hidden"
                     type="radio"
+                    :name="id"
                     @input="onInput(option.value)"
                 />
-                <span :class="{ invalid: showErrors && hasErrors }" class="check-box-container select-box-container" tabindex="0">
-                    <icon-check class="check-box-icon" />
+                <span v-if="props.modelValue === option.value">
+                    <i class="fa-solid fa-check-circle w-5 text-xl text-primary sm:text-2xl"></i>
                 </span>
-                <span :class="{ invalid: showErrors && hasErrors }" class="check-box-label">
+                <span v-else>
+                    <i class="fa-solid fa-circle w-5 text-xl text-surface-container-high sm:text-2xl"></i>
+                </span>
+                <span :class="{ invalid: showErrors && hasErrors }" class="ml-4 cursor-pointer">
                     {{ $t(option.label) }}
                 </span>
             </label>
@@ -34,10 +38,9 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script generic="T extends any = string" lang="ts" setup>
 import { computed, ref } from 'vue';
 import type { ValidationHint } from '@/domain';
-import { IconCheck } from '@/ui/icons/bold';
 import { v4 as uuid4 } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,7 +50,7 @@ interface Props {
     // an optional label to render before the input field
     label?: string;
     // the value we edit, bind with v-model
-    modelValue?: string;
+    modelValue?: T;
     // disables this input
     disabled?: boolean;
     // marks this input as required
@@ -58,6 +61,8 @@ interface Props {
     errorsVisible?: boolean;
     // the options to display
     options: InputRadioOption<T>[];
+    // should the radio items be oriented in a vertical or horizontal way
+    orientation?: 'vertical' | 'horizontal';
 }
 
 type Emits = (e: 'update:modelValue', value: T) => void;
