@@ -134,6 +134,7 @@ async function fetchTeam(event: Event): Promise<void> {
     const registrations = await eventUseCase.resolveRegistrations(event);
     team.value = eventUseCase.filterForCrew(event, registrations);
     waitingList.value = eventUseCase.filterForWaitingList(event, registrations);
+    tab.value = team.value.length > 0 ? Tab.Team : Tab.WaitingList;
 }
 
 init();

@@ -4,7 +4,7 @@
             <template v-if="props.event.locations.length === 1">Ort</template>
             <template v-else>Route</template>
         </h2>
-        <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow">
+        <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 pb-0 shadow">
             <p v-if="props.event.locations.length === 0" class="text-sm">
                 Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar sind, kannst du sie hier
                 sehen.

@@ -40,7 +40,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="flex flex-1 flex-col" :class="{ 'overflow-y-auto': isFullScreen }">
+                            <div class="flex flex-1 flex-col overflow-y-auto">
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>

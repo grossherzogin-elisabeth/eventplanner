@@ -1,53 +1,67 @@
 <template>
     <!-- overview -->
     <div v-if="view === View.OVERVIEW">
-        <p class="mb-8 text-sm">
-            Bitte überprüfe die Angaben zu deiner Anmeldung zu
-            <i>{{ props.event.name }}.</i>
+        <p v-if="events.length === 1" class="mb-8 text-sm">
+            Bitte überprüfe die Angaben zu deiner Anmeldung für
+            <i>{{ events[0].name }}.</i>
         </p>
+        <div v-else class="mb-8 text-sm">
+            <p class="mb-2">Bitte prüfe deine Angaben. Du meldest dich hiermit für die folgenden Veranstaltungen an:</p>
+            <ul class="list-inside list-disc pl-2">
+                <li v-for="evt in events" :key="evt.key" class="truncate">
+                    {{ evt.name }}
+                </li>
+            </ul>
+        </div>
         <ul class="border-t border-onsurface-variant border-opacity-20 md:mx-0">
             <li
-                v-if="availablePositionsForSignedInUser.length > 1"
-                class="flex cursor-pointer items-center space-x-4 border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                class="flex items-center border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                :class="availablePositionsForSignedInUser.length > 1 ? 'cursor-pointer' : 'pointer-events-none'"
                 @click="emit('update:view', View.POSITION)"
             >
-                <div class="w-0 flex-grow">
+                <div class="mr-4 w-0 flex-grow">
                     <p class="mb-1 text-sm font-bold">Deine Position</p>
                     <p>{{ positions.get(props.registration.positionKey).name }}</p>
                 </div>
-                <i class="fa-solid fa-chevron-right" />
-            </li>
-            <li v-else class="flex items-center space-x-4 border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0">
-                <div class="w-0 flex-grow">
-                    <p class="mb-1 text-sm font-bold">Deine Position</p>
-                    <p class="">{{ positions.get(props.registration.positionKey).name }}</p>
-                </div>
+                <button v-if="availablePositionsForSignedInUser.length > 1" class="icon-button -mr-4">
+                    <i class="fa-solid fa-chevron-right" />
+                </button>
             </li>
             <li
-                v-if="isSingleDayEvent"
-                class="flex cursor-pointer items-center space-x-4 border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                v-if="hasSingleDayEvent"
+                class="flex cursor-pointer items-center border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
                 @click="emit('update:view', View.OVERNIGHT)"
             >
-                <div class="w-0 flex-grow">
+                <div class="mr-4 w-0 flex-grow">
                     <p class="mb-1 text-sm font-bold">Übernachtung an Bord</p>
                     <p v-if="!props.registration.overnightStay">Nein</p>
                     <p v-else-if="props.registration.arrival">Ja, Anreise am Vortag</p>
                     <p v-else>Ja</p>
                 </div>
-                <i class="fa-solid fa-chevron-right" />
+                <button class="icon-button -mr-2">
+                    <i class="fa-solid fa-chevron-right" />
+                </button>
             </li>
             <li
-                class="flex cursor-pointer items-center space-x-4 border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                class="flex cursor-pointer items-center border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
                 @click="emit('update:view', View.NOTE)"
             >
-                <div class="w-0 flex-grow">
+                <div class="mr-4 w-0 flex-grow">
                     <p class="mb-1 text-sm font-bold">Notiz fürs Büro</p>
                     <p v-if="props.registration.note" class="truncate italic">{{ props.registration.note }}</p>
                     <p v-else>-</p>
                 </div>
-                <i class="fa-solid fa-chevron-right" />
+                <button class="icon-button -mr-2">
+                    <i class="fa-solid fa-chevron-right" />
+                </button>
             </li>
         </ul>
+
+        <p v-if="events.length > 1" class="mt-8 text-sm">
+            Du meldest dich bei mehreren Veranstaltungen auf einmal an. Diese Angaben werden für alle Anmeldungen übernommen. Wenn du bei
+            einzelnen Veranstaltungen z.B. eine andere Position auswählen, oder eine separate Notiz hinterlegen möchtest, kannst du diese
+            später einzeln bearbeiten.
+        </p>
     </div>
     <!-- position -->
     <div v-else-if="view === View.POSITION">
@@ -61,12 +75,6 @@
             orientation="vertical"
             @update:model-value="updateRegistration({ positionKey: $event })"
         />
-        <p class="mb-4 text-sm">
-            Du kannst die ausgewählte Position als Standard festlegen, um dich für weitere Reisen noch einfacher anmelden zu können.
-        </p>
-        <div class="mb-4">
-            <VInputCheckBox v-model="saveAsDefaultPosition" label="Als Standardposition festlegen" />
-        </div>
     </div>
     <!-- note -->
     <div v-else-if="view === View.NOTE">
@@ -82,7 +90,8 @@
     <!-- overnight -->
     <div v-else-if="view === View.OVERNIGHT">
         <p class="mb-4 text-sm">
-            Bitte teile uns mit, ob du an Bord übernachten möchtest. Falls ja, gib bitte außerdem an, ob du bereits am Vortag anreist.
+            Bitte teile uns mit, ob du an Bord übernachten möchtest. Falls ja, gib bitte außerdem an, ob du bereits am Vortag anreist. Bei
+            mehrtägigen Veranstaltungen wird standardmäßig von einer Übernachtung an Bord ausgegangen.
         </p>
         <div class="mb-4">
             <VInputCheckBox
@@ -98,7 +107,9 @@
                 @update:model-value="
                     (value) =>
                         updateRegistration({
-                            arrival: value ? cropToPrecision(subtractFromDate(props.event.start, { days: 1 }), 'days') : undefined,
+                            arrival: value
+                                ? cropToPrecision(subtractFromDate(events[0]?.start ?? new Date(), { days: 1 }), 'days')
+                                : undefined,
                         })
                 "
             />
@@ -117,7 +128,7 @@ import { useUsersUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions';
 
 interface Props {
-    event: Event;
+    event: Event | Event[];
     registration: Registration;
     view: View;
 }
@@ -133,8 +144,8 @@ const usersUseCase = useUsersUseCase();
 const positions = usePositions();
 
 const signedInUserDetails = ref<UserDetails | null>(null);
-const saveAsDefaultPosition = ref<boolean>(false);
-const isSingleDayEvent = computed<boolean>(() => isSameDate(props.event.start, props.event.end));
+const events = computed<Event[]>(() => (Array.isArray(props.event) ? props.event : [props.event]));
+const hasSingleDayEvent = computed<boolean>(() => events.value.find((it) => isSameDate(it.start, it.end)) !== undefined);
 const availablePositionsForSignedInUser = computed<InputSelectOption<string | undefined>[]>(() => {
     const validPositionKeys: (PositionKey | undefined)[] = signedInUserDetails.value?.positionKeys || [];
     if (!validPositionKeys.includes(props.registration.positionKey)) {
@@ -150,7 +161,6 @@ function updateRegistration(update: Partial<Registration>): void {
 
 async function init(): Promise<void> {
     await fetchSignedInUserDetails();
-    watch(saveAsDefaultPosition, () => savePreferredPosition());
     watch(
         () => props.registration.positionKey,
         () => savePreferredPosition()
@@ -162,9 +172,7 @@ async function fetchSignedInUserDetails(): Promise<void> {
 }
 
 async function savePreferredPosition(): Promise<void> {
-    if (saveAsDefaultPosition.value) {
-        await usersUseCase.saveUserSettings({ preferredPosition: props.registration.positionKey });
-    }
+    await usersUseCase.saveUserSettings({ preferredPosition: props.registration.positionKey });
 }
 
 init();

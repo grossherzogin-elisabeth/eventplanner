@@ -38,7 +38,7 @@ import { useUsersUseCase } from '@/ui/composables/Application.ts';
 import { v4 as uuid } from 'uuid';
 
 interface Props {
-    event: Event;
+    event: Event | Event[];
 }
 const props = defineProps<Props>();
 

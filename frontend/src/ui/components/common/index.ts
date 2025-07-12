@@ -27,6 +27,7 @@ export { default as VInputTime } from './input/VInputTime.vue';
 export { default as VLoadingSpinner } from './loading/VLoadingSpinner.vue';
 export { default as VTable } from './table/VTable.vue';
 export { default as VPagination } from './table/VPagination.vue';
+export { default as VMultiSelectActions } from './table/VMultiSelectActions.vue';
 export { default as VTabs } from './tabs/VTabs.vue';
 export { default as VDraggable } from './drag-n-drop/VDraggable.vue';
 export { default as VDropzone } from './drag-n-drop/VDropzone.vue';
