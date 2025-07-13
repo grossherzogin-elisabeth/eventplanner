@@ -131,7 +131,6 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { Event, Position, Registration, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
-import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VSuccess } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
@@ -146,11 +145,6 @@ import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
-enum Tab {
-    Team = 'team',
-    WaitingList = 'waitinglist',
-}
-
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
@@ -163,12 +157,7 @@ const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
-const statesWithHiddenCrew = [EventState.OpenForSignup, EventState.Draft];
 const event = ref<Event | null>(null);
-const tab = ref<Tab>(Tab.Team);
-
-const waitingList = ref<ResolvedRegistrationSlot[]>([]);
-const team = ref<ResolvedRegistrationSlot[]>([]);
 
 const editRegistrationSheet = ref<Dialog<Registration, Registration | undefined> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
@@ -208,17 +197,6 @@ async function onEventChanged(): Promise<void> {
     if (!event.value) {
         return;
     }
-
-    if (statesWithHiddenCrew.includes(event.value.state)) {
-        tab.value = Tab.WaitingList;
-    }
-    await fetchTeam(event.value);
-}
-
-async function fetchTeam(event: Event): Promise<void> {
-    const registrations = await eventUseCase.resolveRegistrations(event);
-    team.value = eventUseCase.filterForCrew(event, registrations);
-    waitingList.value = eventUseCase.filterForWaitingList(event, registrations);
 }
 
 async function joinEvent(): Promise<void> {
@@ -256,7 +234,7 @@ async function editUserRegistration(): Promise<void> {
         const updatedRegistration = await editRegistrationSheet.value?.open(event.value.signedInUserRegistration);
         if (updatedRegistration) {
             await eventUseCase.updateRegistration(event.value, updatedRegistration);
-            await fetchTeam(event.value);
+            await fetchEvent();
         }
     }
 }

@@ -518,15 +518,15 @@ async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
 }
 
 async function joinEvents(events: EventTableViewItem[]): Promise<void> {
-    await createRegistrationSheet.value?.open({
+    const registration = await createRegistrationSheet.value?.open({
         key: '',
         userKey: signedInUser.value.key,
         positionKey: signedInUser.value.positions[0],
     });
-
-    // FIXME
-    // await eventUseCase.joinEvents(events, signedInUser.value.positions[0]);
-    // await fetchEvents();
+    if (registration) {
+        await eventUseCase.joinEvents(events, registration);
+        await fetchEvents();
+    }
 }
 
 async function leaveEventsWaitingListOnly(events: EventTableViewItem[]): Promise<void> {

@@ -38,7 +38,7 @@
                     <p v-else-if="props.registration.arrival">Ja, Anreise am Vortag</p>
                     <p v-else>Ja</p>
                 </div>
-                <button class="icon-button -mr-2">
+                <button class="icon-button -mr-4">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
@@ -51,23 +51,20 @@
                     <p v-if="props.registration.note" class="truncate italic">{{ props.registration.note }}</p>
                     <p v-else>-</p>
                 </div>
-                <button class="icon-button -mr-2">
+                <button class="icon-button -mr-4">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
         </ul>
 
-        <p v-if="events.length > 1" class="mt-8 text-sm">
-            Du meldest dich bei mehreren Veranstaltungen auf einmal an. Diese Angaben werden für alle Anmeldungen übernommen. Wenn du bei
-            einzelnen Veranstaltungen z.B. eine andere Position auswählen, oder eine separate Notiz hinterlegen möchtest, kannst du diese
-            später einzeln bearbeiten.
-        </p>
+        <VInfo v-if="events.length > 1" class="-mx-4 mt-8 text-sm">
+            Wenn du dich bei mehreren Veranstaltungen anmeldest, werden diese Angaben für alle Anmeldungen übernommen. Du kannst jede
+            Anmeldung im Nachgang einzeln bearbeiten, um z.B. individuelle Notizen fürs Büro zu hinterlegen.
+        </VInfo>
     </div>
     <!-- position -->
     <div v-else-if="view === View.POSITION">
-        <p class="mb-8 text-sm">
-            Du hast die Qualifikation für mehrere Positionen. Mit welcher Position möchtest du dich für diese Reise anmelden?
-        </p>
+        <p class="mb-8 text-sm">Du hast die Qualifikation für mehrere Positionen. Mit welcher Position möchtest du dich anmelden?</p>
         <VInputSelectionList
             :model-value="props.registration.positionKey"
             class="mb-8"
@@ -87,23 +84,23 @@
             <VInputTextArea :model-value="props.registration.note" @update:model-value="updateRegistration({ note: $event })" />
         </div>
     </div>
-    <!-- overnight -->
+    <!-- overnight stay -->
     <div v-else-if="view === View.OVERNIGHT">
         <p class="mb-4 text-sm">
-            Bitte teile uns mit, ob du an Bord übernachten möchtest. Falls ja, gib bitte außerdem an, ob du bereits am Vortag anreist. Bei
-            mehrtägigen Veranstaltungen wird standardmäßig von einer Übernachtung an Bord ausgegangen.
+            Bitte teile uns mit, ob du an Bord übernachten möchtest, und falls ja, ob du bereits am Vortag anreist. Bei mehrtägigen
+            Veranstaltungen wird immer von einer Übernachtung an Bord ausgegangen.
         </p>
         <div class="mb-4">
             <VInputCheckBox
                 :model-value="props.registration.overnightStay"
-                label="Koje benötigt"
+                label="Ich möchte an Bord übernachten"
                 @update:model-value="updateRegistration({ overnightStay: $event })"
             />
         </div>
         <div class="mb-4">
             <VInputCheckBox
                 :model-value="props.registration.arrival !== undefined"
-                label="Anreise am Vortag"
+                label="Ich möchte am Vortag anreisen"
                 @update:model-value="
                     (value) =>
                         updateRegistration({
@@ -114,7 +111,7 @@
                 "
             />
         </div>
-        <VInfo class="-mx-4"> Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht garantiert werden kann. </VInfo>
+        <VInfo class="-mx-4"> Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann. </VInfo>
     </div>
 </template>
 <script lang="ts" setup>
@@ -181,7 +178,6 @@ init();
 export enum View {
     OVERVIEW = 'overview',
     POSITION = 'position',
-    ARRIVAL = 'arrival',
     OVERNIGHT = 'overnight',
     NOTE = 'note',
 }

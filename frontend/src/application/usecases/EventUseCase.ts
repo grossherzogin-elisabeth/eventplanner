@@ -10,7 +10,7 @@ import type {
     UserCachingService,
 } from '@/application';
 import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
-import type { Event, EventKey, EventService, PositionKey, Registration, RegistrationKey, RegistrationService, UserKey } from '@/domain';
+import type { Event, EventKey, EventService, Registration, RegistrationKey, RegistrationService, UserKey } from '@/domain';
 import { EventState, EventType } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
@@ -163,15 +163,14 @@ export class EventUseCase {
         }
     }
 
-    public async joinEvents(events: Event[], positionKey: PositionKey): Promise<void> {
+    public async joinEvents(events: Event[], registration: Registration): Promise<void> {
         try {
-            const signedInUser = this.authService.getSignedInUser();
+            // TODO on multiple events, autoset arrival
             await Promise.all(
                 events.map((event) =>
                     this.joinEventInternal(event, {
+                        ...registration,
                         key: '',
-                        userKey: signedInUser?.key,
-                        positionKey: positionKey,
                     })
                 )
             );

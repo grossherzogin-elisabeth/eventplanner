@@ -3,8 +3,7 @@
         <template #title>
             <h1 v-if="view === View.POSITION">Position auswählen</h1>
             <h1 v-else-if="view === View.NOTE">Notiz fürs Büro</h1>
-            <h1 v-else-if="view === View.ARRIVAL">Anreise und Übernachtung</h1>
-            <h1 v-else-if="view === View.OVERNIGHT">Übernachtung</h1>
+            <h1 v-else-if="view === View.OVERNIGHT">Übernachtung und Anreise</h1>
             <h1 v-else-if="registration.key">Anmeldung bearbeiten</h1>
             <h1 v-else>Anmeldung erstellen</h1>
         </template>

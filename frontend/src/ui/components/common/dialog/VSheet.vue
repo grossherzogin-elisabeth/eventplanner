@@ -25,7 +25,7 @@
                     >
                         <div class="handle mx-auto mb-4 h-1 min-h-1 w-8 rounded-full bg-onsurface-variant sm:hidden"></div>
                         <div class="flex flex-1 flex-col overflow-clip" style="max-height: calc(100vh - 3.25rem)">
-                            <div class="flex h-16 w-full items-center justify-between pl-8 lg:pl-10 lg:pr-2">
+                            <div class="flex h-16 w-full items-center justify-between pl-8 lg:pl-10 lg:pr-10">
                                 <div v-if="props.showBackButton" class="-ml-4 mr-4">
                                     <button class="icon-button" @click="back()">
                                         <i class="fa-solid fa-arrow-left"></i>
@@ -34,8 +34,8 @@
                                 <div class="flex w-0 flex-grow items-center overflow-hidden">
                                     <slot name="title"></slot>
                                 </div>
-                                <div class="sheet-close-button-wrapper hidden w-20 items-center justify-center sm:flex lg:w-16">
-                                    <button class="sheet-close-button icon-button" @click="reject()">
+                                <div class="-mr-4 hidden sm:block">
+                                    <button class="icon-button" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>
