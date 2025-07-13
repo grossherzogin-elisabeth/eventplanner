@@ -111,7 +111,7 @@
                 "
             />
         </div>
-        <VInfo class="-mx-4"> Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann. </VInfo>
+        <VInfo class="-mx-4 mt-8"> Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann. </VInfo>
     </div>
 </template>
 <script lang="ts" setup>

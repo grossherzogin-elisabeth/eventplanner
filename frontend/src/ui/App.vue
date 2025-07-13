@@ -16,6 +16,7 @@
             </div>
         </div>
     </div>
+    <div class="ruler"></div>
     <VErrorDialog />
 </template>
 

@@ -41,7 +41,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="flex flex-1 flex-col overflow-y-auto">
+                            <div class="flex flex-1 flex-col pb-16" :class="{ 'overflow-y-auto': isFullScreen }">
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>
@@ -170,7 +170,7 @@ async function close(): Promise<void> {
 
 function detectScrollClose(event: Event): void {
     const element = event.target as HTMLElement;
-    if (element.scrollTop > window.innerHeight) {
+    if (element.scrollTop >= window.innerHeight) {
         isFullScreen.value = true;
     } else {
         isFullScreen.value = false;

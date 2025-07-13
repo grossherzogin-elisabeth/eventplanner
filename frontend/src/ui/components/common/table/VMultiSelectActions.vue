@@ -1,5 +1,5 @@
 <template>
-    <div class="sticky bottom-0 z-20">
+    <div class="multi-select-bar sticky bottom-0 z-20">
         <div class="border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pl-16 xl:pr-20">
             <div class="h-18 flex items-stretch gap-2 whitespace-nowrap py-4">
                 <button class="btn-ghost" @click="emit('selectNone')">
@@ -36,3 +36,9 @@ interface Emits {
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 </script>
+<style>
+.multi-select-bar {
+    --anim-slide-diff-y: 2rem;
+    animation: anim-slide-in 150ms ease;
+}
+</style>

@@ -34,6 +34,18 @@ body {
     height: var(--nav-height);
 }
 
+.h-screen {
+    height: var(--viewport-height);
+}
+
+.min-h-screen {
+    min-height: var(--viewport-height);
+}
+
+.max-h-screen {
+    max-height: var(--viewport-height);
+}
+
 .pt-nav {
     padding-top: var(--nav-height);
 }
