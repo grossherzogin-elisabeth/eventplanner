@@ -15,7 +15,7 @@
                         <i class="fa-solid fa-hourglass-half"></i>
                     </span>
                 </td>
-                <td class="w-1/2 max-w-[65vw] border-none font-semibold">
+                <td class="w-1/2 max-w-[20rem] border-none font-semibold">
                     <div class="mb-1 md:flex">
                         <p class="flex-grow truncate md:w-0">{{ item.name }}</p>
                     </div>

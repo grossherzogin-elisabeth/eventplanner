@@ -1,6 +1,7 @@
 <template>
     <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <DetailsPage>
+            <template #header> Einstellungen </template>
             <template #content>
                 <VTabs v-if="settings" v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
                     <template #[Tab.GENERAL_SETTINGS]>

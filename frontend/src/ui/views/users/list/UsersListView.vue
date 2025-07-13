@@ -9,13 +9,13 @@
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
-                    <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
                     <div class="permission-write-users hidden 2xl:block">
                         <button class="btn-primary" name="create" @click="createUser()">
                             <i class="fa-solid fa-user-plus"></i>
                             <span>Hinzufügen</span>
                         </button>
                     </div>
+                    <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
                 </div>
             </template>
         </VTabs>
