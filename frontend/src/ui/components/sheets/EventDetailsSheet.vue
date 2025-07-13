@@ -6,7 +6,7 @@
             </h1>
         </template>
         <template #content>
-            <div class="space-y-8 px-8 sm:w-[30rem] lg:px-10">
+            <div class="space-y-8 px-8 pb-4 sm:w-[30rem] lg:px-10">
                 <VWarning v-if="openPositions.length > 0" class="-mx-4 my-4 text-sm">
                     Für diese Reise wird noch Crew für die folgenden Positionen gesucht:
                     {{ openPositions.map((it) => it.name).join(', ') }}

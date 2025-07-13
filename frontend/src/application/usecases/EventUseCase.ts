@@ -9,6 +9,7 @@ import type {
     PositionCachingService,
     UserCachingService,
 } from '@/application';
+import { isSameDate, subtractFromDate } from '@/common';
 import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
 import type { Event, EventKey, EventService, Registration, RegistrationKey, RegistrationService, UserKey } from '@/domain';
 import { EventState, EventType } from '@/domain';
@@ -165,14 +166,18 @@ export class EventUseCase {
 
     public async joinEvents(events: Event[], registration: Registration): Promise<void> {
         try {
-            // TODO on multiple events, autoset arrival
             await Promise.all(
-                events.map((event) =>
-                    this.joinEventInternal(event, {
-                        ...registration,
-                        key: '',
-                    })
-                )
+                events.map((event) => {
+                    const eventRegistration = { ...registration };
+                    if (!isSameDate(event.start, event.end)) {
+                        eventRegistration.overnightStay = true;
+                    }
+                    if (!eventRegistration.arrival) {
+                        // we only support setting arrival on the day before the event start for now
+                        eventRegistration.arrival = subtractFromDate(event.start, { days: 1 });
+                    }
+                    return this.joinEventInternal(event, eventRegistration);
+                })
             );
             this.notificationService.success('Deine Anmeldungen wurde gespeichert');
         } catch (e) {

@@ -287,7 +287,7 @@
             </template>
         </VMultiSelectActions>
 
-        <RegistrationDetailsSheet ref="createRegistrationSheet" :event="selectedEvents as Event[]" />
+        <RegistrationDetailsSheet ref="createRegistrationSheet" />
     </div>
 </template>
 
@@ -350,7 +350,7 @@ const filterEventType = ref<EventType[]>([]);
 
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const positionSelectDialog = ref<Dialog<void, PositionKey | undefined> | null>(null);
-const createRegistrationSheet = ref<Sheet<Registration, Registration | undefined> | null>(null);
+const createRegistrationSheet = ref<Sheet<{ registration: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
 
 useQueryStateSync<boolean>(
     'assigned',
@@ -519,9 +519,12 @@ async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
 
 async function joinEvents(events: EventTableViewItem[]): Promise<void> {
     const registration = await createRegistrationSheet.value?.open({
-        key: '',
-        userKey: signedInUser.value.key,
-        positionKey: signedInUser.value.positions[0],
+        event: events,
+        registration: {
+            key: '',
+            userKey: signedInUser.value.key,
+            positionKey: signedInUser.value.positions[0],
+        },
     });
     if (registration) {
         await eventUseCase.joinEvents(events, registration);

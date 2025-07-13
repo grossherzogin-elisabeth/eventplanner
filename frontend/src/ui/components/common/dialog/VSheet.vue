@@ -1,7 +1,8 @@
 <template>
-    <div v-if="renderContent">
-        <teleport to="body">
+    <div>
+        <teleport to="#app">
             <div
+                v-if="renderContent"
                 ref="background"
                 :class="`${sheetOpen ? 'open' : 'closed'}`"
                 class="sheet-background scrollbar-invisible fixed bottom-0 left-0 right-0 top-0 z-40 overflow-y-auto overscroll-contain sm:flex"

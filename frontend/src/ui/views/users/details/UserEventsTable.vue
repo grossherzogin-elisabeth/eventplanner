@@ -62,7 +62,7 @@
                         }"
                         class="context-menu-item"
                     >
-                        <i class="fa-solid fa-edit" />
+                        <i class="fa-solid fa-drafting-compass" />
                         <span>Reise bearbeiten</span>
                     </RouterLink>
                 </li>

@@ -79,7 +79,7 @@
                 :to="{ name: Routes.EventEdit }"
                 class="btn-secondary"
             >
-                <i class="fa-solid fa-edit" />
+                <i class="fa-solid fa-drafting-compass" />
                 <span>Reise bearbeiten</span>
             </RouterLink>
             <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
@@ -93,11 +93,19 @@
                 <span>Kalendereintrag erstellen</span>
             </li>
             <template v-if="event.signedInUserRegistration">
-                <li class="context-menu-item" @click="editUserRegistration()">
+                <li
+                    class="context-menu-item"
+                    :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
+                    @click="editUserRegistration()"
+                >
                     <i class="fa-solid fa-edit" />
                     <span>Anmeldung bearbeiten</span>
                 </li>
-                <li class="context-menu-item" @click="editUserRegistration()">
+                <li
+                    class="context-menu-item"
+                    :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
+                    @click="editUserRegistration()"
+                >
                     <i class="fa-solid fa-note-sticky" />
                     <span>Notiz fürs Büro hinzufügen</span>
                 </li>
@@ -116,14 +124,14 @@
             </li>
             <li class="permission-write-events">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
-                    <i class="fa-solid fa-edit" />
+                    <i class="fa-solid fa-drafting-compass" />
                     <span>Reise bearbeiten</span>
                 </RouterLink>
             </li>
         </template>
     </DetailsPage>
     <VConfirmationDialog ref="confirmationDialog" />
-    <RegistrationDetailsSheet v-if="event" ref="editRegistrationSheet" :event="event" />
+    <RegistrationDetailsSheet ref="editRegistrationSheet" />
 </template>
 
 <script lang="ts" setup>
@@ -159,7 +167,7 @@ const eventUseCase = useEventUseCase();
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const event = ref<Event | null>(null);
 
-const editRegistrationSheet = ref<Dialog<Registration, Registration | undefined> | null>(null);
+const editRegistrationSheet = ref<Dialog<{ registration: Registration; event: Event }, Registration | undefined> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
 const openPositions = computed<Position[]>(() => {
@@ -200,11 +208,17 @@ async function onEventChanged(): Promise<void> {
 }
 
 async function joinEvent(): Promise<void> {
+    if (!event.value) {
+        return;
+    }
     const registration = await editRegistrationSheet.value?.open({
-        key: '',
-        userKey: signedInUser.value.key,
-        positionKey: signedInUser.value.positions[0],
-    } as Registration);
+        event: event.value,
+        registration: {
+            key: '',
+            userKey: signedInUser.value.key,
+            positionKey: signedInUser.value.positions[0],
+        },
+    });
     if (event.value && registration) {
         event.value = await eventUseCase.joinEvent(event.value, registration);
     }
@@ -231,7 +245,10 @@ async function leaveEvent(): Promise<void> {
 
 async function editUserRegistration(): Promise<void> {
     if (event.value && event.value.signedInUserRegistration) {
-        const updatedRegistration = await editRegistrationSheet.value?.open(event.value.signedInUserRegistration);
+        const updatedRegistration = await editRegistrationSheet.value?.open({
+            event: event.value,
+            registration: event.value.signedInUserRegistration,
+        });
         if (updatedRegistration) {
             await eventUseCase.updateRegistration(event.value, updatedRegistration);
             await fetchEvent();

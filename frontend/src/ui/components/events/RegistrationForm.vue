@@ -1,14 +1,14 @@
 <template>
     <!-- overview -->
     <div v-if="view === View.OVERVIEW">
-        <p v-if="events.length === 1" class="mb-8 text-sm">
+        <p v-if="filteredEvents.length === 1" class="mb-8 text-sm">
             Bitte überprüfe die Angaben zu deiner Anmeldung für
-            <i>{{ events[0].name }}.</i>
+            <i>{{ filteredEvents[0].name }}.</i>
         </p>
         <div v-else class="mb-8 text-sm">
             <p class="mb-2">Bitte prüfe deine Angaben. Du meldest dich hiermit für die folgenden Veranstaltungen an:</p>
             <ul class="list-inside list-disc pl-2">
-                <li v-for="evt in events" :key="evt.key" class="truncate">
+                <li v-for="evt in filteredEvents" :key="evt.key" class="truncate">
                     {{ evt.name }}
                 </li>
             </ul>
@@ -57,7 +57,7 @@
             </li>
         </ul>
 
-        <VInfo v-if="events.length > 1" class="-mx-4 mt-8 text-sm">
+        <VInfo v-if="filteredEvents.length > 1" class="-mx-4 mt-8 text-sm">
             Wenn du dich bei mehreren Veranstaltungen anmeldest, werden diese Angaben für alle Anmeldungen übernommen. Du kannst jede
             Anmeldung im Nachgang einzeln bearbeiten, um z.B. individuelle Notizen fürs Büro zu hinterlegen.
         </VInfo>
@@ -125,7 +125,7 @@ import { useUsersUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions';
 
 interface Props {
-    event: Event | Event[];
+    events: Event[];
     registration: Registration;
     view: View;
 }
@@ -141,8 +141,14 @@ const usersUseCase = useUsersUseCase();
 const positions = usePositions();
 
 const signedInUserDetails = ref<UserDetails | null>(null);
-const events = computed<Event[]>(() => (Array.isArray(props.event) ? props.event : [props.event]));
-const hasSingleDayEvent = computed<boolean>(() => events.value.find((it) => isSameDate(it.start, it.end)) !== undefined);
+const filteredEvents = computed<Event[]>(() => {
+    if (!props.registration.key) {
+        return props.events.filter((e) => e.canSignedInUserJoin);
+    } else {
+        return props.events.filter((e) => e.canSignedInUserUpdateRegistration);
+    }
+});
+const hasSingleDayEvent = computed<boolean>(() => filteredEvents.value.find((it) => isSameDate(it.start, it.end)) !== undefined);
 const availablePositionsForSignedInUser = computed<InputSelectOption<string | undefined>[]>(() => {
     const validPositionKeys: (PositionKey | undefined)[] = signedInUserDetails.value?.positionKeys || [];
     if (!validPositionKeys.includes(props.registration.positionKey)) {

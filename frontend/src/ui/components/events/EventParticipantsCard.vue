@@ -17,7 +17,7 @@
         </h2>
         <div
             v-if="props.event.assignedUserCount === 0 && waitingList.length === 0"
-            class="rounded-2xl bg-surface-container-low px-4 md:-mx-4 md:-mt-4"
+            class="rounded-2xl bg-surface-container bg-opacity-50 px-4 shadow md:-mx-4 md:-mt-4"
         >
             <div class="flex items-center py-4">
                 <div class="mr-4">
