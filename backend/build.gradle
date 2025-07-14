@@ -56,7 +56,7 @@ dependencies {
     runtimeOnly "io.micrometer:micrometer-registry-prometheus"
 
     // util
-    implementation "org.apache.commons:commons-lang3:3.17.0"
+    implementation "org.apache.commons:commons-lang3:3.18.0"
 }
 
 test {
