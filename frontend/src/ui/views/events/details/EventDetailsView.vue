@@ -131,7 +131,7 @@
         </template>
     </DetailsPage>
     <VConfirmationDialog ref="confirmationDialog" />
-    <RegistrationDetailsSheet ref="editRegistrationSheet" />
+    <RegistrationDetailsSheet ref="registrationSheet" />
 </template>
 
 <script lang="ts" setup>
@@ -167,7 +167,7 @@ const eventUseCase = useEventUseCase();
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const event = ref<Event | null>(null);
 
-const editRegistrationSheet = ref<Dialog<{ registration: Registration; event: Event }, Registration | undefined> | null>(null);
+const registrationSheet = ref<Dialog<{ registration?: Registration; event: Event }, Registration | undefined> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
 const openPositions = computed<Position[]>(() => {
@@ -211,13 +211,9 @@ async function joinEvent(): Promise<void> {
     if (!event.value) {
         return;
     }
-    const registration = await editRegistrationSheet.value?.open({
+    const registration = await registrationSheet.value?.open({
         event: event.value,
-        registration: {
-            key: '',
-            userKey: signedInUser.value.key,
-            positionKey: signedInUser.value.positions[0],
-        },
+        registration: undefined,
     });
     if (event.value && registration) {
         event.value = await eventUseCase.joinEvent(event.value, registration);
@@ -245,7 +241,7 @@ async function leaveEvent(): Promise<void> {
 
 async function editUserRegistration(): Promise<void> {
     if (event.value && event.value.signedInUserRegistration) {
-        const updatedRegistration = await editRegistrationSheet.value?.open({
+        const updatedRegistration = await registrationSheet.value?.open({
             event: event.value,
             registration: event.value.signedInUserRegistration,
         });

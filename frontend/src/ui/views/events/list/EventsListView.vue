@@ -231,7 +231,6 @@
         </div>
 
         <VConfirmationDialog ref="confirmationDialog" />
-        <PositionSelectDlg ref="positionSelectDialog" />
 
         <div class="flex-1"></div>
 
@@ -296,12 +295,11 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, PositionKey, Registration, SignedInUser } from '@/domain';
+import type { Event, Registration, SignedInUser } from '@/domain';
 import { EventState, EventType } from '@/domain';
-import type { ConfirmationDialog, Dialog, Sheet } from '@/ui/components/common';
+import type { ConfirmationDialog, Sheet } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
-import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
@@ -349,8 +347,7 @@ const filterFreeSlots = ref<boolean>(false);
 const filterEventType = ref<EventType[]>([]);
 
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
-const positionSelectDialog = ref<Dialog<void, PositionKey | undefined> | null>(null);
-const createRegistrationSheet = ref<Sheet<{ registration: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
+const createRegistrationSheet = ref<Sheet<{ registration?: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
 
 useQueryStateSync<boolean>(
     'assigned',
@@ -520,11 +517,7 @@ async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
 async function joinEvents(events: EventTableViewItem[]): Promise<void> {
     const registration = await createRegistrationSheet.value?.open({
         event: events,
-        registration: {
-            key: '',
-            userKey: signedInUser.value.key,
-            positionKey: signedInUser.value.positions[0],
-        },
+        registration: undefined,
     });
     if (registration) {
         await eventUseCase.joinEvents(events, registration);

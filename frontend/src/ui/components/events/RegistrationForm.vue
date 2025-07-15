@@ -2,16 +2,17 @@
     <!-- overview -->
     <div v-if="view === View.OVERVIEW">
         <p v-if="filteredEvents.length === 1" class="mb-8 text-sm">
-            Bitte überprüfe die Angaben zu deiner Anmeldung für
-            <i>{{ filteredEvents[0].name }}.</i>
+            Bitte überprüfe deine Anmeldung für
+            <i>{{ filteredEvents[0].name }}.</i> Du kannst alle Angaben später noch ändern.
         </p>
         <div v-else class="mb-8 text-sm">
-            <p class="mb-2">Bitte prüfe deine Angaben. Du meldest dich hiermit für die folgenden Veranstaltungen an:</p>
-            <ul class="list-inside list-disc pl-2">
+            <p class="mb-2">Bitte überprüfe deine Anmeldung für die folgenden Veranstaltungen:</p>
+            <ul class="mb-2 list-inside list-disc pl-2">
                 <li v-for="evt in filteredEvents" :key="evt.key" class="truncate">
                     {{ evt.name }}
                 </li>
             </ul>
+            <p>Du kannst alle Angaben später noch ändern.</p>
         </div>
         <ul class="border-t border-onsurface-variant border-opacity-20 md:mx-0">
             <li
@@ -35,8 +36,20 @@
                 <div class="mr-4 w-0 flex-grow">
                     <p class="mb-1 text-sm font-bold">Übernachtung an Bord</p>
                     <p v-if="!props.registration.overnightStay">Nein</p>
-                    <p v-else-if="props.registration.arrival">Ja, Anreise am Vortag</p>
                     <p v-else>Ja</p>
+                </div>
+                <button class="icon-button -mr-4">
+                    <i class="fa-solid fa-chevron-right" />
+                </button>
+            </li>
+            <li
+                class="flex cursor-pointer items-center border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                @click="emit('update:view', View.ARRIVAL)"
+            >
+                <div class="mr-4 w-0 flex-grow">
+                    <p class="mb-1 text-sm font-bold">Anreise am Vortag</p>
+                    <p v-if="props.registration.arrival">Ja</p>
+                    <p v-else>Nein</p>
                 </div>
                 <button class="icon-button -mr-4">
                     <i class="fa-solid fa-chevron-right" />
@@ -86,9 +99,8 @@
     </div>
     <!-- overnight stay -->
     <div v-else-if="view === View.OVERNIGHT">
-        <p class="mb-4 text-sm">
-            Bitte teile uns mit, ob du an Bord übernachten möchtest, und falls ja, ob du bereits am Vortag anreist. Bei mehrtägigen
-            Veranstaltungen wird immer von einer Übernachtung an Bord ausgegangen.
+        <p class="mb-8 text-sm">
+            Möchtest du an Bord übernachten? Bei mehrtägigen Veranstaltungen wird immer von einer Übernachtung an Bord ausgegangen.
         </p>
         <div class="mb-4">
             <VInputCheckBox
@@ -97,6 +109,14 @@
                 @update:model-value="updateRegistration({ overnightStay: $event })"
             />
         </div>
+        <VInfo class="-mx-4 mt-8"> Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann. </VInfo>
+    </div>
+    <!-- overnight stay -->
+    <div v-else-if="view === View.ARRIVAL">
+        <p class="mb-8 text-sm">
+            Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen. Bitte gib hier an, fall du bereits vorher anreisen
+            möchtest, damit das Büro entsprechend planen kann.
+        </p>
         <div class="mb-4">
             <VInputCheckBox
                 :model-value="props.registration.arrival !== undefined"
@@ -185,6 +205,7 @@ export enum View {
     OVERVIEW = 'overview',
     POSITION = 'position',
     OVERNIGHT = 'overnight',
+    ARRIVAL = 'arrival',
     NOTE = 'note',
 }
 </script>

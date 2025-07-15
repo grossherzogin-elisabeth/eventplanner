@@ -3,7 +3,7 @@
         <template #title>
             <h1 v-if="view === View.POSITION">Position auswählen</h1>
             <h1 v-else-if="view === View.NOTE">Notiz fürs Büro</h1>
-            <h1 v-else-if="view === View.OVERNIGHT">Übernachtung und Anreise</h1>
+            <h1 v-else-if="view === View.OVERNIGHT">Übernachtung an Bord</h1>
             <h1 v-else-if="registration.key">Anmeldung bearbeiten</h1>
             <h1 v-else>Anmeldung erstellen</h1>
         </template>
@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { deepCopy } from '@/common';
+import { deepCopy, isSameDate } from '@/common';
 import type { Event, Registration, UserDetails } from '@/domain';
 import type { Sheet } from '@/ui/components/common';
 import { VSheet } from '@/ui/components/common';
@@ -39,7 +39,7 @@ import { v4 as uuid } from 'uuid';
 const usersUseCase = useUsersUseCase();
 
 const view = ref<View>(View.OVERVIEW);
-const sheet = ref<Sheet<{ registration: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
+const sheet = ref<Sheet<{ registration?: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
 const signedInUserDetails = ref<UserDetails | null>(null);
 const registration = ref<Registration>({ key: uuid(), positionKey: '' });
 const events = ref<Event[]>([]);
@@ -52,9 +52,16 @@ async function fetchSignedInUserDetails(): Promise<void> {
     signedInUserDetails.value = await usersUseCase.getUserDetailsForSignedInUser();
 }
 
-async function open(value: { registration: Registration; event: Event | Event[] }): Promise<Registration | undefined> {
-    registration.value = deepCopy(value.registration);
+async function open(value: { registration?: Registration; event: Event | Event[] }): Promise<Registration | undefined> {
     events.value = deepCopy(Array.isArray(value.event) ? value.event : [value.event]);
+    registration.value = value.registration
+        ? deepCopy(value.registration)
+        : {
+              key: '',
+              userKey: signedInUserDetails.value?.key,
+              positionKey: signedInUserDetails.value?.positionKeys[0] ?? '',
+              overnightStay: !isSameDate(events.value[0].start, events.value[0].end),
+          };
     view.value = View.OVERVIEW;
 
     // wait until user submits
