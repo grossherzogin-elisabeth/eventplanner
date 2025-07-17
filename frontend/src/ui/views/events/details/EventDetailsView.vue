@@ -225,7 +225,7 @@ async function leaveEvent(): Promise<void> {
         if (event.value.signedInUserAssignedSlot) {
             const confirmed = await confirmationDialog.value?.open({
                 title: 'Teilnahme absagen?',
-                message: `Bist du sicher, das du deine Teilnahme an der Reise ${event.value.name} absagen möchtest?
+                message: `Bist du sicher, dass du deine Teilnahme an der Reise ${event.value.name} absagen möchtest?
                     Du hast dann keinen Anspruch mehr auf eine Teilname an der Reise und dein Platz wird an eine
                     andere Person vergeben.`,
                 submit: 'Reise absagen',

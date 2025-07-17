@@ -114,7 +114,7 @@
     <!-- overnight stay -->
     <div v-else-if="view === View.ARRIVAL">
         <p class="mb-8 text-sm">
-            Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen. Bitte gib hier an, fall du bereits vorher anreisen
+            Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen. Bitte gib hier an, falls du bereits vorher anreisen
             möchtest, damit das Büro entsprechend planen kann.
         </p>
         <div class="mb-4">

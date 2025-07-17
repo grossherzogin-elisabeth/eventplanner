@@ -605,7 +605,7 @@ async function createEvent(): Promise<void> {
 async function deleteEvent(evt: Event): Promise<void> {
     const confirmed = await confirmationDialog.value?.open({
         title: 'Reise löschen',
-        message: `Bist du sicher, das du die Reise ${evt.name} löschen möchtest? Diese Aktion kann später nicht
+        message: `Bist du sicher, dass du die Reise ${evt.name} löschen möchtest? Diese Aktion kann später nicht
             rückgängig gemacht werden.`,
         submit: 'Unwiederruflich löschen',
         danger: true,

@@ -53,7 +53,7 @@
                             v-model.trim="event.description"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="Kurze Bschreibung oder Zusatzinformationen"
+                            placeholder="Kurze Beschreibung oder Zusatzinformationen"
                         />
                     </div>
                     <div class="mb-4 flex space-x-4">

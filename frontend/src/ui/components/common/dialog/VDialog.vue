@@ -17,7 +17,7 @@
                             class="dialog flex flex-col overflow-hidden bg-surface sm:rounded-3xl sm:shadow-lg"
                         >
                             <div class="dialog-header flex h-16 w-full items-center justify-between pl-8 lg:pl-10 lg:pr-2">
-                                <div class="dialog-back-button-wrapper -ml-4 mr-4">
+                                <div class="fullscreen-back-button -ml-4 mr-4">
                                     <button class="icon-button" @click="reject()">
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
@@ -179,6 +179,10 @@ async function close(): Promise<void> {
     opacity: 1;
 }
 
+.fullscreen-back-button {
+    display: none;
+}
+
 @media (max-width: 639px) {
     .modal .dialog {
         @apply rounded-3xl shadow-lg;
@@ -210,7 +214,7 @@ async function close(): Promise<void> {
         @apply text-white;
     }
 
-    .fullscreen .dialog .dialog-back-button-wrapper {
+    .fullscreen .dialog .fullscreen-back-button {
         @apply block;
     }
 

@@ -103,7 +103,7 @@ async function editQualification(qualification: Qualification): Promise<void> {
 async function deleteQualification(qualification: Qualification): Promise<void> {
     const confirmed = await deleteQualificationDialog.value?.open({
         title: 'Qualifikation löschen',
-        message: `Bist du sicher, das du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern,
+        message: `Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern,
             bei denen sie assoziert ist, entfernt.`,
         submit: 'Löschen',
         danger: true,
