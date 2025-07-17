@@ -9,19 +9,19 @@
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
-                    <VSearchButton v-model="filter" placeholder="Reisen filtern" />
-                    <div v-if="!Number.isNaN(parseInt(tab))" class="permission-read-events hidden lg:block">
-                        <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(parseInt(tab))">
-                            <i class="fa-solid fa-download"></i>
-                            <span>Export</span>
-                        </button>
-                    </div>
                     <div class="permission-create-events hidden 2xl:block">
                         <button class="btn-primary ml-2" name="create" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
                             <span>Hinzufügen</span>
                         </button>
                     </div>
+                    <div v-if="!Number.isNaN(parseInt(tab))" class="permission-read-events hidden lg:block">
+                        <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(parseInt(tab))">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Export</span>
+                        </button>
+                    </div>
+                    <VSearchButton v-model="filter" placeholder="Reisen filtern" />
                 </div>
             </template>
         </VTabs>
@@ -231,7 +231,7 @@
                             }"
                             class="context-menu-item"
                         >
-                            <i class="fa-solid fa-edit" />
+                            <i class="fa-solid fa-drafting-compass" />
                             <span>Reise bearbeiten</span>
                         </RouterLink>
                     </li>
@@ -303,83 +303,75 @@
 
         <div class="flex-1"></div>
 
-        <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
-            <div class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20">
-                <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
-                    <button class="btn-ghost" @click="selectNone()">
-                        <i class="fa-solid fa-xmark" />
+        <VMultiSelectActions
+            v-if="selectedEvents && selectedEvents.length > 0"
+            :count="selectedEvents.length"
+            @select-all="selectAll()"
+            @select-none="selectNone()"
+        >
+            <template #action>
+                <div class="hidden sm:inline">
+                    <button
+                        v-if="showBatchOpenEventForSignup"
+                        class="permission-write-events btn-ghost"
+                        @click="openEventsForSignup(selectedEvents)"
+                    >
+                        <i class="fa-solid fa-lock-open"></i>
+                        <span class="truncate">Anmeldungen freischalten</span>
                     </button>
-                    <span class="self-center font-bold">{{ selectedEvents.length }} ausgewählt</span>
-                    <div class="flex-grow"></div>
-                    <div class="hidden sm:block">
-                        <button
-                            v-if="showBatchOpenEventForSignup"
-                            class="permission-write-events btn-ghost"
-                            @click="openEventsForSignup(selectedEvents)"
-                        >
-                            <i class="fa-solid fa-lock-open"></i>
-                            <span class="truncate">Anmeldungen freischalten</span>
-                        </button>
-                        <button
-                            v-else-if="showBatchPublishPlannedCrew"
-                            class="permission-write-events btn-ghost"
-                            @click="publishCrewPlanning(selectedEvents)"
-                        >
-                            <i class="fa-solid fa-earth-europe"></i>
-                            <span class="truncate">Crew veröffentlichen</span>
-                        </button>
-                        <button v-else class="permission-write-events btn-ghost" @click="editBatch(selectedEvents)">
-                            <i class="fa-solid fa-edit"></i>
-                            <span class="truncate">Ausgewählte bearbeiten</span>
-                        </button>
-                    </div>
-                    <ContextMenuButton class="btn-ghost">
-                        <template #default>
-                            <li class="context-menu-item" @click="selectAll">
-                                <i class="fa-solid fa-list-check" />
-                                <span>Alle auswählen</span>
-                            </li>
-                            <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
-                                <i class="fa-solid fa-user-plus" />
-                                <span>Anmeldung hinzufügen</span>
-                            </li>
-                            <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
-                                <i class="fa-solid fa-edit" />
-                                <span>Ausgewählte bearbeiten</span>
-                            </li>
-                            <li
-                                v-if="showBatchOpenEventForSignup"
-                                class="permission-write-event-details context-menu-item"
-                                @click="openEventsForSignup(selectedEvents)"
-                            >
-                                <i class="fa-solid fa-people-group" />
-                                <span>Anmeldungen freischalten</span>
-                            </li>
-                            <li
-                                v-if="showBatchPublishPlannedCrew"
-                                class="permission-write-event-details context-menu-item"
-                                @click="publishCrewPlanning(selectedEvents)"
-                            >
-                                <i class="fa-solid fa-earth-europe" />
-                                <span>Crew veröffentlichen</span>
-                            </li>
-                            <li class="permission-read-user-details permission-write-events context-menu-item disabled">
-                                <i class="fa-solid fa-users" />
-                                <span>Weitere Crew anfragen*</span>
-                            </li>
-                            <li class="permission-read-user-details context-menu-item disabled">
-                                <i class="fa-solid fa-envelope" />
-                                <span>Crew kontaktieren*</span>
-                            </li>
-                            <li class="permission-delete-events context-menu-item disabled text-error">
-                                <i class="fa-solid fa-ban" />
-                                <span>Reisen absagen*</span>
-                            </li>
-                        </template>
-                    </ContextMenuButton>
+                    <button
+                        v-else-if="showBatchPublishPlannedCrew"
+                        class="permission-write-events btn-ghost"
+                        @click="publishCrewPlanning(selectedEvents)"
+                    >
+                        <i class="fa-solid fa-earth-europe"></i>
+                        <span class="truncate">Crew veröffentlichen</span>
+                    </button>
+                    <button v-else class="permission-write-events btn-ghost" @click="editBatch(selectedEvents)">
+                        <i class="fa-solid fa-edit"></i>
+                        <span class="truncate">Ausgewählte bearbeiten</span>
+                    </button>
                 </div>
-            </div>
-        </div>
+            </template>
+            <template #menu>
+                <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
+                    <i class="fa-solid fa-user-plus" />
+                    <span>Anmeldung hinzufügen</span>
+                </li>
+                <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
+                    <i class="fa-solid fa-edit" />
+                    <span>Ausgewählte bearbeiten</span>
+                </li>
+                <li
+                    v-if="showBatchOpenEventForSignup"
+                    class="permission-write-event-details context-menu-item"
+                    @click="openEventsForSignup(selectedEvents)"
+                >
+                    <i class="fa-solid fa-people-group" />
+                    <span>Anmeldungen freischalten</span>
+                </li>
+                <li
+                    v-if="showBatchPublishPlannedCrew"
+                    class="permission-write-event-details context-menu-item"
+                    @click="publishCrewPlanning(selectedEvents)"
+                >
+                    <i class="fa-solid fa-earth-europe" />
+                    <span>Crew veröffentlichen</span>
+                </li>
+                <li class="permission-read-user-details permission-write-events context-menu-item disabled">
+                    <i class="fa-solid fa-users" />
+                    <span>Weitere Crew anfragen*</span>
+                </li>
+                <li class="permission-read-user-details context-menu-item disabled">
+                    <i class="fa-solid fa-envelope" />
+                    <span>Crew kontaktieren*</span>
+                </li>
+                <li class="permission-delete-events context-menu-item disabled text-error">
+                    <i class="fa-solid fa-ban" />
+                    <span>Reisen absagen*</span>
+                </li>
+            </template>
+        </VMultiSelectActions>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
@@ -403,6 +395,7 @@ import type { Event, EventType, Position, Registration } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { VMultiSelectActions } from '@/ui/components/common';
 import { VTooltip } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';

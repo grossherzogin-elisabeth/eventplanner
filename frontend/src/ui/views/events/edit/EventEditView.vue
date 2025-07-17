@@ -1,27 +1,24 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class">
         <template #header>
-            <div v-if="event">
-                <h1 class="mb-1 mt-8 hidden truncate xl:block">
-                    {{ event.name || 'Err' }}
-                </h1>
-                <section>
-                    <VInfo v-if="event.state === EventState.Draft" class="mt-4" dismissable clamp>
-                        Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als
-                        Admin allerdings bereits Anmeldungen eintragen.
-                    </VInfo>
-                    <VWarning v-if="event.state === EventState.Canceled" class="mt-4" dismissable>
-                        Diese Reise wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab Reisedaten
-                        zurücknehmen.
-                    </VWarning>
-                    <VWarning v-else-if="event.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
-                        Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht erfüllt!
-                    </VWarning>
-                </section>
-            </div>
+            {{ event?.name || 'Err' }}
+        </template>
+        <template #subheader>
+            <section>
+                <VInfo v-if="event?.state === EventState.Draft" class="mt-4" dismissable clamp>
+                    Diese Reise befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als Admin
+                    allerdings bereits Anmeldungen eintragen.
+                </VInfo>
+                <VWarning v-if="event?.state === EventState.Canceled" class="mt-4" dismissable>
+                    Diese Reise wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab Reisedaten zurücknehmen.
+                </VWarning>
+                <VWarning v-else-if="event?.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
+                    Die Vorraussetzungen für eine sichere Mindesbesatzung für diese Reise sind noch nicht erfüllt!
+                </VWarning>
+            </section>
         </template>
         <template #content>
-            <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+            <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-surface pt-4 xl:top-20">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event">
@@ -133,7 +130,9 @@
                     </div>
                 </template>
                 <template #[Tab.EVENT_TEAM]>
-                    <CrewEditor v-if="event" v-model:event="event" />
+                    <div class="xl:max-w-5xl">
+                        <CrewEditor v-if="event" v-model:event="event" />
+                    </div>
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
                     <div class="xl:max-w-5xl">
