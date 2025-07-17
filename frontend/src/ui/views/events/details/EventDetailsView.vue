@@ -68,30 +68,10 @@
                 </template>
                 <template #label> Warteliste verlassen </template>
             </AsyncButton>
-            <div v-else-if="signedInUser.positions.length > 1" class="btn-split">
-                <AsyncButton class="btn-primary max-w-64 sm:max-w-80" :disabled="!event.canSignedInUserJoin" :action="() => joinEvent()">
-                    <template #icon>
-                        <i class="fa-solid fa-user-plus" />
-                    </template>
-                    <template #label> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </template>
-                </AsyncButton>
-                <button
-                    v-if="signedInUser.positions.length > 1"
-                    class="btn-primary"
-                    :disabled="!event.canSignedInUserJoin"
-                    @click="choosePositionAndJoinEvent(event)"
-                >
-                    <i class="fa-solid fa-chevron-down" />
-                </button>
-            </div>
-            <AsyncButton v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" :action="() => joinEvent()">
-                <template #icon>
-                    <i class="fa-solid fa-user-plus" />
-                </template>
-                <template #label>
-                    <span class="truncate text-left"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
-                </template>
-            </AsyncButton>
+            <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
+                <i class="fa-solid fa-user-plus" />
+                <span class="truncate text-left"> Anmelden </span>
+            </button>
         </template>
         <template v-if="event" #secondary-buttons>
             <RouterLink
@@ -151,14 +131,13 @@
         </template>
     </DetailsPage>
     <VConfirmationDialog ref="confirmationDialog" />
-    <PositionSelectDlg ref="positionSelectDialog" />
-    <RegistrationEditDlg v-if="event" ref="editRegistrationDialog" :event="event" />
+    <RegistrationDetailsSheet ref="registrationSheet" />
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { Event, Position, PositionKey, Registration, SignedInUser } from '@/domain';
+import type { Event, Position, Registration, SignedInUser } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VSuccess } from '@/ui/components/common';
@@ -167,13 +146,12 @@ import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
 import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.vue';
 import EventRouteCard from '@/ui/components/events/EventRouteCard.vue';
-import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
+import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
-import RegistrationEditDlg from '@/ui/views/events/details/RegistrationEditDlg.vue';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
@@ -189,8 +167,7 @@ const eventUseCase = useEventUseCase();
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const event = ref<Event | null>(null);
 
-const positionSelectDialog = ref<Dialog<unknown, PositionKey> | null>(null);
-const editRegistrationDialog = ref<Dialog<Registration, Registration | undefined> | null>(null);
+const registrationSheet = ref<Dialog<{ registration?: Registration; event: Event }, Registration | undefined> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
 const openPositions = computed<Position[]>(() => {
@@ -230,18 +207,16 @@ async function onEventChanged(): Promise<void> {
     }
 }
 
-async function choosePositionAndJoinEvent(evt: Event): Promise<void> {
-    const position = await positionSelectDialog.value?.open();
-    if (position) {
-        // default position might have changed
-        signedInUser.value = authUseCase.getSignedInUser();
-        event.value = await eventUseCase.joinEvent(evt, position);
-    }
-}
-
 async function joinEvent(): Promise<void> {
-    if (event.value) {
-        event.value = await eventUseCase.joinEvent(event.value, signedInUser.value.positions[0]);
+    if (!event.value) {
+        return;
+    }
+    const registration = await registrationSheet.value?.open({
+        event: event.value,
+        registration: undefined,
+    });
+    if (event.value && registration) {
+        event.value = await eventUseCase.joinEvent(event.value, registration);
     }
 }
 
@@ -266,9 +241,13 @@ async function leaveEvent(): Promise<void> {
 
 async function editUserRegistration(): Promise<void> {
     if (event.value && event.value.signedInUserRegistration) {
-        const updatedRegistration = await editRegistrationDialog.value?.open(event.value.signedInUserRegistration);
+        const updatedRegistration = await registrationSheet.value?.open({
+            event: event.value,
+            registration: event.value.signedInUserRegistration,
+        });
         if (updatedRegistration) {
             await eventUseCase.updateRegistration(event.value, updatedRegistration);
+            await fetchEvent();
         }
     }
 }

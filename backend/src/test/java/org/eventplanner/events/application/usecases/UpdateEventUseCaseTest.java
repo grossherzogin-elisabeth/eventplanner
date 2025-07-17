@@ -300,7 +300,9 @@ class UpdateEventUseCaseTest {
                 new UserKey(),
                 null,
                 "Test",
-                false
+                false,
+                null,
+                null
             )));
         var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
 
@@ -324,7 +326,9 @@ class UpdateEventUseCaseTest {
                 new UserKey(),
                 null,
                 "Test",
-                false
+                false,
+                null,
+                null
             )))
             .withSlots(createDefaultSlots());
         updateSpec.slots().getFirst().setAssignedRegistration(registrationKey);
