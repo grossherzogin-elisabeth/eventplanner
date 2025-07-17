@@ -9,6 +9,9 @@ interface AccountRepresentation {
     roles: string[];
     permissions: string[];
     positions: string[];
+    gender: string;
+    firstName: string;
+    lastName: string;
 }
 
 export class AccountRestRepository implements AccountRepository {
@@ -42,8 +45,9 @@ export class AccountRestRepository implements AccountRepository {
     private mapAccountToSignedInUser(user: AccountRepresentation): SignedInUser {
         return {
             key: user.key,
-            firstname: '',
-            lastname: '',
+            gender: user.gender,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
             roles: user.roles as Role[],
             permissions: user.permissions as Permission[],

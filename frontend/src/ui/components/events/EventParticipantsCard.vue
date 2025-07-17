@@ -23,7 +23,9 @@
                 <div class="mr-4">
                     <h3 class="mb-4 text-base">
                         <i class="fa-solid fa-trophy opacity-75"></i>
-                        <span class="ml-4">Du könntest der erste sein!</span>
+                        <span v-if="signedInUser.gender === 'm'" class="ml-4">Du könntest der erste sein!</span>
+                        <span v-else-if="signedInUser.gender === 'f'" class="ml-4">Du könntest die erste sein!</span>
+                        <span v-else class="ml-4">Du könntest der/die erste sein!</span>
                     </h3>
                     <p class="text-sm">
                         Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich anmelden. Alle

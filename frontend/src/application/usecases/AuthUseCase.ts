@@ -77,8 +77,9 @@ export class AuthUseCase {
         return (
             this.authService.getSignedInUser() || {
                 key: '',
-                lastname: '',
-                firstname: '',
+                gender: '',
+                lastName: '',
+                firstName: '',
                 email: '',
                 roles: [],
                 permissions: [],

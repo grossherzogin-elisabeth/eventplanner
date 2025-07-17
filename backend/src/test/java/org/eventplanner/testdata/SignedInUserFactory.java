@@ -14,7 +14,10 @@ public class SignedInUserFactory {
             Collections.emptyList(),
             Collections.emptyList(),
             "test@email.com",
-            Collections.emptyList()
+            Collections.emptyList(),
+            "m",
+            "John",
+            "Doe"
         );
     }
 }

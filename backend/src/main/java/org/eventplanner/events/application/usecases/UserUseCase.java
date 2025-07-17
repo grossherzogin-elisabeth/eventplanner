@@ -20,9 +20,9 @@ import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.specs.CreateUserSpec;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
-import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +107,10 @@ public class UserUseCase {
                 Collections.emptyList(),
                 Collections.emptyList(),
                 oidcUser.getEmail(),
-                Collections.emptyList()
+                Collections.emptyList(),
+                null,
+                "",
+                ""
             ).withPermissionsFromAuthentication(authentication);
         }
         if (authentication.getPrincipal() instanceof OAuth2User) {
