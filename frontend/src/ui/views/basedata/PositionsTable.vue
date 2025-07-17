@@ -94,7 +94,7 @@ async function editPosition(position: Position): Promise<void> {
 async function deletePosition(position: Position): Promise<void> {
     const confirmed = await deletePositionDialog.value?.open({
         title: 'Position löschen',
-        message: `Bist du sicher, das du die Position löschen möchtest? Die Position wird bei allen
+        message: `Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen
             Nutzern, bei denen sie assoziert ist, entfernt.`,
         submit: 'Löschen',
         danger: true,

@@ -7,7 +7,7 @@
             <div v-if="event" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
-                        Bist du sicher, das du diese Reise absagen möchtest? Aktuell wird vom System noch keine automatische Mail an die
+                        Bist du sicher, dass du diese Reise absagen möchtest? Aktuell wird vom System noch keine automatische Mail an die
                         Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die Reise absagst.
                     </p>
                 </section>
