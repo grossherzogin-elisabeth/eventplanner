@@ -1,5 +1,7 @@
 package org.eventplanner.events.domain.specs;
 
+import java.time.LocalDate;
+
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
@@ -15,7 +17,9 @@ public record CreateRegistrationSpec(
     @Nullable UserKey userKey,
     @Nullable String name,
     @Nullable String note,
-    boolean isSelfSignup
+    boolean isSelfSignup,
+    @Nullable Boolean overnightStay,
+    @Nullable LocalDate arrival
 ) {
     public Registration toRegistration() {
         return new Registration(
@@ -25,7 +29,9 @@ public record CreateRegistrationSpec(
             name,
             note,
             Registration.generateAccessKey(),
-            null
+            null,
+            overnightStay,
+            arrival
         );
     }
 }

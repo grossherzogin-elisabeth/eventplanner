@@ -2,10 +2,10 @@
     <div class="hidden lg:block" :class="$attrs.class">
         <ContextMenuButton
             class="btn-secondary h-full"
-            anchor-align-y="bottom"
-            anchor-align-x="left"
-            dropdown-position-x="right"
-            dropdown-position-y="top"
+            anchor-align-y="top"
+            anchor-align-x="right"
+            dropdown-position-x="left"
+            dropdown-position-y="bottom"
         >
             <slot></slot>
         </ContextMenuButton>

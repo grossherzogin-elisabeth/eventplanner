@@ -33,6 +33,21 @@
                         </VInputCombobox>
                     </div>
                     <div class="mb-4">
+                        <VInputLabel>Übernachtung an Bord</VInputLabel>
+                        <VInputSelect
+                            v-model="registration.overnightStay"
+                            :options="[
+                                { value: undefined, label: 'Keine Angabe' },
+                                { value: true, label: 'Ja' },
+                                { value: false, label: 'Nein' },
+                            ]"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Anreise am</VInputLabel>
+                        <VInputDate v-model="registration.arrival" />
+                    </div>
+                    <div class="mb-4">
                         <VInputLabel>Notiz</VInputLabel>
                         <VInputTextArea
                             v-model.trim="registration.note"
@@ -90,6 +105,8 @@ import { computed, ref } from 'vue';
 import { deepCopy, filterUndefined } from '@/common';
 import type { Event, Position, QualificationKey, Registration, User, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
+import { VInputSelect } from '@/ui/components/common';
+import { VInputDate } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application.ts';
