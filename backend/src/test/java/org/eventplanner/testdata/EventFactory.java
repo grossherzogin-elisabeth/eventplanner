@@ -30,16 +30,16 @@ public class EventFactory {
             List.of(ELSFLETH, NORDSEE, ELSFLETH),
             createDefaultSlots(),
             List.of(
-                createRegistration(PositionKeys.KAPITAEN),
-                createRegistration(PositionKeys.STM),
-                createRegistration(PositionKeys.MATROSE),
-                createRegistration(PositionKeys.MASCHINIST),
-                createRegistration(PositionKeys.LEICHTMATROSE),
-                createRegistration(PositionKeys.DECKSHAND),
-                createRegistration(PositionKeys.DECKSHAND),
-                createRegistration(PositionKeys.DECKSHAND),
-                createRegistration(PositionKeys.DECKSHAND),
-                createRegistration(PositionKeys.BACKSCHAFT)
+                createRegistration().withPosition(PositionKeys.KAPITAEN),
+                createRegistration().withPosition(PositionKeys.STM),
+                createRegistration().withPosition(PositionKeys.MATROSE),
+                createRegistration().withPosition(PositionKeys.MASCHINIST),
+                createRegistration().withPosition(PositionKeys.LEICHTMATROSE),
+                createRegistration().withPosition(PositionKeys.DECKSHAND),
+                createRegistration().withPosition(PositionKeys.DECKSHAND),
+                createRegistration().withPosition(PositionKeys.DECKSHAND),
+                createRegistration().withPosition(PositionKeys.DECKSHAND),
+                createRegistration().withPosition(PositionKeys.BACKSCHAFT)
             ),
             0
         );

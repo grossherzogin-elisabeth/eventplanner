@@ -128,7 +128,13 @@ public class Event {
             registrations.stream()
                 .filter(it -> it.getNote() != null)
                 .filter(it -> !signedInUser.key().equals(it.getUserKey()))
-                .forEach(it -> it.setNote(null));
+                .forEach(it -> {
+                    it.setNote(null);
+                    it.setOvernightStay(null);
+                    it.setArrival(null);
+                    it.setAccessKey(null);
+                    it.setConfirmedAt(null);
+                });
         }
     }
 

@@ -1,7 +1,7 @@
 import type { RegistrationCreateRequest, RegistrationUpdateRequest } from '@/adapter';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
-import { cropToPrecision, deserializeDate } from '@/common';
+import { cropToPrecision, deserializeDate, isSameDate } from '@/common';
 import type { Event, EventKey, EventState, Registration, Slot } from '@/domain';
 import { EventType } from '@/domain';
 
@@ -21,6 +21,8 @@ interface RegistrationRepresentation {
     userKey?: string | null;
     note?: string | null;
     confirmed?: boolean | null;
+    overnightStay?: boolean | null;
+    arrival?: Date | null;
 }
 
 interface LocationRepresentation {
@@ -94,6 +96,8 @@ export class EventRestRepository implements EventRepository {
                 name: it.name ?? undefined,
                 note: it.note ?? undefined,
                 confirmed: it.confirmed ?? undefined,
+                overnightStay: it.overnightStay ?? undefined,
+                arrival: it.arrival ?? undefined,
             })),
             locations: eventRepresentation.locations.map((locationRepresentation, index) => ({
                 name: locationRepresentation.name,
@@ -133,7 +137,10 @@ export class EventRestRepository implements EventRepository {
         const end = cropToPrecision(event.end, 'days');
         const durationDays = new Date(event.end.getTime() - event.start.getTime()).getDate();
 
-        if (start.getTime() === end.getTime()) {
+        if (event.name.includes('Arbeitsdienst')) {
+            return EventType.WorkEvent;
+        }
+        if (isSameDate(start, end)) {
             return EventType.SingleDayEvent;
         }
         if (durationDays <= 3) {
