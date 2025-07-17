@@ -5,6 +5,22 @@ import { VitePWA } from 'vite-plugin-pwa';
 import svgLoader from 'vite-svg-loader';
 
 const pwa = VitePWA({
+    includeAssets: ['favicon.svg'],
+    manifest: {
+        name: 'Lissi Reiseplaner',
+        short_name: 'Lissi',
+        description: 'Lissi Reiseplaner',
+        theme_color: '#082f49',
+        background_color: '#082f49',
+        display: 'standalone',
+        start_url: '.',
+        icons: [
+            {
+                src: '/favicon.svg',
+                sizes: 'any',
+            },
+        ],
+    },
     registerType: 'autoUpdate',
     workbox: {
         navigateFallbackDenylist: [

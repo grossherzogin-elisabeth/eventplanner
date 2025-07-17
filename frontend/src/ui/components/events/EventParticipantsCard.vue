@@ -17,7 +17,7 @@
         </h2>
         <div
             v-if="props.event.assignedUserCount === 0 && waitingList.length === 0"
-            class="rounded-2xl bg-surface-container bg-opacity-50 px-4 shadow md:-mx-4 md:-mt-4"
+            class="rounded-2xl bg-surface-container bg-opacity-50 px-4 shadow xs:-mx-4 md:-mx-4 md:-mt-4 md:bg-transparent md:shadow-none"
         >
             <div class="flex items-center py-4">
                 <div class="mr-4">
@@ -34,18 +34,10 @@
                 </div>
                 <div></div>
             </div>
-            <ul class="pb-8">
-                <li v-for="i in 10" :key="i" class="flex items-center space-x-4 rounded-xl py-1">
-                    <i class="fa-solid fa-circle text-surface-container-highest"></i>
-                    <span class="mx-2 inline-block h-4 w-64 rounded-full bg-surface-container-highest"> </span>
-                    <span class="flex-grow"></span>
-                    <span class="position h-4 w-16 bg-surface-container-highest"> </span>
-                </li>
-            </ul>
         </div>
         <div
             v-else
-            class="rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow md:rounded-none md:bg-transparent md:p-0 md:shadow-none"
+            class="rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow xs:-mx-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0 md:shadow-none"
         >
             <template v-if="tab === Tab.Team">
                 <ul class="space-y-2">
@@ -128,15 +120,16 @@ const waitingList = ref<ResolvedRegistrationSlot[]>([]);
 const team = ref<ResolvedRegistrationSlot[]>([]);
 
 function init(): void {
-    fetchTeam(props.event);
-    watch(props.event, fetchTeam);
+    fetchTeam(props.event).then(() => {
+        tab.value = team.value.length > 0 ? Tab.Team : Tab.WaitingList;
+    });
+    watch(() => props.event, fetchTeam, { deep: true });
 }
 
 async function fetchTeam(event: Event): Promise<void> {
     const registrations = await eventUseCase.resolveRegistrations(event);
     team.value = eventUseCase.filterForCrew(event, registrations);
     waitingList.value = eventUseCase.filterForWaitingList(event, registrations);
-    tab.value = team.value.length > 0 ? Tab.Team : Tab.WaitingList;
 }
 
 init();

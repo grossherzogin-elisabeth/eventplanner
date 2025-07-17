@@ -26,8 +26,8 @@
                     auf der Warteliste
                 </VInfo>
 
-                <EventDetailsCard :event="event" class="xs:-mx-4" />
-                <EventRouteCard v-if="event.locations.length > 0" :event="event" class="xs:-mx-4" />
+                <EventDetailsCard :event="event" class="" />
+                <EventRouteCard v-if="event.locations.length > 0" :event="event" class="" />
             </div>
         </template>
         <template #bottom>
