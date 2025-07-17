@@ -1,5 +1,5 @@
 <template>
-    <teleport to="#app">
+    <teleport to="body">
         <div
             class="dropdown-wrapper-background"
             :class="blockAllInput ? `pointer-events-none ${props.backgroundClass}` : props.backgroundClass"
