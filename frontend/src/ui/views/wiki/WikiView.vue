@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
+    <div class="h-full overflow-y-auto px-4 pb-8 pt-8 xs:px-8 md:px-16 xl:px-20">
         <div class="wiki max-w-2xl">
             <div v-for="(page, index) in pages" :key="index" class="mb-8">
                 <h2 class="mb-4 text-lg font-bold">{{ page.title }}</h2>
