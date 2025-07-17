@@ -1,8 +1,9 @@
 <template>
     <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <DetailsPage>
+            <template #header> Meine Daten </template>
             <template #content>
-                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-20 xl:pt-8">
                     <template #[Tab.PERSONAL_DATA]>
                         <div v-if="userDetails" class="items-start gap-16 md:flex lg:gap-20 xl:max-w-5xl">
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">

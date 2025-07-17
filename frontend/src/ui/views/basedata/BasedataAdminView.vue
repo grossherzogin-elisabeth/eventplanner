@@ -7,24 +7,22 @@
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div v-if="tab === Tab.QUALIFICATIONS" class="flex items-stretch gap-2 pb-2">
-                    <VSearchButton v-model="qualificationFilter" placeholder="Einträge filtern" class="w-48" />
-                    <div class="hidden flex-grow md:block"></div>
                     <div class="hidden 2xl:block">
                         <button class="btn-primary" name="create" @click="createQualification()">
                             <i class="fa-solid fa-file-circle-plus"></i>
                             <span>Qualifikation hinzufügen</span>
                         </button>
                     </div>
+                    <VSearchButton v-model="qualificationFilter" placeholder="Einträge filtern" class="w-48" />
                 </div>
                 <div v-else-if="tab === Tab.POSITIONS" class="flex items-stretch gap-2 pb-2">
-                    <VSearchButton v-model="positionsFilter" placeholder="Einträge filtern" class="w-48" />
-                    <div class="hidden flex-grow md:block"></div>
                     <div class="hidden 2xl:block">
                         <button class="btn-primary" name="create" @click="createPosition()">
                             <i class="fa-solid fa-file-circle-plus"></i>
                             <span>Position hinzufügen</span>
                         </button>
                     </div>
+                    <VSearchButton v-model="positionsFilter" placeholder="Einträge filtern" class="w-48" />
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
