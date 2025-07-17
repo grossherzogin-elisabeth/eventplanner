@@ -16,6 +16,7 @@ import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -25,7 +26,10 @@ public record SignedInUser(
     @NonNull List<Role> roles,
     @NonNull List<Permission> permissions,
     @NonNull String email,
-    @NonNull List<PositionKey> positions
+    @NonNull List<PositionKey> positions,
+    @Nullable String gender,
+    @NonNull String firstName,
+    @NonNull String lastName
 ) {
 
     public static @NonNull SignedInUser fromUser(@NonNull UserDetails user) {
@@ -38,7 +42,10 @@ public record SignedInUser(
                 .distinct()
                 .toList(),
             orElse(user.getEmail(), ""),
-            user.getPositions()
+            user.getPositions(),
+            user.getGender(),
+            user.getNickName() != null ? user.getNickName() : user.getFirstName(),
+            user.getLastName()
         );
     }
 
@@ -67,7 +74,7 @@ public record SignedInUser(
         if (!permissions().contains(permission)) {
             var permissions = new LinkedList<>(permissions());
             permissions.add(permission);
-            return new SignedInUser(key, authKey, roles, permissions, email, positions);
+            return new SignedInUser(key, authKey, roles, permissions, email, positions, gender, firstName, lastName);
         }
         return this;
     }
@@ -76,7 +83,7 @@ public record SignedInUser(
         var permissions = Stream.concat(Arrays.stream(permission), permissions().stream())
             .distinct()
             .toList();
-        return new SignedInUser(key, authKey, roles, permissions, email, positions);
+        return new SignedInUser(key, authKey, roles, permissions, email, positions, gender, firstName, lastName);
     }
 
     public @NonNull SignedInUser withRole(@NonNull Role role) {
@@ -86,7 +93,7 @@ public record SignedInUser(
             var permissions = Stream.concat(role.getPermissions(), permissions().stream())
                 .distinct()
                 .toList();
-            return new SignedInUser(key, authKey, roles, permissions, email, positions);
+            return new SignedInUser(key, authKey, roles, permissions, email, positions, gender, firstName, lastName);
         }
         return this;
     }
@@ -100,7 +107,7 @@ public record SignedInUser(
         var mergedPermissions = Stream.concat(permissions, permissions().stream())
             .distinct()
             .toList();
-        return new SignedInUser(key, authKey, roles, mergedPermissions, email, positions);
+        return new SignedInUser(key, authKey, roles, mergedPermissions, email, positions, gender, firstName, lastName);
 
     }
 }

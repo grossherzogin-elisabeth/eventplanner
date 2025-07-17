@@ -28,6 +28,30 @@
             <td><b><a class="this-is-not-a-phone-number">${event_start_datetime}</a></b></td>
         </tr>
     </#if>
+    <#if registration??>
+        <tr>
+            <td>Übernachtung an Bord</td>
+            <#if registration.overnightStay == true>
+                <td><b>Ja</b></td>
+            <#else>
+                <td><b>Nein</b></td>
+            </#if>
+        </tr>
+        <tr>
+            <td>Anreise am Vortag</td>
+            <#if registration.arrival??>
+                <td><b>Ja</b></td>
+            <#else>
+                <td><b>Nein</b></td>
+            </#if>
+        </tr>
+        <#if registration.note??>
+            <tr>
+                <td>Notiz fürs Büro</td>
+                <td><b>${registration.note}</b></td>
+            </tr>
+        </#if>
+    </#if>
     <tr>
         <td>Reiseroute</td>
         <td>

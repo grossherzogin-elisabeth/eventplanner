@@ -55,6 +55,7 @@ public class NotificationService {
         var props = new HashMap<String, Object>();
         addRecipientDetails(props, to);
         addEventDetails(props, event);
+        addRegistrationDetails(props, event, to);
         var link = createEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
@@ -83,6 +84,7 @@ public class NotificationService {
         var props = new HashMap<String, Object>();
         addRecipientDetails(props, to);
         addEventDetails(props, event);
+        addRegistrationDetails(props, event, to);
         var link = createEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
@@ -263,6 +265,21 @@ public class NotificationService {
         if (to != null) {
             props.put("user", to);
         }
+    }
+
+    private void addRegistrationDetails(
+        @NonNull HashMap<String, Object> props,
+        @NonNull final Event event,
+        @Nullable final UserDetails user
+    ) {
+        if (user == null) {
+            return;
+        }
+        var registration = event.findRegistrationByUserKey(user.getKey());
+        if (registration.isEmpty()) {
+            return;
+        }
+        props.put("registration", registration.get());
     }
 
     private void addRegistrationConfirmationDetails(

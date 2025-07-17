@@ -5,8 +5,9 @@ import type { Role } from '@/domain/values/Role';
 
 export interface SignedInUser {
     key: UserKey;
-    firstname: string;
-    lastname: string;
+    gender?: string;
+    firstName: string;
+    lastName: string;
     email: string;
     roles: Role[];
     permissions: Permission[];
