@@ -6,7 +6,7 @@
             <div class="flex items-center">
                 <p class="mr-2 w-0 flex-grow py-4 text-sm font-bold">
                     Du siehst die Anwendung aus Sicht von
-                    <span class="italic">{{ signedInUser.firstname }} {{ signedInUser.lastname }}</span>
+                    <span class="italic">{{ signedInUser.firstName }} {{ signedInUser.lastName }}</span>
                 </p>
                 <button class="icon-button mr-2" title="Impersonate Modus beenden" @click="authUseCase.impersonateUser(null)">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
