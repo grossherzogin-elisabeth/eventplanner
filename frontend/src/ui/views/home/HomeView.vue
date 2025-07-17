@@ -1,6 +1,6 @@
 <template>
     <div class="xl:overflow-auto">
-        <div class="flex px-8 pb-8 md:px-16 xl:px-20">
+        <div class="flex px-4 pb-8 xs:px-8 md:px-16 xl:px-20">
             <div class="w-full xl:max-w-2xl">
                 <div class="sticky top-12 z-10 -mx-4 flex h-14 justify-end bg-surface pb-2 pt-4 xl:top-0 xl:h-16 xl:pt-8"></div>
                 <div v-if="loading" class="-mt-10">
@@ -8,14 +8,14 @@
                         <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">
                             <h2 class="inline-block font-bold text-secondary">Reisen werden geladen...</h2>
                         </div>
-                        <ul class="-mx-4 max-w-xl">
+                        <ul class="max-w-xl xs:-mx-4">
                             <li v-for="i in 3" :key="i" class="mt-4">
                                 <EventCard />
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div v-else-if="events.length === 0" class="relative z-10 -mx-4 -mt-10 rounded-2xl bg-surface-container p-4">
+                <div v-else-if="events.length === 0" class="relative z-10 -mt-10 rounded-2xl bg-surface-container p-4 xs:-mx-4">
                     <h3 class="mb-2 font-bold text-secondary">Keine zukünftigen Reisen</h3>
                     <p class="mb-4">
                         Du hast aktuell keine anstehenden Reisen. Du kannst im Kalender oder der Reiseliste nach Reisen suchen und dich für
@@ -36,7 +36,7 @@
                                 {{ entry[0] }}
                             </h2>
                         </div>
-                        <ul class="-mx-4 max-w-xl">
+                        <ul class="max-w-xl xs:-mx-4">
                             <li v-for="event in entry[1]" :key="event.key" class="mt-4">
                                 <EventCard :event="event" />
                             </li>

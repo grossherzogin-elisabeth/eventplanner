@@ -8,12 +8,12 @@
             <h1 v-else>Anmeldung erstellen</h1>
         </template>
         <template #content>
-            <div class="px-8 sm:w-[30rem] lg:px-10">
+            <div class="h-[25rem] px-4 xs:px-8 sm:w-[30rem] lg:px-10">
                 <RegistrationForm v-if="registration" v-model:registration="registration" v-model:view="view" :events="events" />
             </div>
         </template>
         <template #bottom>
-            <div v-if="view === View.OVERVIEW" class="lg:px-10-lg flex justify-end gap-2 px-8 py-4">
+            <div v-if="view === View.OVERVIEW" class="lg:px-10-lg flex justify-end gap-2 px-4 py-4 xs:px-8">
                 <button class="btn-ghost" name="save" @click="cancel()">
                     <span>Abbrechen</span>
                 </button>

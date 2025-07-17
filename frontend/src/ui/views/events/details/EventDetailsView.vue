@@ -4,7 +4,7 @@
             {{ event?.name }}
         </template>
         <template #content>
-            <div v-if="event" class="px-8 pb-8 pt-6 md:px-16 xl:px-20">
+            <div v-if="event" class="px-4 pb-8 pt-6 xs:px-8 md:px-16 xl:px-20">
                 <div class="space-y-4 md:grid md:grid-cols-2 md:gap-x-20 md:gap-y-4 md:space-y-0 xl:max-w-5xl">
                     <!-- state info banner -->
                     <section v-if="event.state === EventState.OpenForSignup" class="col-start-2">

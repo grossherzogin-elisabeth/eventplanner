@@ -1,6 +1,6 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
-        <div class="px-8 pb-8 pt-8 md:px-16 xl:px-20">
+        <div class="px-4 pb-8 pt-8 xs:px-8 md:px-16 xl:px-20">
             <div class="max-w-2xl">
                 <h1 class="mb-4 font-bold">Dein Account konnte nicht zugeordnet werden</h1>
                 <p class="mb-4">

@@ -6,7 +6,7 @@
                     <!--                    <RouterLink v-if="backTo" :to="backTo" class="icon-button mx-4 md:ml-12">-->
                     <!--                        <i class="fa-solid fa-arrow-left"></i>-->
                     <!--                    </RouterLink>-->
-                    <button class="icon-button ml-4 mr-1 md:ml-12" @click="menuOpen = true">
+                    <button class="icon-button mr-1 xs:ml-4 md:ml-12" @click="menuOpen = true">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
@@ -21,7 +21,7 @@
                 </h1>
             </div>
             <div class="flex h-full justify-end">
-                <div id="nav-right" class="mx-8 h-full md:mr-16 xl:mr-20"></div>
+                <div id="nav-right" class="mx-4 h-full xs:mx-8 md:mr-16 xl:mr-20"></div>
             </div>
         </div>
     </nav>

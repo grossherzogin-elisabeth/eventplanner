@@ -4,7 +4,7 @@
             <h1>Nutzer hinzufügen</h1>
         </template>
         <template #default>
-            <div class="px-8 pt-4 lg:px-10">
+            <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
                         <VInputLabel>Vorname</VInputLabel>

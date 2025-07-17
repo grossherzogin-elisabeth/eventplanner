@@ -47,7 +47,7 @@ function onInput(event: Event): void {
 
 .btn-search.active,
 .btn-search:focus-within {
-    @apply w-64 cursor-text bg-surface-container text-onsurface xxl:w-80;
+    @apply w-64 cursor-text bg-surface-container text-onsurface 2xl:w-80;
 }
 
 .btn-search input {

@@ -1,12 +1,12 @@
 <template>
-    <VDialog ref="dlg" height="max-h-screen h-auto" class="error-dialog" type="modal">
+    <VDialog ref="dlg" height="max-h-screen h-auto" type="modal-danger">
         <template #title>
             <h1 class="truncate">
                 {{ error.title || 'Unwerwarteter Fehler' }}
             </h1>
         </template>
         <template #content>
-            <div class="px-8 py-8 lg:px-10">
+            <div class="px-4 px-8 py-8 lg:px-10">
                 <p v-if="error.message">
                     {{ error.message }}
                 </p>

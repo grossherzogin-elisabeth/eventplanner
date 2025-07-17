@@ -5,7 +5,7 @@
             <h1 v-else>Position hinzufügen</h1>
         </template>
         <template #default>
-            <div class="p-8 lg:px-10">
+            <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div v-if="position.key" class="mb-4">
                         <VInputLabel>Id</VInputLabel>

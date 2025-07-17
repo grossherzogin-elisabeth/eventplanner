@@ -16,8 +16,8 @@
                             :class="` ${props.width || 'w-screen max-w-xl'} ${props.height || 'h-auto max-h-[95vh]'} ${$attrs.class} `"
                             class="dialog flex flex-col overflow-hidden bg-surface sm:rounded-3xl sm:shadow-lg"
                         >
-                            <div class="dialog-header flex h-16 w-full items-center justify-between pl-8 lg:pl-10 lg:pr-2">
-                                <div class="fullscreen-back-button -ml-4 mr-4">
+                            <div class="dialog-header flex h-16 w-full items-center justify-between pl-4 xs:pl-8 lg:pl-10 lg:pr-2">
+                                <div class="fullscreen-back-button -ml-4">
                                     <button class="icon-button" @click="reject()">
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
@@ -35,7 +35,7 @@
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>
-                            <div v-if="$slots.buttons" class="dialog-buttons flex justify-end gap-2 px-8 py-4 lg:px-10">
+                            <div v-if="$slots.buttons" class="dialog-buttons flex justify-end gap-2 px-4 py-4 xs:px-8 lg:px-10">
                                 <slot :close="reject" :reject="reject" :submit="submit" name="buttons"></slot>
                             </div>
                         </div>
@@ -63,7 +63,7 @@ interface Props {
     // dialog height css class
     height?: string;
     // how should this dialog behave on mobile screens
-    type?: 'fullscreen' | 'modal';
+    type?: 'fullscreen' | 'modal' | 'modal-danger';
 }
 
 interface Emits {
@@ -165,10 +165,6 @@ async function close(): Promise<void> {
     pointer-events: auto;
 }
 
-.dialog-background:has(.error-dialog) {
-    @apply z-50;
-}
-
 .dialog-wrapper {
     animation: anim-slide-out var(--animation-duration) ease;
     opacity: 0;
@@ -183,7 +179,29 @@ async function close(): Promise<void> {
     display: none;
 }
 
+.modal-danger.dialog-background {
+    @apply z-50;
+}
+
+.modal-danger .dialog-header {
+    @apply border-onerror-container bg-error-container pl-8 text-onerror-container;
+}
+
+.modal-danger .dialog > .dialog-content,
+.modal-danger .dialog > .dialog-buttons {
+    @apply bg-error-container bg-opacity-50;
+}
+
+.modal-danger .dialog-close-button {
+    @apply text-onerror-container;
+}
+
+.modal-danger h1 {
+    @apply text-onerror-container;
+}
+
 @media (max-width: 639px) {
+    .modal-danger .dialog,
     .modal .dialog {
         @apply rounded-3xl shadow-lg;
         max-width: min(calc(100vw - 2rem), 35rem);
@@ -221,22 +239,5 @@ async function close(): Promise<void> {
     .fullscreen .dialog .dialog-close-button-wrapper {
         @apply hidden;
     }
-}
-
-.error-dialog .dialog-header {
-    @apply border-onerror-container bg-error-container;
-}
-
-.dialog.error-dialog > .dialog-content,
-.dialog.error-dialog > .dialog-buttons {
-    @apply bg-error-container bg-opacity-50;
-}
-
-.error-dialog .dialog-close-button {
-    @apply text-onerror-container;
-}
-
-.error-dialog h1 {
-    @apply text-onerror-container;
 }
 </style>

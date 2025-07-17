@@ -1,6 +1,6 @@
 <template>
     <div class="xl:overflow-auto">
-        <div class="px-8 py-8 md:px-16 xl:px-20">
+        <div class="px-4 py-8 xs:px-8 md:px-16 xl:px-20">
             <div class="max-w-2xl">
                 <h2 class="mb-4 hidden xl:block">Feedback</h2>
                 <p class="mb-8">
@@ -16,7 +16,7 @@
                     </a>
                     anlegen.
                 </p>
-                <VInfo class="-mx-4 mb-8">
+                <VInfo class="mb-8 xs:-mx-4">
                     Viele Fehler lassen sich schon dadurch beheben, die Seite einmal neu zu laden und es noch einmal zu probieren. Klicke
                     dazu auf den Neu Laden Button <i class="fa-solid fa-rotate-right"></i>, den du meistens oben links in deinem
                     Browserfenster findest oder verwende die Tastenkombination <code>STRG</code> + <code>R</code> (Windows) bzw.

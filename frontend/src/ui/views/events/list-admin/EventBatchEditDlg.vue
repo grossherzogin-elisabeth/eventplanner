@@ -4,7 +4,7 @@
             <h1>Alle bearbeiten</h1>
         </template>
         <template #default>
-            <div class="px-8 pt-4 lg:px-10">
+            <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <p class="mb-8">
                         Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle Reisen übernommen.

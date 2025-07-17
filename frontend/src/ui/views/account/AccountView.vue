@@ -123,7 +123,7 @@
                                 </section>
                             </div>
                             <div class="my-8 md:my-0 md:w-1/3 md:max-w-96 2xl:w-1/2">
-                                <VInfo class="-mx-4 py-2">
+                                <VInfo class="py-2 xs:-mx-4">
                                     <h2 class="mb-2">Name und Personalausweis Nummer</h2>
                                     <p class="mb-2">
                                         Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen, da dieser auch zum
@@ -250,7 +250,7 @@
                                 </section>
                             </div>
                             <div class="my-8 md:my-0 md:w-1/3 md:max-w-96 2xl:w-1/2">
-                                <VInfo class="-mx-4 py-2">
+                                <VInfo class="py-2 xs:-mx-4">
                                     <h2 class="mb-2">Du möchtest deine Email Adresse ändern?</h2>
                                     <p>
                                         Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login verwendet. Wenn du die
@@ -275,7 +275,7 @@
                                 <VInputLabel>Password</VInputLabel>
                                 <VInputText disabled model-value="this is not your real password, sorry" required type="password" />
                             </div>
-                            <VInfo class="-mx-4 mt-8 py-2">
+                            <VInfo class="mt-8 py-2 xs:-mx-4">
                                 <h2 class="mb-2">Hinweis zum Passwort ändern:</h2>
                                 <p>
                                     Wenn du dein Passwort ändern willst, nutze dazu die "Passwort vergessen" Funktion beim Login. Du
@@ -286,7 +286,7 @@
                     </template>
                     <template #[Tab.QUALIFICATIONS]>
                         <div class="xl:max-w-5xl">
-                            <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                            <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
                                 <UserQualificationsTable v-if="userDetails" :user="userDetails" />
                             </div>
                         </div>
@@ -338,7 +338,7 @@
                                 </section>
                             </div>
                             <div class="my-8 md:my-0 md:w-1/3 md:max-w-96 2xl:w-1/2">
-                                <VInfo class="-mx-4 py-2 md:mx-0">
+                                <VInfo class="py-2 xs:-mx-4 md:mx-0">
                                     <h2 class="mb-2">Notfall Informationen</h2>
                                     <p class="mb-2">
                                         Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, das du bestimmte

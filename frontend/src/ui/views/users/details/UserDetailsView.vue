@@ -44,14 +44,14 @@
                     </template>
                     <template #[Tab.USER_CERTIFICATES]>
                         <div class="xl:max-w-5xl">
-                            <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                            <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
                                 <UserQualificationsTable v-if="user" v-model="user" />
                             </div>
                         </div>
                     </template>
                     <template #[Tab.USER_ROLES]>
                         <div class="xl:max-w-5xl">
-                            <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                            <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
                                 <UserRolesTable v-if="user" v-model="user" />
                             </div>
                         </div>

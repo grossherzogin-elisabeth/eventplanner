@@ -136,14 +136,14 @@
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
                     <div class="xl:max-w-5xl">
-                        <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                        <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
                             <SlotsTable v-if="event" :event="event" />
                         </div>
                     </div>
                 </template>
                 <template #[Tab.EVENT_LOCATIONS]>
                     <div class="xl:max-w-5xl">
-                        <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                        <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
                             <LocationsTable v-if="event" :event="event" />
                         </div>
                     </div>

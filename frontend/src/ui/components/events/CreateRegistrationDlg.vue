@@ -4,7 +4,7 @@
             <h1>Anmeldung hinzufügen</h1>
         </template>
         <template #default>
-            <div class="px-8 pt-4 lg:px-10">
+            <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
                         Du kannst eine Anmeldung für ein Stammcrew Mitglied oder Gastcrew anlegen. Die Position kannst du nachträglich noch
