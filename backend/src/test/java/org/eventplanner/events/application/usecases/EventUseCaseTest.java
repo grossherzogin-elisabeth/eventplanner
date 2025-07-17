@@ -65,7 +65,7 @@ class EventUseCaseTest {
     }
 
     @Test
-    void shouldNotReturnRegistrationNotesForNonAdminUsers() {
+    void shouldNotReturnPrivateRegistrationDataForNonAdminUsers() {
         var signedInUser = createSignedInUser()
             .withPermissions(Permission.READ_EVENTS);
 
@@ -76,12 +76,14 @@ class EventUseCaseTest {
         for (final var evt : events) {
             for (final Registration registration : evt.getRegistrations()) {
                 assertThat(registration.getNote()).isNull();
+                assertThat(registration.getOvernightStay()).isNull();
+                assertThat(registration.getArrival()).isNull();
             }
         }
     }
 
     @Test
-    void shouldReturnOwnRegistrationNotesForNonAdminUsers() {
+    void shouldReturnOwnRegistrationPrivateDataForNonAdminUsers() {
         var signedInUser = createSignedInUser()
             .withPermissions(Permission.READ_EVENTS);
 
@@ -91,6 +93,8 @@ class EventUseCaseTest {
         var events = testee.getEvents(signedInUser, YEAR);
         assertThat(events).isNotEmpty();
         assertThat(events.getFirst().getRegistrations().getFirst().getNote()).isNotNull();
+        assertThat(events.getFirst().getRegistrations().getFirst().getOvernightStay()).isNotNull();
+        assertThat(events.getFirst().getRegistrations().getFirst().getArrival()).isNotNull();
     }
 
     @Test

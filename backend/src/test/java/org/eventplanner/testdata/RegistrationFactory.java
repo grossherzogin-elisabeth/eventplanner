@@ -1,5 +1,9 @@
 package org.eventplanner.testdata;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.UUID;
+
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.positions.PositionKey;
@@ -21,8 +25,10 @@ public class RegistrationFactory {
             userKey,
             null,
             "Lorem ipsum dolor sit amet",
-            null,
-            null
+            UUID.randomUUID().toString(),
+            Instant.now(),
+            true,
+            LocalDate.now()
         );
     }
 }

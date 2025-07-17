@@ -15,7 +15,7 @@
 
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
-                <div class="-mr-4 flex items-stretch gap-2 pb-2">
+                <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" placeholder="Reisen filtern" />
                 </div>
             </template>
@@ -200,22 +200,12 @@
                     </li>
                     <template v-if="!item.signedInUserRegistration">
                         <li
-                            v-if="signedInUser.positions.length === 1"
                             class="permission-write-own-registrations context-menu-item"
                             :class="{ disabled: !item.canSignedInUserJoin }"
                             @click="joinEvents([item])"
                         >
                             <i class="fa-solid fa-user-plus" />
-                            <span class="truncate"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
-                        </li>
-                        <li
-                            v-else
-                            class="permission-write-own-registrations context-menu-item"
-                            :class="{ disabled: !item.canSignedInUserJoin }"
-                            @click="choosePositionAndJoinEvents([item])"
-                        >
-                            <i class="fa-solid fa-user-plus" />
-                            <span>Anmelden als ...</span>
+                            <span class="truncate"> Anmelden </span>
                         </li>
                     </template>
                     <li
@@ -241,81 +231,62 @@
         </div>
 
         <VConfirmationDialog ref="confirmationDialog" />
-        <PositionSelectDlg ref="positionSelectDialog" />
 
         <div class="flex-1"></div>
 
-        <div v-if="selectedEvents && selectedEvents.length > 0" class="sticky bottom-0 z-20">
-            <div class="h-full border-t border-outline-variant bg-surface px-2 md:px-12 xl:rounded-bl-3xl xl:pb-4 xl:pl-16 xl:pr-20">
-                <div class="flex h-full items-stretch gap-2 whitespace-nowrap py-2">
-                    <button class="btn-ghost" @click="selectNone()">
-                        <i class="fa-solid fa-xmark" />
+        <VMultiSelectActions
+            v-if="selectedEvents && selectedEvents.length > 0"
+            :count="selectedEvents.length"
+            @select-all="selectAll()"
+            @select-none="selectNone()"
+        >
+            <template #action>
+                <div class="hidden sm:inline">
+                    <button
+                        class="btn-ghost"
+                        :disabled="!hasAnySelectedEventInFuture || signedInUser.positions.length === 0"
+                        @click="joinEvents(selectedEvents)"
+                    >
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span class="truncate"> Anmelden </span>
                     </button>
-                    <span class="self-center font-bold">{{ selectedEvents.length }} ausgewählt</span>
-                    <div class="flex-grow"></div>
-                    <div class="hidden sm:block">
-                        <button
-                            class="btn-ghost"
-                            :disabled="!hasAnySelectedEventInFuture || signedInUser.positions.length === 0"
-                            @click="joinEvents(selectedEvents)"
-                        >
-                            <i class="fa-solid fa-user-plus"></i>
-                            <span class="truncate"> Anmelden als {{ positions.get(signedInUser.positions[0]).name || '...' }} </span>
-                        </button>
-                    </div>
-                    <ContextMenuButton class="btn-ghost">
-                        <template #default>
-                            <li class="context-menu-item" @click="selectAll">
-                                <i class="fa-solid fa-list-check" />
-                                <span>Alle auswählen</span>
-                            </li>
-                            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
-                                <i class="fa-solid fa-calendar-alt" />
-                                <span>Kalendereintrag erstellen</span>
-                            </li>
-                            <li
-                                v-if="signedInUser.positions.length === 1"
-                                class="permission-write-own-registrations context-menu-item"
-                                :class="{ disabled: !hasAnySelectedEventInFuture }"
-                                @click="joinEvents(selectedEvents)"
-                            >
-                                <i class="fa-solid fa-user-plus" />
-                                <span class="truncate"> Anmelden als {{ positions.get(signedInUser.positions[0]).name }} </span>
-                            </li>
-                            <li
-                                v-else
-                                class="permission-write-own-registrations context-menu-item"
-                                :class="{
-                                    disabled: !hasAnySelectedEventInFuture || signedInUser.positions.length === 0,
-                                }"
-                                @click="choosePositionAndJoinEvents(selectedEvents)"
-                            >
-                                <i class="fa-solid fa-user-plus" />
-                                <span>Anmelden als ...</span>
-                            </li>
-                            <li
-                                v-if="hasAnySelectedEventWithSignedInUserOnWaitingList"
-                                class="permission-write-own-registrations context-menu-item"
-                                :class="{ disabled: !hasAnySelectedEventInFuture }"
-                                @click="leaveEventsWaitingListOnly(selectedEvents)"
-                            >
-                                <i class="fa-solid fa-user-minus" />
-                                <span class="truncate"> Warteliste verlassen </span>
-                            </li>
-                            <li
-                                v-if="hasAnySelectedEventWithSignedInUserInTeam"
-                                class="permission-write-own-registrations context-menu-item text-error"
-                                :class="{ disabled: !hasAnySelectedEventInFuture }"
-                                @click="leaveEvents(selectedEvents)"
-                            >
-                                <i class="fa-solid fa-ban" />
-                                <span class="truncate"> Reisen absagen </span>
-                            </li>
-                        </template>
-                    </ContextMenuButton>
                 </div>
-            </div>
-        </div>
+            </template>
+            <template #menu>
+                <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
+                    <i class="fa-solid fa-calendar-alt" />
+                    <span>Kalendereintrag erstellen</span>
+                </li>
+                <li
+                    class="permission-write-own-registrations context-menu-item"
+                    :class="{ disabled: !hasAnySelectedEventInFuture }"
+                    @click="joinEvents(selectedEvents)"
+                >
+                    <i class="fa-solid fa-user-plus" />
+                    <span class="truncate"> Anmelden </span>
+                </li>
+                <li
+                    v-if="hasAnySelectedEventWithSignedInUserOnWaitingList"
+                    class="permission-write-own-registrations context-menu-item"
+                    :class="{ disabled: !hasAnySelectedEventInFuture }"
+                    @click="leaveEventsWaitingListOnly(selectedEvents)"
+                >
+                    <i class="fa-solid fa-user-minus" />
+                    <span class="truncate"> Warteliste verlassen </span>
+                </li>
+                <li
+                    v-if="hasAnySelectedEventWithSignedInUserInTeam"
+                    class="permission-write-own-registrations context-menu-item text-error"
+                    :class="{ disabled: !hasAnySelectedEventInFuture }"
+                    @click="leaveEvents(selectedEvents)"
+                >
+                    <i class="fa-solid fa-ban" />
+                    <span class="truncate"> Reisen absagen </span>
+                </li>
+            </template>
+        </VMultiSelectActions>
+
+        <RegistrationDetailsSheet ref="createRegistrationSheet" />
     </div>
 </template>
 
@@ -324,13 +295,12 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, EventType, PositionKey, SignedInUser } from '@/domain';
-import { EventState } from '@/domain';
-import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { VInfo } from '@/ui/components/common';
-import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
+import type { Event, Registration, SignedInUser } from '@/domain';
+import { EventState, EventType } from '@/domain';
+import type { ConfirmationDialog, Sheet } from '@/ui/components/common';
+import { ContextMenuButton, VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
-import PositionSelectDlg from '@/ui/components/events/PositionSelectDlg.vue';
+import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
@@ -377,7 +347,7 @@ const filterFreeSlots = ref<boolean>(false);
 const filterEventType = ref<EventType[]>([]);
 
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
-const positionSelectDialog = ref<Dialog<void, PositionKey | undefined> | null>(null);
+const createRegistrationSheet = ref<Sheet<{ registration?: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
 
 useQueryStateSync<boolean>(
     'assigned',
@@ -426,7 +396,7 @@ const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
         .filter((it) => {
             if (filterAssigned.value || filterWaitingList.value || filterFreeSlots.value) {
                 let state = 0;
-                if (it.signedInUserAssignedSlot) {
+                if (it.signedInUserAssignedSlot || it.type === EventType.WorkEvent) {
                     state = 1;
                 } else if (it.signedInUserRegistration) {
                     state = 2;
@@ -505,6 +475,9 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 }
 
 function getStateDetails(event: EventTableViewItem): StateDetails {
+    if (event.type === EventType.WorkEvent) {
+        return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-container text-ongreen-container' };
+    }
     if (event.state === EventState.Canceled) {
         return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
     }
@@ -541,19 +514,15 @@ async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
     }
 }
 
-async function choosePositionAndJoinEvents(events: EventTableViewItem[]): Promise<void> {
-    const position = await positionSelectDialog.value?.open();
-    if (position) {
-        // default position might have changed
-        signedInUser.value = authUseCase.getSignedInUser();
-        await eventUseCase.joinEvents(events, signedInUser.value.positions[0]);
+async function joinEvents(events: EventTableViewItem[]): Promise<void> {
+    const registration = await createRegistrationSheet.value?.open({
+        event: events,
+        registration: undefined,
+    });
+    if (registration) {
+        await eventUseCase.joinEvents(events, registration);
         await fetchEvents();
     }
-}
-
-async function joinEvents(events: EventTableViewItem[]): Promise<void> {
-    await eventUseCase.joinEvents(events, signedInUser.value.positions[0]);
-    await fetchEvents();
 }
 
 async function leaveEventsWaitingListOnly(events: EventTableViewItem[]): Promise<void> {

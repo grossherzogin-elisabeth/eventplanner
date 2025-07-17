@@ -66,6 +66,8 @@ class RegistrationUseCaseTest {
             registration.getUserKey(),
             null,
             "Test",
+            null,
+            null,
             null
         );
 
@@ -90,6 +92,8 @@ class RegistrationUseCaseTest {
             null,
             null,
             "Test",
+            null,
+            null,
             null
         );
         var updatedEvent = testee.updateRegistration(signedInUser, updateSpec);
@@ -110,6 +114,8 @@ class RegistrationUseCaseTest {
             event.getKey(),
             registration.getKey(),
             PositionKeys.DECKSHAND,
+            null,
+            null,
             null,
             null,
             null,

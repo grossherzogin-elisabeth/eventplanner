@@ -1,10 +1,10 @@
 <template>
     <div
-        class="flex items-center overflow-hidden rounded-2xl bg-yellow-container text-onyellow-container"
+        class="flex items-center overflow-hidden rounded-2xl bg-yellow-container text-onyellow-container shadow"
         :class="{ hidden: dismissed }"
         @click="clampActive = !clampActive"
     >
-        <i class="fa-solid fa-warning my-5 ml-4 self-start text-xl"></i>
+        <i class="fa-solid fa-warning my-5 ml-4 w-4 self-start text-xl"></i>
         <span
             class="mx-4 my-4 mr-1 w-0 flex-grow text-sm"
             :class="{
