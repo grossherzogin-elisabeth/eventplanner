@@ -1,7 +1,7 @@
 <template>
     <div :class="$attrs.class">
         <h2
-            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-outline-variant px-8 text-base font-semibold md:px-16 xl:px-20"
+            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-outline-variant px-4 text-base font-semibold xs:px-8 md:px-16 xl:px-20"
         >
             <slot name="before" />
             <div class="flex gap-x-8">
@@ -19,7 +19,7 @@
         </h2>
     </div>
     <!-- tab pane -->
-    <div v-if="props.modelValue && $slots[props.modelValue]" class="flex-1 px-8 py-4 md:px-16 md:py-8 xl:px-20">
+    <div v-if="props.modelValue && $slots[props.modelValue]" class="flex-1 px-4 py-4 xs:px-8 md:px-16 md:py-8 xl:px-20">
         <template v-for="tab in props.tabs" :key="tab">
             <div v-show="tab === props.modelValue" class="h-full">
                 <slot :name="tab" :active="tab === props.modelValue" />

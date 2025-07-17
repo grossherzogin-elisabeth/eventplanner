@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg" height="max-h-screen h-auto error-dialog">
+    <VDialog ref="dlg" height="max-h-screen h-auto" type="modal-danger">
         <template #title>
             <h1>Reise absagen</h1>
         </template>

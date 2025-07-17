@@ -6,28 +6,28 @@
             </h1>
         </template>
         <template #content>
-            <div class="space-y-8 px-8 pb-4 sm:w-[30rem] lg:px-10">
-                <VWarning v-if="openPositions.length > 0" class="-mx-4 my-4 text-sm">
+            <div class="space-y-8 px-4 pb-4 xs:px-8 sm:w-[30rem] lg:px-10">
+                <VWarning v-if="openPositions.length > 0" class="my-4 text-sm xs:-mx-4">
                     Für diese Reise wird noch Crew für die folgenden Positionen gesucht:
                     {{ openPositions.map((it) => it.name).join(', ') }}
                 </VWarning>
                 <VSuccess
                     v-if="event.signedInUserRegistration && event.signedInUserAssignedSlot"
-                    class="-mx-4 my-4 text-sm"
+                    class="my-4 text-sm xs:-mx-4"
                     icon="fa-check"
                 >
                     Du bist für diese Reise als
                     <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
                     eingeplant
                 </VSuccess>
-                <VInfo v-else-if="event.signedInUserRegistration" class="-mx-4 my-4 text-sm" icon="fa-hourglass-half">
+                <VInfo v-else-if="event.signedInUserRegistration" class="my-4 text-sm xs:-mx-4" icon="fa-hourglass-half">
                     Du stehst für diese Reise als
                     <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
                     auf der Warteliste
                 </VInfo>
 
-                <EventDetailsCard :event="event" class="-mx-4" />
-                <EventRouteCard v-if="event.locations.length > 0" :event="event" class="-mx-4" />
+                <EventDetailsCard :event="event" class="xs:-mx-4" />
+                <EventRouteCard v-if="event.locations.length > 0" :event="event" class="xs:-mx-4" />
             </div>
         </template>
         <template #bottom>

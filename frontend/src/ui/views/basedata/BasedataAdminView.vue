@@ -26,12 +26,12 @@
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
-                <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
                     <QualificationsTable ref="qualificationsTable" :filter="qualificationFilter" />
                 </div>
             </template>
             <template #[Tab.POSITIONS]>
-                <div class="-mx-8 md:-mx-16 xl:-mx-20">
+                <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
                     <PositionsTable ref="positionsTable" :filter="positionsFilter" />
                 </div>
             </template>

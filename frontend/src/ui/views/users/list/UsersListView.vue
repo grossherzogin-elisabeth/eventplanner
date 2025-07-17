@@ -171,10 +171,6 @@
                         </div>
                     </td>
                     <td class="w-1/12">
-                        <p class="mb-1 font-semibold">????</p>
-                        <p class="text-sm">Stunden</p>
-                    </td>
-                    <td class="w-1/12">
                         <div class="flex items-center justify-end">
                             <div v-if="item.qualifications?.length === 0" class="status-panel bg-surface-container-highest text-onsurface">
                                 <i class="fa-solid fa-question-circle"></i>

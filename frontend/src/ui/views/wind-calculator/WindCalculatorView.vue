@@ -1,6 +1,6 @@
 <template>
     <div class="xl:overflow-auto">
-        <div class="px-8 py-4 md:px-16 lg:pt-10 xl:px-20">
+        <div class="px-4 py-4 xs:px-8 md:px-16 lg:pt-10 xl:px-20">
             <div class="flex flex-col items-stretch gap-8 xl:flex-row xl:gap-16">
                 <div class="w-full md:max-w-sm">
                     <section>

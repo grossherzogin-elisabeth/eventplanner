@@ -5,7 +5,7 @@
             <h1 v-else>Qualifikation hinzufügen</h1>
         </template>
         <template #default>
-            <div v-if="userQualification" class="flex flex-1 flex-col p-8 lg:px-10">
+            <div v-if="userQualification" class="flex flex-1 flex-col px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
                         <VInputLabel>Qualifikation</VInputLabel>

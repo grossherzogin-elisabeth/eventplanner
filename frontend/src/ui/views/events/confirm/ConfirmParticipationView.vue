@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
+    <div class="h-full overflow-y-auto px-4 pb-8 pt-8 xs:px-8 md:px-16 xl:px-20">
         <div class="w-full max-w-2xl">
             <div v-if="registrationState === State.REGISTRATION_UNCONFIRMED">
                 <div class="mb-8 rounded-2xl">
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED && !signedInUser.key">
-                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container">
+                <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">Anmeldung nicht gefunden</span>
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED">
-                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container md:p-8">
+                <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">Anmeldung wurde bereits abgesagt</span>
@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.SIGNED_IN_USER_HAS_NO_REGISTRATION">
-                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container md:p-8">
+                <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">Keine Anmeldung zur Reise gefunden</span>
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.REGISTRATION_BELONGS_TO_OTHER_USER">
-                <div class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container md:p-8">
+                <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">Ungültiger Link</span>
@@ -87,7 +87,7 @@
                 </div>
             </div>
             <template v-else-if="registrationState === State.REGISTRATION_WAS_CONFIRMED">
-                <div class="-mx-4 mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container md:p-8">
+                <div class="mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-check"></i>
                         <span class="ml-4">Teilnahme bestätigt</span>
@@ -103,7 +103,7 @@
             </template>
             <div
                 v-else-if="registrationState === State.REGISTRATION_WAS_JUST_CANCELED"
-                class="-mx-4 mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container md:p-8"
+                class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8"
             >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-xmark"></i>

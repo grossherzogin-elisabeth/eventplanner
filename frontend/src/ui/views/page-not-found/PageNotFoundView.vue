@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
+    <div class="h-full overflow-y-auto px-4 pb-8 pt-8 xs:px-8 md:px-16 xl:px-20">
         <div class="max-w-2xl">
             <h1 class="mb-4">Die verlorene Seite</h1>
             <p class="mb-4">

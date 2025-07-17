@@ -186,9 +186,6 @@ module.exports = {
             },
         }),
         extend: {
-            screens: {
-                xxl: 1600,
-            },
             borderRadius: {
                 '4xl': '3em',
             },
@@ -204,6 +201,9 @@ module.exports = {
                 '5xl': '64rem',
                 '6xl': '72rem',
                 '7xl': '80rem',
+            },
+            screens: {
+                xs: '400px',
             },
         },
     },

@@ -70,7 +70,7 @@
             </li>
         </ul>
 
-        <VInfo v-if="filteredEvents.length > 1" class="-mx-4 mt-8 text-sm">
+        <VInfo v-if="filteredEvents.length > 1" class="mt-8 text-sm xs:-mx-4">
             Wenn du dich bei mehreren Veranstaltungen anmeldest, werden diese Angaben für alle Anmeldungen übernommen. Du kannst jede
             Anmeldung im Nachgang einzeln bearbeiten, um z.B. individuelle Notizen fürs Büro zu hinterlegen.
         </VInfo>
@@ -92,7 +92,7 @@
             Hier kannst du zusätzliche Informationen für deine Anmeldung hinterlegen, die für das Büro bei der Planung relevant sein
             könnten.
         </p>
-        <div class="-mx-4 mb-4">
+        <div class="mb-4 xs:-mx-4">
             <VInputLabel>Notiz fürs Büro</VInputLabel>
             <VInputTextArea :model-value="props.registration.note" @update:model-value="updateRegistration({ note: $event })" />
         </div>
@@ -109,7 +109,9 @@
                 @update:model-value="updateRegistration({ overnightStay: $event })"
             />
         </div>
-        <VInfo class="-mx-4 mt-8"> Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann. </VInfo>
+        <VInfo class="mt-8 xs:-mx-4">
+            Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann.
+        </VInfo>
     </div>
     <!-- overnight stay -->
     <div v-else-if="view === View.ARRIVAL">
@@ -131,7 +133,9 @@
                 "
             />
         </div>
-        <VInfo class="-mx-4 mt-8"> Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann. </VInfo>
+        <VInfo class="mt-8 xs:-mx-4">
+            Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann.
+        </VInfo>
     </div>
 </template>
 <script lang="ts" setup>

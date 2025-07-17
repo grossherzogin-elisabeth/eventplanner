@@ -1,5 +1,5 @@
 <template>
-    <div class="p-8">
+    <div class="p-4 xs:p-8">
         <div class="grid grid-cols-4 gap-4">
             <div class="flex flex-col">
                 <div class="demo">

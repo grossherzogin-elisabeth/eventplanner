@@ -9,7 +9,7 @@
                 :style="{
                     '--open-close-animation-duration': `${animationDuration}ms`,
                 }"
-                @scroll.passive="detectScrollClose($event)"
+                @scroll.passive="detectScrollClose()"
                 @click="reject()"
             >
                 <div
@@ -26,7 +26,7 @@
                     >
                         <div class="handle mx-auto mb-4 h-1 min-h-1 w-8 rounded-full bg-onsurface-variant sm:hidden"></div>
                         <div class="flex flex-1 flex-col overflow-clip" style="max-height: calc(100vh - 3.25rem)">
-                            <div class="flex h-16 w-full items-center justify-between pl-8 lg:pl-10 lg:pr-10">
+                            <div class="flex h-16 w-full items-center justify-between pl-4 xs:pl-8 lg:pl-10 lg:pr-10">
                                 <div v-if="props.showBackButton" class="-ml-4 mr-4">
                                     <button class="icon-button" @click="back()">
                                         <i class="fa-solid fa-arrow-left"></i>
@@ -112,10 +112,15 @@ const background: Ref<HTMLElement | null> = ref(null);
 const wrapper: Ref<HTMLElement | null> = ref(null);
 const renderContent: Ref<boolean> = ref(false);
 const isFullScreen: Ref<boolean> = ref(false);
+const scrollTop: Ref<number> = ref(0);
 let promiseResolve: ((result: T) => void) | null = null;
 let promiseReject: ((reason: T) => void) | null = null;
 let closeTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 const sheetMinHeight = computed<string>(() => props.minHeight || '10rem');
+
+function init(): void {
+    window.addEventListener('resize', onWindowResize, { passive: true });
+}
 
 async function open(): Promise<T> {
     sheetOpening.value = true;
@@ -168,19 +173,34 @@ async function close(): Promise<void> {
     }, animationDuration + 100);
 }
 
-function detectScrollClose(event: Event): void {
-    const element = event.target as HTMLElement;
-    if (element.scrollTop >= window.innerHeight) {
+function onWindowResize(): void {
+    if (!background.value) {
+        return;
+    }
+    if (background.value.scrollTop < scrollTop.value) {
+        background.value.scrollTop = scrollTop.value;
+    }
+}
+
+async function detectScrollClose(): Promise<void> {
+    if (!background.value) {
+        return;
+    }
+    await nextTick();
+    scrollTop.value = background.value.scrollTop;
+    if (background.value.scrollTop >= window.innerHeight) {
         isFullScreen.value = true;
     } else {
         isFullScreen.value = false;
     }
-    if (element.scrollTop < 25) {
+    if (background.value.scrollTop < 25) {
         reject();
-    } else if (element.scrollTop < 100 && !element.contains(document.activeElement)) {
+    } else if (background.value.scrollTop < 100 && !background.value.contains(document.activeElement)) {
         reject();
     }
 }
+
+init();
 </script>
 <style scoped>
 .sheet-background {
