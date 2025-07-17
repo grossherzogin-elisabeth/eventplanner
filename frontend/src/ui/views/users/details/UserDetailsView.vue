@@ -1,14 +1,9 @@
 <template>
     <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <DetailsPage :back-to="{ name: Routes.UsersList }">
-            <template #header>
-                <div class="hidden pt-8 xl:block">
-                    <h1>{{ user?.firstName }} {{ user?.lastName }} bearbeiten</h1>
-                    <p v-if="user && signedInUser.key === user.key" class="mt-1 text-sm">Das bist du!</p>
-                </div>
-            </template>
+            <template #header> {{ user?.firstName }} {{ user?.lastName }} bearbeiten </template>
             <template #content>
-                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-20 xl:pt-8">
                     <template #[Tab.USER_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
                             <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />

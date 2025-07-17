@@ -78,11 +78,11 @@
                         class="w-0"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
-                        <button class="icon-button mr-1 sm:mr-2">
+                        <button class="icon-button">
                             <i class="fa-solid fa-ellipsis-vertical" />
                         </button>
                     </td>
-                    <td v-else></td>
+                    <td></td>
                 </tr>
             </component>
         </table>

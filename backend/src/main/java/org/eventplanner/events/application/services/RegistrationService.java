@@ -5,13 +5,13 @@ import java.util.NoSuchElementException;
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.RegistrationRepository;
 import org.eventplanner.events.domain.entities.events.Event;
-import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.specs.CreateRegistrationSpec;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
-import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -203,6 +203,8 @@ public class RegistrationService {
         registration.setName(spec.name());
         registration.setNote(spec.note());
         registration.setConfirmedAt(spec.confirmedAt());
+        registration.setOvernightStay(spec.overnightStay());
+        registration.setArrival(spec.arrival());
         registrationRepository.updateRegistration(registration, event.getKey());
         return registration;
     }
