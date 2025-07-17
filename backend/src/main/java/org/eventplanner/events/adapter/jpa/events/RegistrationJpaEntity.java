@@ -1,15 +1,13 @@
 package org.eventplanner.events.adapter.jpa.events;
 
-import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.time.Instant;
+import java.time.LocalDate;
 
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.RegistrationKey;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -56,16 +54,30 @@ public class RegistrationJpaEntity {
     @Column(name = "confirmed_at")
     public @Nullable String confirmedAt;
 
+    @Column(name = "overnight_stay")
+    public @Nullable Boolean overnightStay;
+
+    @Column(name = "arrival")
+    public @Nullable String arrival;
+
     public static @NonNull RegistrationJpaEntity fromDomain(@NonNull Registration domain, @NonNull EventKey eventKey) {
         return new RegistrationJpaEntity(
             domain.getKey().value(),
             eventKey.value(),
             domain.getPosition().value(),
-            mapNullable(domain.getUserKey(), UserKey::value),
+            domain.getUserKey() != null
+                ? domain.getUserKey().value()
+                : null,
             domain.getName(),
             domain.getNote(),
             domain.getAccessKey(),
-            ofNullable(domain.getConfirmedAt()).map(Instant::toString).orElse(null)
+            domain.getConfirmedAt() != null
+                ? domain.getConfirmedAt().toString()
+                : null,
+            domain.getOvernightStay(),
+            domain.getArrival() != null
+                ? domain.getArrival().toString()
+                : null
         );
     }
 
@@ -73,11 +85,19 @@ public class RegistrationJpaEntity {
         return new Registration(
             new RegistrationKey(key),
             new PositionKey(positionKey),
-            mapNullable(userKey, UserKey::new),
+            userKey != null
+                ? new UserKey(userKey)
+                : null,
             name,
             note,
             accessKey,
-            ofNullable(confirmedAt).map(Instant::parse).orElse(null)
+            confirmedAt != null
+                ? Instant.parse(confirmedAt)
+                : null,
+            overnightStay,
+            arrival != null
+                ? LocalDate.parse(arrival)
+                : null
         );
     }
 }

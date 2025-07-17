@@ -4,13 +4,13 @@ import java.util.NoSuchElementException;
 
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.RegistrationService;
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.SignedInUser;
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.specs.CreateRegistrationSpec;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
-import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.Permission;
-import org.eventplanner.events.domain.values.RegistrationKey;
+import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 

@@ -3,12 +3,13 @@ package org.eventplanner.events.rest.registrations.dto;
 import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import org.eventplanner.events.domain.specs.CreateRegistrationSpec;
-import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.RegistrationKey;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -17,7 +18,9 @@ public record CreateRegistrationRequest(
     @NonNull String positionKey,
     @Nullable String userKey,
     @Nullable String name,
-    @Nullable String note
+    @Nullable String note,
+    @Nullable Boolean overnightStay,
+    @Nullable String arrival
 ) implements Serializable {
     public CreateRegistrationSpec toDomain(@NonNull EventKey eventKey, boolean isSelfSignup) {
         return new CreateRegistrationSpec(
@@ -27,7 +30,11 @@ public record CreateRegistrationRequest(
             mapNullable(userKey, UserKey::new),
             name,
             note,
-            isSelfSignup
+            isSelfSignup,
+            overnightStay,
+            arrival != null
+                ? LocalDate.parse(arrival)
+                : null
         );
     }
 }

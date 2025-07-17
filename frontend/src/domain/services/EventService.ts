@@ -156,6 +156,10 @@ export class EventService {
         return this.hasOpenSlots(event, positions, SlotCriticality.Required);
     }
 
+    public hasOpenImportantSlots(event: Event, positions?: PositionKey[]): boolean {
+        return this.hasOpenSlots(event, positions, SlotCriticality.Important);
+    }
+
     public hasOpenSlots(event: Event, positions?: PositionKey[], criticality: number = 0): boolean {
         const openSlots = event.slots.filter(
             (it) =>
@@ -217,7 +221,9 @@ export class EventService {
             // singed in user has a registration
             event.canSignedInUserJoin = false;
             event.signedInUserAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === event.signedInUserRegistration?.key);
+            const isInPast = event.start.getTime() < new Date().getTime();
             if (event.signedInUserAssignedSlot) {
+                event.canSignedInUserUpdateRegistration = !isInPast;
                 const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
                 const isLessThan14daysInFuture =
                     isLessThan7daysInFuture || event.start.getTime() < addToDate(new Date(), { days: 14 }).getTime();
@@ -226,7 +232,8 @@ export class EventService {
                     // event.canSignedInUserLeave;
                 }
             } else {
-                event.canSignedInUserLeave = event.start.getTime() > new Date().getTime();
+                event.canSignedInUserLeave = !isInPast;
+                event.canSignedInUserUpdateRegistration = !isInPast;
             }
         } else {
             // singed in user has no registration

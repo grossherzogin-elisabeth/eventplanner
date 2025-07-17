@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eventplanner.events.application.usecases.PositionUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
-import org.eventplanner.events.domain.values.PositionKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.rest.positions.dto.CreatePositionRequest;
 import org.eventplanner.events.rest.positions.dto.PositionRepresentation;
 import org.eventplanner.events.rest.positions.dto.UpdatePositionRequest;

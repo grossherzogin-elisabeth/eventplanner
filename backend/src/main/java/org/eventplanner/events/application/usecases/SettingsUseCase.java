@@ -1,10 +1,10 @@
 package org.eventplanner.events.application.usecases;
 
-import org.eventplanner.events.application.services.SettingsService;
-import org.eventplanner.events.domain.entities.SignedInUser;
-import org.eventplanner.events.domain.values.Permission;
-import org.eventplanner.events.domain.values.Settings;
-import org.eventplanner.events.domain.values.Settings.UiSettings;
+import org.eventplanner.events.application.services.ConfigurationService;
+import org.eventplanner.events.domain.aggregates.ApplicationConfig;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
+import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.config.FrontendConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -16,25 +16,25 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SettingsUseCase {
 
-    private final SettingsService settingsService;
+    private final ConfigurationService configurationService;
 
-    public @NonNull Settings getSettings(@NonNull final SignedInUser signedInUser) {
+    public @NonNull ApplicationConfig getSettings(@NonNull final SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_APP_SETTINGS);
 
-        return settingsService.getSettings();
+        return configurationService.getConfig();
     }
 
-    public @NonNull Settings updateSettings(
+    public @NonNull ApplicationConfig updateSettings(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final Settings settings
+        @NonNull final ApplicationConfig.UpdateSpec updateSpec
     ) {
         signedInUser.assertHasPermission(Permission.WRITE_APP_SETTINGS);
 
         log.info("Updating settings");
-        return settingsService.updateSettings(settings);
+        return configurationService.updateConfig(updateSpec);
     }
 
-    public @NonNull UiSettings getUiSettings() {
-        return settingsService.getSettings().uiSettings();
+    public @NonNull FrontendConfig getUiSettings() {
+        return configurationService.getConfig().frontend();
     }
 }

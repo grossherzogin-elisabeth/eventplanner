@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eventplanner.events.application.usecases.QualificationUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
-import org.eventplanner.events.domain.values.QualificationKey;
+import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.eventplanner.events.rest.qualifications.dto.CreateQualificationRequest;
 import org.eventplanner.events.rest.qualifications.dto.QualificationRepresentation;
 import org.eventplanner.events.rest.qualifications.dto.UpdateQualificationRequest;

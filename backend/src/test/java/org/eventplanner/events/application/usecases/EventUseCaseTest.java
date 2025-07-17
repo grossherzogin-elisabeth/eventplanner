@@ -13,11 +13,11 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.ExportService;
-import org.eventplanner.events.domain.entities.Event;
-import org.eventplanner.events.domain.entities.EventSlot;
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.EventState;
-import org.eventplanner.events.domain.values.Permission;
+import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.EventSlot;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.events.EventState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -65,7 +65,7 @@ class EventUseCaseTest {
     }
 
     @Test
-    void shouldNotReturnRegistrationNotesForNonAdminUsers() {
+    void shouldNotReturnPrivateRegistrationDataForNonAdminUsers() {
         var signedInUser = createSignedInUser()
             .withPermissions(Permission.READ_EVENTS);
 
@@ -76,12 +76,14 @@ class EventUseCaseTest {
         for (final var evt : events) {
             for (final Registration registration : evt.getRegistrations()) {
                 assertThat(registration.getNote()).isNull();
+                assertThat(registration.getOvernightStay()).isNull();
+                assertThat(registration.getArrival()).isNull();
             }
         }
     }
 
     @Test
-    void shouldReturnOwnRegistrationNotesForNonAdminUsers() {
+    void shouldReturnOwnRegistrationPrivateDataForNonAdminUsers() {
         var signedInUser = createSignedInUser()
             .withPermissions(Permission.READ_EVENTS);
 
@@ -91,6 +93,8 @@ class EventUseCaseTest {
         var events = testee.getEvents(signedInUser, YEAR);
         assertThat(events).isNotEmpty();
         assertThat(events.getFirst().getRegistrations().getFirst().getNote()).isNotNull();
+        assertThat(events.getFirst().getRegistrations().getFirst().getOvernightStay()).isNotNull();
+        assertThat(events.getFirst().getRegistrations().getFirst().getArrival()).isNotNull();
     }
 
     @Test

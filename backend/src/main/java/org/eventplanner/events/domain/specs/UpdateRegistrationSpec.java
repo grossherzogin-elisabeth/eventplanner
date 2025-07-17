@@ -1,11 +1,12 @@
 package org.eventplanner.events.domain.specs;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
-import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.RegistrationKey;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -16,6 +17,8 @@ public record UpdateRegistrationSpec(
     @Nullable UserKey userKey,
     @Nullable String name,
     @Nullable String note,
-    @Nullable Instant confirmedAt
+    @Nullable Instant confirmedAt,
+    @Nullable Boolean overnightStay,
+    @Nullable LocalDate arrival
 ) {
 }

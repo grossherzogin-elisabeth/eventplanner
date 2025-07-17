@@ -1,9 +1,13 @@
 package org.eventplanner.testdata;
 
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.RegistrationKey;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.UserKey;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.UUID;
+
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 
 public class RegistrationFactory {
     public static Registration createRegistration() {
@@ -21,8 +25,10 @@ public class RegistrationFactory {
             userKey,
             null,
             "Lorem ipsum dolor sit amet",
-            null,
-            null
+            UUID.randomUUID().toString(),
+            Instant.now(),
+            true,
+            LocalDate.now()
         );
     }
 }

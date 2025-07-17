@@ -5,7 +5,7 @@ import static java.util.Optional.ofNullable;
 import java.io.Serializable;
 import java.time.Instant;
 
-import org.eventplanner.events.domain.values.EventLocation;
+import org.eventplanner.events.domain.values.events.EventLocation;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

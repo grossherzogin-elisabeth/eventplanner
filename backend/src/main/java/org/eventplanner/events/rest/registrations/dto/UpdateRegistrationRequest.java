@@ -2,12 +2,13 @@ package org.eventplanner.events.rest.registrations.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
 
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
-import org.eventplanner.events.domain.values.EventKey;
-import org.eventplanner.events.domain.values.PositionKey;
-import org.eventplanner.events.domain.values.RegistrationKey;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
+import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -17,7 +18,9 @@ public record UpdateRegistrationRequest(
     @Nullable String userKey,
     @Nullable String name,
     @Nullable String note,
-    @Nullable boolean confirmed
+    @Nullable boolean confirmed,
+    @Nullable Boolean overnightStay,
+    @Nullable String arrival
 ) implements Serializable {
     public @NonNull UpdateRegistrationSpec toDomain(
         @NonNull final EventKey eventKey
@@ -31,7 +34,11 @@ public record UpdateRegistrationRequest(
                 : null,
             name,
             note,
-            confirmed ? Instant.now() : null
+            confirmed ? Instant.now() : null,
+            overnightStay,
+            arrival != null
+                ? LocalDate.parse(arrival)
+                : null
         );
     }
 }

@@ -2,7 +2,7 @@ package org.eventplanner.events.rest.status.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.entities.SystemStatus;
+import org.eventplanner.events.domain.values.config.SystemStatus;
 import org.springframework.lang.NonNull;
 
 public record StatusRepresentation(

@@ -3,8 +3,8 @@ package org.eventplanner.events.domain.specs;
 import java.time.Instant;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.EventSlot;
-import org.eventplanner.events.domain.values.EventLocation;
+import org.eventplanner.events.domain.entities.events.EventSlot;
+import org.eventplanner.events.domain.values.events.EventLocation;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

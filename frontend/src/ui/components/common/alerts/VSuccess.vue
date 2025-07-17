@@ -1,7 +1,7 @@
 <template>
     <div class="rounded-2xl bg-surface">
         <div
-            class="flex items-center overflow-hidden rounded-2xl bg-green-container text-ongreen-container"
+            class="flex items-center overflow-hidden rounded-2xl bg-green-container text-ongreen-container shadow"
             :class="{ hidden: dismissed }"
             @click="clampActive = !clampActive"
         >

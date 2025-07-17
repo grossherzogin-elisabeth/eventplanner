@@ -4,8 +4,8 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.entities.Registration;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -15,7 +15,9 @@ public record RegistrationRepresentation(
     @Nullable String userKey,
     @Nullable String name,
     @Nullable String note,
-    @Nullable Boolean confirmed
+    @Nullable Boolean confirmed,
+    @Nullable Boolean overnightStay,
+    @Nullable String arrival
 ) implements Serializable {
 
     public static @NonNull RegistrationRepresentation fromDomain(@NonNull Registration domain) {
@@ -25,7 +27,9 @@ public record RegistrationRepresentation(
             mapNullable(domain.getUserKey(), UserKey::value),
             domain.getName(),
             domain.getNote(),
-            domain.getConfirmedAt() != null
+            domain.getConfirmedAt() != null,
+            domain.getOvernightStay(),
+            domain.getArrival() != null ? domain.getArrival().toString() : null
         );
     }
 }

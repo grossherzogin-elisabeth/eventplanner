@@ -38,6 +38,6 @@ frontend:
 security:
   enable-csrf: false
 
-#logging:
-#  level:
-#    org.eventplanner: DEBUG
+logging:
+  level:
+    org.eventplanner: DEBUG

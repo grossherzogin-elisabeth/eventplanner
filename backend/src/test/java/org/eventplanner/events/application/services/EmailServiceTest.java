@@ -16,13 +16,17 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EmailSender;
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
-import org.eventplanner.events.domain.entities.QueuedEmail;
-import org.eventplanner.events.domain.values.GlobalNotification;
-import org.eventplanner.events.domain.values.NotificationType;
-import org.eventplanner.events.domain.values.PersonalNotification;
-import org.eventplanner.events.domain.values.Role;
-import org.eventplanner.events.domain.values.Settings;
-import org.eventplanner.events.domain.values.UserKey;
+import org.eventplanner.events.domain.aggregates.ApplicationConfig;
+import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
+import org.eventplanner.events.domain.entities.notifications.PersonalNotification;
+import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
+import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.config.AuthConfig;
+import org.eventplanner.events.domain.values.config.EmailConfig;
+import org.eventplanner.events.domain.values.config.FrontendConfig;
+import org.eventplanner.events.domain.values.config.NotificationConfig;
+import org.eventplanner.events.domain.values.notifications.NotificationType;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.eventplanner.testdata.TestDb;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +45,7 @@ class EmailServiceTest {
 
     private QueuedEmailRepository queuedEmailRepository;
     private UserService userService;
-    private SettingsService settingsService;
+    private ConfigurationService configurationService;
     private EmailSender emailSender;
 
     private EmailService testee;
@@ -53,18 +57,16 @@ class EmailServiceTest {
 
     @BeforeEach
     void setUp() {
-        settingsService = mock(SettingsService.class);
+        configurationService = mock(ConfigurationService.class);
         userService = mock(UserService.class);
         emailSender = mock(EmailSender.class);
         queuedEmailRepository = mock(QueuedEmailRepository.class);
         testee = new EmailService(
-            settingsService,
+            configurationService,
             userService,
             queuedEmailRepository,
             emailSender,
-            freeMarkerConfig.getConfiguration(),
-            "",
-            "[TEST]"
+            freeMarkerConfig.getConfiguration()
         );
     }
 
@@ -98,7 +100,7 @@ class EmailServiceTest {
     @Test
     void shouldNotSendEmail() throws Exception {
         when(queuedEmailRepository.next()).thenReturn(Optional.empty());
-        when(settingsService.getSettings()).thenReturn(createSettings());
+        when(configurationService.getConfig()).thenReturn(createSettings());
 
         testee.sendNextEmail();
 
@@ -108,7 +110,7 @@ class EmailServiceTest {
     @Test
     void shouldSendEmail() throws Exception {
         when(queuedEmailRepository.next()).thenReturn(Optional.of(createQueuedEmail()));
-        when(settingsService.getSettings()).thenReturn(createSettings());
+        when(configurationService.getConfig()).thenReturn(createSettings());
 
         testee.sendNextEmail();
 
@@ -118,7 +120,7 @@ class EmailServiceTest {
     @Test
     void shouldQueueForRetry() throws Exception {
         when(queuedEmailRepository.next()).thenReturn(Optional.of(createQueuedEmail()));
-        when(settingsService.getSettings()).thenReturn(createSettings());
+        when(configurationService.getConfig()).thenReturn(createSettings());
         doThrow(Exception.class).when(emailSender).sendEmail(any(), any());
 
         testee.sendNextEmail();
@@ -129,7 +131,7 @@ class EmailServiceTest {
     @Test
     void shouldNotQueueForRetryWhenMaxRetriesExceeded() throws Exception {
         when(queuedEmailRepository.next()).thenReturn(Optional.of(createQueuedEmail().withRetries(10)));
-        when(settingsService.getSettings()).thenReturn(createSettings());
+        when(configurationService.getConfig()).thenReturn(createSettings());
         doThrow(Exception.class).when(emailSender).sendEmail(any(), any());
 
         testee.sendNextEmail();
@@ -140,23 +142,39 @@ class EmailServiceTest {
     private QueuedEmail createQueuedEmail() {
         return new QueuedEmail(
             NotificationType.ADDED_TO_CREW,
-            "someone@email.de",
+            "someone@email.com",
             new UserKey(),
             "Test",
             "Test"
         );
     }
 
-    private Settings createSettings() {
-        return new Settings(
-            new Settings.NotificationSettings(),
-            new Settings.EmailSettings(),
-            new Settings.UiSettings(
+    private ApplicationConfig createSettings() {
+        return new ApplicationConfig(
+            new NotificationConfig(),
+            new EmailConfig(
+                true,
+                null,
+                "[TEST] ",
+                "from@email.com",
+                "from",
+                "reply@email.com",
+                "reply to",
+                "host",
+                446,
+                true,
+                true,
+                "username",
+                "password"
+            ),
+            new FrontendConfig(
                 "Title",
                 "Title",
                 "test@test.de",
-                "test@test.de"
-            )
+                "test@test.de",
+                "http://localhost:8080"
+            ),
+            new AuthConfig()
         );
     }
 
