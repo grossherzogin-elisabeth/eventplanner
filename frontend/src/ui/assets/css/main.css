@@ -13,7 +13,6 @@
 @import 'styling/status-panels.css';
 
 @import 'domain/role.css';
-@import 'domain/event.css';
 @import 'domain/permission.css';
 
 html {
