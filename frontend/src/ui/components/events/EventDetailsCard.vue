@@ -3,18 +3,19 @@
         <h2 class="mb-2 font-bold text-secondary">
             {{ $t('app.event-details.title') }}
         </h2>
-        <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow">
+        <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow xs:-mx-4">
             <p class="flex items-center space-x-4">
                 <i class="fa-solid fa-calendar-day w-4" />
-                <span>{{ $d(props.event.start, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
+                <span>{{ $d(props.event.start, DateTimeFormat.DDD_DD_MM_hh_mm) }} Uhr</span>
             </p>
             <p class="flex items-center space-x-4">
                 <i class="fa-solid fa-flag-checkered w-4" />
-                <span>{{ $d(props.event.end, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
+                <span>{{ $d(props.event.end, DateTimeFormat.DDD_DD_MM_hh_mm) }} Uhr</span>
             </p>
             <p class="flex items-center space-x-4">
                 <i class="fa-solid fa-route w-4" />
-                <span>{{ props.event.days }} Tage</span>
+                <span v-if="props.event.days === 1">1 Tag</span>
+                <span v-else>{{ props.event.days }} Tage</span>
             </p>
             <p class="flex items-center space-x-4">
                 <i class="fa-solid fa-users w-4" />
@@ -25,7 +26,7 @@
                 <span v-else-if="props.event.assignedUserCount"> {{ props.event.assignedUserCount }} Crew </span>
                 <span v-else> {{ props.event.registrations.length }} Anmeldungen </span>
             </p>
-            <p v-if="props.event.description" class="flex items-center space-x-4">
+            <p v-if="props.event.description" class="flex items-baseline space-x-4">
                 <i class="fa-solid fa-info-circle w-4" />
                 <span>{{ props.event.description }} </span>
             </p>

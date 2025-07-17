@@ -5,8 +5,8 @@
         </div>
         <div class="sticky top-10 z-20 hidden bg-surface px-8 pb-2 pt-8 md:px-16 lg:block xl:top-0 xl:mx-4">
             <div class="flex items-center xl:max-w-5xl">
-                <div class="flex-grow">
-                    <h1 class="hidden xl:block">
+                <div class="w-0 flex-grow pr-4">
+                    <h1 class="hidden truncate xl:block">
                         <slot name="header" />
                     </h1>
                 </div>

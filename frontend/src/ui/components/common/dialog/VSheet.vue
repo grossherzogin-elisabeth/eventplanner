@@ -26,7 +26,7 @@
                     >
                         <div class="handle mx-auto mb-4 h-1 min-h-1 w-8 rounded-full bg-onsurface-variant sm:hidden"></div>
                         <div class="flex flex-1 flex-col overflow-clip" style="max-height: calc(100vh - 3.25rem)">
-                            <div class="flex h-16 w-full items-center justify-between pl-4 xs:pl-8 lg:pl-10 lg:pr-10">
+                            <div class="flex h-16 w-full items-center justify-between pl-4 xs:pl-8 sm:pr-8 lg:pl-10 lg:pr-10">
                                 <div v-if="props.showBackButton" class="-ml-4 mr-4">
                                     <button class="icon-button" @click="back()">
                                         <i class="fa-solid fa-arrow-left"></i>

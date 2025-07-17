@@ -92,7 +92,7 @@
             Hier kannst du zusätzliche Informationen für deine Anmeldung hinterlegen, die für das Büro bei der Planung relevant sein
             könnten.
         </p>
-        <div class="mb-4 xs:-mx-4">
+        <div class="mb-4">
             <VInputLabel>Notiz fürs Büro</VInputLabel>
             <VInputTextArea :model-value="props.registration.note" @update:model-value="updateRegistration({ note: $event })" />
         </div>
