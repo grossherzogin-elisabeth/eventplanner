@@ -32,3 +32,4 @@ export { default as VInfo } from './alerts/VInfo.vue';
 export { default as VSuccess } from './alerts/VSuccess.vue';
 export { default as VError } from './alerts/VError.vue';
 export { default as VTooltip } from './tooltip/VTooltip.vue';
+export { default as VMarkdown } from './VMarkdown.vue';
