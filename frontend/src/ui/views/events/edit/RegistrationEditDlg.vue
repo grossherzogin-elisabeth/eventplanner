@@ -107,7 +107,6 @@ import type { Event, Position, QualificationKey, Registration, User, ValidationH
 import type { Dialog } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputDate } from '@/ui/components/common';
-import { VInputCheckBox } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application.ts';
