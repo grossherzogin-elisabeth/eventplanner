@@ -111,6 +111,7 @@ export class EventRestRepository implements EventRepository {
             assignedUserCount: eventRepresentation.slots.filter((it) => it.assignedRegistrationKey).length,
             canSignedInUserJoin: false,
             canSignedInUserLeave: false,
+            canSignedInUserUpdateRegistration: false,
         };
         event.type = EventRestRepository.mapEventType(event);
         return event;

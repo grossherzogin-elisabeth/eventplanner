@@ -1,8 +1,8 @@
 <template>
-    <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4 2xl:flex-row 2xl:items-start">
+    <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4">
         <!-- position counters -->
-        <div class="top-14 -mx-8 mb-4 overflow-x-auto bg-surface pb-4 2xl:sticky 2xl:mr-8 2xl:w-64 2xl:pt-10">
-            <div class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-onsurface-variant md:flex-wrap 2xl:flex-col">
+        <div class="top-32 -mx-8 mb-4 overflow-x-auto bg-surface pb-4">
+            <div class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-onsurface-variant md:flex-wrap">
                 <div class="flex items-center rounded-2xl bg-surface-container p-1">
                     <span class="px-2"> Crew </span>
                     <span
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="-mx-4 flex-1 gap-16 md:flex xl:pr-8 2xl:w-0">
+        <div class="-mx-4 flex-1 gap-16 md:flex">
             <div class="crew mb-8 px-4 pb-4 md:w-1/2 lg:mb-0">
                 <h2 class="mb-4 font-bold text-secondary">Crew</h2>
                 <!-- slot list-admin dropzone -->

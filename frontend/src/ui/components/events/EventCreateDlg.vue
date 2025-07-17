@@ -153,6 +153,7 @@ const event = ref<Event>({
     assignedUserCount: 0,
     canSignedInUserJoin: false,
     canSignedInUserLeave: false,
+    canSignedInUserUpdateRegistration: false,
 });
 const validation = useValidation(event, eventService.validate);
 

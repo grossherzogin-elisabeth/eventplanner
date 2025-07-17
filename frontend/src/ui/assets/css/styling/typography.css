@@ -38,17 +38,6 @@ code {
     @apply rounded-lg bg-surface-container-highest px-1 py-1 text-onsurface;
 }
 
-section {
-    @apply -mx-4 md:mx-0;
-}
-
-section > h1,
-section > h2,
-section > h3,
-section > p {
-    @apply px-4 md:px-0;
-}
-
 ::-moz-selection {
     @apply bg-secondary text-onsecondary;
 }
