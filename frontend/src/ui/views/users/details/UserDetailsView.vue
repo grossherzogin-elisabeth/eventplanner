@@ -126,6 +126,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { deepCopy, diff } from '@/common';
 import type { Event, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
@@ -146,19 +147,20 @@ import UserQualificationsTable from './UserQualificationsTable.vue';
 import UserRolesTable from './UserRolesTable.vue';
 
 enum Tab {
-    USER_DATA = 'app.user-details.tab.data',
-    USER_CONTACT_DATA = 'app.user-details.tab.contact',
-    USER_CERTIFICATES = 'app.user-details.tab.certificates',
-    USER_EVENTS = 'app.user-details.tab.events',
-    USER_ROLES = 'app.user-details.tab.roles',
-    USER_EMERGENCY = 'app.user-details.tab.emergency',
-    USER_OTHER = 'app.user-details.tab.other',
+    USER_DATA = 'data',
+    USER_CONTACT_DATA = 'contact',
+    USER_CERTIFICATES = 'certificates',
+    USER_EVENTS = 'events',
+    USER_ROLES = 'roles',
+    USER_EMERGENCY = 'emergency',
+    USER_OTHER = 'other',
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const userAdministrationUseCase = useUserAdministrationUseCase();
@@ -175,7 +177,10 @@ const tabs = [
     Tab.USER_EMERGENCY,
     Tab.USER_OTHER,
     Tab.USER_ROLES,
-];
+].map((it) => ({
+    value: it,
+    label: t(`views.user-details.tab.${it}`),
+}));
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);

@@ -13,7 +13,7 @@
                     :aria-required="props.required"
                     :class="{ invalid: showErrors && hasErrors }"
                     :disabled="props.disabled"
-                    :placeholder="props.placeholder || $t('shared.please-select')"
+                    :placeholder="props.placeholder || $t('generic.please-select')"
                     :required="props.required"
                     :value="fileName"
                     aria-haspopup="true"

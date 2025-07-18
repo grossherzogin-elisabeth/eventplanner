@@ -1,13 +1,11 @@
 <template>
     <section>
         <h2 class="mb-2 font-bold text-secondary">
-            <template v-if="props.event.locations.length === 1">Ort</template>
-            <template v-else>Route</template>
+            {{ $t('components.event-locations-card.title', { count: props.event.locations.length }) }}
         </h2>
         <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 pb-0 shadow xs:-mx-4">
             <p v-if="props.event.locations.length === 0" class="pb-4 text-sm">
-                Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar sind, kannst du sie hier
-                sehen.
+                {{ $t('components.event-locations-card.placeholder') }}
             </p>
 
             <div v-else class="relative -ml-4">
@@ -34,7 +32,9 @@
                                             <VMarkdown :value="location.information" />
                                         </p>
                                         <p v-if="location.informationLink">
-                                            <a :href="location.informationLink" class="link">Weitere Informationen</a>
+                                            <a :href="location.informationLink" class="link">
+                                                {{ $t('components.event-locations-card.learn-more') }}
+                                            </a>
                                         </p>
                                     </div>
                                 </template>
@@ -42,7 +42,7 @@
                         </h3>
                         <p v-if="location.addressLink" class="line-clamp-3 text-sm">
                             <a :href="location.addressLink" target="_blank" class="link">
-                                {{ location.address || 'Anreiseinformationen' }}
+                                {{ location.address || $t('components.event-locations-card.address-link') }}
                                 <i class="fa-solid fa-external-link-alt mb-0.5 text-xs"></i>
                             </a>
                         </p>
@@ -50,10 +50,12 @@
                             {{ location.address }}
                         </p>
                         <p v-if="location.eta" class="text-sm">
-                            <span class="inline-block">Ankunft:</span> {{ $d(location.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}
+                            <span class="inline-block"> {{ $t('components.event-locations-card.eta') }} </span>
+                            {{ $d(location.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}
                         </p>
                         <p v-if="location.etd" class="text-sm">
-                            <span class="inline-block">Abfahrt:</span> {{ $d(location.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}
+                            <span class="inline-block"> {{ $t('components.event-locations-card.etd') }} </span>
+                            {{ $d(location.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}
                         </p>
                     </div>
                 </div>

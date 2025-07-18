@@ -13,7 +13,7 @@
                     :aria-required="props.required"
                     :class="{ invalid: showErrors && hasErrors }"
                     :disabled="props.disabled"
-                    :placeholder="props.placeholder || $t('shared.please-select')"
+                    :placeholder="props.placeholder || $t('generic.please-select')"
                     :required="props.required"
                     :value="displayValue"
                     aria-haspopup="true"
@@ -58,8 +58,8 @@
         @close="hideDropdown(true)"
     >
         <ul v-if="visibleOptions.length === 0" ref="list">
-            <li v-if="loading" class="italic opacity-50">{{ $t('shared.loading') }}</li>
-            <li v-else class="italic opacity-50">{{ $t('shared.no-entries') }}</li>
+            <li v-if="loading" class="italic opacity-50">{{ $t('generic.loading') }}</li>
+            <li v-else class="italic opacity-50">{{ $t('generic.no-entries') }}</li>
         </ul>
         <ul v-else ref="list">
             <li
