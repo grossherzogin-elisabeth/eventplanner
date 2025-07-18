@@ -340,7 +340,7 @@ export class UserRestRepository implements UserRepository {
             nickName: representation.nickName ?? undefined,
             secondName: representation.secondName ?? undefined,
             lastName: representation.lastName,
-            positionKeys: representation.positions as PositionKey[],
+            positionKeys: representation.positions,
             roles: representation.roles?.map((r) => r as Role),
             qualifications: representation.qualifications.map((it) => ({
                 qualificationKey: it.qualificationKey,

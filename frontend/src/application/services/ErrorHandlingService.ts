@@ -38,8 +38,7 @@ export class ErrorHandlingService {
 
     public handleRawError(e: unknown | Error | Response): void {
         if (e instanceof Response) {
-            const response = e as Response;
-            if (response.status === 401) {
+            if (e.status === 401) {
                 this.accountRepository.login(location.pathname);
             } else {
                 this.handleError({ error: e });
