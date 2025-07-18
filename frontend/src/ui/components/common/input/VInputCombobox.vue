@@ -14,7 +14,7 @@
                         :aria-required="props.required"
                         :class="{ invalid: showErrors && hasErrors }"
                         :disabled="props.disabled"
-                        :placeholder="props.placeholder || $t('shared.please-select')"
+                        :placeholder="props.placeholder || $t('generic.please-select')"
                         :required="props.required"
                         :value="displayValue"
                         aria-haspopup="true"
@@ -70,7 +70,7 @@
                     :aria-required="props.required"
                     :class="{ invalid: showErrors && hasErrors }"
                     :disabled="props.disabled"
-                    :placeholder="$t('shared.filter-entries')"
+                    :placeholder="$t('generic.filter-entries')"
                     :required="props.required"
                     :value="focusOptionIndex === null ? displayValue : filter"
                     aria-haspopup="true"
@@ -92,11 +92,11 @@
             <slot name="first-option" />
             <div class="flex-1 overflow-y-auto">
                 <ul v-if="filteredOptions.length === 0" ref="list">
-                    <li v-if="loading" class="input-dropdown-hint">{{ $t('shared.loading') }}</li>
+                    <li v-if="loading" class="input-dropdown-hint">{{ $t('generic.loading') }}</li>
                     <li v-else-if="props.options.length === 0" class="input-dropdown-hint">
-                        {{ $t('shared.no-entries') }}
+                        {{ $t('generic.no-entries') }}
                     </li>
-                    <li v-else class="input-dropdown-hint">{{ $t('shared.no-matches') }}</li>
+                    <li v-else class="input-dropdown-hint">{{ $t('generic.no-matches') }}</li>
                 </ul>
                 <template v-else>
                     <ul ref="list">

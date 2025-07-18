@@ -60,6 +60,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
@@ -67,16 +68,21 @@ import PositionsTable from './PositionsTable.vue';
 import QualificationsTable from './QualificationsTable.vue';
 
 enum Tab {
-    QUALIFICATIONS = 'Qualifikationen',
-    POSITIONS = 'Positionen',
+    QUALIFICATIONS = 'qualifications',
+    POSITIONS = 'positions',
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
-const tabs = [Tab.QUALIFICATIONS, Tab.POSITIONS];
-const tab = ref<string>(tabs[0]);
+const { t } = useI18n();
+
+const tabs = [Tab.QUALIFICATIONS, Tab.POSITIONS].map((it) => ({
+    value: it,
+    label: t(`views.basedata.tab.${it}`),
+}));
+const tab = ref<string>(tabs[0].value);
 const qualificationFilter = ref<string>('');
 const positionsFilter = ref<string>('');
 const qualificationsTable = ref<{ createQualification(): void } | null>(null);

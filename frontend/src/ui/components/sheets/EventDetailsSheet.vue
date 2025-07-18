@@ -27,7 +27,7 @@
                 </VInfo>
 
                 <EventDetailsCard :event="event" class="" />
-                <EventRouteCard v-if="event.locations.length > 0" :event="event" class="" />
+                <EventLocationsCard v-if="event.locations.length > 0" :event="event" class="" />
             </div>
         </template>
         <template #bottom>
@@ -47,7 +47,7 @@ import type { Sheet } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VInfo, VSheet, VSuccess } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
-import EventRouteCard from '@/ui/components/events/EventRouteCard.vue';
+import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';

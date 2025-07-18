@@ -1,3 +1,4 @@
+import ViteYaml from '@modyfi/vite-plugin-yaml';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 import { defineConfig } from 'vite';
@@ -35,7 +36,7 @@ const pwa = VitePWA({
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [vue(), svgLoader(), pwa],
+    plugins: [vue(), svgLoader(), pwa, ViteYaml()],
     assetsInclude: ['**/*.csv'],
     server: {
         port: 8090,

@@ -51,7 +51,7 @@
                     </section>
 
                     <EventDetailsCard :event="event" class="col-span-2 pt-4 md:col-start-4 2xl:col-span-3" />
-                    <EventRouteCard :event="event" class="col-span-2 pt-4 md:col-start-4 2xl:col-span-3" />
+                    <EventLocationsCard :event="event" class="col-span-2 pt-4 md:col-start-4 2xl:col-span-3" />
                     <EventParticipantsCard :event="event" class="col-span-3 col-start-1 row-span-6 pt-4 md:row-start-1 md:pt-0" />
                 </div>
             </div>
@@ -153,8 +153,8 @@ import { VSuccess } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
+import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
 import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.vue';
-import EventRouteCard from '@/ui/components/events/EventRouteCard.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';

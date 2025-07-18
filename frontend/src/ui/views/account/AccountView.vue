@@ -264,26 +264,6 @@
                             </div>
                         </div>
                     </template>
-                    <template #[Tab.ACCOUNT_CREDENTIALS]>
-                        <section class="max-w-2xl">
-                            <h2 class="mb-4 font-bold text-secondary">Zugangsdaten</h2>
-                            <div class="mb-2">
-                                <VInputLabel>Benutzername</VInputLabel>
-                                <VInputText v-model.trim="user.email" disabled required />
-                            </div>
-                            <div class="mb-2">
-                                <VInputLabel>Password</VInputLabel>
-                                <VInputText disabled model-value="this is not your real password, sorry" required type="password" />
-                            </div>
-                            <VInfo class="mt-8 py-2 xs:-mx-4">
-                                <h2 class="mb-2">Hinweis zum Passwort ändern:</h2>
-                                <p>
-                                    Wenn du dein Passwort ändern willst, nutze dazu die "Passwort vergessen" Funktion beim Login. Du
-                                    bekommst dann einen Link per Email zugesandt, mit dem du ein neues Passwort vergeben kannst.
-                                </p>
-                            </VInfo>
-                        </section>
-                    </template>
                     <template #[Tab.QUALIFICATIONS]>
                         <div class="xl:max-w-5xl">
                             <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
@@ -373,6 +353,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { deepCopy } from '@/common';
 import type { InputSelectOption, UserDetails } from '@/domain';
 import {
@@ -387,28 +368,26 @@ import {
     VTabs,
 } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import { useAuthUseCase, useConfig, useUsersUseCase } from '@/ui/composables/Application';
+import { useConfig, useUsersUseCase } from '@/ui/composables/Application';
 import { useCountries } from '@/ui/composables/Countries.ts';
 import { useNationalities } from '@/ui/composables/Nationalities.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import UserQualificationsTable from './UserQualificationsTable.vue';
 
 enum Tab {
-    PERSONAL_DATA = 'app.account.tab.data',
-    CONTACT_DATA = 'app.account.tab.contact',
-    ACCOUNT_CREDENTIALS = 'app.account.tab.credentials',
-    EMERGENCY = 'app.account.tab.emergency',
-    QUALIFICATIONS = 'app.account.tab.qualifications',
+    PERSONAL_DATA = 'data',
+    CONTACT_DATA = 'contact',
+    EMERGENCY = 'emergency',
+    QUALIFICATIONS = 'qualifications',
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const { t } = useI18n();
 const config = useConfig();
-const authUseCase = useAuthUseCase();
 const usersUseCase = useUsersUseCase();
-const user = ref(authUseCase.getSignedInUser());
 const nationalities = useNationalities();
 const countries = useCountries();
 const userDetails = ref<UserDetails | null>(null);
@@ -421,8 +400,11 @@ const genderOptions: InputSelectOption[] = [
     { value: 'd', label: 'divers' },
 ];
 
-const tabs = [Tab.PERSONAL_DATA, Tab.CONTACT_DATA, Tab.EMERGENCY, Tab.QUALIFICATIONS];
-const tab = ref<Tab>(tabs[0]);
+const tabs: InputSelectOption[] = [Tab.PERSONAL_DATA, Tab.CONTACT_DATA, Tab.EMERGENCY, Tab.QUALIFICATIONS].map((it) => ({
+    value: it,
+    label: t(`views.account.tab.${it}`),
+}));
+const tab = ref<string>(tabs[0].value);
 const enableEditingDateOfBirth = ref<boolean>(false);
 const enableEditingPlaceOfBirth = ref<boolean>(false);
 
