@@ -32,7 +32,7 @@
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
                                 </div>
-                                <div class="flex w-0 flex-grow items-center overflow-hidden">
+                                <div class="flex h-16 w-0 flex-grow items-center overflow-hidden">
                                     <slot name="title"></slot>
                                 </div>
                                 <div class="-mr-4 hidden sm:block">
