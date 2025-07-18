@@ -56,8 +56,8 @@ function findAssociatedInput(): void {
 
 function findFirstInputElementOfParent(parent: HTMLElement | null): HTMLInputElement | null {
     if (parent instanceof HTMLElement) {
-        const input = parent.querySelector('input, textarea') as HTMLInputElement | null;
-        if (input) {
+        const input = parent.querySelector('input, textarea');
+        if (input instanceof HTMLInputElement) {
             return input;
         }
     }
