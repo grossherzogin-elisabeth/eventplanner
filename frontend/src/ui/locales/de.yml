@@ -1,5 +1,7 @@
 ---
+# -----------------------------------
 # generic messages used anywhere in the application
+# -----------------------------------
 generic:
   loading: 'Wird geladen...'
   no-entries: 'Keine Einträge'
@@ -27,7 +29,9 @@ generic:
     ROLE_USER_MANAGER: 'Nutzerverwalter:in'
     ROLE_TEAM_MEMBER: 'Stammcrew Mitglied'
 
+# -----------------------------------
 # messages for the main navigation
+# -----------------------------------
 navigation:
   myNextEvents: 'Meine nächsten Reisen'
   start: 'Start'
@@ -45,7 +49,9 @@ navigation:
   imprint: 'Impressum'
   impersonate: 'Du siehst die Anwendung aus Sicht von {0}'
 
+# -----------------------------------
 # messages used in shared components
+# -----------------------------------
 components:
   event-details-card:
     title: 'Details'
@@ -76,16 +82,14 @@ components:
     no-registrations: 'Für diese Reise gibt es noch keine Anmeldungen.'
     no-waitinglist: 'Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.'
 
+# -----------------------------------
+# messages used in specific views
+# -----------------------------------
 views:
   home:
     event-card:
-      title': 'Reisedetails'
       state:
         waitinglist: 'Du stehst auf der Warteliste.'
-        waitinglist-position: 'Du stehst für diese Reise als <i>{0}</i> auf der Warteliste.'
-        assigned: 'Du bist für diese Reise eingeplant'
-        assigned-position: 'Du bist für diese Reise als <i>{0}</i> eingeplant.'
-        canceled: 'Diese Reise fällt aus.'
   account:
     tab:
       data: 'Persönliche Daten'
