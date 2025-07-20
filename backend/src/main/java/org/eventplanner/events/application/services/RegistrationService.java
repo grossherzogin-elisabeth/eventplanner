@@ -11,6 +11,7 @@ import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.specs.CreateRegistrationSpec;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
 import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -92,7 +93,7 @@ public class RegistrationService {
 
         // send notifications
         notificationService.sendAddedToWaitingListNotification(user, event);
-        if (spec.isSelfSignup()) {
+        if (spec.isSelfSignup() && !EventState.DRAFT.equals(event.getState())) {
             notificationService.sendCrewRegistrationAddedNotification(
                 Role.TEAM_PLANNER,
                 event,
