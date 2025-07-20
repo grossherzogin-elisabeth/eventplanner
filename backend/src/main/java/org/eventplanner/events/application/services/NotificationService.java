@@ -161,6 +161,7 @@ public class NotificationService {
         var props = new HashMap<String, Object>();
         addRecipientDetails(props, to);
         addEventDetails(props, event);
+        addRegistrationDetails(props, event, to);
         addRegistrationConfirmationDetails(props, event, registration);
         var link = createEventDeepLink(event);
 
@@ -177,6 +178,7 @@ public class NotificationService {
         var props = new HashMap<String, Object>();
         addRecipientDetails(props, to);
         addEventDetails(props, event);
+        addRegistrationDetails(props, event, to);
         addRegistrationConfirmationDetails(props, event, registration);
         var link = createEventDeepLink(event);
 
