@@ -257,6 +257,7 @@
                     <span>Kalendereintrag erstellen</span>
                 </li>
                 <li
+                    v-if="hasAnySelectedEventWhichSignedInUserCanJoin"
                     class="permission-write-own-registrations context-menu-item"
                     :class="{ disabled: !hasAnySelectedEventInFuture }"
                     @click="joinEvents(selectedEvents)"
@@ -280,7 +281,7 @@
                     @click="leaveEvents(selectedEvents)"
                 >
                     <i class="fa-solid fa-ban" />
-                    <span class="truncate"> Reisen absagen </span>
+                    <span class="truncate"> Teilnahme absagen </span>
                 </li>
             </template>
         </VMultiSelectActions>
@@ -379,12 +380,16 @@ const hasAnySelectedEventInFuture = computed<boolean>(() => {
     return selectedEvents.value?.find((it) => it.start.getTime() > now) !== undefined;
 });
 
+const hasAnySelectedEventWhichSignedInUserCanJoin = computed<boolean>(() => {
+    return selectedEvents.value?.find((it) => !it.signedInUserRegistration) !== undefined;
+});
+
 const hasAnySelectedEventWithSignedInUserOnWaitingList = computed<boolean>(() => {
-    return selectedEvents.value?.find((it) => it.signedInUserRegistration && !it.signedInUserAssignedSlot) !== undefined;
+    return selectedEvents.value?.find((it) => it.signedInUserRegistration && !it.isSignedInUserAssigned) !== undefined;
 });
 
 const hasAnySelectedEventWithSignedInUserInTeam = computed<boolean>(() => {
-    return selectedEvents.value?.find((it) => it.signedInUserRegistration && it.signedInUserAssignedSlot) !== undefined;
+    return selectedEvents.value?.find((it) => it.signedInUserRegistration && it.isSignedInUserAssigned) !== undefined;
 });
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {

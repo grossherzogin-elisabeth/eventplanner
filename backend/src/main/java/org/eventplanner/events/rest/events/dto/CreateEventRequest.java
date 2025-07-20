@@ -12,7 +12,7 @@ import org.springframework.lang.Nullable;
 
 public record CreateEventRequest(
     @Nullable String type,
-    @NonNull String accessType,
+    @Nullable String accessType,
     @NonNull String name,
     @Nullable String note,
     @Nullable String description,

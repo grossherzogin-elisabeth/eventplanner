@@ -161,8 +161,8 @@ export class EventService {
 
     public hasOpenSlots(event: Event, positions?: PositionKey[], criticality: number = 0): boolean {
         if (event.accessType === EventAccessType.Open && criticality === 0) {
-            // this event has now limited slots
-            // only return true for criticality 0 to prevent hasOpenRequiredSlots returning a false positive
+            // this event has no limited slots
+            // only return true for criticality 0 though to prevent hasOpenRequiredSlots returning a false positive
             return true;
         }
         const openSlots = event.slots.filter(
