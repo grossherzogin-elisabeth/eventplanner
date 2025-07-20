@@ -49,7 +49,7 @@ const details = computed<string>(() => {
         return e.status + ': ' + e.statusText;
     }
     if (e instanceof Error) {
-        console.log('error');
+        return String(e);
     }
     return '';
 });
