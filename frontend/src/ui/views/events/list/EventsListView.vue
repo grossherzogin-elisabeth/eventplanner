@@ -475,7 +475,7 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 }
 
 function getStateDetails(event: EventTableViewItem): StateDetails {
-    if (event.type === EventType.WorkEvent) {
+    if (event.type === EventType.WorkEvent && event.signedInUserRegistration) {
         return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-container text-ongreen-container' };
     }
     if (event.state === EventState.Canceled) {
