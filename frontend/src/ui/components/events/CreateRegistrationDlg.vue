@@ -52,6 +52,23 @@
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
+                    <div class="mb-4">
+                        <VInputCheckBox
+                            v-model="registration.overnightStay"
+                            :errors="validation.errors.value['overnightStay']"
+                            :errors-visible="validation.showErrors.value"
+                            label="Übernachtung an Bord"
+                        />
+                    </div>
+                    <div v-if="registration.overnightStay" class="mb-4">
+                        <VInputLabel>Anreise am</VInputLabel>
+                        <VInputDate
+                            v-model="registration.arrival"
+                            :errors="validation.errors.value['arrival']"
+                            :errors-visible="validation.showErrors.value"
+                            placeholder="Am ersten Tag der Reise"
+                        />
+                    </div>
                     <template v-if="selectedUser !== undefined">
                         <VWarning
                             v-if="registration.positionKey && !selectedUser?.positionKeys?.includes(registration.positionKey)"
@@ -90,6 +107,8 @@ import { computed, ref, watch } from 'vue';
 import { filterUndefined } from '@/common';
 import type { Event, InputSelectOption, Position, Registration, User, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
+import { VInputDate } from '@/ui/components/common';
+import { VInputCheckBox } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application.ts';
@@ -189,6 +208,8 @@ async function open(value: Event[]): Promise<Registration | undefined> {
         userKey: undefined,
         name: undefined,
         note: '',
+        overnightStay: true,
+        arrival: undefined,
     };
     date = value.map((it) => it.end).sort((a, b) => b.getTime() - a.getTime())[0] || new Date();
     if (value.length === 1) {
@@ -205,6 +226,9 @@ function submit(): void {
     if (validation.isValid.value) {
         if (registration.value.userKey) {
             registration.value.name = undefined;
+        }
+        if (!registration.value.overnightStay) {
+            registration.value.arrival = undefined;
         }
         dlg.value?.submit(registration.value);
     } else {

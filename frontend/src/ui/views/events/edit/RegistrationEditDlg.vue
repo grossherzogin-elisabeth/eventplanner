@@ -43,7 +43,7 @@
                             ]"
                         />
                     </div>
-                    <div class="mb-4">
+                    <div v-if="registration.overnightStay" class="mb-4">
                         <VInputLabel>Anreise am</VInputLabel>
                         <VInputDate v-model="registration.arrival" />
                     </div>
@@ -193,6 +193,12 @@ async function open(value: Registration): Promise<Registration | undefined> {
     }
     value.positionKey = result.positionKey;
     value.note = result.note;
+    value.overnightStay = result.overnightStay;
+    if (result.overnightStay) {
+        value.arrival = result.arrival;
+    } else {
+        value.arrival = undefined;
+    }
     return value;
 }
 
