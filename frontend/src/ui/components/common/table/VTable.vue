@@ -377,8 +377,11 @@ async function init(): Promise<void> {
     await router.isReady();
     watch(
         () => props.items,
-        (_, oldValue) => {
-            if (oldValue !== undefined) {
+        (newValue, oldValue) => {
+            if (oldValue && newValue && oldValue.length !== newValue.length) {
+                // if old and new item count both exist, but are different, then probably the content to display
+                // changed a lot, so we should start at page 0 again
+                // also prevents displaying a page that does not exist
                 page.value = 0;
             }
         }
