@@ -6,9 +6,6 @@ import java.util.UUID;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public record RegistrationKey(
     @NonNull String value
 ) implements Serializable {
@@ -16,7 +13,6 @@ public record RegistrationKey(
         this(null);
     }
 
-    @JsonCreator
     public RegistrationKey(@Nullable String value) {
         if (value != null && !value.isBlank()) {
             this.value = value;
@@ -25,9 +21,8 @@ public record RegistrationKey(
         }
     }
 
-    @JsonValue
     @Override
-    public @NonNull String toString() {
+    public String toString() {
         return value;
     }
 }
