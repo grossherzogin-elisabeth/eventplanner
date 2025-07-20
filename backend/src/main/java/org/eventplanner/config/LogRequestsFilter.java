@@ -53,6 +53,7 @@ public class LogRequestsFilter extends OncePerRequestFilter {
             || request.getRequestURI().endsWith(".svg")
             || request.getRequestURI().endsWith(".png")
             || request.getRequestURI().endsWith(".ico")
+            || request.getRequestURI().endsWith(".gif")
             // js files
             || request.getRequestURI().endsWith(".js")
             || request.getRequestURI().endsWith(".css")
