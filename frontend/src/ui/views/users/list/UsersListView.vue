@@ -78,7 +78,7 @@
             </button>
             <ContextMenuButton anchor-align-x="left" dropdown-position-x="right" class="btn-tag" :class="{ active: filterEventKey }">
                 <template #icon>
-                    <span v-if="!filterEventKey">Nach Reisen filtern...</span>
+                    <span v-if="!filterEventKey">Nach Veranstaltungen filtern...</span>
                     <span v-else class="block max-w-64 truncate"> Nimmt teil an {{ filterEvent?.name }} </span>
                 </template>
                 <template #default>

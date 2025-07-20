@@ -21,7 +21,7 @@
                             <span>Export</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="filter" placeholder="Reisen filtern" />
+                    <VSearchButton v-model="filter" placeholder="Veranstaltungen filtern" />
                 </div>
             </template>
         </VTabs>
@@ -140,8 +140,8 @@
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
                         <div class="flex w-full items-center gap-px pt-2">
-                            <template v-for="position in item.assignedPositions" :key="position.key">
-                                <div class="w-1 flex-grow">
+                            <template v-for="(position, index) in item.assignedPositions" :key="`${position.key}-${index}`">
+                                <div :data-index="index" class="w-1 flex-grow">
                                     <VTooltip :delay="50">
                                         <template #tooltip>
                                             <div class="position text-sm shadow-xl" :style="{ backgroundColor: position.color }">

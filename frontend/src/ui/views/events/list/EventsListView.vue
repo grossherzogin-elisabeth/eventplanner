@@ -16,7 +16,7 @@
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
-                    <VSearchButton v-model="filter" placeholder="Reisen filtern" />
+                    <VSearchButton v-model="filter" placeholder="Veranstaltungen filtern" />
                 </div>
             </template>
         </VTabs>
