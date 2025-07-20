@@ -1,5 +1,6 @@
 package org.eventplanner.events.application.services;
 
+import java.time.Instant;
 import java.util.NoSuchElementException;
 
 import org.eventplanner.events.application.ports.PositionRepository;
@@ -93,7 +94,10 @@ public class RegistrationService {
 
         // send notifications
         notificationService.sendAddedToWaitingListNotification(user, event);
-        if (spec.isSelfSignup() && !EventState.DRAFT.equals(event.getState())) {
+        if (spec.isSelfSignup()
+            && EventState.PLANNED.equals(event.getState())
+            && event.getStart().isAfter(Instant.now())
+        ) {
             notificationService.sendCrewRegistrationAddedNotification(
                 Role.TEAM_PLANNER,
                 event,
