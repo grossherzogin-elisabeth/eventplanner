@@ -5,10 +5,14 @@ import java.time.Instant;
 import java.util.List;
 
 import org.eventplanner.events.domain.specs.CreateEventSpec;
+import org.eventplanner.events.domain.values.events.EventAccessType;
+import org.eventplanner.events.domain.values.events.EventType;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record CreateEventRequest(
+    @Nullable String type,
+    @NonNull String accessType,
     @NonNull String name,
     @Nullable String note,
     @Nullable String description,
@@ -17,8 +21,14 @@ public record CreateEventRequest(
     @NonNull List<EventLocationRepresentation> locations,
     @NonNull List<EventSlotRepresentation> slots
 ) implements Serializable {
-    public CreateEventSpec toDomain() {
+    public @NonNull CreateEventSpec toDomain() {
         return new CreateEventSpec(
+            type != null
+                ? EventType.fromString(type).orElseThrow(IllegalStateException::new)
+                : EventType.OTHER,
+            accessType != null
+                ? EventAccessType.fromString(type).orElseThrow(IllegalStateException::new)
+                : EventAccessType.ASSIGNMENT,
             name,
             note,
             description,

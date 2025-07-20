@@ -1,7 +1,6 @@
 package org.eventplanner.events.application.usecases;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Collections;
 import java.util.List;
 
 import org.eventplanner.events.application.ports.EventRepository;
@@ -11,7 +10,6 @@ import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.specs.CreateEventSpec;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.events.EventKey;
-import org.eventplanner.events.domain.values.events.EventState;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -72,19 +70,7 @@ public class EventUseCase {
     ) {
         signedInUser.assertHasPermission(Permission.CREATE_EVENTS);
 
-        var event = new Event(
-            new EventKey(),
-            spec.name(),
-            EventState.DRAFT,
-            spec.note() != null ? spec.note() : "",
-            spec.description() != null ? spec.description() : "",
-            spec.start(),
-            spec.end(),
-            spec.locations() != null ? spec.locations() : Collections.emptyList(),
-            spec.slots() != null ? spec.slots() : Collections.emptyList(),
-            Collections.emptyList(),
-            0
-        );
+        var event = spec.toEvent();
         log.info("Creating new event {}", event.getName());
         return eventRepository.create(event);
     }

@@ -29,8 +29,7 @@
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventType.length === 0">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4"> {{ filterEventType.length }} Reisearten </span>
+                    <span v-if="filterEventType.length === 0">Alle Veranstaltungen</span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -39,11 +38,11 @@
                     <ul>
                         <li v-if="filterEventType.length === 0" class="context-menu-item">
                             <i class="fa-solid fa-check"></i>
-                            <span>Alle Reisearten</span>
+                            <span>Alle Veranstaltungen</span>
                         </li>
                         <li v-else class="context-menu-item" @click="filterEventType = []">
                             <i class="w-4"></i>
-                            <span>Alle Reisearten</span>
+                            <span>Alle Veranstaltungen</span>
                         </li>
                         <template v-for="eventType in eventTypes.options.value" :key="eventType.value">
                             <li
@@ -97,7 +96,7 @@
                             <span v-else-if="item.state === EventState.Canceled">Abgesagt: </span>
                             {{ item.name }}
                         </p>
-                        <p v-if="item.signedInUserAssignedSlot" class="truncate text-sm font-light">
+                        <p v-if="item.isSignedInUserAssigned" class="truncate text-sm font-light">
                             Du bist als
                             <i>{{ positions.get(item.signedInUserRegistration?.positionKey).name }}</i>
                             eingeplant.
@@ -209,13 +208,13 @@
                         </li>
                     </template>
                     <li
-                        v-if="item.signedInUserAssignedSlot"
+                        v-if="item.isSignedInUserAssigned"
                         class="permission-write-own-registrations context-menu-item text-error"
                         :class="{ disabled: item.isPastEvent }"
                         @click="leaveEvents([item])"
                     >
                         <i class="fa-solid fa-ban" />
-                        <span>Reise absagen</span>
+                        <span>Teilnahme absagen</span>
                     </li>
                     <li
                         v-else-if="item.signedInUserRegistration"
@@ -295,8 +294,8 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, Registration, SignedInUser } from '@/domain';
-import { EventState, EventType } from '@/domain';
+import type { Event, EventType, Registration, SignedInUser } from '@/domain';
+import { EventState } from '@/domain';
 import type { ConfirmationDialog, Sheet } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
@@ -396,7 +395,7 @@ const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
         .filter((it) => {
             if (filterAssigned.value || filterWaitingList.value || filterFreeSlots.value) {
                 let state = 0;
-                if (it.signedInUserAssignedSlot || it.type === EventType.WorkEvent) {
+                if (it.isSignedInUserAssigned) {
                     state = 1;
                 } else if (it.signedInUserRegistration) {
                     state = 2;
@@ -474,13 +473,10 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 }
 
 function getStateDetails(event: EventTableViewItem): StateDetails {
-    if (event.type === EventType.WorkEvent && event.signedInUserRegistration) {
-        return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-container text-ongreen-container' };
-    }
     if (event.state === EventState.Canceled) {
         return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
     }
-    if (event.signedInUserAssignedSlot) {
+    if (event.isSignedInUserAssigned) {
         return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-container text-ongreen-container' };
     }
     if (event.signedInUserRegistration) {

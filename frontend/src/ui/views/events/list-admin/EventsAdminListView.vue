@@ -34,8 +34,7 @@
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventType.length === 0">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4"> {{ filterEventType.length }} Reisearten </span>
+                    <span v-if="filterEventType.length === 0">Alle Veranstaltungen</span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -44,11 +43,11 @@
                     <ul>
                         <li v-if="filterEventType.length === 0" class="context-menu-item">
                             <i class="fa-solid fa-check"></i>
-                            <span>Alle Reisearten</span>
+                            <span>Alle Veranstaltungen</span>
                         </li>
                         <li v-else class="context-menu-item" @click="filterEventType = []">
                             <i class="w-4"></i>
-                            <span>Alle Reisearten</span>
+                            <span>Alle Veranstaltungen</span>
                         </li>
                         <template v-for="eventType in eventTypes.options.value" :key="eventType.value">
                             <li

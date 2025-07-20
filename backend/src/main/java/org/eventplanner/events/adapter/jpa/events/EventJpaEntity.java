@@ -1,7 +1,9 @@
 package org.eventplanner.events.adapter.jpa.events;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
@@ -9,9 +11,11 @@ import java.util.List;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.values.events.EventAccessType;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventLocation;
 import org.eventplanner.events.domain.values.events.EventState;
+import org.eventplanner.events.domain.values.events.EventType;
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -37,6 +41,12 @@ public class EventJpaEntity {
     @Id
     @Column(name = "key", nullable = false, updatable = false)
     private String key;
+
+    @Column(name = "type", nullable = false)
+    private String type;
+
+    @Column(name = "access_type", nullable = false)
+    private String accessType;
 
     @Column(name = "year", nullable = false)
     private Integer year;
@@ -70,6 +80,8 @@ public class EventJpaEntity {
 
     public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
         var eventJpaEntity = new EventJpaEntity();
+        eventJpaEntity.setType(domain.getType().value());
+        eventJpaEntity.setAccessType(domain.getAccessType().value());
         eventJpaEntity.setKey(domain.getKey().value());
         eventJpaEntity.setYear(domain.getStart().atZone(ZoneId.systemDefault()).getYear());
         eventJpaEntity.setName(domain.getName());
@@ -126,9 +138,32 @@ public class EventJpaEntity {
         }
     }
 
+    public @NonNull EventType mapEventType() {
+        var mapped = EventType.fromString(type);
+        if (mapped.isPresent()) {
+            return mapped.get();
+        }
+        if (name.contains("Arbeitsdienst")) {
+            return EventType.WORK_EVENT;
+        }
+        var startTime = Instant.parse(start);
+        var endTime = Instant.parse(end);
+        ZoneId timezone = ZoneId.of("Europe/Berlin");
+        if (LocalDate.ofInstant(startTime, timezone)
+            .isEqual(LocalDate.ofInstant(endTime, timezone))) {
+            return EventType.SINGLE_DAY_EVENT;
+        }
+        if (Duration.between(startTime, endTime).toDays() <= 3) {
+            return EventType.WEEKEND_EVENT;
+        }
+        return EventType.MULTI_DAY_EVENT;
+    }
+
     public Event toDomain(@NonNull List<Registration> registrations) {
         return new Event(
             new EventKey(key),
+            mapEventType(),
+            EventAccessType.fromString(accessType).orElse(EventAccessType.ASSIGNMENT),
             name,
             EventState.fromString(state).orElse(EventState.PLANNED),
             note != null ? note : "",

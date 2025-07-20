@@ -12,7 +12,7 @@
                     {{ openPositions.map((it) => it.name).join(', ') }}
                 </VWarning>
                 <VSuccess
-                    v-if="event.signedInUserRegistration && event.signedInUserAssignedSlot"
+                    v-if="event.signedInUserRegistration && event.isSignedInUserAssigned"
                     class="my-4 text-sm xs:-mx-4"
                     icon="fa-check"
                 >

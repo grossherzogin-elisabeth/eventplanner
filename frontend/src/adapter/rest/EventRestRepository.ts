@@ -1,9 +1,9 @@
 import type { RegistrationCreateRequest, RegistrationUpdateRequest } from '@/adapter';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
-import { cropToPrecision, deserializeDate, isSameDate } from '@/common';
-import type { Event, EventKey, EventState, Registration, Slot } from '@/domain';
-import { EventType } from '@/domain';
+import { deserializeDate } from '@/common';
+import type { Event, EventAccessType, EventKey, EventState, Registration, Slot } from '@/domain';
+import type { EventType } from '@/domain';
 
 interface SlotRepresentation {
     key: string;
@@ -39,6 +39,8 @@ interface LocationRepresentation {
 
 export interface EventRepresentation {
     key: string;
+    type: string;
+    accessType: string;
     state: string;
     templateKey: string;
     name: string;
@@ -51,6 +53,8 @@ export interface EventRepresentation {
 }
 
 interface EventCreateRequest {
+    type: string;
+    accessType: string;
     state: string;
     name: string;
     description: string;
@@ -62,6 +66,8 @@ interface EventCreateRequest {
 
 interface EventUpdateRequest {
     state?: string | null;
+    type?: string | null;
+    accessType?: string | null;
     name?: string | null;
     description?: string | null;
     start?: string | null;
@@ -82,7 +88,8 @@ export class EventRestRepository implements EventRepository {
     public static mapEventToDomain(eventRepresentation: EventRepresentation): Event {
         const event: Event = {
             key: eventRepresentation.key,
-            type: EventType.MultiDayEvent,
+            type: eventRepresentation.type as EventType,
+            accessType: eventRepresentation.accessType as EventAccessType,
             name: eventRepresentation.name,
             description: eventRepresentation.description,
             state: eventRepresentation.state as EventState,
@@ -117,7 +124,6 @@ export class EventRestRepository implements EventRepository {
             canSignedInUserLeave: false,
             canSignedInUserUpdateRegistration: false,
         };
-        event.type = EventRestRepository.mapEventType(event);
         return event;
     }
 
@@ -130,23 +136,6 @@ export class EventRestRepository implements EventRepository {
             positionName: slotRepresentation.name ?? undefined,
             assignedRegistrationKey: slotRepresentation.assignedRegistrationKey ?? undefined,
         }));
-    }
-
-    private static mapEventType(event: Event): EventType {
-        const start = cropToPrecision(event.start, 'days');
-        const end = cropToPrecision(event.end, 'days');
-        const durationDays = new Date(event.end.getTime() - event.start.getTime()).getDate();
-
-        if (event.name.includes('Arbeitsdienst')) {
-            return EventType.WorkEvent;
-        }
-        if (isSameDate(start, end)) {
-            return EventType.SingleDayEvent;
-        }
-        if (durationDays <= 3) {
-            return EventType.WeekendEvent;
-        }
-        return EventType.MultiDayEvent;
     }
 
     public async findByKey(key: EventKey, accessKey?: string): Promise<Event> {
@@ -194,6 +183,8 @@ export class EventRestRepository implements EventRepository {
     public async createEvent(event: Event): Promise<Event> {
         const requestBody: EventCreateRequest = {
             state: event.state,
+            type: event.type,
+            accessType: event.accessType,
             name: event.name,
             description: event.description,
             start: event.start.toISOString(),
@@ -244,6 +235,8 @@ export class EventRestRepository implements EventRepository {
     ): Promise<Event> {
         const requestBody: EventUpdateRequest = {
             state: updateRequest.state,
+            type: updateRequest.type,
+            accessType: updateRequest.accessType,
             name: updateRequest.name,
             description: updateRequest.description,
             start: updateRequest.start?.toISOString(),

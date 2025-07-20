@@ -26,12 +26,7 @@
                                 <VInputLabel>Status</VInputLabel>
                                 <VInputSelect
                                     v-model="event.state"
-                                    :options="[
-                                        { value: EventState.Draft, label: 'Entwurf' },
-                                        { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
-                                        { value: EventState.Planned, label: 'Crew veröffentlicht' },
-                                        { value: EventState.Canceled, label: 'Reise ist abgesagt', hidden: true },
-                                    ]"
+                                    :options="eventStates.options.value"
                                     :errors="validation.errors.value['state']"
                                     :errors-visible="validation.showErrors.value"
                                     required
@@ -49,16 +44,22 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>Typ</VInputLabel>
+                                <VInputLabel>Kategorie</VInputLabel>
                                 <VInputSelect
                                     v-model="event.type"
-                                    :options="[
-                                        { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
-                                        { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
-                                        { value: EventType.WeekendEvent, label: 'Wochenendreise' },
-                                        { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
-                                    ]"
+                                    :options="eventTypes.options.value"
                                     :errors="validation.errors.value['type']"
+                                    :errors-visible="validation.showErrors.value"
+                                    required
+                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                                />
+                            </div>
+                            <div class="mb-4">
+                                <VInputLabel>Anmeldetyp</VInputLabel>
+                                <VInputSelect
+                                    v-model="event.accessType"
+                                    :options="eventAccessTypes.options.value"
+                                    :errors="validation.errors.value['accessType']"
                                     :errors-visible="validation.showErrors.value"
                                     required
                                     :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
@@ -243,7 +244,7 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { deepCopy, diff, filterUndefined, updateDate, updateTime } from '@/common';
 import type { Event, Location, Registration, Slot } from '@/domain';
-import { EventState, EventType, Permission } from '@/domain';
+import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import {
@@ -268,6 +269,9 @@ import {
     useUsersUseCase,
 } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
+import { useEventAccessTypes } from '@/ui/composables/EventAccessTypes.ts';
+import { useEventStates } from '@/ui/composables/EventStates.ts';
+import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import VWarning from '../../../components/common/alerts/VWarning.vue';
@@ -290,6 +294,9 @@ const emit = defineEmits<RouteEmits>();
 
 const router = useRouter();
 const route = useRoute();
+const eventStates = useEventStates();
+const eventTypes = useEventTypes();
+const eventAccessTypes = useEventAccessTypes();
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();

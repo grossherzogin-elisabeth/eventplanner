@@ -9,6 +9,8 @@ import org.springframework.lang.NonNull;
 
 public record EventRepresentation(
     @NonNull String key,
+    @NonNull String type,
+    @NonNull String accessType,
     @NonNull String name,
     @NonNull String state,
     @NonNull String note,
@@ -20,9 +22,11 @@ public record EventRepresentation(
     @NonNull List<RegistrationRepresentation> registrations
 ) implements Serializable {
 
-    public static EventRepresentation fromDomain(@NonNull Event event) {
+    public static @NonNull EventRepresentation fromDomain(@NonNull Event event) {
         return new EventRepresentation(
             event.getKey().value(),
+            event.getType().value(),
+            event.getAccessType().value(),
             event.getName(),
             event.getState().value(),
             event.getNote(),

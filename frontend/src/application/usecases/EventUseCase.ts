@@ -12,7 +12,7 @@ import type {
 import { isSameDate, subtractFromDate } from '@/common';
 import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
 import type { Event, EventKey, EventService, Registration, RegistrationKey, RegistrationService, UserKey } from '@/domain';
-import { EventState, EventType } from '@/domain';
+import { EventAccessType, EventState } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class EventUseCase {
@@ -152,10 +152,10 @@ export class EventUseCase {
     public async joinEvent(event: Event, registration: Registration): Promise<Event> {
         try {
             const savedEvent = await this.joinEventInternal(event, registration);
-            if (savedEvent.type === EventType.WorkEvent) {
-                this.notificationService.success('Deine Anmeldung wurde gespeichert');
-            } else {
+            if (savedEvent.accessType === EventAccessType.Assignment) {
                 this.notificationService.success('Du stehst jetzt auf der Warteliste');
+            } else {
+                this.notificationService.success('Deine Anmeldung wurde gespeichert');
             }
             return savedEvent;
         } catch (e) {
@@ -255,7 +255,7 @@ export class EventUseCase {
             await Promise.all(
                 events
                     .filter((event) => event.signedInUserRegistration)
-                    .filter((event) => !event.signedInUserAssignedSlot)
+                    .filter((event) => !event.isSignedInUserAssigned)
                     .map((event) => this.leaveEventInternal(event))
             );
             this.notificationService.success('Du stehst für die ausgewählten Reisen nicht mehr auf der Warteliste');

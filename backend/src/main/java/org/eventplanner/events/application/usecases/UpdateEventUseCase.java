@@ -94,6 +94,14 @@ public class UpdateEventUseCase {
             event.setName(spec.name());
             changedAttributes.add("name");
         }
+        if (spec.type() != null && !spec.type().equals(event.getType())) {
+            event.setType(spec.type());
+            changedAttributes.add("type");
+        }
+        if (spec.accessType() != null && !spec.accessType().equals(event.getAccessType())) {
+            event.setAccessType(spec.accessType());
+            changedAttributes.add("accessType");
+        }
         if (spec.description() != null && !spec.description().equals(event.getDescription())) {
             event.setDescription(spec.description());
             changedAttributes.add("description");

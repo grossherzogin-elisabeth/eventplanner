@@ -10,6 +10,8 @@ export function useEventTypes() {
             { value: EventType.WeekendEvent, label: 'Wochenendreise' },
             { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
             { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
+            { value: EventType.TrainingEvent, label: 'Ausbildung' },
+            { value: EventType.Other, label: 'Sonstige' },
         ];
     });
 
