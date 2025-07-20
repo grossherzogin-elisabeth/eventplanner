@@ -14,7 +14,7 @@
                         </VInfo>
                     </section>
                     <section
-                        v-if="event.state === EventState.Canceled"
+                        v-else-if="event.state === EventState.Canceled"
                         class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
                     >
                         <VWarning> Diese Reise wurde abgesagt! </VWarning>
