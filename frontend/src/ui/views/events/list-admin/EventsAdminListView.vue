@@ -539,7 +539,6 @@ function selectAll(): void {
 }
 
 async function fetchEvents(): Promise<void> {
-    events.value = null;
     if (tab.value === tabs.value[0]) {
         const now = new Date();
         const currentYear = await fetchEventsByYear(now.getFullYear());
