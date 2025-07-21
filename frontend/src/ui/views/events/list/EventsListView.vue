@@ -84,9 +84,9 @@
             >
                 <template #row="{ item }">
                     <!-- date -->
-                    <td class="w-1/6 whitespace-nowrap" :class="{ 'opacity-50': item.isPastEvent }">
-                        <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
-                        <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
+                    <td class="hidden w-1/6 whitespace-nowrap lg:table-cell" :class="{ 'opacity-50': item.isPastEvent }">
+                        <p class="mb-1 font-semibold 2xl:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
+                        <p class="mb-1 hidden font-semibold 2xl:block">{{ formatDateRange(item.start, item.end) }}</p>
                         <p class="text-sm">
                             {{ $t('views.event-list.table.day-count', { count: item.days }) }}
                         </p>
@@ -147,7 +147,7 @@
                         <template
                             v-if="
                                 [EventState.Draft, EventState.OpenForSignup].includes(item.state) ||
-                                item.accessType === EventAccessType.Open
+                                item.signupType === EventSignupType.Open
                             "
                         >
                             <p class="mb-1 pl-4 font-semibold">
@@ -319,7 +319,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Registration, SignedInUser } from '@/domain';
-import { EventAccessType } from '@/domain';
+import { EventSignupType } from '@/domain';
 import { EventState } from '@/domain';
 import type { ConfirmationDialog, Sheet } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
