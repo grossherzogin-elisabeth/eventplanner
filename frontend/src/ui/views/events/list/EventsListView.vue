@@ -83,6 +83,14 @@
                 @click="openEvent($event.item, $event.event)"
             >
                 <template #row="{ item }">
+                    <!-- date -->
+                    <td class="hidden w-1/6 whitespace-nowrap lg:table-cell" :class="{ 'opacity-50': item.isPastEvent }">
+                        <p class="mb-1 font-semibold 2xl:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
+                        <p class="mb-1 hidden font-semibold 2xl:block">{{ formatDateRange(item.start, item.end) }}</p>
+                        <p class="text-sm">
+                            {{ $t('views.event-list.table.day-count', { count: item.days }) }}
+                        </p>
+                    </td>
                     <!-- name -->
                     <td
                         class="w-2/3 max-w-[80vw] font-semibold"
@@ -101,8 +109,8 @@
                         </p>
                         <i18n-t
                             v-if="item.isSignedInUserAssigned"
-                            class="truncate text-sm font-light"
                             tag="p"
+                            class="hidden truncate text-sm font-light lg:block"
                             keypath="views.event-list.table.assigned-as"
                         >
                             <i>{{ positions.get(item.signedInUserRegistration?.positionKey).name }}</i>
@@ -110,16 +118,20 @@
                         <i18n-t
                             v-else-if="item.signedInUserRegistration"
                             tag="p"
+                            class="hidden truncate text-sm font-light lg:block"
                             keypath="views.event-list.table.on-waiting-list-as"
-                            class="truncate text-sm font-light"
                         >
                             <i>{{ positions.get(item.signedInUserRegistration.positionKey).name }}</i>
                         </i18n-t>
-                        <p v-else-if="item.description" class="truncate text-sm font-light">
+                        <p v-else-if="item.description" class="hidden truncate text-sm font-light lg:block">
                             {{ item.description }}
                         </p>
-                        <p v-else class="truncate text-sm font-light">
+                        <p v-else class="hidden truncate text-sm font-light lg:block">
                             {{ item.locations.map((it) => it.name).join(' - ') }}
+                        </p>
+                        <p class="truncate text-sm font-light lg:hidden">
+                            {{ formatDateRange(item.start, item.end) }} |
+                            {{ $t('views.event-list.table.day-count', { count: item.days }) }}
                         </p>
                     </td>
                     <!-- status -->
@@ -133,7 +145,12 @@
                     </td>
                     <!-- crew -->
                     <td class="w-1/6 min-w-24 whitespace-nowrap" :class="{ 'opacity-50': item.isPastEvent }">
-                        <template v-if="[EventState.Draft, EventState.OpenForSignup].includes(item.state)">
+                        <template
+                            v-if="
+                                [EventState.Draft, EventState.OpenForSignup].includes(item.state) ||
+                                item.signupType === EventSignupType.Open
+                            "
+                        >
                             <p class="mb-1 pl-4 font-semibold">
                                 <span> {{ item.registrations.length }} </span>
                             </p>
@@ -150,14 +167,6 @@
                                 {{ $t('views.event-list.table.team-count', { count: item.assignedUserCount }) }}
                             </p>
                         </template>
-                    </td>
-                    <!-- date -->
-                    <td class="w-1/6 whitespace-nowrap" :class="{ 'opacity-50': item.isPastEvent }">
-                        <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
-                        <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
-                        <p class="text-sm">
-                            {{ $t('views.event-list.table.day-count', { count: item.days }) }}
-                        </p>
                     </td>
                 </template>
                 <template #loading>
@@ -287,7 +296,6 @@
                 >
                     <i class="fa-solid fa-user-minus" />
                     <span>{{ $t('views.event-list.action.leave-waitinglist') }}</span>
-                    <span class="truncate"> Warteliste verlassen </span>
                 </li>
                 <li
                     v-if="hasAnySelectedEventWithSignedInUserInTeam"
@@ -312,6 +320,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Registration, SignedInUser } from '@/domain';
+import { EventSignupType } from '@/domain';
 import { EventState } from '@/domain';
 import type { ConfirmationDialog, Sheet } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';

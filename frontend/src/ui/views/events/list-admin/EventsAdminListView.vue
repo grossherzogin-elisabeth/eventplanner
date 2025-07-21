@@ -124,20 +124,27 @@
                 @click="editEvent($event.item, $event.event)"
             >
                 <template #row="{ item }">
+                    <!-- date -->
+                    <td class="hidden w-1/6 whitespace-nowrap lg:table-cell">
+                        <p class="mb-1 font-semibold 2xl:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
+                        <p class="mb-1 hidden font-semibold 2xl:block">{{ formatDateRange(item.start, item.end) }}</p>
+                        <p class="text-sm">{{ item.days }} Tage</p>
+                    </td>
                     <!-- name -->
-                    <td class="w-1/2 whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
+                    <td class="w-2/3 max-w-[80vw] whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
                         <p class="mb-1 truncate" :class="{ 'text-error line-through': item.state === EventState.Canceled }">
                             <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
                             <span v-else-if="item.state === EventState.Canceled">Abgesagt: </span>
                             {{ item.name }}
                         </p>
 
-                        <p v-if="item.description" class="truncate text-sm font-light">
-                            {{ item.description }}
-                        </p>
-                        <p v-else class="truncate text-sm font-light">
-                            <template v-if="item.locations.length === 0">keine Reiseroute angegeben</template>
+                        <p class="hidden truncate text-sm font-light lg:block">
+                            <template v-if="item.description">{{ item.description }}</template>
+                            <template v-else-if="item.locations.length === 0">keine Reiseroute angegeben</template>
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
+                        </p>
+                        <p class="truncate text-sm font-light lg:hidden">
+                            {{ formatDateRange(item.start, item.end) }} | {{ item.days }} Tage
                         </p>
                         <div class="flex w-full items-center gap-px pt-2">
                             <template v-for="(position, index) in item.assignedPositions" :key="`${position.key}-${index}`">
@@ -167,12 +174,6 @@
                             <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
                         </p>
                         <p class="pl-4 text-sm">Crew</p>
-                    </td>
-                    <!-- date -->
-                    <td class="w-2/6 whitespace-nowrap">
-                        <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
-                        <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
-                        <p class="text-sm">{{ item.days }} Tage</p>
                     </td>
                 </template>
                 <template #loading>
