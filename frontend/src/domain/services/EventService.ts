@@ -1,6 +1,6 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
 import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
-import { EventAccessType, EventState, SlotCriticality } from '@/domain';
+import { EventSignupType, EventState, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
 export class EventService {
@@ -160,7 +160,7 @@ export class EventService {
     }
 
     public hasOpenSlots(event: Event, positions?: PositionKey[], criticality: number = 0): boolean {
-        if (event.accessType === EventAccessType.Open && criticality === 0) {
+        if (event.signupType === EventSignupType.Open && criticality === 0) {
             // this event has no limited slots
             // only return true for criticality 0 though to prevent hasOpenRequiredSlots returning a false positive
             return true;
@@ -225,7 +225,7 @@ export class EventService {
             // singed in user has a registration
             event.canSignedInUserJoin = false;
             event.signedInUserAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === event.signedInUserRegistration?.key);
-            event.isSignedInUserAssigned = event.accessType !== EventAccessType.Assignment || event.signedInUserAssignedSlot !== undefined;
+            event.isSignedInUserAssigned = event.signupType !== EventSignupType.Assignment || event.signedInUserAssignedSlot !== undefined;
             const isInPast = event.start.getTime() < new Date().getTime();
             const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
             if (event.isSignedInUserAssigned) {

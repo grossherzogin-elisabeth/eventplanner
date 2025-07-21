@@ -12,7 +12,7 @@ export * from './values/Location';
 export * from './values/EventQuickFilter';
 export * from './values/EventState';
 export * from './values/EventType';
-export * from './values/EventAccessType';
+export * from './values/EventSignupType.ts';
 export * from './values/Permission';
 export * from './values/Role';
 export * from './values/Address';

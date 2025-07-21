@@ -11,9 +11,9 @@ import java.util.List;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;
-import org.eventplanner.events.domain.values.events.EventAccessType;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventLocation;
+import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.springframework.lang.NonNull;
@@ -45,8 +45,8 @@ public class EventJpaEntity {
     @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name = "access_type", nullable = false)
-    private String accessType;
+    @Column(name = "signup_type", nullable = false)
+    private String signupType;
 
     @Column(name = "year", nullable = false)
     private Integer year;
@@ -81,7 +81,7 @@ public class EventJpaEntity {
     public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
         var eventJpaEntity = new EventJpaEntity();
         eventJpaEntity.setType(domain.getType().value());
-        eventJpaEntity.setAccessType(domain.getAccessType().value());
+        eventJpaEntity.setSignupType(domain.getSignupType().value());
         eventJpaEntity.setKey(domain.getKey().value());
         eventJpaEntity.setYear(domain.getStart().atZone(ZoneId.systemDefault()).getYear());
         eventJpaEntity.setName(domain.getName());
@@ -163,7 +163,7 @@ public class EventJpaEntity {
         return new Event(
             new EventKey(key),
             mapEventType(),
-            EventAccessType.fromString(accessType).orElse(EventAccessType.ASSIGNMENT),
+            EventSignupType.fromString(signupType).orElse(EventSignupType.ASSIGNMENT),
             name,
             EventState.fromString(state).orElse(EventState.PLANNED),
             note != null ? note : "",

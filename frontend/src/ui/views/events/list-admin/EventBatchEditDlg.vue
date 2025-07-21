@@ -41,9 +41,9 @@
                     <div class="mb-4">
                         <VInputLabel>Anmeldetyp</VInputLabel>
                         <VInputSelect
-                            v-model="patch.accessType"
-                            :options="eventAccessTypes.options.value"
-                            :errors="validation.errors.value['accessType']"
+                            v-model="patch.signupType"
+                            :options="eventSignupTypes.options.value"
+                            :errors="validation.errors.value['signupType']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="nicht geändert"
                         />
@@ -78,14 +78,14 @@ import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VDialog, VInputLabel, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useEventAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
-import { useEventAccessTypes } from '@/ui/composables/EventAccessTypes.ts';
+import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 const eventStates = useEventStates();
 const eventTypes = useEventTypes();
-const eventAccessTypes = useEventAccessTypes();
+const eventSignupTypes = useEventSignupTypes();
 const eventService = useEventService();
 const eventAdminUseCase = useEventAdministrationUseCase();
 

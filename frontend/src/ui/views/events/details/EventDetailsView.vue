@@ -8,7 +8,7 @@
                 <div class="space-y-4 md:grid md:grid-cols-5 md:gap-x-20 md:gap-y-4 md:space-y-0 md:pr-4 xl:max-w-5xl 2xl:grid-cols-6">
                     <!-- state info banner -->
                     <section
-                        v-if="event.state === EventState.OpenForSignup && event.accessType === EventAccessType.Assignment"
+                        v-if="event.state === EventState.OpenForSignup && event.signupType === EventSignupType.Assignment"
                         class="col-span-2 col-start-4 xs:-mx-4 2xl:col-span-3"
                     >
                         <VInfo clamp>
@@ -20,7 +20,7 @@
                         v-else-if="event.state === EventState.Canceled"
                         class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
                     >
-                        <VWarning> Diese Reise wurde abgesagt! </VWarning>
+                        <VWarning> Diese Reise wurde abgesagt!</VWarning>
                     </section>
                     <section
                         v-else-if="event.signedInUserRegistration && event.isSignedInUserAssigned"
@@ -78,7 +78,7 @@
                 <template #icon>
                     <i class="fa-solid fa-user-minus" />
                 </template>
-                <template #label> Warteliste verlassen </template>
+                <template #label> Warteliste verlassen</template>
             </AsyncButton>
             <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
                 <i class="fa-solid fa-user-plus" />
@@ -150,12 +150,9 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { Event, Position, Registration, SignedInUser } from '@/domain';
-import { EventAccessType } from '@/domain';
-import { EventState, Permission } from '@/domain';
+import { EventSignupType, EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { VSuccess } from '@/ui/components/common';
-import { VConfirmationDialog } from '@/ui/components/common';
-import { AsyncButton, VInfo, VWarning } from '@/ui/components/common';
+import { AsyncButton, VConfirmationDialog, VInfo, VSuccess, VWarning } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
 import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.vue';
 import EventRouteCard from '@/ui/components/events/EventRouteCard.vue';
@@ -180,7 +177,13 @@ const eventUseCase = useEventUseCase();
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const event = ref<Event | null>(null);
 
-const registrationSheet = ref<Dialog<{ registration?: Registration; event: Event }, Registration | undefined> | null>(null);
+const registrationSheet = ref<Dialog<
+    {
+        registration?: Registration;
+        event: Event;
+    },
+    Registration | undefined
+> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
 const openPositions = computed<Position[]>(() => {

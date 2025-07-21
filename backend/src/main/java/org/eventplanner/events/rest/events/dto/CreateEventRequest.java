@@ -5,14 +5,14 @@ import java.time.Instant;
 import java.util.List;
 
 import org.eventplanner.events.domain.specs.CreateEventSpec;
-import org.eventplanner.events.domain.values.events.EventAccessType;
+import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record CreateEventRequest(
     @Nullable String type,
-    @Nullable String accessType,
+    @Nullable String signupType,
     @NonNull String name,
     @Nullable String note,
     @Nullable String description,
@@ -26,9 +26,9 @@ public record CreateEventRequest(
             type != null
                 ? EventType.fromString(type).orElseThrow(IllegalStateException::new)
                 : EventType.OTHER,
-            accessType != null
-                ? EventAccessType.fromString(type).orElseThrow(IllegalStateException::new)
-                : EventAccessType.ASSIGNMENT,
+            signupType != null
+                ? EventSignupType.fromString(type).orElseThrow(IllegalStateException::new)
+                : EventSignupType.ASSIGNMENT,
             name,
             note,
             description,

@@ -1,11 +1,11 @@
-import type { EventAccessType, EventState, EventType, Location, Registration, Slot } from '@/domain';
+import type { EventSignupType, EventState, EventType, Location, Registration, Slot } from '@/domain';
 
 export type EventKey = string;
 
 export interface Event {
     key: EventKey;
     type: EventType;
-    accessType: EventAccessType;
+    signupType: EventSignupType;
     state: EventState;
     name: string;
     description: string;

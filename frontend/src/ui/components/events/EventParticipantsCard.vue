@@ -95,8 +95,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import type { Event, ResolvedRegistrationSlot, SignedInUser } from '@/domain';
-import { EventAccessType } from '@/domain';
-import { EventState, Permission } from '@/domain';
+import { EventSignupType, EventState, Permission } from '@/domain';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
@@ -108,6 +107,7 @@ enum Tab {
 interface Props {
     event: Event;
 }
+
 const props = defineProps<Props>();
 
 const authUseCase = useAuthUseCase();
@@ -121,7 +121,7 @@ const team = ref<ResolvedRegistrationSlot[]>([]);
 
 const hasHiddenCrewAssignments = computed<boolean>(() => {
     return (
-        props.event.accessType !== EventAccessType.Assignment || [EventState.OpenForSignup, EventState.Draft].includes(props.event.state)
+        props.event.signupType !== EventSignupType.Assignment || [EventState.OpenForSignup, EventState.Draft].includes(props.event.state)
     );
 });
 

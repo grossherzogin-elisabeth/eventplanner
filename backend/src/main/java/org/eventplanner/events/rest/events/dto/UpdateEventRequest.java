@@ -5,8 +5,8 @@ import java.time.Instant;
 import java.util.List;
 
 import org.eventplanner.events.domain.specs.UpdateEventSpec;
-import org.eventplanner.events.domain.values.events.EventAccessType;
 import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
@@ -18,7 +18,7 @@ import org.springframework.lang.Nullable;
 public record UpdateEventRequest(
     @Nullable String name,
     @Nullable String type,
-    @Nullable String accessType,
+    @Nullable String signupType,
     @Nullable String state,
     @Nullable String note,
     @Nullable String description,
@@ -36,8 +36,8 @@ public record UpdateEventRequest(
             type != null
                 ? EventType.fromString(type).orElseThrow(IllegalArgumentException::new)
                 : null,
-            accessType != null
-                ? EventAccessType.fromString(accessType).orElseThrow(IllegalArgumentException::new)
+            signupType != null
+                ? EventSignupType.fromString(signupType).orElseThrow(IllegalArgumentException::new)
                 : null,
             name,
             state != null

@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.eventplanner.events.domain.entities.events.Event;
-import org.eventplanner.events.domain.values.events.EventAccessType;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventLocation;
+import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 
@@ -24,7 +24,7 @@ public class EventFactory {
         return new Event(
             new EventKey(UUID.randomUUID().toString()),
             EventType.OTHER,
-            EventAccessType.ASSIGNMENT,
+            EventSignupType.ASSIGNMENT,
             "Testevent",
             EventState.PLANNED,
             "Note for test event",

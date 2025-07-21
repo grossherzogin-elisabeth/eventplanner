@@ -45,9 +45,9 @@
                     <div class="mb-4">
                         <VInputLabel>Anmeldetyp</VInputLabel>
                         <VInputSelect
-                            v-model="event.accessType"
-                            :options="eventAccessTypes.options.value"
-                            :errors="validation.errors.value['accessType']"
+                            v-model="event.signupType"
+                            :options="eventSignupTypes.options.value"
+                            :errors="validation.errors.value['signupType']"
                             :errors-visible="validation.showErrors.value"
                             required
                         />
@@ -129,19 +129,26 @@ import { ref, watch } from 'vue';
 import { deepCopy, updateDate, updateTime } from '@/common';
 import { DateTimeFormat, cropToPrecision } from '@/common/date';
 import type { Event } from '@/domain';
-import { EventAccessType } from '@/domain';
-import { EventState, EventType } from '@/domain';
+import { EventSignupType, EventState, EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VInputTime } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputDate, VInputLabel, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
+import {
+    VDialog,
+    VInputCombobox,
+    VInputDate,
+    VInputLabel,
+    VInputSelect,
+    VInputText,
+    VInputTextArea,
+    VInputTime,
+} from '@/ui/components/common';
 import { useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
-import { useEventAccessTypes } from '@/ui/composables/EventAccessTypes.ts';
+import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation';
 
 const eventTypes = useEventTypes();
-const eventAccessTypes = useEventAccessTypes();
+const eventSignupTypes = useEventSignupTypes();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 
@@ -153,7 +160,7 @@ const event = ref<Event>({
     name: '',
     description: '',
     type: EventType.WeekendEvent,
-    accessType: EventAccessType.Assignment,
+    signupType: EventSignupType.Assignment,
     state: EventState.Draft,
     start: new Date(),
     days: 0,

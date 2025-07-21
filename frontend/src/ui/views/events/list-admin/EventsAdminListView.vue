@@ -21,7 +21,7 @@
                             <span>Export</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="filter" placeholder="Veranstaltungen filtern" />
+                    <VSearchButton v-model="filter" placeholder="Einträge filtern" />
                 </div>
             </template>
         </VTabs>

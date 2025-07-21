@@ -10,7 +10,7 @@ import org.springframework.lang.NonNull;
 public record EventRepresentation(
     @NonNull String key,
     @NonNull String type,
-    @NonNull String accessType,
+    @NonNull String signupType,
     @NonNull String name,
     @NonNull String state,
     @NonNull String note,
@@ -26,7 +26,7 @@ public record EventRepresentation(
         return new EventRepresentation(
             event.getKey().value(),
             event.getType().value(),
-            event.getAccessType().value(),
+            event.getSignupType().value(),
             event.getName(),
             event.getState().value(),
             event.getNote(),

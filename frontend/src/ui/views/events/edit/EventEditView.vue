@@ -57,9 +57,9 @@
                             <div class="mb-4">
                                 <VInputLabel>Anmeldetyp</VInputLabel>
                                 <VInputSelect
-                                    v-model="event.accessType"
-                                    :options="eventAccessTypes.options.value"
-                                    :errors="validation.errors.value['accessType']"
+                                    v-model="event.signupType"
+                                    :options="eventSignupTypes.options.value"
+                                    :errors="validation.errors.value['signupType']"
                                     :errors-visible="validation.showErrors.value"
                                     required
                                     :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
@@ -246,9 +246,9 @@ import { deepCopy, diff, filterUndefined, updateDate, updateTime } from '@/commo
 import type { Event, Location, Registration, Slot } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { VConfirmationDialog } from '@/ui/components/common';
 import {
     AsyncButton,
+    VConfirmationDialog,
     VInfo,
     VInputDate,
     VInputLabel,
@@ -269,7 +269,7 @@ import {
     useUsersUseCase,
 } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
-import { useEventAccessTypes } from '@/ui/composables/EventAccessTypes.ts';
+import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
@@ -296,7 +296,7 @@ const router = useRouter();
 const route = useRoute();
 const eventStates = useEventStates();
 const eventTypes = useEventTypes();
-const eventAccessTypes = useEventAccessTypes();
+const eventSignupTypes = useEventSignupTypes();
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();

@@ -1,4 +1,4 @@
-export enum EventAccessType {
+export enum EventSignupType {
     Open = 'open',
     Assignment = 'assignment',
 }

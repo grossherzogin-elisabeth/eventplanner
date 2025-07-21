@@ -2,8 +2,7 @@ import type { RegistrationCreateRequest, RegistrationUpdateRequest } from '@/ada
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
 import { deserializeDate } from '@/common';
-import type { Event, EventAccessType, EventKey, EventState, Registration, Slot } from '@/domain';
-import type { EventType } from '@/domain';
+import type { Event, EventKey, EventSignupType, EventState, EventType, Registration, Slot } from '@/domain';
 
 interface SlotRepresentation {
     key: string;
@@ -40,7 +39,7 @@ interface LocationRepresentation {
 export interface EventRepresentation {
     key: string;
     type: string;
-    accessType: string;
+    signupType: string;
     state: string;
     templateKey: string;
     name: string;
@@ -54,7 +53,7 @@ export interface EventRepresentation {
 
 interface EventCreateRequest {
     type: string;
-    accessType: string;
+    signupType: string;
     state: string;
     name: string;
     description: string;
@@ -67,7 +66,7 @@ interface EventCreateRequest {
 interface EventUpdateRequest {
     state?: string | null;
     type?: string | null;
-    accessType?: string | null;
+    signupType?: string | null;
     name?: string | null;
     description?: string | null;
     start?: string | null;
@@ -89,7 +88,7 @@ export class EventRestRepository implements EventRepository {
         const event: Event = {
             key: eventRepresentation.key,
             type: eventRepresentation.type as EventType,
-            accessType: eventRepresentation.accessType as EventAccessType,
+            signupType: eventRepresentation.signupType as EventSignupType,
             name: eventRepresentation.name,
             description: eventRepresentation.description,
             state: eventRepresentation.state as EventState,
@@ -184,7 +183,7 @@ export class EventRestRepository implements EventRepository {
         const requestBody: EventCreateRequest = {
             state: event.state,
             type: event.type,
-            accessType: event.accessType,
+            signupType: event.signupType,
             name: event.name,
             description: event.description,
             start: event.start.toISOString(),
@@ -236,7 +235,7 @@ export class EventRestRepository implements EventRepository {
         const requestBody: EventUpdateRequest = {
             state: updateRequest.state,
             type: updateRequest.type,
-            accessType: updateRequest.accessType,
+            signupType: updateRequest.signupType,
             name: updateRequest.name,
             description: updateRequest.description,
             start: updateRequest.start?.toISOString(),

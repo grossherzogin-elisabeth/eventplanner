@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eventplanner.events.domain.entities.events.EventSlot;
-import org.eventplanner.events.domain.values.events.EventAccessType;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventLocation;
+import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
@@ -21,7 +21,7 @@ import lombok.With;
 public record UpdateEventSpec(
     @NonNull EventKey eventKey,
     @Nullable EventType type,
-    @Nullable EventAccessType accessType,
+    @Nullable EventSignupType signupType,
     @Nullable String name,
     @Nullable EventState state,
     @Nullable String note,
