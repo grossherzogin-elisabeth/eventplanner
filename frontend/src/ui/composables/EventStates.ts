@@ -1,16 +1,17 @@
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { InputSelectOption } from '@/domain';
 import { EventState } from '@/domain';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useEventStates() {
+    const { t } = useI18n();
+
     const options = computed<InputSelectOption<EventState>[]>(() => {
-        return [
-            { value: EventState.Draft, label: 'Entwurf' },
-            { value: EventState.OpenForSignup, label: 'Crew Anmeldung' },
-            { value: EventState.Planned, label: 'Veröffentlicht' },
-            { value: EventState.Canceled, label: 'Abgesagt' },
-        ];
+        return [EventState.Draft, EventState.OpenForSignup, EventState.Planned, EventState.Canceled].map((it) => ({
+            value: it,
+            label: t(`generic.event-state.${it}`),
+        }));
     });
 
     const optionsIncludingNone = computed<InputSelectOption<EventState | undefined>[]>(() => {

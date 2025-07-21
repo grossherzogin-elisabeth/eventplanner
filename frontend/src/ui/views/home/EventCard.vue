@@ -40,7 +40,7 @@
                         >
                             <p class="flex items-center gap-2">
                                 <i class="fa-solid fa-hourglass-half w-4" />
-                                <span class="text-sm font-bold">{{ $t('app.event-details.note-waitinglist') }}</span>
+                                <span class="text-sm font-bold">{{ $t('views.home.event-card.state.waitinglist') }}</span>
                             </p>
                         </div>
                     </div>

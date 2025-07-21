@@ -2,21 +2,20 @@
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
             <div class="h-full lg:hidden">
-                <NavbarFilter v-model="filter" placeholder="Reisen durchsuchen" />
+                <NavbarFilter v-model="filter" :placeholder="$t('views.event-list.filter.search')" />
             </div>
         </teleport>
 
         <div v-if="signedInUser.positions.length === 0" class="px-4 md:px-12 xl:px-16">
             <VInfo class="mt-4 xl:mt-8" clamp>
-                Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht selber für Reisen anmelden.
-                Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.
+                {{ $t('views.event-list.note-no-position') }}
             </VInfo>
         </div>
 
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
-                    <VSearchButton v-model="filter" placeholder="Einträge filtern" />
+                    <VSearchButton v-model="filter" :placeholder="$t('views.event-list.filter.search')" />
                 </div>
             </template>
         </VTabs>
@@ -29,7 +28,9 @@
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventType.length === 0">Alle Veranstaltungen</span>
+                    <span v-if="filterEventType.length === 0">
+                        {{ $t('views.event-list.filter.all-types') }}
+                    </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -38,11 +39,11 @@
                     <ul>
                         <li v-if="filterEventType.length === 0" class="context-menu-item">
                             <i class="fa-solid fa-check"></i>
-                            <span>Alle Veranstaltungen</span>
+                            <span>{{ $t('views.event-list.filter.all-types') }}</span>
                         </li>
                         <li v-else class="context-menu-item" @click="filterEventType = []">
                             <i class="w-4"></i>
-                            <span>Alle Veranstaltungen</span>
+                            <span>{{ $t('views.event-list.filter.all-types') }}</span>
                         </li>
                         <template v-for="eventType in eventTypes.options.value" :key="eventType.value">
                             <li
@@ -62,13 +63,13 @@
                 </template>
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterAssigned }" @click="filterAssigned = !filterAssigned">
-                <span>Eingeplant</span>
+                <span>{{ $t('views.event-list.filter.assigned') }}</span>
             </button>
             <button class="btn-tag" :class="{ active: filterWaitingList }" @click="filterWaitingList = !filterWaitingList">
-                <span>Warteliste</span>
+                <span>{{ $t('views.event-list.filter.waitinglist') }}</span>
             </button>
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
-                <span>Freie Plätze</span>
+                <span>{{ $t('views.event-list.filter.free-slots') }}</span>
             </button>
         </div>
 
@@ -92,26 +93,33 @@
                             class="mb-1 truncate whitespace-nowrap"
                             :class="{ 'text-error line-through': item.state === EventState.Canceled }"
                         >
-                            <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
-                            <span v-else-if="item.state === EventState.Canceled">Abgesagt: </span>
+                            <span v-if="item.state === EventState.Draft" class="opacity-50"> {{ $t('generic.event-state.draft') }}: </span>
+                            <span v-else-if="item.state === EventState.Canceled" class="opacity-50">
+                                {{ $t('generic.event-state.canceled') }}:
+                            </span>
                             {{ item.name }}
                         </p>
-                        <p v-if="item.isSignedInUserAssigned" class="truncate text-sm font-light">
-                            Du bist als
+                        <i18n-t
+                            v-if="item.isSignedInUserAssigned"
+                            class="truncate text-sm font-light"
+                            tag="p"
+                            keypath="views.event-list.table.assigned-as"
+                        >
                             <i>{{ positions.get(item.signedInUserRegistration?.positionKey).name }}</i>
-                            eingeplant.
-                        </p>
-                        <p v-else-if="item.signedInUserRegistration" class="truncate text-sm font-light">
-                            Du stehst als
+                        </i18n-t>
+                        <i18n-t
+                            v-else-if="item.signedInUserRegistration"
+                            tag="p"
+                            keypath="views.event-list.table.on-waiting-list-as"
+                            class="truncate text-sm font-light"
+                        >
                             <i>{{ positions.get(item.signedInUserRegistration.positionKey).name }}</i>
-                            auf der Warteliste.
-                        </p>
+                        </i18n-t>
                         <p v-else-if="item.description" class="truncate text-sm font-light">
                             {{ item.description }}
                         </p>
                         <p v-else class="truncate text-sm font-light">
-                            <template v-if="item.locations.length === 0">keine Reiseroute angegeben</template>
-                            <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
+                            {{ item.locations.map((it) => it.name).join(' - ') }}
                         </p>
                     </td>
                     <!-- status -->
@@ -129,21 +137,27 @@
                             <p class="mb-1 pl-4 font-semibold">
                                 <span> {{ item.registrations.length }} </span>
                             </p>
-                            <p class="pl-4 text-sm">Anmeldungen</p>
+                            <p class="pl-4 text-sm">
+                                {{ $t('views.event-list.table.registration-count', { count: item.registrations.length }) }}
+                            </p>
                         </template>
                         <template v-else>
                             <p class="mb-1 pl-4 font-semibold">
                                 {{ item.assignedUserCount }}
                                 <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
                             </p>
-                            <p class="pl-4 text-sm">Crew</p>
+                            <p class="pl-4 text-sm">
+                                {{ $t('views.event-list.table.team-count', { count: item.assignedUserCount }) }}
+                            </p>
                         </template>
                     </td>
                     <!-- date -->
                     <td class="w-1/6 whitespace-nowrap" :class="{ 'opacity-50': item.isPastEvent }">
                         <p class="mb-1 font-semibold lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
                         <p class="mb-1 hidden font-semibold lg:block">{{ formatDateRange(item.start, item.end) }}</p>
-                        <p class="text-sm">{{ item.days }} Tage</p>
+                        <p class="text-sm">
+                            {{ $t('views.event-list.table.day-count', { count: item.days }) }}
+                        </p>
                     </td>
                 </template>
                 <template #loading>
@@ -190,12 +204,12 @@
                             class="context-menu-item"
                         >
                             <i class="fa-solid fa-search" />
-                            <span>Reise anzeigen</span>
+                            <span>{{ $t('views.event-list.action.link-event-details') }}</span>
                         </RouterLink>
                     </li>
                     <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(item)">
                         <i class="fa-solid fa-calendar-alt" />
-                        <span>Kalendereintrag erstellen</span>
+                        <span>{{ $t('views.event-list.action.create-calendar-entry') }}</span>
                     </li>
                     <template v-if="!item.signedInUserRegistration">
                         <li
@@ -204,7 +218,7 @@
                             @click="joinEvents([item])"
                         >
                             <i class="fa-solid fa-user-plus" />
-                            <span class="truncate"> Anmelden </span>
+                            <span>{{ $t('views.event-list.action.signup') }}</span>
                         </li>
                     </template>
                     <li
@@ -214,7 +228,7 @@
                         @click="leaveEvents([item])"
                     >
                         <i class="fa-solid fa-ban" />
-                        <span>Teilnahme absagen</span>
+                        <span>{{ $t('views.event-list.action.cancel') }}</span>
                     </li>
                     <li
                         v-else-if="item.signedInUserRegistration"
@@ -223,7 +237,7 @@
                         @click="leaveEvents([item])"
                     >
                         <i class="fa-solid fa-user-minus" />
-                        <span>Warteliste verlassen</span>
+                        <span>{{ $t('views.event-list.action.leave-waitinglist') }}</span>
                     </li>
                 </template>
             </VTable>
@@ -247,14 +261,14 @@
                         @click="joinEvents(selectedEvents)"
                     >
                         <i class="fa-solid fa-user-plus"></i>
-                        <span class="truncate"> Anmelden </span>
+                        <span>{{ $t('views.event-list.action.signup') }}</span>
                     </button>
                 </div>
             </template>
             <template #menu>
                 <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
                     <i class="fa-solid fa-calendar-alt" />
-                    <span>Kalendereintrag erstellen</span>
+                    <span>{{ $t('views.event-list.action.create-calendar-entry') }}</span>
                 </li>
                 <li
                     v-if="hasAnySelectedEventWhichSignedInUserCanJoin"
@@ -263,7 +277,7 @@
                     @click="joinEvents(selectedEvents)"
                 >
                     <i class="fa-solid fa-user-plus" />
-                    <span class="truncate"> Anmelden </span>
+                    <span>{{ $t('views.event-list.action.signup') }}</span>
                 </li>
                 <li
                     v-if="hasAnySelectedEventWithSignedInUserOnWaitingList"
@@ -272,6 +286,7 @@
                     @click="leaveEventsWaitingListOnly(selectedEvents)"
                 >
                     <i class="fa-solid fa-user-minus" />
+                    <span>{{ $t('views.event-list.action.leave-waitinglist') }}</span>
                     <span class="truncate"> Warteliste verlassen </span>
                 </li>
                 <li
@@ -281,7 +296,7 @@
                     @click="leaveEvents(selectedEvents)"
                 >
                     <i class="fa-solid fa-ban" />
-                    <span class="truncate"> Teilnahme absagen </span>
+                    <span>{{ $t('views.event-list.action.cancel') }}</span>
                 </li>
             </template>
         </VMultiSelectActions>
@@ -294,8 +309,9 @@
 import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, EventType, Registration, SignedInUser } from '@/domain';
+import type { Event, EventType, InputSelectOption, Registration, SignedInUser } from '@/domain';
 import { EventState } from '@/domain';
 import type { ConfirmationDialog, Sheet } from '@/ui/components/common';
 import { ContextMenuButton, VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
@@ -330,6 +346,7 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const { t } = useI18n();
 const eventUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
 const eventService = useEventService();
@@ -339,7 +356,7 @@ const eventTypes = useEventTypes();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const events = ref<EventTableViewItem[] | null>(null);
-const tab = ref<string>('Zukünftige');
+const tab = ref<string>('future');
 const filter = ref<string>('');
 const filterAssigned = ref<boolean>(false);
 const filterWaitingList = ref<boolean>(false);
@@ -347,7 +364,13 @@ const filterFreeSlots = ref<boolean>(false);
 const filterEventType = ref<EventType[]>([]);
 
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
-const createRegistrationSheet = ref<Sheet<{ registration?: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
+const createRegistrationSheet = ref<Sheet<
+    {
+        registration?: Registration;
+        event: Event | Event[];
+    },
+    Registration | undefined
+> | null>(null);
 
 useQueryStateSync<boolean>(
     'assigned',
@@ -421,9 +444,14 @@ const selectedEvents = computed<EventTableViewItem[] | undefined>(() => {
     return filteredEvents.value?.filter((it) => it.selected);
 });
 
-const tabs = computed<string[]>(() => {
+const tabs = computed<InputSelectOption[]>(() => {
     const currentYear = new Date().getFullYear();
-    return ['Zukünftige', String(currentYear + 1), String(currentYear), String(currentYear - 1)];
+    return [
+        { value: 'future', label: t('views.event-list.tab.future') },
+        { value: String(currentYear + 1), label: String(currentYear + 1) },
+        { value: String(currentYear), label: String(currentYear) },
+        { value: String(currentYear - 1), label: String(currentYear - 1) },
+    ];
 });
 
 async function init(): Promise<void> {
@@ -443,7 +471,7 @@ function selectAll(): void {
 }
 
 async function fetchEvents(): Promise<void> {
-    if (tab.value === tabs.value[0]) {
+    if (tab.value === tabs.value[0].value) {
         const now = new Date();
         const currentYear = await fetchEventsByYear(now.getFullYear());
         const nextYear = await fetchEventsByYear(now.getFullYear() + 1);
@@ -479,27 +507,59 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 
 function getStateDetails(event: EventTableViewItem): StateDetails {
     if (event.state === EventState.Canceled) {
-        return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
+        return {
+            name: t('generic.event-state.canceled'),
+            icon: 'fa-ban',
+            color: 'bg-red-container text-onred-container',
+        };
     }
     if (event.isSignedInUserAssigned) {
-        return { name: 'Eingeplant', icon: 'fa-check-circle', color: 'bg-green-container text-ongreen-container' };
+        return {
+            name: t('views.event-list.state.assigned'),
+            icon: 'fa-check-circle',
+            color: 'bg-green-container text-ongreen-container',
+        };
     }
     if (event.signedInUserRegistration) {
-        return { name: 'Warteliste', icon: 'fa-hourglass-half', color: 'bg-surface-container-highest text-onsurface' };
+        return {
+            name: t('views.event-list.state.waitinglist'),
+            icon: 'fa-hourglass-half',
+            color: 'bg-surface-container-highest text-onsurface',
+        };
     }
     if (event.state === EventState.Draft) {
-        return { name: 'Entwurf', icon: 'fa-compass-drafting', color: 'bg-surface-container-highest text-onsurface' };
+        return {
+            name: t('generic.event-state.draft'),
+            icon: 'fa-compass-drafting',
+            color: 'bg-surface-container-highest text-onsurface',
+        };
     }
     if (event.state === EventState.OpenForSignup) {
-        return { name: 'Crew Anmeldung', icon: 'fa-people-group', color: 'bg-blue-container text-onblue-container' };
+        return {
+            name: t('generic.event-state.open-for-signup'),
+            icon: 'fa-people-group',
+            color: 'bg-blue-container text-onblue-container',
+        };
     }
     if (event.hasOpenImportantSlots) {
-        return { name: 'Crew gesucht', icon: 'fa-info-circle', color: 'bg-yellow-container text-onyellow-container' };
+        return {
+            name: t('generic.event-state.crew-wanted'),
+            icon: 'fa-info-circle',
+            color: 'bg-yellow-container text-onyellow-container',
+        };
     }
     if (event.hasOpenSlots) {
-        return { name: 'Freie Plätze', icon: 'fa-info-circle', color: 'bg-blue-container text-onblue-container' };
+        return {
+            name: t('generic.event-state.open-slots'),
+            icon: 'fa-info-circle',
+            color: 'bg-blue-container text-onblue-container',
+        };
     }
-    return { name: 'Voll belegt', icon: 'fa-info-circle', color: 'bg-surface-container-highest text-onsurface' };
+    return {
+        name: t('generic.event-state.full'),
+        icon: 'fa-info-circle',
+        color: 'bg-surface-container-highest text-onsurface',
+    };
 }
 
 async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {

@@ -242,8 +242,9 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { deepCopy, diff, filterUndefined, updateDate, updateTime } from '@/common';
-import type { Event, Location, Registration, Slot } from '@/domain';
+import type { Event, InputSelectOption, Location, Registration, Slot } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import {
@@ -282,16 +283,17 @@ import SlotEditDlg from './SlotEditDlg.vue';
 import SlotsTable from './SlotsTable.vue';
 
 enum Tab {
-    EVENT_DATA = 'app.edit-event.tab.data',
-    EVENT_TEAM = 'Crew verwalten',
-    EVENT_SLOTS = 'Crew Slots',
-    EVENT_LOCATIONS = 'Reiseroute',
+    EVENT_DATA = 'data',
+    EVENT_TEAM = 'positions',
+    EVENT_SLOTS = 'slots',
+    EVENT_LOCATIONS = 'locations',
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const eventStates = useEventStates();
@@ -311,13 +313,13 @@ const validation = useValidation(event, (evt) => (evt === null ? {} : eventServi
 const hasChanges = ref<boolean>(false);
 
 const tab = ref<Tab>(Tab.EVENT_TEAM);
-const tabs = computed<Tab[]>(() => {
+const tabs = computed<InputSelectOption<Tab>[]>(() => {
     const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
     if (signedInUser.permissions.includes(Permission.WRITE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_TEAM);
         visibleTabs.push(Tab.EVENT_SLOTS);
     }
-    return visibleTabs;
+    return visibleTabs.map((it) => ({ value: it, label: t(`views.event-admin-details.tab.${it}`) }));
 });
 
 const createLocationDialog = ref<Dialog<void, Location | undefined> | null>(null);

@@ -8,8 +8,8 @@
         "preview": "vite preview",
         "build": "vue-tsc --noEmit -p tsconfig.app.json --composite false && vite build",
         "lint": "npx eslint --fix src",
-        "format": "./node_modules/.bin/prettier . --ignore-path .gitignore --write",
-        "check:format": "./node_modules/.bin/prettier --ignore-path .gitignore --check .",
+        "format": "./node_modules/.bin/prettier . --ignore-path .gitignore --ignore-path .prettierignore --write",
+        "check:format": "./node_modules/.bin/prettier --ignore-path .gitignore --ignore-path .prettierignore --check .",
         "check:lint": "npx eslint src",
         "check:typescript": "vue-tsc"
     },
@@ -33,6 +33,7 @@
         "@babel/preset-env": "^7.28.0",
         "@babel/preset-typescript": "^7.27.1",
         "@material/material-color-utilities": "^0.3.0",
+        "@modyfi/vite-plugin-yaml": "^1.1.1",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/markdown-it": "^14.1.2",
         "@types/node": "^22.15.35",

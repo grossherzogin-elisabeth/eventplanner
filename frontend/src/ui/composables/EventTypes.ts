@@ -1,18 +1,24 @@
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { InputSelectOption } from '@/domain';
 import { EventType } from '@/domain';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useEventTypes() {
+    const { t } = useI18n();
+
     const options = computed<InputSelectOption<EventType>[]>(() => {
         return [
-            { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
-            { value: EventType.WeekendEvent, label: 'Wochenendreise' },
-            { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
-            { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
-            { value: EventType.TrainingEvent, label: 'Ausbildung' },
-            { value: EventType.Other, label: 'Sonstige' },
-        ];
+            EventType.SingleDayEvent,
+            EventType.WeekendEvent,
+            EventType.MultiDayEvent,
+            EventType.WorkEvent,
+            EventType.TrainingEvent,
+            EventType.Other,
+        ].map((it) => ({
+            value: it,
+            label: t(`generic.event-type.${it}`),
+        }));
     });
 
     const optionsIncludingNone = computed<InputSelectOption<EventType | undefined>[]>(() => {

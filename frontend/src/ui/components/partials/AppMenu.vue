@@ -4,10 +4,9 @@
 
         <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-error-container pl-4 text-onerror-container xl:mx-8 xl:pl-6">
             <div class="flex items-center">
-                <p class="mr-2 w-0 flex-grow py-4 text-sm font-bold">
-                    Du siehst die Anwendung aus Sicht von
+                <i18n-t tag="p" keypath="navigation.impersonate" class="mr-2 w-0 flex-grow py-4 text-sm font-bold">
                     <span class="italic">{{ signedInUser.firstName }} {{ signedInUser.lastName }}</span>
-                </p>
+                </i18n-t>
                 <button class="icon-button mr-2" title="Impersonate Modus beenden" @click="authUseCase.impersonateUser(null)">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
@@ -18,19 +17,19 @@
             <li v-if="signedInUser.permissions.includes(Permission.READ_EVENTS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.Home }">
                     <i class="fa-solid fa-home"></i>
-                    <span>Meine nächsten Reisen</span>
+                    <span>{{ $t('navigation.myNextEvents') }}</span>
                 </RouterLink>
             </li>
             <li v-else class="menu-item">
                 <RouterLink :to="{ name: Routes.Onboarding }">
                     <i class="fa-solid fa-home"></i>
-                    <span>Start</span>
+                    <span>{{ $t('navigation.start') }}</span>
                 </RouterLink>
             </li>
             <li :class="{ expanded: eventsExpanded }" class="permission-read-events menu-item">
                 <button @click="eventsExpanded = !eventsExpanded">
                     <i class="fa-solid fa-calendar-days"></i>
-                    <span>Kalender</span>
+                    <span>{{ $t('navigation.calendar') }}</span>
                     <i class="menu-chevron fa-solid fa-chevron-right"></i>
                 </button>
                 <ul v-if="eventsExpanded" class="space-y-1 pb-4">
@@ -49,19 +48,19 @@
             <li class="permission-read-events menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }">
                 <RouterLink :to="{ name: Routes.EventsList }">
                     <i class="fa-solid fa-compass"></i>
-                    <span>Alle Veranstaltungen</span>
+                    <span>{{ $t('navigation.allEvents') }}</span>
                 </RouterLink>
             </li>
             <li class="permission-write-events menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }">
                 <RouterLink :to="{ name: Routes.EventsListAdmin }">
                     <i class="fa-solid fa-compass-drafting"></i>
-                    <span>Reisen verwalten</span>
+                    <span>{{ $t('navigation.manageEvents') }}</span>
                 </RouterLink>
             </li>
             <li class="permission-read-user-details menu-item">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
-                    <span>Nutzer verwalten</span>
+                    <span>{{ $t('navigation.manageUsers') }}</span>
                 </RouterLink>
             </li>
             <li
@@ -73,46 +72,47 @@
             >
                 <RouterLink :to="{ name: Routes.Basedata }">
                     <i class="fa-solid fa-database"></i>
-                    <span>Stammdaten verwalten</span>
+                    <span>{{ $t('navigation.manageBaseData') }}</span>
                 </RouterLink>
             </li>
             <li class="permission-write-application-settings menu-item">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>
-                    <span>Einstellungen</span>
+                    <span>{{ $t('navigation.manageSettings') }}</span>
                 </RouterLink>
             </li>
             <li class="menu-item">
                 <RouterLink :to="{ name: Routes.SystemInfo }">
                     <i class="fa-solid fa-comment"></i>
-                    <span>Feedback</span>
+                    <span>{{ $t('navigation.feedback') }}</span>
                 </RouterLink>
             </li>
             <li class="menu-item">
                 <RouterLink :to="{ name: Routes.Account }">
                     <i class="fa-solid fa-user-circle"></i>
-                    <span>Meine Daten</span>
+                    <span>{{ $t('navigation.account') }}</span>
                 </RouterLink>
             </li>
             <li class="menu-item">
                 <a type="button" @click="authUseCase.logout()">
                     <i class="fa-solid fa-sign-out"></i>
-                    <span>Abmelden</span>
+                    <span>{{ $t('navigation.signOut') }}</span>
                 </a>
             </li>
         </ul>
-        <h2 class="menu-subheading hidden">Rechtliches</h2>
+        <!-- TODO do we need this? -->
+        <h2 class="menu-subheading hidden">{{ $t('navigation.legal') }}</h2>
         <ul class="menu-list my-4 hidden">
             <li class="menu-item">
                 <RouterLink :to="{ name: Routes.Privacy }">
                     <i class="fa-solid fa-user-shield"></i>
-                    <span>Datenschutzerklärung</span>
+                    <span>{{ $t('navigation.dataPrivacy') }}</span>
                 </RouterLink>
             </li>
             <li class="menu-item">
                 <RouterLink :to="{ name: Routes.Imprint }">
                     <i class="fa-solid fa-section"></i>
-                    <span>Impressum</span>
+                    <span>{{ $t('navigation.imprint') }}</span>
                 </RouterLink>
             </li>
         </ul>

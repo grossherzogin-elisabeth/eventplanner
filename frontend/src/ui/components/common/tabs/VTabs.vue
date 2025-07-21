@@ -5,10 +5,15 @@
         >
             <slot name="before" />
             <div class="flex gap-x-8">
-                <div v-for="tab in props.tabs" :key="tab" class="tab" :class="{ active: tab === props.modelValue && !showSearch }">
-                    <button class="btn-tab" @click="emit('update:modelValue', tab)">
-                        <slot name="tab" :tab="tab">
-                            {{ $t(tab) }}
+                <div
+                    v-for="tab in localizedTabs"
+                    :key="tab.value"
+                    class="tab"
+                    :class="{ active: tab.value === props.modelValue && !showSearch }"
+                >
+                    <button class="btn-tab" @click="emit('update:modelValue', tab.value)">
+                        <slot name="tab" :tab="tab.value">
+                            {{ tab.label }}
                         </slot>
                     </button>
                 </div>
@@ -20,23 +25,23 @@
     </div>
     <!-- tab pane -->
     <div v-if="props.modelValue && $slots[props.modelValue]" class="flex-1 px-4 py-4 xs:px-8 md:px-16 md:py-8 xl:px-20">
-        <template v-for="tab in props.tabs" :key="tab">
-            <div v-show="tab === props.modelValue" class="h-full">
-                <slot :name="tab" :active="tab === props.modelValue" />
+        <template v-for="tab in localizedTabs" :key="tab.value">
+            <div v-show="tab.value === props.modelValue" class="h-full">
+                <slot :name="tab.value" :active="tab.value === props.modelValue" />
             </div>
         </template>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import type { InputSelectOption } from '@/domain';
 import { useQueryStateSync } from '@/ui/composables/QueryState';
 
 interface Props {
-    // the active tab, bind with v-model
     modelValue?: string;
-    // show errors, even if this field has not been focused jet, e.g. after pressing save
-    tabs?: string[];
+    tabs?: string[] | InputSelectOption[];
 }
 
 type Emits = (e: 'update:modelValue', value: string) => void;
@@ -44,7 +49,12 @@ type Emits = (e: 'update:modelValue', value: string) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
+const { t } = useI18n();
+
 const showSearch = ref<boolean>(false);
+const localizedTabs = computed<InputSelectOption[]>(
+    () => props.tabs?.map((it) => (typeof it === 'string' ? { value: it, label: t(it) } : it)) ?? []
+);
 
 useQueryStateSync<string>(
     'tab',

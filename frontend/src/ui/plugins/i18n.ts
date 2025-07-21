@@ -2,7 +2,7 @@ import type { DateTimeOptions, I18n } from 'vue-i18n';
 import { createI18n } from 'vue-i18n';
 import type { Config } from '@/application/values/Config';
 import { DateTimeFormat } from '@/common/date';
-import messagesDe from '@/ui/locales/de.json';
+import messagesDe from '@/ui/locales/de.yml';
 
 const datetimeFormatsDe: Record<string, DateTimeOptions> = {};
 datetimeFormatsDe[DateTimeFormat.DD_MM_YYYY] = {

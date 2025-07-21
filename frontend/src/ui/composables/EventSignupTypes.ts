@@ -1,14 +1,17 @@
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { InputSelectOption } from '@/domain';
 import { EventSignupType } from '@/domain';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useEventSignupTypes() {
+    const { t } = useI18n();
+
     const options = computed<InputSelectOption<EventSignupType>[]>(() => {
-        return [
-            { value: EventSignupType.Assignment, label: 'Offene Anmeldung mit manueller Einteilung' },
-            { value: EventSignupType.Open, label: 'Offene Teilnahme' },
-        ];
+        return [EventSignupType.Assignment, EventSignupType.Open].map((it) => ({
+            value: it,
+            label: t(`generic.event-signup-type.${it}`),
+        }));
     });
 
     const optionsIncludingNone = computed<InputSelectOption<EventSignupType | undefined>[]>(() => {
