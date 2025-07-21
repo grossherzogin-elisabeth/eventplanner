@@ -307,9 +307,9 @@ import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
 import UsersListSkeletonLoader from '@/ui/views/users/list/UsersListSkeletonLoader.vue';
 
 enum Tab {
-    TEAM_MEMBERS = 'Stammcrew',
-    ADMINS = 'Verwalter',
-    UNMATCHED_USERS = 'Nutzer ohne Rolle',
+    TEAM_MEMBERS = 'members',
+    ADMINS = 'admins',
+    UNMATCHED_USERS = 'unknown',
 }
 
 interface UserRegistrations extends User, Selectable {
@@ -327,7 +327,7 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
-const i18n = useI18n();
+const { t } = useI18n();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 const usersUseCase = useUsersUseCase();
@@ -338,8 +338,11 @@ const router = useRouter();
 const signedInUser = authUseCase.getSignedInUser();
 const positions = usePositions();
 
-const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS];
-const tab = ref<string>(tabs[0]);
+const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS].map((it) => ({
+    value: it,
+    label: t(`views.user-list.tab.${it}`),
+}));
+const tab = ref<string>(tabs[0].value);
 const filter = ref<string>('');
 const filterOnlyActive = ref<boolean>(true);
 const filterExpiredQualifications = ref<boolean>(false);
@@ -532,7 +535,7 @@ async function fetchUsers(): Promise<void> {
     users.value = userlist.map((user: User) => {
         return {
             ...user,
-            rolesStr: user.roles?.map((k) => i18n.t(`app.role.${k}`)).join(', ') || '',
+            rolesStr: user.roles?.map((k) => t(`generic.role.${k}`)).join(', ') || '',
             waitingListCount: registrationsWaitinglist.filter((it) => it.userKey === user.key).length,
             multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,

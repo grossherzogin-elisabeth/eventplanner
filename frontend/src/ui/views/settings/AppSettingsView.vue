@@ -106,25 +106,30 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { AppSettings } from '@/domain';
 import { AsyncButton, VInputCheckBox, VInputLabel, VInputNumber, VInputText, VInputTextArea, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAppSettingsUseCase } from '@/ui/composables/Application.ts';
 
 enum Tab {
-    GENERAL_SETTINGS = 'Allgemein',
-    EMAIL = 'Email',
-    NOTIFICATIONS = 'Notifications',
+    GENERAL_SETTINGS = 'general',
+    EMAIL = 'email',
+    NOTIFICATIONS = 'notifications',
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const { t } = useI18n();
 const appSettingsUseCase = useAppSettingsUseCase();
 
-const tabs = [Tab.GENERAL_SETTINGS, Tab.EMAIL, Tab.NOTIFICATIONS];
-const tab = ref<Tab>(tabs[0]);
+const tabs = [Tab.GENERAL_SETTINGS, Tab.EMAIL, Tab.NOTIFICATIONS].map((it) => ({
+    value: it,
+    label: t(`views.settings.tab.${it}`),
+}));
+const tab = ref<Tab>(tabs[0].value);
 const settings = ref<AppSettings | null>(null);
 
 function init(): void {

@@ -1,0 +1,134 @@
+---
+# -----------------------------------
+# generic messages used anywhere in the application
+# -----------------------------------
+generic:
+  loading: 'Wird geladen...'
+  no-entries: 'Keine Einträge'
+  no-matches: 'Keine Treffer'
+  please-select: 'Bitte auswählen'
+  filter-entries: 'Einträge filtern'
+  month:
+    '0': 'Januar'
+    '1': 'Februar'
+    '2': 'März'
+    '3': 'April'
+    '4': 'Mai'
+    '5': 'Juni'
+    '6': 'Juli'
+    '7': 'August'
+    '8': 'September'
+    '9': 'Oktober'
+    '10': 'November'
+    '11': 'Dezember'
+  role:
+    ROLE_ADMIN: 'Admin'
+    ROLE_EVENT_PLANNER: 'Reiseplaner:in'
+    ROLE_EVENT_LEADER: 'Reiseleiter:in'
+    ROLE_TEAM_PLANNER: 'Crewplaner:in'
+    ROLE_USER_MANAGER: 'Nutzerverwalter:in'
+    ROLE_TEAM_MEMBER: 'Stammcrew Mitglied'
+
+# -----------------------------------
+# messages for the main navigation
+# -----------------------------------
+navigation:
+  myNextEvents: 'Meine nächsten Reisen'
+  start: 'Start'
+  calendar: 'Kalender'
+  allEvents: 'Alle Reisen'
+  manageEvents: 'Reisen verwalten'
+  manageUsers: 'Nutzer verwalten'
+  manageBaseData: 'Stammdaten verwalten'
+  manageSettings: 'Einstellungen'
+  account: 'Meine Daten'
+  feedback: 'Feedback'
+  signOut: 'Abmelden'
+  legal: 'Rechtliches'
+  dataPrivacy: 'Datenschutzerklärung'
+  imprint: 'Impressum'
+  impersonate: 'Du siehst die Anwendung aus Sicht von {0}'
+
+# -----------------------------------
+# messages used in shared components
+# -----------------------------------
+components:
+  event-details-card:
+    title: 'Details'
+    days: '{count} Tag|{count} Tage'
+    registrations: '{count} Anmeldung | {count} Anmeldungen'
+    assigned: '{count} Crew | {count} Crew'
+    waitinglist: '{count} Warteliste | {count} Warteliste'
+  event-locations-card:
+    title: 'Ort | Route'
+    placeholder: 'Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar
+            sind, kannst du sie hier sehen.'
+    eta: 'Ankunft:'
+    etd: 'Abfahrt:'
+    address-link: 'Anreiseinformationen'
+    learn-more: 'Weitere Informationen'
+  event-participants-card:
+    registrations: 'Anmeldungen'
+    assigned: 'Crew ({count})'
+    waitinglist: 'Warteliste ({count})'
+    placeholder-title: 'Du könntest den Anfang machen!'
+    placeholder-title-m: 'Du könntest der Erste sein!'
+    placeholder-title-f: 'Du könntest die Erste sein!'
+    placeholder: 'Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich
+            anmelden. Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und anschließend wird vom Büro eine
+            Crew zusammengestellt.'
+    unknown: 'Unbekannter Nutzer'
+    empty: 'Noch nicht besetzt'
+    no-registrations: 'Für diese Reise gibt es noch keine Anmeldungen.'
+    no-waitinglist: 'Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.'
+
+# -----------------------------------
+# messages used in specific views
+# -----------------------------------
+views:
+  home:
+    event-card:
+      state:
+    waitinglist: 'Du stehst auf der Warteliste.'
+  account:
+    tab:
+      data: 'Persönliche Daten'
+      contact: 'Kontaktdaten'
+      qualifications: 'Qualifikationen'
+      emergency: 'Notfallinformationen'
+  event-list:
+    tab:
+      future: 'Zukünftige'
+  event-details:
+  event-admin-list:
+    tab:
+      future: 'Zukünftige'
+  event-admin-details:
+    tab:
+      data: 'Reisedaten'
+      positions: 'Crew verwalten'
+      locations: 'Reiseroute'
+      slots: 'Crew Slots'
+  user-list:
+    tab:
+      members: 'Stammcrew'
+      admins: 'Verwalter'
+      unknown: 'Nutzer ohne Rolle'
+  user-details:
+    tab:
+      data: 'Stammdaten'
+      contact: 'Kontakt'
+      certificates: 'Qualifikationen'
+      events: 'Reisen'
+      roles: 'Anwendungsrollen'
+      emergency: 'Notfallinformationen'
+      other: 'Sonstige Daten'
+  basedata:
+    tab:
+      positions: 'Positionen'
+      qualifications: 'Qualifikationen'
+  settings:
+    tab:
+      general: 'Allgemein'
+      email: 'Email'
+      notifications: 'Notifications'

@@ -388,9 +388,10 @@
 import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, EventType, Position, Registration } from '@/domain';
+import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import { EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -433,6 +434,7 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const { t } = useI18n();
 const eventAdminUseCase = useEventAdministrationUseCase();
 const userAdminUseCase = useUserAdministrationUseCase();
 const usersUseCase = useUsersUseCase();
@@ -446,7 +448,7 @@ const eventTypes = useEventTypes();
 const eventStates = useEventStates();
 
 const events = ref<EventTableViewItem[] | null>(null);
-const tab = ref<string>('Zukünftige');
+const tab = ref<string>('future');
 const filter = ref<string>('');
 const filterWaitinglist = ref<boolean>(false);
 const filterFreeSlots = ref<boolean>(false);
@@ -515,9 +517,14 @@ const showBatchPublishPlannedCrew = computed<boolean>(() => {
     );
 });
 
-const tabs = computed<string[]>(() => {
+const tabs = computed<InputSelectOption[]>(() => {
     const currentYear = new Date().getFullYear();
-    return ['Zukünftige', String(currentYear + 1), String(currentYear), String(currentYear - 1), String(currentYear - 2)];
+    return [
+        { value: 'future', label: t('views.event-admin-list.tab.future') },
+        { value: String(currentYear + 1), label: String(currentYear + 1) },
+        { value: String(currentYear), label: String(currentYear) },
+        { value: String(currentYear - 1), label: String(currentYear - 1) },
+    ];
 });
 
 async function init(): Promise<void> {
@@ -538,7 +545,7 @@ function selectAll(): void {
 }
 
 async function fetchEvents(): Promise<void> {
-    if (tab.value === tabs.value[0]) {
+    if (tab.value === tabs.value[0].value) {
         const now = new Date();
         const currentYear = await fetchEventsByYear(now.getFullYear());
         const nextYear = await fetchEventsByYear(now.getFullYear() + 1);

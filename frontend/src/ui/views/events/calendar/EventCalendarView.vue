@@ -20,7 +20,7 @@
                 >
                     <div v-for="m in months.entries()" :key="m[0]" class="calendar-month">
                         <div class="calendar-header">
-                            <span>{{ $t(`month.${m[0]}`) }}</span>
+                            <span>{{ $t(`generic.month.${m[0]}`) }}</span>
                             <span class="ml-2 sm:hidden">{{ events[0]?.end.getFullYear() }}</span>
                         </div>
                         <div

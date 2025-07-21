@@ -1,18 +1,18 @@
 <template>
     <section>
         <h2 v-if="hasHiddenCrewAssignments" class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
-            <span>Anmeldungen</span>
+            <span>{{ $t('components.event-participants-card.registrations') }}</span>
         </h2>
         <h2 v-else class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
             <button class="hover:text-primary" :class="{ 'text-primary underline': tab === Tab.Team }" @click="tab = Tab.Team">
-                Crew ({{ props.event.assignedUserCount }})
+                {{ $t('components.event-participants-card.assigned', { count: props.event.assignedUserCount }) }}
             </button>
             <button
                 class="hover:text-primary"
                 :class="{ 'text-primary underline': tab === Tab.WaitingList }"
                 @click="tab = Tab.WaitingList"
             >
-                Warteliste ({{ waitingList.length }})
+                {{ $t('components.event-participants-card.waitinglist', { count: waitingList.length }) }}
             </button>
         </h2>
         <div
@@ -23,16 +23,17 @@
                 <div class="mr-4">
                     <h3 class="mb-4 text-base">
                         <i class="fa-solid fa-trophy opacity-75"></i>
-                        <span v-if="signedInUser.gender === 'm'" class="ml-4">Du könntest der erste sein!</span>
-                        <span v-else-if="signedInUser.gender === 'f'" class="ml-4">Du könntest die erste sein!</span>
-                        <span v-else class="ml-4">Du könntest der/die erste sein!</span>
+                        <span v-if="['m', 'f'].includes(signedInUser.gender ?? '')" class="ml-4">
+                            {{ $t(`components.event-participants-card.placeholder-title-${signedInUser.gender}`) }}
+                        </span>
+                        <span v-else class="ml-4">
+                            {{ $t('components.event-participants-card.placeholder-title') }}
+                        </span>
                     </h3>
                     <p class="text-sm">
-                        Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich anmelden. Alle
-                        Anmeldungen werden zuerst auf der Warteliste gesammelt und anschließend wird vom Büro eine Crew zusammengestellt.
+                        {{ $t('components.event-participants-card.placeholder') }}
                     </p>
                 </div>
-                <div></div>
             </div>
         </div>
         <div
@@ -53,8 +54,12 @@
                                 {{ it.name }}
                             </RouterLink>
                             <span v-else-if="it.name" class="truncate">{{ it.name }}</span>
-                            <span v-else-if="it.user?.key" class="italic text-error"> Unbekannter Nutzer </span>
-                            <span v-else class="truncate italic text-error text-opacity-60">Noch nicht besetzt</span>
+                            <span v-else-if="it.user?.key" class="italic text-error">
+                                {{ $t('components.event-participants-card.unknown') }}
+                            </span>
+                            <span v-else class="truncate italic text-error text-opacity-60">
+                                {{ $t('components.event-participants-card.empty') }}
+                            </span>
                             <span class="flex-grow"></span>
                             <span
                                 :style="{ background: it.position.color }"
@@ -84,9 +89,13 @@
                         </span>
                     </li>
                 </ul>
-                <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container-low p-4 text-sm">
-                    <p v-if="hasHiddenCrewAssignments">Für diese Reise gibt es noch keine Anmeldungen.</p>
-                    <p v-else>Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.</p>
+                <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container bg-opacity-50 p-4 text-sm shadow">
+                    <p v-if="hasHiddenCrewAssignments">
+                        {{ $t('components.event-participants-card.no-registrations') }}
+                    </p>
+                    <p v-else>
+                        {{ $t('components.event-participants-card.no-waitinglist') }}
+                    </p>
                 </div>
             </template>
         </div>
