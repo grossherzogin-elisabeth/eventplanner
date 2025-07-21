@@ -28,6 +28,24 @@ generic:
     ROLE_TEAM_PLANNER: 'Crewplaner:in'
     ROLE_USER_MANAGER: 'Nutzerverwalter:in'
     ROLE_TEAM_MEMBER: 'Stammcrew Mitglied'
+  event-state:
+    draft: 'Entwurf'
+    open-for-signup: 'Crew Anmeldung'
+    planned: 'Veröffentlicht'
+    canceled: 'Abgesagt'
+    crew-wanted: 'Crew gesucht'
+    open-slots: 'Freie Plätze'
+    full: 'Voll belegt'
+  event-type:
+    single-day-event: 'Tagesfahrt'
+    weekend-event: 'Wochenendreise'
+    multi-day-event: 'Mehrtagesfahrt'
+    work-event: 'Arbeitsdienst'
+    training-event: 'Ausbildung'
+    other: 'Sonstige'
+  event-signup-type:
+    open: 'Offene Teilnahme'
+    assignment: 'Offene Anmeldung mit manueller Einteilung'
 
 # -----------------------------------
 # messages for the main navigation
@@ -36,7 +54,7 @@ navigation:
   myNextEvents: 'Meine nächsten Reisen'
   start: 'Start'
   calendar: 'Kalender'
-  allEvents: 'Alle Reisen'
+  allEvents: 'Alle Veranstaltungen'
   manageEvents: 'Reisen verwalten'
   manageUsers: 'Nutzer verwalten'
   manageBaseData: 'Stammdaten verwalten'
@@ -62,7 +80,7 @@ components:
   event-locations-card:
     title: 'Ort | Route'
     placeholder: 'Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar
-            sind, kannst du sie hier sehen.'
+        sind, kannst du sie hier sehen.'
     eta: 'Ankunft:'
     etd: 'Abfahrt:'
     address-link: 'Anreiseinformationen'
@@ -75,8 +93,8 @@ components:
     placeholder-title-m: 'Du könntest der Erste sein!'
     placeholder-title-f: 'Du könntest die Erste sein!'
     placeholder: 'Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich
-            anmelden. Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und anschließend wird vom Büro eine
-            Crew zusammengestellt.'
+        anmelden. Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und anschließend wird vom Büro eine
+        Crew zusammengestellt.'
     unknown: 'Unbekannter Nutzer'
     empty: 'Noch nicht besetzt'
     no-registrations: 'Für diese Reise gibt es noch keine Anmeldungen.'
@@ -99,6 +117,29 @@ views:
   event-list:
     tab:
       future: 'Zukünftige'
+    note-no-position: 'Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht
+        selber für Reisen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.'
+    filter:
+      search: 'Einträge filtern'
+      all-types: 'Alle Veranstaltungen'
+      assigned: 'Eingeplant'
+      waitinglist: 'Warteliste'
+      free-slots: 'Freie Plätze'
+    table:
+      team-count: 'Crew'
+      registration-count: 'Anmeldung | Anmeldungen'
+      day-count: '{count} Tag | {count} Tage'
+      assigned-as: 'Du bist als {0} eingeplant.'
+      on-waiting-list-as: 'Du stehst als {0} auf der Warteliste.'
+    state:
+      assigned: 'Eingeplant'
+      waitinglist: 'Warteliste'
+    action:
+      link-event-details: 'Reise anzeigen'
+      create-calendar-entry: 'Kalendereintrag erstellen'
+      signup: 'Anmelden'
+      cancel: 'Teilnahme absagen'
+      leave-waitinglist: 'Warteliste verlassen'
   event-details:
   event-admin-list:
     tab:
