@@ -1,6 +1,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { EventState, InputSelectOption } from '@/domain';
+import type { InputSelectOption } from '@/domain';
+import { EventState } from '@/domain';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useEventStates() {
