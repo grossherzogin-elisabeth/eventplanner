@@ -130,7 +130,8 @@
                             {{ item.locations.map((it) => it.name).join(' - ') }}
                         </p>
                         <p class="truncate text-sm font-light lg:hidden">
-                            {{ formatDateRange(item.start, item.end) }} | {{ item.days }} Tage
+                            {{ formatDateRange(item.start, item.end) }} |
+                            {{ $t('views.event-list.table.day-count', { count: item.days }) }}
                         </p>
                     </td>
                     <!-- status -->
