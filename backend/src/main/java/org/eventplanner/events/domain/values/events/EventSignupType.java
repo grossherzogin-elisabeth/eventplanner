@@ -16,29 +16,29 @@ public enum EventSignupType {
 
     private final String value;
 
-    EventSignupType(String value) {
+    EventSignupType(@NonNull String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static EventSignupType parse(@NonNull String value) {
+    public static @NonNull EventSignupType parse(@NonNull String value) {
         return fromString(value)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid event type value " + value));
+            .orElseThrow(() -> new IllegalArgumentException("Invalid event signup type value " + value));
     }
 
-    public static Optional<EventSignupType> fromString(@Nullable String value) {
+    public static @NonNull Optional<EventSignupType> fromString(@Nullable String value) {
         return Arrays.stream(values())
             .filter(state -> state.value().equals(value))
             .findFirst();
     }
 
-    public String value() {
+    public @NonNull String value() {
         return value;
     }
 
     @JsonValue
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return value;
     }
 }
