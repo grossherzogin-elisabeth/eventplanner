@@ -20,29 +20,29 @@ public enum EventType {
 
     private final String value;
 
-    EventType(String value) {
+    EventType(@NonNull String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static EventType parse(@NonNull String value) {
+    public static @NonNull EventType parse(@NonNull String value) {
         return fromString(value)
             .orElseThrow(() -> new IllegalArgumentException("Invalid event type value " + value));
     }
 
-    public static Optional<EventType> fromString(@Nullable String value) {
+    public static @NonNull Optional<EventType> fromString(@Nullable String value) {
         return Arrays.stream(values())
             .filter(state -> state.value().equals(value))
             .findFirst();
     }
 
-    public String value() {
+    public @NonNull String value() {
         return value;
     }
 
     @JsonValue
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return value;
     }
 }
