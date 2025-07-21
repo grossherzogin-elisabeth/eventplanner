@@ -22,12 +22,7 @@
                             v-model="event.type"
                             :errors="validation.errors.value['type']"
                             :errors-visible="validation.showErrors.value"
-                            :options="[
-                                { value: EventType.WorkEvent, label: 'Arbeitsdienst' },
-                                { value: EventType.SingleDayEvent, label: 'Tagesfahrt' },
-                                { value: EventType.WeekendEvent, label: 'Wochenendreise' },
-                                { value: EventType.MultiDayEvent, label: 'Mehrtagesfahrt' },
-                            ]"
+                            :options="eventTypes.options.value"
                             required
                         />
                     </div>
@@ -45,6 +40,16 @@
                                         value: it,
                                     }))
                             "
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputLabel>Anmeldetyp</VInputLabel>
+                        <VInputSelect
+                            v-model="event.signupType"
+                            :options="eventSignupTypes.options.value"
+                            :errors="validation.errors.value['signupType']"
+                            :errors-visible="validation.showErrors.value"
+                            required
                         />
                     </div>
                     <div class="mb-4">
@@ -124,14 +129,26 @@ import { ref, watch } from 'vue';
 import { deepCopy, updateDate, updateTime } from '@/common';
 import { DateTimeFormat, cropToPrecision } from '@/common/date';
 import type { Event } from '@/domain';
-import { EventState, EventType } from '@/domain';
+import { EventSignupType, EventState, EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VInputTime } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputDate, VInputLabel, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
+import {
+    VDialog,
+    VInputCombobox,
+    VInputDate,
+    VInputLabel,
+    VInputSelect,
+    VInputText,
+    VInputTextArea,
+    VInputTime,
+} from '@/ui/components/common';
 import { useEventUseCase } from '@/ui/composables/Application';
 import { useEventService } from '@/ui/composables/Domain';
+import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
+import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation';
 
+const eventTypes = useEventTypes();
+const eventSignupTypes = useEventSignupTypes();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 
@@ -143,6 +160,7 @@ const event = ref<Event>({
     name: '',
     description: '',
     type: EventType.WeekendEvent,
+    signupType: EventSignupType.Assignment,
     state: EventState.Draft,
     start: new Date(),
     days: 0,
@@ -157,8 +175,7 @@ const event = ref<Event>({
 });
 const validation = useValidation(event, eventService.validate);
 
-async function init(): Promise<void> {
-    await fetchTemplates(new Date().getFullYear());
+function init(): void {
     watch(
         () => event.value.start,
         () => {
@@ -167,6 +184,7 @@ async function init(): Promise<void> {
             }
         }
     );
+    fetchTemplates(new Date().getFullYear());
 }
 
 async function fetchTemplates(year: number): Promise<void> {

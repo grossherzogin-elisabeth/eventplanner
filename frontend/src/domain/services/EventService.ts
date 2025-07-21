@@ -1,7 +1,6 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
 import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
-import { SlotCriticality } from '@/domain';
-import { EventState } from '@/domain';
+import { EventSignupType, EventState, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
 export class EventService {
@@ -161,6 +160,11 @@ export class EventService {
     }
 
     public hasOpenSlots(event: Event, positions?: PositionKey[], criticality: number = 0): boolean {
+        if (event.signupType === EventSignupType.Open && criticality === 0) {
+            // this event has no limited slots
+            // only return true for criticality 0 though to prevent hasOpenRequiredSlots returning a false positive
+            return true;
+        }
         const openSlots = event.slots.filter(
             (it) =>
                 it.criticality >= criticality &&
@@ -221,22 +225,19 @@ export class EventService {
             // singed in user has a registration
             event.canSignedInUserJoin = false;
             event.signedInUserAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === event.signedInUserRegistration?.key);
+            event.isSignedInUserAssigned = event.signupType !== EventSignupType.Assignment || event.signedInUserAssignedSlot !== undefined;
             const isInPast = event.start.getTime() < new Date().getTime();
-            if (event.signedInUserAssignedSlot) {
+            const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
+            if (event.isSignedInUserAssigned) {
                 event.canSignedInUserUpdateRegistration = !isInPast;
-                const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
-                const isLessThan14daysInFuture =
-                    isLessThan7daysInFuture || event.start.getTime() < addToDate(new Date(), { days: 14 }).getTime();
                 event.canSignedInUserLeave = !isLessThan7daysInFuture;
-                if (isLessThan14daysInFuture) {
-                    // event.canSignedInUserLeave;
-                }
             } else {
                 event.canSignedInUserLeave = !isInPast;
                 event.canSignedInUserUpdateRegistration = !isInPast;
             }
         } else {
             // singed in user has no registration
+            event.isSignedInUserAssigned = false;
             event.canSignedInUserLeave = false;
             event.canSignedInUserJoin =
                 (signedInUser?.positions || []).length > 0 &&

@@ -1,11 +1,11 @@
 <template>
-    <div class="btn-search" :class="`${$attrs.class || 'w-44'} ${modelValue ? 'active' : ''}`" @click="input?.focus()">
+    <div class="btn-search" :class="`${$attrs.class || 'w-48'} ${modelValue ? 'active' : ''}`" @click="input?.focus()">
         <i class="fa-solid fa-search" />
         <input
             ref="input"
             name="search"
             :value="props.modelValue"
-            :placeholder="placeholder"
+            :placeholder="placeholder ?? 'Einträge filtern'"
             @input="onInput"
             @keydown.esc="input?.blur()"
         />

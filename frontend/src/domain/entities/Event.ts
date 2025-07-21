@@ -1,10 +1,11 @@
-import type { EventState, EventType, Location, Registration, Slot } from '@/domain';
+import type { EventSignupType, EventState, EventType, Location, Registration, Slot } from '@/domain';
 
 export type EventKey = string;
 
 export interface Event {
     key: EventKey;
     type: EventType;
+    signupType: EventSignupType;
     state: EventState;
     name: string;
     description: string;
@@ -21,6 +22,7 @@ export interface Event {
     canSignedInUserJoin: boolean;
     canSignedInUserLeave: boolean;
     canSignedInUserUpdateRegistration: boolean;
+    isSignedInUserAssigned?: boolean;
     signedInUserRegistration?: Registration;
     signedInUserAssignedSlot?: Slot;
 }

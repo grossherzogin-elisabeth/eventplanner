@@ -21,7 +21,7 @@
                             <span>Export</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="filter" placeholder="Reisen filtern" />
+                    <VSearchButton v-model="filter" placeholder="Einträge filtern" />
                 </div>
             </template>
         </VTabs>
@@ -34,8 +34,7 @@
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventType.length === 0">Alle Reisearten</span>
-                    <span v-else-if="filterEventType.length > 4"> {{ filterEventType.length }} Reisearten </span>
+                    <span v-if="filterEventType.length === 0">Alle Veranstaltungen</span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -44,11 +43,11 @@
                     <ul>
                         <li v-if="filterEventType.length === 0" class="context-menu-item">
                             <i class="fa-solid fa-check"></i>
-                            <span>Alle Reisearten</span>
+                            <span>Alle Veranstaltungen</span>
                         </li>
                         <li v-else class="context-menu-item" @click="filterEventType = []">
                             <i class="w-4"></i>
-                            <span>Alle Reisearten</span>
+                            <span>Alle Veranstaltungen</span>
                         </li>
                         <template v-for="eventType in eventTypes.options.value" :key="eventType.value">
                             <li
@@ -141,8 +140,8 @@
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
                         <div class="flex w-full items-center gap-px pt-2">
-                            <template v-for="position in item.assignedPositions" :key="position.key">
-                                <div class="w-1 flex-grow">
+                            <template v-for="(position, index) in item.assignedPositions" :key="`${position.key}-${index}`">
+                                <div :data-index="index" class="w-1 flex-grow">
                                     <VTooltip :delay="50">
                                         <template #tooltip>
                                             <div class="position text-sm shadow-xl" :style="{ backgroundColor: position.color }">

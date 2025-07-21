@@ -12,7 +12,9 @@ import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventLocation;
+import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
+import org.eventplanner.events.domain.values.events.EventType;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
@@ -36,6 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @ToString
 public class Event {
     private @NonNull EventKey key = new EventKey();
+    private @NonNull EventType type = EventType.OTHER;
+    private @NonNull EventSignupType signupType = EventSignupType.ASSIGNMENT;
     private @NonNull String name = "";
     private @NonNull EventState state = EventState.DRAFT;
     private @NonNull String note = "";

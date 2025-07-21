@@ -1,6 +1,6 @@
 <template>
     <section>
-        <h2 v-if="statesWithHiddenCrew.includes(props.event.state)" class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
+        <h2 v-if="hasHiddenCrewAssignments" class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
             <span>Anmeldungen</span>
         </h2>
         <h2 v-else class="mb-2 flex space-x-4 font-bold text-secondary md:mb-6 md:ml-0">
@@ -85,7 +85,7 @@
                     </li>
                 </ul>
                 <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container-low p-4 text-sm">
-                    <p v-if="statesWithHiddenCrew.includes(props.event.state)">Für diese Reise gibt es noch keine Anmeldungen.</p>
+                    <p v-if="hasHiddenCrewAssignments">Für diese Reise gibt es noch keine Anmeldungen.</p>
                     <p v-else>Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.</p>
                 </div>
             </template>
@@ -93,9 +93,9 @@
     </section>
 </template>
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { Event, ResolvedRegistrationSlot, SignedInUser } from '@/domain';
-import { EventState, Permission } from '@/domain';
+import { EventSignupType, EventState, Permission } from '@/domain';
 import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
@@ -107,17 +107,23 @@ enum Tab {
 interface Props {
     event: Event;
 }
+
 const props = defineProps<Props>();
 
 const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
 
 const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
-const statesWithHiddenCrew = [EventState.OpenForSignup, EventState.Draft];
 const tab = ref<Tab>(Tab.Team);
 
 const waitingList = ref<ResolvedRegistrationSlot[]>([]);
 const team = ref<ResolvedRegistrationSlot[]>([]);
+
+const hasHiddenCrewAssignments = computed<boolean>(() => {
+    return (
+        props.event.signupType !== EventSignupType.Assignment || [EventState.OpenForSignup, EventState.Draft].includes(props.event.state)
+    );
+});
 
 function init(): void {
     fetchTeam(props.event).then(() => {

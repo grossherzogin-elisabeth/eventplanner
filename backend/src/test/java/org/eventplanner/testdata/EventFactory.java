@@ -10,7 +10,9 @@ import java.util.UUID;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventLocation;
+import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
+import org.eventplanner.events.domain.values.events.EventType;
 
 public class EventFactory {
 
@@ -21,6 +23,8 @@ public class EventFactory {
     public static Event createEvent() {
         return new Event(
             new EventKey(UUID.randomUUID().toString()),
+            EventType.OTHER,
+            EventSignupType.ASSIGNMENT,
             "Testevent",
             EventState.PLANNED,
             "Note for test event",

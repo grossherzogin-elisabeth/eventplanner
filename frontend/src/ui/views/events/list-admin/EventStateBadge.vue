@@ -2,7 +2,7 @@
     <div class="flex items-center justify-end">
         <VTooltip v-if="unassignedRequiredPositions.length > 0 || unassignedOptionalPositions.length > 0" :delay="10">
             <template #default>
-                <div class="status-panel" :class="state.color">
+                <div :key="state.icon" class="status-panel" :class="state.color">
                     <i class="fa-solid w-4" :class="state.icon"></i>
                     <span class="whitespace-nowrap font-semibold">{{ state.name }}</span>
                 </div>
@@ -48,7 +48,7 @@
                 </div>
             </template>
         </VTooltip>
-        <div v-else class="status-panel" :class="state.color">
+        <div v-else :key="state.icon" class="status-panel" :class="state.color">
             <i class="fa-solid w-4" :class="state.icon"></i>
             <span class="whitespace-nowrap font-semibold">{{ state.name }}</span>
         </div>
