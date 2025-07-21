@@ -99,6 +99,11 @@ components:
     empty: 'Noch nicht besetzt'
     no-registrations: 'Für diese Reise gibt es noch keine Anmeldungen.'
     no-waitinglist: 'Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.'
+  event-details-sheet:
+    note-missing-crew: 'Für diese Reise wird noch Crew für die folgenden Positionen gesucht:'
+    note-assigned: 'Du bist für diese Reise als {0} eingeplant'
+    note-on-waiting-list: 'Du stehst für diese Reise als {0} auf der Warteliste'
+    show-details: 'Details anzeigen'
 
 # -----------------------------------
 # messages used in specific views

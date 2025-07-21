@@ -7,24 +7,24 @@
         </template>
         <template #content>
             <div class="space-y-8 px-4 pb-4 xs:px-8 sm:w-[30rem] lg:px-10">
-                <VWarning v-if="openPositions.length > 0" class="my-4 text-sm xs:-mx-4">
-                    Für diese Reise wird noch Crew für die folgenden Positionen gesucht:
-                    {{ openPositions.map((it) => it.name).join(', ') }}
-                </VWarning>
                 <VSuccess
                     v-if="event.signedInUserRegistration && event.isSignedInUserAssigned"
                     class="my-4 text-sm xs:-mx-4"
                     icon="fa-check"
                 >
-                    Du bist für diese Reise als
-                    <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
-                    eingeplant
+                    <i18n-t tag="span" keypath="components.event-details-sheet.note-assigned">
+                        <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
+                    </i18n-t>
                 </VSuccess>
                 <VInfo v-else-if="event.signedInUserRegistration" class="my-4 text-sm xs:-mx-4" icon="fa-hourglass-half">
-                    Du stehst für diese Reise als
-                    <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
-                    auf der Warteliste
+                    <i18n-t tag="span" keypath="components.event-details-sheet.note-on-waiting-list">
+                        <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
+                    </i18n-t>
                 </VInfo>
+                <VWarning v-else-if="openPositions.length > 0 && event.state === EventState.Planned" class="my-4 text-sm xs:-mx-4">
+                    {{ $t('components.event-details-sheet.note-missing-crew') }}
+                    {{ openPositions.map((it) => it.name).join(', ') }}
+                </VWarning>
 
                 <EventDetailsCard :event="event" class="" />
                 <EventLocationsCard v-if="event.locations.length > 0" :event="event" class="" />
@@ -32,8 +32,12 @@
         </template>
         <template #bottom>
             <div class="lg:px-10-lg flex justify-end gap-2 px-8 py-4">
-                <RouterLink :to="{ name: Routes.EventDetails, params: { key: event.key } }" class="btn-primary" title="Detailansicht">
-                    <span>Details anzeigen</span>
+                <RouterLink
+                    :to="{ name: Routes.EventDetails, params: { key: event.key } }"
+                    class="btn-primary"
+                    :title="$t('components.event-details-sheet.show-details')"
+                >
+                    <span>{{ $t('components.event-details-sheet.show-details') }}</span>
                 </RouterLink>
             </div>
         </template>
@@ -43,6 +47,7 @@
 import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Event, Position } from '@/domain';
+import { EventState } from '@/domain';
 import type { Sheet } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VInfo, VSheet, VSuccess } from '@/ui/components/common';
