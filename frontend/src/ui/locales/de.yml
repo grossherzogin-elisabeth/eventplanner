@@ -112,43 +112,62 @@ components:
 # -----------------------------------
 domain:
   user:
-    display-name: 'Anzeigename'
+    display-name:
+      label: 'Anzeigename'
     diet:
       label: 'Ernährungsweise'
       values:
         vegetarian: 'Vegetarisch'
         vegan: 'Vegan'
         omnivore: 'Fleisch'
-      intolerances: 'Unverträglichkeiten'
-    first-name: 'Vorname'
-    middle-name: 'Zweiter Vorname'
-    last-name: 'Nachname'
-    email: 'Email'
-    phone: 'Telefon'
-    phone-work: 'Telefon (dienstlich)'
-    mobile: 'Mobil'
-    street-with-nr: 'Straße, Hausnr.'
-    address-addition: 'Adresszusatz'
-    zip: 'PLZ'
-    city: 'Ort'
-    country: 'Land'
+    intolerances:
+      label: 'Unverträglichkeiten'
+    first-name:
+      label: 'Vorname'
+    middle-name:
+      label: 'Zweiter Vorname'
+    last-name:
+      label: 'Nachname'
+    email:
+      label: 'Email'
+    phone:
+      label: 'Telefon'
+    phone-work:
+      label: 'Telefon (dienstlich)'
+    mobile:
+      label: 'Mobil'
+    address-line1:
+      label: 'Straße, Hausnr.'
+    address-line2:
+      label: 'Adresszusatz'
+    zip:
+      label: 'PLZ'
+    city:
+      label: 'Ort'
+    country:
+      label: 'Land'
     birthday:
-      date: 'Geboren am'
-      place: 'Geburtsort'
+      label: 'Geboren am'
+    place-of-birth:
+      label: 'Geburtsort'
     gender:
       label: 'Geschlecht'
       values:
         male: 'männlich'
         female: 'weiblich'
         diverse: 'divers'
-    passport:
-      number: 'Personalausweis Nummer'
-    nationality: 'Nationalität'
+    passport-number:
+      label: 'Personalausweis Nummer'
+    nationality:
+      label: 'Nationalität'
     diseases:
       label: 'Krankheiten'
     emergency-contact:
-      name: 'Name des Notfallkontakts'
-      phone: 'Telefonnummer des Notfallkontakts'
+      label: 'Notfallkontakt'
+      name:
+        label: 'Name des Notfallkontakts'
+      phone:
+        label: 'Telefonnummer des Notfallkontakts'
     medication:
       label: 'Medikamente'
 
@@ -202,12 +221,11 @@ views:
           - 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, dass du bestimmte 
                 Krankheiten hast oder welche wichtigen Medikamente du benötigst. Außerdem kannst du einen Notfallkontakt
                 angeben, den wir kontaktieren können, falls du mal nicht mehr ansprechbar bist.'
-          - 'Deine Daten werden {bold-text} gespeichert und sind nur für autorisierte Personen einsehbar. In 
+          - 'Deine Daten werden {encrypted} gespeichert und sind nur für autorisierte Personen einsehbar. In 
                 der Regel sind dies das Büro und der Kapitän der jeweiligen Reise.'
-          - '{bold-text}'
-        bold-text:
-          - 'verschlüsselt'
-          - 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
+          - '{hint-all-data-optional}'
+        encrypted: 'verschlüsselt'
+        hint-all-data-optional: 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
   event-list:
     tab:
       future: 'Zukünftige'
