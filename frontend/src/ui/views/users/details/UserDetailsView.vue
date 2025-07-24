@@ -1,9 +1,19 @@
 <template>
     <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <DetailsPage :back-to="{ name: Routes.UsersList }">
-            <template #header> {{ user?.firstName }} {{ user?.lastName }} bearbeiten </template>
+            <template #header>
+                <p>{{ user?.firstName }} {{ user?.lastName }} bearbeiten</p>
+                <p v-if="user" class="text-sm text-onsecondary-variant">
+                    aktualisiert am {{ $d(user?.updatedAt, DateTimeFormat.DD_MM_YYYY) }}
+                </p>
+            </template>
             <template #content>
                 <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-20 xl:pt-8">
+                    <template #[Tab.USER_OVERVIEW]>
+                        <div class="xl:max-w-5xl">
+                            <UserData v-if="user" v-model="user" :errors="validation.errors.value" />
+                        </div>
+                    </template>
                     <template #[Tab.USER_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
                             <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />
@@ -78,7 +88,7 @@
                     </template>
                 </AsyncButton>
             </template>
-            <template #secondary-buttons>
+            <template v-if="user" #secondary-buttons>
                 <button v-if="tab === Tab.USER_EVENTS" class="btn-secondary" @click="createRegistration()">
                     <i class="fa-solid fa-user-plus"></i>
                     <span>Anmeldung hinzufügen</span>
@@ -86,6 +96,10 @@
                 <button v-else-if="tab === Tab.USER_CERTIFICATES" class="btn-secondary" @click="addUserQualification()">
                     <i class="fa-solid fa-file-circle-plus"></i>
                     <span>Qualifikation hinzufügen</span>
+                </button>
+                <button v-else-if="tab === Tab.USER_OVERVIEW" class="btn-secondary" @click="user.verifiedAt = new Date()">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Daten verifiziert</span>
                 </button>
                 <a
                     v-else-if="tab === Tab.USER_CONTACT_DATA && user?.email"
@@ -128,6 +142,7 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { deepCopy, diff } from '@/common';
+import { DateTimeFormat } from '@/common/date';
 import type { Event, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -140,6 +155,7 @@ import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegi
 import UserEmergencyForm from '@/ui/views/users/details/UserEmergencyForm.vue';
 import UserOtherForm from '@/ui/views/users/details/UserOtherForm.vue';
 import UserContactForm from './UserContactForm.vue';
+import UserData from './UserData.vue';
 import UserDataForm from './UserDataForm.vue';
 import UserEventsTable from './UserEventsTable.vue';
 import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';
@@ -147,6 +163,7 @@ import UserQualificationsTable from './UserQualificationsTable.vue';
 import UserRolesTable from './UserRolesTable.vue';
 
 enum Tab {
+    USER_OVERVIEW = 'overview',
     USER_DATA = 'data',
     USER_CONTACT_DATA = 'contact',
     USER_CERTIFICATES = 'certificates',
@@ -170,18 +187,19 @@ const errorHandlingUseCase = useErrorHandling();
 const signedInUser = authUseCase.getSignedInUser();
 
 const tabs = [
+    Tab.USER_OVERVIEW,
     Tab.USER_EVENTS,
     Tab.USER_CERTIFICATES,
+    Tab.USER_ROLES,
     Tab.USER_DATA,
     Tab.USER_CONTACT_DATA,
     Tab.USER_EMERGENCY,
     Tab.USER_OTHER,
-    Tab.USER_ROLES,
 ].map((it) => ({
     value: it,
     label: t(`views.user-details.tab.${it}`),
 }));
-const tab = ref<Tab>(Tab.USER_EVENTS);
+const tab = ref<Tab>(Tab.USER_OVERVIEW);
 const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);
 const hasChanges = ref<boolean>(false);

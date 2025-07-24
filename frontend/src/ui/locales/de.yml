@@ -51,6 +51,14 @@ generic:
   event-signup-type:
     open: 'Offene Teilnahme'
     assignment: 'Offene Anmeldung mit manueller Einteilung'
+  gender:
+    m: 'Männlich'
+    f: 'Weiblich'
+    d: 'Divers'
+  diet:
+    omnivore: 'Fleisch'
+    vegetarian: 'Vegetarisch'
+    vegan: 'Vegan'
 
 # -----------------------------------
 # messages for the main navigation
@@ -290,6 +298,7 @@ views:
       unknown: 'Nutzer ohne Rolle'
   user-details:
     tab:
+      overview: 'Übersicht'
       data: 'Stammdaten'
       contact: 'Kontakt'
       certificates: 'Qualifikationen'

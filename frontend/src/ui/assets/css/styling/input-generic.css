@@ -51,8 +51,9 @@
 
 /* label */
 .input-label {
-    @apply mb-1 mt-1 text-xs font-bold;
-    @apply pointer-events-none relative z-10 -mb-5 ml-4 text-onsurface text-opacity-50;
+    @apply mb-1 mt-1;
+    @apply pointer-events-none relative z-10 -mb-5 ml-4;
+    @apply text-xs font-bold text-onsurface text-opacity-50;
 }
 
 .input-label.required {
