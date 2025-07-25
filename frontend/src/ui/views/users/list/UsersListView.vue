@@ -298,7 +298,7 @@ import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useEventService, useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
+import { useQuery, useQueryStateSync } from '@/ui/composables/QueryState.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
@@ -338,17 +338,18 @@ const router = useRouter();
 const signedInUser = authUseCase.getSignedInUser();
 const positions = usePositions();
 
+const filter = useQuery<string>('filter', '').parameter;
+const filterOnlyActive = useQuery<boolean>('active', false).parameter;
+const filterExpiredQualifications = useQuery<boolean>('expired', false).parameter;
+const filterPendingVerification = useQuery<boolean>('unverified', false).parameter;
+const filterEventKey = useQuery<EventKey>('event', '').parameter;
+const filterPositions = useQuery<PositionKey[]>('positions', []).parameter;
+
 const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS].map((it) => ({
     value: it,
     label: t(`views.user-list.tab.${it}`),
 }));
 const tab = ref<string>(tabs[0].value);
-const filter = ref<string>('');
-const filterOnlyActive = ref<boolean>(true);
-const filterExpiredQualifications = ref<boolean>(false);
-const filterPendingVerification = ref<boolean>(false);
-const filterPositions = ref<PositionKey[]>([]);
-const filterEventKey = ref<EventKey>('');
 
 const events = ref<Event[]>([]);
 const users = ref<UserRegistrations[] | undefined>(undefined);
@@ -356,37 +357,6 @@ const users = ref<UserRegistrations[] | undefined>(undefined);
 const createUserDialog = ref<Dialog<void, User | undefined> | null>(null);
 const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
-
-useQueryStateSync<boolean>(
-    'active',
-    () => filterOnlyActive.value,
-    (v) => (filterOnlyActive.value = v)
-);
-useQueryStateSync<boolean>(
-    'expired',
-    () => filterExpiredQualifications.value,
-    (v) => (filterExpiredQualifications.value = v)
-);
-useQueryStateSync<boolean>(
-    'unverified',
-    () => filterPendingVerification.value,
-    (v) => (filterPendingVerification.value = v)
-);
-useQueryStateSync<string>(
-    'positions',
-    () => filterPositions.value.join('_'),
-    (v) => (filterPositions.value = v.split('_'))
-);
-useQueryStateSync<string>(
-    'filter',
-    () => filter.value,
-    (v) => (filter.value = v)
-);
-useQueryStateSync<string>(
-    'event',
-    () => filterEventKey.value,
-    (v) => (filterEventKey.value = v)
-);
 
 const filterEvent = computed<Event | undefined>(() => events.value.find((evt) => evt.key === filterEventKey.value));
 
