@@ -47,7 +47,7 @@ jobs:
     - name: Build and push Docker image (main)
       if: ${{ github.ref == 'refs/heads/main' }}
       id: build-and-push-main
-      uses: docker/build-push-action@v6.16.0
+      uses: docker/build-push-action@v6.18.0
       with:
         context: .
         build-args: |
@@ -64,7 +64,7 @@ jobs:
     - name: Build and push Docker image (dev)
       if: ${{ github.ref != 'refs/heads/main' }}
       id: build-and-push-dev
-      uses: docker/build-push-action@v6.16.0
+      uses: docker/build-push-action@v6.18.0
       with:
         context: .
         build-args: |
