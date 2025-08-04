@@ -38,7 +38,7 @@
         "@types/markdown-it": "^14.1.2",
         "@types/node": "^22.15.35",
         "@types/uuid": "^10.0.0",
-        "@vitejs/plugin-vue": "^6.0.0",
+        "@vitejs/plugin-vue": "^6.0.1",
         "@vue/eslint-config-typescript": "^14.6.0",
         "autoprefixer": "^10.4.21",
         "eslint": "^9.31.0",
