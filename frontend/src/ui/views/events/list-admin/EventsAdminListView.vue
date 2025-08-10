@@ -393,12 +393,9 @@ import { useI18n } from 'vue-i18n';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
-import { SlotCriticality } from '@/domain';
-import { EventState, Permission } from '@/domain';
+import { EventState, Permission, SlotCriticality } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { VMultiSelectActions } from '@/ui/components/common';
-import { VTooltip } from '@/ui/components/common';
-import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
+import { ContextMenuButton, VConfirmationDialog, VMultiSelectActions, VTable, VTabs, VTooltip } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
@@ -580,6 +577,7 @@ async function createEvent(): Promise<void> {
     const event = await createEventDialog.value?.open().catch();
     if (event) {
         await eventAdminUseCase.createEvent(event);
+        await fetchEvents();
     }
 }
 
