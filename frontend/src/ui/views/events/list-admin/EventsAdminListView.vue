@@ -393,12 +393,9 @@ import { useI18n } from 'vue-i18n';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
-import { SlotCriticality } from '@/domain';
-import { EventState, Permission } from '@/domain';
+import { EventState, Permission, SlotCriticality } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { VMultiSelectActions } from '@/ui/components/common';
-import { VTooltip } from '@/ui/components/common';
-import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
+import { ContextMenuButton, VConfirmationDialog, VMultiSelectActions, VTable, VTabs, VTooltip } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
@@ -416,7 +413,7 @@ import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
+import { useQuery } from '@/ui/composables/QueryState.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
@@ -448,45 +445,20 @@ const signedInUser = authUseCase.getSignedInUser();
 const eventTypes = useEventTypes();
 const eventStates = useEventStates();
 
+const filter = useQuery<string>('filter', '').parameter;
+const filterWaitinglist = useQuery<boolean>('has-waitinglist', false).parameter;
+const filterFreeSlots = useQuery<boolean>('has-free-slots', false).parameter;
+const filterEventStates = useQuery<EventState[]>('states', []).parameter;
+const filterEventType = useQuery<EventType[]>('types', []).parameter;
+
 const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('future');
-const filter = ref<string>('');
-const filterWaitinglist = ref<boolean>(false);
-const filterFreeSlots = ref<boolean>(false);
-const filterEventStates = ref<EventState[]>([]);
-const filterEventType = ref<EventType[]>([]);
 
 const createEventDialog = ref<Dialog<Event> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
-
-useQueryStateSync<boolean>(
-    'has-free-slots',
-    () => filterFreeSlots.value,
-    (v) => (filterFreeSlots.value = v)
-);
-useQueryStateSync<boolean>(
-    'has-waitinglist',
-    () => filterWaitinglist.value,
-    (v) => (filterWaitinglist.value = v)
-);
-useQueryStateSync<string>(
-    'states',
-    () => filterEventStates.value.join('_'),
-    (v) => (filterEventStates.value = v.split('_') as EventState[])
-);
-useQueryStateSync<string>(
-    'types',
-    () => filterEventType.value.join('_'),
-    (v) => (filterEventType.value = v.split('_') as EventType[])
-);
-useQueryStateSync<string>(
-    'filter',
-    () => filter.value,
-    (v) => (filter.value = v)
-);
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
@@ -605,6 +577,7 @@ async function createEvent(): Promise<void> {
     const event = await createEventDialog.value?.open().catch();
     if (event) {
         await eventAdminUseCase.createEvent(event);
+        await fetchEvents();
     }
 }
 
