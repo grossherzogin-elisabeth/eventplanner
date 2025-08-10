@@ -36,7 +36,7 @@
         "@modyfi/vite-plugin-yaml": "^1.1.1",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/markdown-it": "^14.1.2",
-        "@types/node": "^22.15.35",
+        "@types/node": "^24.2.1np",
         "@types/uuid": "^10.0.0",
         "@vitejs/plugin-vue": "^6.0.1",
         "@vue/eslint-config-typescript": "^14.6.0",
