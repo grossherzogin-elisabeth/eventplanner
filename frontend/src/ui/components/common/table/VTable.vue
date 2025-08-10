@@ -123,7 +123,7 @@ import { computed, ref, useSlots, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { deepCopy, extractValue } from '@/common';
 import { useLongTouch } from '@/ui/components/common/table/touch.ts';
-import { useQueryStateSync } from '@/ui/composables/QueryState';
+import { useQuery } from '@/ui/composables/QueryState';
 import { useViewportSize } from '@/ui/composables/ViewportSize.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
 import { VueDraggableNext } from 'vue-draggable-next';
@@ -139,10 +139,6 @@ interface Props<T> {
      * Pagination page size, set to -1 to disable pagination
      */
     pageSize?: number;
-    /**
-     * Current page, can be synced with `v-model:page`
-     */
-    page?: number;
     /**
      * Should page and sorting be saved in the url query?
      * If true the query parameters `page`, `sort` and `direction` will be set
@@ -193,6 +189,9 @@ defineSlots<Slots>();
 
 const viewPortSize = useViewportSize();
 const touch = useLongTouch();
+const page = useQuery<number>('page', 0).parameter;
+const sortCol = useQuery<string>('sort', '').parameter;
+const sortDir = useQuery<number>('direction', 0).parameter;
 
 const usePagination: ComputedRef<boolean> = computed(() => props.pageSize !== -1);
 const usePageSize: ComputedRef<number> = computed(() => props.pageSize || 10);
@@ -202,27 +201,8 @@ const dropdownAnchor: Ref<HTMLElement | null> = ref(null);
 const dropdownItem: Ref<(T & Selectable) | null> = ref(null);
 const contextColumns: Ref<HTMLTableCellElement[] | null> = ref(null);
 const rows: Ref<HTMLTableRowElement[] | null> = ref(null);
-const page: Ref<number> = ref(props.page || 0);
-const sortCol: Ref<string> = ref('');
-const sortDir: Ref<number> = ref(1);
 const loading: ComputedRef<boolean> = computed(() => props.items === undefined);
 const empty: ComputedRef<boolean> = computed(() => props.items !== undefined && props.items.length === 0);
-
-useQueryStateSync<number>(
-    'page',
-    () => page.value,
-    (v) => (page.value = v)
-);
-useQueryStateSync<string>(
-    'sort',
-    () => sortCol.value,
-    (v) => (sortCol.value = v)
-);
-useQueryStateSync<number>(
-    'direction',
-    () => sortDir.value,
-    (v) => (sortDir.value = v)
-);
 
 const classes = computed<string[]>(() => {
     const result: string[] = [];
