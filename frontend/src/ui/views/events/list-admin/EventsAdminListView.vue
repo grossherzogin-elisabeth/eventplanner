@@ -416,7 +416,7 @@ import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import { useQueryStateSync } from '@/ui/composables/QueryState.ts';
+import { useQuery } from '@/ui/composables/QueryState.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
@@ -448,45 +448,20 @@ const signedInUser = authUseCase.getSignedInUser();
 const eventTypes = useEventTypes();
 const eventStates = useEventStates();
 
+const filter = useQuery<string>('filter', '').parameter;
+const filterWaitinglist = useQuery<boolean>('has-waitinglist', false).parameter;
+const filterFreeSlots = useQuery<boolean>('has-free-slots', false).parameter;
+const filterEventStates = useQuery<EventState[]>('states', []).parameter;
+const filterEventType = useQuery<EventType[]>('types', []).parameter;
+
 const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('future');
-const filter = ref<string>('');
-const filterWaitinglist = ref<boolean>(false);
-const filterFreeSlots = ref<boolean>(false);
-const filterEventStates = ref<EventState[]>([]);
-const filterEventType = ref<EventType[]>([]);
 
 const createEventDialog = ref<Dialog<Event> | null>(null);
 const cancelEventDialog = ref<Dialog<Event, string> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
-
-useQueryStateSync<boolean>(
-    'has-free-slots',
-    () => filterFreeSlots.value,
-    (v) => (filterFreeSlots.value = v)
-);
-useQueryStateSync<boolean>(
-    'has-waitinglist',
-    () => filterWaitinglist.value,
-    (v) => (filterWaitinglist.value = v)
-);
-useQueryStateSync<string>(
-    'states',
-    () => filterEventStates.value.join('_'),
-    (v) => (filterEventStates.value = v.split('_') as EventState[])
-);
-useQueryStateSync<string>(
-    'types',
-    () => filterEventType.value.join('_'),
-    (v) => (filterEventType.value = v.split('_') as EventType[])
-);
-useQueryStateSync<string>(
-    'filter',
-    () => filter.value,
-    (v) => (filter.value = v)
-);
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();

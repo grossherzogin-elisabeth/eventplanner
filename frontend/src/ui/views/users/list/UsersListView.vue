@@ -298,7 +298,7 @@ import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useEventService, useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import { useQuery, useQueryStateSync } from '@/ui/composables/QueryState.ts';
+import { useQuery } from '@/ui/composables/QueryState.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';

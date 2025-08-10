@@ -34,10 +34,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { InputSelectOption } from '@/domain';
-import { useQueryStateSync } from '@/ui/composables/QueryState';
+import { useQuery } from '@/ui/composables/QueryState';
 
 interface Props {
     modelValue?: string;
@@ -51,16 +51,23 @@ const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
 
+const query = useQuery<string>('tab', props.modelValue || '');
+
 const showSearch = ref<boolean>(false);
 const localizedTabs = computed<InputSelectOption[]>(
     () => props.tabs?.map((it) => (typeof it === 'string' ? { value: it, label: t(it) } : it)) ?? []
 );
 
-useQueryStateSync<string>(
-    'tab',
-    () => props.modelValue || '',
-    (v) => emit('update:modelValue', v)
-);
+function init(): void {
+    watch(query.parameter, (v) => emit('update:modelValue', v));
+    watch(
+        () => props.modelValue,
+        () => (query.parameter.value = props.modelValue || '')
+    );
+    emit('update:modelValue', query.parameter.value);
+}
+
+init();
 </script>
 <style>
 .tab {
