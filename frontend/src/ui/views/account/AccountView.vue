@@ -1,16 +1,18 @@
 <template>
     <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <DetailsPage>
-            <template #header> Meine Daten </template>
+            <template #header> {{ $t('navigation.account') }} </template>
             <template #content>
                 <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-20 xl:pt-8">
                     <template #[Tab.PERSONAL_DATA]>
                         <div v-if="userDetails" class="items-start gap-16 md:flex lg:gap-20 xl:max-w-5xl">
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
                                 <section class="app-data">
-                                    <h2 class="mb-4 font-bold text-secondary">App</h2>
+                                    <h2 class="mb-4 font-bold text-secondary">
+                                        {{ $t('views.account.data.title-app') }}
+                                    </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>Anzeigename</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.display-name.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.nickName"
                                             :placeholder="userDetails.firstName"
@@ -20,78 +22,91 @@
                                     </div>
                                 </section>
                                 <section class="diet-data">
-                                    <h2 class="mb-4 font-bold text-secondary">Ernährung</h2>
+                                    <h2 class="mb-4 font-bold text-secondary">
+                                        {{ $t('views.account.data.title-diet') }}
+                                    </h2>
                                     <div class="mb-4 sm:w-64">
-                                        <VInputLabel>Ernährungsweise</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.diet.label') }}</VInputLabel>
                                         <VInputSelect
                                             v-model="userDetails.diet"
                                             :options="[
-                                                { value: 'omnivore', label: 'Fleisch' },
-                                                { value: 'vegetarian', label: 'Vegetarisch' },
-                                                { value: 'vegan', label: 'Vegan' },
+                                                { value: 'omnivore', label: $t('domain.user.diet.values.omnivore') },
+                                                { value: 'vegetarian', label: $t('domain.user.diet.values.vegetarian') },
+                                                { value: 'vegan', label: $t('domain.user.diet.values.vegan') },
                                             ]"
                                             :errors="validation.errors.value['diet']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Unverträglichkeiten</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.intolerances.label') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.intolerances"
-                                            placeholder="Keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['intolerances']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                 </section>
                                 <section class="personal-data">
-                                    <h2 class="mb-4 font-bold text-secondary">Persönliche Daten</h2>
+                                    <h2 class="mb-4 font-bold text-secondary">
+                                        {{ $t('views.account.data.title-personal') }}
+                                    </h2>
                                     <div class="mb-4 sm:w-64">
-                                        <VInputLabel>Geschlecht</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.gender.label') }}</VInputLabel>
                                         <VInputSelect
                                             v-model="userDetails.gender"
                                             :options="genderOptions"
-                                            placeholder="Keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['gender']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Vorname</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.first-name.label') }}</VInputLabel>
                                         <VInputText
                                             :model-value="`${userDetails.firstName} ${userDetails.secondName || ''}`.trim()"
                                             required
                                             disabled
-                                            placeholder="Keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Zweiter Vorname</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.secondName" disabled placeholder="Keine Angabe" />
+                                        <VInputLabel>{{ $t('domain.user.middle-name.label') }}</VInputLabel>
+                                        <VInputText
+                                            v-model.trim="userDetails.secondName"
+                                            disabled
+                                            :placeholder="$t('generic.no-information')"
+                                        />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Nachname</VInputLabel>
-                                        <VInputText v-model.trim="userDetails.lastName" required disabled placeholder="Keine Angabe" />
+                                        <VInputLabel>{{ $t('domain.user.last-name.label') }}</VInputLabel>
+                                        <VInputText
+                                            v-model.trim="userDetails.lastName"
+                                            required
+                                            disabled
+                                            :placeholder="$t('generic.no-information')"
+                                        />
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
-                                            <VInputLabel>Geboren am</VInputLabel>
+                                            <VInputLabel>{{ $t('domain.user.birthday.label') }}</VInputLabel>
                                             <VInputDate
                                                 v-model="userDetails.dateOfBirth"
                                                 required
                                                 :disabled="!enableEditingDateOfBirth"
-                                                placeholder="Keine Angabe"
+                                                :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['dateOfBirth']"
                                                 :errors-visible="validation.showErrors.value"
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>Geburtsort</VInputLabel>
+                                            <VInputLabel>{{ $t('domain.user.place-of-birth.label') }}</VInputLabel>
                                             <VInputText
                                                 v-model="userDetails.placeOfBirth"
                                                 required
                                                 :disabled="!enableEditingPlaceOfBirth"
-                                                placeholder="Keine Angabe"
+                                                :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['placeOfBirth']"
                                                 :errors-visible="validation.showErrors.value"
                                             />
@@ -99,22 +114,22 @@
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
-                                            <VInputLabel>Personalausweis Nummer</VInputLabel>
+                                            <VInputLabel>{{ $t('domain.user.passport-number.label') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.passNr"
                                                 required
-                                                placeholder="Keine Angabe"
+                                                :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['passNr']"
                                                 :errors-visible="validation.showErrors.value"
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>Nationalität</VInputLabel>
+                                            <VInputLabel>{{ $t('domain.user.nationality.label') }}</VInputLabel>
                                             <VInputCombobox
                                                 v-model="userDetails.nationality"
                                                 :options="nationalities.options"
                                                 required
-                                                placeholder="Keine Angabe"
+                                                :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['nationality']"
                                                 :errors-visible="validation.showErrors.value"
                                             />
@@ -124,27 +139,21 @@
                             </div>
                             <div class="my-8 md:my-0 md:w-1/3 md:max-w-96 2xl:w-1/2">
                                 <VInfo class="py-2 xs:-mx-4">
-                                    <h2 class="mb-2">Name und Personalausweis Nummer</h2>
-                                    <p class="mb-2">
-                                        Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen, da dieser auch zum
-                                        Erstellen der IMO Liste verwendet wird. Bitte beachte, das du den Personalausweis bei Reisen
-                                        mitführen musst!
-                                    </p>
-                                    <p class="mb-2">
-                                        Solltest du mit einem anderen Namen oder Spitznamen angesprochen werden wollen, kannst du einen
-                                        abweichenden Anzeigenamen angeben. Dieser wird dann in der App angezeigt und auch beim Kammerplan
-                                        und der Getränkeliste verwendet.
-                                    </p>
-                                    <p>
-                                        <a
-                                            href="https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png"
-                                            class="link"
-                                            target="_blank"
-                                        >
-                                            Wo finde ich meine Personalausweis Nummer?
-                                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                                        </a>
-                                    </p>
+                                    <h2 class="mb-2">{{ $t('views.account.data.hint-name-passport.title') }}</h2>
+                                    <i18n-t
+                                        v-for="(message, index) in $tm('views.account.data.hint-name-passport.messages')"
+                                        :key="message"
+                                        tag="p"
+                                        class="mb-2"
+                                        :keypath="`views.account.data.hint-name-passport.messages.${index}`"
+                                    >
+                                        <template #link>
+                                            <a class="link" :href="$t('views.account.data.hint-name-passport.link.url')" target="_blank">
+                                                {{ $t('views.account.data.hint-name-passport.link.label') }}
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                            </a>
+                                        </template>
+                                    </i18n-t>
                                 </VInfo>
                             </div>
                         </div>
@@ -153,96 +162,100 @@
                         <div v-if="userDetails" class="items-start gap-16 md:flex lg:gap-20 xl:max-w-5xl">
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
                                 <section>
-                                    <h2 class="mb-4 font-bold text-secondary">Email & Telefon</h2>
+                                    <h2 class="mb-4 font-bold text-secondary">
+                                        {{ $t('views.account.contact.title-mail-phone') }}
+                                    </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>Email</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.email.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.email"
                                             required
                                             disabled
-                                            placeholder="keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['email']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Telefon</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.phone.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.phone"
-                                            placeholder="keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['phone']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Telefon (dienstlich)</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.phone-work.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.phoneWork"
-                                            placeholder="keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['phoneWork']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Mobil</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.mobile.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.mobile"
-                                            placeholder="keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['mobile']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                 </section>
                                 <section>
-                                    <h2 class="mb-4 font-bold text-secondary">Adresse</h2>
+                                    <h2 class="mb-4 font-bold text-secondary">
+                                        {{ $t('views.account.contact.title-address') }}
+                                    </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>Straße, Hausnr</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.address-line1.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.address.addressLine1"
                                             required
-                                            placeholder="keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['address.addressLine1']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Adresszusatz</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.address-line2.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.address.addressLine2"
-                                            placeholder="keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['address.addressLine2']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-36">
-                                            <VInputLabel>PLZ</VInputLabel>
+                                            <VInputLabel>{{ $t('domain.user.zip.label') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.address.zipcode"
                                                 required
-                                                placeholder="keine Angabe"
+                                                :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['address.zipcode']"
                                                 :errors-visible="validation.showErrors.value"
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>Ort</VInputLabel>
+                                            <VInputLabel>{{ $t('domain.user.city.label') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.address.town"
                                                 required
-                                                placeholder="keine Angabe"
+                                                :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['address.town']"
                                                 :errors-visible="validation.showErrors.value"
                                             />
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Land</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.country.label') }}</VInputLabel>
                                         <VInputCombobox
                                             v-model="userDetails.address.country"
                                             :options="countries.options"
                                             required
-                                            placeholder="keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['address.country']"
                                             :errors-visible="validation.showErrors.value"
                                         />
@@ -251,15 +264,21 @@
                             </div>
                             <div class="my-8 md:my-0 md:w-1/3 md:max-w-96 2xl:w-1/2">
                                 <VInfo class="py-2 xs:-mx-4">
-                                    <h2 class="mb-2">Du möchtest deine Email Adresse ändern?</h2>
-                                    <p>
-                                        Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login verwendet. Wenn du die
-                                        Email Adresse ändern möchtest wende dich bitte ans
-                                        <a class="link" :href="`mailto:${config.supportEmail}`">
-                                            Büro
-                                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> </a
-                                        >.
-                                    </p>
+                                    <h2 class="mb-2">{{ $t('views.account.contact.hint-mail.title') }}</h2>
+                                    <i18n-t
+                                        v-for="(message, index) in $tm('views.account.contact.hint-mail.messages')"
+                                        :key="message"
+                                        tag="p"
+                                        class="mb-2"
+                                        :keypath="`views.account.contact.hint-mail.messages.${index}`"
+                                    >
+                                        <template #link>
+                                            <a class="link" :href="`mailto:${config.supportEmail}`">
+                                                {{ $t('views.account.contact.hint-mail.link') }}
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                            </a>
+                                        </template>
+                                    </i18n-t>
                                 </VInfo>
                             </div>
                         </div>
@@ -275,42 +294,44 @@
                         <div v-if="userDetails" class="items-start gap-16 md:flex lg:gap-20 xl:max-w-5xl">
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
                                 <section>
-                                    <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
+                                    <h2 class="mb-4 font-bold text-secondary">
+                                        {{ $t('views.account.emergency.title-contact') }}
+                                    </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>Name des Notfallkontakts</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.emergency-contact.name.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.emergencyContact.name"
-                                            placeholder="Keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['emergencyContact.name']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Telefonnummer des Notfallkontakts</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.emergency-contact.phone.label') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.emergencyContact.phone"
-                                            placeholder="Keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['emergencyContact.phone']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                 </section>
                                 <section>
-                                    <h2 class="mb-4 font-bold text-secondary">Wichtige gesundheitliche Informationen</h2>
+                                    <h2 class="mb-4 font-bold text-secondary">{{ $t('views.account.emergency.title-medical') }}</h2>
                                     <div class="mb-4">
-                                        <VInputLabel>Krankheiten</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.diseases.label') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.diseases"
-                                            placeholder="Keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['diseases']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>Medikamente</VInputLabel>
+                                        <VInputLabel>{{ $t('domain.user.medication.label') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.medication"
-                                            placeholder="Keine Angabe"
+                                            :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['medication']"
                                             :errors-visible="validation.showErrors.value"
                                         />
@@ -319,19 +340,21 @@
                             </div>
                             <div class="my-8 md:my-0 md:w-1/3 md:max-w-96 2xl:w-1/2">
                                 <VInfo class="py-2 xs:-mx-4 md:mx-0">
-                                    <h2 class="mb-2">Notfall Informationen</h2>
-                                    <p class="mb-2">
-                                        Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, das du bestimmte
-                                        Krankheiten hast oder welche wichtigen Medikamente du benötigst. Außerdem kannst du einen
-                                        Notfallkontakt angeben, den wir kontaktieren können, falls du mal nicht mehr ansprechbar bist.
-                                    </p>
-                                    <p class="mb-2">
-                                        Deine Daten werden <b>verschlüsselt</b> gespeichert und sind nur für autorisierte Personen
-                                        einsehbar. In der Regel sind dies das Büro und der Kapitän der jeweiligen Reise.
-                                    </p>
-                                    <p class="mb-2">
-                                        <b> All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord! </b>
-                                    </p>
+                                    <h2 class="mb-2">{{ $t('views.account.emergency.hint-emergency-contact.title') }}</h2>
+                                    <i18n-t
+                                        v-for="(message, index) in $tm('views.account.emergency.hint-emergency-contact.messages')"
+                                        :key="message"
+                                        tag="p"
+                                        class="mb-2"
+                                        :keypath="`views.account.emergency.hint-emergency-contact.messages.${index}`"
+                                    >
+                                        <template #encrypted>
+                                            <b>{{ $t(`views.account.emergency.hint-emergency-contact.encrypted`) }}</b>
+                                        </template>
+                                        <template #hint-all-data-optional>
+                                            <b>{{ $t(`views.account.emergency.hint-emergency-contact.hint-all-data-optional`) }}</b>
+                                        </template>
+                                    </i18n-t>
                                 </VInfo>
                             </div>
                         </div>
@@ -344,7 +367,7 @@
                         <i class="fa-solid fa-save"></i>
                     </template>
                     <template #label>
-                        <span>Speichern</span>
+                        <span>{{ $t('generic.save') }}</span>
                     </template>
                 </AsyncButton>
             </template>
@@ -395,9 +418,9 @@ const userDetailsOriginal = ref<UserDetails | null>(null);
 const validation = useValidation<UserDetails | null>(userDetails, usersUseCase.validate);
 
 const genderOptions: InputSelectOption[] = [
-    { value: 'm', label: 'männlich' },
-    { value: 'f', label: 'weiblich' },
-    { value: 'd', label: 'divers' },
+    { value: 'm', label: t('domain.user.gender.values.male') },
+    { value: 'f', label: t('domain.user.gender.values.female') },
+    { value: 'd', label: t('domain.user.gender.values.diverse') },
 ];
 
 const tabs: InputSelectOption[] = [Tab.PERSONAL_DATA, Tab.CONTACT_DATA, Tab.EMERGENCY, Tab.QUALIFICATIONS].map((it) => ({
@@ -424,7 +447,7 @@ async function save(): Promise<void> {
 }
 
 function init(): void {
-    emit('update:tab-title', 'Meine Daten');
+    emit('update:tab-title', t('views.account.title'));
     fetchUserDetails();
 }
 
