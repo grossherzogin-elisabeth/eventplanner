@@ -139,42 +139,6 @@ const absoluteWindDirection = ref<number>(0);
 const scale = ref<number>(20);
 const chart = ref<SVGElement | null>(null);
 
-// useQueryStateSync(
-//     'hdg',
-//     () => hdg.value,
-//     (val) => (hdg.value = val)
-// );
-// useQueryStateSync(
-//     'cog',
-//     () => cog.value,
-//     (val) => (cog.value = val)
-// );
-// useQueryStateSync(
-//     'sog',
-//     () => sog.value,
-//     (val) => (sog.value = val)
-// );
-// useQueryStateSync(
-//     'relWindDir',
-//     () => relativeWindDirection.value,
-//     (val) => (relativeWindDirection.value = val)
-// );
-// useQueryStateSync(
-//     'relWindSpd',
-//     () => relativeWindSpeed.value,
-//     (val) => (relativeWindSpeed.value = val)
-// );
-// useQueryStateSync(
-//     'absWindDir',
-//     () => absoluteWindDirection.value,
-//     (val) => (absoluteWindDirection.value = val)
-// );
-// useQueryStateSync(
-//     'absWindSpd',
-//     () => absoluteWindSpeed.value,
-//     (val) => (absoluteWindSpeed.value = val)
-// );
-
 const relativeWind = ref<Pointer>({ x1: 0, y1: 0, x2: 0, y2: 0 });
 const absoluteWind = ref<Pointer>({ x1: 0, y1: 0, x2: 0, y2: 0 });
 const course = computed<Pointer>(() => calculatePointer({ x: 0, y: 0 }, cog.value, sog.value * scale.value));

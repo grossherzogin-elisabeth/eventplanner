@@ -5,33 +5,45 @@
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 version: 2
 updates:
+  - package-ecosystem: "gradle"
+    target-branch: "main"
+    directory: "/backend"
+    labels:
+      - "dependabot"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      gradle-version-updates-minor-patch:
+        applies-to: "version-updates"
+        update-types:
+          - "minor"
+          - "patch"
 
-- package-ecosystem: "gradle"
-  directory: "/backend"
-  labels:
-  - "dependabot"
-  schedule:
-    interval: "weekly"
-    day: "monday"
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    labels:
+      - "dependabot"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      npm-version-updates-minor-patch:
+        applies-to: "version-updates"
+        update-types:
+          - "minor"
+          - "patch"
 
-- package-ecosystem: "npm"
-  directory: "/frontend"
-  labels:
-  - "dependabot"
-  schedule:
-    interval: "weekly"
-    day: "monday"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    labels:
+      - "dependabot"
+    schedule:
+      interval: "monthly"
 
-- package-ecosystem: "github-actions"
-  directory: "/"
-  labels:
-  - "dependabot"
-  schedule:
-    interval: "monthly"
-
-- package-ecosystem: "docker"
-  directory: "/"
-  labels:
-  - "dependabot"
-  schedule:
-    interval: "monthly"
+  - package-ecosystem: "docker"
+    directory: "/"
+    labels:
+      - "dependabot"
+    schedule:
+      interval: "monthly"

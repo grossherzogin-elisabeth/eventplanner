@@ -24,10 +24,10 @@ public record CreateEventRequest(
     public @NonNull CreateEventSpec toDomain() {
         return new CreateEventSpec(
             type != null
-                ? EventType.fromString(type).orElseThrow(IllegalStateException::new)
+                ? EventType.fromString(type).orElseThrow(IllegalArgumentException::new)
                 : EventType.OTHER,
             signupType != null
-                ? EventSignupType.fromString(type).orElseThrow(IllegalStateException::new)
+                ? EventSignupType.fromString(signupType).orElseThrow(IllegalArgumentException::new)
                 : EventSignupType.ASSIGNMENT,
             name,
             note,
