@@ -68,7 +68,6 @@ navigation:
   dataPrivacy: 'Datenschutzerklärung'
   imprint: 'Impressum'
   impersonate: 'Du siehst die Anwendung aus Sicht von {0}'
-  test: 'Test4'
 
 # -----------------------------------
 # messages used in shared components
