@@ -5,9 +5,11 @@
 generic:
   loading: 'Wird geladen...'
   no-entries: 'Keine Einträge'
+  no-information: 'Keine Angabe'
   no-matches: 'Keine Treffer'
   please-select: 'Bitte auswählen'
   filter-entries: 'Einträge filtern'
+  save: 'Speichern'
   month:
     '0': 'Januar'
     '1': 'Februar'
@@ -106,6 +108,70 @@ components:
     show-details: 'Details anzeigen'
 
 # -----------------------------------
+# messages used for domains
+# -----------------------------------
+domain:
+  user:
+    display-name:
+      label: 'Anzeigename'
+    diet:
+      label: 'Ernährungsweise'
+      values:
+        vegetarian: 'Vegetarisch'
+        vegan: 'Vegan'
+        omnivore: 'Fleisch'
+    intolerances:
+      label: 'Unverträglichkeiten'
+    first-name:
+      label: 'Vorname'
+    middle-name:
+      label: 'Zweiter Vorname'
+    last-name:
+      label: 'Nachname'
+    email:
+      label: 'Email'
+    phone:
+      label: 'Telefon'
+    phone-work:
+      label: 'Telefon (dienstlich)'
+    mobile:
+      label: 'Mobil'
+    address-line1:
+      label: 'Straße, Hausnr.'
+    address-line2:
+      label: 'Adresszusatz'
+    zip:
+      label: 'PLZ'
+    city:
+      label: 'Ort'
+    country:
+      label: 'Land'
+    birthday:
+      label: 'Geboren am'
+    place-of-birth:
+      label: 'Geburtsort'
+    gender:
+      label: 'Geschlecht'
+      values:
+        male: 'männlich'
+        female: 'weiblich'
+        diverse: 'divers'
+    passport-number:
+      label: 'Personalausweis Nummer'
+    nationality:
+      label: 'Nationalität'
+    diseases:
+      label: 'Krankheiten'
+    emergency-contact:
+      label: 'Notfallkontakt'
+      name:
+        label: 'Name des Notfallkontakts'
+      phone:
+        label: 'Telefonnummer des Notfallkontakts'
+    medication:
+      label: 'Medikamente'
+
+# -----------------------------------
 # messages used in specific views
 # -----------------------------------
 views:
@@ -114,11 +180,52 @@ views:
       state:
         waitinglist: 'Du stehst auf der Warteliste.'
   account:
+    title: 'Meine Daten'
     tab:
       data: 'Persönliche Daten'
       contact: 'Kontaktdaten'
       qualifications: 'Qualifikationen'
       emergency: 'Notfallinformationen'
+    data:
+      title-app: 'App'
+      title-diet: 'Ernährung'
+      title-personal: 'Persönliche Daten'
+      hint-name-passport:
+        title: 'Name und Personalausweis Nummer'
+        messages:
+          - 'Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen, da dieser auch zum 
+                Erstellen der IMO Liste verwendet wird. Bitte beachte, das du den Personalausweis bei Reisen mitführen 
+                musst!'
+          - 'Solltest du mit einem anderen Namen oder Spitznamen angesprochen werden wollen, kannst du einen 
+                abweichenden Anzeigenamen angeben. Dieser wird dann in der App angezeigt und auch beim Kammerplan und 
+                der Getränkeliste verwendet.'
+          - '{link}'
+        link:
+          label: 'Wo finde ich meine Personalausweis Nummer?'
+          url: 'https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png'
+    contact:
+      title-mail-phone: 'Email & Telefon'
+      title-address: 'Adresse'
+      hint-mail:
+        title: 'Du möchtest deine Email Adresse ändern?'
+        messages:
+          - 'Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login verwendet. Wenn du die Email 
+                Adresse ändern möchtest wende dich bitte ans {link}'
+        link: 'Büro'
+    emergency:
+      title-contact: 'Notfallkontakt'
+      title-medical: 'Wichtige gesundheitliche Informationen'
+      hint-emergency-contact:
+        title: 'Notfall Informationen'
+        messages:
+          - 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, dass du bestimmte 
+                Krankheiten hast oder welche wichtigen Medikamente du benötigst. Außerdem kannst du einen Notfallkontakt
+                angeben, den wir kontaktieren können, falls du mal nicht mehr ansprechbar bist.'
+          - 'Deine Daten werden {encrypted} gespeichert und sind nur für autorisierte Personen einsehbar. In 
+                der Regel sind dies das Büro und der Kapitän der jeweiligen Reise.'
+          - '{hint-all-data-optional}'
+        encrypted: 'verschlüsselt'
+        hint-all-data-optional: 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
   event-list:
     tab:
       future: 'Zukünftige'
