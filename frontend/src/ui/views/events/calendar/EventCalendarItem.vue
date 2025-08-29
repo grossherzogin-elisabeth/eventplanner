@@ -11,13 +11,13 @@
             <div class="calendar-event-entry-bar"></div>
             <div class="calendar-event-entry-bg">
                 <div class="w-full truncate" :title="props.event.name">
-                    <span v-if="event.state === EventState.Draft" class="opacity-50"> Entwurf: </span>
+                    <span v-if="event.state === EventState.Draft" class="opacity-50"> {{ $t('views.events.calendar.draft') }}: </span>
                     <span>
                         {{ props.event.name }}
                     </span>
                 </div>
                 <template v-if="props.durationInMonth > 1">
-                    <span class="block w-full truncate text-xs font-normal"> {{ props.duration }} Tage </span>
+                    <span class="block w-full truncate text-xs font-normal"> {{ props.duration }} {{ $t('views.events.calendar.days') }} </span>
                     <span v-if="props.event.description" class="block w-full truncate text-xs font-normal">
                         {{ props.event.description }}
                     </span>

@@ -3,11 +3,9 @@
         <div class="w-full max-w-2xl">
             <div v-if="registrationState === State.REGISTRATION_UNCONFIRMED">
                 <div class="mb-8 rounded-2xl">
-                    <h1 class="mb-4 text-lg">Bitte bestätige deine Teilnahme</h1>
+                    <h1 class="mb-4 text-lg">{{ $t('views.events.confirmParticipation.title') }}</h1>
                     <p class="mb-4">
-                        In {{ daysUntilStart }} Tagen startet die Reise {{ event?.name }}, bei der du als Crew eingeplant bist. Bitte
-                        bestätige deine Teilnahme bis <b>spätestens 7 Tage vor Reisebeginn</b>, damit das Büro noch genügend Zeit hat, um
-                        gegebenenfalls einen Ersatz für dich zu finden.
+                        {{ $t('views.events.confirmParticipation.info', { days: daysUntilStart, event: event?.name }) }}
                     </p>
                 </div>
                 <EventDetails v-if="event" :event="event" class="mb-8" />
@@ -15,22 +13,22 @@
                 <div class="hidden items-center gap-4 sm:flex">
                     <button class="btn-primary" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
-                        <span class="py-2 sm:py-0">Ja, ich nehme teil</span>
+                        <span class="py-2 sm:py-0">{{ $t('views.events.confirmParticipation.confirm') }}</span>
                     </button>
                     <button class="btn-danger" @click="decline()">
                         <i class="fa-solid fa-xmark"></i>
-                        <span class="py-2 sm:py-0">Ich muss leider absagen</span>
+                        <span class="py-2 sm:py-0">{{ $t('views.events.confirmParticipation.decline') }}</span>
                     </button>
                 </div>
                 <div class="h-20 sm:hidden"></div>
                 <div class="fixed bottom-0 left-0 right-0 flex flex-col items-stretch gap-4 bg-surface px-4 py-2 sm:hidden">
                     <button class="btn-primary" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
-                        <span class="whitespace-normal py-2 text-sm">Ja, ich nehme teil</span>
+                        <span class="whitespace-normal py-2 text-sm">{{ $t('views.events.confirmParticipation.confirm') }}</span>
                     </button>
                     <button class="btn-danger" @click="decline()">
                         <i class="fa-solid fa-xmark"></i>
-                        <span class="whitespace-normal py-2 text-sm">Ich muss leider absagen</span>
+                        <span class="whitespace-normal py-2 text-sm">{{ $t('views.events.confirmParticipation.decline') }}</span>
                     </button>
                 </div>
             </div>
@@ -38,12 +36,10 @@
                 <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-4">Anmeldung nicht gefunden</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.not-found-title') }}</span>
                     </p>
                     <p class="mb-4">
-                        Wir konnten keine Anmeldung für diesen Link finden. Das kann daran liegen, dass du die Reise bereits abgesagt hast,
-                        oder dein Link ungültig ist. Falls du bereits abgesagt hast, aber doch an der Reise teilnehmen möchtest, oder du
-                        Probleme mit der Teilnahmebestätigung hast, melde dich bitte telefonisch im Büro.
+                        {{ $t('views.events.confirmParticipation.not-found-info') }}
                     </p>
                 </div>
             </div>
@@ -51,11 +47,10 @@
                 <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-4">Anmeldung wurde bereits abgesagt</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.canceled-title') }}</span>
                     </p>
                     <p class="mb-4">
-                        Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der Crew Liste. Falls du doch an der Reise
-                        teilnehmen möchtest, melde dich bitte telefonisch im Büro.
+                        {{ $t('views.events.confirmParticipation.canceled-info') }}
                     </p>
                 </div>
             </div>
@@ -63,12 +58,10 @@
                 <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-4">Keine Anmeldung zur Reise gefunden</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.no-registration-title') }}</span>
                     </p>
                     <p class="mb-4">
-                        Leider konnten wir für dich keine Anmeldung zu dieser Reise finden. Das kann daran liegen, dass du deine Teilnahme
-                        bereits abgesagt hast, oder das du dich mit einem anderen Account angemeldet hast. Wenn du bereits abgesagt hast und
-                        doch teilnehmen möchtest, melde dich bitte telefonisch im Büro.
+                        {{ $t('views.events.confirmParticipation.no-registration-info') }}
                     </p>
                 </div>
             </div>
@@ -76,13 +69,10 @@
                 <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-4">Ungültiger Link</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.invalid-link-title') }}</span>
                     </p>
                     <p class="mb-4">
-                        Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder gehört zu einem anderen Nutzer. Du kannst nur
-                        die Teilname an deinen eigenen Reisen bestätigen. Bitte überprüfe, ob die Email Adresse deines Accounts, mit dem du
-                        dich angemeldet hast mit der Email Adresse übereinstimmt, über die du diesen Link erhalten hast. Wenn du weiterhin
-                        Probleme bei der Bestätigung der Reise hast, melde dich gerne telefonisch im Büro.
+                        {{ $t('views.events.confirmParticipation.invalid-link-info') }}
                     </p>
                 </div>
             </div>
@@ -90,14 +80,12 @@
                 <div class="mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-check"></i>
-                        <span class="ml-4">Teilnahme bestätigt</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.confirmed-title') }}</span>
                     </p>
                     <p class="mb-8">
-                        Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte denk daran,
-                        deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew
-                        einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!
+                        {{ $t('views.events.confirmParticipation.confirmed-info') }}
                     </p>
-                    <h2 class="mb-4 text-base">Hier noch einmal die wichtigsten Details zur Reise:</h2>
+                    <h2 class="mb-4 text-base">{{ $t('views.events.confirmParticipation.details-title') }}</h2>
                     <EventDetails v-if="event" :event="event" />
                 </div>
             </template>
@@ -107,12 +95,10 @@
             >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-xmark"></i>
-                    <span class="ml-4">Reise abgesagt</span>
+                    <span class="ml-4">{{ $t('views.events.confirmParticipation.canceled-now-title') }}</span>
                 </p>
                 <p class="mb-4">
-                    Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Reise wurde
-                    storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz
-                    für dich zu finden.
+                    {{ $t('views.events.confirmParticipation.canceled-now-info') }}
                 </p>
             </div>
         </div>
