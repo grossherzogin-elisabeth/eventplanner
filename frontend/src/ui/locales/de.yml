@@ -229,6 +229,12 @@ views:
           - '{hint-all-data-optional}'
         encrypted: 'verschlüsselt'
         hint-all-data-optional: 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
+    qualifications:
+      status-expires: 'Gültig bis'
+      status-no-expires: 'Ohne Ablaufdatum'
+      status-expired: 'Abgelaufen'
+      status-expiring-soon: 'Läuft bald ab'
+      status-valid: 'Gültig'
   event-list:
     tab:
       future: 'Zukünftige'
@@ -280,9 +286,36 @@ views:
       emergency: 'Notfallinformationen'
       other: 'Sonstige Daten'
   basedata:
+    title: 'Stammdaten'
     tab:
-      positions: 'Positionen'
-      qualifications: 'Qualifikationen'
+      positions:
+        label: 'Positionen'
+        search-placeholder: 'Positionen durchsuchen'
+        add-new: 'Position hinzufügen'
+        edit: "Position bearbeiten"
+        id: "Id"
+        name: "Name"
+        imoListRank: "Anzeigename IMO Liste"
+        color: "Farbe"
+        prio: "Priorität"
+        delete-title: "Position löschen"
+        delete-message: "Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt."
+        delete-submit: "Löschen"
+      qualifications:
+        label: 'Qualifikationen'
+        search-placeholder: 'Qualifikationen durchsuchen'
+        add-new: 'Qualifikation hinzufügen'
+        edit: 'Qualifikation bearbeiten'
+        name: 'Name'
+        icon: 'Icon'
+        icon-placeholder: 'fa-id-card'
+        description: 'Beschreibung'
+        expires: 'Gültigkeit der Qualifikation ist zeitlich begrenzt'
+        status-expires: 'Mit Ablaufdatum'
+        status-no-expires: 'Ohne Ablaufdatum'
+        delete-title: "Qualifikation löschen"
+        delete-message: "Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt."
+        delete-submit: "Löschen"
   settings:
     tab:
       general: 'Allgemein'

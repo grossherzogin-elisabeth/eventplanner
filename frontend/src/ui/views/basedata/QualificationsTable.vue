@@ -28,11 +28,11 @@
                 <div class="flex justify-end">
                     <div v-if="item.expires" class="status-panel bg-yellow-container text-onyellow-container">
                         <i class="fa-solid fa-clock"></i>
-                        <span class="whitespace-nowrap font-semibold">Mit Ablaufdatum</span>
+                        <span class="whitespace-nowrap font-semibold">{{ $t('views.basedata.tab.qualifications.status-expires') }}</span>
                     </div>
                     <div v-else class="status-panel bg-green-container text-ongreen-container">
                         <i class="fa-solid fa-check-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">Ohne Ablaufdatum</span>
+                        <span class="whitespace-nowrap font-semibold">{{ $t('views.basedata.tab.qualifications.status-no-expires') }}</span>
                     </div>
                 </div>
             </td>
@@ -40,11 +40,11 @@
         <template #context-menu="{ item }">
             <li class="context-menu-item" @click="editQualification(item)">
                 <i class="fa-solid fa-edit" />
-                <span>Bearbeiten</span>
+                <span>{{ $t('generic.edit') }}</span>
             </li>
             <li class="context-menu-item text-error" @click="deleteQualification(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>Löschen</span>
+                <span>{{ $t('generic.delete') }}</span>
             </li>
         </template>
     </VTable>
@@ -53,6 +53,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Qualification } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
@@ -74,6 +75,8 @@ const qualifications = ref<Qualification[] | undefined>(undefined);
 
 const qualificationDetailsDialog = ref<Dialog<Qualification | undefined, Qualification | undefined> | null>(null);
 const deleteQualificationDialog = ref<ConfirmationDialog | null>(null);
+
+const { t } = useI18n();
 
 function init(): void {
     fetchQualifications();
@@ -102,10 +105,9 @@ async function editQualification(qualification: Qualification): Promise<void> {
 
 async function deleteQualification(qualification: Qualification): Promise<void> {
     const confirmed = await deleteQualificationDialog.value?.open({
-        title: 'Qualifikation löschen',
-        message: `Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern,
-            bei denen sie assoziert ist, entfernt.`,
-        submit: 'Löschen',
+        title: t('views.basedata.tab.qualifications.delete-title'),
+        message: t('views.basedata.tab.qualifications.delete-message'),
+        submit: t('views.basedata.tab.qualifications.delete-submit'),
         danger: true,
     });
     if (confirmed) {
