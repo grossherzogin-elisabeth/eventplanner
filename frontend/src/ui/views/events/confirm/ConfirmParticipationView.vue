@@ -36,10 +36,10 @@
                 <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-4">{{ $t('views.events.confirmParticipation.not-found-title') }}</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.not-found.title') }}</span>
                     </p>
                     <p class="mb-4">
-                        {{ $t('views.events.confirmParticipation.not-found-info') }}
+                        {{ $t('views.events.confirmParticipation.not-found.info') }}
                     </p>
                 </div>
             </div>
@@ -47,10 +47,10 @@
                 <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-4">{{ $t('views.events.confirmParticipation.canceled-title') }}</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.canceled.title') }}</span>
                     </p>
                     <p class="mb-4">
-                        {{ $t('views.events.confirmParticipation.canceled-info') }}
+                        {{ $t('views.events.confirmParticipation.canceled.info') }}
                     </p>
                 </div>
             </div>
@@ -58,10 +58,10 @@
                 <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-4">{{ $t('views.events.confirmParticipation.no-registration-title') }}</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.no-registration.title') }}</span>
                     </p>
                     <p class="mb-4">
-                        {{ $t('views.events.confirmParticipation.no-registration-info') }}
+                        {{ $t('views.events.confirmParticipation.no-registration.info') }}
                     </p>
                 </div>
             </div>
@@ -69,10 +69,10 @@
                 <div class="mb-8 rounded-2xl bg-error-container p-4 font-bold text-onerror-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-4">{{ $t('views.events.confirmParticipation.invalid-link-title') }}</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.invalid-link.title') }}</span>
                     </p>
                     <p class="mb-4">
-                        {{ $t('views.events.confirmParticipation.invalid-link-info') }}
+                        {{ $t('views.events.confirmParticipation.invalid-link.info') }}
                     </p>
                 </div>
             </div>
@@ -80,12 +80,12 @@
                 <div class="mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-check"></i>
-                        <span class="ml-4">{{ $t('views.events.confirmParticipation.confirmed-title') }}</span>
+                        <span class="ml-4">{{ $t('views.events.confirmParticipation.confirmed.title') }}</span>
                     </p>
                     <p class="mb-8">
-                        {{ $t('views.events.confirmParticipation.confirmed-info') }}
+                        {{ $t('views.events.confirmParticipation.confirmed.info') }}
                     </p>
-                    <h2 class="mb-4 text-base">{{ $t('views.events.confirmParticipation.details-title') }}</h2>
+                    <h2 class="mb-4 text-base">{{ $t('views.events.confirmParticipation.details.title') }}</h2>
                     <EventDetails v-if="event" :event="event" />
                 </div>
             </template>
@@ -95,10 +95,10 @@
             >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-xmark"></i>
-                    <span class="ml-4">{{ $t('views.events.confirmParticipation.canceled-now-title') }}</span>
+                    <span class="ml-4">{{ $t('views.events.confirmParticipation.canceled-now.title') }}</span>
                 </p>
                 <p class="mb-4">
-                    {{ $t('views.events.confirmParticipation.canceled-now-info') }}
+                    {{ $t('views.events.confirmParticipation.canceled-now.info') }}
                 </p>
             </div>
         </div>
