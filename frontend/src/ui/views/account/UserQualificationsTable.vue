@@ -15,27 +15,26 @@
                     <p v-if="item.expiresAt" class="mb-1 font-semibold">
                         {{ $d(item.expiresAt, DateTimeFormat.DD_MM_YYYY) }}
                     </p>
-                    <p v-else class="mb-1 font-semibold">k.A.</p>
-                    <p class="text-sm">Gültig bis</p>
+                    <p v-else class="mb-1 font-semibold">{{ $t('generic.no-information') }}</p>
+                    <p class="text-sm">{{ $t('views.account.qualifications.status-expires') }}</p>
                 </template>
                 <p v-else class="text-sm">
-                    Ohne<br />
-                    Ablaufdatum
+                    {{ $t('views.account.qualifications.status-no-expires') }}
                 </p>
             </td>
             <td>
                 <div class="flex items-center justify-end">
                     <div v-if="item.isExpired" class="status-panel bg-red-container text-onred-container">
                         <i class="fa-solid fa-ban"></i>
-                        <span class="whitespace-nowrap font-semibold">Abgelaufen</span>
+                        <span class="whitespace-nowrap font-semibold">{{ $t('views.account.qualifications.status-expired') }}</span>
                     </div>
                     <div v-else-if="item.willExpireSoon" class="status-panel bg-yellow-container text-onyellow-container">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="whitespace-nowrap font-semibold"> Läuft bald ab</span>
+                        <span class="whitespace-nowrap font-semibold"> {{ $t('views.account.qualifications.status-expiring-soon') }}</span>
                     </div>
                     <div v-else class="status-panel bg-green-container text-ongreen-container">
                         <i class="fa-solid fa-check-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">Gültig</span>
+                        <span class="whitespace-nowrap font-semibold">{{ $t('views.account.qualifications.status-valid') }}</span>
                     </div>
                 </div>
             </td>
