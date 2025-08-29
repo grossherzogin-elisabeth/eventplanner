@@ -9,7 +9,10 @@ generic:
   no-matches: 'Keine Treffer'
   please-select: 'Bitte auswählen'
   filter-entries: 'Einträge filtern'
+  cancel: 'Abbrechen'
   save: 'Speichern'
+  edit: 'Bearbeiten'
+  delete: 'Löschen'
   month:
     '0': 'Januar'
     '1': 'Februar'
