@@ -182,6 +182,11 @@ views:
     event-card:
       state:
         waitinglist: 'Du stehst auf der Warteliste.'
+  settings:
+    tab:
+      general: 'Allgemein'
+      email: 'Email'
+      notifications: 'Notifications'
   account:
     title: 'Meine Daten'
     tab:
@@ -283,8 +288,9 @@ views:
     tab:
       positions: 'Positionen'
       qualifications: 'Qualifikationen'
-  settings:
-    tab:
-      general: 'Allgemein'
-      email: 'Email'
-      notifications: 'Notifications'
+  events:
+    calendar:
+      title: 'Alle Veranstaltungen'
+      create-event: "Neue Veranstaltung"
+      days: "Tage"
+      draft: "Entwurf"
