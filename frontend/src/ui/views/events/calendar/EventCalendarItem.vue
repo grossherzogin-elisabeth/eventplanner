@@ -17,7 +17,9 @@
                     </span>
                 </div>
                 <template v-if="props.durationInMonth > 1">
-                    <span class="block w-full truncate text-xs font-normal"> {{ props.duration }} {{ $t('views.events.calendar.days') }} </span>
+                    <span class="block w-full truncate text-xs font-normal">
+                        {{ props.duration }} {{ $t('views.events.calendar.days') }}
+                    </span>
                     <span v-if="props.event.description" class="block w-full truncate text-xs font-normal">
                         {{ props.event.description }}
                     </span>

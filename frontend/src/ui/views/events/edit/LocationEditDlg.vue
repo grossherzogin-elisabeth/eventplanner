@@ -66,7 +66,9 @@
                         </div>
                     </div>
                     <div class="mb-4 flex justify-end">
-                        <button class="link text-sm" @click="location.eta = undefined">{{ $t('views.events.edit.location-edit-dlg.delete-eta') }}</button>
+                        <button class="link text-sm" @click="location.eta = undefined">
+                            {{ $t('views.events.edit.location-edit-dlg.delete-eta') }}
+                        </button>
                     </div>
                     <div class="mb-2 flex space-x-4">
                         <div class="w-3/5">
@@ -89,7 +91,9 @@
                         </div>
                     </div>
                     <div class="mb-4 flex justify-end">
-                        <button class="link text-sm" @click="location.etd = undefined">{{ $t('views.events.edit.location-edit-dlg.delete-etd') }}</button>
+                        <button class="link text-sm" @click="location.etd = undefined">
+                            {{ $t('views.events.edit.location-edit-dlg.delete-etd') }}
+                        </button>
                     </div>
                     <div class="mb-4">
                         <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.address.title') }}</VInputLabel>

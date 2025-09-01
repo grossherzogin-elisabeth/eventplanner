@@ -26,8 +26,14 @@
                         class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
                     >
                         <VSuccess icon="fa-check">
-                            {{ $t('views.events.details.info-assigned', { position: positions.get(event.signedInUserRegistration.positionKey).name }) }}
-                            <template v-if="event.signedInUserRegistration.confirmed"> {{ $t('views.events.details.info-confirmed') }} </template>
+                            {{
+                                $t('views.events.details.info-assigned', {
+                                    position: positions.get(event.signedInUserRegistration.positionKey).name,
+                                })
+                            }}
+                            <template v-if="event.signedInUserRegistration.confirmed">
+                                {{ $t('views.events.details.info-confirmed') }}
+                            </template>
                         </VSuccess>
                     </section>
                     <section
@@ -35,7 +41,11 @@
                         class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
                     >
                         <VInfo icon="fa-hourglass-half">
-                            {{ $t('views.events.details.info-waitinglist', { position: positions.get(event.signedInUserRegistration.positionKey).name }) }}
+                            {{
+                                $t('views.events.details.info-waitinglist', {
+                                    position: positions.get(event.signedInUserRegistration.positionKey).name,
+                                })
+                            }}
                         </VInfo>
                     </section>
                     <section
@@ -148,8 +158,8 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import type { Event, Position, Registration, SignedInUser } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';

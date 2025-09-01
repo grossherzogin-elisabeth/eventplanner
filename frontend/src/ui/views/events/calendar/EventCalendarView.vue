@@ -124,7 +124,7 @@ const calendarStyle = ref({
 });
 
 function init(): void {
-   emit('update:tab-title', `${i18n.t('views.events.calendar.title')} ${route.params.year}`);
+    emit('update:tab-title', `${i18n.t('views.events.calendar.title')} ${route.params.year}`);
     watch(route, () => fetchEvents());
     watch(
         () => events.value,
