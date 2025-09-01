@@ -13,6 +13,7 @@ generic:
   save: 'Speichern'
   edit: 'Bearbeiten'
   delete: 'Löschen'
+  discard-changes: 'Änderungen verwerfen'
   error: 'Fehler'
   month:
     '0': 'Januar'
@@ -183,6 +184,11 @@ views:
     event-card:
       state:
         waitinglist: 'Du stehst auf der Warteliste.'
+  settings:
+    tab:
+      general: 'Allgemein'
+      email: 'Email'
+      notifications: 'Notifications'
   account:
     title: 'Meine Daten'
     tab:
@@ -383,6 +389,9 @@ views:
         publish-crew: "Crew veröffentlichen"
         reset-crew: "Crew zurücksetzen"
         cancel-event: "Veranstaltung absagen"
+        unsaved-changes:
+          title: "Änderungen verwerfen?"
+          message: "Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen verworfen. Möchtest du fortfahren?"
       location-edit-dlg:
         edit-start-port: "Starthafen bearbeiten"
         add-location: "Reiseabschnitt hinzufügen"
@@ -408,8 +417,3 @@ views:
         move-up: "Nach oben verschieben"
         move-down: "Nach unten verschieben"
         delete: "Abschnitt löschen"
-  settings:
-    tab:
-      general: 'Allgemein'
-      email: 'Email'
-      notifications: 'Notifications'

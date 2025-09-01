@@ -353,11 +353,10 @@ function preventPageUnloadOnUnsavedChanges(): void {
         }
         if (hasChanges.value) {
             const continueNavigation = await confirmDialog.value?.open({
-                title: 'Änderungen verwerfen?',
-                message: `Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden
-                    diese Änderungen verworfen. Möchtest du forfahren?`,
-                cancel: 'Abbrechen',
-                submit: 'Änderungen verwerfen',
+                title: t('views.events.edit.event-edit-view.unsaved-changes.title'),
+                message: t('views.events.edit.event-edit-view.unsaved-changes.message'),
+                cancel: t('generic.cancel'),
+                submit: t('generic.discard-changes'),
             });
             if (!continueNavigation) {
                 return false;
