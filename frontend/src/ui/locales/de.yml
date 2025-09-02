@@ -284,35 +284,37 @@ views:
       positions: 'Positionen'
       qualifications: 'Qualifikationen'
   events:
-    confirmParticipation:
-      title: "Bitte bestätige deine Teilnahme"
-      info: "In {days} Tagen startet die Reise {event}, bei der du als Crew eingeplant bist. Bitte bestätige deine Teilnahme bis spätestens 7 Tage vor Reisebeginn, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden."
-      confirm: "Ja, ich nehme teil"
-      decline: "Ich muss leider absagen"
+    confirm-participation:
+      title: 'Bitte bestätige deine Teilnahme'
+      info: 
+        message: 'In {days} Tagen startet die Reise {event}, bei der du als Crew eingeplant bist. Bitte bestätige deine Teilnahme bis {deadline}, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden.'
+        deadline: 'spätestens 7 Tage vor Reisebeginn'
+      confirm: 'Ja, ich nehme teil'
+      decline: 'Ich muss leider absagen'
       not-found:
-        title: "Anmeldung nicht gefunden"
-        info: "Wir konnten keine Anmeldung für diesen Link finden. Das kann daran liegen, dass du die Reise bereits abgesagt hast, oder dein Link ungültig ist. Falls du bereits abgesagt hast, aber doch an der Reise teilnehmen möchtest, oder du Probleme mit der Teilnahmebestätigung hast, melde dich bitte telefonisch im Büro."
+        title: 'Anmeldung nicht gefunden'
+        info: 'Wir konnten keine Anmeldung für diesen Link finden. Das kann daran liegen, dass du die Reise bereits abgesagt hast, oder dein Link ungültig ist. Falls du bereits abgesagt hast, aber doch an der Reise teilnehmen möchtest, oder du Probleme mit der Teilnahmebestätigung hast, melde dich bitte telefonisch im Büro.'
       canceled:
-        title: "Anmeldung wurde bereits abgesagt"
-        info: "Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der Crew Liste. Falls du doch an der Reise teilnehmen möchtest, melde dich bitte telefonisch im Büro."
+        title: 'Anmeldung wurde bereits abgesagt'
+        info: 'Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der Crew Liste. Falls du doch an der Reise teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
       no-registration:
-        title: "Keine Anmeldung zur Reise gefunden"
-        info: "Leider konnten wir für dich keine Anmeldung zu dieser Reise finden. Das kann daran liegen, dass du deine Teilnahme bereits abgesagt hast, oder das du dich mit einem anderen Account angemeldet hast. Wenn du bereits abgesagt hast und doch teilnehmen möchtest, melde dich bitte telefonisch im Büro."
+        title: 'Keine Anmeldung zur Reise gefunden'
+        info: 'Leider konnten wir für dich keine Anmeldung zu dieser Reise finden. Das kann daran liegen, dass du deine Teilnahme bereits abgesagt hast, oder das du dich mit einem anderen Account angemeldet hast. Wenn du bereits abgesagt hast und doch teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
       invalid-link:
-        title: "Ungültiger Link"
-        info: "Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder gehört zu einem anderen Nutzer. Du kannst nur die Teilname an deinen eigenen Reisen bestätigen. Bitte überprüfe, ob die Email Adresse deines Accounts, mit dem du dich angemeldet hast mit der Email Adresse übereinstimmt, über die du diesen Link erhalten hast. Wenn du weiterhin Probleme bei der Bestätigung der Reise hast, melde dich gerne telefonisch im Büro."
+        title: 'Ungültiger Link'
+        info: 'Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder gehört zu einem anderen Nutzer. Du kannst nur die Teilname an deinen eigenen Reisen bestätigen. Bitte überprüfe, ob die Email Adresse deines Accounts, mit dem du dich angemeldet hast mit der Email Adresse übereinstimmt, über die du diesen Link erhalten hast. Wenn du weiterhin Probleme bei der Bestätigung der Reise hast, melde dich gerne telefonisch im Büro.'
       confirmed:
-        title: "Teilnahme bestätigt"
-        info: "Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte denk daran, deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!"
+        title: 'Teilnahme bestätigt'
+        info: 'Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte denk daran, deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!'
       details:
-        title: "Hier noch einmal die wichtigsten Details zur Reise:"
+        title: 'Hier noch einmal die wichtigsten Details zur Reise:'
       canceled-now:
-        title: "Reise abgesagt"
-        info: "Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Reise wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden."
-      event: "Reise"
-      route: "Geplante Route"
-      crew-on-board: "Crew an Bord"
-      start: "Reisebeginn"
+        title: 'Reise abgesagt'
+        info: 'Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Reise wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.'
+      event: 'Reise'
+      route: 'Geplante Route'
+      crew-on-board: 'Crew an Bord'
+      start: 'Reisebeginn'
   settings:
     tab:
       general: 'Allgemein'
