@@ -292,5 +292,5 @@ views:
     calendar:
       title: 'Alle Veranstaltungen'
       create-event: "Neue Veranstaltung"
-      days: "Tage"
+      days: '{count} Tag|{count} Tage'
       draft: "Entwurf"
