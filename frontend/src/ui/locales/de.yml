@@ -289,7 +289,7 @@ views:
     title: 'Stammdaten'
     tab:
       positions:
-        label: 'Positionen'
+        title: 'Positionen'
         search-placeholder: 'Positionen durchsuchen'
         add-new: 'Position hinzufügen'
         edit: "Position bearbeiten"
@@ -302,7 +302,7 @@ views:
         delete-message: "Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt."
         delete-submit: "Löschen"
       qualifications:
-        label: 'Qualifikationen'
+        title: 'Qualifikationen'
         search-placeholder: 'Qualifikationen durchsuchen'
         add-new: 'Qualifikation hinzufügen'
         edit: 'Qualifikation bearbeiten'

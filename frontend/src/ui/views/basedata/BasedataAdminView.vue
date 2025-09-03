@@ -88,7 +88,7 @@ const { t } = useI18n();
 
 const tabs = [Tab.QUALIFICATIONS, Tab.POSITIONS].map((it) => ({
     value: it,
-    label: t(`views.basedata.tab.${it}.label`),
+    label: t(`views.basedata.tab.${it}.title`),
 }));
 const tab = ref<string>(tabs[0].value);
 const qualificationFilter = ref<string>('');
