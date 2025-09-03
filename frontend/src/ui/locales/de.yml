@@ -182,6 +182,11 @@ views:
     event-card:
       state:
         waitinglist: 'Du stehst auf der Warteliste.'
+  settings:
+    tab:
+      general: 'Allgemein'
+      email: 'Email'
+      notifications: 'Notifications'
   account:
     title: 'Meine Daten'
     tab:
@@ -284,9 +289,14 @@ views:
       positions: 'Positionen'
       qualifications: 'Qualifikationen'
   events:
+    calendar:
+      title: 'Alle Veranstaltungen'
+      create-event: "Neue Veranstaltung"
+      days: '{count} Tag|{count} Tage'
+      draft: "Entwurf"
     confirm-participation:
       title: 'Bitte bestätige deine Teilnahme'
-      info: 
+      info:
         message: 'In {days} Tagen startet die Reise {event}, bei der du als Crew eingeplant bist. Bitte bestätige deine Teilnahme bis {deadline}, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden.'
         deadline: 'spätestens 7 Tage vor Reisebeginn'
       confirm: 'Ja, ich nehme teil'
@@ -315,8 +325,3 @@ views:
       route: 'Geplante Route'
       crew-on-board: 'Crew an Bord'
       start: 'Reisebeginn'
-  settings:
-    tab:
-      general: 'Allgemein'
-      email: 'Email'
-      notifications: 'Notifications'
