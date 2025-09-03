@@ -1,0 +1,64 @@
+# -----------------------------------
+# messages used for domains
+# -----------------------------------
+domain:
+  user:
+    display-name:
+      label: 'Anzeigename'
+    diet:
+      label: 'Ernährungsweise'
+      values:
+        vegetarian: 'Vegetarisch'
+        vegan: 'Vegan'
+        omnivore: 'Fleisch'
+    intolerances:
+      label: 'Unverträglichkeiten'
+    first-name:
+      label: 'Vorname'
+    middle-name:
+      label: 'Zweiter Vorname'
+    last-name:
+      label: 'Nachname'
+    email:
+      label: 'Email'
+    phone:
+      label: 'Telefon'
+    phone-work:
+      label: 'Telefon (dienstlich)'
+    mobile:
+      label: 'Mobil'
+    address-line1:
+      label: 'Straße, Hausnr.'
+    address-line2:
+      label: 'Adresszusatz'
+    zip:
+      label: 'PLZ'
+    city:
+      label: 'Ort'
+    country:
+      label: 'Land'
+    birthday:
+      label: 'Geboren am'
+    place-of-birth:
+      label: 'Geburtsort'
+    gender:
+      label: 'Geschlecht'
+      values:
+        male: 'männlich'
+        female: 'weiblich'
+        diverse: 'divers'
+    passport-number:
+      label: 'Personalausweis Nummer'
+    nationality:
+      label: 'Nationalität'
+    diseases:
+      label: 'Krankheiten'
+    emergency-contact:
+      label: 'Notfallkontakt'
+      name:
+        label: 'Name des Notfallkontakts'
+      phone:
+        label: 'Telefonnummer des Notfallkontakts'
+    medication:
+      label: 'Medikamente'
+

@@ -2,7 +2,7 @@ import type { DateTimeOptions, I18n } from 'vue-i18n';
 import { createI18n } from 'vue-i18n';
 import type { Config } from '@/application/values/Config';
 import { DateTimeFormat } from '@/common/date';
-import messagesDe from '@/ui/locales/de.yml';
+import messages from '@/ui/locales';
 
 const datetimeFormatsDe: Record<string, DateTimeOptions> = {};
 datetimeFormatsDe[DateTimeFormat.DD_MM_YYYY] = {
@@ -53,9 +53,7 @@ export function setupI18n(config: Config): I18n {
         legacy: false, // required to enable useI18n in Vue setup script
         locale: config.i18nLocale,
         fallbackLocale: config.i18nFallbackLocale,
-        messages: {
-            de: messagesDe,
-        },
+        messages: messages,
         availableLocales: config.i18nAvailableLocales,
         silentFallbackWarn: true,
         silentTranslationWarn: true,

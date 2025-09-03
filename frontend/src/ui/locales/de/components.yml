@@ -1,0 +1,35 @@
+# -----------------------------------
+# messages used in shared components
+# -----------------------------------
+components:
+  event-details-card:
+    title: 'Details'
+    days: '{count} Tag|{count} Tage'
+    registrations: '{count} Anmeldung | {count} Anmeldungen'
+    assigned: '{count} Crew | {count} Crew'
+    waitinglist: '{count} Warteliste | {count} Warteliste'
+  event-locations-card:
+    title: 'Ort | Route'
+    placeholder: 'Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar\n        sind, kannst du sie hier sehen.'
+    eta: 'Ankunft:'
+    etd: 'Abfahrt:'
+    address-link: 'Anreiseinformationen'
+    learn-more: 'Weitere Informationen'
+  event-participants-card:
+    registrations: 'Anmeldungen'
+    assigned: 'Crew ({count})'
+    waitinglist: 'Warteliste ({count})'
+    placeholder-title: 'Du könntest den Anfang machen!'
+    placeholder-title-m: 'Du könntest der Erste sein!'
+    placeholder-title-f: 'Du könntest die Erste sein!'
+    placeholder: 'Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich\n        anmelden. Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und anschließend wird vom Büro eine\n        Crew zusammengestellt.'
+    unknown: 'Unbekannter Nutzer'
+    empty: 'Noch nicht besetzt'
+    no-registrations: 'Für diese Reise gibt es noch keine Anmeldungen.'
+    no-waitinglist: 'Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.'
+  event-details-sheet:
+    note-missing-crew: 'Für diese Reise wird noch Crew für die folgenden Positionen gesucht:'
+    note-assigned: 'Du bist für diese Reise als {0} eingeplant'
+    note-on-waiting-list: 'Du stehst für diese Reise als {0} auf der Warteliste'
+    show-details: 'Details anzeigen'
+
