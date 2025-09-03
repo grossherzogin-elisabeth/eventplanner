@@ -4,7 +4,7 @@
         <div class="top-32 -mx-8 mb-4 overflow-x-auto bg-surface pb-4">
             <div class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-onsurface-variant md:flex-wrap">
                 <div class="flex items-center rounded-2xl bg-surface-container p-1">
-                    <span class="px-2"> Crew </span>
+                    <span class="px-2">{{ $t('views.events.edit.crew-editor.crew') }}</span>
                     <span
                         class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
                     >
@@ -19,7 +19,7 @@
                             : 'bg-error-container text-onerror-container'
                     "
                 >
-                    <span class="whitespace-nowrap px-2"> Sichere Besatzung </span>
+                    <span class="whitespace-nowrap px-2">{{ $t('views.events.edit.crew-editor.secure-crew') }}</span>
                     <span
                         class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
                     >
@@ -45,14 +45,14 @@
         </div>
         <div class="-mx-4 flex-1 gap-16 md:flex">
             <div class="crew mb-8 px-4 pb-4 md:w-1/2 lg:mb-0">
-                <h2 class="mb-4 font-bold text-secondary">Crew</h2>
+                <h2 class="mb-4 font-bold text-secondary">{{ $t('views.events.edit.crew-editor.crew') }}</h2>
                 <!-- slot list-admin dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute z-10 w-full" :class="{ hidden: dragSource !== DragSource.FROM_WAITING_LIST }">
                         <VDropzone class="h-96" @drop="addToTeam($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-add">
                                 <i class="fa-regular fa-calendar-plus text-3xl opacity-75"></i>
-                                <span>Zur Crew hinzufügen</span>
+                                <span>{{ $t('views.events.edit.crew-editor.add-to-crew') }}</span>
                             </div>
                         </VDropzone>
                     </div>
@@ -64,11 +64,10 @@
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
                                     <i class="fa-solid fa-list-check opacity-75"></i>
-                                    Hier ist noch nichts...
+                                    {{ $t('views.events.edit.crew-editor.empty-crew.title') }}
                                 </h3>
                                 <p class="text-sm">
-                                    Für diese Reise wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese Reise
-                                    definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.
+                                    {{ $t('views.events.edit.crew-editor.empty-crew.desc') }}
                                 </p>
                             </div>
                             <div></div>
@@ -103,20 +102,20 @@
             </div>
 
             <div class="waiting-list px-4 md:w-1/2">
-                <h2 class="mb-4 font-bold text-secondary">Warteliste</h2>
+                <h2 class="mb-4 font-bold text-secondary">{{ $t('views.events.edit.crew-editor.waiting-list') }}</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute w-full space-y-8" :class="{ hidden: dragSource !== DragSource.FROM_TEAM }">
                         <VDropzone class="h-44" @drop="removeFromTeam($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-remove">
                                 <i class="fa-regular fa-calendar-minus text-3xl opacity-75"></i>
-                                <span>Auf Warteliste verschieben</span>
+                                <span>{{ $t('views.events.edit.crew-editor.move-to-waiting-list') }}</span>
                             </div>
                         </VDropzone>
                         <VDropzone class="h-44" @drop="cancelRegistration($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-delete">
                                 <i class="fa-regular fa-calendar-xmark text-3xl opacity-75"></i>
-                                <span>Anmeldung löschen</span>
+                                <span>{{ $t('views.events.edit.crew-editor.delete-registration') }}</span>
                             </div>
                         </VDropzone>
                     </div>
@@ -128,11 +127,10 @@
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
                                     <i class="fa-solid fa-list-check opacity-75"></i>
-                                    Die Warteliste ist leer...
+                                    {{ $t('views.events.edit.crew-editor.empty-waitinglist.title') }}
                                 </h3>
                                 <p class="text-sm">
-                                    Für diese Reise gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Reise anmelden, werden
-                                    sie hier aufgelistet und können für die Crew eingeplant werden.
+                                    {{ $t('views.events.edit.crew-editor.empty-waitinglist.desc') }}
                                 </p>
                             </div>
                             <div></div>
@@ -172,6 +170,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Event, PositionKey, Registration, Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
@@ -199,6 +198,7 @@ type Emits = (e: 'update:event', value: Event) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
+const { t } = useI18n();
 const eventUseCase = useEventUseCase();
 const eventAdminUseCase = useEventAdministrationUseCase();
 const eventService = useEventService();
@@ -240,12 +240,10 @@ async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
     const slot = eventService.getOpenSlots(props.event).find((it) => it.positionKeys.includes(aggregate.position.key));
     if (!slot) {
         errorHandler.handleError({
-            title: 'Zuweisung nicht möglich',
-            message: `${aggregate.name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die
-                Position ${aggregate.position.name} gibt. Du kannst entweder einen passenden Slot freigeben, indem du
-                jemand anderes aus der Crew entfernst oder einen neuen Slot für diese Reise hinzufügen.`,
-            cancelText: 'Abbrechen',
-            retryText: 'Slot hinzufügen',
+            title: t('views.events.edit.crew-editor.assign-error.title'),
+            message: t('views.events.edit.crew-editor.assign-error.message', { name: aggregate.name, position: aggregate.position.name }),
+            cancelText: t('generic.cancel'),
+            retryText: t('views.events.edit.crew-editor.assign-error.retry'),
             retry: async () => {
                 const event = props.event;
                 event.slots.push({

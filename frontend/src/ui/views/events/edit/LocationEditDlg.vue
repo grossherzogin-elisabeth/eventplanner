@@ -1,15 +1,15 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="location.order === 1">Starthafen bearbeiten</h1>
-            <h1 v-else-if="location.order === -1">Reiseabschnitt hinzufügen</h1>
-            <h1 v-else>Reiseabschnitt bearbeiten</h1>
+            <h1 v-if="location.order === 1">{{ $t('views.events.edit.location-edit-dlg.edit-start-port') }}</h1>
+            <h1 v-else-if="location.order === -1">{{ $t('views.events.edit.location-edit-dlg.add-location') }}</h1>
+            <h1 v-else>{{ $t('views.events.edit.location-edit-dlg.edit-location') }}</h1>
         </template>
         <template #default>
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>Name</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.name') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.name"
                             :errors="validation.errors.value['name']"
@@ -18,10 +18,10 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Icon</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.icon') }}</VInputLabel>
                         <VInputSelect
                             v-model="location.icon"
-                            placeholder="fa-anchor"
+                            :placeholder="$t('views.events.edit.location-edit-dlg.icon-placeholder')"
                             :errors="validation.errors.value['icon']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -66,7 +66,9 @@
                         </div>
                     </div>
                     <div class="mb-4 flex justify-end">
-                        <button class="link text-sm" @click="location.eta = undefined">ETA löschen</button>
+                        <button class="link text-sm" @click="location.eta = undefined">
+                            {{ $t('views.events.edit.location-edit-dlg.delete-eta') }}
+                        </button>
                     </div>
                     <div class="mb-2 flex space-x-4">
                         <div class="w-3/5">
@@ -89,10 +91,12 @@
                         </div>
                     </div>
                     <div class="mb-4 flex justify-end">
-                        <button class="link text-sm" @click="location.etd = undefined">ETD löschen</button>
+                        <button class="link text-sm" @click="location.etd = undefined">
+                            {{ $t('views.events.edit.location-edit-dlg.delete-etd') }}
+                        </button>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Liegeplatz</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.address.title') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="location.address"
                             class="h-24"
@@ -101,7 +105,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Liegeplatz Link</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.address.link') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.addressLink"
                             :errors="validation.errors.value['addressLink']"
@@ -109,7 +113,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Weitere Informationen</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.information.title') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="location.information"
                             class="h-24"
@@ -118,7 +122,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Weitere Informationen Link</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.information.link') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.informationLink"
                             :errors="validation.errors.value['informationLink']"
@@ -130,10 +134,10 @@
         </template>
         <template #buttons>
             <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Übernehmen</span>
+                <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>
     </VDialog>
@@ -141,11 +145,14 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { deepCopy, updateDate, updateTime } from '@/common';
 import type { Location, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputDate, VInputLabel, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation.ts';
+
+const { t } = useI18n();
 
 const dlg = ref<Dialog<Location | undefined, Location | undefined> | null>(null);
 const location = ref<Location>({
@@ -161,11 +168,11 @@ const validation = useValidation(location, (value) => {
     const errors: Record<string, ValidationHint[]> = {};
     if (!value.name) {
         errors.name = errors.name || [];
-        errors.name.push({ key: 'Bitte gib einen Namen an', params: {} });
+        errors.name.push({ key: t('views.events.edit.location-edit-dlg.validation.name'), params: {} });
     }
     if (!value.icon) {
         errors.icon = errors.icon || [];
-        errors.icon.push({ key: 'Bitte wähle ein Icon', params: {} });
+        errors.icon.push({ key: t('views.events.edit.location-edit-dlg.validation.icon'), params: {} });
     }
     return errors;
 });
