@@ -1,8 +1,16 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
-            <NavbarFilter v-if="tab === Tab.QUALIFICATIONS" v-model="qualificationFilter" placeholder="Qualifikationen durchsuchen" />
-            <NavbarFilter v-else-if="tab === Tab.POSITIONS" v-model="positionsFilter" placeholder="Positionen durchsuchen" />
+            <NavbarFilter
+                v-if="tab === Tab.QUALIFICATIONS"
+                v-model="qualificationFilter"
+                :placeholder="$t('views.basedata.tab.qualifications.search-placeholder')"
+            />
+            <NavbarFilter
+                v-else-if="tab === Tab.POSITIONS"
+                v-model="positionsFilter"
+                :placeholder="$t('views.basedata.tab.positions.search-placeholder')"
+            />
         </teleport>
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #end>
@@ -10,19 +18,19 @@
                     <div class="hidden 2xl:block">
                         <button class="btn-primary" name="create" @click="createQualification()">
                             <i class="fa-solid fa-file-circle-plus"></i>
-                            <span>Qualifikation hinzufügen</span>
+                            <span>{{ $t('views.basedata.tab.qualifications.add-new') }}</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="qualificationFilter" placeholder="Einträge filtern" class="w-48" />
+                    <VSearchButton v-model="qualificationFilter" :placeholder="$t('generic.filter-entries')" class="w-48" />
                 </div>
                 <div v-else-if="tab === Tab.POSITIONS" class="flex items-stretch gap-2 pb-2">
                     <div class="hidden 2xl:block">
                         <button class="btn-primary" name="create" @click="createPosition()">
                             <i class="fa-solid fa-file-circle-plus"></i>
-                            <span>Position hinzufügen</span>
+                            <span>{{ $t('views.basedata.tab.positions.add-new') }}</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="positionsFilter" placeholder="Einträge filtern" class="w-48" />
+                    <VSearchButton v-model="positionsFilter" :placeholder="$t('generic.filter-entries')" class="w-48" />
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
@@ -44,7 +52,7 @@
         >
             <button class="btn-floating pointer-events-auto" @click="createPosition()">
                 <i class="fa-solid fa-file-circle-plus"></i>
-                <span>Position hinzufügen</span>
+                <span>{{ $t('views.basedata.tab.positions.add-new') }}</span>
             </button>
         </div>
         <div
@@ -53,7 +61,7 @@
         >
             <button class="btn-floating pointer-events-auto" @click="createQualification()">
                 <i class="fa-solid fa-file-circle-plus"></i>
-                <span>Qualifikation hinzufügen</span>
+                <span>{{ $t('views.basedata.tab.qualifications.add-new') }}</span>
             </button>
         </div>
     </div>
@@ -80,7 +88,7 @@ const { t } = useI18n();
 
 const tabs = [Tab.QUALIFICATIONS, Tab.POSITIONS].map((it) => ({
     value: it,
-    label: t(`views.basedata.tab.${it}`),
+    label: t(`views.basedata.tab.${it}.title`),
 }));
 const tab = ref<string>(tabs[0].value);
 const qualificationFilter = ref<string>('');
@@ -89,7 +97,7 @@ const qualificationsTable = ref<{ createQualification(): void } | null>(null);
 const positionsTable = ref<{ createPosition(): void } | null>(null);
 
 function init(): void {
-    emit('update:tab-title', 'Stammdaten');
+    emit('update:tab-title', t('views.basedata.title'));
 }
 
 function createQualification(): void {

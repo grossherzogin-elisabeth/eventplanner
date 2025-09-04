@@ -1,18 +1,18 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="position.key">Position bearbeiten</h1>
-            <h1 v-else>Position hinzufügen</h1>
+            <h1 v-if="position.key">{{ $t('views.basedata.tab.positions.edit') }}</h1>
+            <h1 v-else>{{ $t('views.basedata.tab.positions.add-new') }}</h1>
         </template>
         <template #default>
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div v-if="position.key" class="mb-4">
-                        <VInputLabel>Id</VInputLabel>
+                        <VInputLabel>{{ $t('views.basedata.tab.positions.id') }}</VInputLabel>
                         <VInputText v-model.trim="position.key" required disabled />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Name</VInputLabel>
+                        <VInputLabel>{{ $t('views.basedata.tab.positions.name') }}</VInputLabel>
                         <VInputText
                             v-model="position.name"
                             :errors="validation.errors.value['name']"
@@ -21,7 +21,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Anzeigename IMO Liste</VInputLabel>
+                        <VInputLabel>{{ $t('views.basedata.tab.positions.imoListRank') }}</VInputLabel>
                         <VInputText
                             v-model="position.imoListRank"
                             :errors="validation.errors.value['imoListRank']"
@@ -30,7 +30,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Farbe</VInputLabel>
+                        <VInputLabel>{{ $t('views.basedata.tab.positions.color') }}</VInputLabel>
                         <VInputText
                             v-model="position.color"
                             :errors="validation.errors.value['color']"
@@ -43,7 +43,7 @@
                         </VInputText>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Priorität</VInputLabel>
+                        <VInputLabel>{{ $t('views.basedata.tab.positions.prio') }}</VInputLabel>
                         <VInputNumber
                             v-model="position.prio"
                             :errors="validation.errors.value['prio']"
@@ -56,10 +56,10 @@
         </template>
         <template #buttons>
             <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <button class="btn-primary" name="save" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Speichern</span>
+                <span>{{ $t('generic.save') }}</span>
             </button>
         </template>
     </VDialog>
