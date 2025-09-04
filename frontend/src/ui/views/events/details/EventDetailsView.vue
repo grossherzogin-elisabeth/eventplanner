@@ -12,25 +12,28 @@
                         class="col-span-2 col-start-4 xs:-mx-4 2xl:col-span-3"
                     >
                         <VInfo clamp>
-                            Diese Reise befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Reise! Sobald
-                            die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.
+                            {{ $t('views.events.details.info-planning') }}
                         </VInfo>
                     </section>
                     <section
                         v-else-if="event.state === EventState.Canceled"
                         class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
                     >
-                        <VWarning> Diese Reise wurde abgesagt!</VWarning>
+                        <VWarning> {{ $t('views.events.details.info-canceled') }} </VWarning>
                     </section>
                     <section
                         v-else-if="event.signedInUserRegistration && event.isSignedInUserAssigned"
                         class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
                     >
                         <VSuccess icon="fa-check">
-                            Du bist für diese Reise als
-                            <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
-                            eingeplant.
-                            <template v-if="event.signedInUserRegistration.confirmed"> Du hast deine Teilnahme bestätigt. </template>
+                            <i18n-t tag="span" keypath="views.events.details.info-assigned">
+                                <template #position>
+                                    <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
+                                </template>
+                                <template v-if="event.signedInUserRegistration.confirmed">
+                                    {{ $t('views.events.details.info-confirmed') }}
+                                </template>
+                            </i18n-t>
                         </VSuccess>
                     </section>
                     <section
@@ -38,9 +41,11 @@
                         class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
                     >
                         <VInfo icon="fa-hourglass-half">
-                            Du stehst für diese Reise als
-                            <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
-                            auf der Warteliste
+                            <i18n-t tag="span" keypath="views.events.details.info-waitinglist">
+                                <template #position>
+                                    <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
+                                </template>
+                            </i18n-t>
                         </VInfo>
                     </section>
                     <section
@@ -48,8 +53,7 @@
                         class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
                     >
                         <VWarning>
-                            Für diese Reise wird noch Crew für die folgenden Positionen gesucht:
-                            {{ openPositions.map((it) => it.name).join(', ') }}
+                            {{ $t('views.events.details.info-missing-crew', { positions: openPositions.map((it) => it.name).join(', ') }) }}
                         </VWarning>
                     </section>
 
@@ -66,8 +70,12 @@
                 :disabled="!event.canSignedInUserLeave"
                 :action="() => leaveEvent()"
             >
-                <template #icon><i class="fa-solid fa-cancel" /></template>
-                <template #label>Teilnahme absagen</template>
+                <template #icon>
+                    <i class="fa-solid fa-cancel" />
+                </template>
+                <template #label>
+                    {{ $t('views.events.details.leave-crew') }}
+                </template>
             </AsyncButton>
             <AsyncButton
                 v-else-if="event.signedInUserRegistration"
@@ -78,11 +86,13 @@
                 <template #icon>
                     <i class="fa-solid fa-user-minus" />
                 </template>
-                <template #label> Warteliste verlassen</template>
+                <template #label>
+                    {{ $t('views.events.details.leave-waitinglist') }}
+                </template>
             </AsyncButton>
             <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
                 <i class="fa-solid fa-user-plus" />
-                <span class="truncate text-left"> Anmelden </span>
+                <span class="truncate text-left"> {{ $t('views.events.details.sign-up') }} </span>
             </button>
         </template>
         <template v-if="event" #secondary-buttons>
@@ -92,17 +102,17 @@
                 class="btn-secondary"
             >
                 <i class="fa-solid fa-drafting-compass" />
-                <span>Reise bearbeiten</span>
+                <span>{{ $t('views.events.details.edit-event') }}</span>
             </RouterLink>
             <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
-                <span>In Kalender speichern</span>
+                <span>{{ $t('views.events.details.save-calendar') }}</span>
             </button>
         </template>
         <template v-if="event" #actions-menu>
             <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
-                <span>Kalendereintrag erstellen</span>
+                <span>{{ $t('views.events.details.create-calendar-entry') }}</span>
             </li>
             <template v-if="event.signedInUserRegistration">
                 <li
@@ -111,7 +121,7 @@
                     @click="editUserRegistration()"
                 >
                     <i class="fa-solid fa-edit" />
-                    <span>Anmeldung bearbeiten</span>
+                    <span>{{ $t('views.events.details.edit-registration') }}</span>
                 </li>
                 <li
                     class="context-menu-item"
@@ -119,25 +129,25 @@
                     @click="editUserRegistration()"
                 >
                     <i class="fa-solid fa-note-sticky" />
-                    <span>Notiz fürs Büro hinzufügen</span>
+                    <span>{{ $t('views.events.details.add-note') }}</span>
                 </li>
             </template>
             <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
                 <i class="fa-solid fa-clipboard-user" />
-                <span>IMO Liste generieren</span>
+                <span>{{ $t('views.events.details.generate-imo-list') }}</span>
             </li>
             <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
                 <i class="fa-solid fa-beer-mug-empty" />
-                <span>Verzehrliste generieren</span>
+                <span>{{ $t('views.events.details.generate-consumption-list') }}</span>
             </li>
             <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(event)">
                 <i class="fa-solid fa-file-medical" />
-                <span>Kapitänsliste generieren</span>
+                <span>{{ $t('views.events.details.generate-captain-list') }}</span>
             </li>
             <li class="permission-write-events">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-drafting-compass" />
-                    <span>Reise bearbeiten</span>
+                    <span>{{ $t('views.events.details.edit-event') }}</span>
                 </RouterLink>
             </li>
         </template>
@@ -149,6 +159,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import type { Event, Position, Registration, SignedInUser } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -167,6 +178,7 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const positions = usePositions();
@@ -240,11 +252,9 @@ async function leaveEvent(): Promise<void> {
     if (event.value) {
         if (event.value.signedInUserAssignedSlot) {
             const confirmed = await confirmationDialog.value?.open({
-                title: 'Teilnahme absagen?',
-                message: `Bist du sicher, dass du deine Teilnahme an der Veranstaltung ${event.value.name} absagen möchtest?
-                    Du hast dann keinen Anspruch mehr auf eine Teilname an der Veranstaltung und dein Platz wird an eine
-                    andere Person vergeben.`,
-                submit: 'Teilnahme absagen',
+                title: t('views.events.details.leave-crew-dialog.title'),
+                message: t('views.events.details.leave-crew-dialog.message', { event: event.value.name }),
+                submit: t('views.events.details.leave-crew-dialog.submit'),
                 danger: true,
             });
             if (!confirmed) {
