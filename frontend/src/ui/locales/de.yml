@@ -1,0 +1,381 @@
+# -----------------------------------
+# generic messages used anywhere in the application
+# -----------------------------------
+generic:
+  loading: 'Wird geladen...'
+  no-entries: 'Keine Einträge'
+  no-information: 'Keine Angabe'
+  no-matches: 'Keine Treffer'
+  please-select: 'Bitte auswählen'
+  filter-entries: 'Einträge filtern'
+  cancel: 'Abbrechen'
+  save: 'Speichern'
+  edit: 'Bearbeiten'
+  delete: 'Löschen'
+  month:
+    '0': 'Januar'
+    '1': 'Februar'
+    '2': 'März'
+    '3': 'April'
+    '4': 'Mai'
+    '5': 'Juni'
+    '6': 'Juli'
+    '7': 'August'
+    '8': 'September'
+    '9': 'Oktober'
+    '10': 'November'
+    '11': 'Dezember'
+  role:
+    ROLE_ADMIN: 'Admin'
+    ROLE_EVENT_PLANNER: 'Reiseplaner:in'
+    ROLE_EVENT_LEADER: 'Reiseleiter:in'
+    ROLE_TEAM_PLANNER: 'Crewplaner:in'
+    ROLE_USER_MANAGER: 'Nutzerverwalter:in'
+    ROLE_TEAM_MEMBER: 'Stammcrew Mitglied'
+  event-state:
+    draft: 'Entwurf'
+    open-for-signup: 'Crew Anmeldung'
+    planned: 'Veröffentlicht'
+    canceled: 'Abgesagt'
+    crew-wanted: 'Crew gesucht'
+    open-slots: 'Freie Plätze'
+    full: 'Voll belegt'
+  event-type:
+    single-day-event: 'Tagesfahrt'
+    weekend-event: 'Wochenendreise'
+    multi-day-event: 'Mehrtagesfahrt'
+    work-event: 'Arbeitsdienst'
+    training-event: 'Ausbildung'
+    other: 'Sonstige'
+  event-signup-type:
+    open: 'Offene Teilnahme'
+    assignment: 'Offene Anmeldung mit manueller Einteilung'
+
+# -----------------------------------
+# messages for the main navigation
+# -----------------------------------
+navigation:
+  myNextEvents: 'Meine nächsten Reisen'
+  start: 'Start'
+  calendar: 'Kalender'
+  allEvents: 'Alle Veranstaltungen'
+  manageEvents: 'Reisen verwalten'
+  manageUsers: 'Nutzer verwalten'
+  manageBaseData: 'Stammdaten verwalten'
+  manageSettings: 'Einstellungen'
+  account: 'Meine Daten'
+  feedback: 'Feedback'
+  signOut: 'Abmelden'
+  legal: 'Rechtliches'
+  dataPrivacy: 'Datenschutzerklärung'
+  imprint: 'Impressum'
+  impersonate: 'Du siehst die Anwendung aus Sicht von {0}'
+
+# -----------------------------------
+# messages used in shared components
+# -----------------------------------
+components:
+  event-details-card:
+    title: 'Details'
+    days: '{count} Tag|{count} Tage'
+    registrations: '{count} Anmeldung | {count} Anmeldungen'
+    assigned: '{count} Crew | {count} Crew'
+    waitinglist: '{count} Warteliste | {count} Warteliste'
+  event-locations-card:
+    title: 'Ort | Route'
+    placeholder: 'Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar
+        sind, kannst du sie hier sehen.'
+    eta: 'Ankunft:'
+    etd: 'Abfahrt:'
+    address-link: 'Anreiseinformationen'
+    learn-more: 'Weitere Informationen'
+  event-participants-card:
+    registrations: 'Anmeldungen'
+    assigned: 'Crew ({count})'
+    waitinglist: 'Warteliste ({count})'
+    placeholder-title: 'Du könntest den Anfang machen!'
+    placeholder-title-m: 'Du könntest der Erste sein!'
+    placeholder-title-f: 'Du könntest die Erste sein!'
+    placeholder: 'Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich
+        anmelden. Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und anschließend wird vom Büro eine
+        Crew zusammengestellt.'
+    unknown: 'Unbekannter Nutzer'
+    empty: 'Noch nicht besetzt'
+    no-registrations: 'Für diese Reise gibt es noch keine Anmeldungen.'
+    no-waitinglist: 'Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.'
+  event-details-sheet:
+    note-missing-crew: 'Für diese Reise wird noch Crew für die folgenden Positionen gesucht:'
+    note-assigned: 'Du bist für diese Reise als {0} eingeplant'
+    note-on-waiting-list: 'Du stehst für diese Reise als {0} auf der Warteliste'
+    show-details: 'Details anzeigen'
+
+# -----------------------------------
+# messages used for domains
+# -----------------------------------
+domain:
+  user:
+    display-name:
+      label: 'Anzeigename'
+    diet:
+      label: 'Ernährungsweise'
+      values:
+        vegetarian: 'Vegetarisch'
+        vegan: 'Vegan'
+        omnivore: 'Fleisch'
+    intolerances:
+      label: 'Unverträglichkeiten'
+    first-name:
+      label: 'Vorname'
+    middle-name:
+      label: 'Zweiter Vorname'
+    last-name:
+      label: 'Nachname'
+    email:
+      label: 'Email'
+    phone:
+      label: 'Telefon'
+    phone-work:
+      label: 'Telefon (dienstlich)'
+    mobile:
+      label: 'Mobil'
+    address-line1:
+      label: 'Straße, Hausnr.'
+    address-line2:
+      label: 'Adresszusatz'
+    zip:
+      label: 'PLZ'
+    city:
+      label: 'Ort'
+    country:
+      label: 'Land'
+    birthday:
+      label: 'Geboren am'
+    place-of-birth:
+      label: 'Geburtsort'
+    gender:
+      label: 'Geschlecht'
+      values:
+        male: 'männlich'
+        female: 'weiblich'
+        diverse: 'divers'
+    passport-number:
+      label: 'Personalausweis Nummer'
+    nationality:
+      label: 'Nationalität'
+    diseases:
+      label: 'Krankheiten'
+    emergency-contact:
+      label: 'Notfallkontakt'
+      name:
+        label: 'Name des Notfallkontakts'
+      phone:
+        label: 'Telefonnummer des Notfallkontakts'
+    medication:
+      label: 'Medikamente'
+
+# -----------------------------------
+# messages used in specific views
+# -----------------------------------
+views:
+  home:
+    event-card:
+      state:
+        waitinglist: 'Du stehst auf der Warteliste.'
+  settings:
+    tab:
+      general: 'Allgemein'
+      email: 'Email'
+      notifications: 'Notifications'
+  account:
+    title: 'Meine Daten'
+    tab:
+      data: 'Persönliche Daten'
+      contact: 'Kontaktdaten'
+      qualifications: 'Qualifikationen'
+      emergency: 'Notfallinformationen'
+    data:
+      title-app: 'App'
+      title-diet: 'Ernährung'
+      title-personal: 'Persönliche Daten'
+      hint-name-passport:
+        title: 'Name und Personalausweis Nummer'
+        messages:
+          - 'Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen, da dieser auch zum 
+                Erstellen der IMO Liste verwendet wird. Bitte beachte, das du den Personalausweis bei Reisen mitführen 
+                musst!'
+          - 'Solltest du mit einem anderen Namen oder Spitznamen angesprochen werden wollen, kannst du einen 
+                abweichenden Anzeigenamen angeben. Dieser wird dann in der App angezeigt und auch beim Kammerplan und 
+                der Getränkeliste verwendet.'
+          - '{link}'
+        link:
+          label: 'Wo finde ich meine Personalausweis Nummer?'
+          url: 'https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png'
+    contact:
+      title-mail-phone: 'Email & Telefon'
+      title-address: 'Adresse'
+      hint-mail:
+        title: 'Du möchtest deine Email Adresse ändern?'
+        messages:
+          - 'Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login verwendet. Wenn du die Email 
+                Adresse ändern möchtest wende dich bitte ans {link}'
+        link: 'Büro'
+    emergency:
+      title-contact: 'Notfallkontakt'
+      title-medical: 'Wichtige gesundheitliche Informationen'
+      hint-emergency-contact:
+        title: 'Notfall Informationen'
+        messages:
+          - 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, dass du bestimmte 
+                Krankheiten hast oder welche wichtigen Medikamente du benötigst. Außerdem kannst du einen Notfallkontakt
+                angeben, den wir kontaktieren können, falls du mal nicht mehr ansprechbar bist.'
+          - 'Deine Daten werden {encrypted} gespeichert und sind nur für autorisierte Personen einsehbar. In 
+                der Regel sind dies das Büro und der Kapitän der jeweiligen Reise.'
+          - '{hint-all-data-optional}'
+        encrypted: 'verschlüsselt'
+        hint-all-data-optional: 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
+    qualifications:
+      status-expires: 'Gültig bis'
+      status-no-expires: 'Ohne Ablaufdatum'
+      status-expired: 'Abgelaufen'
+      status-expiring-soon: 'Läuft bald ab'
+      status-valid: 'Gültig'
+  event-list:
+    tab:
+      future: 'Zukünftige'
+    note-no-position: 'Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht
+        selber für Reisen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.'
+    filter:
+      search: 'Einträge filtern'
+      all-types: 'Alle Veranstaltungen'
+      assigned: 'Eingeplant'
+      waitinglist: 'Warteliste'
+      free-slots: 'Freie Plätze'
+    table:
+      team-count: 'Crew'
+      registration-count: 'Anmeldung | Anmeldungen'
+      day-count: '{count} Tag | {count} Tage'
+      assigned-as: 'Du bist als {0} eingeplant.'
+      on-waiting-list-as: 'Du stehst als {0} auf der Warteliste.'
+    state:
+      assigned: 'Eingeplant'
+      waitinglist: 'Warteliste'
+    action:
+      link-event-details: 'Reise anzeigen'
+      create-calendar-entry: 'Kalendereintrag erstellen'
+      signup: 'Anmelden'
+      cancel: 'Teilnahme absagen'
+      leave-waitinglist: 'Warteliste verlassen'
+  event-details:
+  event-admin-list:
+    tab:
+      future: 'Zukünftige'
+  event-admin-details:
+    tab:
+      data: 'Reisedaten'
+      positions: 'Crew verwalten'
+      locations: 'Reiseroute'
+      slots: 'Crew Slots'
+  user-list:
+    tab:
+      members: 'Stammcrew'
+      admins: 'Verwalter'
+      unknown: 'Nutzer ohne Rolle'
+  user-details:
+    tab:
+      data: 'Stammdaten'
+      contact: 'Kontakt'
+      certificates: 'Qualifikationen'
+      events: 'Reisen'
+      roles: 'Anwendungsrollen'
+      emergency: 'Notfallinformationen'
+      other: 'Sonstige Daten'
+  basedata:
+    title: 'Stammdaten'
+    tab:
+      positions:
+        title: 'Positionen'
+        search-placeholder: 'Positionen durchsuchen'
+        add-new: 'Position hinzufügen'
+        edit: "Position bearbeiten"
+        id: "Id"
+        name: "Name"
+        imoListRank: "Anzeigename IMO Liste"
+        color: "Farbe"
+        prio: "Priorität"
+        delete-title: "Position löschen"
+        delete-message: "Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt."
+        delete-submit: "Löschen"
+      qualifications:
+        title: 'Qualifikationen'
+        search-placeholder: 'Qualifikationen durchsuchen'
+        add-new: 'Qualifikation hinzufügen'
+        edit: 'Qualifikation bearbeiten'
+        name: 'Name'
+        icon: 'Icon'
+        icon-placeholder: 'fa-id-card'
+        description: 'Beschreibung'
+        expires: 'Gültigkeit der Qualifikation ist zeitlich begrenzt'
+        status-expires: 'Mit Ablaufdatum'
+        status-no-expires: 'Ohne Ablaufdatum'
+        delete-title: "Qualifikation löschen"
+        delete-message: "Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt."
+        delete-submit: "Löschen"
+  events:
+    calendar:
+      title: 'Alle Veranstaltungen'
+      create-event: "Neue Veranstaltung"
+      days: '{count} Tag|{count} Tage'
+      draft: "Entwurf"
+    confirm-participation:
+      title: 'Bitte bestätige deine Teilnahme'
+      info:
+        message: 'In {days} Tagen startet die Reise {event}, bei der du als Crew eingeplant bist. Bitte bestätige deine Teilnahme bis {deadline}, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden.'
+        deadline: 'spätestens 7 Tage vor Reisebeginn'
+      confirm: 'Ja, ich nehme teil'
+      decline: 'Ich muss leider absagen'
+      not-found:
+        title: 'Anmeldung nicht gefunden'
+        info: 'Wir konnten keine Anmeldung für diesen Link finden. Das kann daran liegen, dass du die Reise bereits abgesagt hast, oder dein Link ungültig ist. Falls du bereits abgesagt hast, aber doch an der Reise teilnehmen möchtest, oder du Probleme mit der Teilnahmebestätigung hast, melde dich bitte telefonisch im Büro.'
+      canceled:
+        title: 'Anmeldung wurde bereits abgesagt'
+        info: 'Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der Crew Liste. Falls du doch an der Reise teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
+      no-registration:
+        title: 'Keine Anmeldung zur Reise gefunden'
+        info: 'Leider konnten wir für dich keine Anmeldung zu dieser Reise finden. Das kann daran liegen, dass du deine Teilnahme bereits abgesagt hast, oder das du dich mit einem anderen Account angemeldet hast. Wenn du bereits abgesagt hast und doch teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
+      invalid-link:
+        title: 'Ungültiger Link'
+        info: 'Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder gehört zu einem anderen Nutzer. Du kannst nur die Teilname an deinen eigenen Reisen bestätigen. Bitte überprüfe, ob die Email Adresse deines Accounts, mit dem du dich angemeldet hast mit der Email Adresse übereinstimmt, über die du diesen Link erhalten hast. Wenn du weiterhin Probleme bei der Bestätigung der Reise hast, melde dich gerne telefonisch im Büro.'
+      confirmed:
+        title: 'Teilnahme bestätigt'
+        info: 'Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte denk daran, deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!'
+      details:
+        title: 'Hier noch einmal die wichtigsten Details zur Reise:'
+      canceled-now:
+        title: 'Reise abgesagt'
+        info: 'Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Reise wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.'
+      event: 'Reise'
+      route: 'Geplante Route'
+      crew-on-board: 'Crew an Bord'
+      start: 'Reisebeginn'
+    details:
+      info-planning: "Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Reise! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert."
+      info-canceled: "Diese Veranstaltung wurde abgesagt!"
+      info-assigned: "Du bist für diese Veranstaltung als {position} eingeplant."
+      info-confirmed: "Du hast deine Teilnahme bestätigt."
+      info-waitinglist: "Du stehst für diese Veranstaltung als {position} auf der Warteliste"
+      info-missing-crew: "Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht: {positions}"
+      leave-crew: "Teilnahme absagen"
+      leave-waitinglist: "Warteliste verlassen"
+      sign-up: "Anmelden"
+      edit-event: "Veranstaltung bearbeiten"
+      save-calendar: "In Kalender speichern"
+      create-calendar-entry: "Kalendereintrag erstellen"
+      edit-registration: "Anmeldung bearbeiten"
+      add-note: "Notiz fürs Büro hinzufügen"
+      generate-imo-list: "IMO Liste generieren"
+      generate-consumption-list: "Verzehrliste generieren"
+      generate-captain-list: "Kapitänsliste generieren"
+      leave-crew-dialog:
+        title: "Teilnahme absagen?"
+        message: "Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event} absagen möchtest? Du hast dann keinen Anspruch mehr auf eine Teilnahme an der Veranstaltung und dein Platz wird an eine andere Person vergeben."
+        submit: "Teilnahme absagen"
