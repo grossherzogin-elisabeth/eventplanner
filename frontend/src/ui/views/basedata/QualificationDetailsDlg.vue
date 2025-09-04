@@ -43,7 +43,7 @@
                     </div>
                 </section>
                 <div class="mb-4">
-                    <VInputCheckBox v-model="qualification.expires" :label="$t('views.basedata.tab.qualifications.expires')" />
+                    <VInputCheckBox v-model="qualification.expires" :label="$t('domain.qualifications.expires')" />
                 </div>
                 <div class="mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm xs:-mx-4">
                     <h2 class="mb-4 text-xs font-bold">{{ $t('views.basedata.tab.positions.title') }}</h2>
