@@ -98,7 +98,7 @@ async function deletePosition(position: Position): Promise<void> {
     const confirmed = await deletePositionDialog.value?.open({
         title: t('views.basedata.tab.positions.delete-title'),
         message: t('views.basedata.tab.positions.delete-message'),
-        submit: t('views.basedata.tab.positions.delete-submit'),
+        submit: t('generic.delete'),
         danger: true,
     });
     if (confirmed) {
