@@ -33,11 +33,11 @@
         <template #context-menu="{ item }">
             <li class="context-menu-item" @click="editPosition(item)">
                 <i class="fa-solid fa-edit" />
-                <span>Bearbeiten</span>
+                <span>{{ $t('generic.edit') }}</span>
             </li>
             <li class="context-menu-item text-error" @click="deletePosition(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>Löschen</span>
+                <span>{{ $t('generic.delete') }}</span>
             </li>
         </template>
     </VTable>
@@ -46,6 +46,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Position } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
@@ -65,6 +66,8 @@ const positions = ref<Position[] | undefined>(undefined);
 
 const positionDetailsDialog = ref<Dialog<Position | undefined, Position | undefined> | null>(null);
 const deletePositionDialog = ref<ConfirmationDialog | null>(null);
+
+const { t } = useI18n();
 
 function init(): void {
     fetchPositions();
@@ -93,10 +96,9 @@ async function editPosition(position: Position): Promise<void> {
 
 async function deletePosition(position: Position): Promise<void> {
     const confirmed = await deletePositionDialog.value?.open({
-        title: 'Position löschen',
-        message: `Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen
-            Nutzern, bei denen sie assoziert ist, entfernt.`,
-        submit: 'Löschen',
+        title: t('views.basedata.tab.positions.delete-title'),
+        message: t('views.basedata.tab.positions.delete-message'),
+        submit: t('views.basedata.tab.positions.delete-submit'),
         danger: true,
     });
     if (confirmed) {

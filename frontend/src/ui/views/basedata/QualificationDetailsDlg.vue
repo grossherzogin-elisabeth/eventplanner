@@ -1,14 +1,14 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="!qualification.key">Qualifikation hinzufügen</h1>
-            <h1 v-else>Qualifikation bearbeiten</h1>
+            <h1 v-if="!qualification.key">{{ $t('views.basedata.tab.qualifications.add-new') }}</h1>
+            <h1 v-else>{{ $t('views.basedata.tab.qualifications.edit') }}</h1>
         </template>
         <template #default>
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>Name</VInputLabel>
+                        <VInputLabel>{{ $t('views.basedata.tab.qualifications.name') }}</VInputLabel>
                         <VInputText
                             v-model="qualification.name"
                             :errors="validation.errors.value['name']"
@@ -17,10 +17,10 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Icon</VInputLabel>
+                        <VInputLabel>{{ $t('views.basedata.tab.qualifications.icon') }}</VInputLabel>
                         <VInputText
                             v-model="qualification.icon"
-                            placeholder="fa-id-card"
+                            :placeholder="$t('views.basedata.tab.qualifications.icon-placeholder')"
                             :errors="validation.errors.value['icon']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -33,7 +33,7 @@
                         </VInputText>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Beschreibung</VInputLabel>
+                        <VInputLabel>{{ $t('views.basedata.tab.qualifications.description') }}</VInputLabel>
                         <VInputTextArea
                             v-model="qualification.description"
                             :errors="validation.errors.value['description']"
@@ -43,10 +43,10 @@
                     </div>
                 </section>
                 <div class="mb-4">
-                    <VInputCheckBox v-model="qualification.expires" label="Gültigkeit der Qualifikation ist zeitlich begrenzt" />
+                    <VInputCheckBox v-model="qualification.expires" :label="$t('views.basedata.tab.qualifications.expires')" />
                 </div>
                 <div class="mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm xs:-mx-4">
-                    <h2 class="mb-4 text-xs font-bold">Positionen</h2>
+                    <h2 class="mb-4 text-xs font-bold">{{ $t('views.basedata.tab.positions.title') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox
@@ -61,10 +61,10 @@
         </template>
         <template #buttons>
             <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Speichern</span>
+                <span>{{ $t('generic.save') }}</span>
             </button>
         </template>
     </VDialog>
