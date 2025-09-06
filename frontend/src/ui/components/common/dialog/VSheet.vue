@@ -32,7 +32,7 @@
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
                                 </div>
-                                <div class="flex h-16 w-0 flex-grow items-center overflow-hidden">
+                                <div class="flex h-16 w-0 flex-grow items-center overflow-hidden font-bold">
                                     <slot name="title"></slot>
                                 </div>
                                 <div class="-mr-4 hidden sm:block">
@@ -41,7 +41,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="flex flex-1 flex-col pb-16 md:overflow-y-auto" :class="{ 'overflow-y-auto': isFullScreen }">
+                            <div class="mb-16 flex flex-1 flex-col md:mb-0 md:overflow-y-auto" :class="{ 'overflow-y-auto': isFullScreen }">
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>
@@ -188,7 +188,7 @@ async function detectScrollClose(): Promise<void> {
     }
     await nextTick();
     scrollTop.value = background.value.scrollTop;
-    if (background.value.scrollTop >= window.innerHeight) {
+    if (background.value.scrollTop >= (window.visualViewport?.height ?? window.innerHeight)) {
         isFullScreen.value = true;
     } else {
         isFullScreen.value = false;

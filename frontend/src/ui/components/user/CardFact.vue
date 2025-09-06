@@ -12,9 +12,9 @@
         </button>
     </div>
     <VSheet ref="editSheet">
-        <template #title> {{ props.label }} bearbeiten </template>
+        <template #title> {{ props.label }} </template>
         <template #content>
-            <div class="min-h-[10rem] px-4 xs:px-8 sm:w-[30rem] lg:px-10">
+            <div class="min-h-[10rem] px-4 pb-4 xs:px-8 sm:w-[30rem] lg:px-10">
                 <slot name="edit" :value="mutableCopy" />
             </div>
         </template>
@@ -24,7 +24,8 @@
                     <span>Abbrechen</span>
                 </button>
                 <button class="btn-primary" @click="submit()">
-                    <span>Übernehmen</span>
+                    <i class="fa-solid fa-save"></i>
+                    <span>Speichern</span>
                 </button>
             </div>
         </template>

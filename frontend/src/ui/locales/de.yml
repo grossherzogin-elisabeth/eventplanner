@@ -72,7 +72,7 @@ navigation:
   manageUsers: 'Nutzer verwalten'
   manageBaseData: 'Stammdaten verwalten'
   manageSettings: 'Einstellungen'
-  account: 'Meine Daten'
+  account: 'Mein Profil'
   feedback: 'Feedback'
   signOut: 'Abmelden'
   legal: 'Rechtliches'
@@ -212,12 +212,11 @@ views:
       email: 'Email'
       notifications: 'Notifications'
   account:
-    title: 'Meine Daten'
+    title: 'Profil'
     tab:
-      data: 'Persönliche Daten'
-      contact: 'Kontaktdaten'
-      qualifications: 'Qualifikationen'
-      emergency: 'Notfallinformationen'
+      data: 'Meine Daten'
+      qualifications: 'Meine Qualifikationen'
+      settings: 'App Einstellungen'
     data:
       title-app: 'App'
       title-diet: 'Ernährung'

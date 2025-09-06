@@ -37,3 +37,5 @@ export { default as VSuccess } from './alerts/VSuccess.vue';
 export { default as VError } from './alerts/VError.vue';
 export { default as VTooltip } from './tooltip/VTooltip.vue';
 export { default as VMarkdown } from './VMarkdown.vue';
+export { default as VInteractiveList } from './list/VInteractiveList.vue';
+export { default as VInteractiveListItem } from './list/VInteractiveListItem.vue';
