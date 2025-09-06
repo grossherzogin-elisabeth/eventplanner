@@ -12,9 +12,9 @@
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
                 Bitte gib die Nummer eines offiziellen Ausweisdokuments an. Dies kann entweder dein Personalausweis oder alternativ auch
-                dein Reisepas sein.
+                dein Reisepass sein.
             </p>
-            <p class="mb-8 text-sm font-bold">Bitte beachte, dass du dieses Ausweisdokument bei Reisen mitführen musst!</p>
+            <p class="mb-8 text-sm font-bold">Bitte beachte, dass du dieses Ausweisdokument auf Reisen mitführen musst!</p>
             <p class="mb-8 text-sm italic">
                 <a href="https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png" target="_blank" class="link">
                     So findest du deine Personalausweis Nummer

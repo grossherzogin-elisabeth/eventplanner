@@ -10,7 +10,9 @@
             <span v-else class="italic">keine Angabe</span>
         </template>
         <template #edit="{ value }">
-            <p class="mb-8 text-sm">Wie können wir dich erreichen?</p>
+            <p class="mb-8 text-sm">
+                Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer an: Festnetz, mobil oder dienstlich.
+            </p>
             <div class="mb-4">
                 <VInputLabel>Telefon Mobil</VInputLabel>
                 <VInputText v-model="value.mobile" />

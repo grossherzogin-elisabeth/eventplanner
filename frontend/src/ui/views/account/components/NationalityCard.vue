@@ -11,8 +11,8 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                Deine Nationalität wird für das Erstellen de offiziellen IMO Liste benötigt. Solltest du mehrere Nationalitäten haben, wähle
-                hier bitte diejenige aus, die auch auf deinem Ausweisdokumentes steht.
+                Deine Nationalität wird für das Erstellen der offiziellen IMO Liste benötigt. Solltest du mehrere Nationalitäten haben, gib
+                hier bitte diejenige an, die auch auf deinem Ausweisdokumentes steht.
             </p>
             <p class="mb-8 text-sm font-bold">Bitte beachte, dass du dein Ausweisdokument auf Reisen mitführen musst!</p>
             <VInputSelectionList v-model="value.nationality" :options="nationalities.options" />

@@ -2,7 +2,7 @@
     <div class="xl:overflow-y-auto xl:overflow-x-hidden">
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #[Tab.PERSONAL_DATA]>
-                <div class="xl:max-w-xl">
+                <div class="lg:max-w-xl">
                     <AccountData v-if="userDetails" :model-value="userDetails" @update:model-value="update($event)" />
                 </div>
             </template>
@@ -39,7 +39,7 @@ const { t } = useI18n();
 const usersUseCase = useUsersUseCase();
 const userDetails = ref<UserDetails | null>(null);
 
-const tabs: InputSelectOption[] = [Tab.PERSONAL_DATA, Tab.QUALIFICATIONS, Tab.SETTINGS].map((it) => ({
+const tabs: InputSelectOption[] = [Tab.PERSONAL_DATA, Tab.QUALIFICATIONS].map((it) => ({
     value: it,
     label: t(`views.account.tab.${it}`),
 }));

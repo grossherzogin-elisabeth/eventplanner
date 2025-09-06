@@ -12,6 +12,7 @@
             <span v-else> Keine Angabe </span>
         </template>
         <template #edit="{ value }">
+            <p class="mb-4 text-sm">Mit welchem Geschlecht identifizierst du dich?</p>
             <VInputSelectionList v-model="value.gender" :options="gender.options" />
         </template>
     </VInteractiveListItem>

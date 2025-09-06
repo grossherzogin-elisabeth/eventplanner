@@ -20,8 +20,8 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                Dein Name, wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen, da dieser auch zum Erstellen der
-                offiziellen IMO Liste verwendet wird.
+                Dein Name, wie hier angegeben, muss genau so auf deinem Ausweisdokument stehen, da dieser auch zum Erstellen der offiziellen
+                IMO Liste verwendet wird.
             </p>
             <p class="mb-4 text-sm">
                 Solltest du mit einem anderen Namen angesprochen werden wollen, kannst du einen Anzeigenamen angeben. Dieser wird in der App
