@@ -7,9 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.IOException;
 
-import org.eventplanner.testdata.TestDb;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -20,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,19 +27,15 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
+@Transactional // resets db changes after each test
 class WebConfigIntegrationTest {
     private MockMvc webMvc;
 
     @Autowired
     private WebApplicationContext context;
 
-    @BeforeAll
-    static void setUpTestDb() throws IOException {
-        TestDb.setup();
-    }
-
     @BeforeEach
-    void setup() {
+    void setup() throws IOException {
         webMvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(springSecurity())
             .build();

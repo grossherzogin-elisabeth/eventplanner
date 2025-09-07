@@ -1,21 +1,19 @@
 package org.eventplanner;
 
-import java.io.IOException;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eventplanner.events.adapter.jpa.events.EventJpaRepository;
 import org.eventplanner.events.adapter.jpa.events.RegistrationJpaRepository;
 import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
-import org.eventplanner.testdata.TestDb;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = { "test" })
+@Transactional  // resets db changes after each test
 class ApplicationTest {
 
     @Autowired
@@ -26,11 +24,6 @@ class ApplicationTest {
 
     @Autowired
     private RegistrationJpaRepository registrationJpaRepository;
-
-    @BeforeAll
-    static void setUpTestDb() throws IOException {
-        TestDb.setup();
-    }
 
     @Test
     void contextLoads() {

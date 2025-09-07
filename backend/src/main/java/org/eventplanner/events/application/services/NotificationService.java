@@ -29,8 +29,8 @@ import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationService {
     private static final ZoneId timezone = ZoneId.of("Europe/Berlin");
 
-    private final FreeMarkerConfig freeMarkerConfig;
+    private final Configuration freeMarkerConfig;
     private final ConfigurationService configurationService;
     private final List<NotificationDispatcher> notificationDispatchers;
 
@@ -441,7 +441,7 @@ public class NotificationService {
 
     private @NonNull String renderTemplate(@NonNull final String template, @NonNull final Object params)
     throws TemplateException, IOException {
-        Template content = freeMarkerConfig.getConfiguration().getTemplate(template);
+        Template content = freeMarkerConfig.getTemplate(template);
         Writer writer = new StringWriter();
         content.process(params, writer);
         return writer.toString();

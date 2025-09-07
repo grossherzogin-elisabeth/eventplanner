@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -27,21 +28,13 @@ import org.eventplanner.events.domain.values.config.FrontendConfig;
 import org.eventplanner.events.domain.values.config.NotificationConfig;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.eventplanner.testdata.TestDb;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 
-@SpringBootTest
-@ActiveProfiles(profiles = { "test" })
+import freemarker.template.TemplateException;
+
 class EmailServiceTest {
-
-    @Autowired
-    private FreeMarkerConfig freeMarkerConfig;
 
     private QueuedEmailRepository queuedEmailRepository;
     private UserService userService;
@@ -50,13 +43,11 @@ class EmailServiceTest {
 
     private EmailService testee;
 
-    @BeforeAll
-    static void setUpTestDb() throws IOException {
-        TestDb.setup();
-    }
-
     @BeforeEach
-    void setUp() {
+    void setUp() throws TemplateException, IOException {
+        var freeMarkerConfig = new FreeMarkerConfigurationFactory().createConfiguration();
+        freeMarkerConfig.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
+
         configurationService = mock(ConfigurationService.class);
         userService = mock(UserService.class);
         emailSender = mock(EmailSender.class);
@@ -66,7 +57,7 @@ class EmailServiceTest {
             userService,
             queuedEmailRepository,
             emailSender,
-            freeMarkerConfig.getConfiguration()
+            freeMarkerConfig
         );
     }
 

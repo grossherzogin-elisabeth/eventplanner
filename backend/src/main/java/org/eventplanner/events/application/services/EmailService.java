@@ -146,7 +146,8 @@ public class EmailService implements NotificationDispatcher {
         return configurationService.getConfig().email();
     }
 
-    protected @NonNull String renderEmailContent(@NonNull PersonalNotification notification)
+    @NonNull
+    protected String renderEmailContent(@NonNull PersonalNotification notification)
     throws TemplateException, IOException {
         var model = new HashMap<String, Object>();
         model.put("user", notification.recipient());

@@ -10,7 +10,9 @@ import org.springframework.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.With;
 
+@With
 public record NotificationConfig(
     @Nullable String teamsWebhookUrl,
     @Nullable List<NotificationType> enabledNotifications

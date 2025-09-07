@@ -1,5 +1,6 @@
 package org.eventplanner.events.application.services;
 
+import static org.eventplanner.testdata.ApplicationConfigFactory.createApplicationConfig;
 import static org.eventplanner.testdata.EventFactory.createEvent;
 import static org.eventplanner.testdata.QualificationFactory.createQualification;
 import static org.eventplanner.testdata.RegistrationFactory.createRegistration;
@@ -11,7 +12,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
@@ -20,40 +23,32 @@ import java.util.List;
 
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
-import org.eventplanner.testdata.TestDb;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 
 import freemarker.template.TemplateException;
 
-@SpringBootTest
-@ActiveProfiles(profiles = { "test" })
 class NotificationServiceTest {
 
-    @Autowired
-    private FreeMarkerConfig freeMarkerConfig;
-
-    @Autowired
     private ConfigurationService configurationService;
-
-    private NotificationService testee;
     private NotificationDispatcher dispatcher;
 
-    @BeforeAll
-    static void setUpTestDb() throws IOException {
-        TestDb.setup();
-    }
+    private NotificationService testee;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException, TemplateException {
+        var freeMarkerConfig = new FreeMarkerConfigurationFactory().createConfiguration();
+        freeMarkerConfig.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
+
+        configurationService = mock(ConfigurationService.class);
         dispatcher = mock(NotificationDispatcher.class);
+
+        when(configurationService.getConfig()).thenReturn(createApplicationConfig());
+        when(configurationService.isNotificationEnabled(any())).thenReturn(true);
+
         testee = new NotificationService(
             freeMarkerConfig,
             configurationService,
