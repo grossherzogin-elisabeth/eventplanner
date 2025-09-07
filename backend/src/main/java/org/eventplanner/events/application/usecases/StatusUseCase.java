@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.eventplanner.events.domain.values.config.SystemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +32,7 @@ public class StatusUseCase {
         this.buildTime = t;
     }
 
-    public SystemStatus getSystemStatus() {
+    public @NonNull SystemStatus getSystemStatus() {
         var status = new SystemStatus();
         status.setBuildBranch(buildBranch);
         status.setBuildCommit(buildCommit);

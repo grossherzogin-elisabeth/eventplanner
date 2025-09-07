@@ -27,13 +27,13 @@ import org.eventplanner.events.domain.values.users.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import io.micrometer.common.lang.Nullable;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -131,7 +131,7 @@ public class UserUseCase {
         return userService.getDetailedUsers();
     }
 
-    public Optional<UserDetails> getUserByKey(
+    public @NonNull Optional<UserDetails> getUserByKey(
         @NonNull final SignedInUser signedInUser,
         @NonNull final UserKey key
     ) {
@@ -141,7 +141,7 @@ public class UserUseCase {
         return userService.getUserByKey(key);
     }
 
-    public UserDetails createUser(
+    public @NonNull UserDetails createUser(
         @NonNull final SignedInUser signedInUser,
         @NonNull final CreateUserSpec spec
     ) {
@@ -152,7 +152,7 @@ public class UserUseCase {
         return userService.createUser(newUser);
     }
 
-    public UserDetails updateUser(
+    public @NonNull UserDetails updateUser(
         @NonNull final SignedInUser signedInUser,
         @NonNull final UserKey userKey,
         @NonNull final UpdateUserSpec spec

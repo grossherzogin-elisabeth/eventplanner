@@ -43,7 +43,7 @@ public class ConsumptionListService {
         }
     }
 
-    private List<String> getNameList(List<Registration> crewList) {
+    private @NonNull List<String> getNameList(@NonNull List<Registration> crewList) {
         var userNames = crewList.stream()
             .map(Registration::getUserKey)
             .filter(Objects::nonNull)
@@ -65,14 +65,14 @@ public class ConsumptionListService {
         return Stream.concat(userNames, guestNames).sorted().toList();
     }
 
-    private void writeCrewDataToWorkbook(XSSFWorkbook workbook, List<String> nameList) {
+    private void writeCrewDataToWorkbook(@NonNull XSSFWorkbook workbook, @NonNull List<String> nameList) {
         XSSFSheet sheet = workbook.getSheetAt(0);
         for (int i = 0; i < nameList.size(); i++) {
             sheet.getRow(((i + 1) * 2 - 1)).getCell(0).setCellValue(nameList.get(i));
         }
     }
 
-    private ByteArrayOutputStream getWorkbookBytes(XSSFWorkbook workbook) throws IOException {
+    private @NonNull ByteArrayOutputStream getWorkbookBytes(@NonNull XSSFWorkbook workbook) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (bos) {
             workbook.write(bos);

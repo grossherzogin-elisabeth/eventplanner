@@ -12,13 +12,13 @@ public record Encrypted<T extends Serializable>(
 ) implements Serializable {
 
     @JsonCreator
-    public static <T extends Serializable> Encrypted<T> fromString(@NonNull String value) {
+    public static <T extends Serializable> @NonNull Encrypted<T> fromString(@NonNull String value) {
         return new Encrypted<>(value);
     }
 
     @JsonValue
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return value;
     }
 }

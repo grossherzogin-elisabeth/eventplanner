@@ -39,7 +39,7 @@ public class ObjectUtils {
         return function.apply(nullable);
     }
 
-    public static @Nullable <T, E> List<T> mapNullable(@Nullable List<E> nullable, Function<E, T> Function) {
+    public static @Nullable <T, E> List<T> mapNullable(@Nullable List<E> nullable, @NonNull Function<E, T> Function) {
         if (nullable == null) {
             return null;
         }

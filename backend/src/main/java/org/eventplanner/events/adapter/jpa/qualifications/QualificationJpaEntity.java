@@ -7,6 +7,7 @@ import java.util.Collections;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
+import org.springframework.lang.NonNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,7 +45,7 @@ public class QualificationJpaEntity implements Serializable {
     @Column(name = "grants_position")
     private String grantsPositions;
 
-    public static QualificationJpaEntity fromDomain(Qualification qualification) {
+    public static @NonNull QualificationJpaEntity fromDomain(@NonNull Qualification qualification) {
         return new QualificationJpaEntity(
             qualification.getKey().value(),
             qualification.getName(),
@@ -55,7 +56,7 @@ public class QualificationJpaEntity implements Serializable {
         );
     }
 
-    public Qualification toDomain() {
+    public @NonNull Qualification toDomain() {
         return new Qualification(
             new QualificationKey(key),
             name,

@@ -36,7 +36,7 @@ public class Registration {
     private @Nullable Boolean overnightStay;
     private @Nullable LocalDate arrival;
 
-    public static String generateAccessKey() {
+    public static @NonNull String generateAccessKey() {
         return UUID.randomUUID().toString();
     }
 }

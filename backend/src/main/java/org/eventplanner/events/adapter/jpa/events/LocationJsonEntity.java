@@ -35,7 +35,7 @@ public record LocationJsonEntity(
         );
     }
 
-    public EventLocation toDomain() {
+    public @NonNull EventLocation toDomain() {
         return new EventLocation(
             name != null ? name : "",
             icon != null ? icon : "",

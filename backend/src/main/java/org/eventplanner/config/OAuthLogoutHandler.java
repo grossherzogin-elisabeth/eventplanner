@@ -4,8 +4,10 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -26,8 +28,8 @@ public class OAuthLogoutHandler implements LogoutHandler {
     private final String logoutSuccessUrl;
 
     public OAuthLogoutHandler(
-        final ClientRegistrationRepository clientRegistrationRepository,
-        final OAuth2ClientProperties oAuth2ClientProperties,
+        @Autowired final ClientRegistrationRepository clientRegistrationRepository,
+        @Autowired final OAuth2ClientProperties oAuth2ClientProperties,
         @Value("${auth.logout-success-url}") String logoutSuccessUrl
     ) {
         this.clientRegistrationRepository = clientRegistrationRepository;
@@ -37,9 +39,9 @@ public class OAuthLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(
-        final HttpServletRequest request,
-        final HttpServletResponse response,
-        final Authentication authentication
+        @NonNull final HttpServletRequest request,
+        @NonNull final HttpServletResponse response,
+        @NonNull final Authentication authentication
     ) {
         try {
             response.sendRedirect(getLogoutUrl(authentication));
@@ -48,7 +50,7 @@ public class OAuthLogoutHandler implements LogoutHandler {
         }
     }
 
-    private String getLogoutUrl(Authentication authentication) {
+    private @NonNull String getLogoutUrl(@NonNull Authentication authentication) {
         if (!(authentication instanceof OAuth2AuthenticationToken oAuth2Token)) {
             return logoutSuccessUrl;
         }

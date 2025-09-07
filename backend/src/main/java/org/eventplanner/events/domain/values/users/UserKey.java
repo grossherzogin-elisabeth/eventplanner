@@ -24,7 +24,7 @@ public record UserKey(
         }
     }
 
-    public static UserKey fromName(String name) {
+    public static @NonNull UserKey fromName(@NonNull String name) {
         var normalizedName = name
             .replace("mit Ü", "")
             .replace("u. V.", "")

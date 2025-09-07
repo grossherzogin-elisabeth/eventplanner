@@ -7,10 +7,10 @@ import java.util.HashMap;
 
 import org.eventplanner.events.application.ports.EmailSender;
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
-import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
 import org.eventplanner.events.domain.entities.notifications.Notification;
 import org.eventplanner.events.domain.entities.notifications.PersonalNotification;
+import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.values.config.EmailConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -142,11 +142,11 @@ public class EmailService implements NotificationDispatcher {
         }
     }
 
-    private EmailConfig getEmailSettings() {
+    private @NonNull EmailConfig getEmailSettings() {
         return configurationService.getConfig().email();
     }
 
-    protected String renderEmailContent(@NonNull PersonalNotification notification)
+    protected @NonNull String renderEmailContent(@NonNull PersonalNotification notification)
     throws TemplateException, IOException {
         var model = new HashMap<String, Object>();
         model.put("user", notification.recipient());

@@ -22,12 +22,12 @@ public enum Role {
 
     private final String value;
 
-    Role(String value) {
+    Role(@NonNull String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static Role parse(@NonNull String value) {
+    public static @NonNull Role parse(@NonNull String value) {
         return fromString(value)
             .orElseThrow(() -> new IllegalArgumentException("Invalid role value " + value));
     }
@@ -38,7 +38,7 @@ public enum Role {
             .findFirst();
     }
 
-    public String value() {
+    public @NonNull String value() {
         return value;
     }
 

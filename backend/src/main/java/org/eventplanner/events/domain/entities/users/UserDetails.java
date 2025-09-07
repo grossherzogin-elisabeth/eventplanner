@@ -87,7 +87,7 @@ public class UserDetails {
         return new User(key, firstName, lastName, nickName);
     }
 
-    public void addPosition(PositionKey positionKey) {
+    public void addPosition(@NonNull PositionKey positionKey) {
         if (!positions.contains(positionKey)) {
             var mutableList = new LinkedList<>(positions);
             mutableList.add(positionKey);
@@ -147,7 +147,7 @@ public class UserDetails {
         qualifications = mutableList.stream().toList();
     }
 
-    public Optional<UserQualification> getQualification(@NonNull QualificationKey qualificationKey) {
+    public @NonNull Optional<UserQualification> getQualification(@NonNull QualificationKey qualificationKey) {
         return qualifications.stream()
             .filter(it -> qualificationKey.equals(it.getQualificationKey()))
             .findFirst();

@@ -98,7 +98,7 @@ public record SignedInUser(
         return this;
     }
 
-    public SignedInUser withPermissionsFromAuthentication(@NonNull Authentication authentication) {
+    public @NonNull SignedInUser withPermissionsFromAuthentication(@NonNull Authentication authentication) {
         var permissions = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .map(Role::fromString)

@@ -1,10 +1,11 @@
 package org.eventplanner.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Component;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Component
 public class OAuthClientConfig {
@@ -15,15 +16,15 @@ public class OAuthClientConfig {
 
     public OAuthClientConfig(
         @Value("${auth.login-success-url}") String loginSuccessUrl,
-        OAuthLogoutHandler oAuthLogoutHandler,
-        OAuthUserAuthoritiesMapper oAuthUserAuthoritiesMapper
+        @NonNull OAuthLogoutHandler oAuthLogoutHandler,
+        @NonNull OAuthUserAuthoritiesMapper oAuthUserAuthoritiesMapper
     ) {
         this.loginSuccessUrl = loginSuccessUrl;
         this.oAuthLogoutHandler = oAuthLogoutHandler;
         this.oAuthUserAuthoritiesMapper = oAuthUserAuthoritiesMapper;
     }
 
-    public HttpSecurity configure(HttpSecurity http) throws Exception {
+    public @NonNull HttpSecurity configure(@NonNull HttpSecurity http) throws Exception {
         http.oauth2Login(oauth2Login -> {
             // open frontend home page after login
             oauth2Login.defaultSuccessUrl(loginSuccessUrl, true);

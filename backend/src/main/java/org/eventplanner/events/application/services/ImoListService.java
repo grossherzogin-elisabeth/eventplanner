@@ -86,7 +86,7 @@ public class ImoListService {
         }
     }
 
-    private int findFirstEmptyRow(XSSFSheet sheet) {
+    private int findFirstEmptyRow(@NonNull XSSFSheet sheet) {
         int rowCounter = -1;
         boolean rowIsEmpty = false;
         Iterator<Row> rowIterator = sheet.iterator();
@@ -111,9 +111,9 @@ public class ImoListService {
     }
 
     private void writeCrewDataToSheet(
-        XSSFSheet sheet,
-        List<Registration> crewList,
-        Map<PositionKey, Position> positionMap
+        @NonNull XSSFSheet sheet,
+        @NonNull List<Registration> crewList,
+        @NonNull Map<PositionKey, Position> positionMap
     ) throws IOException {
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
@@ -159,7 +159,11 @@ public class ImoListService {
         }
     }
 
-    private void replacePlaceHolderInSheet(XSSFSheet sheet, String placeHolder, @NonNull String replacement) {
+    private void replacePlaceHolderInSheet(
+        @NonNull XSSFSheet sheet,
+        @NonNull String placeHolder,
+        @NonNull String replacement
+    ) {
         Iterator<Row> rowIterator = sheet.iterator();
         int rowCounter = 0;
         while (rowIterator.hasNext()) {
@@ -177,7 +181,7 @@ public class ImoListService {
         }
     }
 
-    private ByteArrayOutputStream getWorkbookBytes(XSSFWorkbook workbook) throws IOException {
+    private @NonNull ByteArrayOutputStream getWorkbookBytes(@NonNull XSSFWorkbook workbook) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (bos) {
             workbook.write(bos);
