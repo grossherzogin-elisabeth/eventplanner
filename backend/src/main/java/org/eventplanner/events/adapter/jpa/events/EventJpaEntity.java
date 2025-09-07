@@ -96,7 +96,7 @@ public class EventJpaEntity {
         return eventJpaEntity;
     }
 
-    public static List<EventLocation> deserializeLocations(String json) {
+    public static @NonNull List<EventLocation> deserializeLocations(@NonNull String json) {
         try {
             var entities = objectMapper.readValue(
                 json, new TypeReference<List<LocationJsonEntity>>() {
@@ -108,7 +108,7 @@ public class EventJpaEntity {
         }
     }
 
-    public static String serializeLocations(List<EventLocation> locations) {
+    public static @NonNull String serializeLocations(@NonNull List<EventLocation> locations) {
         try {
             var entities = locations.stream().map(LocationJsonEntity::fromDomain).toList();
             return objectMapper.writeValueAsString(entities);
@@ -117,7 +117,7 @@ public class EventJpaEntity {
         }
     }
 
-    public static List<EventSlot> deserializeSlots(String json) {
+    public static @NonNull List<EventSlot> deserializeSlots(@NonNull String json) {
         try {
             var entities = objectMapper.readValue(
                 json, new TypeReference<List<SlotJsonEntity>>() {
@@ -129,7 +129,7 @@ public class EventJpaEntity {
         }
     }
 
-    public static String serializeSlots(List<EventSlot> slots) {
+    public static @NonNull String serializeSlots(@NonNull List<EventSlot> slots) {
         try {
             var entities = slots.stream().map(SlotJsonEntity::fromDomain).toList();
             return objectMapper.writeValueAsString(entities);
@@ -159,7 +159,7 @@ public class EventJpaEntity {
         return EventType.MULTI_DAY_EVENT;
     }
 
-    public Event toDomain(@NonNull List<Registration> registrations) {
+    public @NonNull Event toDomain(@NonNull List<Registration> registrations) {
         return new Event(
             new EventKey(key),
             mapEventType(),

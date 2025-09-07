@@ -6,9 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.values.auth.Role;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -25,19 +23,16 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
 
-    private final UserService userService;
     private final List<String> admins;
 
-    public OAuthUserAuthoritiesMapper(
-        @Autowired UserService userService,
-        @Value("${auth.admins}") String admins
-    ) {
-        this.userService = userService;
+    public OAuthUserAuthoritiesMapper(@Value("${auth.admins}") String admins) {
         this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> mapAuthorities(Collection<? extends GrantedAuthority> authorities) {
+    public @NonNull Collection<? extends GrantedAuthority> mapAuthorities(
+        @NonNull Collection<? extends GrantedAuthority> authorities
+    ) {
         return authorities
             .stream()
             .flatMap(authority -> switch (authority) {
@@ -48,14 +43,14 @@ public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
             .toList();
     }
 
-    private Stream<? extends GrantedAuthority> extractOidcRoles(OidcUserAuthority oidcUserAuthority) {
+    private @NonNull Stream<? extends GrantedAuthority> extractOidcRoles(@NonNull OidcUserAuthority oidcUserAuthority) {
         var authorities = new ArrayList<GrantedAuthority>();
         authorities.add(oidcUserAuthority);
         authorities.addAll(getRolesByEmail(oidcUserAuthority.getIdToken().getEmail()));
         return authorities.stream();
     }
 
-    private Stream<? extends GrantedAuthority> extractOAuthRoles(OAuth2UserAuthority oAuthAuthority) {
+    private @NonNull Stream<? extends GrantedAuthority> extractOAuthRoles(@NonNull OAuth2UserAuthority oAuthAuthority) {
         var authorities = new ArrayList<GrantedAuthority>();
         authorities.add(oAuthAuthority);
         authorities.addAll(getRolesByEmail(oAuthAuthority.getAttributes().get("email")));

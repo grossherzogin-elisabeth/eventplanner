@@ -28,7 +28,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
         @NonNull final HttpServletRequest request,
         @NonNull final HttpServletResponse response,
-        final FilterChain filterChain
+        @NonNull final FilterChain filterChain
     )
     throws ServletException, IOException {
         var authentication = SecurityContextHolder.getContext().getAuthentication();

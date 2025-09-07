@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.springframework.lang.NonNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,7 +51,7 @@ public class QueuedEmailJpaEntity {
     @Column(name = "created_at", nullable = false)
     private String createdAt;
 
-    public QueuedEmail toDomain() {
+    public @NonNull QueuedEmail toDomain() {
         return new QueuedEmail(
             key,
             NotificationType.fromString(type).orElseThrow(),

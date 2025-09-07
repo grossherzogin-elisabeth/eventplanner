@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         // resolves the home endpoint, e.g. http://localhost:8080
         registry.addResourceHandler("")
             .addResourceLocations("classpath:/static/")
@@ -38,7 +39,8 @@ public class WebConfig implements WebMvcConfigurer {
      */
     private static class PathResourceResolverWithIndexHTMLFallback extends PathResourceResolver {
         @Override
-        protected Resource getResource(String resourcePath, Resource location) throws IOException {
+        protected @NonNull Resource getResource(@NonNull String resourcePath, @NonNull Resource location)
+        throws IOException {
             Resource requestedResource = location.createRelative(resourcePath);
             return requestedResource.exists() && requestedResource.isReadable()
                 ? requestedResource

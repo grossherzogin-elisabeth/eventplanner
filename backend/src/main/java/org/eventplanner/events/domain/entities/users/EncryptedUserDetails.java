@@ -1,5 +1,7 @@
 package org.eventplanner.events.domain.entities.users;
 
+import static java.util.Optional.ofNullable;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -8,15 +10,14 @@ import java.util.List;
 
 import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.domain.functions.DecryptFunc;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.Diet;
 import org.eventplanner.events.domain.values.users.EncryptedAddress;
-import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import static java.util.Optional.ofNullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -61,7 +62,7 @@ public class EncryptedUserDetails implements Serializable {
     private @Nullable Encrypted<String> medication;
     private @Nullable Encrypted<Diet> diet;
 
-    public @NonNull UserDetails decrypt(DecryptFunc decryptFunc) {
+    public @NonNull UserDetails decrypt(@NonNull DecryptFunc decryptFunc) {
         return new UserDetails(
             key,
             authKey,

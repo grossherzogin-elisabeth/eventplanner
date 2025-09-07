@@ -1,13 +1,13 @@
 package org.eventplanner.events.domain.values.users;
 
+import static java.util.Optional.ofNullable;
+
 import java.io.Serializable;
 
 import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.domain.functions.DecryptFunc;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import static java.util.Optional.ofNullable;
 
 public record EncryptedAddress(
     @NonNull Encrypted<String> addressLine1,

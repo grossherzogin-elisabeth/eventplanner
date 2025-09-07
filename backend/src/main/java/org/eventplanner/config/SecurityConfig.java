@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -37,7 +38,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityConfigCustomizer(HttpSecurity http) throws Exception {
+    public @NonNull SecurityFilterChain securityConfigCustomizer(@NonNull HttpSecurity http) throws Exception {
         if (enableCSRF) {
             http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
         } else {

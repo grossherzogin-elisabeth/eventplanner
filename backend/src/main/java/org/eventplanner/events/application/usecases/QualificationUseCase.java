@@ -20,13 +20,13 @@ public class QualificationUseCase {
 
     private final QualificationRepository qualificationRepository;
 
-    public List<Qualification> getQualifications(@NonNull final SignedInUser signedInUser) {
+    public @NonNull List<Qualification> getQualifications(@NonNull final SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_QUALIFICATIONS);
 
         return this.qualificationRepository.findAll();
     }
 
-    public Qualification createQualification(
+    public @NonNull Qualification createQualification(
         @NonNull final SignedInUser signedInUser,
         @NonNull final Qualification qualification
     ) {
@@ -38,7 +38,7 @@ public class QualificationUseCase {
         return qualification;
     }
 
-    public Qualification updateQualification(
+    public @NonNull Qualification updateQualification(
         @NonNull final SignedInUser signedInUser,
         @NonNull final QualificationKey qualificationKey,
         @NonNull final Qualification qualification
