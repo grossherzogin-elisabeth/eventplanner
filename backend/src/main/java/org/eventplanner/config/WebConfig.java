@@ -1,11 +1,14 @@
 package org.eventplanner.config;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
+import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -41,6 +44,14 @@ public class WebConfig implements WebMvcConfigurer {
         @Override
         protected @NonNull Resource getResource(@NonNull String resourcePath, @NonNull Resource location)
         throws IOException {
+            if (resourcePath.startsWith("/api/")) {
+                var auth = SecurityContextHolder.getContext().getAuthentication();
+                if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+                    throw new UnauthorizedException("Authentication required");
+                } else {
+                    throw new NoSuchElementException("No such endpoint");
+                }
+            }
             Resource requestedResource = location.createRelative(resourcePath);
             return requestedResource.exists() && requestedResource.isReadable()
                 ? requestedResource
