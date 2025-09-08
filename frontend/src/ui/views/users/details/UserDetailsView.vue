@@ -179,7 +179,7 @@ const tabs = [
     Tab.USER_ROLES,
 ].map((it) => ({
     value: it,
-    label: t(`views.user-details.tab.${it}`),
+    label: t(`views.users.details.tab.${it}`),
 }));
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const userOriginal = ref<UserDetails | null>(null);

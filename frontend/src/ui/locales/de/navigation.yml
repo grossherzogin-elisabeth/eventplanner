@@ -1,3 +1,19 @@
 # -----------------------------------
 # messages for the main navigation
 # -----------------------------------
+navigation:
+  myNextEvents: 'Meine nächsten Reisen'
+  start: 'Start'
+  calendar: 'Kalender'
+  allEvents: 'Alle Veranstaltungen'
+  manageEvents: 'Reisen verwalten'
+  manageUsers: 'Nutzer verwalten'
+  manageBaseData: 'Stammdaten verwalten'
+  manageSettings: 'Einstellungen'
+  account: 'Meine Daten'
+  feedback: 'Feedback'
+  signOut: 'Abmelden'
+  legal: 'Rechtliches'
+  dataPrivacy: 'Datenschutzerklärung'
+  imprint: 'Impressum'
+  impersonate: 'Du siehst die Anwendung aus Sicht von {0}'
