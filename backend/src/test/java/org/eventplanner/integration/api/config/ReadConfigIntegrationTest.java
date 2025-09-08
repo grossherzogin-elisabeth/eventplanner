@@ -1,4 +1,4 @@
-package org.eventplanner.integration;
+package org.eventplanner.integration.api.config;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
 @Transactional // resets db changes after each test
-class ConfigIntegrationTest {
+class ReadConfigIntegrationTest {
     private MockMvc webMvc;
 
     @Autowired

@@ -1,20 +1,21 @@
-package org.eventplanner.integration;
+package org.eventplanner.integration.api.users;
 
+import static org.eventplanner.testutil.TestUser.withAuthentication;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.eventplanner.integration.util.Auth;
-import org.hamcrest.Matchers;
+import org.eventplanner.testutil.TestResources;
+import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
 @Transactional // resets db changes after each test
-class WebConfigIntegrationTest {
+class ListUsersIntegrationTest {
+
     private MockMvc webMvc;
 
     @Autowired
@@ -40,39 +42,40 @@ class WebConfigIntegrationTest {
             .build();
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = { "/api/v1/users", "/api/v1/any", "/api/any" })
-    void shouldReturnUnauthorized(String path) throws Exception {
-        webMvc.perform(get(path)
+    @Test
+    void shouldReturnUnauthorized() throws Exception {
+        webMvc.perform(get("/api/v1/users")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = { "/api/v1/any", "/api/any" })
-    void shouldReturnNotFound(String path) throws Exception {
-        webMvc.perform(get(path)
-                .with(Auth.withAuthentication(Auth.TestUser.USER_WITHOUT_ROLE))
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNotFound());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = { "/api/v1/users", "/api/v1/settings" })
-    void shouldReturnForbidden(String path) throws Exception {
-        webMvc.perform(get(path)
-                .with(Auth.withAuthentication(Auth.TestUser.USER_WITHOUT_ROLE))
+    @Test
+    void shouldReturnForbidden() throws Exception {
+        webMvc.perform(get("/api/v1/users")
+                .with(withAuthentication(TestUser.USER_WITHOUT_ROLE))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = { "/any", "" })
-    void shouldReturnIndexHtml(String path) throws Exception {
-        webMvc.perform(get(path)
+    @Test
+    void shouldReturnListOfMinimalUsers() throws Exception {
+        var expected = TestResources.getString("/integration/users/list-users-minimal.json");
+        webMvc.perform(get("/api/v1/users")
+                .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("text/html"))
-            .andExpect(content().string(Matchers.containsString("This is a dummy index.html for testing")));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(expected, JsonCompareMode.STRICT));
+    }
+
+    @Test
+    void shouldReturnListOfExtendedUsers() throws Exception {
+        var expected = TestResources.getString("/integration/users/list-users-extended.json");
+        webMvc.perform(get("/api/v1/users")
+                .with(withAuthentication(TestUser.ADMIN))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(expected, JsonCompareMode.STRICT));
     }
 }
