@@ -2,20 +2,20 @@
     <table class="block sm:table">
         <tbody>
             <tr class="mb-2 block sm:table-row">
-                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">{{ $t('domain.event.title') }}</td>
+                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">{{ $t('views.events.confirm-participation.event') }}</td>
                 <td class="block py-1 font-bold sm:table-cell">
                     {{ props.event?.name }}
                 </td>
             </tr>
             <tr class="mb-2 block sm:table-row">
-                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">{{ $t('domain.event.route') }}</td>
+                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">{{ $t('views.events.confirm-participation.route') }}</td>
                 <td class="block py-1 font-bold sm:table-cell">
                     {{ props.event.locations.map((l) => l.name).join(' - ') }}
                 </td>
             </tr>
             <tr class="mb-2 block sm:table-row">
                 <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">
-                    {{ $t('domain.event.crew-on-board') }}
+                    {{ $t('views.events.confirm-participation.crew-on-board') }}
                 </td>
                 <td class="block py-1 font-bold sm:table-cell">
                     {{ $d(props.event.start, DateTimeFormat.DD_MM_YYYY) }}
@@ -23,7 +23,7 @@
                 </td>
             </tr>
             <tr v-if="props.event.locations[0].etd" class="mb-2 block sm:table-row">
-                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">{{ $t('domain.event.start') }}</td>
+                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">{{ $t('views.events.confirm-participation.start') }}</td>
                 <td class="block py-1 font-bold sm:table-cell">
                     {{ $d(props.event.locations[0].etd, DateTimeFormat.DD_MM_YYYY) }}
                     {{ $d(props.event.locations[0].etd, DateTimeFormat.hh_mm) }}

@@ -113,86 +113,6 @@ components:
     show-details: 'Details anzeigen'
 
 # -----------------------------------
-# messages used for domains
-# -----------------------------------
-domain:
-  user:
-    display-name:
-      label: 'Anzeigename'
-    diet:
-      label: 'Ernährungsweise'
-      values:
-        vegetarian: 'Vegetarisch'
-        vegan: 'Vegan'
-        omnivore: 'Fleisch'
-    intolerances:
-      label: 'Unverträglichkeiten'
-    first-name:
-      label: 'Vorname'
-    middle-name:
-      label: 'Zweiter Vorname'
-    last-name:
-      label: 'Nachname'
-    email:
-      label: 'Email'
-    phone:
-      label: 'Telefon'
-    phone-work:
-      label: 'Telefon (dienstlich)'
-    mobile:
-      label: 'Mobil'
-    address-line1:
-      label: 'Straße, Hausnr.'
-    address-line2:
-      label: 'Adresszusatz'
-    zip:
-      label: 'PLZ'
-    city:
-      label: 'Ort'
-    country:
-      label: 'Land'
-    birthday:
-      label: 'Geboren am'
-    place-of-birth:
-      label: 'Geburtsort'
-    gender:
-      label: 'Geschlecht'
-      values:
-        male: 'männlich'
-        female: 'weiblich'
-        diverse: 'divers'
-    passport-number:
-      label: 'Personalausweis Nummer'
-    nationality:
-      label: 'Nationalität'
-    diseases:
-      label: 'Krankheiten'
-    emergency-contact:
-      label: 'Notfallkontakt'
-      name:
-        label: 'Name des Notfallkontakts'
-      phone:
-        label: 'Telefonnummer des Notfallkontakts'
-    medication:
-      label: 'Medikamente'
-  event:
-    title: 'Reise'
-    route: 'Geplante Route'
-    crew-on-board: 'Crew an Bord'
-    start: 'Reisebeginn'
-    signup: 'Anmelden'
-    leave-crew: 'Teilnahme absagen'
-    leave-waitinglist: 'Warteliste verlassen'
-  qualifications:
-    expires: 'Gültigkeit der Qualifikation ist zeitlich begrenzt'
-    status-expires: 'Mit Ablaufdatum'
-    status-expires-on: 'Gültig bis'
-    status-no-expires: 'Ohne Ablaufdatum'
-    status-expired: 'Abgelaufen'
-    status-expiring-soon: 'Läuft bald ab'
-    status-valid: 'Gültig'
-
-# -----------------------------------
 # messages used in specific views
 # -----------------------------------
 views:
@@ -214,8 +134,30 @@ views:
       emergency: 'Notfallinformationen'
     data:
       title-app: 'App'
-      title-diet: 'Ernährung'
-      title-personal: 'Persönliche Daten'
+      personal:
+        title: 'Persönliche Daten'
+        first-name: 'Vorname'
+        middle-name: 'Zweiter Vorname'
+        last-name: 'Nachname'
+        birthday: 'Geboren am'
+        place-of-birth: 'Geburtsort'
+        gender:
+          label: 'Geschlecht'
+          values:
+            male: 'männlich'
+            female: 'weiblich'
+            diverse: 'divers'
+        passport-number: 'Personalausweis Nummer'
+        nationality: 'Nationalität'
+      display-name: 'Anzeigename'
+      diet:
+        title: 'Ernährung'
+        label: 'Ernährungsweise'
+        values:
+          vegetarian: 'Vegetarisch'
+          vegan: 'Vegan'
+          omnivore: 'Fleisch'
+        intolerances: 'Unverträglichkeiten'
       hint-name-passport:
         title: 'Name und Personalausweis Nummer'
         messages:
@@ -230,8 +172,19 @@ views:
           label: 'Wo finde ich meine Personalausweis Nummer?'
           url: 'https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png'
     contact:
-      title-mail-phone: 'Email & Telefon'
-      title-address: 'Adresse'
+      mail-phone:
+        title: 'Email & Telefon'
+        email: 'Email'
+        phone: 'Telefon'
+        phone-work: 'Telefon (dienstlich)'
+        mobile: 'Mobil'
+      address:
+        title: 'Adresse'
+        address-line1: 'Straße, Hausnr.'
+        address-line2: 'Adresszusatz'
+        zip: 'PLZ'
+        city: 'Ort'
+        country: 'Land'
       hint-mail:
         title: 'Du möchtest deine Email Adresse ändern?'
         messages:
@@ -239,8 +192,14 @@ views:
                 Adresse ändern möchtest wende dich bitte ans {link}'
         link: 'Büro'
     emergency:
-      title-contact: 'Notfallkontakt'
-      title-medical: 'Wichtige gesundheitliche Informationen'
+      contact:
+        title: 'Notfallkontakt'
+        name: 'Name des Notfallkontakts'
+        phone: 'Telefonnummer des Notfallkontakts'
+      medical:
+        title: 'Wichtige gesundheitliche Informationen'
+        diseases: 'Krankheiten'
+        medication: 'Medikamente'
       hint-emergency-contact:
         title: 'Notfall Informationen'
         messages:
@@ -252,6 +211,12 @@ views:
           - '{hint-all-data-optional}'
         encrypted: 'verschlüsselt'
         hint-all-data-optional: 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
+    qualifications:
+      status-expires-on: 'Gültig bis'
+      status-no-expires: 'Ohne Ablaufdatum'
+      status-expired: 'Abgelaufen'
+      status-expiring-soon: 'Läuft bald ab'
+      status-valid: 'Gültig'
   event-list:
     tab:
       future: 'Zukünftige'
@@ -275,6 +240,9 @@ views:
     action:
       link-event-details: 'Reise anzeigen'
       create-calendar-entry: 'Kalendereintrag erstellen'
+      signup: 'Anmelden'
+      cancel: 'Teilnahme absagen'
+      leave-waitinglist: 'Warteliste verlassen'
   event-details:
   event-admin-list:
     tab:
@@ -323,6 +291,9 @@ views:
         icon: 'Icon'
         icon-placeholder: 'fa-id-card'
         description: 'Beschreibung'
+        expires: 'Gültigkeit der Qualifikation ist zeitlich begrenzt'
+        status-expires: 'Mit Ablaufdatum'
+        status-no-expires: 'Ohne Ablaufdatum'
         delete-title: 'Qualifikation löschen'
         delete-message: 'Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt.'
   events:
@@ -358,6 +329,10 @@ views:
       canceled-now:
         title: 'Reise abgesagt'
         info: 'Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Reise wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.'
+      event: 'Reise'
+      route: 'Geplante Route'
+      crew-on-board: 'Crew an Bord'
+      start: 'Reisebeginn'
     details:
       info-planning: 'Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Reise! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.'
       info-canceled: 'Diese Veranstaltung wurde abgesagt!'
@@ -365,6 +340,9 @@ views:
       info-confirmed: 'Du hast deine Teilnahme bestätigt.'
       info-waitinglist: 'Du stehst für diese Veranstaltung als {position} auf der Warteliste'
       info-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht: {positions}'
+      leave-crew: 'Teilnahme absagen'
+      leave-waitinglist: 'Warteliste verlassen'
+      sign-up: 'Anmelden'
       edit-event: 'Veranstaltung bearbeiten'
       save-calendar: 'In Kalender speichern'
       create-calendar-entry: 'Kalendereintrag erstellen'
