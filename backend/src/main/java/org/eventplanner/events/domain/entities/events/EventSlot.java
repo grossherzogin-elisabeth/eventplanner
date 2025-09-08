@@ -33,7 +33,7 @@ public class EventSlot {
     private @Nullable String name = null;
     private @Nullable RegistrationKey assignedRegistration = null;
 
-    public static EventSlot of(PositionKey... positions) {
+    public static @NonNull EventSlot of(@NonNull PositionKey... positions) {
         return new EventSlot(
             new SlotKey(),
             0,
@@ -44,7 +44,7 @@ public class EventSlot {
         );
     }
 
-    public EventSlot withRequired() {
+    public @NonNull EventSlot withRequired() {
         this.criticality = 1;
         return this;
     }

@@ -13,14 +13,13 @@ import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class QualificationJpaRepositoryAdapter implements QualificationRepository {
 
     private final QualificationJpaRepository qualificationJpaRepository;
-
-    public QualificationJpaRepositoryAdapter(final QualificationJpaRepository qualificationJpaRepository) {
-        this.qualificationJpaRepository = qualificationJpaRepository;
-    }
 
     @Override
     public @NonNull Optional<Qualification> findByKey(@NonNull final QualificationKey qualificationKey) {

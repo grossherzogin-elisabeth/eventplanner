@@ -3,20 +3,19 @@ package org.eventplanner.events.adapter.jpa.users;
 import java.util.List;
 import java.util.Optional;
 
+import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.eventplanner.events.application.ports.UserRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
 
     private final EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository;
-
-    public EncryptedUserDetailsRepositoryAdapter(final EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository) {
-        this.encrypedUserDetailsJpaRepository = encrypedUserDetailsJpaRepository;
-    }
 
     @Override
     public @NonNull List<EncryptedUserDetails> findAll() {

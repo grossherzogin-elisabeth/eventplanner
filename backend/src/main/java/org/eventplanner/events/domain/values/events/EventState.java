@@ -18,29 +18,29 @@ public enum EventState {
 
     private final String value;
 
-    EventState(String value) {
+    EventState(@NonNull String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static EventState parse(@NonNull String value) {
+    public static @NonNull EventState parse(@NonNull String value) {
         return fromString(value)
             .orElseThrow(() -> new IllegalArgumentException("Invalid event state value " + value));
     }
 
-    public static Optional<EventState> fromString(@Nullable String value) {
+    public static @NonNull Optional<EventState> fromString(@Nullable String value) {
         return Arrays.stream(values())
             .filter(state -> state.value().equals(value))
             .findFirst();
     }
 
-    public String value() {
+    public @NonNull String value() {
         return value;
     }
 
     @JsonValue
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return value;
     }
 }

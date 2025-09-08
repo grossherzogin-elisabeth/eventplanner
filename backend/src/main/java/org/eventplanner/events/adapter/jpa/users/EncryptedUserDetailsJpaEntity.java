@@ -9,10 +9,11 @@ import org.eventplanner.config.ObjectMapperFactory;
 import org.eventplanner.events.domain.entities.users.EncryptedEmergencyContact;
 import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.entities.users.EncryptedUserQualification;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.EncryptedAddress;
-import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -125,7 +126,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
     @Column(name = "diet")
     private String diet;
 
-    public static EncryptedUserDetailsJpaEntity fromDomain(EncryptedUserDetails domain) {
+    public static @NonNull EncryptedUserDetailsJpaEntity fromDomain(@NonNull EncryptedUserDetails domain) {
         String roles = "[]";
         try {
             roles = objectMapper.writeValueAsString(domain.getRoles());
@@ -191,7 +192,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         );
     }
 
-    public EncryptedUserDetails toDomain() {
+    public @NonNull EncryptedUserDetails toDomain() {
         var roles = new Encrypted[] {};
         if (rolesRaw != null && rolesRaw.startsWith("[") && rolesRaw.endsWith("]")) {
             try {

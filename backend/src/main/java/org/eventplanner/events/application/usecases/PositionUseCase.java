@@ -20,13 +20,13 @@ public class PositionUseCase {
 
     private final PositionRepository positionRepository;
 
-    public List<Position> getPosition(@NonNull final SignedInUser signedInUser) {
+    public @NonNull List<Position> getPosition(@NonNull final SignedInUser signedInUser) {
         signedInUser.assertHasPermission(Permission.READ_POSITIONS);
 
         return positionRepository.findAll();
     }
 
-    public Position createPosition(
+    public @NonNull Position createPosition(
         @NonNull final SignedInUser signedInUser,
         @NonNull final Position position
     ) {
@@ -38,7 +38,7 @@ public class PositionUseCase {
         return position;
     }
 
-    public Position updatePosition(
+    public @NonNull Position updatePosition(
         @NonNull final SignedInUser signedInUser,
         @NonNull final PositionKey positionKey,
         @NonNull final Position position

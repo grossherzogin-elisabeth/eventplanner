@@ -1,12 +1,12 @@
 package org.eventplanner.events.rest.users.dto;
 
+import static org.eventplanner.common.StringUtils.trimToNull;
+
 import java.io.Serializable;
 
 import org.eventplanner.events.domain.entities.users.User;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import static org.eventplanner.common.StringUtils.trimToNull;
 
 public record UserRepresentation(
     @NonNull String key,

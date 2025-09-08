@@ -21,7 +21,7 @@ public record CreateRegistrationSpec(
     @Nullable Boolean overnightStay,
     @Nullable LocalDate arrival
 ) {
-    public Registration toRegistration() {
+    public @NonNull Registration toRegistration() {
         return new Registration(
             registrationKey,
             positionKey,

@@ -6,8 +6,8 @@ import java.io.IOException;
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.ConsumptionListService;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
-import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.events.EventKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class ConsumtionListUseCase {
     private final EventRepository eventRepository;
     private final ConsumptionListService consumptionListService;
 
-    public ByteArrayOutputStream downloadConsumptionList(
+    public @NonNull ByteArrayOutputStream downloadConsumptionList(
         @NonNull final SignedInUser signedInUser,
         @NonNull final EventKey eventKey
     )

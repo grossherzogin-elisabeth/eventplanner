@@ -2,8 +2,6 @@ package org.eventplanner.events.domain.entities.users;
 
 import static java.util.Objects.requireNonNull;
 
-import static java.util.Objects.requireNonNull;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

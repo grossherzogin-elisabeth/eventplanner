@@ -67,7 +67,7 @@ public class TeamsNotificationService implements NotificationDispatcher {
         }
     }
 
-    private String renderDefaultTeamsMessage(@NonNull final Notification notification) {
+    private @NonNull String renderDefaultTeamsMessage(@NonNull final Notification notification) {
         return """
             {
                 "type": "message",

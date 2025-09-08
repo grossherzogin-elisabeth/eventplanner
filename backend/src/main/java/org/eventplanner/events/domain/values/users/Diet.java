@@ -21,7 +21,7 @@ public enum Diet {
     }
 
     @JsonCreator
-    public static Diet parse(@NonNull String value) {
+    public static @NonNull Diet parse(@NonNull String value) {
         return fromString(value)
             .orElseThrow(() -> new IllegalArgumentException("Invalid diet value " + value));
     }

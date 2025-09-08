@@ -14,14 +14,13 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class PositionJpaRepositoryAdapter implements PositionRepository {
 
     private final PositionJpaRepository positionJpaRepository;
-
-    public PositionJpaRepositoryAdapter(final PositionJpaRepository positionJpaRepository) {
-        this.positionJpaRepository = positionJpaRepository;
-    }
 
     @Override
     public @NonNull Optional<Position> findByKey(@Nullable final PositionKey key) {
