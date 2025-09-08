@@ -2,12 +2,11 @@
 # messages used in account views
 # -----------------------------------
 account:
-  title: 'Meine Daten'
+  title: 'Profil'
   tab:
-    data: 'Persönliche Daten'
-    contact: 'Kontaktdaten'
-    qualifications: 'Qualifikationen'
-    emergency: 'Notfallinformationen'
+    data: 'Meine Daten'
+    qualifications: 'Meine Qualifikationen'
+    settings: 'App Einstellungen'
   data:
     title-app: 'App'
     personal:
