@@ -12,7 +12,7 @@
                                         {{ $t('views.account.data.title-app') }}
                                     </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.display-name.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.data.display-name') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.nickName"
                                             :placeholder="userDetails.firstName"
@@ -23,23 +23,23 @@
                                 </section>
                                 <section class="diet-data">
                                     <h2 class="mb-4 font-bold text-secondary">
-                                        {{ $t('views.account.data.title-diet') }}
+                                        {{ $t('views.account.data.diet.title') }}
                                     </h2>
                                     <div class="mb-4 sm:w-64">
-                                        <VInputLabel>{{ $t('domain.user.diet.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.data.diet.label') }}</VInputLabel>
                                         <VInputSelect
                                             v-model="userDetails.diet"
                                             :options="[
-                                                { value: 'omnivore', label: $t('domain.user.diet.values.omnivore') },
-                                                { value: 'vegetarian', label: $t('domain.user.diet.values.vegetarian') },
-                                                { value: 'vegan', label: $t('domain.user.diet.values.vegan') },
+                                                { value: 'omnivore', label: $t('views.account.data.diet.values.omnivore') },
+                                                { value: 'vegetarian', label: $t('views.account.data.diet.values.vegetarian') },
+                                                { value: 'vegan', label: $t('views.account.data.diet.values.vegan') },
                                             ]"
                                             :errors="validation.errors.value['diet']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.intolerances.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.data.diet.intolerances') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.intolerances"
                                             :placeholder="$t('generic.no-information')"
@@ -50,10 +50,10 @@
                                 </section>
                                 <section class="personal-data">
                                     <h2 class="mb-4 font-bold text-secondary">
-                                        {{ $t('views.account.data.title-personal') }}
+                                        {{ $t('views.account.data.personal.title') }}
                                     </h2>
                                     <div class="mb-4 sm:w-64">
-                                        <VInputLabel>{{ $t('domain.user.gender.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.data.personal.gender.label') }}</VInputLabel>
                                         <VInputSelect
                                             v-model="userDetails.gender"
                                             :options="genderOptions"
@@ -63,7 +63,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.first-name.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.data.personal.first-name') }}</VInputLabel>
                                         <VInputText
                                             :model-value="`${userDetails.firstName} ${userDetails.secondName || ''}`.trim()"
                                             required
@@ -72,7 +72,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.middle-name.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.data.personal.middle-name') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.secondName"
                                             disabled
@@ -80,7 +80,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.last-name.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.data.personal.last-name') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.lastName"
                                             required
@@ -90,7 +90,7 @@
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
-                                            <VInputLabel>{{ $t('domain.user.birthday.label') }}</VInputLabel>
+                                            <VInputLabel>{{ $t('views.account.data.personal.birthday') }}</VInputLabel>
                                             <VInputDate
                                                 v-model="userDetails.dateOfBirth"
                                                 required
@@ -101,7 +101,7 @@
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>{{ $t('domain.user.place-of-birth.label') }}</VInputLabel>
+                                            <VInputLabel>{{ $t('views.account.data.personal.place-of-birth') }}</VInputLabel>
                                             <VInputText
                                                 v-model="userDetails.placeOfBirth"
                                                 required
@@ -114,7 +114,7 @@
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
-                                            <VInputLabel>{{ $t('domain.user.passport-number.label') }}</VInputLabel>
+                                            <VInputLabel>{{ $t('views.account.data.personal.passport-number') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.passNr"
                                                 required
@@ -124,7 +124,7 @@
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>{{ $t('domain.user.nationality.label') }}</VInputLabel>
+                                            <VInputLabel>{{ $t('views.account.data.personal.nationality') }}</VInputLabel>
                                             <VInputCombobox
                                                 v-model="userDetails.nationality"
                                                 :options="nationalities.options"
@@ -163,10 +163,10 @@
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
                                 <section>
                                     <h2 class="mb-4 font-bold text-secondary">
-                                        {{ $t('views.account.contact.title-mail-phone') }}
+                                        {{ $t('views.account.contact.mail-phone.title') }}
                                     </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.email.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.contact.mail-phone.email') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.email"
                                             required
@@ -177,7 +177,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.phone.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.contact.mail-phone.phone') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.phone"
                                             :placeholder="$t('generic.no-information')"
@@ -186,7 +186,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.phone-work.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.contact.mail-phone.phone-work') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.phoneWork"
                                             :placeholder="$t('generic.no-information')"
@@ -195,7 +195,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.mobile.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.contact.mail-phone.mobile') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.mobile"
                                             :placeholder="$t('generic.no-information')"
@@ -206,10 +206,10 @@
                                 </section>
                                 <section>
                                     <h2 class="mb-4 font-bold text-secondary">
-                                        {{ $t('views.account.contact.title-address') }}
+                                        {{ $t('views.account.contact.address.title') }}
                                     </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.address-line1.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.contact.address.address-line1') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.address.addressLine1"
                                             required
@@ -219,7 +219,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.address-line2.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.contact.address.address-line2') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.address.addressLine2"
                                             :placeholder="$t('generic.no-information')"
@@ -229,7 +229,7 @@
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-36">
-                                            <VInputLabel>{{ $t('domain.user.zip.label') }}</VInputLabel>
+                                            <VInputLabel>{{ $t('views.account.contact.address.zip') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.address.zipcode"
                                                 required
@@ -239,7 +239,7 @@
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>{{ $t('domain.user.city.label') }}</VInputLabel>
+                                            <VInputLabel>{{ $t('views.account.contact.address.city') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.address.town"
                                                 required
@@ -250,7 +250,7 @@
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.country.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.contact.address.country') }}</VInputLabel>
                                         <VInputCombobox
                                             v-model="userDetails.address.country"
                                             :options="countries.options"
@@ -295,10 +295,10 @@
                             <div class="w-full max-w-2xl space-y-8 md:w-2/3 md:flex-grow 2xl:w-1/2">
                                 <section>
                                     <h2 class="mb-4 font-bold text-secondary">
-                                        {{ $t('views.account.emergency.title-contact') }}
+                                        {{ $t('views.account.emergency.contact.title') }}
                                     </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.emergency-contact.name.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.emergency.contact.name') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.emergencyContact.name"
                                             :placeholder="$t('generic.no-information')"
@@ -307,7 +307,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.emergency-contact.phone.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.emergency.contact.phone') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.emergencyContact.phone"
                                             :placeholder="$t('generic.no-information')"
@@ -317,9 +317,9 @@
                                     </div>
                                 </section>
                                 <section>
-                                    <h2 class="mb-4 font-bold text-secondary">{{ $t('views.account.emergency.title-medical') }}</h2>
+                                    <h2 class="mb-4 font-bold text-secondary">{{ $t('views.account.emergency.medical.title') }}</h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.diseases.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.emergency.medical.diseases') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.diseases"
                                             :placeholder="$t('generic.no-information')"
@@ -328,7 +328,7 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('domain.user.medication.label') }}</VInputLabel>
+                                        <VInputLabel>{{ $t('views.account.emergency.medical.medication') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.medication"
                                             :placeholder="$t('generic.no-information')"
@@ -418,9 +418,9 @@ const userDetailsOriginal = ref<UserDetails | null>(null);
 const validation = useValidation<UserDetails | null>(userDetails, usersUseCase.validate);
 
 const genderOptions: InputSelectOption[] = [
-    { value: 'm', label: t('domain.user.gender.values.male') },
-    { value: 'f', label: t('domain.user.gender.values.female') },
-    { value: 'd', label: t('domain.user.gender.values.diverse') },
+    { value: 'm', label: t('views.account.data.personal.gender.values.male') },
+    { value: 'f', label: t('views.account.data.personal.gender.values.female') },
+    { value: 'd', label: t('views.account.data.personal.gender.values.diverse') },
 ];
 
 const tabs: InputSelectOption[] = [Tab.PERSONAL_DATA, Tab.CONTACT_DATA, Tab.EMERGENCY, Tab.QUALIFICATIONS].map((it) => ({

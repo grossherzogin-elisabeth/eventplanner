@@ -28,11 +28,11 @@
                 <div class="flex justify-end">
                     <div v-if="item.expires" class="status-panel bg-yellow-container text-onyellow-container">
                         <i class="fa-solid fa-clock"></i>
-                        <span class="whitespace-nowrap font-semibold">{{ $t('domain.qualifications.status-expires') }}</span>
+                        <span class="whitespace-nowrap font-semibold">{{ $t('views.basedata.tab.qualifications.status-expires') }}</span>
                     </div>
                     <div v-else class="status-panel bg-green-container text-ongreen-container">
                         <i class="fa-solid fa-check-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">{{ $t('domain.qualifications.status-no-expires') }}</span>
+                        <span class="whitespace-nowrap font-semibold">{{ $t('views.basedata.tab.qualifications.status-no-expires') }}</span>
                     </div>
                 </div>
             </td>

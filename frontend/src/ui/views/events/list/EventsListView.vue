@@ -227,7 +227,7 @@
                             @click="joinEvents([item])"
                         >
                             <i class="fa-solid fa-user-plus" />
-                            <span>{{ $t('domain.event.signup') }}</span>
+                            <span>{{ $t('views.event-list.action.signup') }}</span>
                         </li>
                     </template>
                     <li
@@ -246,7 +246,7 @@
                         @click="leaveEvents([item])"
                     >
                         <i class="fa-solid fa-user-minus" />
-                        <span>{{ $t('domain.event.leave-waitinglist') }}</span>
+                        <span>{{ $t('views.event-list.action.leave-waitinglist') }}</span>
                     </li>
                 </template>
             </VTable>
@@ -270,7 +270,7 @@
                         @click="joinEvents(selectedEvents)"
                     >
                         <i class="fa-solid fa-user-plus"></i>
-                        <span>{{ $t('domain.event.signup') }}</span>
+                        <span>{{ $t('views.event-list.action.signup') }}</span>
                     </button>
                 </div>
             </template>
@@ -286,7 +286,7 @@
                     @click="joinEvents(selectedEvents)"
                 >
                     <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('domain.event.signup') }}</span>
+                    <span>{{ $t('views.event-list.action.signup') }}</span>
                 </li>
                 <li
                     v-if="hasAnySelectedEventWithSignedInUserOnWaitingList"
@@ -295,7 +295,7 @@
                     @click="leaveEventsWaitingListOnly(selectedEvents)"
                 >
                     <i class="fa-solid fa-user-minus" />
-                    <span>{{ $t('domain.event.leave-waitinglist') }}</span>
+                    <span>{{ $t('views.event-list.action.leave-waitinglist') }}</span>
                 </li>
                 <li
                     v-if="hasAnySelectedEventWithSignedInUserInTeam"

@@ -74,7 +74,7 @@
                     <i class="fa-solid fa-cancel" />
                 </template>
                 <template #label>
-                    {{ $t('domain.event.leave-crew') }}
+                    {{ $t('views.events.details.leave-crew') }}
                 </template>
             </AsyncButton>
             <AsyncButton
@@ -87,12 +87,12 @@
                     <i class="fa-solid fa-user-minus" />
                 </template>
                 <template #label>
-                    {{ $t('domain.event.leave-waitinglist') }}
+                    {{ $t('views.events.details.leave-waitinglist') }}
                 </template>
             </AsyncButton>
             <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
                 <i class="fa-solid fa-user-plus" />
-                <span class="truncate text-left"> {{ $t('domain.event.signup') }} </span>
+                <span class="truncate text-left"> {{ $t('views.events.details.sign-up') }} </span>
             </button>
         </template>
         <template v-if="event" #secondary-buttons>
