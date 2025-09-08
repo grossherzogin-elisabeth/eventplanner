@@ -5,8 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
-
+import org.eventplanner.integration.util.Auth;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,7 +34,7 @@ class WebConfigIntegrationTest {
     private WebApplicationContext context;
 
     @BeforeEach
-    void setup() throws IOException {
+    void setup() {
         webMvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(springSecurity())
             .build();

@@ -1,4 +1,7 @@
-package org.eventplanner.integration;
+package org.eventplanner.integration.util;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Map;
 
@@ -8,10 +11,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-class Auth {
+public class Auth {
 
     public enum TestUser {
         ADMIN("3f18dea3-44fa-461d-b5c0-d101bf4f1b98"),
