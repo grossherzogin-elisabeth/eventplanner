@@ -1,0 +1,8 @@
+# -----------------------------------
+# messages used in settings views
+# -----------------------------------
+settings:
+  tab:
+    general: 'Allgemein'
+    email: 'Email'
+    notifications: 'Notifications'

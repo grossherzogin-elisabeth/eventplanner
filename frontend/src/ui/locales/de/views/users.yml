@@ -1,0 +1,18 @@
+# -----------------------------------
+# messages used in users views
+# -----------------------------------
+users:
+  list:
+    tab:
+      members: 'Stammcrew'
+      admins: 'Verwalter'
+      unknown: 'Nutzer ohne Rolle'
+  details:
+    tab:
+      data: 'Stammdaten'
+      contact: 'Kontakt'
+      certificates: 'Qualifikationen'
+      events: 'Reisen'
+      roles: 'Anwendungsrollen'
+      emergency: 'Notfallinformationen'
+      other: 'Sonstige Daten'

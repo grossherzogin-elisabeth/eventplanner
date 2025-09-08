@@ -347,7 +347,7 @@ const filterPositions = useQuery<PositionKey[]>('positions', []).parameter;
 
 const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS].map((it) => ({
     value: it,
-    label: t(`views.user-list.tab.${it}`),
+    label: t(`views.users.list.tab.${it}`),
 }));
 const tab = ref<string>(tabs[0].value);
 

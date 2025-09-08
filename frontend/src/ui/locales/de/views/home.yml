@@ -1,0 +1,7 @@
+# -----------------------------------
+# messages used in home views
+# -----------------------------------
+home:
+  event-card:
+    state:
+      waitinglist: 'Du stehst auf der Warteliste.'

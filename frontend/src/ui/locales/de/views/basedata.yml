@@ -1,0 +1,32 @@
+# -----------------------------------
+# messages used in basedata views
+# -----------------------------------
+basedata:
+  title: 'Stammdaten'
+  tab:
+    positions:
+      title: 'Positionen'
+      search-placeholder: 'Positionen durchsuchen'
+      add-new: 'Position hinzufügen'
+      edit: 'Position bearbeiten'
+      id: 'Id'
+      name: 'Name'
+      imoListRank: 'Anzeigename IMO Liste'
+      color: 'Farbe'
+      prio: 'Priorität'
+      delete-title: 'Position löschen'
+      delete-message: 'Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt.'
+    qualifications:
+      title: 'Qualifikationen'
+      search-placeholder: 'Qualifikationen durchsuchen'
+      add-new: 'Qualifikation hinzufügen'
+      edit: 'Qualifikation bearbeiten'
+      name: 'Name'
+      icon: 'Icon'
+      icon-placeholder: 'fa-id-card'
+      description: 'Beschreibung'
+      expires: 'Gültigkeit der Qualifikation ist zeitlich begrenzt'
+      status-expires: 'Mit Ablaufdatum'
+      status-no-expires: 'Ohne Ablaufdatum'
+      delete-title: 'Qualifikation löschen'
+      delete-message: 'Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt.'

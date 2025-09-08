@@ -318,7 +318,7 @@ const tabs = computed<InputSelectOption<Tab>[]>(() => {
         visibleTabs.push(Tab.EVENT_TEAM);
         visibleTabs.push(Tab.EVENT_SLOTS);
     }
-    return visibleTabs.map((it) => ({ value: it, label: t(`views.event-admin-details.tab.${it}`) }));
+    return visibleTabs.map((it) => ({ value: it, label: t(`views.events.edit.event-edit-view.admin-details.tab.${it}`) }));
 });
 
 const createLocationDialog = ref<Dialog<void, Location | undefined> | null>(null);
