@@ -172,6 +172,22 @@ domain:
         label: 'Telefonnummer des Notfallkontakts'
     medication:
       label: 'Medikamente'
+  event:
+    title: 'Reise'
+    route: 'Geplante Route'
+    crew-on-board: 'Crew an Bord'
+    start: 'Reisebeginn'
+    signup: 'Anmelden'
+    leave-crew: 'Teilnahme absagen'
+    leave-waitinglist: 'Warteliste verlassen'
+  qualifications:
+    expires: 'Gültigkeit der Qualifikation ist zeitlich begrenzt'
+    status-expires: 'Mit Ablaufdatum'
+    status-expires-on: 'Gültig bis'
+    status-no-expires: 'Ohne Ablaufdatum'
+    status-expired: 'Abgelaufen'
+    status-expiring-soon: 'Läuft bald ab'
+    status-valid: 'Gültig'
 
 # -----------------------------------
 # messages used in specific views
@@ -233,12 +249,6 @@ views:
           - '{hint-all-data-optional}'
         encrypted: 'verschlüsselt'
         hint-all-data-optional: 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
-    qualifications:
-      status-expires: 'Gültig bis'
-      status-no-expires: 'Ohne Ablaufdatum'
-      status-expired: 'Abgelaufen'
-      status-expiring-soon: 'Läuft bald ab'
-      status-valid: 'Gültig'
   event-list:
     tab:
       future: 'Zukünftige'
@@ -262,9 +272,6 @@ views:
     action:
       link-event-details: 'Reise anzeigen'
       create-calendar-entry: 'Kalendereintrag erstellen'
-      signup: 'Anmelden'
-      cancel: 'Teilnahme absagen'
-      leave-waitinglist: 'Warteliste verlassen'
   event-details:
   event-admin-list:
     tab:
@@ -296,15 +303,14 @@ views:
         title: 'Positionen'
         search-placeholder: 'Positionen durchsuchen'
         add-new: 'Position hinzufügen'
-        edit: "Position bearbeiten"
-        id: "Id"
-        name: "Name"
-        imoListRank: "Anzeigename IMO Liste"
-        color: "Farbe"
-        prio: "Priorität"
-        delete-title: "Position löschen"
-        delete-message: "Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt."
-        delete-submit: "Löschen"
+        edit: 'Position bearbeiten'
+        id: 'Id'
+        name: 'Name'
+        imoListRank: 'Anzeigename IMO Liste'
+        color: 'Farbe'
+        prio: 'Priorität'
+        delete-title: 'Position löschen'
+        delete-message: 'Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt.'
       qualifications:
         title: 'Qualifikationen'
         search-placeholder: 'Qualifikationen durchsuchen'
@@ -314,18 +320,14 @@ views:
         icon: 'Icon'
         icon-placeholder: 'fa-id-card'
         description: 'Beschreibung'
-        expires: 'Gültigkeit der Qualifikation ist zeitlich begrenzt'
-        status-expires: 'Mit Ablaufdatum'
-        status-no-expires: 'Ohne Ablaufdatum'
-        delete-title: "Qualifikation löschen"
-        delete-message: "Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt."
-        delete-submit: "Löschen"
+        delete-title: 'Qualifikation löschen'
+        delete-message: 'Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt.'
   events:
     calendar:
       title: 'Alle Veranstaltungen'
-      create-event: "Neue Veranstaltung"
+      create-event: 'Neue Veranstaltung'
       days: '{count} Tag|{count} Tage'
-      draft: "Entwurf"
+      draft: 'Entwurf'
     confirm-participation:
       title: 'Bitte bestätige deine Teilnahme'
       info:
@@ -353,29 +355,22 @@ views:
       canceled-now:
         title: 'Reise abgesagt'
         info: 'Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Reise wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.'
-      event: 'Reise'
-      route: 'Geplante Route'
-      crew-on-board: 'Crew an Bord'
-      start: 'Reisebeginn'
     details:
-      info-planning: "Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Reise! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert."
-      info-canceled: "Diese Veranstaltung wurde abgesagt!"
-      info-assigned: "Du bist für diese Veranstaltung als {position} eingeplant."
-      info-confirmed: "Du hast deine Teilnahme bestätigt."
-      info-waitinglist: "Du stehst für diese Veranstaltung als {position} auf der Warteliste"
-      info-missing-crew: "Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht: {positions}"
-      leave-crew: "Teilnahme absagen"
-      leave-waitinglist: "Warteliste verlassen"
-      sign-up: "Anmelden"
-      edit-event: "Veranstaltung bearbeiten"
-      save-calendar: "In Kalender speichern"
-      create-calendar-entry: "Kalendereintrag erstellen"
-      edit-registration: "Anmeldung bearbeiten"
-      add-note: "Notiz fürs Büro hinzufügen"
-      generate-imo-list: "IMO Liste generieren"
-      generate-consumption-list: "Verzehrliste generieren"
-      generate-captain-list: "Kapitänsliste generieren"
+      info-planning: 'Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Reise! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.'
+      info-canceled: 'Diese Veranstaltung wurde abgesagt!'
+      info-assigned: 'Du bist für diese Veranstaltung als {position} eingeplant.'
+      info-confirmed: 'Du hast deine Teilnahme bestätigt.'
+      info-waitinglist: 'Du stehst für diese Veranstaltung als {position} auf der Warteliste'
+      info-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht: {positions}'
+      edit-event: 'Veranstaltung bearbeiten'
+      save-calendar: 'In Kalender speichern'
+      create-calendar-entry: 'Kalendereintrag erstellen'
+      edit-registration: 'Anmeldung bearbeiten'
+      add-note: 'Notiz fürs Büro hinzufügen'
+      generate-imo-list: 'IMO Liste generieren'
+      generate-consumption-list: 'Verzehrliste generieren'
+      generate-captain-list: 'Kapitänsliste generieren'
       leave-crew-dialog:
-        title: "Teilnahme absagen?"
-        message: "Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event} absagen möchtest? Du hast dann keinen Anspruch mehr auf eine Teilnahme an der Veranstaltung und dein Platz wird an eine andere Person vergeben."
-        submit: "Teilnahme absagen"
+        title: 'Teilnahme absagen?'
+        message: 'Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event} absagen möchtest? Du hast dann keinen Anspruch mehr auf eine Teilnahme an der Veranstaltung und dein Platz wird an eine andere Person vergeben.'
+        submit: 'Teilnahme absagen'
