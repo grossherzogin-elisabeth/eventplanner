@@ -59,7 +59,7 @@ class ListUsersIntegrationTest {
 
     @Test
     void shouldReturnListOfMinimalUsers() throws Exception {
-        var expected = TestResources.getString("/integration/users/list-users-minimal.json");
+        var expected = TestResources.getString("/integration/api/users/list-users-minimal.json");
         webMvc.perform(get("/api/v1/users")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
@@ -70,7 +70,7 @@ class ListUsersIntegrationTest {
 
     @Test
     void shouldReturnListOfExtendedUsers() throws Exception {
-        var expected = TestResources.getString("/integration/users/list-users-extended.json");
+        var expected = TestResources.getString("/integration/api/users/list-users-extended.json");
         webMvc.perform(get("/api/v1/users")
                 .with(withAuthentication(TestUser.ADMIN))
                 .accept(MediaType.APPLICATION_JSON))

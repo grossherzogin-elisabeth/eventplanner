@@ -59,7 +59,7 @@ class ReadSettingsIntegrationTest {
 
     @Test
     void shouldReturnSettingsForAdmins() throws Exception {
-        var expected = TestResources.getString("/integration/settings/read-settings.json");
+        var expected = TestResources.getString("/integration/api/settings/read-settings.json");
         webMvc.perform(get("/api/v1/settings")
                 .with(withAuthentication(TestUser.ADMIN))
                 .accept(MediaType.APPLICATION_JSON))

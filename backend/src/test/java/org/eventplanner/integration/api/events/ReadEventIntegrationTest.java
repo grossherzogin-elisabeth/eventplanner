@@ -44,7 +44,7 @@ class ReadEventIntegrationTest {
 
     @Test
     void shouldReturnSingleEventAsTeamMember() throws Exception {
-        var expected = TestResources.getString("/integration/events/read-event-as-team-member.json");
+        var expected = TestResources.getString("/integration/api/events/read-event-as-team-member.json");
         webMvc.perform(get("/api/v1/events/7fa48570-963a-4e95-b72f-acaf70c70a24")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
@@ -55,7 +55,7 @@ class ReadEventIntegrationTest {
 
     @Test
     void shouldReturnSingleEventAsEventPlanner() throws Exception {
-        var expected = TestResources.getString("/integration/events/read-event-as-event-planner.json");
+        var expected = TestResources.getString("/integration/api/events/read-event-as-event-planner.json");
         webMvc.perform(get("/api/v1/events/7fa48570-963a-4e95-b72f-acaf70c70a24")
                 .with(withAuthentication(TestUser.EVENT_PLANNER))
                 .accept(MediaType.APPLICATION_JSON))

@@ -51,7 +51,7 @@ class ListPositionsIntegrationTest {
 
     @Test
     void shouldReturnPositions() throws Exception {
-        var expected = TestResources.getString("/integration/positions/list-positions.json");
+        var expected = TestResources.getString("/integration/api/positions/list-positions.json");
         webMvc.perform(get("/api/v1/positions")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))

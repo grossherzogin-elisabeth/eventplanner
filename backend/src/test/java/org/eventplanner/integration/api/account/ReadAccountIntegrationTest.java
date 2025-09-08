@@ -51,7 +51,7 @@ class ReadAccountIntegrationTest {
 
     @Test
     void shouldReturnAccountDataForTeamMember() throws Exception {
-        var expected = TestResources.getString("/integration/account/read-account-team-member.json");
+        var expected = TestResources.getString("/integration/api/account/read-account-team-member.json");
         webMvc.perform(get("/api/v1/account")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
@@ -62,7 +62,7 @@ class ReadAccountIntegrationTest {
 
     @Test
     void shouldReturnAccountDataForAdmin() throws Exception {
-        var expected = TestResources.getString("/integration/account/read-account-admin.json");
+        var expected = TestResources.getString("/integration/api/account/read-account-admin.json");
         webMvc.perform(get("/api/v1/account")
                 .with(withAuthentication(TestUser.ADMIN))
                 .accept(MediaType.APPLICATION_JSON))

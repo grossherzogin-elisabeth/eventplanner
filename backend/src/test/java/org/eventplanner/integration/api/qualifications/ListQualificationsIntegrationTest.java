@@ -51,7 +51,7 @@ class ListQualificationsIntegrationTest {
 
     @Test
     void shouldReturnQualifications() throws Exception {
-        var expected = TestResources.getString("/integration/qualifications/list-qualifications.json");
+        var expected = TestResources.getString("/integration/api/qualifications/list-qualifications.json");
         webMvc.perform(get("/api/v1/qualifications")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))

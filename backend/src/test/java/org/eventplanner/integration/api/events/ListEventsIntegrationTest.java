@@ -70,7 +70,7 @@ class ListEventsIntegrationTest {
 
     @Test
     void shouldListEvents() throws Exception {
-        var expected = TestResources.getString("/integration/events/list-events-as-team-member.json");
+        var expected = TestResources.getString("/integration/api/events/list-events-as-team-member.json");
         webMvc.perform(get("/api/v1/events?year=2025")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
@@ -81,7 +81,7 @@ class ListEventsIntegrationTest {
 
     @Test
     void shouldListAllEvents() throws Exception {
-        var expected = TestResources.getString("/integration/events/list-events-as-event-planner.json");
+        var expected = TestResources.getString("/integration/api/events/list-events-as-event-planner.json");
         webMvc.perform(get("/api/v1/events?year=2025")
                 .with(withAuthentication(TestUser.EVENT_PLANNER))
                 .accept(MediaType.APPLICATION_JSON))
