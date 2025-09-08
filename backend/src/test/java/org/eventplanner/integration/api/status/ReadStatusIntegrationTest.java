@@ -1,4 +1,4 @@
-package org.eventplanner.integration.api.config;
+package org.eventplanner.integration.api.status;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
 @Transactional // resets db changes after each test
-class ReadConfigIntegrationTest {
+class ReadStatusIntegrationTest {
 
     private MockMvc webMvc;
 
@@ -40,13 +40,13 @@ class ReadConfigIntegrationTest {
     }
 
     @Test
-    void shouldAllowReadWithoutAuthentication() throws Exception {
-        webMvc.perform(get("/api/v1/config").accept(MediaType.APPLICATION_JSON))
+    void shouldReturnStatusWithoutAuthentication() throws Exception {
+        webMvc.perform(get("/api/v1/status")
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.menuTitle").value("Test"))
-            .andExpect(jsonPath("$.tabTitle").value("Test"))
-            .andExpect(jsonPath("$.technicalSupportEmail").value("admin@email.com"))
-            .andExpect(jsonPath("$.supportEmail").value("support@email.com"));
+            .andExpect(jsonPath("$.buildCommit").value("local"))
+            .andExpect(jsonPath("$.buildBranch").value("main"))
+            .andExpect(jsonPath("$.buildDate").isNotEmpty());
     }
 }

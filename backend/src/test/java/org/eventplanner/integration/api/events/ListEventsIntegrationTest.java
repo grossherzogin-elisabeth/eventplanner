@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @AutoConfigureMockMvc
 @Transactional // resets db changes after each test
 class ListEventsIntegrationTest {
+
     private MockMvc webMvc;
 
     @Autowired

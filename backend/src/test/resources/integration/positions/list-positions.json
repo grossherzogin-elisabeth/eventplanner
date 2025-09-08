@@ -1,0 +1,37 @@
+[
+  {
+    "key": "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545",
+    "name": "Captain",
+    "color": "#D9D9D9",
+    "prio": 100,
+    "imoListRank": "Master"
+  },
+  {
+    "key": "3ea10356-8f2f-49df-abc8-b9ecd1a6934e",
+    "name": "Mate",
+    "color": "#D9D9D9",
+    "prio": 90,
+    "imoListRank": "Mate"
+  },
+  {
+    "key": "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+    "name": "Engineer",
+    "color": "#FCE4D6",
+    "prio": 80,
+    "imoListRank": "Engineer"
+  },
+  {
+    "key": "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+    "name": "Deckshand",
+    "color": "#E2EFDA",
+    "prio": 10,
+    "imoListRank": "Deckshand"
+  },
+  {
+    "key": "576803dd-9f05-44f2-9746-08cf42431a3e",
+    "name": "Trainer",
+    "color": "#F4B084",
+    "prio": 50,
+    "imoListRank": "Trainer"
+  }
+]
