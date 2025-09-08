@@ -1,7 +1,6 @@
 package org.eventplanner.integration;
 
 import static org.eventplanner.integration.util.Auth.TestUser.TEAM_MEMBER;
-import static org.eventplanner.utils.IsIterableContainingOnly.allMatch;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -9,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
 import org.eventplanner.integration.util.Auth;
 import org.hamcrest.BaseMatcher;
@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -75,32 +74,38 @@ class EventsIntegrationTest {
             .andExpect(jsonPath("$.registrations[*]", doesNotContainPrivateUserData(Auth.TestUser.TEAM_MEMBER)));
     }
 
-    public static Matcher<Iterable<? super Map<String, Object>>> doesNotContainPrivateUserData(Auth.TestUser user) {
-        return allMatch(new RegistrationMatcher(user));
-    }
-
-    @RequiredArgsConstructor
-    static class RegistrationMatcher extends BaseMatcher<Map<String, Object>> {
-        private final Auth.TestUser user;
-
-        @Override
-        public boolean matches(final Object actual) {
-            if (actual instanceof Map<?, ?> attributes) {
-                var userKey = attributes.get("userKey");
-                if (user.getOidcId().equals(userKey)) {
-                    return true;
+    public static Matcher<Iterable<? super Object>> doesNotContainPrivateUserData(Auth.TestUser user) {
+        return new BaseMatcher<>() {
+            @Override
+            public boolean matches(final Object actual) {
+                if (actual instanceof Iterable<?> iterable) {
+                    var invalidRegistrations = StreamSupport.stream(iterable.spliterator(), false)
+                        .filter(this::isInValidRegistration)
+                        .count();
+                    return invalidRegistrations == 0;
                 }
-                return !attributes.containsKey("note")
-                    && !attributes.containsKey("overnightStay")
-                    && !attributes.containsKey("confirmed")
-                    && !attributes.containsKey("arrival");
+                return false;
             }
-            return false;
-        }
 
-        @Override
-        public void describeTo(final Description description) {
-            description.appendText("items without private data of other users");
-        }
+            private boolean isInValidRegistration(Object actual) {
+                if (actual instanceof Map<?, ?> attributes) {
+                    var userKey = attributes.get("userKey");
+                    if (user.getOidcId().equals(userKey)) {
+                        // this is the users own registration, so it may contain all data
+                        return false;
+                    }
+                    return attributes.containsKey("note")
+                        || attributes.containsKey("overnightStay")
+                        || attributes.containsKey("confirmed")
+                        || attributes.containsKey("arrival");
+                }
+                return true;
+            }
+
+            @Override
+            public void describeTo(final Description description) {
+                description.appendText("items do not contain private data of other users");
+            }
+        };
     }
 }
