@@ -1,4 +1,0 @@
-data:
-  generate-test-data: true
-  db-url: jdbc:sqlite:eventplanner-test.db
-
