@@ -12,6 +12,9 @@ generic:
   save: 'Speichern'
   edit: 'Bearbeiten'
   delete: 'Löschen'
+  apply: 'Übernehmen'
+  discard-changes: 'Änderungen verwerfen'
+  error: 'Fehler'
   month:
     '0': 'Januar'
     '1': 'Februar'
@@ -374,3 +377,73 @@ views:
         title: 'Teilnahme absagen?'
         message: 'Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event} absagen möchtest? Du hast dann keinen Anspruch mehr auf eine Teilnahme an der Veranstaltung und dein Platz wird an eine andere Person vergeben.'
         submit: 'Teilnahme absagen'
+    edit:
+      crew-editor:
+        crew: "Crew"
+        secure-crew: "Sichere Besatzung"
+        add-to-crew: "Zur Crew hinzufügen"
+        empty-crew:
+          title: "Hier ist noch nichts..."
+          desc: "Für diese Veranstaltung wurden noch keine Slots definiert. Im \"Slots\" Tab kannst du Slots für diese Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen."
+        waiting-list: "Warteliste"
+        move-to-waiting-list: "Auf Warteliste verschieben"
+        delete-registration: "Anmeldung löschen"
+        empty-waitinglist:
+          title: "Die Warteliste ist leer..."
+          desc: "Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Veranstaltung anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden."
+        assign-error:
+          title: "Zuweisung nicht möglich"
+          message: "{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die Position {position} gibt. Du kannst entweder einen passenden Slot freigeben, indem du jemand anderes aus der Crew entfernst oder einen neuen Slot für diese Veranstaltung hinzufügen."
+          retry: "Slot hinzufügen"
+      event-edit-view:
+        info-draft: "Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen."
+        info-canceled: "Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab Reisedaten zurücknehmen."
+        info-missing-crew: "Die Voraussetzungen für eine sichere Mindestbesatzung für diese Veranstaltung sind noch nicht erfüllt!"
+        status: "Status"
+        name: "Veranstaltungsname"
+        category: "Kategorie"
+        signup-type: "Anmeldetyp"
+        description: "Beschreibung"
+        start-date: "Startdatum"
+        crew-on-board: "Crew an Bord"
+        end-date: "Enddatum"
+        crew-off-board: "Crew von Bord"
+        add-registration: "Anmeldung hinzufügen"
+        add-slot: "Crewslot hinzufügen"
+        add-location: "Reiseabschnitt hinzufügen"
+        contact-crew: "Crew kontaktieren"
+        generate-imo-list: "IMO Liste generieren"
+        generate-consumption-list: "Verzehrliste generieren"
+        generate-captain-list: "Kapitänsliste generieren"
+        open-signup: "Anmeldungen freischalten"
+        publish-crew: "Crew veröffentlichen"
+        reset-crew: "Crew zurücksetzen"
+        cancel-event: "Veranstaltung absagen"
+        unsaved-changes:
+          title: "Änderungen verwerfen?"
+          message: "Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen verworfen. Möchtest du fortfahren?"
+      location-edit-dlg:
+        edit-start-port: "Starthafen bearbeiten"
+        add-location: "Reiseabschnitt hinzufügen"
+        edit-location: "Reiseabschnitt bearbeiten"
+        name: "Name"
+        icon: "Icon"
+        icon-placeholder: "fa-anchor"
+        delete-eta: "ETA löschen"
+        delete-etd: "ETD löschen"
+        address:
+          title: "Liegeplatz"
+          link: "Liegeplatz Link"
+        information:
+          title: "Weitere Informationen"
+          link: "Weitere Informationen Link"
+        validation:
+          name: "Bitte gib einen Namen an"
+          icon: "Bitte wähle ein Icon"
+      locations-table:
+        eta: "ETA:"
+        etd: "ETD:"
+        edit: "Abschnitt bearbeiten"
+        move-up: "Nach oben verschieben"
+        move-down: "Nach unten verschieben"
+        delete: "Abschnitt löschen"
