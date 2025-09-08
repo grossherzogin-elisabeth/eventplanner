@@ -1,0 +1,95 @@
+# -----------------------------------
+# messages used in account views
+# -----------------------------------
+account:
+  title: 'Meine Daten'
+  tab:
+    data: 'Persönliche Daten'
+    contact: 'Kontaktdaten'
+    qualifications: 'Qualifikationen'
+    emergency: 'Notfallinformationen'
+  data:
+    title-app: 'App'
+    personal:
+      title: 'Persönliche Daten'
+      first-name: 'Vorname'
+      middle-name: 'Zweiter Vorname'
+      last-name: 'Nachname'
+      birthday: 'Geboren am'
+      place-of-birth: 'Geburtsort'
+      gender:
+        label: 'Geschlecht'
+        values:
+          male: 'männlich'
+          female: 'weiblich'
+          diverse: 'divers'
+      passport-number: 'Personalausweis Nummer'
+      nationality: 'Nationalität'
+    display-name: 'Anzeigename'
+    diet:
+      title: 'Ernährung'
+      label: 'Ernährungsweise'
+      values:
+        vegetarian: 'Vegetarisch'
+        vegan: 'Vegan'
+        omnivore: 'Fleisch'
+      intolerances: 'Unverträglichkeiten'
+    hint-name-passport:
+      title: 'Name und Personalausweis Nummer'
+      messages:
+        - 'Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen, da dieser auch zum 
+                Erstellen der IMO Liste verwendet wird. Bitte beachte, das du den Personalausweis bei Reisen mitführen 
+                musst!'
+        - 'Solltest du mit einem anderen Namen oder Spitznamen angesprochen werden wollen, kannst du einen 
+                abweichenden Anzeigenamen angeben. Dieser wird dann in der App angezeigt und auch beim Kammerplan und 
+                der Getränkeliste verwendet.'
+        - '{link}'
+      link:
+        label: 'Wo finde ich meine Personalausweis Nummer?'
+        url: 'https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png'
+  contact:
+    mail-phone:
+      title: 'Email & Telefon'
+      email: 'Email'
+      phone: 'Telefon'
+      phone-work: 'Telefon (dienstlich)'
+      mobile: 'Mobil'
+    address:
+      title: 'Adresse'
+      address-line1: 'Straße, Hausnr.'
+      address-line2: 'Adresszusatz'
+      zip: 'PLZ'
+      city: 'Ort'
+      country: 'Land'
+    hint-mail:
+      title: 'Du möchtest deine Email Adresse ändern?'
+      messages:
+        - 'Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login verwendet. Wenn du die Email 
+                Adresse ändern möchtest wende dich bitte ans {link}'
+      link: 'Büro'
+  emergency:
+    contact:
+      title: 'Notfallkontakt'
+      name: 'Name des Notfallkontakts'
+      phone: 'Telefonnummer des Notfallkontakts'
+    medical:
+      title: 'Wichtige gesundheitliche Informationen'
+      diseases: 'Krankheiten'
+      medication: 'Medikamente'
+    hint-emergency-contact:
+      title: 'Notfall Informationen'
+      messages:
+        - 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, dass du bestimmte 
+                Krankheiten hast oder welche wichtigen Medikamente du benötigst. Außerdem kannst du einen Notfallkontakt
+                angeben, den wir kontaktieren können, falls du mal nicht mehr ansprechbar bist.'
+        - 'Deine Daten werden {encrypted} gespeichert und sind nur für autorisierte Personen einsehbar. In 
+                der Regel sind dies das Büro und der Kapitän der jeweiligen Reise.'
+        - '{hint-all-data-optional}'
+      encrypted: 'verschlüsselt'
+      hint-all-data-optional: 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
+  qualifications:
+    status-expires-on: 'Gültig bis'
+    status-no-expires: 'Ohne Ablaufdatum'
+    status-expired: 'Abgelaufen'
+    status-expiring-soon: 'Läuft bald ab'
+    status-valid: 'Gültig'

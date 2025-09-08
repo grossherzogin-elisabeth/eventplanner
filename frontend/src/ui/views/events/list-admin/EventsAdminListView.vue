@@ -493,7 +493,7 @@ const showBatchPublishPlannedCrew = computed<boolean>(() => {
 const tabs = computed<InputSelectOption[]>(() => {
     const currentYear = new Date().getFullYear();
     return [
-        { value: 'future', label: t('views.event-admin-list.tab.future') },
+        { value: 'future', label: t('views.events.admin-list.tab.future') },
         { value: String(currentYear + 1), label: String(currentYear + 1) },
         { value: String(currentYear), label: String(currentYear) },
         { value: String(currentYear - 1), label: String(currentYear - 1) },
