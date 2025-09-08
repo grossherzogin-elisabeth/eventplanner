@@ -88,7 +88,7 @@ public class CaptainListService {
         }
     }
 
-    private int findFirstEmptyRow(XSSFSheet sheet) {
+    private int findFirstEmptyRow(@NonNull XSSFSheet sheet) {
         int rowCounter = -1;
         boolean rowIsEmpty = false;
         Iterator<Row> rowIterator = sheet.iterator();
@@ -113,9 +113,9 @@ public class CaptainListService {
     }
 
     private void writeCrewDataToSheet(
-        XSSFSheet sheet,
-        List<Registration> crewList,
-        Map<PositionKey, Position> positionMap
+        @NonNull XSSFSheet sheet,
+        @NonNull List<Registration> crewList,
+        @NonNull Map<PositionKey, Position> positionMap
     ) throws IOException {
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
@@ -173,7 +173,11 @@ public class CaptainListService {
         }
     }
 
-    private void replacePlaceHolderInSheet(XSSFSheet sheet, String placeHolder, @NonNull String replacement) {
+    private void replacePlaceHolderInSheet(
+        @NonNull XSSFSheet sheet,
+        @NonNull String placeHolder,
+        @NonNull String replacement
+    ) {
         Iterator<Row> rowIterator = sheet.iterator();
         int rowCounter = 0;
         while (rowIterator.hasNext()) {
@@ -191,7 +195,7 @@ public class CaptainListService {
         }
     }
 
-    private void insertQualifications(Row row, Optional<UserDetails> crewMemberDetails) {
+    private void insertQualifications(@NonNull Row row, @NonNull Optional<UserDetails> crewMemberDetails) {
         StringBuilder otherQualifications = new StringBuilder();
         List<Instant> expirationDateOtherQualifications = new ArrayList<>();
         StringBuilder radioQualifications = new StringBuilder();
@@ -262,16 +266,16 @@ public class CaptainListService {
         row.getCell(17).setCellValue(multipleDates2String(new ArrayList<>(expirationDateSafetyQualifications)));
     }
 
-    private String removeCommaAtStringEnd(String input) {
+    private @NonNull String removeCommaAtStringEnd(@NonNull String input) {
         return input.replaceAll(", $", "");
     }
 
-    private String date2String(Instant date) {
+    private @NonNull String date2String(@NonNull Instant date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return date.atZone(timezone).format(formatter);
     }
 
-    private String multipleDates2String(List<Instant> dates) {
+    private @NonNull String multipleDates2String(@NonNull List<Instant> dates) {
         String dateString = dates.stream()
             .filter(Objects::nonNull)
             .map(this::date2String)
@@ -279,7 +283,7 @@ public class CaptainListService {
         return removeCommaAtStringEnd(dateString);
     }
 
-    private void resizeSheet(XSSFSheet sheet) {
+    private void resizeSheet(@NonNull XSSFSheet sheet) {
         int maxColumnWidth = 5000;
         int columnCount = sheet.getRow(0).getLastCellNum();
         for (int i = 0; i < columnCount; i++) {
@@ -293,7 +297,7 @@ public class CaptainListService {
             row.setHeight((short) -1);
     }
 
-    private ByteArrayOutputStream getWorkbookBytes(XSSFWorkbook workbook) throws IOException {
+    private @NonNull ByteArrayOutputStream getWorkbookBytes(@NonNull XSSFWorkbook workbook) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (bos) {
             workbook.write(bos);

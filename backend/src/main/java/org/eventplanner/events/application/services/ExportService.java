@@ -195,8 +195,8 @@ public class ExportService {
         @NonNull Map<UserKey, UserDetails> users,
         @NonNull XSSFSheet sheet,
         @NonNull Map<String, XSSFCellStyle> cellStyles,
-        List<PositionKey> assignedRows,
-        List<PositionKey> waitingListRows,
+        @NonNull List<PositionKey> assignedRows,
+        @NonNull List<PositionKey> waitingListRows,
         int column
     ) {
         for (var it = sheet.rowIterator(); it.hasNext(); ) {

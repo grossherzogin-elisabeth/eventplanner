@@ -28,11 +28,11 @@
                 <div class="flex justify-end">
                     <div v-if="item.expires" class="status-panel bg-yellow-container text-onyellow-container">
                         <i class="fa-solid fa-clock"></i>
-                        <span class="whitespace-nowrap font-semibold">{{ $t('views.basedata.tab.qualifications.status-expires') }}</span>
+                        <span class="whitespace-nowrap font-semibold">{{ $t('domain.qualifications.status-expires') }}</span>
                     </div>
                     <div v-else class="status-panel bg-green-container text-ongreen-container">
                         <i class="fa-solid fa-check-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">{{ $t('views.basedata.tab.qualifications.status-no-expires') }}</span>
+                        <span class="whitespace-nowrap font-semibold">{{ $t('domain.qualifications.status-no-expires') }}</span>
                     </div>
                 </div>
             </td>
@@ -107,7 +107,7 @@ async function deleteQualification(qualification: Qualification): Promise<void> 
     const confirmed = await deleteQualificationDialog.value?.open({
         title: t('views.basedata.tab.qualifications.delete-title'),
         message: t('views.basedata.tab.qualifications.delete-message'),
-        submit: t('views.basedata.tab.qualifications.delete-submit'),
+        submit: t('generic.delete'),
         danger: true,
     });
     if (confirmed) {

@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import lombok.With;
+
+@With
 public record AuthConfig(
     @Nullable String loginSuccessUrl,
     @Nullable String logoutSuccessUrl,

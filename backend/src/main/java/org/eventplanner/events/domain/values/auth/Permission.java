@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -38,29 +39,29 @@ public enum Permission {
 
     private final String value;
 
-    Permission(String value) {
+    Permission(@NonNull String value) {
         this.value = value;
     }
 
     @JsonCreator
-    public static Permission parse(@NonNull String value) {
+    public static @NonNull Permission parse(@NonNull String value) {
         return fromString(value)
             .orElseThrow(() -> new IllegalArgumentException("Invalid permission value " + value));
     }
 
-    public static Optional<Permission> fromString(String value) {
+    public static @NonNull Optional<Permission> fromString(@Nullable String value) {
         return Arrays.stream(values())
             .filter(permission -> permission.value().equals(value))
             .findFirst();
     }
 
-    public String value() {
+    public @NonNull String value() {
         return value;
     }
 
     @JsonValue
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return value;
     }
 }

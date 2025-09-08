@@ -61,7 +61,7 @@ public class JavaEmailAdapter implements EmailSender {
         mailSender.send(message);
     }
 
-    private JavaMailSender getMailSender(@NonNull EmailConfig emailConfig) {
+    private @NonNull JavaMailSender getMailSender(@NonNull EmailConfig emailConfig) {
         var host = emailConfig.host();
         var port = emailConfig.port();
         var username = emailConfig.username();

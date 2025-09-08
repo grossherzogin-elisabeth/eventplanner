@@ -135,7 +135,7 @@ public class RegistrationConfirmationUseCase {
         eventRepository.update(event);
     }
 
-    private List<Event> getEventsToNotify(final int alreadySentRequests) {
+    private @NonNull List<Event> getEventsToNotify(final int alreadySentRequests) {
         var currentYear = Instant.now().atZone(timezone).getYear();
         return Stream.concat(
                 eventRepository.findAllByYear(currentYear + 1).stream(),
@@ -157,7 +157,7 @@ public class RegistrationConfirmationUseCase {
             .toList();
     }
 
-    public Event getEventByAccessKey(
+    public @NonNull Event getEventByAccessKey(
         @NonNull final EventKey eventKey,
         @NonNull final String accessKey
     ) {
@@ -233,7 +233,7 @@ public class RegistrationConfirmationUseCase {
         eventRepository.update(event);
     }
 
-    private Registration getRegistrationByKey(
+    private @NonNull Registration getRegistrationByKey(
         @NonNull final Event event,
         @NonNull final RegistrationKey registrationKey
     ) {

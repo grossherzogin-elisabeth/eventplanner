@@ -3,6 +3,7 @@ package org.eventplanner.events.domain.values.notifications;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public enum NotificationType {
@@ -88,18 +89,18 @@ public enum NotificationType {
 
     private final String value;
 
-    NotificationType(String value) {
+    NotificationType(@NonNull String value) {
         this.value = value;
     }
 
-    public static Optional<NotificationType> fromString(@Nullable String value) {
+    public static @NonNull Optional<NotificationType> fromString(@Nullable String value) {
         return Arrays.stream(values())
             .filter(state -> state.toString().equals(value))
             .findFirst();
     }
 
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return value;
     }
 }

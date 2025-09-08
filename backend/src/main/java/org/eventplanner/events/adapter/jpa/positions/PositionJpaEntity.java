@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.springframework.lang.NonNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,7 +39,7 @@ public class PositionJpaEntity implements Serializable {
     @Column(name = "imo_list_name", nullable = false)
     private String imoListRank;
 
-    public static PositionJpaEntity fromDomain(Position position) {
+    public static @NonNull PositionJpaEntity fromDomain(@NonNull Position position) {
         return new PositionJpaEntity(
             position.getKey().value(),
             position.getName(),
@@ -48,7 +49,7 @@ public class PositionJpaEntity implements Serializable {
         );
     }
 
-    public Position toDomain() {
+    public @NonNull Position toDomain() {
         return new Position(new PositionKey(key), name, color, prio, imoListRank);
     }
 }

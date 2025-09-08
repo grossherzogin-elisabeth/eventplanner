@@ -8,7 +8,9 @@ import org.springframework.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.With;
 
+@With
 public record FrontendConfig(
     @Nullable String menuTitle,
     @Nullable String tabTitle,

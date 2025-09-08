@@ -74,7 +74,7 @@ public class UserService {
         return userRepository.findByKey(key);
     }
 
-    public Optional<UserDetails> getUserByKey(@Nullable UserKey key) {
+    public @NonNull Optional<UserDetails> getUserByKey(@Nullable UserKey key) {
         if (key == null) {
             return Optional.empty();
         }
@@ -105,39 +105,39 @@ public class UserService {
             .findFirst();
     }
 
-    public UserDetails createUser(UserDetails userDetails) {
+    public @NonNull UserDetails createUser(@NonNull UserDetails userDetails) {
         var encrypted = userDetails.encrypt(encryptionService::encrypt);
         encrypted = userRepository.create(encrypted);
         return encrypted.decrypt(encryptionService::decrypt);
     }
 
-    public UserDetails updateUser(UserDetails userDetails) {
+    public @NonNull UserDetails updateUser(@NonNull UserDetails userDetails) {
         var encrypted = userDetails.encrypt(encryptionService::encrypt);
         encrypted = userRepository.update(encrypted);
         return resolvePositionsAndQualificationExpires(encrypted.decrypt(encryptionService::decrypt));
     }
 
-    public void deleteUser(UserKey userKey) {
+    public void deleteUser(@NonNull UserKey userKey) {
         // TODO should this be a soft delete?
         userRepository.deleteByKey(userKey);
     }
 
-    public List<UserDetails> getUsersByRole(Role role) {
+    public @NonNull List<UserDetails> getUsersByRole(@NonNull Role role) {
         return getDetailedUsers().stream()
             .filter(user -> user.getRoles().contains(role))
             .collect(Collectors.toList());
     }
 
-    private UserDetails resolvePositionsAndQualificationExpires(UserDetails userDetails) {
+    private @NonNull UserDetails resolvePositionsAndQualificationExpires(@NonNull UserDetails userDetails) {
         var qualificationMap = qualificationRepository.findAll()
             .stream()
             .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
         return resolvePositionsAndQualificationExpires(userDetails, qualificationMap);
     }
 
-    private UserDetails resolvePositionsAndQualificationExpires(
-        UserDetails userDetails,
-        Map<QualificationKey, Qualification> qualificationMap
+    private @NonNull UserDetails resolvePositionsAndQualificationExpires(
+        @NonNull UserDetails userDetails,
+        @NonNull Map<QualificationKey, Qualification> qualificationMap
     ) {
         userDetails.getQualifications().forEach(userQualification -> {
             var qualification = qualificationMap.get(userQualification.getQualificationKey());
