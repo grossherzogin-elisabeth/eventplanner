@@ -43,7 +43,7 @@ class WebConfigIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "/api/v1/users", "/api/v1/any", "/api/any" })
-    void shouldReturnUnauthorized(String path) throws Exception {
+    void shouldReturnUnauthorizedForMissingAuth(String path) throws Exception {
         webMvc.perform(get(path)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
@@ -51,7 +51,7 @@ class WebConfigIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "/api/v1/any", "/api/any" })
-    void shouldReturnNotFound(String path) throws Exception {
+    void shouldReturnNotFoundForNonExistingEndpoints(String path) throws Exception {
         webMvc.perform(get(path)
                 .with(withAuthentication(TestUser.USER_WITHOUT_ROLE))
                 .accept(MediaType.APPLICATION_JSON))
@@ -60,7 +60,7 @@ class WebConfigIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "/api/v1/users", "/api/v1/settings" })
-    void shouldReturnForbidden(String path) throws Exception {
+    void shouldReturnForbiddenForUsersWithoutRole(String path) throws Exception {
         webMvc.perform(get(path)
                 .with(withAuthentication(TestUser.USER_WITHOUT_ROLE))
                 .accept(MediaType.APPLICATION_JSON))
@@ -68,8 +68,8 @@ class WebConfigIntegrationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "/any", "" })
-    void shouldReturnIndexHtml(String path) throws Exception {
+    @ValueSource(strings = { "", "/index.html", "/any", "/any/longer" })
+    void shouldFallbackToIndexHtml(String path) throws Exception {
         webMvc.perform(get(path)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
