@@ -2,27 +2,26 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-birthday-cake"
-        label="Geburtstag und Ort"
+        :label="$t('views.account.data.personal.birth.label')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
             <span v-if="props.modelValue.dateOfBirth"> {{ $d(props.modelValue.dateOfBirth, DateTimeFormat.DD_MM_YYYY) }} </span>
-            <span v-else> Keine Angabe </span>
+            <span v-else> {{ $t('generic.no-information') }} </span>
             <span v-if="props.modelValue.placeOfBirth"> in {{ props.modelValue.placeOfBirth }} </span>
-            <span v-else> in Keine Angabe </span>
+            <span v-else> in {{ $t('generic.no-information') }} </span>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum Erstellen der
-                offiziellen IMO Liste verwendet werden.
+                {{ $t('views.account.data.personal.hint') }}
             </p>
-            <p class="mb-8 text-sm font-bold">Bitte beachte, dass du dein Ausweisdokument auf Reisen mitführen musst!</p>
+            <p class="mb-8 text-sm font-bold">{{ $t('views.account.data.personal.passport.hint')}}</p>
             <div class="mb-4">
-                <VInputLabel>Geburtstag</VInputLabel>
+                <VInputLabel>{{$t('views.account.data.personal.birth.day')}}</VInputLabel>
                 <VInputDate v-model="value.dateOfBirth" disabled />
             </div>
             <div class="mb-4">
-                <VInputLabel>Geburtsort</VInputLabel>
+                <VInputLabel>{{$t('views.account.data.personal.birth.place-of-birth')}}</VInputLabel>
                 <VInputText v-model="value.placeOfBirth" disabled />
             </div>
         </template>

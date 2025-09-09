@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-map-location-dot"
-        label="Adresse"
+        :label="$t('views.account.contact.address.title')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -25,32 +25,32 @@
                 "
                 class="italic"
             >
-                keine Angabe
+                {{ $t('generic.no-information') }}
             </p>
         </template>
         <template #edit="{ value }">
-            <p class="mb-8 text-sm">Bitte gib deine primäre Wohnanschrift an.</p>
+            <p class="mb-8 text-sm">{{$t('views.account.contact.address.hint')}}</p>
             <div class="mb-4">
-                <VInputLabel>Straße und Hausnummer</VInputLabel>
-                <VInputText v-model.trim="value.address.addressLine1" required placeholder="keine Angabe" />
+                <VInputLabel>{{$t('views.account.contact.address.address-line1')}}</VInputLabel>
+                <VInputText v-model.trim="value.address.addressLine1" required :placeholder="$t('generic.no-information')" />
             </div>
             <div class="mb-4">
-                <VInputLabel>Adresszusatz</VInputLabel>
-                <VInputText v-model.trim="value.address.addressLine2" placeholder="optional" />
+                <VInputLabel>{{$t('views.account.contact.address.address-line2')}}</VInputLabel>
+                <VInputText v-model.trim="value.address.addressLine2" :placeholder="$t('generic.optional')" />
             </div>
             <div class="flex flex-col sm:flex-row sm:space-x-4">
                 <div class="mb-4 sm:w-36">
-                    <VInputLabel>PLZ</VInputLabel>
-                    <VInputText v-model.trim="value.address.zipcode" required placeholder="keine Angabe" />
+                    <VInputLabel>{{$t('views.account.contact.address.zip')}}</VInputLabel>
+                    <VInputText v-model.trim="value.address.zipcode" required :placeholder="$t('generic.no-information')" />
                 </div>
                 <div class="mb-4 sm:flex-grow">
-                    <VInputLabel>Ort</VInputLabel>
-                    <VInputText v-model.trim="value.address.town" required placeholder="keine Angabe" />
+                    <VInputLabel>{{$t('views.account.contact.address.city')}}</VInputLabel>
+                    <VInputText v-model.trim="value.address.town" required :placeholder="$t('generic.no-information')" />
                 </div>
             </div>
             <div class="mb-4">
-                <VInputLabel>Land</VInputLabel>
-                <VInputCombobox v-model="value.address.country" :options="countries.options" required placeholder="keine Angabe" />
+                <VInputLabel>{{$t('views.account.contact.address.country')}}</VInputLabel>
+                <VInputCombobox v-model="value.address.country" :options="countries.options" required :placeholder="$t('generic.no-information')" />
             </div>
         </template>
     </VInteractiveListItem>

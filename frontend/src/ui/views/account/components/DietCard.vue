@@ -2,19 +2,18 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-utensils"
-        label="Ernährungsweise"
+        :label="$t('views.account.data.diet.label')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
             <span v-if="props.modelValue.diet">
                 {{ diet.getName(props.modelValue.diet) }}
             </span>
-            <span v-else>keine Angabe</span>
+            <span v-else>{{ $t('generic.no-information') }}</span>
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">
-                Bitte gib an, falls du dich vegetarisch oder vegan ernährst. Diese Information ist wichtig, damit die Kombüse ausreichend
-                planen kann.
+                {{ $t('views.account.data.diet.hint')}}
             </p>
             <VInputSelectionList v-model="value.diet" :options="diet.options" />
         </template>

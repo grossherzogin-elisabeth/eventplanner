@@ -2,19 +2,20 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-flag"
-        label="Nationalität"
+        :label="$t('views.account.data.personal.nationality.label')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
             <span v-if="props.modelValue.nationality"> {{ nationalities.getName(props.modelValue.nationality) }} </span>
-            <span v-else> Keine Angabe </span>
+            <span v-else> {{$t('generic.no-information')}} </span>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                Deine Nationalität wird für das Erstellen der offiziellen IMO Liste benötigt. Solltest du mehrere Nationalitäten haben, gib
-                hier bitte diejenige an, die auch auf deinem Ausweisdokumentes steht.
+                {{$t('views.account.data.personal.nationality.hint')}}
             </p>
-            <p class="mb-8 text-sm font-bold">Bitte beachte, dass du dein Ausweisdokument auf Reisen mitführen musst!</p>
+            <p class="mb-8 text-sm font-bold">
+                {{$t('views.account.data.personal.passport.hint')}}
+            </p>
             <VInputSelectionList v-model="value.nationality" :options="nationalities.options" />
         </template>
     </VInteractiveListItem>

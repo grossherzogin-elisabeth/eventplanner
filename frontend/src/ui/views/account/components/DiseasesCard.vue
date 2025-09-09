@@ -2,23 +2,22 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-file-medical-alt"
-        label="Krankheiten"
+        :label="$t('views.account.emergency.diseases.label')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.diseases"> [zum Ansehen klicken] </span>
-            <span v-else>Keine Angabe</span>
+            <span v-if="props.modelValue.diseases"> {{$t('views.account.emergency.hint-show')}} </span>
+            <span v-else>{{ $t('generic.no-information') }}</span>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                Wenn auf einer Reise mal etwas passiert, ist es gegebenenfalls wichtig, dass jemand an Bord weiß, ob du Krankheiten hast,
-                die bestimmte Behandlungen erfordern.
+                {{$t('views.account.emergency.diseases.hint')}}
             </p>
             <p class="mb-8 text-sm font-bold">
-                Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für autorisierte Personen einsehbar!
+                {{$t('views.account.emergency.hint-privacy')}}
             </p>
             <div class="mb-4">
-                <VInputLabel>Krankheiten</VInputLabel>
+                <VInputLabel>{{$t('views.account.emergency.diseases.label')}}</VInputLabel>
                 <VInputTextArea v-model="value.diseases" />
             </div>
         </template>

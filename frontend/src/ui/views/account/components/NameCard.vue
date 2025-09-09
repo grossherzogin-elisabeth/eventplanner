@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-user-tag"
-        label="Name"
+        :label="$t('views.account.data.personal.name')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -20,33 +20,31 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                Dein Name, wie hier angegeben, muss genau so auf deinem Ausweisdokument stehen, da dieser auch zum Erstellen der offiziellen
-                IMO Liste verwendet wird.
+                {{ $t('views.account.data.personal.hint') }}
             </p>
             <p class="mb-4 text-sm">
-                Solltest du mit einem anderen Namen angesprochen werden wollen, kannst du einen Anzeigenamen angeben. Dieser wird in der App
-                angezeigt und beim Kammerplan und der Getränkeliste verwendet.
+                {{ $t('views.account.data.personal.display-name.hint') }}
             </p>
-            <p class="mb-8 text-sm font-bold">Bitte beachte, dass du dein Ausweisdokument auf Reisen mitführen musst!</p>
+            <p class="mb-8 text-sm font-bold">{{ $t('views.account.data.personal.passport.hint') }}</p>
             <div class="mb-4">
-                <VInputLabel>Anzeigename</VInputLabel>
+                <VInputLabel>{{ $t('views.account.data.personal.display-name.label') }}</VInputLabel>
                 <VInputText v-model="value.nickName" :placeholder="value.firstName" />
             </div>
             <div class="mb-4">
-                <VInputLabel>Titel</VInputLabel>
-                <VInputText v-model="value.title" placeholder="keine Angabe" disabled />
+                <VInputLabel>{{ $t('views.account.data.personal.degree') }}</VInputLabel>
+                <VInputText v-model="value.title" :placeholder="$t('generic.no-information')" disabled />
             </div>
             <div class="mb-4">
-                <VInputLabel>Vorname</VInputLabel>
+                <VInputLabel>{{ $t('views.account.data.personal.first-name') }}</VInputLabel>
                 <VInputText v-model="value.firstName" required disabled />
             </div>
             <div class="mb-4">
-                <VInputLabel>Zweiter Vorname</VInputLabel>
-                <VInputText v-model="value.secondName" placeholder="keine Angabe" disabled />
+                <VInputLabel>{{ $t('views.account.data.personal.middle-name') }}</VInputLabel>
+                <VInputText v-model="value.secondName" :placeholder="$t('generic.no-information')" disabled />
             </div>
             <div class="mb-4">
-                <VInputLabel>Nachname</VInputLabel>
-                <VInputText v-model="value.lastName" required placeholder="keine Angabe" disabled />
+                <VInputLabel>{{ $t('views.account.data.personal.last-name') }}</VInputLabel>
+                <VInputText v-model="value.lastName" required :placeholder="$t('generic.no-information')" disabled />
             </div>
         </template>
     </VInteractiveListItem>

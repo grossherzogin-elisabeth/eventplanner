@@ -2,19 +2,19 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-briefcase"
-        label="Telefon Dienstlich"
+        :label="$t('views.account.contact.phone-work')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
             <span v-if="props.modelValue.phoneWork">{{ props.modelValue.phoneWork }}</span>
-            <span v-else class="italic">keine Angabe</span>
+            <span v-else class="italic">{{ $t('generic.no-information') }}</span>
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">
-                Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer an: Festnetz, mobil oder dienstlich.
+                {{ $t('views.account.contact.hint-phone') }}
             </p>
             <div class="mb-4">
-                <VInputLabel>Telefon Dienstlich</VInputLabel>
+                <VInputLabel>{{ $t('views.account.contact.phone-work') }}</VInputLabel>
                 <VInputText v-model="value.phoneWork" />
             </div>
         </template>

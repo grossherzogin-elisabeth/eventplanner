@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-envelope"
-        label="Email"
+        :label="$t('views.account.contact.email')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -10,11 +10,10 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">
-                Deine Email Adresse wird sowohl als Kontakt Email für Benachrichtigungen, als auch für deinen Login verwendet. Wenn du sie
-                ändern möchtest, schreib uns bitte eine Email, damit wir auch den Login für dich anpassen können.
+                {{ $t('views.account.contact.hint-mail') }}
             </p>
             <div class="mb-4">
-                <VInputLabel>Email</VInputLabel>
+                <VInputLabel>{{ $t('views.account.contact.email') }}</VInputLabel>
                 <VInputText v-model="value.email" disabled />
             </div>
         </template>

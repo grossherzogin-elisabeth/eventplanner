@@ -1,7 +1,7 @@
 <template>
     <div class="grid gap-x-32 gap-y-8 md:grid-cols-1">
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">Persönliche Daten</h2>
+            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.data.personal.title') }}</h2>
             <VInteractiveList>
                 <NameCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <GenderCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
@@ -11,7 +11,7 @@
             </VInteractiveList>
         </div>
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">Kontaktdaten</h2>
+            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.contact.title') }}</h2>
             <VInteractiveList>
                 <EmailCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <PhoneCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
@@ -21,14 +21,14 @@
             </VInteractiveList>
         </div>
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">Informationen für die Kombüse</h2>
+            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.data.diet.kitchen-info') }}</h2>
             <VInteractiveList>
                 <DietCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <IntolerancesCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
             </VInteractiveList>
         </div>
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">Notfallinformationen</h2>
+            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.emergency.title') }}</h2>
             <VInteractiveList>
                 <EmergencyContactCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <MedicationCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />

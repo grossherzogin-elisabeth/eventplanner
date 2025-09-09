@@ -2,22 +2,22 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-pills"
-        label="Medikamente"
+        :label="$t('views.account.emergency.medication.label')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.medication"> [zum Ansehen klicken] </span>
-            <span v-else>Keine Angabe</span>
+            <span v-if="props.modelValue.medication">{{$t('views.account.emergency.hint-show')}}</span>
+            <span v-else>{{$t('generic.no-information')}}</span>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, welche Medikamente du benötigst.
+                {{$t('views.account.emergency.medication.hint')}}
             </p>
             <p class="mb-8 text-sm font-bold">
-                Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für autorisierte Personen einsehbar!
+                {{$t('views.account.emergency.hint-privacy')}}
             </p>
             <div class="mb-4">
-                <VInputLabel>Medikamente</VInputLabel>
+                <VInputLabel>{{$t('views.account.emergency.medication.label')}}</VInputLabel>
                 <VInputTextArea v-model="value.medication" />
             </div>
         </template>

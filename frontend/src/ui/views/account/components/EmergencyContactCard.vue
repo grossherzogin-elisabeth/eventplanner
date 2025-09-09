@@ -2,27 +2,27 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-address-book"
-        label="Notfallkontakt"
+        :label="$t('views.account.emergency.contact.title')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="!props.modelValue.emergencyContact.name && !props.modelValue.emergencyContact.phone"> Keine Angabe </span>
+            <span v-if="!props.modelValue.emergencyContact.name && !props.modelValue.emergencyContact.phone">{{ $t('generic.no-information') }}</span>
             <template v-else>
-                {{ props.modelValue.emergencyContact?.name ?? 'keine Angabe' }},
-                {{ props.modelValue.emergencyContact?.phone ?? 'keine Angabe' }}
+                {{ props.modelValue.emergencyContact?.name ?? $t('generic.no-information') }},
+                {{ props.modelValue.emergencyContact?.phone ?? $t('generic.no-information') }}
             </template>
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">
-                Im Notfall zählt jede Sekunde. Hier kannst du eine Person hinterlegen, die wir im Falle eines medizinischen Notfalls oder
-                einer anderen dringenden Situation kontaktieren können. Bitte gib Namen und Telefonnummer der Person an.
+                {{$t('views.account.emergency.contact.hint')}}
+
             </p>
             <div class="mb-4">
-                <VInputLabel>Name des Notfallkontaktes</VInputLabel>
+                <VInputLabel>{{$t('views.account.emergency.contact.name')}}</VInputLabel>
                 <VInputText v-model="value.emergencyContact.name" />
             </div>
             <div class="mb-4">
-                <VInputLabel>Telefonnummer des Notfallkontakt</VInputLabel>
+                <VInputLabel>{{$t('views.account.emergency.contact.phone')}}</VInputLabel>
                 <VInputText v-model="value.emergencyContact.phone" />
             </div>
         </template>

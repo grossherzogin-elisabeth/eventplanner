@@ -2,19 +2,19 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-mobile"
-        label="Telefon Mobil"
+        :label="$t('views.account.contact.mobile')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
             <span v-if="props.modelValue.mobile">{{ props.modelValue.mobile }}</span>
-            <span v-else class="italic">keine Angabe</span>
+            <span v-else class="italic">{{ $t('generic.no-information') }}</span>
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">
-                Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer an: Festnetz, mobil oder dienstlich.
+                {{ $t('views.account.contact.hint-phone') }}
             </p>
             <div class="mb-4">
-                <VInputLabel>Telefon Mobil</VInputLabel>
+                <VInputLabel>{{ $t('views.account.contact.mobile') }}</VInputLabel>
                 <VInputText v-model="value.mobile" />
             </div>
         </template>

@@ -2,17 +2,17 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-venus-mars"
-        label="Geschlecht"
+        :label="$t('views.account.data.personal.gender.label')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
             <span v-if="props.modelValue.gender">
                 {{ gender.getName(props.modelValue.gender) }}
             </span>
-            <span v-else> Keine Angabe </span>
+            <span v-else> {{ $t('generic.no-information') }} </span>
         </template>
         <template #edit="{ value }">
-            <p class="mb-4 text-sm">Mit welchem Geschlecht identifizierst du dich?</p>
+            <p class="mb-4 text-sm">{{ $t('views.account.data.personal.gender.hint') }}</p>
             <VInputSelectionList v-model="value.gender" :options="gender.options" />
         </template>
     </VInteractiveListItem>
