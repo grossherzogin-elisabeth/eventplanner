@@ -66,9 +66,19 @@ test {
     testLogging.showStandardStreams = true
 }
 
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+
+    reports {
+        xml.required = true
+    }
+}
+
 sonar {
     properties {
         property "sonar.projectKey", "grossherzogin-elisabeth_eventplanner"
         property "sonar.organization", "grossherzogin-elisabeth"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.plugins.downloadOnlyRequired", true
     }
 }
