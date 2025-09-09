@@ -111,7 +111,7 @@ public class ImoListService {
         @NonNull XSSFSheet sheet,
         @NonNull List<Registration> crewList,
         @NonNull Map<PositionKey, Position> positionMap
-    ) throws IOException {
+    ) {
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
 
