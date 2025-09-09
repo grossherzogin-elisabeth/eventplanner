@@ -13,7 +13,7 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">
-                {{ $t('views.account.data.diet.hint')}}
+                {{ $t('views.account.data.diet.hint') }}
             </p>
             <VInputSelectionList v-model="value.diet" :options="diet.options" />
         </template>

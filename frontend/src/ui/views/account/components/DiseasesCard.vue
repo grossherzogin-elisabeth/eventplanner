@@ -6,18 +6,18 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.diseases"> {{$t('views.account.emergency.hint-show')}} </span>
+            <span v-if="props.modelValue.diseases"> {{ $t('views.account.emergency.hint-show') }} </span>
             <span v-else>{{ $t('generic.no-information') }}</span>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                {{$t('views.account.emergency.diseases.hint')}}
+                {{ $t('views.account.emergency.diseases.hint') }}
             </p>
             <p class="mb-8 text-sm font-bold">
-                {{$t('views.account.emergency.hint-privacy')}}
+                {{ $t('views.account.emergency.hint-privacy') }}
             </p>
             <div class="mb-4">
-                <VInputLabel>{{$t('views.account.emergency.diseases.label')}}</VInputLabel>
+                <VInputLabel>{{ $t('views.account.emergency.diseases.label') }}</VInputLabel>
                 <VInputTextArea v-model="value.diseases" />
             </div>
         </template>

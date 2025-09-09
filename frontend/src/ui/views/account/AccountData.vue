@@ -21,7 +21,9 @@
             </VInteractiveList>
         </div>
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.data.diet.kitchen-info') }}</h2>
+            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">
+                {{ $t('views.account.data.diet.kitchen-info') }}
+            </h2>
             <VInteractiveList>
                 <DietCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <IntolerancesCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />

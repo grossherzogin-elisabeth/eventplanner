@@ -7,23 +7,23 @@
     >
         <template #default>
             <span v-if="props.modelValue.passNr">{{ props.modelValue.passNr }}</span>
-            <span v-else> {{$t('generic.no-information')}} </span>
+            <span v-else> {{ $t('generic.no-information') }} </span>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                {{$t('views.account.data.personal.passport.number.hint')}}
+                {{ $t('views.account.data.personal.passport.number.hint') }}
             </p>
             <p class="mb-8 text-sm font-bold">
-                {{$t('views.account.data.personal.passport.hint')}}
+                {{ $t('views.account.data.personal.passport.hint') }}
             </p>
             <p class="mb-8 text-sm italic">
                 <a :href="$t('views.account.data.personal.passport.number.link')" target="_blank" class="link">
-                    {{$t('views.account.data.personal.passport.number.hint-link')}}
+                    {{ $t('views.account.data.personal.passport.number.hint-link') }}
                     <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                 </a>
             </p>
             <div class="mb-4">
-                <VInputLabel>{{$t('views.account.data.personal.passport.number.label')}}</VInputLabel>
+                <VInputLabel>{{ $t('views.account.data.personal.passport.number.label') }}</VInputLabel>
                 <VInputText v-model="value.passNr" />
             </div>
         </template>

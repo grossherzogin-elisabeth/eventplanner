@@ -6,7 +6,9 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="!props.modelValue.emergencyContact.name && !props.modelValue.emergencyContact.phone">{{ $t('generic.no-information') }}</span>
+            <span v-if="!props.modelValue.emergencyContact.name && !props.modelValue.emergencyContact.phone">{{
+                $t('generic.no-information')
+            }}</span>
             <template v-else>
                 {{ props.modelValue.emergencyContact?.name ?? $t('generic.no-information') }},
                 {{ props.modelValue.emergencyContact?.phone ?? $t('generic.no-information') }}
@@ -14,15 +16,14 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">
-                {{$t('views.account.emergency.contact.hint')}}
-
+                {{ $t('views.account.emergency.contact.hint') }}
             </p>
             <div class="mb-4">
-                <VInputLabel>{{$t('views.account.emergency.contact.name')}}</VInputLabel>
+                <VInputLabel>{{ $t('views.account.emergency.contact.name') }}</VInputLabel>
                 <VInputText v-model="value.emergencyContact.name" />
             </div>
             <div class="mb-4">
-                <VInputLabel>{{$t('views.account.emergency.contact.phone')}}</VInputLabel>
+                <VInputLabel>{{ $t('views.account.emergency.contact.phone') }}</VInputLabel>
                 <VInputText v-model="value.emergencyContact.phone" />
             </div>
         </template>

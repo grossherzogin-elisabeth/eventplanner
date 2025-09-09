@@ -15,13 +15,13 @@
             <p class="mb-4 text-sm">
                 {{ $t('views.account.data.personal.hint') }}
             </p>
-            <p class="mb-8 text-sm font-bold">{{ $t('views.account.data.personal.passport.hint')}}</p>
+            <p class="mb-8 text-sm font-bold">{{ $t('views.account.data.personal.passport.hint') }}</p>
             <div class="mb-4">
-                <VInputLabel>{{$t('views.account.data.personal.birth.day')}}</VInputLabel>
+                <VInputLabel>{{ $t('views.account.data.personal.birth.day') }}</VInputLabel>
                 <VInputDate v-model="value.dateOfBirth" disabled />
             </div>
             <div class="mb-4">
-                <VInputLabel>{{$t('views.account.data.personal.birth.place-of-birth')}}</VInputLabel>
+                <VInputLabel>{{ $t('views.account.data.personal.birth.place-of-birth') }}</VInputLabel>
                 <VInputText v-model="value.placeOfBirth" disabled />
             </div>
         </template>

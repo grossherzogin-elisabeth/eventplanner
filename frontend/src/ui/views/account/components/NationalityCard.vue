@@ -7,14 +7,14 @@
     >
         <template #default>
             <span v-if="props.modelValue.nationality"> {{ nationalities.getName(props.modelValue.nationality) }} </span>
-            <span v-else> {{$t('generic.no-information')}} </span>
+            <span v-else> {{ $t('generic.no-information') }} </span>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                {{$t('views.account.data.personal.nationality.hint')}}
+                {{ $t('views.account.data.personal.nationality.hint') }}
             </p>
             <p class="mb-8 text-sm font-bold">
-                {{$t('views.account.data.personal.passport.hint')}}
+                {{ $t('views.account.data.personal.passport.hint') }}
             </p>
             <VInputSelectionList v-model="value.nationality" :options="nationalities.options" />
         </template>
