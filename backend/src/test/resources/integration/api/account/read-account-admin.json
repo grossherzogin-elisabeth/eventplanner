@@ -1,0 +1,37 @@
+{
+  "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
+  "email": "tony.stark@test.email",
+  "roles": [
+    "ROLE_ADMIN",
+    "ROLE_TEAM_MEMBER"
+  ],
+  "permissions": [
+    "events:read",
+    "events:write",
+    "events:delete",
+    "events:create",
+    "events:write-details",
+    "events:write-slots",
+    "registrations:write",
+    "registrations:write-self",
+    "users:read",
+    "users:read-details-self",
+    "users:write-self",
+    "users:read-details",
+    "users:read-full-details",
+    "users:write",
+    "users:delete",
+    "positions:read",
+    "positions:write",
+    "qualifications:read",
+    "qualifications:write",
+    "application-settings:read",
+    "application-settings:write"
+  ],
+  "positions": [
+    "08c609d2-26c9-4848-b17b-8feac2e2a91f"
+  ],
+  "gender": "m",
+  "firstName": "Tony",
+  "lastName": "Stark"
+}

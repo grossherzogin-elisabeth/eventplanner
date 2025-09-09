@@ -9,6 +9,9 @@ import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record RegistrationRepresentation(
     @NonNull String key,
     @NonNull String positionKey,
@@ -27,7 +30,7 @@ public record RegistrationRepresentation(
             mapNullable(domain.getUserKey(), UserKey::value),
             domain.getName(),
             domain.getNote(),
-            domain.getConfirmedAt() != null,
+            domain.getConfirmedAt() != null ? true : null,
             domain.getOvernightStay(),
             domain.getArrival() != null ? domain.getArrival().toString() : null
         );

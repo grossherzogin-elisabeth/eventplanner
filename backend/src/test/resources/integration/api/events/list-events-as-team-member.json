@@ -1,0 +1,307 @@
+[
+  {
+    "key": "7fa48570-963a-4e95-b72f-acaf70c70a24",
+    "type": "weekend-event",
+    "signupType": "assignment",
+    "name": "Planned event",
+    "state": "planned",
+    "note": "",
+    "description": "",
+    "start": "2025-04-12T14:00:00Z",
+    "end": "2025-04-13T16:00:00Z",
+    "locations": [
+      {
+        "name": "Start",
+        "icon": "fa-anchor",
+        "address": "",
+        "country": "",
+        "addressLink": null,
+        "information": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+        "informationLink": null,
+        "eta": null,
+        "etd": "2025-03-15T15:00:00Z"
+      },
+      {
+        "name": "End",
+        "icon": "fa-anchor",
+        "address": "",
+        "country": "",
+        "addressLink": null,
+        "information": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua",
+        "informationLink": null,
+        "eta": "2025-03-15T17:00:00Z",
+        "etd": null
+      }
+    ],
+    "slots": [
+      {
+        "key": "26c6d321-5957-43db-b895-a6ab364f3138",
+        "order": -1,
+        "criticality": 2,
+        "positionKeys": [
+          "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "eb3ea349-28f8-48c7-971f-afecc29ef004",
+        "order": -1,
+        "criticality": 2,
+        "positionKeys": [
+          "3ea10356-8f2f-49df-abc8-b9ecd1a6934e",
+          "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "2cff6586-dd85-4733-b883-771a5d317cd7",
+        "order": -1,
+        "criticality": 2,
+        "positionKeys": [
+          "576803dd-9f05-44f2-9746-08cf42431a3e"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "f4b9453e-3226-41fe-a8ff-5b90cd5b1211",
+        "order": -1,
+        "criticality": 2,
+        "positionKeys": [
+          "08c609d2-26c9-4848-b17b-8feac2e2a91f"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "55a3be53-4b09-491a-a4a3-070c2d341617",
+        "order": -1,
+        "criticality": 0,
+        "positionKeys": [
+          "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+          "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+          "576803dd-9f05-44f2-9746-08cf42431a3e",
+          "3ea10356-8f2f-49df-abc8-b9ecd1a6934e"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "22d9a860-3acb-4c57-b3bf-7df4872b76aa",
+        "order": -1,
+        "criticality": 0,
+        "positionKeys": [
+          "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+          "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+          "576803dd-9f05-44f2-9746-08cf42431a3e",
+          "3ea10356-8f2f-49df-abc8-b9ecd1a6934e"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "6fe6e31f-e280-4fdd-962c-f78506facd74",
+        "order": -1,
+        "criticality": 0,
+        "positionKeys": [
+          "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+          "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+          "576803dd-9f05-44f2-9746-08cf42431a3e",
+          "3ea10356-8f2f-49df-abc8-b9ecd1a6934e"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      }
+    ],
+    "registrations": [
+      {
+        "key": "79afe8ba-5990-4fef-9c40-821a547dc02a",
+        "positionKey": "576803dd-9f05-44f2-9746-08cf42431a3e",
+        "userKey": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98"
+      },
+      {
+        "key": "c59bc5ee-c2a9-4c15-bb4b-5e23c0a14edf",
+        "positionKey": "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+        "userKey": "3449174e-c8e1-49b7-8ef0-35c8c5f23a0c",
+        "note": "note",
+        "overnightStay": true
+      },
+      {
+        "key": "86efb94c-0683-46be-9ec7-164c07eacb88",
+        "positionKey": "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+        "userKey": "5bfe85c9-f0e6-4033-9ba3-cfdb677ddaee"
+      },
+      {
+        "key": "9f792a2f-ae56-4daa-beb5-1074d1dae118",
+        "positionKey": "3ea10356-8f2f-49df-abc8-b9ecd1a6934e",
+        "userKey": "80717734-d546-4b7b-a756-5f4f266b5ae6"
+      },
+      {
+        "key": "0f0c7f95-e4bf-4ffe-a456-80dfdfe2ad30",
+        "positionKey": "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545",
+        "userKey": "fc766e6e-dec2-4fc8-89ef-4c158786fd4e"
+      }
+    ]
+  },
+  {
+    "key": "98b55fb5-7f10-42c7-9b94-2e5c9b92f264",
+    "type": "weekend-event",
+    "signupType": "assignment",
+    "name": "Open for signup",
+    "state": "open-for-signup",
+    "note": "",
+    "description": "",
+    "start": "2025-06-13T14:00:00Z",
+    "end": "2025-06-15T16:00:00Z",
+    "locations": [
+      {
+        "name": "Start",
+        "icon": "fa-anchor",
+        "address": "",
+        "country": "",
+        "addressLink": null,
+        "information": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+        "informationLink": null,
+        "eta": null,
+        "etd": "2025-03-15T15:00:00Z"
+      },
+      {
+        "name": "End",
+        "icon": "fa-anchor",
+        "address": "",
+        "country": "",
+        "addressLink": null,
+        "information": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua",
+        "informationLink": null,
+        "eta": "2025-03-15T17:00:00Z",
+        "etd": null
+      }
+    ],
+    "slots": [
+      {
+        "key": "26c6d321-5957-43db-b895-a6ab364f3138",
+        "order": -1,
+        "criticality": 2,
+        "positionKeys": [
+          "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "eb3ea349-28f8-48c7-971f-afecc29ef004",
+        "order": -1,
+        "criticality": 2,
+        "positionKeys": [
+          "3ea10356-8f2f-49df-abc8-b9ecd1a6934e",
+          "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "2cff6586-dd85-4733-b883-771a5d317cd7",
+        "order": -1,
+        "criticality": 2,
+        "positionKeys": [
+          "576803dd-9f05-44f2-9746-08cf42431a3e"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "f4b9453e-3226-41fe-a8ff-5b90cd5b1211",
+        "order": -1,
+        "criticality": 2,
+        "positionKeys": [
+          "08c609d2-26c9-4848-b17b-8feac2e2a91f"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "55a3be53-4b09-491a-a4a3-070c2d341617",
+        "order": -1,
+        "criticality": 0,
+        "positionKeys": [
+          "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+          "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+          "576803dd-9f05-44f2-9746-08cf42431a3e",
+          "3ea10356-8f2f-49df-abc8-b9ecd1a6934e"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "22d9a860-3acb-4c57-b3bf-7df4872b76aa",
+        "order": -1,
+        "criticality": 0,
+        "positionKeys": [
+          "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+          "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+          "576803dd-9f05-44f2-9746-08cf42431a3e",
+          "3ea10356-8f2f-49df-abc8-b9ecd1a6934e"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      },
+      {
+        "key": "6fe6e31f-e280-4fdd-962c-f78506facd74",
+        "order": -1,
+        "criticality": 0,
+        "positionKeys": [
+          "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+          "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+          "576803dd-9f05-44f2-9746-08cf42431a3e",
+          "3ea10356-8f2f-49df-abc8-b9ecd1a6934e"
+        ],
+        "name": null,
+        "assignedRegistrationKey": null
+      }
+    ],
+    "registrations": [
+      {
+        "key": "360e7db1-ba12-46c0-8433-684216b5a9a4",
+        "positionKey": "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+        "userKey": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98"
+      },
+      {
+        "key": "fd25a0c2-24bf-4e95-b5a8-ff8b617b13cd",
+        "positionKey": "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+        "userKey": "5bfe85c9-f0e6-4033-9ba3-cfdb677ddaee"
+      },
+      {
+        "key": "913ea3cc-9afa-4582-86f2-c3525f0a7187",
+        "positionKey": "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545",
+        "userKey": "684e0bf5-c720-4c9a-a95d-9378351c35ee"
+      },
+      {
+        "key": "9e5c48cb-d947-47b9-84f3-ad64000f4234",
+        "positionKey": "3ea10356-8f2f-49df-abc8-b9ecd1a6934e",
+        "userKey": "80717734-d546-4b7b-a756-5f4f266b5ae6"
+      },
+      {
+        "key": "bce22fe7-f45e-45c7-bc1a-d90e74a1b771",
+        "positionKey": "3ea10356-8f2f-49df-abc8-b9ecd1a6934e",
+        "userKey": "9ae78599-5bc0-4a6d-a164-1ba59ec04adc"
+      },
+      {
+        "key": "275e0eba-0913-4561-8dd3-c490d07893cd",
+        "positionKey": "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545",
+        "userKey": "fc766e6e-dec2-4fc8-89ef-4c158786fd4e"
+      },
+      {
+        "key": "a29d3065-0eaa-4238-999a-a641317b8c9d",
+        "positionKey": "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+        "userKey": "c45ba65f-fb7f-474d-b86b-ca6f3143084a"
+      },
+      {
+        "key": "14eaf418-3f08-4b3c-8c4d-a2763cb0e4e1",
+        "positionKey": "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+        "userKey": "61741a06-58d7-43a9-b55a-80d07f281bba"
+      }
+    ]
+  }
+]
