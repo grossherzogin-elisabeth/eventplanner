@@ -34,6 +34,7 @@ import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -61,9 +62,6 @@ public class CaptainListService {
             .stream()
             .sorted((a, b) -> {
                 // TODO get crew member name here for sorting
-                // if (a.getPosition().equals(b.getPosition())) {
-                //   return a.getName().compareTo(b.getName());
-                // }
                 var pa = positionMap.get(a.getPosition());
                 var pb = positionMap.get(b.getPosition());
                 return pb.getPriority() - pa.getPriority();
@@ -116,7 +114,7 @@ public class CaptainListService {
         @NonNull XSSFSheet sheet,
         @NonNull List<Registration> crewList,
         @NonNull Map<PositionKey, Position> positionMap
-    ) throws IOException {
+    ) {
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
 
@@ -157,7 +155,7 @@ public class CaptainListService {
                     }
                     currentRow.getCell(10).setCellValue(imoListRank);
 
-                    insertQualifications(currentRow, crewMemberDetails);
+                    insertQualifications(currentRow, crewMemberDetails.get());
 
                     continue;
                 }
@@ -195,20 +193,20 @@ public class CaptainListService {
         }
     }
 
-    private void insertQualifications(@NonNull Row row, @NonNull Optional<UserDetails> crewMemberDetails) {
+    private void insertQualifications(@NonNull Row row, @NonNull UserDetails crewMemberDetails) {
         StringBuilder otherQualifications = new StringBuilder();
         List<Instant> expirationDateOtherQualifications = new ArrayList<>();
         StringBuilder radioQualifications = new StringBuilder();
         List<Instant> expirationDateRadioQualifications = new ArrayList<>();
         StringBuilder safetyQualifications = new StringBuilder();
         Set<Instant> expirationDateSafetyQualifications = new HashSet<>();
-        var qualifications = crewMemberDetails.get().getQualifications();
+        var qualifications = crewMemberDetails.getQualifications();
 
         for (UserQualification qualification : qualifications) {
             String qualificationKeyValue = qualification.getQualificationKey().value();
 
             if ((qualificationKeyValue.contains("medical") || qualificationKeyValue.contains("aid"))
-                & qualification.getExpiresAt() != null) {
+                && qualification.getExpiresAt() != null) {
                 switch (qualificationKeyValue) {
                     case "medical-fitness" -> row.getCell(11).setCellValue(date2String(qualification.getExpiresAt()));
                     case "medical-care" -> row.getCell(18).setCellValue(date2String(qualification.getExpiresAt()));
@@ -270,7 +268,10 @@ public class CaptainListService {
         return input.replaceAll(", $", "");
     }
 
-    private @NonNull String date2String(@NonNull Instant date) {
+    private @NonNull String date2String(@Nullable Instant date) {
+        if (date == null) {
+            return "";
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return date.atZone(timezone).format(formatter);
     }

@@ -1,0 +1,22 @@
+{
+  "key": "3449174e-c8e1-49b7-8ef0-35c8c5f23a0c",
+  "email": "bruce.benner@test.email",
+  "roles": [
+    "ROLE_TEAM_MEMBER"
+  ],
+  "permissions": [
+    "users:read-details-self",
+    "users:write-self",
+    "events:read",
+    "users:read",
+    "positions:read",
+    "qualifications:read",
+    "registrations:write-self"
+  ],
+  "positions": [
+    "08c609d2-26c9-4848-b17b-8feac2e2a91f"
+  ],
+  "gender": "m",
+  "firstName": "",
+  "lastName": "Benner"
+}

@@ -59,20 +59,8 @@ public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
 
     private @NonNull List<? extends GrantedAuthority> getRolesByEmail(@Nullable Object email) {
         var authorities = new ArrayList<GrantedAuthority>();
-        if (email instanceof String) {
-            if (admins.contains(email)) {
-                authorities.add(new SimpleGrantedAuthority(Role.ADMIN.toString()));
-            }
-            // var user = userService.getUserByEmail(email.toString());
-            // if (user.isPresent()) {
-            //     authorities.add(SignedInUser.fromUser(user.get()));
-            //     user.get().getRoles().stream()
-            //         .map(Role::toString)
-            //         .distinct()
-            //         .map(SimpleGrantedAuthority::new)
-            //         .filter(authority -> !authorities.contains(authority))
-            //         .forEach(authorities::add);
-            // }
+        if (email instanceof String && admins.contains(email)) {
+            authorities.add(new SimpleGrantedAuthority(Role.ADMIN.toString()));
         }
         if (authorities.isEmpty()) {
             authorities.add(new SimpleGrantedAuthority(Role.NONE.toString()));

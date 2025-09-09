@@ -19,6 +19,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -91,19 +92,7 @@ public class EncryptionService {
             return null;
         }
         try {
-            String json;
-            if (value.getClass().isEnum()
-                || value instanceof Short
-                || value instanceof Integer
-                || value instanceof Long
-                || value instanceof Float
-                || value instanceof Double
-                || value instanceof String) {
-                json = objectMapper.convertValue(value, String.class);
-            } else {
-                json = objectMapper.writeValueAsString(value);
-            }
-            return new Encrypted<>(encryptWithSecretKey(json, secretKey));
+            return new Encrypted<>(encryptWithSecretKey(toJson(value), secretKey));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -125,6 +114,20 @@ public class EncryptionService {
             return objectMapper.readValue(plain, type);
         } catch (Exception e) {
             return objectMapper.convertValue(plain, type);
+        }
+    }
+
+    protected @NonNull <T extends Serializable> String toJson(@NonNull T value) throws JsonProcessingException {
+        if (value.getClass().isEnum()
+            || value instanceof Short
+            || value instanceof Integer
+            || value instanceof Long
+            || value instanceof Float
+            || value instanceof Double
+            || value instanceof String) {
+            return objectMapper.convertValue(value, String.class);
+        } else {
+            return objectMapper.writeValueAsString(value);
         }
     }
 }

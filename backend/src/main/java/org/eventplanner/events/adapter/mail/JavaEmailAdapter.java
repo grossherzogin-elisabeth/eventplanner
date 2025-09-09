@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
 import jakarta.mail.Address;
+import jakarta.mail.Message.RecipientType;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class JavaEmailAdapter implements EmailSender {
 
         message.setFrom(new InternetAddress(from, fromDisplayName));
         message.setReplyTo(new Address[] { new InternetAddress(replyTo, replyToDisplayName) });
-        message.setRecipients(MimeMessage.RecipientType.TO, notification.getTo().trim());
+        message.setRecipients(RecipientType.TO, notification.getTo().trim());
         message.setSubject(notification.getSubject());
         message.setContent(notification.getBody(), "text/html; charset=utf-8");
 

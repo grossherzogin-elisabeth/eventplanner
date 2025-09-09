@@ -1,0 +1,22 @@
+{
+  "notifications": {
+    "teamsWebhookUrl": "encrypted"
+  },
+  "email": {
+    "from": "from@email.com",
+    "fromDisplayName": "From Displayname",
+    "replyTo": "reply-to@email.com",
+    "replyToDisplayName": "Reply To Displayname",
+    "host": "smtp.office365.com",
+    "port": 587,
+    "enableSSL": false,
+    "enableStartTls": true,
+    "username": "username"
+  },
+  "ui": {
+    "menuTitle": "Test",
+    "tabTitle": "Test",
+    "technicalSupportEmail": "admin@email.com",
+    "supportEmail": "support@email.com"
+  }
+}

@@ -38,12 +38,12 @@ public class UserController {
 
     @GetMapping("")
     public ResponseEntity<List<?>> getUsers(
-        @RequestParam(name = "details", required = false) boolean details
+        @RequestParam(name = "details", required = false) Boolean details
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         if (signedInUser.hasPermission(Permission.READ_USER_DETAILS)) {
             var users = userUseCase.getDetailedUsers(signedInUser).stream();
-            if (details) {
+            if (Boolean.TRUE.equals(details)) {
                 return ResponseEntity.ok(users.map(UserDetailsRepresentation::fromDomain).toList());
             }
             return ResponseEntity.ok(users.map(UserAdminListRepresentation::fromDomain).toList());
