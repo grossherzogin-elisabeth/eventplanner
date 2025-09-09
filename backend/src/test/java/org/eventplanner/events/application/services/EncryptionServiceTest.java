@@ -183,7 +183,7 @@ public class EncryptionServiceTest {
     }
 
     @Test
-    void shouldHaveDifferentEncryptionsForSameInput() throws Exception {
+    void shouldHaveDifferentEncryptionsForSameInput() {
         var value = "Teststring";
         var encryptedA = testee.encrypt(value);
         var encryptedB = testee.encrypt(value);
