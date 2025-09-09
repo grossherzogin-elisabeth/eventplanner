@@ -8,6 +8,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public class ObjectUtils {
+
+    private ObjectUtils() {
+    }
+
     public static @NonNull <T> T orElse(@Nullable T nullable, @NonNull T fallback) {
         if (nullable == null) {
             return fallback;
@@ -15,7 +19,7 @@ public class ObjectUtils {
         return nullable;
     }
 
-    public static @Nullable <T> void applyNullable(@Nullable T nullable, @NonNull Consumer<T> applier) {
+    public static <T> void applyNullable(@Nullable T nullable, @NonNull Consumer<T> applier) {
         if (nullable != null) {
             applier.accept(nullable);
         }
@@ -39,11 +43,11 @@ public class ObjectUtils {
         return function.apply(nullable);
     }
 
-    public static @Nullable <T, E> List<T> mapNullable(@Nullable List<E> nullable, @NonNull Function<E, T> Function) {
+    public static @Nullable <T, E> List<T> mapNullable(@Nullable List<E> nullable, @NonNull Function<E, T> function) {
         if (nullable == null) {
             return null;
         }
-        return nullable.stream().map(Function).toList();
+        return nullable.stream().map(function).toList();
     }
 
     public static @NonNull <T, E> List<T> mapNullable(

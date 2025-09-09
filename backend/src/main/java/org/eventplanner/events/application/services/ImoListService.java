@@ -55,9 +55,6 @@ public class ImoListService {
             .stream()
             .sorted((a, b) -> {
                 // TODO get crew member name here for sorting
-                // if (a.getPosition().equals(b.getPosition())) {
-                //   return a.getName().compareTo(b.getName());
-                // }
                 var pa = positionMap.get(a.getPosition());
                 var pb = positionMap.get(b.getPosition());
                 return pb.getPriority() - pa.getPriority();
@@ -114,7 +111,7 @@ public class ImoListService {
         @NonNull XSSFSheet sheet,
         @NonNull List<Registration> crewList,
         @NonNull Map<PositionKey, Position> positionMap
-    ) throws IOException {
+    ) {
 
         int firstEmptyRow = findFirstEmptyRow(sheet);
 
