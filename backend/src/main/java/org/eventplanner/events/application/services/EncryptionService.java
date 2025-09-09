@@ -117,7 +117,7 @@ public class EncryptionService {
         }
     }
 
-    protected <T extends Serializable> String toJson(T value) throws JsonProcessingException {
+    protected @NonNull <T extends Serializable> String toJson(@NonNull T value) throws JsonProcessingException {
         if (value.getClass().isEnum()
             || value instanceof Short
             || value instanceof Integer
