@@ -21,16 +21,17 @@ jobs:
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
-          path: ~/backend/.sonar/cache
+          path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
-          path: ~/backend/.gradle/caches
+          path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Build and analyze
+        working-directory: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./backend/gradlew build sonar --info
+        run: ./gradlew build sonar --info
