@@ -61,9 +61,6 @@ public class CaptainListService {
             .stream()
             .sorted((a, b) -> {
                 // TODO get crew member name here for sorting
-                // if (a.getPosition().equals(b.getPosition())) {
-                //   return a.getName().compareTo(b.getName());
-                // }
                 var pa = positionMap.get(a.getPosition());
                 var pb = positionMap.get(b.getPosition());
                 return pb.getPriority() - pa.getPriority();
@@ -208,7 +205,7 @@ public class CaptainListService {
             String qualificationKeyValue = qualification.getQualificationKey().value();
 
             if ((qualificationKeyValue.contains("medical") || qualificationKeyValue.contains("aid"))
-                & qualification.getExpiresAt() != null) {
+                && qualification.getExpiresAt() != null) {
                 switch (qualificationKeyValue) {
                     case "medical-fitness" -> row.getCell(11).setCellValue(date2String(qualification.getExpiresAt()));
                     case "medical-care" -> row.getCell(18).setCellValue(date2String(qualification.getExpiresAt()));
