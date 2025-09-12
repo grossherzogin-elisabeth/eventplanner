@@ -1,7 +1,6 @@
 package org.eventplanner.events.application.services;
 
 import static java.util.Optional.ofNullable;
-import static java.util.concurrent.CompletableFuture.runAsync;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -405,7 +404,11 @@ public class NotificationService {
 
     private void dispatch(@NonNull final Notification notification) {
         for (var dispatcher : notificationDispatchers) {
-            runAsync(() -> dispatcher.dispatch(notification));
+            try {
+                dispatcher.dispatch(notification);
+            } catch (Exception e) {
+                log.error("Failed to dispatch notification", e);
+            }
         }
     }
 
