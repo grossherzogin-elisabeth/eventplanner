@@ -11,7 +11,7 @@ import org.eventplanner.events.domain.values.users.UserKey;
 
 public class RegistrationFactory {
     public static Registration createRegistration() {
-        return createRegistration(PositionKeys.DECKSHAND, new UserKey());
+        return createRegistration(PositionKeys.DECKHAND, new UserKey());
     }
 
     public static Registration createRegistration(PositionKey positionKey) {

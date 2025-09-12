@@ -1,6 +1,6 @@
 {
   "notifications": {
-    "teamsWebhookUrl": "encrypted"
+    "teamsWebhookUrl": "https://webhook.site/9e2b7496-3983-46cb-82df-57f4d9d9a964"
   },
   "email": {
     "from": "from@email.com",

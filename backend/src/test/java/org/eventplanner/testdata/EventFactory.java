@@ -18,7 +18,7 @@ public class EventFactory {
 
     private static final EventLocation ELSFLETH =
         new EventLocation("Elsfleth", "fa-anchor", "An d. Kaje 1, 26931 Elsfleth", "DE");
-    private static final EventLocation NORDSEE = new EventLocation("Nordsee", "fa-water", null, null);
+    private static final EventLocation NORTH_SEA = new EventLocation("North Sea", "fa-water", null, null);
 
     public static Event createEvent() {
         return new Event(
@@ -31,19 +31,23 @@ public class EventFactory {
             "Description for test event",
             ZonedDateTime.now().plusMonths(3).toInstant(),
             ZonedDateTime.now().plusMonths(3).plusDays(3).toInstant(),
-            List.of(ELSFLETH, NORDSEE, ELSFLETH),
+            List.of(ELSFLETH, NORTH_SEA, ELSFLETH),
             createDefaultSlots(),
             List.of(
-                createRegistration().withPosition(PositionKeys.KAPITAEN),
-                createRegistration().withPosition(PositionKeys.STM),
-                createRegistration().withPosition(PositionKeys.MATROSE),
-                createRegistration().withPosition(PositionKeys.MASCHINIST),
-                createRegistration().withPosition(PositionKeys.LEICHTMATROSE),
-                createRegistration().withPosition(PositionKeys.DECKSHAND),
-                createRegistration().withPosition(PositionKeys.DECKSHAND),
-                createRegistration().withPosition(PositionKeys.DECKSHAND),
-                createRegistration().withPosition(PositionKeys.DECKSHAND),
-                createRegistration().withPosition(PositionKeys.BACKSCHAFT)
+                createRegistration().withPosition(PositionKeys.CAPTAIN),
+                createRegistration().withPosition(PositionKeys.MATE),
+                createRegistration().withPosition(PositionKeys.MATE),
+                createRegistration().withPosition(PositionKeys.ENGINEER),
+                createRegistration().withPosition(PositionKeys.ENGINEER),
+                createRegistration().withPosition(PositionKeys.TRAINER),
+                createRegistration().withPosition(PositionKeys.DECKHAND),
+                createRegistration().withPosition(PositionKeys.DECKHAND),
+                createRegistration().withPosition(PositionKeys.DECKHAND),
+                createRegistration().withPosition(PositionKeys.DECKHAND),
+                createRegistration().withPosition(PositionKeys.DECKHAND),
+                createRegistration().withPosition(PositionKeys.DECKHAND),
+                createRegistration().withPosition(PositionKeys.DECKHAND),
+                createRegistration().withPosition(PositionKeys.DECKHAND)
             ),
             0
         );

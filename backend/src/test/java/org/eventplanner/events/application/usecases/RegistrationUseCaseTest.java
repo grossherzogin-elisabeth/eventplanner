@@ -62,7 +62,7 @@ class RegistrationUseCaseTest {
         var updateSpec = new UpdateRegistrationSpec(
             event.getKey(),
             registration.getKey(),
-            PositionKeys.DECKSHAND,
+            PositionKeys.DECKHAND,
             registration.getUserKey(),
             null,
             "Test",
@@ -83,12 +83,12 @@ class RegistrationUseCaseTest {
 
         var registration = event.getRegistrations().getFirst();
         registration.setUserKey(signedInUser.key());
-        registration.setPosition(PositionKeys.BACKSCHAFT);
+        registration.setPosition(PositionKeys.DECKHAND);
 
         var updateSpec = new UpdateRegistrationSpec(
             event.getKey(),
             registration.getKey(),
-            PositionKeys.DECKSHAND,
+            PositionKeys.ENGINEER,
             null,
             null,
             "Test",
@@ -99,7 +99,7 @@ class RegistrationUseCaseTest {
         var updatedEvent = testee.updateRegistration(signedInUser, updateSpec);
 
         assertThat(updatedEvent.getKey()).isEqualTo(event.getKey());
-        assertThat(updatedEvent.getRegistrations().getFirst().getPosition()).isEqualTo(PositionKeys.DECKSHAND);
+        assertThat(updatedEvent.getRegistrations().getFirst().getPosition()).isEqualTo(PositionKeys.ENGINEER);
         assertThat(updatedEvent.getRegistrations().getFirst().getNote()).isEqualTo("Test");
     }
 
@@ -108,12 +108,12 @@ class RegistrationUseCaseTest {
         var signedInUser = createSignedInUser().withPermission(Permission.WRITE_REGISTRATIONS);
 
         var registration = event.getRegistrations().getFirst();
-        registration.setPosition(PositionKeys.BACKSCHAFT);
+        registration.setPosition(PositionKeys.DECKHAND);
 
         var updateSpec = new UpdateRegistrationSpec(
             event.getKey(),
             registration.getKey(),
-            PositionKeys.DECKSHAND,
+            PositionKeys.ENGINEER,
             null,
             null,
             null,
@@ -124,7 +124,7 @@ class RegistrationUseCaseTest {
         var updatedEvent = testee.updateRegistration(signedInUser, updateSpec);
 
         assertThat(updatedEvent.getKey()).isEqualTo(event.getKey());
-        assertThat(updatedEvent.getRegistrations().getFirst().getPosition()).isEqualTo(PositionKeys.DECKSHAND);
+        assertThat(updatedEvent.getRegistrations().getFirst().getPosition()).isEqualTo(PositionKeys.ENGINEER);
         assertThat(updatedEvent.getRegistrations().getFirst().getUserKey()).isNotEqualTo(signedInUser.key());
     }
 }
