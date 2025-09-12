@@ -4,6 +4,7 @@ import static org.eventplanner.testutil.TestUser.withAuthentication;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.eventplanner.testutil.TestUser;
@@ -46,7 +47,11 @@ class WebConfigIntegrationTest {
     void shouldReturnUnauthorizedForMissingAuth(String path) throws Exception {
         webMvc.perform(get(path)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.status").value(401))
+            .andExpect(jsonPath("$.title").value("Unauthorized"))
+            .andExpect(jsonPath("$.detail").value("Authentication required"))
+            .andExpect(jsonPath("$.instance").value(path));
     }
 
     @ParameterizedTest
@@ -55,7 +60,11 @@ class WebConfigIntegrationTest {
         webMvc.perform(get(path)
                 .with(withAuthentication(TestUser.USER_WITHOUT_ROLE))
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.title").value("Not Found"))
+            .andExpect(jsonPath("$.detail").value("No such endpoint"))
+            .andExpect(jsonPath("$.instance").value(path));
     }
 
     @ParameterizedTest
@@ -64,7 +73,11 @@ class WebConfigIntegrationTest {
         webMvc.perform(get(path)
                 .with(withAuthentication(TestUser.USER_WITHOUT_ROLE))
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isForbidden())
+            .andExpect(jsonPath("$.status").value(403))
+            .andExpect(jsonPath("$.title").value("Forbidden"))
+            .andExpect(jsonPath("$.detail").value("Missing permission for requested resource or operation"))
+            .andExpect(jsonPath("$.instance").value(path));
     }
 
     @ParameterizedTest
