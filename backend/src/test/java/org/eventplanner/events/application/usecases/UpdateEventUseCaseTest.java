@@ -296,7 +296,7 @@ class UpdateEventUseCaseTest {
             .withRegistrationsToAdd(List.of(new CreateRegistrationSpec(
                 new RegistrationKey(),
                 event.getKey(),
-                PositionKeys.DECKSHAND,
+                PositionKeys.DECKHAND,
                 new UserKey(),
                 null,
                 "Test",
@@ -322,7 +322,7 @@ class UpdateEventUseCaseTest {
             .withRegistrationsToAdd(List.of(new CreateRegistrationSpec(
                 registrationKey,
                 event.getKey(),
-                PositionKeys.DECKSHAND,
+                PositionKeys.DECKHAND,
                 new UserKey(),
                 null,
                 "Test",

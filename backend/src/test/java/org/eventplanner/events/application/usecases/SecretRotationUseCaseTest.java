@@ -1,5 +1,14 @@
 package org.eventplanner.events.application.usecases;
 
+import static java.util.Objects.requireNonNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -14,15 +23,6 @@ import org.eventplanner.events.domain.values.users.Diet;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-
-import static java.util.Objects.requireNonNull;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 class SecretRotationUseCaseTest {
 
@@ -92,7 +92,7 @@ class SecretRotationUseCaseTest {
             Collections.emptyList(),
             Collections.emptyList(),
             null,
-            encryptionService.encrypt("tony.stark@test.email"),
+            encryptionService.encrypt("tony.stark@email.com"),
             null,
             null,
             encryptionService.encrypt("+1 123 456789"),

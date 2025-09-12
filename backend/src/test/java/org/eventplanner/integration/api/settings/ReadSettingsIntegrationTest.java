@@ -50,7 +50,7 @@ class ReadSettingsIntegrationTest {
     }
 
     @Test
-    void shouldRequireAdminRole() throws Exception {
+    void shouldRequireAuthorization() throws Exception {
         webMvc.perform(get("/api/v1/settings")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))

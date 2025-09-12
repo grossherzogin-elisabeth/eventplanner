@@ -1,6 +1,6 @@
 {
   "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
-  "email": "tony.stark@test.email",
+  "email": "tony.stark@email.com",
   "roles": [
     "ROLE_ADMIN",
     "ROLE_TEAM_MEMBER"
