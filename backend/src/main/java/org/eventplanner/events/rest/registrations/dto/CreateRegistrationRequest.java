@@ -13,14 +13,16 @@ import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import jakarta.validation.constraints.NotNull;
+
 public record CreateRegistrationRequest(
     @Nullable String registrationKey,
-    @NonNull String positionKey,
+    @NotNull @NonNull String positionKey,
     @Nullable String userKey,
     @Nullable String name,
     @Nullable String note,
     @Nullable Boolean overnightStay,
-    @Nullable String arrival
+    @Nullable LocalDate arrival
 ) implements Serializable {
     public CreateRegistrationSpec toDomain(@NonNull EventKey eventKey, boolean isSelfSignup) {
         return new CreateRegistrationSpec(
@@ -32,9 +34,7 @@ public record CreateRegistrationRequest(
             note,
             isSelfSignup,
             overnightStay,
-            arrival != null
-                ? LocalDate.parse(arrival)
-                : null
+            arrival
         );
     }
 }
