@@ -7,9 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
 import org.eventplanner.testutil.TestUser;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ class WebConfigIntegrationTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @Autowired
+    private EncrypedUserDetailsJpaRepository userJpaRepository;
 
     @BeforeEach
     void setup() {
@@ -88,5 +93,18 @@ class WebConfigIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("text/html"))
             .andExpect(content().string(Matchers.containsString("This is a dummy index.html for testing")));
+    }
+
+    @Test
+    void shouldNotReturnTechnicalDetailsOnInternalServerError() throws Exception {
+        var user = userJpaRepository.findByKey(TestUser.TEAM_MEMBER.getOidcId()).orElseThrow();
+        user.setFirstName("should fail to decrypt");
+        userJpaRepository.save(user);
+
+        webMvc.perform(get("/api/v1/users")
+                .with(withAuthentication(TestUser.ADMIN))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isInternalServerError())
+            .andExpect(jsonPath("$.detail").value("Unexpected error, see server logs for details"));
     }
 }

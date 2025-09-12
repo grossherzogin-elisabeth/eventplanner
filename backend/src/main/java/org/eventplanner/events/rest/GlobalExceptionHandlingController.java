@@ -36,11 +36,17 @@ public class GlobalExceptionHandlingController {
                 request.getMethod(),
                 request.getRequestURI()
             );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            var body =
+                ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Broken pipe, please try again");
+            body.setInstance(URI.create(request.getRequestURI()));
+            return ResponseEntity.status(body.getStatus()).body(body);
         }
         log.error("Unhandled exception on request {} {}", request.getMethod(), request.getRequestURI(), exception);
 
-        var body = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+        var body = ProblemDetail.forStatusAndDetail(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "Unexpected error, see server logs for details"
+        );
         body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(body.getStatus()).body(body);
     }
