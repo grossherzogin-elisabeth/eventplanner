@@ -33,6 +33,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jdbc:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-freemarker:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
 
     // sqlite
     implementation "org.xerial:sqlite-jdbc:3.50.3.0"

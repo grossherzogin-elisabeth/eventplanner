@@ -1,0 +1,41 @@
+{
+  "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
+  "gender": "m",
+  "firstName": "Anthony",
+  "nickName": "Tony",
+  "secondName": "Edward",
+  "lastName": "Stark",
+  "positions": [
+    "08c609d2-26c9-4848-b17b-8feac2e2a91f"
+  ],
+  "qualifications": [
+    {
+      "qualificationKey": "659fccf8-2bfc-4123-b7cd-98be4b8e4f8d",
+      "expiresAt": null,
+      "expires": false
+    }
+  ],
+  "address": {
+    "addressLine1": "10880",
+    "addressLine2": "Appartment 1",
+    "town": "Malibu",
+    "zipCode": "90265",
+    "country": "US"
+  },
+  "email": "tony.stark@email.com",
+  "phone": "+1 555-0789",
+  "phoneWork": "+1 555-0790",
+  "mobile": "+1 555-0791",
+  "dateOfBirth": "1970-05-29",
+  "placeOfBirth": "New York",
+  "passNr": "321654987",
+  "nationality": "US",
+  "emergencyContact": {
+    "name": "Pepper Potts",
+    "phone": "+1 555-0987"
+  },
+  "diseases": "heart injured by shrapnel",
+  "intolerances": "none",
+  "medication": null,
+  "diet": "omnivore"
+}
