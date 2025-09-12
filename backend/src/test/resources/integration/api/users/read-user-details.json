@@ -1,0 +1,51 @@
+{
+  "key": "3449174e-c8e1-49b7-8ef0-35c8c5f23a0c",
+  "authKey": "3449174e-c8e1-49b7-8ef0-35c8c5f23a0c",
+  "createdAt": "2025-03-15T10:53:43.170969Z",
+  "updatedAt": "2025-09-10T08:14:45.257150Z",
+  "verifiedAt": "2025-06-19T07:48:00Z",
+  "lastLoginAt": "2025-03-16T10:05:42.768603Z",
+  "title": "Dr",
+  "gender": "m",
+  "firstName": "Bruce",
+  "nickName": null,
+  "secondName": null,
+  "lastName": "Benner",
+  "positions": [
+    "08c609d2-26c9-4848-b17b-8feac2e2a91f"
+  ],
+  "roles": [
+    "ROLE_TEAM_MEMBER"
+  ],
+  "qualifications": [
+    {
+      "qualificationKey": "659fccf8-2bfc-4123-b7cd-98be4b8e4f8d",
+      "expiresAt": null,
+      "expires": false
+    }
+  ],
+  "address": {
+    "addressLine1": "42",
+    "addressLine2": null,
+    "town": "Dayton",
+    "zipCode": "45402",
+    "country": "US"
+  },
+  "email": "bruce.benner@email.com",
+  "phone": null,
+  "phoneWork": null,
+  "mobile": null,
+  "dateOfBirth": "1965-12-18",
+  "placeOfBirth": "Dayton",
+  "passNr": "789456123",
+  "comment": "becomes the Hulk when angry, don't anger him",
+  "nationality": "US",
+  "emergencyContact": {
+    "name": "",
+    "phone": ""
+  },
+  "diseases": "its normal, that I become a big green guy sometimes",
+  "intolerances": "nothing",
+  "medication": "Tetrodotoxin B",
+  "diet": "omnivore"
+}

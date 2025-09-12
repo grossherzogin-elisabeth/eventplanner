@@ -13,7 +13,7 @@ public class ApplicationConfigFactory {
     public static ApplicationConfig createApplicationConfig() {
         return new ApplicationConfig(
             new NotificationConfig(
-                "https://teams.webhook.url",
+                "https://webhook.site/#!/view/9e2b7496-3983-46cb-82df-57f4d9d9a964",
                 List.of(NotificationType.values())
             ),
             new EmailConfig(),

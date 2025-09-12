@@ -1,9 +1,10 @@
-package org.eventplanner.integration.api.settings;
+package org.eventplanner.integration.api.users;
 
 import static org.eventplanner.testutil.TestUser.withAuthentication;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.eventplanner.testutil.TestResources;
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
 @Transactional // resets db changes after each test
-class ReadSettingsIntegrationTest {
+class ReadUserDetailsIntegrationTest {
 
     private MockMvc webMvc;
 
@@ -44,27 +45,38 @@ class ReadSettingsIntegrationTest {
 
     @Test
     void shouldRequireAuthentication() throws Exception {
-        webMvc.perform(get("/api/v1/settings")
+        webMvc.perform(get("/api/v1/users/" + TestUser.TEAM_MEMBER)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
     void shouldRequireAuthorization() throws Exception {
-        webMvc.perform(get("/api/v1/settings")
+        webMvc.perform(get("/api/v1/users/" + TestUser.ADMIN)
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
 
     @Test
-    void shouldReturnSettingsForAdmins() throws Exception {
-        var expected = TestResources.getString("/integration/api/settings/read-settings.json");
-        webMvc.perform(get("/api/v1/settings")
-                .with(withAuthentication(TestUser.ADMIN))
+    void shouldReturnUserInformationForSelf() throws Exception {
+        webMvc.perform(get("/api/v1/users/" + TestUser.TEAM_MEMBER)
+                .with(withAuthentication(TestUser.TEAM_MEMBER))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    void shouldReturnUserInformationAsAdmin() throws Exception {
+        var expected = TestResources.getString("/integration/api/users/read-user-details.json");
+        webMvc.perform(get("/api/v1/users/" + TestUser.TEAM_MEMBER)
+                .with(withAuthentication(TestUser.TEAM_PLANNER))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.comment").isNotEmpty())
+            .andExpect(jsonPath("$.authKey").isNotEmpty())
             .andExpect(content().json(expected, JsonCompareMode.STRICT));
     }
 }

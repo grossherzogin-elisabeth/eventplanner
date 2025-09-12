@@ -29,6 +29,11 @@ public enum TestUser {
         return oidcId;
     }
 
+    @Override
+    public String toString() {
+        return oidcId;
+    }
+
     public static RequestPostProcessor withAuthentication(@NonNull TestUser user) {
         var authentication = mock(OAuth2AuthenticationToken.class);
         var oidcUser = mock(OidcUser.class);

@@ -17,8 +17,8 @@
         "expires": false
       }
     ],
-    "email": "bruce.benner@test.email",
-    "verified": false
+    "email": "bruce.benner@email.com",
+    "verified": true
   },
   {
     "key": "80717734-d546-4b7b-a756-5f4f266b5ae6",
@@ -39,8 +39,8 @@
         "expires": false
       }
     ],
-    "email": "stephen.strange@email.de",
-    "verified": false
+    "email": "stephen.strange@email.com",
+    "verified": true
   },
   {
     "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
@@ -61,8 +61,8 @@
         "expires": false
       }
     ],
-    "email": "tony.stark@test.email",
-    "verified": false
+    "email": "tony.stark@email.com",
+    "verified": true
   },
   {
     "key": "b0c4bf2d-d390-4490-8a77-59214eb9a81c",
@@ -93,7 +93,7 @@
         "expires": false
       }
     ],
-    "email": "natasha.romanoff@test.email",
+    "email": "natasha.romanoff@email.com",
     "verified": false
   },
   {
@@ -108,7 +108,7 @@
       "ROLE_EVENT_PLANNER"
     ],
     "qualifications": [],
-    "email": "nick.fury@test.email",
+    "email": "nick.fury@email.com",
     "verified": false
   },
   {
@@ -129,8 +129,8 @@
         "expires": false
       }
     ],
-    "email": "peter.parker@test.email",
-    "verified": false
+    "email": "peter.parker@email.com",
+    "verified": true
   },
   {
     "key": "fc766e6e-dec2-4fc8-89ef-4c158786fd4e",
@@ -151,7 +151,7 @@
         "expires": true
       }
     ],
-    "email": "captain.america@test.email",
+    "email": "captain.america@email.com",
     "verified": true
   },
   {
@@ -172,7 +172,7 @@
         "expires": false
       }
     ],
-    "email": "thor.odinson@asgard.email",
+    "email": "thor.odinson@email.com",
     "verified": false
   },
   {
@@ -193,7 +193,7 @@
         "expires": false
       }
     ],
-    "email": "wanda.maximoff@test.email",
+    "email": "wanda.maximoff@email.com",
     "verified": false
   }
 ]

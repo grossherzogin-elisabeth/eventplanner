@@ -1,4 +1,4 @@
-package org.eventplanner.integration.api.settings;
+package org.eventplanner.integration.api.users;
 
 import static org.eventplanner.testutil.TestUser.withAuthentication;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
 @Transactional // resets db changes after each test
-class ReadSettingsIntegrationTest {
+class ReadSelfIntegrationTest {
 
     private MockMvc webMvc;
 
@@ -44,23 +44,26 @@ class ReadSettingsIntegrationTest {
 
     @Test
     void shouldRequireAuthentication() throws Exception {
-        webMvc.perform(get("/api/v1/settings")
+        webMvc.perform(get("/api/v1/users/self")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void shouldRequireAuthorization() throws Exception {
-        webMvc.perform(get("/api/v1/settings")
+    void shouldReturnOwnUserDataAsTeamMember() throws Exception {
+        var expected = TestResources.getString("/integration/api/users/read-self-team-member.json");
+        webMvc.perform(get("/api/v1/users/self")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(expected, JsonCompareMode.STRICT));
     }
 
     @Test
-    void shouldReturnSettingsForAdmins() throws Exception {
-        var expected = TestResources.getString("/integration/api/settings/read-settings.json");
-        webMvc.perform(get("/api/v1/settings")
+    void shouldReturnOwnUserDataAsAdmin() throws Exception {
+        var expected = TestResources.getString("/integration/api/users/read-self-admin.json");
+        webMvc.perform(get("/api/v1/users/self")
                 .with(withAuthentication(TestUser.ADMIN))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())

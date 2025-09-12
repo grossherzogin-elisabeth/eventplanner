@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -55,7 +56,7 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<UserDetailsRepresentation> createUser(
-        @RequestBody CreateUserRequest spec
+        @Valid @RequestBody CreateUserRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var user = userUseCase.createUser(signedInUser, spec.toDomain());

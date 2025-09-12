@@ -11,7 +11,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ConfigurationService {
@@ -40,6 +42,7 @@ public class ConfigurationService {
     }
 
     private @NonNull ApplicationConfig readConfig() {
+        log.info("Loading application configuration");
         return configurationSources.stream()
             .sorted(Comparator.comparing(ConfigurationSource::getPriority))
             .map(s -> s.getConfig(encryptionService::decrypt))

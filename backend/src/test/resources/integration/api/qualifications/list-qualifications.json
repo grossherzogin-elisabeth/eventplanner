@@ -2,7 +2,7 @@
   {
     "key": "7e819522-6103-491c-8ef0-cbc0c2c208dd",
     "name": "Captain",
-    "icon": "fa-id-card",
+    "icon": "fa-anchor",
     "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
     "expires": true,
     "grantsPositions": [
@@ -12,7 +12,7 @@
   {
     "key": "659fccf8-2bfc-4123-b7cd-98be4b8e4f8d",
     "name": "Engineer",
-    "icon": "fa-id-card",
+    "icon": "fa-screwdriver-wrench",
     "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt.",
     "expires": false,
     "grantsPositions": [
@@ -32,7 +32,7 @@
   {
     "key": "9e4f0b6c-f7e6-480e-8b16-28e50e25f9d3",
     "name": "Trainer",
-    "icon": "fa-id-card",
+    "icon": "fa-bullhorn",
     "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua",
     "expires": false,
     "grantsPositions": []
@@ -40,7 +40,7 @@
   {
     "key": "225f84e5-ebc1-4e76-8ada-98df9f8bf4ad",
     "name": "Deck",
-    "icon": "fa-id-card",
+    "icon": "fa-helmet-safety",
     "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua",
     "expires": false,
     "grantsPositions": [

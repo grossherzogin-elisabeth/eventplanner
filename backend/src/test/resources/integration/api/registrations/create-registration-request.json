@@ -1,0 +1,9 @@
+{
+  "registrationKey": null,
+  "positionKey": "$positionKey",
+  "userKey": "$userKey",
+  "name": null,
+  "note": "Some note",
+  "overnightStay": true,
+  "arrival": "$arrival"
+}
