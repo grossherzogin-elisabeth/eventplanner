@@ -1,0 +1,11 @@
+{
+  "type": "invalid",
+  "signupType": "invalid",
+  "name": null,
+  "note": null,
+  "description": null,
+  "start": "invalid",
+  "end": "invalid",
+  "locations": [],
+  "slots": []
+}

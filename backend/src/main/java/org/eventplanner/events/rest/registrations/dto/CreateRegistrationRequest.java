@@ -5,6 +5,7 @@ import static org.eventplanner.common.ObjectUtils.mapNullable;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import org.eventplanner.common.validation.IsoDate;
 import org.eventplanner.events.domain.specs.CreateRegistrationSpec;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
@@ -17,12 +18,12 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateRegistrationRequest(
     @Nullable String registrationKey,
-    @NotNull @NonNull String positionKey,
+    @NotNull @Nullable String positionKey,
     @Nullable String userKey,
     @Nullable String name,
     @Nullable String note,
     @Nullable Boolean overnightStay,
-    @Nullable LocalDate arrival
+    @IsoDate @Nullable String arrival
 ) implements Serializable {
     public CreateRegistrationSpec toDomain(@NonNull EventKey eventKey, boolean isSelfSignup) {
         return new CreateRegistrationSpec(
@@ -34,7 +35,7 @@ public record CreateRegistrationRequest(
             note,
             isSelfSignup,
             overnightStay,
-            arrival
+            arrival != null ? LocalDate.parse(arrival) : null
         );
     }
 }

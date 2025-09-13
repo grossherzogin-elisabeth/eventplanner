@@ -1,4 +1,4 @@
-package org.eventplanner.integration.api.users;
+package org.eventplanner.integration.api.events;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testutil.TestUser.withAuthentication;
@@ -10,9 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.eventplanner.config.ObjectMapperFactory;
-import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
-import org.eventplanner.events.rest.users.dto.CreateUserRequest;
-import org.eventplanner.events.rest.users.dto.UserDetailsRepresentation;
+import org.eventplanner.events.adapter.jpa.events.EventJpaRepository;
+import org.eventplanner.events.rest.events.dto.CreateEventRequest;
+import org.eventplanner.events.rest.events.dto.EventRepresentation;
 import org.eventplanner.testutil.TestResources;
 import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
 @Transactional // resets db changes after each test
-class CreateUserIntegrationTest {
+class CreateEventIntegrationTest {
 
     private MockMvc webMvc;
 
@@ -43,7 +43,7 @@ class CreateUserIntegrationTest {
     private WebApplicationContext context;
 
     @Autowired
-    private EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository;
+    private EventJpaRepository eventJpaRepository;
 
     @BeforeEach
     void setup() {
@@ -54,8 +54,8 @@ class CreateUserIntegrationTest {
 
     @Test
     void shouldRequireAuthentication() throws Exception {
-        var requestBody = TestResources.getString("/integration/api/users/create-user-request.json");
-        webMvc.perform(post("/api/v1/users")
+        var requestBody = TestResources.getString("/integration/api/events/create-event-request.json");
+        webMvc.perform(post("/api/v1/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
@@ -64,8 +64,8 @@ class CreateUserIntegrationTest {
 
     @Test
     void shouldRequireAuthorization() throws Exception {
-        var requestBody = TestResources.getString("/integration/api/users/create-user-request.json");
-        webMvc.perform(post("/api/v1/users")
+        var requestBody = TestResources.getString("/integration/api/events/create-event-request.json");
+        webMvc.perform(post("/api/v1/events")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -74,46 +74,58 @@ class CreateUserIntegrationTest {
     }
 
     @Test
-    void shouldRejectInvalidRequests() throws Exception {
-        var requestBody = "{}";
-        webMvc.perform(post("/api/v1/users")
+    void shouldReturnValidationErrors() throws Exception {
+        var requestBody = TestResources.getString("/integration/api/events/create-event-invalid-request.json");
+        webMvc.perform(post("/api/v1/events")
                 .with(withAuthentication(TestUser.ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.errors").isMap())
-            .andExpect(jsonPath("$.errors.firstName").value("must not be blank"))
-            .andExpect(jsonPath("$.errors.lastName").value("must not be blank"))
-            .andExpect(jsonPath("$.errors.email").value("must not be blank"));
+            .andExpect(jsonPath("$.errors.type").isNotEmpty())
+            .andExpect(jsonPath("$.errors.signupType").isNotEmpty())
+            .andExpect(jsonPath("$.errors.start").isNotEmpty())
+            .andExpect(jsonPath("$.errors.end").isNotEmpty());
     }
 
     @Test
-    void shouldCreateNewUser() throws Exception {
+    void shouldCreateEvent() throws Exception {
         ObjectMapper objectMapper = ObjectMapperFactory.defaultObjectMapper();
 
-        var requestBody = TestResources.getString("/integration/api/users/create-user-request.json");
-        var request = objectMapper.readValue(requestBody, CreateUserRequest.class);
-        var createUserResponse = webMvc.perform(post("/api/v1/users")
+        var requestBody = TestResources.getString("/integration/api/events/create-event-request.json");
+        var request = objectMapper.readValue(requestBody, CreateEventRequest.class);
+        var createEventResponse = webMvc.perform(post("/api/v1/events")
                 .with(withAuthentication(TestUser.ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.firstName").value(request.firstName()))
-            .andExpect(jsonPath("$.lastName").value(request.lastName()))
-            .andExpect(jsonPath("$.email").value(request.email()))
+            .andExpect(jsonPath("$.name").value(request.name()))
+            .andExpect(jsonPath("$.note").value(request.note()))
+            .andExpect(jsonPath("$.description").value(request.description()))
+            .andExpect(jsonPath("$.type").value(request.type()))
+            .andExpect(jsonPath("$.signupType").value(request.signupType()))
+            .andExpect(jsonPath("$.start").value(request.start()))
+            .andExpect(jsonPath("$.end").value(request.end()))
+            .andExpect(jsonPath("$.locations").value(request.locations()))
+            .andExpect(jsonPath("$.slots").value(request.slots()))
             .andReturn().getResponse().getContentAsString();
 
-        // verify user exist in database
-        var createdUser = objectMapper.readValue(createUserResponse, UserDetailsRepresentation.class);
-        assertThat(encrypedUserDetailsJpaRepository.existsById(createdUser.key())).isTrue();
+        // verify event exist in database
+        var createdEvent = objectMapper.readValue(createEventResponse, EventRepresentation.class);
+        assertThat(eventJpaRepository.existsById(createdEvent.key())).isTrue();
 
-        // verify create user returns same response as the user details request
-        webMvc.perform(get("/api/v1/users/" + createdUser.key())
+        // verify create event returns same response as the get event request
+        webMvc.perform(get("/api/v1/events/" + createdEvent.key())
                 .with(withAuthentication(TestUser.ADMIN))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().string(createUserResponse));
+            .andExpect(content().string(createEventResponse));
+
+        // non-admins should not be able to access the new event
+        webMvc.perform(get("/api/v1/events/" + createdEvent.key())
+                .with(withAuthentication(TestUser.TEAM_MEMBER))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
     }
 }

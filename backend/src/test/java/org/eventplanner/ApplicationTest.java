@@ -26,7 +26,7 @@ class ApplicationTest {
     private RegistrationJpaRepository registrationJpaRepository;
 
     @Test
-    void testDbIsAccessible() {
+    void testDatabaseShouldContainTestData() {
         assertThat(encrypedUserDetailsJpaRepository.findAll()).isNotEmpty();
         assertThat(eventJpaRepository.findAll()).isNotEmpty();
         assertThat(registrationJpaRepository.findAll()).isNotEmpty();

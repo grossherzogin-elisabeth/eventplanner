@@ -102,7 +102,7 @@ class CreateRegistrationIntegrationTest extends EmailSpy {
         var requestBody = TestResources.getString("/integration/api/registrations/create-registration-request.json");
         requestBody = requestBody.replace("$userKey", TestUser.EVENT_PLANNER.getOidcId());
         requestBody = requestBody.replace("$positionKey", PositionKeys.DECKHAND.value());
-        requestBody = requestBody.replace("$arrival", event.getStart().toString());
+        requestBody = requestBody.replace("$arrival", event.getStart().toString().substring(0, 10));
 
         webMvc.perform(post("/api/v1/events/" + event.getKey() + "/registrations")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
@@ -123,7 +123,7 @@ class CreateRegistrationIntegrationTest extends EmailSpy {
         var requestBody = TestResources.getString("/integration/api/registrations/create-registration-request.json");
         requestBody = requestBody.replace("$userKey", TestUser.TEAM_MEMBER.getOidcId());
         requestBody = requestBody.replace("$positionKey", PositionKeys.DECKHAND.value());
-        requestBody = requestBody.replace("$arrival", event.getStart().toString());
+        requestBody = requestBody.replace("$arrival", event.getStart().toString().substring(0, 10));
 
         webMvc.perform(post("/api/v1/events/" + event.getKey() + "/registrations")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
