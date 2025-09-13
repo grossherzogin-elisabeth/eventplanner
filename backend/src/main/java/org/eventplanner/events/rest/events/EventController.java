@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -98,7 +99,7 @@ public class EventController {
     }
 
     @PostMapping("")
-    public ResponseEntity<EventRepresentation> createEvent(@RequestBody CreateEventRequest spec) {
+    public ResponseEntity<EventRepresentation> createEvent(@RequestBody @Valid CreateEventRequest spec) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var event = eventUseCase.createEvent(signedInUser, spec.toDomain());
         return ResponseEntity.status(HttpStatus.CREATED).body(EventRepresentation.fromDomain(event));
