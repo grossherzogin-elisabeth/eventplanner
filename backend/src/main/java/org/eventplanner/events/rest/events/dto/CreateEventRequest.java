@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
-import org.eventplanner.common.validation.Enum;
+import org.eventplanner.common.validation.EnumValue;
 import org.eventplanner.common.validation.IsoTimestamp;
 import org.eventplanner.events.domain.specs.CreateEventSpec;
 import org.eventplanner.events.domain.values.events.EventSignupType;
@@ -17,8 +17,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record CreateEventRequest(
-    @Nullable @Enum(EventType.class) String type,
-    @Nullable @Enum(EventSignupType.class) String signupType,
+    @Nullable @EnumValue(EventType.class) String type,
+    @Nullable @EnumValue(EventSignupType.class) String signupType,
     @NonNull @NotBlank String name,
     @Nullable String note,
     @Nullable String description,
