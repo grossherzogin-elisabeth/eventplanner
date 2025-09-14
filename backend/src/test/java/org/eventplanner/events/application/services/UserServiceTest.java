@@ -3,7 +3,6 @@ package org.eventplanner.events.application.services;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
 import static org.eventplanner.testdata.UserFactory.createUser;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,11 +29,7 @@ class UserServiceTest {
     private UserService testee;
 
     @BeforeEach
-    void setUp() {
-    }
-
-    @BeforeEach
-    void setup() throws Exception {
+    void setup() {
         qualificationRepository = mock();
         when(qualificationRepository.findAll()).thenReturn(List.of(
             qualificationWithoutExpiration(),
@@ -90,7 +85,7 @@ class UserServiceTest {
     void shouldReturnUserDetails() {
         var user = createUser();
         user.addQualification(qualificationWithPosition());
-        when(userRepository.findByKey(eq(user.getKey())))
+        when(userRepository.findByKey(user.getKey()))
             .thenReturn(Optional.of(user.encrypt(encryptionService::encrypt)));
 
         var result = testee.getUserByKey(user.getKey());
@@ -123,7 +118,7 @@ class UserServiceTest {
         var authKey = new AuthKey("auth");
         var user = createUser().withAuthKey(authKey);
         user.addQualification(qualificationWithPosition());
-        when(userRepository.findByAuthKey(eq(authKey)))
+        when(userRepository.findByAuthKey(authKey))
             .thenReturn(Optional.of(user.encrypt(encryptionService::encrypt)));
 
         var result = testee.getUserByAuthKey(authKey);
