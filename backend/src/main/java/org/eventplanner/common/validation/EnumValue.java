@@ -84,7 +84,7 @@ public @interface EnumValue {
             return false;
         }
 
-        private static Optional<Method> findCreatorMethod(Class<?> type) {
+        private static @NonNull Optional<Method> findCreatorMethod(@NonNull Class<?> type) {
             return Arrays.stream(type.getDeclaredMethods())
                 .filter(m -> Modifier.isStatic(m.getModifiers()))
                 .filter(m -> m.isAnnotationPresent(JsonCreator.class))
@@ -92,7 +92,7 @@ public @interface EnumValue {
                 .findFirst();
         }
 
-        private static Optional<Method> findValueOfMethod(Class<?> type) {
+        private static @NonNull Optional<Method> findValueOfMethod(@NonNull Class<?> type) {
             return Arrays.stream(type.getDeclaredMethods())
                 .filter(m -> Modifier.isStatic(m.getModifiers()))
                 .filter(m -> m.getName().equals("valueOf"))
