@@ -19,6 +19,11 @@ import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * The annotated value must be a valid enum value. Supports enums with values, that have a method annotated with
+ * {@link JsonCreator} as well as simple enums, where the validated value must return a valid enum value from the
+ * {@link Enum#valueOf(Class, String)} function.
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = EnumValue.EnumValidator.class)

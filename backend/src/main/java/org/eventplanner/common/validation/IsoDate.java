@@ -14,6 +14,10 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 
+/**
+ * The annotated value must be a valid ISO 8601 date with the format 2007-12-03. This in particular ensures, that the
+ * value can be parsed using {@link LocalDate#parse(CharSequence)}.
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = IsoDate.IsoDateValidator.class)
@@ -25,7 +29,7 @@ public @interface IsoDate {
 
     @NonNull Class<? extends Payload>[] payload() default {};
 
-    public static class IsoDateValidator implements ConstraintValidator<IsoDate, String> {
+    class IsoDateValidator implements ConstraintValidator<IsoDate, String> {
 
         @Override
         public boolean isValid(@Nullable final String value, @NonNull final ConstraintValidatorContext context) {

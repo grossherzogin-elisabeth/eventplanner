@@ -14,6 +14,10 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 
+/**
+ * The annotated value must be a valid ISO 8601 timestamp with the format 2007-12-03T10:15:30.00Z. This in particular
+ * ensures, that the value can be parsed using {@link Instant#parse(CharSequence)}.
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = IsoTimestamp.IsoTimestampValidator.class)
@@ -25,7 +29,7 @@ public @interface IsoTimestamp {
 
     @NonNull Class<? extends Payload>[] payload() default {};
 
-    public static class IsoTimestampValidator implements ConstraintValidator<IsoTimestamp, String> {
+    class IsoTimestampValidator implements ConstraintValidator<IsoTimestamp, String> {
 
         @Override
         public boolean isValid(@Nullable final String value, @NonNull final ConstraintValidatorContext context) {
