@@ -7,7 +7,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.functions.EncryptFunc;
@@ -69,20 +72,16 @@ public class UserDetails {
     private @Nullable Diet diet;
 
     public @NonNull String getFullName() {
-        StringBuilder stb = new StringBuilder();
-        if (title != null) {
-            stb.append(title).append(" ");
-        }
-        if (nickName != null && !nickName.isBlank()) {
-            stb.append(nickName).append(" ");
-        } else {
-            stb.append(firstName).append(" ");
-        }
-        if (secondName != null && !secondName.isBlank()) {
-            stb.append(secondName).append(" ");
-        }
-        stb.append(lastName);
-        return stb.toString();
+        var activeFirstName = Optional.ofNullable(nickName).orElse(firstName);
+        return Stream.of(title, activeFirstName, secondName, lastName)
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(" "));
+    }
+
+    public @NonNull String getFirstNames() {
+        return Stream.of(firstName, secondName)
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(" "));
     }
 
     public @NonNull User cropToUser() {
