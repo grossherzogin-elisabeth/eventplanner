@@ -84,7 +84,6 @@ public class EmailService implements NotificationDispatcher {
     }
 
     public void sendNextEmail() {
-
         var maybeNext = queuedEmailRepository.next();
         if (maybeNext.isPresent()) {
             var config = configurationService.getConfig().email();
