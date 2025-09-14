@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
+import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,14 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
 
     @Override
     public @NonNull Optional<EncryptedUserDetails> findByKey(@NonNull final UserKey key) {
-        return encrypedUserDetailsJpaRepository.findByKey(key.value()).map(EncryptedUserDetailsJpaEntity::toDomain);
+        return encrypedUserDetailsJpaRepository.findByKey(key.value())
+            .map(EncryptedUserDetailsJpaEntity::toDomain);
+    }
+
+    @Override
+    public @NonNull Optional<EncryptedUserDetails> findByAuthKey(@NonNull final AuthKey authKey) {
+        return encrypedUserDetailsJpaRepository.findByAuthKey(authKey.value())
+            .map(EncryptedUserDetailsJpaEntity::toDomain);
     }
 
     @Override

@@ -44,6 +44,7 @@ public @interface EnumValue {
         private @Nullable Method creatorMethod;
         private @Nullable Method valueOfMethod;
 
+        @Override
         public void initialize(@NonNull EnumValue constraintAnnotation) {
             if (!constraintAnnotation.value().isEnum()) {
                 throw new IllegalArgumentException("Validated type must be an enum!");

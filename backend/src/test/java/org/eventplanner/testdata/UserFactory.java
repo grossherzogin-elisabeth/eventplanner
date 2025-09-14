@@ -31,7 +31,7 @@ public class UserFactory {
             "Doe",
             Collections.emptyList(),
             List.of(Role.TEAM_MEMBER),
-            List.of(),
+            Collections.emptyList(),
             new Address(
                 "Teststr. 42",
                 null,
