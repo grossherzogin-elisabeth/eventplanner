@@ -58,28 +58,21 @@ public @interface EnumValue {
             if (value == null || type == null) {
                 return true;
             }
-            try {
-                if (creatorMethod != null) {
-                    var result = creatorMethod.invoke(null, value);
-                    if (result instanceof Optional<?> optional) {
-                        return optional.isPresent();
-                    }
-                    return result != null;
+
+            if (creatorMethod != null) {
+                try {
+                    return creatorMethod.invoke(null, value) != null;
+                } catch (Exception e) {
+                    return false;
                 }
-            } catch (Exception e) {
-                log.error("Failed to invoke creator method to validate {}", type.getSimpleName(), e);
             }
 
-            try {
-                if (valueOfMethod != null) {
-                    var result = valueOfMethod.invoke(null, value);
-                    if (result instanceof Optional<?> optional) {
-                        return optional.isPresent();
-                    }
-                    return result != null;
+            if (valueOfMethod != null) {
+                try {
+                    return valueOfMethod.invoke(null, value) != null;
+                } catch (Exception e) {
+                    return false;
                 }
-            } catch (Exception e) {
-                log.error("Failed to valueOf method to validate {}", type.getSimpleName(), e);
             }
             return false;
         }
