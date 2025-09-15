@@ -140,7 +140,7 @@ class UserDetailsTest {
         var testee = createUser();
         testee.addQualification(qualificationA);
         testee.addQualification(qualificationB);
-        var result = testee.getQualification(qualificationA.getKey());
+        var result = testee.findQualification(qualificationA.getKey());
         assertThat(result).isPresent();
         assertThat(result.get().getQualificationKey()).isEqualTo(qualificationA.getKey());
     }

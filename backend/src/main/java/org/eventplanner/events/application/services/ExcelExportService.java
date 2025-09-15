@@ -3,8 +3,10 @@ package org.eventplanner.events.application.services;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.time.Instant;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +33,7 @@ public class ExcelExportService {
         @NonNull final File template,
         @NonNull final Map<String, Object> model
     ) {
+        model.put("currentDate", Instant.now());
         try (FileInputStream fileTemplate = new FileInputStream(template)) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
@@ -41,12 +45,13 @@ public class ExcelExportService {
             try (bos) {
                 workbook.write(bos);
                 bos.flush();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 throw e;
             }
             return bos;
-        } catch (Exception e) {
+        } catch (TemplateException | IOException e) {
             // TODO throw other exception
+            log.error("Failed to create excel export", e);
             throw new RuntimeException(e);
         }
     }
@@ -67,7 +72,8 @@ public class ExcelExportService {
         }
     }
 
-    private void fillSheet(@NonNull final XSSFSheet sheet, @NonNull final Map<String, Object> model) {
+    private void fillSheet(@NonNull final XSSFSheet sheet, @NonNull final Map<String, Object> model)
+    throws TemplateException {
         for (var row : sheet) {
             for (var cell : row) {
                 renderCellValue(cell, model);
@@ -75,7 +81,7 @@ public class ExcelExportService {
         }
     }
 
-    private void renderCellValue(@NonNull Cell cell, Map<String, Object> model) {
+    private void renderCellValue(@NonNull Cell cell, Map<String, Object> model) throws TemplateException {
         if (!cell.getCellType().equals(CellType.STRING)) {
             return;
         }
@@ -89,15 +95,16 @@ public class ExcelExportService {
         cell.setCellValue(rendered);
     }
 
-    private @NonNull String renderString(@NonNull final String template, @NonNull Map<String, Object> model) {
+    protected @NonNull String renderString(@NonNull final String template, @NonNull Map<String, Object> model)
+    throws TemplateException {
         try {
             var renderer = new Template(template, new StringReader(template), freemarkerConfig);
             var writer = new StringWriter();
             renderer.process(model, writer);
             return writer.toString();
-        } catch (Exception e) {
-            log.error("Failed to render cell content", e);
+        } catch (IOException e) {
+            log.error("Failed to initialize template", e);
+            return template;
         }
-        return template;
     }
 }

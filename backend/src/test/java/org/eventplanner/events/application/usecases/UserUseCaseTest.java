@@ -109,10 +109,10 @@ class UserUseCaseTest {
         );
 
         assertThat(updateUser.getQualifications()).hasSize(4);
-        assertThat(updateUser.getQualification(NON_EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updateUser.getQualification(EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updateUser.getQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updateUser.getQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
+        assertThat(updateUser.findQualification(NON_EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updateUser.findQualification(EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updateUser.findQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updateUser.findQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
         verifyNoInteractions(notificationService);
     }
 
@@ -136,12 +136,12 @@ class UserUseCaseTest {
         );
 
         assertThat(updatedUser.getQualifications()).hasSize(6);
-        assertThat(updatedUser.getQualification(NON_EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(NON_EXPIRING_NEW_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(EXPIRING_NEW_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(NON_EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(NON_EXPIRING_NEW_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(EXPIRING_NEW_QUALIFICATION.getKey())).isPresent();
         verify(notificationService).sendQualificationAddedNotification(
             eq(user),
             eq(NON_EXPIRING_NEW_QUALIFICATION),
@@ -163,10 +163,10 @@ class UserUseCaseTest {
                 .build()
         );
         assertThat(updatedUser.getQualifications()).hasSize(3);
-        assertThat(updatedUser.getQualification(NON_EXPIRING_QUALIFICATION.getKey())).isEmpty();
-        assertThat(updatedUser.getQualification(EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(NON_EXPIRING_QUALIFICATION.getKey())).isEmpty();
+        assertThat(updatedUser.findQualification(EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
         verify(notificationService).sendQualificationRemovedNotification(
             eq(user),
             eq(NON_EXPIRING_QUALIFICATION),
@@ -200,10 +200,10 @@ class UserUseCaseTest {
                 .build()
         );
         assertThat(updatedUser.getQualifications()).hasSize(4);
-        assertThat(updatedUser.getQualification(NON_EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
-        assertThat(updatedUser.getQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(NON_EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
+        assertThat(updatedUser.findQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
         verify(notificationService).sendQualificationUpdatedNotification(eq(user), eq(EXPIRED_QUALIFICATION), any());
         verifyNoMoreInteractions(notificationService);
     }
