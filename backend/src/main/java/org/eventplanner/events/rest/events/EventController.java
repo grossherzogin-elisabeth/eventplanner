@@ -1,11 +1,10 @@
 package org.eventplanner.events.rest.events;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import org.eventplanner.events.application.usecases.CaptainListUseCase;
 import org.eventplanner.events.application.usecases.ConsumtionListUseCase;
+import org.eventplanner.events.application.usecases.EventExportUseCase;
 import org.eventplanner.events.application.usecases.EventUseCase;
 import org.eventplanner.events.application.usecases.ImoListUseCase;
 import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
@@ -50,6 +49,7 @@ public class EventController {
     private final UserUseCase userUseCase;
     private final EventUseCase eventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
+    private final EventExportUseCase eventExportUseCase;
     private final ImoListUseCase imoListUseCase;
     private final ConsumtionListUseCase consumtionListUseCase;
     private final CaptainListUseCase captainListUseCase;
@@ -123,52 +123,36 @@ public class EventController {
     }
 
     @GetMapping("/{eventKey}/imo-list")
-    public ResponseEntity<Resource> downloadImoList(@PathVariable("eventKey") String eventKey) throws IOException {
-
+    public ResponseEntity<Resource> downloadImoList(@PathVariable("eventKey") String eventKey) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream imoListStream = imoListUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
-        byte[] imoListByteArray = imoListStream.toByteArray();
-
-        ByteArrayResource resource = new ByteArrayResource(imoListByteArray);
-
+        var outputStream = eventExportUseCase.exportImoCrewList(signedInUser, new EventKey(eventKey));
+        byte[] bytes = outputStream.toByteArray();
         return ResponseEntity.ok()
-            .contentLength(imoListByteArray.length)
+            .contentLength(bytes.length)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource);
+            .body(new ByteArrayResource(bytes));
     }
 
     @GetMapping("/{eventKey}/consumption-list")
-    public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey)
-    throws IOException {
-
+    public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream consumptionListStream =
-            consumtionListUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
-        byte[] consumptionListByteArray = consumptionListStream.toByteArray();
-
-        ByteArrayResource resource = new ByteArrayResource(consumptionListByteArray);
-
+        var outputStream = eventExportUseCase.exportConsumptionList(signedInUser, new EventKey(eventKey));
+        byte[] bytes = outputStream.toByteArray();
         return ResponseEntity.ok()
-            .contentLength(consumptionListByteArray.length)
+            .contentLength(bytes.length)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource);
+            .body(new ByteArrayResource(bytes));
     }
 
     @GetMapping("/{eventKey}/captain-list")
-    public ResponseEntity<Resource> downloadCaptainList(@PathVariable("eventKey") String eventKey)
-    throws IOException {
-
+    public ResponseEntity<Resource> downloadCaptainList(@PathVariable("eventKey") String eventKey) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream captainListStream =
-            captainListUseCase.downloadCaptainList(signedInUser, new EventKey(eventKey));
-        byte[] captainListByteArray = captainListStream.toByteArray();
-
-        ByteArrayResource resource = new ByteArrayResource(captainListByteArray);
-
+        var outputStream = eventExportUseCase.exportCaptainList(signedInUser, new EventKey(eventKey));
+        byte[] bytes = outputStream.toByteArray();
         return ResponseEntity.ok()
-            .contentLength(captainListByteArray.length)
+            .contentLength(bytes.length)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource);
+            .body(new ByteArrayResource(bytes));
     }
 
     @PostMapping("/{eventKey}/optimized-slots")

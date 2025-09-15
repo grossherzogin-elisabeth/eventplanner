@@ -339,7 +339,7 @@ public class NotificationService {
         props.put("granted_positions", joinedPositionNames.toString());
 
         ofNullable(user)
-            .flatMap(u -> u.getQualification(qualification.getKey()))
+            .flatMap(u -> u.findQualification(qualification.getKey()))
             .map(UserQualification::getExpiresAt)
             .ifPresent(exp -> props.put("expiration_date", formatDate(exp.atZone(timezone))));
     }

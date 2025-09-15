@@ -24,6 +24,7 @@ import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import freemarker.ext.beans.TemplateAccessible;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -100,7 +101,7 @@ public class UserDetails {
         @NonNull final Qualification qualification,
         @Nullable final Instant expirationDate
     ) {
-        var maybeExistingQualification = getQualification(qualification.getKey());
+        var maybeExistingQualification = findQualification(qualification.getKey());
         if (maybeExistingQualification.isEmpty()) {
             throw new IllegalStateException("Qualification with key " + qualification.getKey() + " not found");
         }
@@ -120,7 +121,7 @@ public class UserDetails {
     }
 
     public void addQualification(@NonNull final Qualification qualification, @Nullable final Instant expirationDate) {
-        var maybeExistingQualification = getQualification(qualification.getKey());
+        var maybeExistingQualification = findQualification(qualification.getKey());
         if (maybeExistingQualification.isPresent()) {
             throw new IllegalStateException("Qualification with key " + qualification.getKey() + " already assigned");
         }
@@ -152,10 +153,16 @@ public class UserDetails {
         //  qualifications here, this cannot be updated without making this type know the full qualification data
     }
 
-    public @NonNull Optional<UserQualification> getQualification(@NonNull QualificationKey qualificationKey) {
+    @TemplateAccessible
+    public @NonNull Optional<UserQualification> findQualification(@NonNull QualificationKey qualificationKey) {
         return qualifications.stream()
             .filter(it -> qualificationKey.equals(it.getQualificationKey()))
             .findFirst();
+    }
+
+    @TemplateAccessible
+    public @Nullable UserQualification getQualification(@NonNull String qualificationKey) {
+        return findQualification(new QualificationKey(qualificationKey)).orElse(null);
     }
 
     public @NonNull EncryptedUserDetails encrypt(@NonNull final EncryptFunc encryptFunc) {
