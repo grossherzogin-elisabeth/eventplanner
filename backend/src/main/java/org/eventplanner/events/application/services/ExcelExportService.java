@@ -92,7 +92,16 @@ public class ExcelExportService {
         model.put("row", cell.getRowIndex());
         template = template.replace("#row", String.valueOf(cell.getRowIndex()));
         var rendered = renderString(template, model);
-        cell.setCellValue(rendered);
+        if (rendered.isEmpty()) {
+            cell.setBlank();
+            return;
+        }
+        try {
+            var dbl = Double.parseDouble(rendered);
+            cell.setCellValue(dbl);
+        } catch (NumberFormatException e) {
+            cell.setCellValue(rendered);
+        }
     }
 
     protected @NonNull String renderString(@NonNull final String template, @NonNull Map<String, Object> model)
