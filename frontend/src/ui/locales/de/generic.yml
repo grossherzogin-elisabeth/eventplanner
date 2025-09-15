@@ -6,6 +6,7 @@ generic:
   no-entries: 'Keine Einträge'
   no-information: 'Keine Angabe'
   no-matches: 'Keine Treffer'
+  optional: 'optional'
   please-select: 'Bitte auswählen'
   filter-entries: 'Einträge filtern'
   cancel: 'Abbrechen'
