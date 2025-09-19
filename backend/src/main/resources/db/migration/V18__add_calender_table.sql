@@ -1,6 +1,6 @@
 CREATE TABLE ics_calendar
 (
-    key_id TEXT PRIMARY KEY,
+    key_id   TEXT PRIMARY KEY,
     token    TEXT        NOT NULL,
     user_key TEXT UNIQUE NOT NULL
 );

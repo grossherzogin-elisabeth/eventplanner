@@ -29,16 +29,11 @@ public class IcsCalendarJpaRepositoryAdapterTest {
     @Test
     public void testCreate_validUserKey_createsAndReturnsIcsCalendarInfo() {
 
-
         // Arrange
         UserKey userKey = new UserKey();
 
-        log.info("UserKey: {}", userKey);
-
         // Act
         IcsCalendarInfo result = adapter.create(userKey);
-
-        log.info("Result: {}", result);
 
         // Assert
         assertThat(result).isNotNull();
@@ -48,8 +43,6 @@ public class IcsCalendarJpaRepositoryAdapterTest {
 
         // Verify the entity in the database
         var savedEntity = repository.findById(result.getKey());
-
-        log.info("SavedEntity: {}", savedEntity);
 
         assertThat(savedEntity).isPresent();
         assertThat(savedEntity.get().getKey()).isEqualTo(result.getKey());
