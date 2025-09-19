@@ -10,7 +10,7 @@
             "{{ props.registration.registration.note }}"
         </p>
         <template v-if="props.registration.user">
-            <h4 class="mb-2 text-sm font-bold">Positionen</h4>
+            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.registration-tooltip.positions') }}</h4>
             <div class="mb-4 flex flex-wrap items-center gap-1">
                 <span
                     v-for="p in props.registration.user.positionKeys"
@@ -28,7 +28,7 @@
                     {{ positions.get(props.registration.registration?.positionKey).name }}
                 </span>
             </div>
-            <h4 class="mb-2 text-sm font-bold">Qualifikationen</h4>
+            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.registration-tooltip.qualifications') }}</h4>
             <div class="flex flex-wrap items-center gap-1">
                 <span
                     v-for="q in props.registration.user.qualifications"
@@ -46,7 +46,9 @@
                 </span>
             </div>
         </template>
-        <p v-else>{{ props.registration.name }} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.</p>
+        <p v-else>
+            {{ $t('views.events.edit.registration-tooltip.guest-info', { name: props.registration.name }) }}
+        </p>
     </div>
 </template>
 <script lang="ts" setup>

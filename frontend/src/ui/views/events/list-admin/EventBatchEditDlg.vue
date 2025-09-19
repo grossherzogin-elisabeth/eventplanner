@@ -1,60 +1,60 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1>Alle bearbeiten</h1>
+            <h1>{{ $t('views.events.admin-list.batch-edit.title') }}</h1>
         </template>
         <template #default>
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <p class="mb-8">
-                        Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle Reisen übernommen.
+                        {{ $t('views.events.admin-list.batch-edit.info') }}
                     </p>
                     <div class="mb-4">
-                        <VInputLabel>Status</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.status') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.state"
                             :options="eventStates.options.value"
                             :errors="validation.errors.value['state']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="nicht geändert"
+                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Name</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.name') }}</VInputLabel>
                         <VInputText
                             v-model="patch.name"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="nicht geändert"
+                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Kategorie</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.category') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.type"
                             :options="eventTypes.options.value"
                             :errors="validation.errors.value['type']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="nicht geändert"
+                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Anmeldetyp</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.signup-type') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.signupType"
                             :options="eventSignupTypes.options.value"
                             :errors="validation.errors.value['signupType']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="nicht geändert"
+                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Beschreibung</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.description') }}</VInputLabel>
                         <VInputTextArea
                             v-model="patch.description"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="nicht geändert"
+                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
                         />
                     </div>
                 </section>
@@ -62,10 +62,10 @@
         </template>
         <template #buttons>
             <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <AsyncButton class="btn-primary" name="save" :action="submit" :disabled="validation.disableSubmit.value">
-                <template #label>Speichern</template>
+                <template #label>{{ $t('generic.save') }}</template>
             </AsyncButton>
         </template>
     </VDialog>
