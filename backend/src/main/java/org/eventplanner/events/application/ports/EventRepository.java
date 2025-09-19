@@ -1,11 +1,12 @@
 package org.eventplanner.events.application.ports;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface EventRepository {
     @NonNull
@@ -13,6 +14,9 @@ public interface EventRepository {
 
     @NonNull
     List<Event> findAllByYear(int year);
+
+    @NonNull
+    List<Event> findAllByUser(UserKey userKey);
 
     @NonNull
     Event create(@NonNull Event event);
