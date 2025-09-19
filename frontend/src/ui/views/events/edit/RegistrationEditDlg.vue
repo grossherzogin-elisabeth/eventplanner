@@ -1,14 +1,21 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="selectedUser">Anmeldung von {{ selectedUser.nickName || selectedUser.firstName }} {{ selectedUser.lastName }}</h1>
-            <h1 v-else>Gastcrewanmeldung</h1>
+            <h1 v-if="selectedUser">
+                {{
+                    $t('views.events.edit.registration-edit-dlg.title', {
+                        name: selectedUser.nickName || selectedUser.firstName,
+                        lastName: selectedUser.lastName,
+                    })
+                }}
+            </h1>
+            <h1 v-else>{{ $t('views.events.edit.registration-edit-dlg.guest-title') }}</h1>
         </template>
         <template #default>
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div v-if="!registration.userKey" class="mb-4">
-                        <VInputLabel>Name</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.name') }}</VInputLabel>
                         <VInputText
                             v-model.trim="registration.name"
                             :errors="validation.errors.value['name']"
@@ -16,7 +23,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Position</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.position') }}</VInputLabel>
                         <VInputCombobox
                             v-model="registration.positionKey"
                             :options="positions.options.value"
@@ -33,22 +40,22 @@
                         </VInputCombobox>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Übernachtung an Bord</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.overnightStay') }}</VInputLabel>
                         <VInputSelect
                             v-model="registration.overnightStay"
                             :options="[
-                                { value: undefined, label: 'Keine Angabe' },
-                                { value: true, label: 'Ja' },
-                                { value: false, label: 'Nein' },
+                                { value: undefined, label: $t('generic.no-information') },
+                                { value: true, label: $t('generic.yes') },
+                                { value: false, label: $t('generic.no') },
                             ]"
                         />
                     </div>
                     <div v-if="registration.overnightStay" class="mb-4">
-                        <VInputLabel>Anreise am</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.arrival') }}</VInputLabel>
                         <VInputDate v-model="registration.arrival" />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Notiz</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.note') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="registration.note"
                             :errors="validation.errors.value['note']"
@@ -57,18 +64,25 @@
                     </div>
                     <template v-if="selectedUser !== undefined">
                         <VWarning v-if="!selectedUser?.positionKeys?.includes(registration.positionKey)" class="my-4">
-                            {{ selectedUser?.nickName || selectedUser?.firstName }} hat keine Qualifikation für die Position
-                            <i>{{ selectedPosition?.name }}</i>
+                            {{
+                                $t('views.events.edit.registration-edit-dlg.no-qualification', {
+                                    name: selectedUser?.nickName || selectedUser?.firstName,
+                                    position: selectedPosition?.name,
+                                })
+                            }}
                         </VWarning>
                     </template>
                     <VWarning v-else-if="registration.name" class="my-4">
-                        {{ registration.name }} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft
-                        werden.
+                        {{ $t('views.events.edit.registration-edit-dlg.guest-warning', { name: registration.name }) }}
                     </VWarning>
                 </section>
                 <template v-if="selectedUser">
                     <p class="mb-2">
-                        {{ selectedUser.nickName || selectedUser.firstName }} hat zum Zeitpunkt der Reise die folgenden Qualifikationen:
+                        {{
+                            $t('views.events.edit.registration-edit-dlg.qualifications', {
+                                name: selectedUser.nickName || selectedUser.firstName,
+                            })
+                        }}
                     </p>
                     <div class="flex flex-wrap items-center gap-1 text-sm">
                         <span
@@ -91,10 +105,10 @@
         </template>
         <template #buttons>
             <button class="btn-ghost" name="save" @click="cancel">
-                <span>Abbrechen</span>
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Übernehmen</span>
+                <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>
     </VDialog>
@@ -138,11 +152,11 @@ const validation = useValidation(registration, (value) => {
     const errors: Record<string, ValidationHint[]> = {};
     if (!value.positionKey) {
         errors.positionKey = errors.positionKey || [];
-        errors.positionKey.push({ key: 'Bitte wähle eine Position', params: {} });
+        errors.positionKey.push({ key: 'views.events.edit.registration-edit-dlg.select-position', params: {} });
     }
     if (!value.name && !value.userKey) {
         errors.userKey = errors.userKey || [];
-        errors.userKey.push({ key: 'Bitte wähle eine Stammcrew Mitglied', params: {} });
+        errors.userKey.push({ key: 'views.events.edit.registration-edit-dlg.select-user', params: {} });
     }
     return errors;
 });

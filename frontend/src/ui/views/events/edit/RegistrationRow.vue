@@ -62,7 +62,7 @@
                             :class="{ disabled: !props.value.user }"
                         >
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                            <span>Nutzer anzeigen</span>
+                            <span>{{ $t('views.events.edit.registration-row.show-user') }}</span>
                         </RouterLink>
                         <li
                             v-if="props.value.slot"
@@ -71,27 +71,27 @@
                             @click="emit('removeFromTeam')"
                         >
                             <i class="fa-solid fa-arrow-right"></i>
-                            <span>Auf Warteliste setzen</span>
+                            <span>{{ $t('views.events.edit.registration-row.move-to-waiting-list') }}</span>
                         </li>
                         <li v-else class="context-menu-item" :class="{ disabled: !props.value.registration }" @click="emit('addToTeam')">
                             <i class="fa-solid fa-arrow-left"></i>
-                            <span>Zur Crew hinzufügen</span>
+                            <span>{{ $t('views.events.edit.registration-row.add-to-crew') }}</span>
                         </li>
                         <li class="context-menu-item" :class="{ disabled: !props.value.registration }" @click="emit('editRegistration')">
                             <i class="fa-solid fa-edit"></i>
-                            <span>Anmeldung bearbeiten</span>
+                            <span>{{ $t('views.events.edit.registration-row.edit-registration') }}</span>
                         </li>
                         <li v-if="props.value.slot" class="context-menu-item" @click="emit('editSlot')">
                             <i class="fa-solid fa-edit"></i>
-                            <span>Slot bearbeiten</span>
+                            <span>{{ $t('views.events.edit.registration-row.edit-slot') }}</span>
                         </li>
                         <li v-if="props.value.registration" class="context-menu-item text-error" @click="emit('cancelRegistration')">
                             <i class="fa-solid fa-user-minus"></i>
-                            <span>Anmeldung löschen</span>
+                            <span>{{ $t('views.events.edit.registration-row.delete-registration') }}</span>
                         </li>
                         <li v-else class="context-menu-item text-error" @click="emit('deleteSlot')">
                             <i class="fa-solid fa-trash-alt"></i>
-                            <span>Slot löschen</span>
+                            <span>{{ $t('views.events.edit.registration-row.delete-slot') }}</span>
                         </li>
                     </ul>
                 </template>

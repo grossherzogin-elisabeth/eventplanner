@@ -10,7 +10,7 @@
             <template #tooltip>
                 <div class="flex flex-col gap-8 rounded-xl bg-surface-container-high p-4 text-sm text-onsurface shadow-xl">
                     <div v-if="unassignedRequiredPositions.length > 0">
-                        <h4 class="mb-2 font-bold">Noch zu besetzende Slots</h4>
+                        <h4 class="mb-2 font-bold">{{ $t('views.events.admin-list.state.missing-crew') }}</h4>
                         <div class="flex flex-wrap gap-2">
                             <div
                                 v-for="position in unassignedRequiredPositions"
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div v-if="unassignedOptionalPositions.length > 0">
-                        <h4 class="mb-2 font-bold">Freie Plätze für</h4>
+                        <h4 class="mb-2 font-bold">{{ $t('views.events.admin-list.state.free-slots-for') }}</h4>
                         <div class="flex flex-wrap gap-2">
                             <div
                                 v-for="position in unassignedOptionalPositions"
@@ -56,6 +56,7 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Event, Position, Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import { EventState } from '@/domain';
@@ -81,6 +82,7 @@ const props = defineProps<Props>();
 
 const eventService = useEventService();
 const positions = usePositions();
+const { t } = useI18n();
 
 const openSlots = computed<Slot[]>(() => eventService.getOpenSlots(props.event));
 const openRequiredSlots = computed<Slot[]>(() => openSlots.value.filter((slot) => slot.criticality !== SlotCriticality.Optional));
@@ -101,32 +103,36 @@ const state = computed<StateDetails>(() => {
     switch (props.event.state) {
         case EventState.Draft:
             return {
-                name: 'Entwurf',
+                name: t('generic.event-state.draft'),
                 icon: 'fa-compass-drafting',
                 color: 'bg-surface-container-highest text-onsurface',
             };
         case EventState.OpenForSignup:
             return {
-                name: 'Crew Anmeldung',
+                name: t('generic.event-state.open-for-signup'),
                 icon: 'fa-people-group',
                 color: 'bg-surface-container-highest text-onsurface',
             };
         case EventState.Canceled:
-            return { name: 'Abgesagt', icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
+            return { name: t('generic.event-state.canceled'), icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
     }
     if (openRequiredSlots.value.length > 0) {
-        return { name: 'Fehlende Crew', icon: 'fa-warning', color: 'bg-yellow-container text-onyellow-container' };
+        return {
+            name: t('views.events.admin-list.state.missing-crew'),
+            icon: 'fa-warning',
+            color: 'bg-yellow-container text-onyellow-container',
+        };
     }
     if (openSlots.value.length > 0) {
         return {
-            name: 'Freie Plätze',
+            name: t('generic.event-state.open-slots'),
             icon: 'fa-info-circle',
             iconMobile: 'fa-info',
             color: 'bg-blue-container text-onblue-container',
         };
     }
     return {
-        name: 'Voll belegt',
+        name: t('generic.event-state.full'),
         icon: 'fa-check-circle',
         iconMobile: 'fa-check',
         color: 'bg-green-container text-ongreen-container',

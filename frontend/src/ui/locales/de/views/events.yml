@@ -67,7 +67,7 @@ events:
       add-to-crew: 'Zur Crew hinzufügen'
       empty-crew:
         title: 'Hier ist noch nichts...'
-        desc: 'Für diese Veranstaltung wurden noch keine Slots definiert. Im \"Slots\" Tab kannst du Slots für diese Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.'
+        desc: 'Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.'
       waiting-list: 'Warteliste'
       move-to-waiting-list: 'Auf Warteliste verschieben'
       delete-registration: 'Anmeldung löschen'
@@ -136,6 +136,52 @@ events:
       move-up: 'Nach oben verschieben'
       move-down: 'Nach unten verschieben'
       delete: 'Abschnitt löschen'
+    registration-edit-dlg:
+      title: 'Anmeldung von {name} {lastName}'
+      guest-title: 'Gastcrewanmeldung'
+      name: 'Name'
+      position: 'Position'
+      overnightStay: 'Übernachtung an Bord'
+      arrival: 'Anreise am'
+      note: 'Notiz'
+      no-qualification: '{name} hat keine Qualifikation für die Position {position}'
+      guest-warning: '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft werden.'
+      qualifications: '{name} hat zum Zeitpunkt der Reise die folgenden Qualifikationen:'
+      select-position: 'Bitte wähle eine Position'
+      select-user: 'Bitte wähle eine Stammcrew Mitglied'
+    registration-row:
+      show-user: 'Nutzer anzeigen'
+      move-to-waiting-list: 'Auf Warteliste setzen'
+      add-to-crew: 'Zur Crew hinzufügen'
+      edit-registration: 'Anmeldung bearbeiten'
+      edit-slot: 'Slot bearbeiten'
+      delete-registration: 'Anmeldung löschen'
+      delete-slot: 'Slot löschen'
+    registration-tooltip:
+      positions: 'Positionen'
+      qualifications: 'Qualifikationen'
+      guest-info: '{name} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.'
+    slot-edit-dlg:
+      title:
+        add: 'Slot hinzufügen'
+        edit: 'Slot bearbeiten'
+      position: 'Position'
+      display-name: 'Anzeigename'
+      criticality:
+        label: 'Kritikalität'
+        values:
+          required: 'Notwendig'
+          important: 'Wichtig'
+          optional: 'Optional'
+      alternative-positions: 'Alternative Positionen'
+    slots-table:
+      registration-id: 'Anmeldungs ID'
+      free: 'frei'
+      edit-slot: 'Slot bearbeiten'
+      duplicate-slot: 'Slot duplizieren'
+      move-up: 'Nach oben verschieben'
+      move-down: 'Nach unten verschieben'
+      delete-slot: 'Slot löschen'
   list:
     tab:
       future: 'Zukünftige'
@@ -165,3 +211,53 @@ events:
   admin-list:
     tab:
       future: 'Zukünftige'
+    tab-title: 'Reisen verwalten'
+    filter:
+      search: 'Reisen durchsuchen'
+      all-events: 'Alle Veranstaltungen'
+      all-status: 'Alle Status'
+      status: 'Status'
+      free-slots: 'Freie Plätze'
+      waitinglist: 'Warteliste'
+    table:
+      day-count: '{count} Tag | {count} Tage'
+      team: 'Crew'
+      no-route: 'keine Reiseroute angegeben'
+    state:
+      missing-crew: 'Noch zu besetzende Slots'
+      free-slots-for: 'Freie Plätze für'
+    action:
+      add-event: 'Hinzufügen'
+      export: 'Export'
+      show-event: 'Reise anzeigen'
+      edit-event: 'Reise bearbeiten'
+      generate-imo-list: 'IMO Liste generieren'
+      generate-consumption-list: 'Verzehrliste generieren'
+      generate-captain-list: 'Kapitänsliste generieren'
+      add-registration: 'Anmeldung hinzufügen'
+      open-signup: 'Anmeldungen freischalten'
+      publish-crew: 'Crew veröffentlichen'
+      request-more-crew: 'Weitere Crew anfragen*'
+      contact-crew: 'Crew kontaktieren ({count} Pers.)'
+      delete-event: 'Reise löschen'
+      cancel-event: 'Reise absagen'
+      create-event: 'Reise erstellen'
+    dialog:
+      delete:
+        title: 'Reise löschen'
+        message: 'Bist du sicher, dass du die Reise {name} löschen möchtest? Diese Aktion kann später nicht rückgängig gemacht werden.'
+        submit: 'Unwiederruflich löschen'
+      open-signup:
+        title: 'Anmeldungen freigeben'
+        message: 'Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status "Entwurf" ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crew Anmeldung" ändern?'
+        cancel: 'Nein, nur die Entwürfe'
+        submit: 'Ja, alle ändern'
+      publish-crew:
+        title: 'Crew veröffentlichen'
+        message: 'Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status "Crew Anmeldung" ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crewplanung veröffentlicht" ändern?'
+        cancel: 'Nein, nur die in Anmeldung'
+        submit: 'Ja, alle ändern'
+    batch-edit:
+      title: 'Alle bearbeiten'
+      info: 'Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle Reisen übernommen.'
+      not-changed: 'nicht geändert'
