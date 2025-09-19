@@ -1,10 +1,10 @@
 package org.eventplanner.events.adapter.jpa.events;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface RegistrationJpaRepository extends JpaRepository<RegistrationJpaEntity, String> {
@@ -17,6 +17,8 @@ public interface RegistrationJpaRepository extends JpaRepository<RegistrationJpa
 
     @NonNull
     List<RegistrationJpaEntity> findAllByEventKeyIn(@NonNull List<String> eventKey);
+
+    List<RegistrationJpaEntity> findAllByUserKey(@NonNull String userKey);
 
     void deleteAllByEventKey(@NonNull String eventKey);
 
