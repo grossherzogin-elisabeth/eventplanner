@@ -27,9 +27,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.With;
 
 @Getter
 @Setter
+@With
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -135,6 +137,8 @@ public class UserDetails {
         var mutableList = new LinkedList<>(qualifications);
         mutableList.add(userQualification);
         qualifications = mutableList.stream().toList();
+
+        qualification.getGrantsPositions().forEach(this::addPosition);
     }
 
     public void addQualification(@NonNull Qualification qualification) {
@@ -145,6 +149,8 @@ public class UserDetails {
         var mutableList = new LinkedList<>(qualifications);
         mutableList.removeIf(it -> it.getQualificationKey().equals(qualificationKey));
         qualifications = mutableList.stream().toList();
+        // TODO this should also update the positions, but as we don't know the positions granted by the
+        //  qualifications here, this cannot be updated without making this type know the full qualification data
     }
 
     public @NonNull Optional<UserQualification> getQualification(@NonNull QualificationKey qualificationKey) {

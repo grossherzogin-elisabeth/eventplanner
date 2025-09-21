@@ -1,6 +1,5 @@
 package org.eventplanner.events.application.services;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.stream.Collectors;
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
-import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.entities.users.User;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.auth.Role;
@@ -46,7 +44,7 @@ public class UserService {
             .stream()
             .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
 
-        return getEncryptedUsers().stream()
+        return userRepository.findAll().stream()
             .map(user -> user.decrypt(encryptionService::decrypt))
             .map(user -> resolvePositionsAndQualificationExpires(user, qualificationMap))
             .sorted(Comparator.comparing(UserDetails::getFullName))
@@ -59,26 +57,18 @@ public class UserService {
             .stream()
             .collect(Collectors.toMap(Qualification::getKey, qualification -> qualification));
 
-        return getEncryptedUsers().stream()
+        return userRepository.findAll().stream()
             .map(user -> user.decrypt(encryptionService::decrypt))
             .map(user -> resolvePositionsAndQualificationExpires(user, qualificationMap))
             .sorted(Comparator.comparing(UserDetails::getFullName))
             .toList();
     }
 
-    private @NonNull Collection<EncryptedUserDetails> getEncryptedUsers() {
-        return userRepository.findAll();
-    }
-
-    private @NonNull Optional<EncryptedUserDetails> getEncryptedUserByKey(@NonNull UserKey key) {
-        return userRepository.findByKey(key);
-    }
-
     public @NonNull Optional<UserDetails> getUserByKey(@Nullable UserKey key) {
         if (key == null) {
             return Optional.empty();
         }
-        return getEncryptedUserByKey(key)
+        return userRepository.findByKey(key)
             .map(user -> user.decrypt(encryptionService::decrypt))
             .map(this::resolvePositionsAndQualificationExpires);
     }
@@ -87,18 +77,16 @@ public class UserService {
         if (authKey == null) {
             return Optional.empty();
         }
-        return getEncryptedUsers().stream()
-            .filter(it -> authKey.equals(it.getAuthKey()))
+        return userRepository.findByAuthKey(authKey)
             .map(user -> user.decrypt(encryptionService::decrypt))
-            .map(this::resolvePositionsAndQualificationExpires)
-            .findFirst();
+            .map(this::resolvePositionsAndQualificationExpires);
     }
 
     public @NonNull Optional<UserDetails> getUserByEmail(@Nullable String email) {
         if (email == null) {
             return Optional.empty();
         }
-        return getEncryptedUsers().stream()
+        return userRepository.findAll().stream()
             .filter(it -> email.equals(encryptionService.decrypt(it.getEmail())))
             .map(user -> user.decrypt(encryptionService::decrypt))
             .map(this::resolvePositionsAndQualificationExpires)
@@ -143,6 +131,8 @@ public class UserService {
             var qualification = qualificationMap.get(userQualification.getQualificationKey());
             if (qualification != null) {
                 qualification.getGrantsPositions().forEach(userDetails::addPosition);
+                // set flag, that this qualification expires, as this cannot be determined by the user qualification
+                // alone
                 userQualification.setExpires(qualification.isExpires());
             }
         });
