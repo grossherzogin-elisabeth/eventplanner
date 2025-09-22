@@ -1,34 +1,43 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto">
         <template #title>
-            <h1 v-if="createMode">Slot hinzufügen</h1>
-            <h1 v-else>Slot bearbeiten</h1>
+            <h1 v-if="createMode">{{ $t('views.events.edit.slot-edit-dlg.title.add') }}</h1>
+            <h1 v-else>{{ $t('views.events.edit.slot-edit-dlg.title.edit') }}</h1>
         </template>
         <template #default>
             <div class="flex flex-1 flex-col px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>Position</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.slot-edit-dlg.position') }}</VInputLabel>
                         <VInputCombobox v-model="primaryPositionKey" :options="positions.options.value" />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Anzeigename</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.slot-edit-dlg.display-name') }}</VInputLabel>
                         <VInputText v-model.trim="slot.positionName" :placeholder="positions.get(primaryPositionKey).name" />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Kritikaliät</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.slot-edit-dlg.criticality.label') }}</VInputLabel>
                         <VInputSelect
                             v-model="slot.criticality"
                             :options="[
-                                { value: SlotCriticality.Required, label: 'Notwendig' },
-                                { value: SlotCriticality.Important, label: 'Wichtig' },
-                                { value: SlotCriticality.Optional, label: 'Optional' },
+                                {
+                                    value: SlotCriticality.Required,
+                                    label: $t('views.events.edit.slot-edit-dlg.criticality.values.required'),
+                                },
+                                {
+                                    value: SlotCriticality.Important,
+                                    label: $t('views.events.edit.slot-edit-dlg.criticality.values.important'),
+                                },
+                                {
+                                    value: SlotCriticality.Optional,
+                                    label: $t('views.events.edit.slot-edit-dlg.criticality.values.optional'),
+                                },
                             ]"
                         />
                     </div>
                 </section>
                 <div class="mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm xs:-mx-4">
-                    <h2 class="mb-4 text-xs font-bold">Alternative Positionen</h2>
+                    <h2 class="mb-4 text-xs font-bold">{{ $t('views.events.edit.slot-edit-dlg.alternative-positions') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox
@@ -44,10 +53,10 @@
         </template>
         <template #buttons>
             <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <button class="btn-primary" @click="submit">
-                <span>Übernehmen</span>
+                <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>
     </VDialog>

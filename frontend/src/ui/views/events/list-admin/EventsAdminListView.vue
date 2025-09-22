@@ -2,7 +2,7 @@
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
             <div class="h-full lg:hidden">
-                <NavbarFilter v-model="filter" placeholder="Reisen durchsuchen" />
+                <NavbarFilter v-model="filter" :placeholder="$t('views.events.admin-list.filter.search')" />
             </div>
         </teleport>
 
@@ -12,16 +12,16 @@
                     <div class="permission-create-events hidden 2xl:block">
                         <button class="btn-primary ml-2" name="create" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
-                            <span>Hinzufügen</span>
+                            <span>{{ $t('views.events.admin-list.action.add-event') }}</span>
                         </button>
                     </div>
                     <div v-if="!Number.isNaN(parseInt(tab))" class="permission-read-events hidden lg:block">
                         <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(parseInt(tab))">
                             <i class="fa-solid fa-download"></i>
-                            <span>Export</span>
+                            <span>{{ $t('views.events.admin-list.action.export') }}</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="filter" placeholder="Einträge filtern" />
+                    <VSearchButton v-model="filter" :placeholder="$t('views.events.admin-list.filter.search')" />
                 </div>
             </template>
         </VTabs>
@@ -34,7 +34,7 @@
                 :class="{ active: filterEventType.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventType.length === 0">Alle Veranstaltungen</span>
+                    <span v-if="filterEventType.length === 0">{{ $t('views.events.admin-list.filter.all-events') }}</span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventType.map(eventTypes.getName).join(', ') }}
                     </span>
@@ -43,11 +43,11 @@
                     <ul>
                         <li v-if="filterEventType.length === 0" class="context-menu-item">
                             <i class="fa-solid fa-check"></i>
-                            <span>Alle Veranstaltungen</span>
+                            <span>{{ $t('views.events.admin-list.filter.all-events') }}</span>
                         </li>
                         <li v-else class="context-menu-item" @click="filterEventType = []">
                             <i class="w-4"></i>
-                            <span>Alle Veranstaltungen</span>
+                            <span>{{ $t('views.events.admin-list.filter.all-events') }}</span>
                         </li>
                         <template v-for="eventType in eventTypes.options.value" :key="eventType.value">
                             <li
@@ -73,8 +73,10 @@
                 :class="{ active: filterEventStates.length > 0 }"
             >
                 <template #icon>
-                    <span v-if="filterEventStates.length === 0">Alle Status</span>
-                    <span v-else-if="filterEventStates.length > 4"> {{ filterEventStates.length }} Status </span>
+                    <span v-if="filterEventStates.length === 0">{{ $t('views.events.admin-list.filter.all-status') }}</span>
+                    <span v-else-if="filterEventStates.length > 4">
+                        {{ filterEventStates.length }} {{ $t('views.events.admin-list.filter.status') }}
+                    </span>
                     <span v-else class="block max-w-64 truncate">
                         {{ filterEventStates.map(eventStates.getName).join(', ') }}
                     </span>
@@ -83,11 +85,11 @@
                     <ul>
                         <li v-if="filterEventStates.length === 0" class="context-menu-item">
                             <i class="fa-solid fa-check"></i>
-                            <span>Alle Status</span>
+                            <span>{{ $t('views.events.admin-list.filter.all-status') }}</span>
                         </li>
                         <li v-else class="context-menu-item" @click="filterEventStates = []">
                             <i class="w-4"></i>
-                            <span>Alle Status</span>
+                            <span>{{ $t('views.events.admin-list.filter.all-status') }}</span>
                         </li>
                         <template v-for="eventStatus in eventStates.options.value" :key="eventStatus.value">
                             <li
@@ -107,10 +109,10 @@
                 </template>
             </ContextMenuButton>
             <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
-                <span>Freie Plätze</span>
+                <span>{{ $t('views.events.admin-list.filter.free-slots') }}</span>
             </button>
             <button class="btn-tag" :class="{ active: filterWaitinglist }" @click="filterWaitinglist = !filterWaitinglist">
-                <span>Warteliste</span>
+                <span>{{ $t('views.events.admin-list.filter.waitinglist') }}</span>
             </button>
         </div>
 
@@ -128,23 +130,24 @@
                     <td class="hidden w-1/6 whitespace-nowrap lg:table-cell">
                         <p class="mb-1 font-semibold 2xl:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
                         <p class="mb-1 hidden font-semibold 2xl:block">{{ formatDateRange(item.start, item.end) }}</p>
-                        <p class="text-sm">{{ item.days }} Tage</p>
+                        <p class="text-sm">{{ $t('views.events.admin-list.table.day-count', { count: item.days }) }}</p>
                     </td>
                     <!-- name -->
                     <td class="w-2/3 max-w-[80vw] whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
                         <p class="mb-1 truncate" :class="{ 'text-error line-through': item.state === EventState.Canceled }">
-                            <span v-if="item.state === EventState.Draft" class="opacity-50">Entwurf: </span>
-                            <span v-else-if="item.state === EventState.Canceled">Abgesagt: </span>
+                            <span v-if="item.state === EventState.Draft" class="opacity-50">{{ $t('generic.event-state.draft') }}: </span>
+                            <span v-else-if="item.state === EventState.Canceled">{{ $t('generic.event-state.canceled') }}: </span>
                             {{ item.name }}
                         </p>
 
                         <p class="hidden truncate text-sm font-light lg:block">
                             <template v-if="item.description">{{ item.description }}</template>
-                            <template v-else-if="item.locations.length === 0">keine Reiseroute angegeben</template>
+                            <template v-else-if="item.locations.length === 0">{{ $t('views.events.admin-list.table.no-route') }}</template>
                             <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
                         <p class="truncate text-sm font-light lg:hidden">
-                            {{ formatDateRange(item.start, item.end) }} | {{ item.days }} Tage
+                            {{ formatDateRange(item.start, item.end) }} |
+                            {{ $t('views.events.admin-list.table.day-count', { count: item.days }) }}
                         </p>
                         <div class="flex w-full items-center gap-px pt-2">
                             <template v-for="(position, index) in item.assignedPositions" :key="`${position.key}-${index}`">
@@ -173,7 +176,7 @@
                             {{ item.assignedUserCount }}
                             <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
                         </p>
-                        <p class="pl-4 text-sm">Crew</p>
+                        <p class="pl-4 text-sm">{{ $t('views.events.admin-list.table.team') }}</p>
                     </td>
                 </template>
                 <template #loading>
@@ -220,7 +223,7 @@
                             class="context-menu-item"
                         >
                             <i class="fa-solid fa-search" />
-                            <span>Reise anzeigen</span>
+                            <span>{{ $t('views.events.admin-list.action.show-event') }}</span>
                         </RouterLink>
                     </li>
                     <li class="permission-write-event-details">
@@ -232,24 +235,24 @@
                             class="context-menu-item"
                         >
                             <i class="fa-solid fa-drafting-compass" />
-                            <span>Reise bearbeiten</span>
+                            <span>{{ $t('views.events.admin-list.action.edit-event') }}</span>
                         </RouterLink>
                     </li>
                     <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(item)">
                         <i class="fa-solid fa-clipboard-user" />
-                        <span>IMO Liste generieren</span>
+                        <span>{{ $t('views.events.admin-list.action.generate-imo-list') }}</span>
                     </li>
                     <li class="permission-read-users context-menu-item" @click="eventUseCase.downloadConsumptionList(item)">
                         <i class="fa-solid fa-beer-mug-empty" />
-                        <span>Verzehrliste generieren</span>
+                        <span>{{ $t('views.events.admin-list.action.generate-consumption-list') }}</span>
                     </li>
                     <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(item)">
                         <i class="fa-solid fa-file-medical" />
-                        <span>Kapitänsliste generieren</span>
+                        <span>{{ $t('views.events.admin-list.action.generate-captain-list') }}</span>
                     </li>
                     <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
                         <i class="fa-solid fa-user-plus" />
-                        <span>Anmeldung hinzufügen</span>
+                        <span>{{ $t('views.events.admin-list.action.add-registration') }}</span>
                     </li>
                     <li
                         v-if="item.state === EventState.Draft"
@@ -257,7 +260,7 @@
                         @click="openEventsForSignup([item])"
                     >
                         <i class="fa-solid fa-people-group" />
-                        <span>Anmeldungen freischalten</span>
+                        <span>{{ $t('views.events.admin-list.action.open-signup') }}</span>
                     </li>
                     <li
                         v-else-if="item.state === EventState.OpenForSignup"
@@ -265,11 +268,11 @@
                         @click="publishCrewPlanning([item])"
                     >
                         <i class="fa-solid fa-earth-europe" />
-                        <span>Crew veröffentlichen</span>
+                        <span>{{ $t('views.events.admin-list.action.publish-crew') }}</span>
                     </li>
                     <li class="permission-read-user-details context-menu-item disabled">
                         <i class="fa-solid fa-users" />
-                        <span>Weitere Crew anfragen*</span>
+                        <span>{{ $t('views.events.admin-list.action.request-more-crew') }}</span>
                     </li>
                     <li
                         class="permission-read-user-details context-menu-item"
@@ -277,7 +280,7 @@
                         @click="contactCrew([item])"
                     >
                         <i class="fa-solid fa-envelope" />
-                        <span>Crew kontaktieren ({{ item.assignedUserCount }} Pers.)</span>
+                        <span>{{ $t('views.events.admin-list.action.contact-crew', { count: item.assignedUserCount }) }}</span>
                     </li>
                     <li
                         v-if="item.state === EventState.Canceled"
@@ -285,11 +288,11 @@
                         @click="deleteEvent(item)"
                     >
                         <i class="fa-solid fa-trash-alt" />
-                        <span>Reise löschen</span>
+                        <span>{{ $t('views.events.admin-list.action.delete-event') }}</span>
                     </li>
                     <li v-else class="permission-delete-events context-menu-item text-error" @click="cancelEvent(item)">
                         <i class="fa-solid fa-ban" />
-                        <span>Reise absagen</span>
+                        <span>{{ $t('views.events.admin-list.action.cancel-event') }}</span>
                     </li>
                 </template>
             </VTable>
@@ -299,7 +302,7 @@
         <EventCancelDlg ref="cancelEventDialog" />
         <VConfirmationDialog ref="confirmationDialog" />
         <EventBatchEditDlg ref="eventBatchEditDialog" />
-        <CreateRegistrationDlg ref="createRegistrationDialog" submit-text="Speichern" />
+        <CreateRegistrationDlg ref="createRegistrationDialog" :submit-text="$t('generic.save')" />
 
         <div class="flex-1"></div>
 
@@ -317,7 +320,7 @@
                         @click="openEventsForSignup(selectedEvents)"
                     >
                         <i class="fa-solid fa-lock-open"></i>
-                        <span class="truncate">Anmeldungen freischalten</span>
+                        <span class="truncate">{{ $t('views.events.admin-list.action.open-signup') }}</span>
                     </button>
                     <button
                         v-else-if="showBatchPublishPlannedCrew"
@@ -325,22 +328,22 @@
                         @click="publishCrewPlanning(selectedEvents)"
                     >
                         <i class="fa-solid fa-earth-europe"></i>
-                        <span class="truncate">Crew veröffentlichen</span>
+                        <span class="truncate">{{ $t('views.events.admin-list.action.publish-crew') }}</span>
                     </button>
                     <button v-else class="permission-write-events btn-ghost" @click="editBatch(selectedEvents)">
                         <i class="fa-solid fa-edit"></i>
-                        <span class="truncate">Ausgewählte bearbeiten</span>
+                        <span class="truncate">{{ $t('views.events.admin-list.batch-edit.title') }}</span>
                     </button>
                 </div>
             </template>
             <template #menu>
                 <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
                     <i class="fa-solid fa-user-plus" />
-                    <span>Anmeldung hinzufügen</span>
+                    <span>{{ $t('views.events.admin-list.action.add-registration') }}</span>
                 </li>
                 <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
                     <i class="fa-solid fa-edit" />
-                    <span>Ausgewählte bearbeiten</span>
+                    <span>{{ $t('views.events.admin-list.batch-edit.title') }}</span>
                 </li>
                 <li
                     v-if="showBatchOpenEventForSignup"
@@ -348,7 +351,7 @@
                     @click="openEventsForSignup(selectedEvents)"
                 >
                     <i class="fa-solid fa-people-group" />
-                    <span>Anmeldungen freischalten</span>
+                    <span>{{ $t('views.events.admin-list.action.open-signup') }}</span>
                 </li>
                 <li
                     v-if="showBatchPublishPlannedCrew"
@@ -356,19 +359,19 @@
                     @click="publishCrewPlanning(selectedEvents)"
                 >
                     <i class="fa-solid fa-earth-europe" />
-                    <span>Crew veröffentlichen</span>
+                    <span>{{ $t('views.events.admin-list.action.publish-crew') }}</span>
                 </li>
                 <li class="permission-read-user-details permission-write-events context-menu-item disabled">
                     <i class="fa-solid fa-users" />
-                    <span>Weitere Crew anfragen*</span>
+                    <span>{{ $t('views.events.admin-list.action.request-more-crew') }}</span>
                 </li>
                 <li class="permission-read-user-details context-menu-item disabled">
                     <i class="fa-solid fa-envelope" />
-                    <span>Crew kontaktieren*</span>
+                    <span>{{ $t('views.events.admin-list.action.contact-crew', { count: '*' }) }}</span>
                 </li>
                 <li class="permission-delete-events context-menu-item disabled text-error">
                     <i class="fa-solid fa-ban" />
-                    <span>Reisen absagen*</span>
+                    <span>{{ $t('views.events.admin-list.action.cancel-event') }}*</span>
                 </li>
             </template>
         </VMultiSelectActions>
@@ -379,7 +382,7 @@
         >
             <button class="btn-floating pointer-events-auto" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
-                <span>Reise erstellen</span>
+                <span>{{ $t('views.events.admin-list.action.create-event') }}</span>
             </button>
         </div>
     </div>
@@ -501,7 +504,7 @@ const tabs = computed<InputSelectOption[]>(() => {
 });
 
 async function init(): Promise<void> {
-    emit('update:tab-title', 'Reisen verwalten');
+    emit('update:tab-title', t('views.events.admin-list.tab-title'));
     watch(tab, () => fetchEvents());
     await positions.loading;
     await nextTick(); // wait for the tab to have the correct value before fetching
@@ -583,10 +586,9 @@ async function createEvent(): Promise<void> {
 
 async function deleteEvent(evt: Event): Promise<void> {
     const confirmed = await confirmationDialog.value?.open({
-        title: 'Reise löschen',
-        message: `Bist du sicher, dass du die Reise ${evt.name} löschen möchtest? Diese Aktion kann später nicht
-            rückgängig gemacht werden.`,
-        submit: 'Unwiederruflich löschen',
+        title: t('views.events.admin-list.dialog.delete.title'),
+        message: t('views.events.admin-list.dialog.delete.message', { name: evt.name }),
+        submit: t('views.events.admin-list.dialog.delete.submit'),
         danger: true,
     });
     if (confirmed) {
@@ -632,11 +634,10 @@ async function openEventsForSignup(events: Event[]): Promise<void> {
     let eventsToEdit = events.filter((it) => it.state !== EventState.OpenForSignup);
     if (eventsToEdit.find((event) => event.state !== EventState.Draft)) {
         const confirmed = await confirmationDialog.value?.open({
-            title: 'Anmeldungen freigeben',
-            message: `Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status 'Entwurf' ist. Möchtest du
-                trotzdem alle ausgewählten Reisen in den Status 'Crew Anmeldung' ändern?`,
-            cancel: 'Nein, nur die Entwürfe',
-            submit: 'Ja, alle ändern',
+            title: t('views.events.admin-list.dialog.open-signup.title'),
+            message: t('views.events.admin-list.dialog.open-signup.message'),
+            cancel: t('views.events.admin-list.dialog.open-signup.cancel'),
+            submit: t('views.events.admin-list.dialog.open-signup.submit'),
         });
         if (confirmed === undefined) {
             return;
@@ -655,11 +656,10 @@ async function publishCrewPlanning(events: Event[]): Promise<void> {
     let eventsToEdit = events.filter((it) => it.state !== EventState.Planned);
     if (eventsToEdit.find((event) => event.state !== EventState.OpenForSignup)) {
         const confirmed = await confirmationDialog.value?.open({
-            title: 'Crew veröffentlichen',
-            message: `Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status 'Crew Anmeldung' ist.
-                Möchtest du trotzdem alle ausgewählten Reisen in den Status 'Crewplanung veröffentlicht' ändern?`,
-            cancel: 'Nein, nur die in Anmeldung',
-            submit: 'Ja, alle ändern',
+            title: t('views.events.admin-list.dialog.publish-crew.title'),
+            message: t('views.events.admin-list.dialog.publish-crew.message'),
+            cancel: t('views.events.admin-list.dialog.publish-crew.cancel'),
+            submit: t('views.events.admin-list.dialog.publish-crew.submit'),
         });
         if (confirmed === undefined) {
             return;

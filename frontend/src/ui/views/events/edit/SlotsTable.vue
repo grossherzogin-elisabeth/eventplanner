@@ -18,7 +18,10 @@
                 <p class="whitespace-nowrap font-semibold">
                     {{ item.positionName || positions.get(item.positionKeys[0]).name }}
                 </p>
-                <p class="truncate text-sm">Anmeldungs ID: {{ item.assignedRegistrationKey?.substring(0, 8) || 'frei' }}</p>
+                <p class="truncate text-sm">
+                    {{ $t('views.events.edit.slots-table.registration-id') }}:
+                    {{ item.assignedRegistrationKey?.substring(0, 8) || $t('views.events.edit.slots-table.free') }}
+                </p>
             </td>
             <td class="w-2/3 min-w-96">
                 <div class="flex flex-wrap items-center">
@@ -36,15 +39,21 @@
                 <div class="flex items-center justify-end">
                     <span v-if="item.criticality === 2" class="status-panel bg-red-container text-onred-container">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-2 whitespace-nowrap font-semibold">Notwendig</span>
+                        <span class="ml-2 whitespace-nowrap font-semibold">{{
+                            $t('views.events.edit.slot-edit-dlg.criticality.values.required')
+                        }}</span>
                     </span>
                     <span v-else-if="item.criticality === 1" class="status-panel bg-yellow-container text-onyellow-container">
                         <i class="fa-solid fa-circle-info"></i>
-                        <span class="ml-2 whitespace-nowrap font-semibold">Wichtig</span>
+                        <span class="ml-2 whitespace-nowrap font-semibold">{{
+                            $t('views.events.edit.slot-edit-dlg.criticality.values.important')
+                        }}</span>
                     </span>
                     <span v-else class="status-panel bg-surface-container-highest text-onsurface">
                         <i class="fa-solid fa-circle-question"></i>
-                        <span class="ml-2 whitespace-nowrap font-semibold">Optional</span>
+                        <span class="ml-2 whitespace-nowrap font-semibold">{{
+                            $t('views.events.edit.slot-edit-dlg.criticality.values.optional')
+                        }}</span>
                     </span>
                 </div>
             </td>
@@ -52,23 +61,23 @@
         <template #context-menu="{ item }">
             <li class="context-menu-item" @click="editSlot(item)">
                 <i class="fa-solid fa-edit" />
-                <span>Slot bearbeiten</span>
+                <span>{{ $t('views.events.edit.slots-table.edit-slot') }}</span>
             </li>
             <li class="context-menu-item" @click="duplicateSlot(item)">
                 <i class="fa-solid fa-clone" />
-                <span>Slot duplizieren</span>
+                <span>{{ $t('views.events.edit.slots-table.duplicate-slot') }}</span>
             </li>
             <li class="context-menu-item" @click="moveSlotUp(item)">
                 <i class="fa-solid fa-arrow-up" />
-                <span>Nach oben verschieben</span>
+                <span>{{ $t('views.events.edit.slots-table.move-up') }}</span>
             </li>
             <li class="context-menu-item" @click="moveSlotDown(item)">
                 <i class="fa-solid fa-arrow-down" />
-                <span>Nach unten verschieben</span>
+                <span>{{ $t('views.events.edit.slots-table.move-down') }}</span>
             </li>
             <li class="context-menu-item text-error" @click="deleteSlot(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>Slot Löschen</span>
+                <span>{{ $t('views.events.edit.slots-table.delete-slot') }}</span>
             </li>
         </template>
     </VTable>
