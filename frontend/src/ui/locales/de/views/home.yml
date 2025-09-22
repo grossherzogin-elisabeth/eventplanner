@@ -5,3 +5,23 @@ home:
   event-card:
     state:
       waitinglist: 'Du stehst auf der Warteliste.'
+  home-view:
+    loading-events: 'Reisen werden geladen...'
+    no-upcoming-events-title: 'Keine zukünftigen Reisen'
+    no-upcoming-events-description: >
+      Du hast aktuell keine anstehenden Reisen. Du kannst im Kalender oder der Reiseliste nach Reisen suchen und dich für
+      Reisen anmelden, die du gerne mitfahren möchtest. Du wirst dann auf die Warteliste gesetzt und per Email
+      benachrichtigt, wenn du für die Crew der Reise eingeplant wirst.
+    find-next-event: 'Finde deine nächste Reise'
+    tab-title: 'Meine nächsten Reisen'
+    this-month: 'Diesen Monat'
+    next-month: 'Nächsten Monat'
+  month-overview:
+    weekdays:
+      mo: 'Mo'
+      di: 'Di'
+      mi: 'Mi'
+      do: 'Do'
+      fr: 'Fr'
+      sa: 'Sa'
+      so: 'So'

@@ -1,12 +1,12 @@
 <template>
     <div class="grid h-96 w-96 grid-cols-7 rounded-2xl bg-surface-container p-4">
-        <span class="text-center opacity-50">Mo</span>
-        <span class="text-center opacity-50">Di</span>
-        <span class="text-center opacity-50">Mi</span>
-        <span class="text-center opacity-50">Do</span>
-        <span class="text-center opacity-50">Fr</span>
-        <span class="text-center opacity-50">Sa</span>
-        <span class="text-center opacity-50">So</span>
+        <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.mo') }}</span>
+        <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.di') }}</span>
+        <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.mi') }}</span>
+        <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.do') }}</span>
+        <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.fr') }}</span>
+        <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.sa') }}</span>
+        <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.so') }}</span>
         <span v-for="day in days" :key="day.toISOString()" class="text-center">
             {{ day.getDate() }}
         </span>

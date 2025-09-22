@@ -6,7 +6,7 @@
                 <div v-if="loading" class="-mt-10">
                     <div class="pb-8">
                         <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">
-                            <h2 class="inline-block font-bold text-secondary">Reisen werden geladen...</h2>
+                            <h2 class="inline-block font-bold text-secondary">{{ $t('views.home.home-view.loading-events') }}</h2>
                         </div>
                         <ul class="max-w-xl xs:-mx-4">
                             <li v-for="i in 3" :key="i" class="mt-4">
@@ -16,16 +16,14 @@
                     </div>
                 </div>
                 <div v-else-if="events.length === 0" class="relative z-10 -mt-10 rounded-2xl bg-surface-container p-4 xs:-mx-4">
-                    <h3 class="mb-2 font-bold text-secondary">Keine zukünftigen Reisen</h3>
+                    <h3 class="mb-2 font-bold text-secondary">{{ $t('views.home.home-view.no-upcoming-events-title') }}</h3>
                     <p class="mb-4">
-                        Du hast aktuell keine anstehenden Reisen. Du kannst im Kalender oder der Reiseliste nach Reisen suchen und dich für
-                        Reisen anmelden, die du gerne mitfahren möchtest. Du wirst dann auf die Warteliste gesetzt und per Email
-                        benachrichtigt, wenn du für die Crew der Reise eingeplant wirst.
+                        {{ $t('views.home.home-view.no-upcoming-events-description') }}
                     </p>
                     <div class="flex">
                         <RouterLink :to="{ name: Routes.EventsList }" class="btn-primary">
                             <i class="fa-solid fa-binoculars"></i>
-                            <span>Finde deine nächste Reise</span>
+                            <span>{{ $t('views.home.home-view.find-next-event') }}</span>
                         </RouterLink>
                     </div>
                 </div>
@@ -84,9 +82,9 @@ const eventsByMonth = computed<Map<string, Event[]>>(() =>
     filteredEvents.value.reduce((map, it) => {
         let groupName = i18n.d(it.start, DateTimeFormat.MMMM_YYYY);
         if (isThisMonth(it.start)) {
-            groupName = 'Diesen Monat';
+            groupName = i18n.t('views.home.home-view.this-month');
         } else if (isNextMonth(it.start)) {
-            groupName = 'Nächsten Monat';
+            groupName = i18n.t('views.home.home-view.next-month');
         }
 
         const groupedEvents = map.get(groupName) || [];
@@ -113,7 +111,7 @@ function isNextMonth(date: Date): boolean {
 }
 
 function init(): void {
-    emit('update:tab-title', 'Meine nächsten Reisen');
+    emit('update:tab-title', i18n.t('views.home.home-view.tab-title'));
     if (user.permissions.includes(Permission.READ_EVENTS)) {
         fetchEvents();
     } else {
