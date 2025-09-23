@@ -1,35 +1,21 @@
 package org.eventplanner.events.application.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.testdata.EventFactory.createEvent;
-import static org.eventplanner.testdata.PositionKeys.createPosition;
-import static org.eventplanner.testdata.QualificationFactory.createQualification;
-import static org.eventplanner.testdata.RegistrationFactory.createRegistration;
-import static org.eventplanner.testdata.UserFactory.createUser;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.Instant;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
 
-import org.eventplanner.events.domain.entities.events.Registration;
-import org.eventplanner.events.domain.entities.positions.Position;
-import org.eventplanner.events.domain.entities.users.UserDetails;
-import org.eventplanner.events.domain.values.qualifications.QualificationKey;
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 
 import freemarker.template.TemplateException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 class ExcelExportServiceTest {
 
@@ -44,61 +30,35 @@ class ExcelExportServiceTest {
         );
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = { "captain-list.xlsx" })
-    void shouldExportToExcel(String file) {
-        var template = new File("src/test/resources/templates/excel/" + file);
-        var out = testee.exportToExcel(template, generateTestData());
-        try (OutputStream outputStream = new FileOutputStream(
-            "src/test/resources/templates/excel/out/" + file)) {
+    @Test
+    void shouldFillExcelTemplateWithData() throws Exception {
+        var model = new HashMap<String, Object>();
+        model.put("modelvalue", "Value from model");
+        var template = new File("src/test/resources/templates/excel/sample.xlsx");
+        var outFile = new File("src/test/resources/templates/excel/sample.out.xlsx");
+        var out = testee.exportToExcel(template, model);
+        try (OutputStream outputStream = new FileOutputStream(outFile)) {
             out.writeTo(outputStream);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
-    }
+        XSSFWorkbook workbook = new XSSFWorkbook(outFile);
 
-    @Test
-    void testRenderString() throws TemplateException {
-        var template = """
-            ${(
-            crew[0].user.qualifications
-            ?filter(it -> it.qualificationKey == 'medical-fitness')
-            ?filter(it -> it.expiresAt??)
-            ?map(it -> it.expiresAt)
-            ?first
-            )!'k.A.'}
-            """.replaceAll(" ", "").replaceAll("\n", "");
-        var template2 = "${(crew[0].user.nickName)!(crew[0].user.nickName)!}";
-        var result = testee.renderString(template2, generateTestData());
-        assertThat(result).isNotEqualTo(template);
-    }
+        // template sheet should be removed
+        assertThat(workbook.getNumberOfSheets()).isEqualTo(1);
 
-    private static Map<String, Object> generateTestData() {
-        var crew = new LinkedList<>();
-        for (int i = 0; i < 50; i++) {
-            var user = createUser().withNickName(null);
-            user.addQualification(
-                createQualification().withKey(new QualificationKey("medical-fitness-2")),
-                Instant.now()
-            );
-            user.addQualification(createQualification().withKey(new QualificationKey("medical-fitness")));
-            user.addQualification(createQualification().withKey(new QualificationKey("funk-src")));
-            user.addQualification(createQualification().withKey(new QualificationKey("lissi-deckshand")));
-            crew.add(new ExportRow(i, user, createPosition(), createRegistration()));
-        }
-        var model = new HashMap<String, Object>();
-        model.put("event", createEvent());
-        model.put("crew", crew);
-        return model;
-    }
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getRow(0).getCell(0).getStringCellValue()).isEqualTo("static text should not be changed");
+        assertThat(sheet.getRow(1).getCell(0).getStringCellValue()).isEqualTo("global template function is working");
+        assertThat(sheet.getRow(2).getCell(0).getStringCellValue()).isEqualTo("global assigned value");
+        assertThat(sheet.getRow(3).getCell(0).getStringCellValue()).isEmpty();
+        assertThat(sheet.getRow(4).getCell(0).getStringCellValue()).isEqualTo("Value from model");
+        assertThat(sheet.getRow(5).getCell(0).getNumericCellValue()).isEqualTo(42);
+        assertThat(sheet.getRow(6).getCell(0).getNumericCellValue()).isEqualTo(43);
+        assertThat(sheet.getRow(7).getCell(0).getNumericCellValue()).isEqualTo(44);
+        assertThat(sheet.getRow(8).getCell(0).getStringCellValue()).isEqualTo("${invalid}");
+        assertThat(sheet.getRow(9).getCell(0).getStringCellValue()).isEmpty();
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class ExportRow {
-        private int number;
-        private UserDetails user;
-        private Position position;
-        private Registration registration;
+        FileUtils.delete(outFile);
     }
 }

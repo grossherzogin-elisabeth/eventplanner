@@ -51,7 +51,7 @@ public class QualificationJpaEntity implements Serializable {
             qualification.getName(),
             qualification.getIcon(),
             qualification.getDescription(),
-            qualification.isExpires(),
+            qualification.getExpires(),
             String.join(", ", qualification.getGrantsPositions().stream().map(PositionKey::value).toList())
         );
     }

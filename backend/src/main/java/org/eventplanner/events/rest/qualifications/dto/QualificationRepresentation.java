@@ -23,7 +23,7 @@ public record QualificationRepresentation(
             qualification.getName(),
             qualification.getIcon(),
             qualification.getDescription(),
-            qualification.isExpires(),
+            qualification.getExpires(),
             qualification.getGrantsPositions().stream().map(PositionKey::value).toList()
         );
     }

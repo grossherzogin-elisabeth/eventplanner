@@ -110,7 +110,7 @@ public class UserDetails {
         var userQualification = new UserQualification(
             qualification.getKey(),
             expirationDate,
-            qualification.isExpires(),
+            qualification.getExpires(),
             UserQualification.State.VALID
         );
         if (userQualification.isExpired()) {
@@ -128,7 +128,7 @@ public class UserDetails {
         var userQualification = new UserQualification(
             qualification.getKey(),
             expirationDate,
-            qualification.isExpires(),
+            qualification.getExpires(),
             UserQualification.State.VALID
         );
         if (userQualification.isExpired()) {
