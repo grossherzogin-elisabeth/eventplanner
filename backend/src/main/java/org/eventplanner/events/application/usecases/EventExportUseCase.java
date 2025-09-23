@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.ports.PositionRepository;
+import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.services.ExcelExportService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.events.Event;
@@ -37,6 +39,7 @@ public class EventExportUseCase {
     private final EventRepository eventRepository;
     private final UserService userService;
     private final PositionRepository positionRepository;
+    private final QualificationRepository qualificationRepository;
 
     public @NonNull ByteArrayOutputStream exportImoCrewList(
         @NonNull final SignedInUser signedInUser,
@@ -87,6 +90,10 @@ public class EventExportUseCase {
         model.put("event", event);
         model.put("crew", resolveRegistrations(event, users, positions, true));
         model.put("waitinglist", resolveRegistrations(event, users, positions, false));
+        model.put(
+            "qualifications", qualificationRepository.findAll().stream()
+                .collect(Collectors.toMap(it -> it.getKey().value(), it -> it))
+        );
         return model;
     }
 
@@ -147,5 +154,10 @@ public class EventExportUseCase {
         private @NonNull Registration registration;
         private @NonNull UserDetails user;
         private @NonNull Position position;
+
+        @Override
+        public @NonNull String toString() {
+            return user.getFullName();
+        }
     }
 }

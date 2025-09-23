@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -36,10 +38,12 @@ public class ExcelExportService {
         model.put("currentDate", Instant.now());
         try (FileInputStream fileTemplate = new FileInputStream(template)) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
+            workbook.setActiveSheet(0);
+            var directives = extractTemplateDirectives(workbook);
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 var sheet = workbook.getSheetAt(i);
                 resolveCopies(sheet);
-                fillSheet(sheet, model);
+                fillSheet(sheet, model, directives);
             }
             var bos = new ByteArrayOutputStream();
             try (bos) {
@@ -54,6 +58,29 @@ public class ExcelExportService {
             log.error("Failed to create excel export", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private @NonNull String extractTemplateDirectives(@NonNull final XSSFWorkbook workbook) {
+        for (var i = 0; i < workbook.getNumberOfSheets(); i++) {
+            var sheet = workbook.getSheetAt(i);
+            if (sheet.getSheetName().equals("<#template>")) {
+                var content = new StringBuilder();
+                for (var row : sheet) {
+                    for (var cell : row) {
+                        try {
+                            var cellContent = cell.getStringCellValue();
+                            var directives = findDirectivesInString(cellContent);
+                            content.append(directives);
+                        } catch (Exception e) {
+                            // ignore
+                        }
+                    }
+                }
+                workbook.removeSheetAt(i);
+                return content.toString();
+            }
+        }
+        return "";
     }
 
     private void resolveCopies(@NonNull final XSSFSheet sheet) {
@@ -72,42 +99,72 @@ public class ExcelExportService {
         }
     }
 
-    private void fillSheet(@NonNull final XSSFSheet sheet, @NonNull final Map<String, Object> model)
+    private void fillSheet(
+        @NonNull final XSSFSheet sheet,
+        @NonNull final Map<String, Object> model,
+        @NonNull final String globalDirectives
+    )
     throws TemplateException {
+        var sheetDirectives = globalDirectives;
         for (var row : sheet) {
             for (var cell : row) {
-                renderCellValue(cell, model);
+                try {
+                    sheetDirectives = renderCellValue(cell, model, sheetDirectives);
+                } catch (Exception e) {
+                    log.warn("Failed to render cell {}-{}", cell.getColumnIndex(), cell.getRow(), e);
+                }
             }
         }
     }
 
-    private void renderCellValue(@NonNull Cell cell, Map<String, Object> model) throws TemplateException {
+    private @NonNull String renderCellValue(
+        @NonNull Cell cell,
+        @NonNull Map<String, Object> model,
+        @NonNull final String assigns
+    ) throws TemplateException {
         if (!cell.getCellType().equals(CellType.STRING)) {
-            return;
+            return assigns;
         }
-        var template = cell.getStringCellValue();
-        if (template == null || !template.contains("${")) {
-            return;
+        var template = assigns + cell.getStringCellValue();
+        if (!template.contains("${") && !template.contains("<#assign")) {
+            return assigns;
         }
         model.put("row", cell.getRowIndex());
-        template = template.replace("#row", String.valueOf(cell.getRowIndex()));
         var rendered = renderString(template, model);
         if (rendered.isEmpty()) {
             cell.setBlank();
-            return;
+        } else {
+            try {
+                var dbl = Double.parseDouble(rendered);
+                cell.setCellValue(dbl);
+            } catch (NumberFormatException e) {
+                cell.setCellValue(rendered);
+            }
         }
-        try {
-            var dbl = Double.parseDouble(rendered);
-            cell.setCellValue(dbl);
-        } catch (NumberFormatException e) {
-            cell.setCellValue(rendered);
-        }
+        return findDirectivesInString(template);
+    }
+
+    private @NonNull String findDirectivesInString(@NonNull final String template) {
+        var directives = new StringBuilder();
+        var patterns = List.of(
+            Pattern.compile("<#assign [^>]*>"),
+            Pattern.compile("<#function [\\S\\s]*<\\/#function>")
+        );
+        patterns.forEach(pattern -> {
+            var matcher = pattern.matcher(template);
+            while (matcher.find()) {
+                directives.append(matcher.group());
+            }
+        });
+        return directives.toString();
     }
 
     protected @NonNull String renderString(@NonNull final String template, @NonNull Map<String, Object> model)
     throws TemplateException {
         try {
             var renderer = new Template(template, new StringReader(template), freemarkerConfig);
+            // renderer.setDateFormat("yyyy-MM-dd");
+            // renderer.setDateTimeFormat("yyyy-MM-ddTHH:mm:ss.");
             var writer = new StringWriter();
             renderer.process(model, writer);
             return writer.toString();

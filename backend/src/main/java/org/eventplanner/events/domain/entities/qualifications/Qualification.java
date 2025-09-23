@@ -33,4 +33,8 @@ public class Qualification implements Serializable {
     private @Nullable String description;
     private boolean expires;
     private @NonNull List<PositionKey> grantsPositions = Collections.emptyList();
+
+    public boolean getExpires() {
+        return expires;
+    }
 }

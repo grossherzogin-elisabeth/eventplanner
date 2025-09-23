@@ -133,7 +133,7 @@ public class UserService {
                 qualification.getGrantsPositions().forEach(userDetails::addPosition);
                 // set flag, that this qualification expires, as this cannot be determined by the user qualification
                 // alone
-                userQualification.setExpires(qualification.isExpires());
+                userQualification.setExpires(qualification.getExpires());
             }
         });
         return userDetails;
