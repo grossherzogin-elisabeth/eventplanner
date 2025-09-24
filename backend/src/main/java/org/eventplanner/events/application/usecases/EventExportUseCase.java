@@ -134,7 +134,7 @@ public class EventExportUseCase {
         return crew;
     }
 
-    private Optional<File> getResourceFile(String path) {
+    private @NonNull Optional<File> getResourceFile(@NonNull String path) {
         try {
             var url = getClass().getClassLoader().getResource(path);
             if (url == null) {
