@@ -1,8 +1,10 @@
 package org.eventplanner.integration.export;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.eventplanner.events.application.usecases.EventExportUseCase;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.events.EventKey;
@@ -27,13 +29,15 @@ class EventExportIntegrationTest {
     private EventExportUseCase testee;
 
     @Test
-    void shouldGenerateCaptainList() {
+    void shouldGenerateCaptainList() throws Exception {
         var user = SignedInUserFactory.createSignedInUser().withRole(Role.ADMIN);
         var out = testee.exportCaptainList(user, new EventKey("98b55fb5-7f10-42c7-9b94-2e5c9b92f264"));
-        try (OutputStream outputStream = new FileOutputStream("data/captain-list.out.xlsx")) {
+        var target = new File("captain-list.out.xlsx");
+        try (OutputStream outputStream = new FileOutputStream(target)) {
             out.writeTo(outputStream);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        FileUtils.delete(target);
     }
 }
