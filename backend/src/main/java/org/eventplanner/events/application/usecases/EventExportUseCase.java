@@ -41,41 +41,16 @@ public class EventExportUseCase {
     private final PositionRepository positionRepository;
     private final QualificationRepository qualificationRepository;
 
-    public @NonNull ByteArrayOutputStream exportImoCrewList(
+    public @NonNull ByteArrayOutputStream exportEvent(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final EventKey eventKey
+        @NonNull final EventKey eventKey,
+        @NonNull final String templateName
     ) {
         signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
         var model = getEventExportModel(eventKey);
-        var template = getResourceFile("templates/excel/imo-crew-list.xlsx")
-            .orElseThrow(() -> new NoSuchElementException("Cannot find template file"));
-        return excelExportService.exportToExcel(template, model);
-    }
-
-    public @NonNull ByteArrayOutputStream exportCaptainList(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final EventKey eventKey
-    ) {
-        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
-        signedInUser.assertHasPermission(Permission.READ_EVENTS);
-
-        var model = getEventExportModel(eventKey);
-        var template = getResourceFile("templates/excel/captain-list.xlsx")
-            .orElseThrow(() -> new NoSuchElementException("Cannot find template file"));
-        return excelExportService.exportToExcel(template, model);
-    }
-
-    public @NonNull ByteArrayOutputStream exportConsumptionList(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final EventKey eventKey
-    ) {
-        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
-        signedInUser.assertHasPermission(Permission.READ_EVENTS);
-
-        var model = getEventExportModel(eventKey);
-        var template = getResourceFile("templates/excel/consumption-list.xlsx")
+        var template = resolveResourceFile("templates/excel/" + templateName + ".xlsx")
             .orElseThrow(() -> new NoSuchElementException("Cannot find template file"));
         return excelExportService.exportToExcel(template, model);
     }
@@ -134,7 +109,7 @@ public class EventExportUseCase {
         return crew;
     }
 
-    private @NonNull Optional<File> getResourceFile(@NonNull String path) {
+    private @NonNull Optional<File> resolveResourceFile(@NonNull String path) {
         try {
             var url = getClass().getClassLoader().getResource(path);
             if (url == null) {

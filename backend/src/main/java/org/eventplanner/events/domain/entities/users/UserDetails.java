@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eventplanner.common.StringUtils;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.functions.EncryptFunc;
 import org.eventplanner.events.domain.values.auth.Role;
@@ -73,9 +74,10 @@ public class UserDetails {
     private @Nullable Diet diet;
 
     public @NonNull String getFullName() {
-        var activeFirstName = Optional.ofNullable(nickName).orElse(firstName);
+        var activeFirstName = StringUtils.isBlank(nickName) ? firstName : nickName;
         return Stream.of(title, activeFirstName, secondName, lastName)
             .filter(Objects::nonNull)
+            .map(String::trim)
             .collect(Collectors.joining(" "));
     }
 

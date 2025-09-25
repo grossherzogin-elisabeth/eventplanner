@@ -2,11 +2,8 @@ package org.eventplanner.events.rest.events;
 
 import java.util.List;
 
-import org.eventplanner.events.application.usecases.CaptainListUseCase;
-import org.eventplanner.events.application.usecases.ConsumtionListUseCase;
 import org.eventplanner.events.application.usecases.EventExportUseCase;
 import org.eventplanner.events.application.usecases.EventUseCase;
-import org.eventplanner.events.application.usecases.ImoListUseCase;
 import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.UpdateEventUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
@@ -50,9 +47,6 @@ public class EventController {
     private final EventUseCase eventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
     private final EventExportUseCase eventExportUseCase;
-    private final ImoListUseCase imoListUseCase;
-    private final ConsumtionListUseCase consumtionListUseCase;
-    private final CaptainListUseCase captainListUseCase;
     private final RegistrationConfirmationUseCase registrationConfirmationUseCase;
 
     @GetMapping("")
@@ -122,32 +116,13 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/{eventKey}/imo-list")
-    public ResponseEntity<Resource> downloadImoList(@PathVariable("eventKey") String eventKey) {
+    @GetMapping("/{eventKey}/export/{templateName}")
+    public ResponseEntity<Resource> exportEvent(
+        @PathVariable("eventKey") String eventKey,
+        @PathVariable("templateName") String templateName
+    ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var outputStream = eventExportUseCase.exportImoCrewList(signedInUser, new EventKey(eventKey));
-        byte[] bytes = outputStream.toByteArray();
-        return ResponseEntity.ok()
-            .contentLength(bytes.length)
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(new ByteArrayResource(bytes));
-    }
-
-    @GetMapping("/{eventKey}/consumption-list")
-    public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var outputStream = eventExportUseCase.exportConsumptionList(signedInUser, new EventKey(eventKey));
-        byte[] bytes = outputStream.toByteArray();
-        return ResponseEntity.ok()
-            .contentLength(bytes.length)
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(new ByteArrayResource(bytes));
-    }
-
-    @GetMapping("/{eventKey}/captain-list")
-    public ResponseEntity<Resource> downloadCaptainList(@PathVariable("eventKey") String eventKey) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var outputStream = eventExportUseCase.exportCaptainList(signedInUser, new EventKey(eventKey));
+        var outputStream = eventExportUseCase.exportEvent(signedInUser, new EventKey(eventKey), templateName);
         byte[] bytes = outputStream.toByteArray();
         return ResponseEntity.ok()
             .contentLength(bytes.length)

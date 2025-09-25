@@ -31,19 +31,35 @@ public class ExcelExportService {
 
     private final Configuration freemarkerConfig;
 
+    /**
+     * Reads the provided xlsx file and executes freemarker templating on each cell. Cells are rendered starting in A1
+     * and then going row by row. All <#assign> and <#function> directives in a cell will be used in all following
+     * cells.
+     * <br>
+     * Cells containing {@code ..} will have the same content as the cell above them, so you can define a table by only
+     * writing freemarker expressions in the first row and then using {@code ..} to fill the rest.
+     * <br>
+     * If there is a sheet named <#template>, all <#assign> and <#function> from this sheet will be used globally to
+     * allow writing reusable helper functions.
+     *
+     * @param template the template file
+     * @param model    the data model to use for templating
+     * @return ByteArrayOutputStream of the rendered xlsx file
+     */
     public @NonNull ByteArrayOutputStream exportToExcel(
         @NonNull final File template,
         @NonNull final Map<String, Object> model
     ) {
+        log.info("Generating excel export with template {}", template.getName());
         model.put("currentDate", Instant.now());
         try (FileInputStream fileTemplate = new FileInputStream(template)) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
             workbook.setActiveSheet(0);
-            var directives = extractTemplateDirectives(workbook);
+            var directives = extractGlobalDirectives(workbook);
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 var sheet = workbook.getSheetAt(i);
-                resolveCopies(sheet);
-                fillSheet(sheet, model, directives);
+                renderCopies(sheet);
+                renderSheet(sheet, model, directives);
             }
             var bos = new ByteArrayOutputStream();
             try (bos) {
@@ -60,7 +76,7 @@ public class ExcelExportService {
         }
     }
 
-    private @NonNull String extractTemplateDirectives(@NonNull final XSSFWorkbook workbook) {
+    private @NonNull String extractGlobalDirectives(@NonNull final XSSFWorkbook workbook) {
         for (var i = 0; i < workbook.getNumberOfSheets(); i++) {
             var sheet = workbook.getSheetAt(i);
             if (sheet.getSheetName().equals("<#template>")) {
@@ -83,7 +99,7 @@ public class ExcelExportService {
         return "";
     }
 
-    private void resolveCopies(@NonNull final XSSFSheet sheet) {
+    private void renderCopies(@NonNull final XSSFSheet sheet) {
         for (var row : sheet) {
             for (var cell : row) {
                 if (!cell.getCellType().equals(CellType.STRING)) {
@@ -99,7 +115,7 @@ public class ExcelExportService {
         }
     }
 
-    private void fillSheet(
+    private void renderSheet(
         @NonNull final XSSFSheet sheet,
         @NonNull final Map<String, Object> model,
         @NonNull final String globalDirectives
@@ -163,8 +179,6 @@ public class ExcelExportService {
     throws TemplateException {
         try {
             var renderer = new Template(template, new StringReader(template), freemarkerConfig);
-            // renderer.setDateFormat("yyyy-MM-dd");
-            // renderer.setDateTimeFormat("yyyy-MM-ddTHH:mm:ss.");
             var writer = new StringWriter();
             renderer.process(model, writer);
             return writer.toString();
