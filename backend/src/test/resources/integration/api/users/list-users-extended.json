@@ -43,28 +43,6 @@
     "verified": true
   },
   {
-    "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
-    "firstName": "Anthony",
-    "nickName": "Tony",
-    "lastName": "Stark",
-    "positions": [
-      "08c609d2-26c9-4848-b17b-8feac2e2a91f"
-    ],
-    "roles": [
-      "ROLE_ADMIN",
-      "ROLE_TEAM_MEMBER"
-    ],
-    "qualifications": [
-      {
-        "qualificationKey": "659fccf8-2bfc-4123-b7cd-98be4b8e4f8d",
-        "expiresAt": null,
-        "expires": false
-      }
-    ],
-    "email": "tony.stark@email.com",
-    "verified": true
-  },
-  {
     "key": "b0c4bf2d-d390-4490-8a77-59214eb9a81c",
     "firstName": "Loki",
     "nickName": null,
@@ -174,6 +152,28 @@
     ],
     "email": "thor.odinson@email.com",
     "verified": false
+  },
+  {
+    "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
+    "firstName": "Anthony",
+    "nickName": "Tony",
+    "lastName": "Stark",
+    "positions": [
+      "08c609d2-26c9-4848-b17b-8feac2e2a91f"
+    ],
+    "roles": [
+      "ROLE_ADMIN",
+      "ROLE_TEAM_MEMBER"
+    ],
+    "qualifications": [
+      {
+        "qualificationKey": "659fccf8-2bfc-4123-b7cd-98be4b8e4f8d",
+        "expiresAt": null,
+        "expires": false
+      }
+    ],
+    "email": "tony.stark@email.com",
+    "verified": true
   },
   {
     "key": "61741a06-58d7-43a9-b55a-80d07f281bba",

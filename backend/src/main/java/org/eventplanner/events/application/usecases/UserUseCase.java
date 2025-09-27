@@ -235,7 +235,7 @@ public class UserUseCase {
                 log.error("Cannot assign unknown qualification {} to user {}", spec.qualificationKey(), user.getKey());
                 continue;
             }
-            var existingUserQualification = user.getQualification(qualification.getKey());
+            var existingUserQualification = user.findQualification(qualification.getKey());
             if (existingUserQualification.isPresent()) {
                 var oldExpiration = existingUserQualification.get().getExpiresAt();
                 var newExpiration = spec.expiresAt();

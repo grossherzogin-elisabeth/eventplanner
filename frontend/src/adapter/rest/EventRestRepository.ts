@@ -306,7 +306,7 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async downloadImoList(event: Event): Promise<Blob> {
-        const response = await fetch(`/api/v1/events/${event.key}/imo-list`, {
+        const response = await fetch(`/api/v1/events/${event.key}/export/imo-list`, {
             method: 'GET',
             credentials: 'include',
         });
@@ -317,7 +317,7 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async downloadConsumptionList(event: Event): Promise<Blob> {
-        const response = await fetch(`/api/v1/events/${event.key}/consumption-list`, {
+        const response = await fetch(`/api/v1/events/${event.key}/export/consumption-list`, {
             method: 'GET',
             credentials: 'include',
         });
@@ -328,7 +328,7 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async downloadCaptainList(event: Event): Promise<Blob> {
-        const response = await fetch(`/api/v1/events/${event.key}/captain-list`, {
+        const response = await fetch(`/api/v1/events/${event.key}/export/event-details`, {
             method: 'GET',
             credentials: 'include',
         });
