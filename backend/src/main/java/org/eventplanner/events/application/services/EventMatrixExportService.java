@@ -40,13 +40,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ExportService {
+public class EventMatrixExportService {
 
     private final ZoneId timezone = ZoneId.of("Europe/Berlin");
     private final PositionRepository positionRepository;
     private final UserService userService;
 
-    public @NonNull ByteArrayOutputStream exportEvents(@NonNull List<Event> events, int year) {
+    public @NonNull ByteArrayOutputStream exportEventMatrix(@NonNull List<Event> events) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Einsatzmatrix");
         sheet.setDefaultColumnWidth(18);
@@ -58,6 +58,7 @@ public class ExportService {
         positions.forEach(position -> positionsByKey.put(position.getKey(), position));
 
         var r = 0;
+        var year = events.getFirst().getEnd().atZone(timezone).getYear();
         var yearCell = sheet.createRow(r++).createCell(0);
         yearCell.setCellValue(year);
         yearCell.setCellStyle(cellStyles.get("header"));

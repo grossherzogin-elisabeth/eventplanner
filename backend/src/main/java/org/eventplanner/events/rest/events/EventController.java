@@ -57,7 +57,7 @@ public class EventController {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
         if (accept.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-            var stream = eventUseCase.exportEvents(signedInUser, year);
+            var stream = eventExportUseCase.exportEventMatrix(signedInUser, year);
             byte[] binary = stream.toByteArray();
             ByteArrayResource resource = new ByteArrayResource(binary);
             return ResponseEntity.ok()

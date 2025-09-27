@@ -98,7 +98,7 @@
         "3ea10356-8f2f-49df-abc8-b9ecd1a6934e"
       ],
       "name": null,
-      "assignedRegistrationKey": null
+      "assignedRegistrationKey": "b5545e20-717e-465e-8ca4-f2cf973302f7"
     },
     {
       "key": "6fe6e31f-e280-4fdd-962c-f78506facd74",
@@ -149,6 +149,12 @@
       "userKey": "fc766e6e-dec2-4fc8-89ef-4c158786fd4e",
       "note": "note",
       "overnightStay": true
+    },
+    {
+      "key": "b5545e20-717e-465e-8ca4-f2cf973302f7",
+      "positionKey": "24dd5aef-e819-4d9d-8b19-d9d592c4ff8f",
+      "name": "Nebula",
+      "note": ""
     }
   ]
 }

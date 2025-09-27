@@ -2,6 +2,7 @@ package org.eventplanner.events.application.usecases;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,9 +11,12 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eventplanner.common.StringUtils;
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.QualificationRepository;
+import org.eventplanner.events.application.services.EventMatrixExportService;
+import org.eventplanner.events.application.services.EventService;
 import org.eventplanner.events.application.services.ExcelExportService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.events.Event;
@@ -23,6 +27,7 @@ import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.positions.PositionKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +40,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class EventExportUseCase {
+    private final EventService eventService;
     private final ExcelExportService excelExportService;
+    private final EventMatrixExportService eventMatrixExportService;
     private final EventRepository eventRepository;
     private final UserService userService;
     private final PositionRepository positionRepository;
@@ -49,15 +56,27 @@ public class EventExportUseCase {
         signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
 
-        var model = getEventExportModel(eventKey);
+        var event = eventService.getEvent(signedInUser, eventKey);
+        var model = getEventExportModel(event);
         var template = resolveResourceFile("templates/excel/" + templateName + ".xlsx")
             .orElseThrow(() -> new NoSuchElementException("Cannot find template file"));
+        log.info("Generating excel export {} for event {}", templateName, event.getName());
         return excelExportService.exportToExcel(template, model);
     }
 
-    private @NonNull Map<String, Object> getEventExportModel(@NonNull final EventKey eventKey) {
-        var event = eventRepository.findByKey(eventKey)
-            .orElseThrow(() -> new NoSuchElementException("Event does not exist"));
+    public @NonNull ByteArrayOutputStream exportEventMatrix(
+        @NonNull final SignedInUser signedInUser,
+        final int year
+    ) {
+        signedInUser.assertHasPermission(Permission.READ_USERS);
+        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+
+        var events = eventService.getEvents(signedInUser, year);
+        log.info("Generating event matric for {} events of year {}", events.size(), year);
+        return eventMatrixExportService.exportEventMatrix(events);
+    }
+
+    private @NonNull Map<String, Object> getEventExportModel(@NonNull final Event event) {
         var positions = positionRepository.findAllAsMap();
         var users = userService.getDetailedUsers();
 
@@ -96,7 +115,17 @@ public class EventExportUseCase {
                 .findFirst()
                 .orElse(null);
             if (user == null) {
-                continue;
+                if (StringUtils.isBlank(registration.getName())) {
+                    log.info("Skipping registration without user key and name");
+                    continue;
+                }
+                user = new UserDetails(
+                    new UserKey(),
+                    Instant.now(),
+                    Instant.now(),
+                    "",
+                    registration.getName()
+                );
             }
             crew.add(new ResolvedRegistration(
                 i++,

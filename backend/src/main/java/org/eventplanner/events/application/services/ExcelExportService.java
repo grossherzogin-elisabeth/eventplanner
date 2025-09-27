@@ -50,7 +50,6 @@ public class ExcelExportService {
         @NonNull final File template,
         @NonNull final Map<String, Object> model
     ) {
-        log.info("Generating excel export with template {}", template.getName());
         model.put("currentDate", Instant.now());
         try (FileInputStream fileTemplate = new FileInputStream(template)) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
@@ -127,7 +126,13 @@ public class ExcelExportService {
                 try {
                     sheetDirectives = renderCellValue(cell, model, sheetDirectives);
                 } catch (Exception e) {
-                    log.warn("Failed to render cell {}-{}", cell.getColumnIndex(), cell.getRow(), e);
+                    log.warn(
+                        "Failed to render cell {}-{} on sheet {}",
+                        cell.getColumnIndex(),
+                        cell.getRowIndex(),
+                        sheet.getSheetName(),
+                        e
+                    );
                 }
             }
         }

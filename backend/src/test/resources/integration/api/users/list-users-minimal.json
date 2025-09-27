@@ -12,12 +12,6 @@
     "lastName": "Strange"
   },
   {
-    "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
-    "firstName": "Anthony",
-    "nickName": "Tony",
-    "lastName": "Stark"
-  },
-  {
     "key": "b0c4bf2d-d390-4490-8a77-59214eb9a81c",
     "firstName": "Loki",
     "nickName": null,
@@ -52,6 +46,12 @@
     "firstName": "Thor",
     "nickName": null,
     "lastName": "Odinson"
+  },
+  {
+    "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
+    "firstName": "Anthony",
+    "nickName": "Tony",
+    "lastName": "Stark"
   },
   {
     "key": "61741a06-58d7-43a9-b55a-80d07f281bba",
