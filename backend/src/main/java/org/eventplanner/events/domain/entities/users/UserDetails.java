@@ -73,14 +73,23 @@ public class UserDetails {
     private @Nullable String medication;
     private @Nullable Diet diet;
 
+    @TemplateAccessible
     public @NonNull String getFullName() {
         var activeFirstName = StringUtils.isBlank(nickName) ? firstName : nickName;
-        return Stream.of(title, activeFirstName, secondName, lastName)
+        return Stream.of(activeFirstName, lastName)
+            .map(String::trim)
+            .collect(Collectors.joining(" "));
+    }
+
+    @TemplateAccessible
+    public @NonNull String getFullLegalName() {
+        return Stream.of(title, firstName, secondName, lastName)
             .filter(Objects::nonNull)
             .map(String::trim)
             .collect(Collectors.joining(" "));
     }
 
+    @TemplateAccessible
     public @NonNull String getFirstNames() {
         return Stream.of(firstName, secondName)
             .filter(Objects::nonNull)

@@ -16,7 +16,7 @@ import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 
 import freemarker.template.TemplateException;
 
-class ExcelExportServiceTest {
+class ExcelEventMatrixExportServiceTest {
 
     private ExcelExportService testee;
 

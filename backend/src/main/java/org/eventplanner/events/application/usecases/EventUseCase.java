@@ -1,10 +1,9 @@
 package org.eventplanner.events.application.usecases;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import org.eventplanner.events.application.ports.EventRepository;
-import org.eventplanner.events.application.services.ExportService;
+import org.eventplanner.events.application.services.EventService;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.specs.CreateEventSpec;
@@ -20,32 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class EventUseCase {
+    private final EventService eventService;
     private final EventRepository eventRepository;
-    private final ExportService exportService;
 
     public @NonNull List<Event> getEvents(
         @NonNull final SignedInUser signedInUser,
         final int year
     ) {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
-
-        return eventRepository.findAllByYear(year).stream()
-            .filter(evt -> evt.isVisibleForUser(signedInUser))
-            .peek(Event::removeInvalidSlotAssignments)
-            .peek(evt -> evt.clearConfidentialData(signedInUser))
-            .toList();
-    }
-
-    public @NonNull ByteArrayOutputStream exportEvents(
-        @NonNull final SignedInUser signedInUser,
-        final int year
-    ) {
-        signedInUser.assertHasPermission(Permission.READ_USERS);
-        signedInUser.assertHasPermission(Permission.READ_EVENTS);
-
-        var events = getEvents(signedInUser, year); // we want the exact same permission checks here
-        log.info("Generating excel export for {} events of year {}", events.size(), year);
-        return exportService.exportEvents(events, year);
+        return eventService.getEvents(signedInUser, year);
     }
 
     public @NonNull Event getEventByKey(
@@ -53,15 +35,7 @@ public class EventUseCase {
         @NonNull final EventKey key
     ) {
         signedInUser.assertHasPermission(Permission.READ_EVENTS);
-
-        return eventRepository.findByKey(key)
-            .filter(evt -> evt.isVisibleForUser(signedInUser))
-            .map(evt -> {
-                evt.removeInvalidSlotAssignments();
-                evt.clearConfidentialData(signedInUser);
-                return evt;
-            })
-            .orElseThrow();
+        return eventService.getEvent(signedInUser, key);
     }
 
     public @NonNull Event createEvent(

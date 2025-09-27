@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EventRepository;
-import org.eventplanner.events.application.services.ExportService;
+import org.eventplanner.events.application.services.EventService;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;
@@ -37,8 +37,8 @@ class EventUseCaseTest {
         when(eventRepository.update(any())).thenAnswer(mock -> mock.getArgument(0));
 
         testee = new EventUseCase(
-            eventRepository,
-            mock(ExportService.class)
+            new EventService(eventRepository),
+            eventRepository
         );
     }
 

@@ -18,6 +18,17 @@ import org.junit.jupiter.api.Test;
 class UserDetailsTest {
 
     @Test
+    void shouldBuildFullLegalName() {
+        var testee = createUser()
+            .withTitle("Title")
+            .withNickName(null)
+            .withFirstName("Firstname")
+            .withSecondName("Second Name")
+            .withLastName("Lastname");
+        assertThat(testee.getFullLegalName()).isEqualTo("Title Firstname Second Name Lastname");
+    }
+
+    @Test
     void shouldBuildFullName() {
         var testee = createUser()
             .withTitle("Title")
@@ -25,7 +36,7 @@ class UserDetailsTest {
             .withFirstName("Firstname")
             .withSecondName("Second Name")
             .withLastName("Lastname");
-        assertThat(testee.getFullName()).isEqualTo("Title Firstname Second Name Lastname");
+        assertThat(testee.getFullName()).isEqualTo("Firstname Lastname");
     }
 
     @Test
@@ -37,6 +48,17 @@ class UserDetailsTest {
             .withSecondName(null)
             .withLastName("Lastname");
         assertThat(testee.getFullName()).isEqualTo("Nickname Lastname");
+    }
+
+    @Test
+    void shouldBuildFirstNames() {
+        var testee = createUser()
+            .withTitle("Title")
+            .withNickName(null)
+            .withFirstName("Firstname")
+            .withSecondName("Second Name")
+            .withLastName("Lastname");
+        assertThat(testee.getFirstNames()).isEqualTo("Firstname Second Name");
     }
 
     @Test

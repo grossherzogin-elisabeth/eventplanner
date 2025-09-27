@@ -38,10 +38,10 @@ class EventExportIntegrationTest {
 
         try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             var sheet = workbook.getSheetAt(0);
-            assertThat(cellValue(sheet, 2, 0)).isEqualTo("Steve Grant Rogers");
-            assertThat(cellValue(sheet, 3, 0)).isEqualTo("Dr Doctor Strange");
-            assertThat(cellValue(sheet, 4, 0)).isEqualTo("Dr Bruce Benner");
-            assertThat(cellValue(sheet, 5, 0)).isEqualTo("Dr Tony Edward Stark");
+            assertThat(cellValue(sheet, 2, 0)).isEqualTo("Steve Rogers");
+            assertThat(cellValue(sheet, 3, 0)).isEqualTo("Doctor Strange");
+            assertThat(cellValue(sheet, 4, 0)).isEqualTo("Bruce Benner");
+            assertThat(cellValue(sheet, 5, 0)).isEqualTo("Tony Stark");
             assertThat(cellValue(sheet, 6, 0)).isEqualTo("Natasha Romanoff");
         }
         FileUtils.delete(file);
@@ -53,6 +53,7 @@ class EventExportIntegrationTest {
 
         try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             var sheet = workbook.getSheetAt(0);
+            // check all fields set correctly
             assertThat(cellValue(sheet, 8, 1)).isEqualTo("Rogers");
             assertThat(cellValue(sheet, 8, 2)).isEqualTo("Steven Grant");
             assertThat(cellValue(sheet, 8, 3)).isEqualTo("Master");
@@ -61,13 +62,24 @@ class EventExportIntegrationTest {
             assertThat(cellValue(sheet, 8, 8)).isEqualTo("New York");
             assertThat(cellValue(sheet, 8, 9)).isEqualTo("US28091922");
 
+            // check order of crew members
             assertThat(cellValue(sheet, 9, 1)).isEqualTo("Strange");
             assertThat(cellValue(sheet, 10, 1)).isEqualTo("Benner");
             assertThat(cellValue(sheet, 11, 1)).isEqualTo("Stark");
             assertThat(cellValue(sheet, 12, 1)).isEqualTo("Romanoff");
 
+            // check guest crew
+            assertThat(cellValue(sheet, 13, 1)).isEqualTo("Nebula");
+            assertThat(cellValue(sheet, 13, 2)).isBlank();
+            assertThat(cellValue(sheet, 13, 3)).isEqualTo("Deckshand");
+            assertThat(cellValue(sheet, 13, 4)).isBlank();
+            assertThat(cellValue(sheet, 13, 6)).isBlank();
+            assertThat(cellValue(sheet, 13, 8)).isBlank();
+            assertThat(cellValue(sheet, 13, 9)).isBlank();
+
+            // check next line is completely blank
             for (int i = 0; i < 10; i++) {
-                assertThat(cellValue(sheet, 13, i)).isBlank();
+                assertThat(cellValue(sheet, 14, i)).isBlank();
             }
         }
         FileUtils.delete(file);
