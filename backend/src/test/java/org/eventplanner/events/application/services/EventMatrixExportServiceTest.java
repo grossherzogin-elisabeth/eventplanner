@@ -230,13 +230,12 @@ class EventMatrixExportServiceTest {
 
     private static Stream<Arguments> provideSingleEvents() {
         return Stream.of(
-            createEventWithoutRegistrations(),
-            createEventWithCrewOnly(),
-            createEventWithHalfCrewOnly(),
-            createEventWithWaitingListOnly(),
-            createEventWithCrewAndWaitingList(),
-            createEventWithCrewAndWaitingList()
-        ).map(Arguments::of);
+            Arguments.argumentSet("event without registrations", createEventWithoutRegistrations()),
+            Arguments.argumentSet("event with full crew", createEventWithCrewOnly()),
+            Arguments.argumentSet("event with half full crew", createEventWithHalfCrewOnly()),
+            Arguments.argumentSet("event with waiting list", createEventWithWaitingListOnly()),
+            Arguments.argumentSet("event with crew and waiting list", createEventWithCrewAndWaitingList())
+        );
     }
 
     private static Stream<Arguments> provideEvents() {
@@ -250,11 +249,6 @@ class EventMatrixExportServiceTest {
                 createEventWithoutRegistrations()
             ),
             List.of(
-                createEventWithoutRegistrations(),
-                createEventWithCrewOnly(),
-                createEventWithWaitingListOnly()
-            ),
-            List.of(
                 createEventWithCrewOnly(),
                 createEventWithCrewOnly()
             ),
@@ -265,6 +259,11 @@ class EventMatrixExportServiceTest {
             List.of(
                 createEventWithCrewAndWaitingList(),
                 createEventWithCrewAndWaitingList()
+            ),
+            List.of(
+                createEventWithoutRegistrations(),
+                createEventWithCrewOnly(),
+                createEventWithWaitingListOnly()
             ),
             List.of(
                 createEventWithoutRegistrations(),
@@ -414,7 +413,7 @@ class EventMatrixExportServiceTest {
     }
 
     private static Event createEventWithCrewAndWaitingList() {
-        return new Event(
+        var event = new Event(
             new EventKey(),
             EventType.SINGLE_DAY_EVENT,
             EventSignupType.ASSIGNMENT,
@@ -429,5 +428,40 @@ class EventMatrixExportServiceTest {
             Collections.emptyList(),
             0
         );
+        var randomUsers = new ArrayList<>(users);
+        Collections.shuffle(randomUsers);
+
+        for (EventSlot slot : event.getSlots()) {
+            var registration = new Registration(
+                new RegistrationKey(),
+                slot.getPositions().getLast(),
+                randomUsers.removeFirst().getKey(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+            slot.setAssignedRegistration(registration.getKey());
+            event.addRegistration(registration);
+        }
+
+        for (int i = 0; i < event.getSlots().size(); i += 2) {
+            var slot = event.getSlots().get(i);
+            var registration = new Registration(
+                new RegistrationKey(),
+                slot.getPositions().getLast(),
+                randomUsers.removeFirst().getKey(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+            event.addRegistration(registration);
+        }
+        return event;
     }
 }
