@@ -25,8 +25,8 @@ public class EventService {
     ) {
         return eventRepository.findAllByYear(year).stream()
             .filter(evt -> evt.isVisibleForUser(signedInUser))
-            .peek(Event::removeInvalidSlotAssignments)
-            .peek(evt -> evt.clearConfidentialData(signedInUser))
+            .map(Event::removeInvalidSlotAssignments)
+            .map(evt -> evt.clearConfidentialData(signedInUser))
             .toList();
     }
 

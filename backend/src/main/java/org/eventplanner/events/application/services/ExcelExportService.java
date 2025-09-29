@@ -64,8 +64,6 @@ public class ExcelExportService {
             try (bos) {
                 workbook.write(bos);
                 bos.flush();
-            } catch (IOException e) {
-                throw e;
             }
             return bos;
         } catch (TemplateException | IOException e) {

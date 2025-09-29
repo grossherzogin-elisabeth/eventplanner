@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.events.application.usecases.EventExportUseCase;
 import org.eventplanner.events.domain.values.auth.Role;
@@ -83,17 +82,6 @@ class EventExportIntegrationTest {
             }
         }
         FileUtils.delete(file);
-    }
-
-    private String cellValue(XSSFSheet sheet, int r, int c) {
-        var cell = sheet.getRow(r).getCell(c);
-        return switch (cell.getCellType()) {
-            case STRING -> cell.getStringCellValue();
-            case BLANK -> "";
-            case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
-            case NUMERIC -> String.valueOf(cell.getNumericCellValue());
-            default -> "";
-        };
     }
 
     private File generateExcelExport(String template) {

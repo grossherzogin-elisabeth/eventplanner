@@ -120,7 +120,7 @@ public class Event {
         };
     }
 
-    public void clearConfidentialData(@NonNull final SignedInUser signedInUser) {
+    public @NonNull Event clearConfidentialData(@NonNull final SignedInUser signedInUser) {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
             && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(state)) {
             // clear assigned registrations on slots if crew is not published yet
@@ -141,9 +141,10 @@ public class Event {
                     it.setConfirmedAt(null);
                 });
         }
+        return this;
     }
 
-    public void removeInvalidSlotAssignments() {
+    public @NonNull Event removeInvalidSlotAssignments() {
         log.debug("Removing invalid slot assignments for event {}", name);
         var counter = 0;
         var validRegistrationKeys = registrations.stream().map(Registration::getKey).toList();
@@ -157,6 +158,7 @@ public class Event {
         if (counter > 0) {
             log.info("Removed {} invalid slot assignments for event {}", counter, name);
         }
+        return this;
     }
 
     /**

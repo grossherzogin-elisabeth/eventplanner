@@ -41,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class EventMatrixExportService {
 
+    private static final String HEADER_STYLE = "header";
     private final ZoneId timezone = ZoneId.of("Europe/Berlin");
     private final PositionRepository positionRepository;
     private final UserService userService;
@@ -63,13 +64,13 @@ public class EventMatrixExportService {
         var year = events.getFirst().getEnd().atZone(timezone).getYear();
         var yearCell = sheet.createRow(r++).createCell(0);
         yearCell.setCellValue(year);
-        yearCell.setCellStyle(cellStyles.get("header"));
+        yearCell.setCellStyle(cellStyles.get(HEADER_STYLE));
         sheet.createRow(r++);
         sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 0));
 
         var countCell = sheet.createRow(r++).createCell(0);
         countCell.setCellValue("Anzahl");
-        countCell.setCellStyle(cellStyles.get("header"));
+        countCell.setCellStyle(cellStyles.get(HEADER_STYLE));
 
         var assignedRows = getRequiredRows(events, positions, false);
         for (var key : assignedRows) {
@@ -128,7 +129,7 @@ public class EventMatrixExportService {
         styleColumnHeader.setVerticalAlignment(VerticalAlignment.CENTER);
         styleColumnHeader.setBorderRight(BorderStyle.HAIR);
         styleColumnHeader.setBorderBottom(BorderStyle.HAIR);
-        cellStyles.put("header", styleColumnHeader);
+        cellStyles.put(HEADER_STYLE, styleColumnHeader);
 
         for (Position position : positions) {
             int red = Integer.valueOf(position.getColor().substring(1, 3), 16);
@@ -232,7 +233,7 @@ public class EventMatrixExportService {
                 .ifPresent(cell::setCellStyle);
         }
 
-        var headerStyle = cellStyles.get("header");
+        var headerStyle = cellStyles.get(HEADER_STYLE);
         sheet.getRow(0).getCell(column).setCellValue(event.getName());
         sheet.getRow(0).getCell(column).setCellStyle(headerStyle);
         sheet.getRow(1).getCell(column).setCellValue(

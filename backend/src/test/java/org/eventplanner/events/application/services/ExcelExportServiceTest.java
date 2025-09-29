@@ -48,8 +48,6 @@ class ExcelExportServiceTest {
             assertThat(sheet).cell(0, 0).hasValue("static text should not be changed");
             assertThat(sheet).cell(1, 0).hasValue("global template function is working");
             assertThat(sheet).cell(2, 0).hasValue("global assigned value");
-
-            // cellValue(sheet, 2, 0)).isEqualTo("global assigned value");
             assertThat(sheet).cell(3, 0).isBlank();
             assertThat(sheet).cell(4, 0).hasValue("Value from model");
             assertThat(sheet).cell(5, 0).hasValue(42);
