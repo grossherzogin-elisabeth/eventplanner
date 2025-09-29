@@ -1,7 +1,7 @@
 package org.eventplanner.integration.export;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testdata.SignedInUserFactory.createSignedInUser;
+import static org.eventplanner.testutil.assertions.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,11 +38,11 @@ class EventExportIntegrationTest {
 
         try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             var sheet = workbook.getSheetAt(0);
-            assertThat(cellValue(sheet, 2, 0)).isEqualTo("Steve Rogers");
-            assertThat(cellValue(sheet, 3, 0)).isEqualTo("Doctor Strange");
-            assertThat(cellValue(sheet, 4, 0)).isEqualTo("Bruce Benner");
-            assertThat(cellValue(sheet, 5, 0)).isEqualTo("Tony Stark");
-            assertThat(cellValue(sheet, 6, 0)).isEqualTo("Natasha Romanoff");
+            assertThat(sheet).cell(2, 0).hasValue("Steve Rogers");
+            assertThat(sheet).cell(3, 0).hasValue("Doctor Strange");
+            assertThat(sheet).cell(4, 0).hasValue("Bruce Benner");
+            assertThat(sheet).cell(5, 0).hasValue("Tony Stark");
+            assertThat(sheet).cell(6, 0).hasValue("Natasha Romanoff");
         }
         FileUtils.delete(file);
     }
@@ -54,32 +54,32 @@ class EventExportIntegrationTest {
         try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             var sheet = workbook.getSheetAt(0);
             // check all fields set correctly
-            assertThat(cellValue(sheet, 8, 1)).isEqualTo("Rogers");
-            assertThat(cellValue(sheet, 8, 2)).isEqualTo("Steven Grant");
-            assertThat(cellValue(sheet, 8, 3)).isEqualTo("Master");
-            assertThat(cellValue(sheet, 8, 4)).isEqualTo("US");
-            assertThat(cellValue(sheet, 8, 6)).isEqualTo("1922-09-28");
-            assertThat(cellValue(sheet, 8, 8)).isEqualTo("New York");
-            assertThat(cellValue(sheet, 8, 9)).isEqualTo("US28091922");
+            assertThat(sheet).cell(8, 1).hasValue("Rogers");
+            assertThat(sheet).cell(8, 2).hasValue("Steven Grant");
+            assertThat(sheet).cell(8, 3).hasValue("Master");
+            assertThat(sheet).cell(8, 4).hasValue("US");
+            assertThat(sheet).cell(8, 6).hasValue("1922-09-28");
+            assertThat(sheet).cell(8, 8).hasValue("New York");
+            assertThat(sheet).cell(8, 9).hasValue("US28091922");
 
             // check order of crew members
-            assertThat(cellValue(sheet, 9, 1)).isEqualTo("Strange");
-            assertThat(cellValue(sheet, 10, 1)).isEqualTo("Benner");
-            assertThat(cellValue(sheet, 11, 1)).isEqualTo("Stark");
-            assertThat(cellValue(sheet, 12, 1)).isEqualTo("Romanoff");
+            assertThat(sheet).cell(9, 1).hasValue("Strange");
+            assertThat(sheet).cell(10, 1).hasValue("Benner");
+            assertThat(sheet).cell(11, 1).hasValue("Stark");
+            assertThat(sheet).cell(12, 1).hasValue("Romanoff");
 
             // check guest crew
-            assertThat(cellValue(sheet, 13, 1)).isEqualTo("Nebula");
-            assertThat(cellValue(sheet, 13, 2)).isBlank();
-            assertThat(cellValue(sheet, 13, 3)).isEqualTo("Deckshand");
-            assertThat(cellValue(sheet, 13, 4)).isBlank();
-            assertThat(cellValue(sheet, 13, 6)).isBlank();
-            assertThat(cellValue(sheet, 13, 8)).isBlank();
-            assertThat(cellValue(sheet, 13, 9)).isBlank();
+            assertThat(sheet).cell(13, 1).hasValue("Nebula");
+            assertThat(sheet).cell(13, 2).isBlank();
+            assertThat(sheet).cell(13, 3).hasValue("Deckshand");
+            assertThat(sheet).cell(13, 4).isBlank();
+            assertThat(sheet).cell(13, 6).isBlank();
+            assertThat(sheet).cell(13, 8).isBlank();
+            assertThat(sheet).cell(13, 9).isBlank();
 
             // check next line is completely blank
-            for (int i = 0; i < 10; i++) {
-                assertThat(cellValue(sheet, 14, i)).isBlank();
+            for (int i = 14; i < 30; i++) {
+                assertThat(sheet).row(i).isBlank();
             }
         }
         FileUtils.delete(file);

@@ -1,6 +1,6 @@
 package org.eventplanner.events.application.services;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.eventplanner.testutil.assertions.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,13 +10,14 @@ import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 
 import freemarker.template.TemplateException;
 
-class ExcelEventMatrixExportServiceTest {
+class ExcelExportServiceTest {
 
     private ExcelExportService testee;
 
@@ -38,26 +39,24 @@ class ExcelEventMatrixExportServiceTest {
         var out = testee.exportToExcel(template, model);
         try (OutputStream outputStream = new FileOutputStream(outFile)) {
             out.writeTo(outputStream);
-        } catch (Exception e) {
-            throw e;
         }
         try (XSSFWorkbook workbook = new XSSFWorkbook(outFile)) {
             // template sheet should be removed
-            assertThat(workbook.getNumberOfSheets()).isEqualTo(1);
+            Assertions.assertThat(workbook.getNumberOfSheets()).isEqualTo(1);
 
             var sheet = workbook.getSheetAt(0);
-            assertThat(sheet.getRow(0).getCell(0).getStringCellValue()).isEqualTo("static text should not be changed");
-            assertThat(sheet.getRow(1)
-                .getCell(0)
-                .getStringCellValue()).isEqualTo("global template function is working");
-            assertThat(sheet.getRow(2).getCell(0).getStringCellValue()).isEqualTo("global assigned value");
-            assertThat(sheet.getRow(3).getCell(0).getStringCellValue()).isEmpty();
-            assertThat(sheet.getRow(4).getCell(0).getStringCellValue()).isEqualTo("Value from model");
-            assertThat(sheet.getRow(5).getCell(0).getNumericCellValue()).isEqualTo(42);
-            assertThat(sheet.getRow(6).getCell(0).getNumericCellValue()).isEqualTo(43);
-            assertThat(sheet.getRow(7).getCell(0).getNumericCellValue()).isEqualTo(44);
-            assertThat(sheet.getRow(8).getCell(0).getStringCellValue()).isEqualTo("${invalid}");
-            assertThat(sheet.getRow(9).getCell(0).getStringCellValue()).isEmpty();
+            assertThat(sheet).cell(0, 0).hasValue("static text should not be changed");
+            assertThat(sheet).cell(1, 0).hasValue("global template function is working");
+            assertThat(sheet).cell(2, 0).hasValue("global assigned value");
+
+            // cellValue(sheet, 2, 0)).isEqualTo("global assigned value");
+            assertThat(sheet).cell(3, 0).isBlank();
+            assertThat(sheet).cell(4, 0).hasValue("Value from model");
+            assertThat(sheet).cell(5, 0).hasValue(42);
+            assertThat(sheet).cell(6, 0).hasValue(43);
+            assertThat(sheet).cell(7, 0).hasValue(44);
+            assertThat(sheet).cell(8, 0).hasValue("${invalid}");
+            assertThat(sheet).cell(9, 0).isBlank();
         }
 
         FileUtils.delete(outFile);

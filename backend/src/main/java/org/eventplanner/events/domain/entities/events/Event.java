@@ -18,6 +18,7 @@ import org.eventplanner.events.domain.values.events.EventType;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -63,7 +64,7 @@ public class Event {
         return registrations.stream().filter(it -> keys.contains(it.getKey())).toList();
     }
 
-    public @NonNull Optional<Registration> findRegistrationByKey(@NonNull final RegistrationKey key) {
+    public @NonNull Optional<Registration> findRegistrationByKey(@Nullable final RegistrationKey key) {
         return registrations.stream().filter(it -> it.getKey().equals(key)).findFirst();
     }
 
