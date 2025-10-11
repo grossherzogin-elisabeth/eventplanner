@@ -106,7 +106,7 @@
 import type { ResolvedRegistrationSlot } from '@/domain';
 import { ContextMenuButton, VDraggable, VTooltip } from '@/ui/components/common';
 import { Routes } from '@/ui/views/Routes.ts';
-import RegistrationTooltip from '@/ui/views/events/edit/RegistrationTooltip.vue';
+import RegistrationTooltip from '@/ui/views/events/edit/components/RegistrationTooltip.vue';
 
 interface Props {
     value: ResolvedRegistrationSlot;

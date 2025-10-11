@@ -95,8 +95,12 @@
                                     : 'bg-secondary-container text-onsecondary-container'
                             "
                         >
-                            <i v-if="expiredQualifications.includes(q.qualificationKey)" class="fa-solid fa-warning"></i>
-                            <i v-else class="fa-solid fa-check"></i>
+                            <span v-if="expiredQualifications.includes(q.qualificationKey)">
+                                <i class="fa-solid fa-warning" />
+                            </span>
+                            <span v-else>
+                                <i class="fa-solid fa-check" />
+                            </span>
                             {{ qualifications.get(q.qualificationKey).name }}
                         </span>
                     </div>

@@ -179,8 +179,8 @@ import { VDropzone } from '@/ui/components/common';
 import { useErrorHandling, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import RegistrationRow from '@/ui/views/events/edit/RegistrationRow.vue';
-import SlotEditDlg from '@/ui/views/events/edit/SlotEditDlg.vue';
+import RegistrationRow from '@/ui/views/events/edit/components/RegistrationRow.vue';
+import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';
 import { v4 as uuid } from 'uuid';
 import RegistrationEditDlg from './RegistrationEditDlg.vue';
 

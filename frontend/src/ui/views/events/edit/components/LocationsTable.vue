@@ -75,7 +75,7 @@ import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
 import { useAuthUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
-import LocationEditDlg from '@/ui/views/events/edit/LocationEditDlg.vue';
+import LocationEditDlg from '@/ui/views/events/edit/components/LocationEditDlg.vue';
 
 interface Props {
     event: Event;

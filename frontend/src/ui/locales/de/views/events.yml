@@ -107,6 +107,7 @@ events:
         message: 'Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen verworfen. Möchtest du fortfahren?'
       admin-details:
         tab:
+          crew: 'Crew'
           data: 'Reisedaten'
           positions: 'Crew verwalten'
           locations: 'Reiseroute'
@@ -159,6 +160,7 @@ events:
       delete-slot: 'Slot löschen'
     registration-tooltip:
       positions: 'Positionen'
+      information: 'Anmeldung'
       qualifications: 'Qualifikationen'
       guest-info: '{name} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.'
     slot-edit-dlg:

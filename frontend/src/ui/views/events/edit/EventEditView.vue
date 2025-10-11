@@ -148,6 +148,11 @@
                         </div>
                     </div>
                 </template>
+                <template #[Tab.EVENT_REGISTRATIONS]>
+                    <div class="xl:max-w-5xl">
+                        <CrewTab v-if="event" :event="event" />
+                    </div>
+                </template>
             </VTabs>
         </template>
         <template v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)" #primary-button>
@@ -274,18 +279,20 @@ import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
+import CrewTab from '@/ui/views/events/edit/components/CrewTab.vue';
 import VWarning from '../../../components/common/alerts/VWarning.vue';
-import CrewEditor from './CrewEditor.vue';
-import LocationEditDlg from './LocationEditDlg.vue';
-import LocationsTable from './LocationsTable.vue';
-import SlotEditDlg from './SlotEditDlg.vue';
-import SlotsTable from './SlotsTable.vue';
+import CrewEditor from './components/CrewEditor.vue';
+import LocationEditDlg from './components/LocationEditDlg.vue';
+import LocationsTable from './components/LocationsTable.vue';
+import SlotEditDlg from './components/SlotEditDlg.vue';
+import SlotsTable from './components/SlotsTable.vue';
 
 enum Tab {
     EVENT_DATA = 'data',
     EVENT_TEAM = 'positions',
     EVENT_SLOTS = 'slots',
     EVENT_LOCATIONS = 'locations',
+    EVENT_REGISTRATIONS = 'crew',
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -317,6 +324,7 @@ const tabs = computed<InputSelectOption<Tab>[]>(() => {
     if (signedInUser.permissions.includes(Permission.WRITE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_TEAM);
         visibleTabs.push(Tab.EVENT_SLOTS);
+        visibleTabs.push(Tab.EVENT_REGISTRATIONS);
     }
     return visibleTabs.map((it) => ({ value: it, label: t(`views.events.edit.event-edit-view.admin-details.tab.${it}`) }));
 });
