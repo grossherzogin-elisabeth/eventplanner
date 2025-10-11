@@ -6,13 +6,13 @@
         <template #subheader>
             <section>
                 <VInfo v-if="event?.state === EventState.Draft" class="mt-4" dismissable clamp>
-                    {{ $t('views.events.edit.event-edit-view.info-draft') }}
+                    {{ $t('views.events.edit.info-draft') }}
                 </VInfo>
                 <VWarning v-if="event?.state === EventState.Canceled" class="mt-4" dismissable>
-                    {{ $t('views.events.edit.event-edit-view.info-canceled') }}
+                    {{ $t('views.events.edit.info-canceled') }}
                 </VWarning>
                 <VWarning v-else-if="event?.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
-                    {{ $t('views.events.edit.event-edit-view.info-missing-crew') }}
+                    {{ $t('views.events.edit.info-missing-crew') }}
                 </VWarning>
             </section>
         </template>
@@ -22,7 +22,7 @@
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event">
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('views.events.edit.event-edit-view.status') }}</VInputLabel>
+                                <VInputLabel>{{ $t('domain.event.status') }}</VInputLabel>
                                 <VInputSelect
                                     v-model="event.state"
                                     :options="eventStates.options.value"
@@ -33,7 +33,7 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('views.events.edit.event-edit-view.name') }}</VInputLabel>
+                                <VInputLabel>{{ $t('domain.event.name') }}</VInputLabel>
                                 <VInputText
                                     v-model.trim="event.name"
                                     :errors="validation.errors.value['name']"
@@ -43,7 +43,7 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('views.events.edit.event-edit-view.category') }}</VInputLabel>
+                                <VInputLabel>{{ $t('domain.event.category') }}</VInputLabel>
                                 <VInputSelect
                                     v-model="event.type"
                                     :options="eventTypes.options.value"
@@ -54,7 +54,7 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('views.events.edit.event-edit-view.signup-type') }}</VInputLabel>
+                                <VInputLabel>{{ $t('domain.event.signup-type') }}</VInputLabel>
                                 <VInputSelect
                                     v-model="event.signupType"
                                     :options="eventSignupTypes.options.value"
@@ -65,7 +65,7 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('views.events.edit.event-edit-view.description') }}</VInputLabel>
+                                <VInputLabel>{{ $t('domain.event.description') }}</VInputLabel>
                                 <VInputTextArea
                                     v-model.trim="event.description"
                                     :errors="validation.errors.value['description']"
@@ -75,7 +75,7 @@
                             </div>
                             <div class="mb-4 flex space-x-4">
                                 <div class="w-3/5">
-                                    <VInputLabel>{{ $t('views.events.edit.event-edit-view.start-date') }}</VInputLabel>
+                                    <VInputLabel>{{ $t('domain.event.start-date') }}</VInputLabel>
                                     <VInputDate
                                         :model-value="event.start"
                                         :highlight-from="event.start"
@@ -88,7 +88,7 @@
                                     />
                                 </div>
                                 <div class="w-2/5">
-                                    <VInputLabel>{{ $t('views.events.edit.event-edit-view.crew-on-board') }}</VInputLabel>
+                                    <VInputLabel>{{ $t('domain.event.crew-on-board') }}</VInputLabel>
                                     <VInputTime
                                         :model-value="event.start"
                                         :errors="validation.errors.value['start']"
@@ -102,7 +102,7 @@
 
                             <div class="mb-4 flex space-x-4">
                                 <div class="w-3/5">
-                                    <VInputLabel>{{ $t('views.events.edit.event-edit-view.end-date') }}</VInputLabel>
+                                    <VInputLabel>{{ $t('domain.event.end-date') }}</VInputLabel>
                                     <VInputDate
                                         :model-value="event.end"
                                         :highlight-from="event.start"
@@ -115,7 +115,7 @@
                                     />
                                 </div>
                                 <div class="w-2/5">
-                                    <VInputLabel>{{ $t('views.events.edit.event-edit-view.crew-off-board') }}</VInputLabel>
+                                    <VInputLabel>{{ $t('domain.event.crew-off-board') }}</VInputLabel>
                                     <VInputTime
                                         :model-value="event.end"
                                         :errors="validation.errors.value['end']"
@@ -169,46 +169,46 @@
             <div class="hidden items-stretch space-x-2 lg:flex">
                 <button v-if="tab === Tab.EVENT_TEAM" class="permission-write-registrations btn-secondary" @click="addRegistration()">
                     <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('views.events.edit.event-edit-view.add-registration') }}</span>
+                    <span>{{ $t('views.events.edit.actions.add-registration') }}</span>
                 </button>
                 <button v-else-if="tab === Tab.EVENT_SLOTS" class="permission-write-event-slots btn-secondary" @click="addSlot()">
                     <i class="fa-solid fa-list" />
-                    <span>{{ $t('views.events.edit.event-edit-view.add-slot') }}</span>
+                    <span>{{ $t('views.events.edit.actions.add-slot') }}</span>
                 </button>
                 <button v-else-if="tab === Tab.EVENT_LOCATIONS" class="permission-write-event-details btn-secondary" @click="addLocation()">
                     <i class="fa-solid fa-route" />
-                    <span>{{ $t('views.events.edit.event-edit-view.add-location') }}</span>
+                    <span>{{ $t('views.events.edit.actions.add-location') }}</span>
                 </button>
             </div>
         </template>
         <template #actions-menu>
             <li class="permission-write-registrations context-menu-item" @click="addRegistration()">
                 <i class="fa-solid fa-user-plus" />
-                <span>{{ $t('views.events.edit.event-edit-view.add-registration') }}</span>
+                <span>{{ $t('views.events.edit.actions.add-registration') }}</span>
             </li>
             <li class="permission-write-event-slots context-menu-item" @click="addSlot()">
                 <i class="fa-solid fa-list" />
-                <span>{{ $t('views.events.edit.event-edit-view.add-slot') }}</span>
+                <span>{{ $t('views.events.edit.actions.add-slot') }}</span>
             </li>
             <li class="permission-write-event-details context-menu-item" @click="addLocation()">
                 <i class="fa-solid fa-route" />
-                <span>{{ $t('views.events.edit.event-edit-view.add-location') }}</span>
+                <span>{{ $t('views.events.edit.actions.add-location') }}</span>
             </li>
             <li class="permission-read-user-details context-menu-item" @click="contactTeam()">
                 <i class="fa-solid fa-envelope" />
-                <span>{{ $t('views.events.edit.event-edit-view.contact-crew') }}</span>
+                <span>{{ $t('views.events.edit.actions.contact-crew') }}</span>
             </li>
             <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
                 <i class="fa-solid fa-clipboard-user" />
-                <span>{{ $t('views.events.edit.event-edit-view.generate-imo-list') }}</span>
+                <span>{{ $t('views.events.edit.actions.generate-imo-list') }}</span>
             </li>
             <li v-if="event" class="permission-read-users context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
                 <i class="fa-solid fa-beer-mug-empty" />
-                <span>{{ $t('views.events.edit.event-edit-view.generate-consumption-list') }}</span>
+                <span>{{ $t('views.events.edit.actions.generate-consumption-list') }}</span>
             </li>
             <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(event)">
                 <i class="fa-solid fa-file-medical" />
-                <span>{{ $t('views.events.edit.event-edit-view.generate-captain-list') }}</span>
+                <span>{{ $t('views.events.edit.actions.generate-captain-list') }}</span>
             </li>
             <li
                 v-if="event?.state === EventState.Draft"
@@ -216,7 +216,7 @@
                 @click="openEventForCrewSignup()"
             >
                 <i class="fa-solid fa-lock-open" />
-                <span>{{ $t('views.events.edit.event-edit-view.open-signup') }}</span>
+                <span>{{ $t('views.events.edit.open-signup') }}</span>
             </li>
             <li
                 v-if="event?.state === EventState.OpenForSignup"
@@ -224,15 +224,15 @@
                 @click="publishPlannedCrew()"
             >
                 <i class="fa-solid fa-earth-europe" />
-                <span>{{ $t('views.events.edit.event-edit-view.publish-crew') }}</span>
+                <span>{{ $t('views.events.edit.actions.publish-crew') }}</span>
             </li>
             <li class="permission-write-event-slots context-menu-item" @click="resetTeam()">
                 <i class="fa-solid fa-rotate" />
-                <span>{{ $t('views.events.edit.event-edit-view.reset-crew') }}</span>
+                <span>{{ $t('views.events.edit.actions.reset-crew') }}</span>
             </li>
             <li class="permission-write-event-details context-menu-item text-error" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
-                <span>{{ $t('views.events.edit.event-edit-view.cancel-event') }}</span>
+                <span>{{ $t('views.events.edit.actions.cancel-event') }}</span>
             </li>
         </template>
     </DetailsPage>
@@ -326,7 +326,7 @@ const tabs = computed<InputSelectOption<Tab>[]>(() => {
         visibleTabs.push(Tab.EVENT_SLOTS);
         visibleTabs.push(Tab.EVENT_REGISTRATIONS);
     }
-    return visibleTabs.map((it) => ({ value: it, label: t(`views.events.edit.event-edit-view.admin-details.tab.${it}`) }));
+    return visibleTabs.map((it) => ({ value: it, label: t(`views.events.edit.tab.${it}`) }));
 });
 
 const createLocationDialog = ref<Dialog<void, Location | undefined> | null>(null);
@@ -361,8 +361,8 @@ function preventPageUnloadOnUnsavedChanges(): void {
         }
         if (hasChanges.value) {
             const continueNavigation = await confirmDialog.value?.open({
-                title: t('views.events.edit.event-edit-view.unsaved-changes.title'),
-                message: t('views.events.edit.event-edit-view.unsaved-changes.message'),
+                title: t('views.events.edit.unsaved-changes.title'),
+                message: t('views.events.edit.unsaved-changes.message'),
                 cancel: t('generic.cancel'),
                 submit: t('generic.discard-changes'),
             });

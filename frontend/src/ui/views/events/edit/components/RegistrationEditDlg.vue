@@ -3,19 +3,19 @@
         <template #title>
             <h1 v-if="selectedUser">
                 {{
-                    $t('views.events.edit.registration-edit-dlg.title', {
+                    $t('views.events.edit.edit-registration.title', {
                         name: selectedUser.nickName || selectedUser.firstName,
                         lastName: selectedUser.lastName,
                     })
                 }}
             </h1>
-            <h1 v-else>{{ $t('views.events.edit.registration-edit-dlg.guest-title') }}</h1>
+            <h1 v-else>{{ $t('views.events.edit.edit-registration.guest-title') }}</h1>
         </template>
         <template #default>
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div v-if="!registration.userKey" class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.name') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.registration.name') }}</VInputLabel>
                         <VInputText
                             v-model.trim="registration.name"
                             :errors="validation.errors.value['name']"
@@ -23,7 +23,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.position') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.registration.position') }}</VInputLabel>
                         <VInputCombobox
                             v-model="registration.positionKey"
                             :options="positions.options.value"
@@ -40,7 +40,7 @@
                         </VInputCombobox>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.overnightStay') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.registration.overnight-stay') }}</VInputLabel>
                         <VInputSelect
                             v-model="registration.overnightStay"
                             :options="[
@@ -51,11 +51,11 @@
                         />
                     </div>
                     <div v-if="registration.overnightStay" class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.arrival') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.registration.arrival') }}</VInputLabel>
                         <VInputDate v-model="registration.arrival" />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.registration-edit-dlg.note') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.registration.note') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="registration.note"
                             :errors="validation.errors.value['note']"
@@ -65,7 +65,7 @@
                     <template v-if="selectedUser !== undefined">
                         <VWarning v-if="!selectedUser?.positionKeys?.includes(registration.positionKey)" class="my-4">
                             {{
-                                $t('views.events.edit.registration-edit-dlg.no-qualification', {
+                                $t('views.events.edit.edit-registration.no-qualification', {
                                     name: selectedUser?.nickName || selectedUser?.firstName,
                                     position: selectedPosition?.name,
                                 })
@@ -73,13 +73,13 @@
                         </VWarning>
                     </template>
                     <VWarning v-else-if="registration.name" class="my-4">
-                        {{ $t('views.events.edit.registration-edit-dlg.guest-warning', { name: registration.name }) }}
+                        {{ $t('views.events.edit.edit-registration.guest-warning', { name: registration.name }) }}
                     </VWarning>
                 </section>
                 <template v-if="selectedUser">
                     <p class="mb-2">
                         {{
-                            $t('views.events.edit.registration-edit-dlg.qualifications', {
+                            $t('views.events.edit.edit-registration.qualifications', {
                                 name: selectedUser.nickName || selectedUser.firstName,
                             })
                         }}
@@ -156,11 +156,11 @@ const validation = useValidation(registration, (value) => {
     const errors: Record<string, ValidationHint[]> = {};
     if (!value.positionKey) {
         errors.positionKey = errors.positionKey || [];
-        errors.positionKey.push({ key: 'views.events.edit.registration-edit-dlg.select-position', params: {} });
+        errors.positionKey.push({ key: 'views.events.edit.edit-registration.select-position', params: {} });
     }
     if (!value.name && !value.userKey) {
         errors.userKey = errors.userKey || [];
-        errors.userKey.push({ key: 'views.events.edit.registration-edit-dlg.select-user', params: {} });
+        errors.userKey.push({ key: 'views.events.edit.edit-registration.select-user', params: {} });
     }
     return errors;
 });

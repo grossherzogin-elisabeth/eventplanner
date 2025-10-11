@@ -17,6 +17,8 @@ generic:
   error: 'Fehler'
   yes: 'Ja'
   no: 'Nein'
+  move-up: 'Nach oben verschieben'
+  move-down: 'Nach unten verschieben'
   month:
     '0': 'Januar'
     '1': 'Februar'

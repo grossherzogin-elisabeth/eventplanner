@@ -1,0 +1,53 @@
+event:
+  crew: 'Crew'
+  waiting-list: 'Warteliste'
+  crew-count: 'Crew ({count})'
+  registration-count: 'Anmeldungen ({count})'
+  actions:
+    add-to-crew: 'Zur Crew hinzufügen'
+    remove-from-crew: 'Auf die Warteliste'
+  no-slot-for-position-error:
+    title: 'Zuweisung nicht möglich'
+    message: '{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die Position {position} gibt. Du kannst entweder einen passenden Slot freigeben, indem du jemand anderes aus der Crew entfernst oder einen neuen Slot für diese Veranstaltung hinzufügen.'
+    retry: 'Slot hinzufügen'
+  slot:
+    empty: 'noch nicht besetzt'
+  status: 'Status'
+  name: 'Veranstaltungsname'
+  category: 'Kategorie'
+  signup-type: 'Anmeldetyp'
+  description: 'Beschreibung'
+  start-date: 'Startdatum'
+  crew-on-board: 'Crew an Bord'
+  end-date: 'Enddatum'
+  crew-off-board: 'Crew von Bord'
+registration:
+  unknown-user: 'Unbekannter Nutzer'
+  guest: 'Gastcrew'
+  overnight-stay: 'Übernachtung'
+  arrival-on-day-before: 'Anreise am Vortag'
+  arrival: 'Anreise am'
+  name: 'Name'
+  position: 'Position'
+  note: 'Notiz'
+location:
+  eta: 'ETA'
+  etd: 'ETD'
+  eda: 'EDA'
+  edd: 'EDD'
+  name: 'Name'
+  icon: 'Icon'
+  address: 'Liegeplatz'
+  address-link: 'Liegeplatz Link'
+  information: 'Weitere Informationen'
+  information-link: 'Weitere Informationen Link'
+event-slot:
+  position: 'Position'
+  display-name: 'Anzeigename'
+  criticality: 'Kritikalität'
+  required: 'Notwendig'
+  important: 'Wichtig'
+  optional: 'Optional'
+  alternative-positions: 'Alternative Positionen'
+
+

@@ -2,13 +2,19 @@
     <div
         class="scrollbar-invisible -mx-4 mb-4 flex items-center gap-2 overflow-x-auto px-4 xs:-mx-8 xs:px-8 md:-mx-16 md:-mt-4 md:px-16 xl:-mx-20 xl:px-20"
     >
-        <FilterMultiselect v-model="filterPositions" placeholder="Alle Positionen" :options="positions.options.value" />
-        <FilterToggle v-model="filterFreeSlots" label="Freie Slots" />
-        <FilterToggle v-model="filterValidQualifications" label="Gültige Qualifikationen" />
-        <FilterToggle v-model="filterUnconfirmed" label="Teilnahmebestätigung ausstehend" />
+        <FilterMultiselect
+            v-model="filterPositions"
+            :placeholder="$t('views.events.edit.filter.all-positions')"
+            :options="positions.options.value"
+        />
+        <FilterToggle v-model="filterFreeSlots" :label="$t('views.events.edit.filter.free-slots')" />
+        <FilterToggle v-model="filterValidQualifications" :label="$t('views.events.edit.filter.valid-qualifications')" />
+        <FilterToggle v-model="filterUnconfirmed" :label="$t('views.events.edit.filter.pending-confirmation')" />
     </div>
     <template v-if="props.event.signupType !== EventSignupType.Open">
-        <h2 class="mb-4 font-bold text-secondary">Crew ({{ filteredCrew.length }})</h2>
+        <h2 class="mb-4 font-bold text-secondary">
+            {{ $t('domain.event.crew-count', { count: filteredCrew.length }) }}
+        </h2>
         <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
             <RegistrationsTable
                 :event="props.event"
@@ -22,7 +28,9 @@
             />
         </div>
     </template>
-    <h2 class="mb-4 font-bold text-secondary">Anmeldungen ({{ filteredRegistrations.length }})</h2>
+    <h2 class="mb-4 font-bold text-secondary">
+        {{ $t('domain.event.registration-count', { count: filteredRegistrations.length }) }}
+    </h2>
     <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
         <RegistrationsTable
             :event="props.event"
@@ -133,10 +141,10 @@ async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
     const slot = eventService.getOpenSlots(props.event).find((it) => it.positionKeys.includes(aggregate.position.key));
     if (!slot) {
         errorHandler.handleError({
-            title: t('views.events.edit.crew-editor.assign-error.title'),
-            message: t('views.events.edit.crew-editor.assign-error.message', { name: aggregate.name, position: aggregate.position.name }),
+            title: t('domain.events.no-slot-for-position-error.title'),
+            message: t('domain.events.no-slot-for-position-error.message', { name: aggregate.name, position: aggregate.position.name }),
             cancelText: t('generic.cancel'),
-            retryText: t('views.events.edit.crew-editor.assign-error.retry'),
+            retryText: t('domain.events.no-slot-for-position-error.retry'),
             retry: async () => {
                 const event = props.event;
                 event.slots.push({

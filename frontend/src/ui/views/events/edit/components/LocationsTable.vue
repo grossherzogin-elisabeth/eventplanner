@@ -34,12 +34,12 @@
             </td>
             <td class="w-1/2 whitespace-nowrap">
                 <p class="mb-2 text-sm">
-                    <span class="mr-2 inline-block w-10 opacity-50">{{ $t('views.events.edit.locations-table.eta') }} </span>
+                    <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.eta') }}:</span>
                     <span v-if="item.eta" class="font-semibold">{{ $d(item.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
                     <span v-else>-</span>
                 </p>
                 <p class="text-sm">
-                    <span class="mr-2 inline-block w-10 opacity-50">{{ $t('views.events.edit.locations-table.etd') }} </span>
+                    <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.etd') }}: </span>
                     <span v-if="item.etd" class="font-semibold">{{ $d(item.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
                     <span v-else>-</span>
                 </p>
@@ -48,19 +48,19 @@
         <template v-if="signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
             <li class="context-menu-item" @click="editLocation(item)">
                 <i class="fa-solid fa-edit" />
-                <span>{{ $t('views.events.edit.locations-table.edit') }}</span>
+                <span>{{ $t('views.events.edit.actions.edit-location') }}</span>
             </li>
             <li class="context-menu-item" @click="moveLocationUp(item)">
                 <i class="fa-solid fa-arrow-up" />
-                <span>{{ $t('views.events.edit.locations-table.move-up') }}</span>
+                <span>{{ $t('generic.move-up') }}</span>
             </li>
             <li class="context-menu-item" @click="moveLocationDown(item)">
                 <i class="fa-solid fa-arrow-down" />
-                <span>{{ $t('views.events.edit.locations-table.move-down') }}</span>
+                <span>{{ $t('generic.move-down') }}</span>
             </li>
             <li class="context-menu-item text-error" @click="deleteLocation(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>{{ $t('views.events.edit.locations-table.delete') }}</span>
+                <span>{{ $t('views.events.edit.actions.delete-location') }}</span>
             </li>
         </template>
     </VTable>

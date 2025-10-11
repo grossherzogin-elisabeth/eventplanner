@@ -24,7 +24,9 @@
                 <td class="w-full lg:w-1/3">
                     <VTooltip :delay="500">
                         <template #default>
-                            <p class="mb-1 flex items-center gap-x-1 font-semibold">{{ item.name || 'Unbekannter Nutzer' }}</p>
+                            <p class="mb-1 flex items-center gap-x-1 font-semibold">
+                                {{ item.name || $t('domain.registration.unknown-user') }}
+                            </p>
                             <p v-if="item.registration?.note" class="mb-2 line-clamp-2 text-sm italic text-onsurface-variant lg:hidden">
                                 <i class="fa-solid fa-comment-dots" />
                                 {{ item.registration?.note.trim() }}
@@ -39,7 +41,7 @@
                                     class="whitespace-nowrap rounded-lg bg-surface-container-highest px-2 py-1 text-xs font-black text-onsurface"
                                 >
                                     <i class="fa-solid fa-question-circle" />
-                                    Keine Angaben
+                                    {{ $t('generic.no-information') }}
                                 </span>
                                 <span
                                     v-else-if="item.expiredQualifications.length > 0"
@@ -47,27 +49,27 @@
                                     :title="item.expiredQualifications.join(', ')"
                                 >
                                     <i class="fa-solid fa-ban" />
-                                    {{ item.expiredQualifications.length }} abgelaufen
+                                    {{ $t('domain.user.qualification.expired-count', { count: item.expiredQualifications.length }) }}
                                 </span>
                                 <span
                                     v-else
                                     class="whitespace-nowrap rounded-lg bg-green-container px-2 py-1 text-xs font-black text-ongreen-container"
                                 >
-                                    <i class="fa-solid fa-check-circle" />
-                                    Alle gültig
+                                    <i class="fa-solid fa-check" />
+                                    {{ $t('domain.user.qualification.all-valid') }}
                                 </span>
 
                                 <span v-if="!item.registration?.userKey" class="tag bg-secondary-container text-onsecondary-container">
                                     <i class="fa-solid fa-info-circle" />
-                                    Gastcrew
+                                    {{ $t('domain.registration.guest') }}
                                 </span>
                                 <span v-if="item.registration?.overnightStay" class="tag bg-secondary-container text-onsecondary-container">
                                     <i class="fa-solid fa-bed" />
-                                    Übernachtung
+                                    {{ $t('domain.registration.overnight-stay') }}
                                 </span>
                                 <span v-if="item.registration?.arrival" class="tag bg-secondary-container text-onsecondary-container">
                                     <i class="fa-solid fa-calendar-day" />
-                                    Anreise am Vortag
+                                    {{ $t('domain.registration.arrival-on-day-before') }}
                                 </span>
                             </p>
                         </template>
@@ -85,7 +87,9 @@
                 <td class="w-0 lg:hidden"></td>
             </template>
             <td v-else colspan="2" class="w-full">
-                <p class="mb-1 font-semibold italic text-error opacity-50">noch nicht besetzt</p>
+                <p class="mb-1 font-semibold italic text-error opacity-50">
+                    {{ $t('domain.event.slot.empty') }}
+                </p>
                 <p v-if="item.slot" class="opacity-50">
                     <span
                         v-for="position in item.slot.positionKeys.map((it) => positions.get(it))"
@@ -106,31 +110,31 @@
                 :class="{ disabled: !item.user }"
             >
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                <span>{{ $t('views.events.edit.registration-row.show-user') }}</span>
+                <span>{{ $t('views.events.edit.actions.show-user') }}</span>
             </RouterLink>
             <li v-if="item.slot" class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('removeFromCrew', item)">
                 <i class="fa-solid fa-hourglass-half"></i>
-                <span>{{ $t('views.events.edit.registration-row.move-to-waiting-list') }}</span>
+                <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
             </li>
             <li v-else class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('addToCrew', item)">
                 <i class="fa-solid fa-user-plus"></i>
-                <span>{{ $t('views.events.edit.registration-row.add-to-crew') }}</span>
+                <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
             </li>
             <li class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('editRegistration', item)">
                 <i class="fa-solid fa-clipboard-list"></i>
-                <span>{{ $t('views.events.edit.registration-row.edit-registration') }}</span>
+                <span>{{ $t('views.events.edit.actions.edit-registration') }}</span>
             </li>
             <li v-if="item.slot" class="context-menu-item" @click="emit('editSlot', item)">
                 <i class="fa-solid fa-edit"></i>
-                <span>{{ $t('views.events.edit.registration-row.edit-slot') }}</span>
+                <span>{{ $t('views.events.edit.actions.edit-slot') }}</span>
             </li>
             <li v-if="item.registration" class="context-menu-item text-error" @click="emit('deleteRegistration', item)">
                 <i class="fa-solid fa-trash-alt"></i>
-                <span>{{ $t('views.events.edit.registration-row.delete-registration') }}</span>
+                <span>{{ $t('views.events.edit.actions.delete-registration') }}</span>
             </li>
             <li v-else class="context-menu-item text-error" @click="emit('deleteSlot', item)">
                 <i class="fa-solid fa-trash-alt"></i>
-                <span>{{ $t('views.events.edit.registration-row.delete-slot') }}</span>
+                <span>{{ $t('views.events.edit.actions.delete-slot') }}</span>
             </li>
         </template>
     </VTable>

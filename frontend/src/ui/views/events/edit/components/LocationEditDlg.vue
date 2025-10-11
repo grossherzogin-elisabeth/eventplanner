@@ -1,15 +1,15 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="location.order === 1">{{ $t('views.events.edit.location-edit-dlg.edit-start-port') }}</h1>
-            <h1 v-else-if="location.order === -1">{{ $t('views.events.edit.location-edit-dlg.add-location') }}</h1>
-            <h1 v-else>{{ $t('views.events.edit.location-edit-dlg.edit-location') }}</h1>
+            <h1 v-if="location.order === 1">{{ $t('views.events.edit.actions.edit-start-location') }}</h1>
+            <h1 v-else-if="location.order === -1">{{ $t('views.events.edit.actions.add-location') }}</h1>
+            <h1 v-else>{{ $t('views.events.edit.actions.edit-location') }}</h1>
         </template>
         <template #default>
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.name') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.location.name') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.name"
                             :errors="validation.errors.value['name']"
@@ -18,10 +18,10 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.icon') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.location.icon') }}</VInputLabel>
                         <VInputSelect
                             v-model="location.icon"
-                            :placeholder="$t('views.events.edit.location-edit-dlg.icon-placeholder')"
+                            placeholder="fa-anchor"
                             :errors="validation.errors.value['icon']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -47,7 +47,9 @@
                     </div>
                     <div class="mb-2 flex space-x-4">
                         <div class="w-3/5">
-                            <VInputLabel>EDA</VInputLabel>
+                            <VInputLabel>
+                                {{ $t('domain.location.eda') }}
+                            </VInputLabel>
                             <VInputDate
                                 :model-value="location.eta"
                                 :errors="validation.errors.value['start']"
@@ -56,7 +58,9 @@
                             />
                         </div>
                         <div class="w-2/5">
-                            <VInputLabel>ETA</VInputLabel>
+                            <VInputLabel>
+                                {{ $t('domain.location.eta') }}
+                            </VInputLabel>
                             <VInputTime
                                 :model-value="location.eta"
                                 :errors="validation.errors.value['start']"
@@ -67,12 +71,14 @@
                     </div>
                     <div class="mb-4 flex justify-end">
                         <button class="link text-sm" @click="location.eta = undefined">
-                            {{ $t('views.events.edit.location-edit-dlg.delete-eta') }}
+                            {{ $t('views.events.edit.actions.delete-eta') }}
                         </button>
                     </div>
                     <div class="mb-2 flex space-x-4">
                         <div class="w-3/5">
-                            <VInputLabel>EDD</VInputLabel>
+                            <VInputLabel>
+                                {{ $t('domain.location.edd') }}
+                            </VInputLabel>
                             <VInputDate
                                 :model-value="location.etd"
                                 :errors="validation.errors.value['etd']"
@@ -81,7 +87,9 @@
                             />
                         </div>
                         <div class="w-2/5">
-                            <VInputLabel>ETD</VInputLabel>
+                            <VInputLabel>
+                                {{ $t('domain.location.etd') }}
+                            </VInputLabel>
                             <VInputTime
                                 :model-value="location.etd"
                                 :errors="validation.errors.value['etd']"
@@ -92,11 +100,11 @@
                     </div>
                     <div class="mb-4 flex justify-end">
                         <button class="link text-sm" @click="location.etd = undefined">
-                            {{ $t('views.events.edit.location-edit-dlg.delete-etd') }}
+                            {{ $t('views.events.edit.actions.delete-etd') }}
                         </button>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.address.title') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.location.address') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="location.address"
                             class="h-24"
@@ -105,7 +113,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.address.link') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.location.address-link') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.addressLink"
                             :errors="validation.errors.value['addressLink']"
@@ -113,7 +121,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.information.title') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.location.information') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="location.information"
                             class="h-24"
@@ -122,7 +130,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.location-edit-dlg.information.link') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.location.information-link') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.informationLink"
                             :errors="validation.errors.value['informationLink']"
@@ -168,11 +176,11 @@ const validation = useValidation(location, (value) => {
     const errors: Record<string, ValidationHint[]> = {};
     if (!value.name) {
         errors.name = errors.name || [];
-        errors.name.push({ key: t('views.events.edit.location-edit-dlg.validation.name'), params: {} });
+        errors.name.push({ key: t('views.events.edit.validation.missing-location-name'), params: {} });
     }
     if (!value.icon) {
         errors.icon = errors.icon || [];
-        errors.icon.push({ key: t('views.events.edit.location-edit-dlg.validation.icon'), params: {} });
+        errors.icon.push({ key: t('views.events.edit.validation.missing-location-icon'), params: {} });
     }
     return errors;
 });

@@ -10,7 +10,7 @@
                         {{ $t('views.events.admin-list.batch-edit.info') }}
                     </p>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.status') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.event.status') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.state"
                             :options="eventStates.options.value"
@@ -20,7 +20,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.name') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.event.name') }}</VInputLabel>
                         <VInputText
                             v-model="patch.name"
                             :errors="validation.errors.value['name']"
@@ -29,7 +29,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.category') }}</VInputLabel>
+                        <VInputLabel>{{ $t('domain.events.category') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.type"
                             :options="eventTypes.options.value"
@@ -39,7 +39,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.signup-type') }}</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.signup-type') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.signupType"
                             :options="eventSignupTypes.options.value"
@@ -49,7 +49,7 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.event-edit-view.description') }}</VInputLabel>
+                        <VInputLabel>{{ $t('views.events.edit.description') }}</VInputLabel>
                         <VInputTextArea
                             v-model="patch.description"
                             :errors="validation.errors.value['description']"

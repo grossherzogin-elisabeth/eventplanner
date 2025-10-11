@@ -10,7 +10,7 @@
             "{{ props.registration.registration.note }}"
         </p>
         <template v-if="props.registration.user">
-            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.registration-tooltip.information') }}</h4>
+            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.tooltip.information') }}</h4>
             <div class="mb-4 flex flex-wrap items-center gap-1">
                 <span
                     v-if="props.registration?.state === RegistrationSlotState.CONFIRMED"
@@ -39,7 +39,7 @@
                     Anreise am Vortag
                 </span>
             </div>
-            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.registration-tooltip.positions') }}</h4>
+            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.tooltip.positions') }}</h4>
             <div class="mb-4 flex flex-wrap items-center gap-1">
                 <span
                     v-for="p in props.registration.user.positionKeys"
@@ -57,7 +57,7 @@
                     {{ positions.get(props.registration.registration?.positionKey).name }}
                 </span>
             </div>
-            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.registration-tooltip.qualifications') }}</h4>
+            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.tooltip.qualifications') }}</h4>
             <div class="flex flex-wrap items-center gap-1">
                 <span
                     v-for="q in props.registration.user.qualifications"
@@ -76,7 +76,7 @@
             </div>
         </template>
         <p v-else>
-            {{ $t('views.events.edit.registration-tooltip.guest-info', { name: props.registration.name }) }}
+            {{ $t('views.events.edit.tooltip.guest-info', { name: props.registration.name }) }}
         </p>
     </div>
 </template>
