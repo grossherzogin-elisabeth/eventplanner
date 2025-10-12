@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto">
         <template #title>
-            <h1 v-if="createMode">{{ $t('views.events.edit.slot-edit-dlg.title.add') }}</h1>
-            <h1 v-else>{{ $t('views.events.edit.slot-edit-dlg.title.edit') }}</h1>
+            <h1 v-if="createMode">{{ $t('views.events.edit.actions.add-slot') }}</h1>
+            <h1 v-else>{{ $t('views.events.edit.actions.edit-slot') }}</h1>
         </template>
         <template #default>
             <div class="flex flex-1 flex-col px-4 pt-4 xs:px-8 lg:px-10">
