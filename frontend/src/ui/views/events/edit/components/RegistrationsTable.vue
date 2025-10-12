@@ -2,7 +2,6 @@
     <VTable
         :items="props.registrations"
         class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
-        :sortable="true"
         :page-size="-1"
     >
         <template #row="{ item }">

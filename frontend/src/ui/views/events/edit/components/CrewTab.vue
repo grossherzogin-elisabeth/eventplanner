@@ -117,7 +117,11 @@ function matchesPositionsFilter(value: ResolvedRegistrationSlot): boolean {
 }
 
 function matchesValidQualificationsFilter(value: ResolvedRegistrationSlot): boolean {
-    return filterValidQualifications.value !== true || (value.registration !== undefined && value.expiredQualifications.length === 0);
+    return (
+        filterValidQualifications.value !== true ||
+        (value.registration !== undefined && value.expiredQualifications.length === 0) ||
+        (value.registration === undefined && filterFreeSlots.value === true)
+    );
 }
 
 function matchesUnconfirmedFilter(value: ResolvedRegistrationSlot): boolean {
@@ -141,10 +145,10 @@ async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
     const slot = eventService.getOpenSlots(props.event).find((it) => it.positionKeys.includes(aggregate.position.key));
     if (!slot) {
         errorHandler.handleError({
-            title: t('domain.events.no-slot-for-position-error.title'),
-            message: t('domain.events.no-slot-for-position-error.message', { name: aggregate.name, position: aggregate.position.name }),
+            title: t('domain.event.no-slot-for-position-error.title'),
+            message: t('domain.event.no-slot-for-position-error.message', { name: aggregate.name, position: aggregate.position.name }),
             cancelText: t('generic.cancel'),
-            retryText: t('domain.events.no-slot-for-position-error.retry'),
+            retryText: t('domain.event.no-slot-for-position-error.retry'),
             retry: async () => {
                 const event = props.event;
                 event.slots.push({
