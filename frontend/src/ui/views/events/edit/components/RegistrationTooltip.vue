@@ -10,30 +10,59 @@
             "{{ props.registration.registration.note }}"
         </p>
         <template v-if="props.registration.user">
-            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.registration-tooltip.positions') }}</h4>
+            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.tooltip.information') }}</h4>
+            <div class="mb-4 flex flex-wrap items-center gap-1">
+                <span
+                    v-if="props.registration?.state === RegistrationSlotState.CONFIRMED"
+                    class="tag bg-green-container text-ongreen-container"
+                >
+                    <i class="fa-solid fa-check" />
+                    {{ $t('domain.registration.confirmed') }}
+                </span>
+                <span
+                    v-if="props.registration?.state === RegistrationSlotState.ASSIGNED"
+                    class="tag bg-error-container text-onerror-container"
+                >
+                    <i class="fa-solid fa-clock" />
+                    {{ $t('domain.registration.confirmation-pending') }}
+                </span>
+                <span v-if="!props.registration?.registration?.userKey" class="tag bg-secondary-container text-onsecondary-container">
+                    <i class="fa-solid fa-info-circle" />
+                    {{ $t('domain.registration.guest') }}
+                </span>
+                <span v-if="props.registration?.registration?.overnightStay" class="tag bg-secondary-container text-onsecondary-container">
+                    <i class="fa-solid fa-bed" />
+                    {{ $t('domain.registration.overnight-stay') }}
+                </span>
+                <span v-if="props.registration?.registration?.arrival" class="tag bg-secondary-container text-onsecondary-container">
+                    <i class="fa-solid fa-calendar-day" />
+                    {{ $t('domain.registration.arrival-on-day-before') }}
+                </span>
+            </div>
+            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.tooltip.positions') }}</h4>
             <div class="mb-4 flex flex-wrap items-center gap-1">
                 <span
                     v-for="p in props.registration.user.positionKeys"
                     :key="p"
                     :style="{ background: positions.get(p).color }"
-                    class="position cursor-pointer text-xs"
+                    class="position"
                 >
                     {{ positions.get(p).name }}
                 </span>
                 <span
                     v-if="props.registration.hasOverwrittenPosition"
-                    class="position cursor-pointer bg-error-container text-xs text-onerror-container line-through"
+                    class="position bg-error-container text-onerror-container line-through"
                 >
                     <i class="fa-solid fa-warning"></i>
                     {{ positions.get(props.registration.registration?.positionKey).name }}
                 </span>
             </div>
-            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.registration-tooltip.qualifications') }}</h4>
+            <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.tooltip.qualifications') }}</h4>
             <div class="flex flex-wrap items-center gap-1">
                 <span
                     v-for="q in props.registration.user.qualifications"
                     :key="q.qualificationKey"
-                    class="truncate whitespace-nowrap rounded-lg px-2 py-1 text-xs font-bold"
+                    class="tag"
                     :class="
                         props.registration.expiredQualifications.includes(q.qualificationKey)
                             ? 'bg-error-container text-onerror-container'
@@ -47,12 +76,13 @@
             </div>
         </template>
         <p v-else>
-            {{ $t('views.events.edit.registration-tooltip.guest-info', { name: props.registration.name }) }}
+            {{ $t('views.events.edit.tooltip.guest-info', { name: props.registration.name }) }}
         </p>
     </div>
 </template>
 <script lang="ts" setup>
 import type { ResolvedRegistrationSlot } from '@/domain';
+import { RegistrationSlotState } from '@/domain';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 

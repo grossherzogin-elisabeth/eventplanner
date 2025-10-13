@@ -1,0 +1,161 @@
+<template>
+    <VTable
+        :items="props.registrations"
+        class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+        :page-size="-1"
+    >
+        <template #row="{ item }">
+            <td class="w-0">
+                <span v-if="item.state === RegistrationSlotState.WAITING_LIST">
+                    <i class="fa-solid fa-hourglass-half opacity-25" />
+                </span>
+                <span v-else-if="item.state === RegistrationSlotState.CONFIRMED">
+                    <i class="fa-solid fa-user-check text-green opacity-60" />
+                </span>
+                <span v-else-if="item.state === RegistrationSlotState.ASSIGNED">
+                    <i class="fa-solid fa-user-clock opacity-25" />
+                </span>
+                <span v-else-if="item.state === RegistrationSlotState.OPEN">
+                    <i class="fa-solid fa-user-xmark text-error text-opacity-50" />
+                </span>
+            </td>
+            <template v-if="item.registration">
+                <td class="w-full lg:w-1/3">
+                    <VTooltip :delay="500">
+                        <template #default>
+                            <p class="mb-1 flex items-center gap-x-1 font-semibold">
+                                {{ item.name || $t('domain.registration.unknown-user') }}
+                            </p>
+                            <p v-if="item.registration?.note" class="mb-2 line-clamp-2 text-sm italic text-onsurface-variant lg:hidden">
+                                <i class="fa-solid fa-comment-dots" />
+                                {{ item.registration?.note.trim() }}
+                            </p>
+                            <p class="mb-1 flex items-center gap-x-1 gap-y-2">
+                                <span :style="{ background: item.position.color }" class="position text-xs">
+                                    {{ item.slot?.positionName || item.position.name }}
+                                </span>
+
+                                <template v-if="!item.user || item.user?.qualifications?.length === 0"></template>
+                                <span
+                                    v-else-if="item.expiredQualifications.length > 0"
+                                    class="whitespace-nowrap rounded-lg bg-red-container px-2 py-1 text-xs font-black text-onred-container"
+                                    :title="item.expiredQualifications.join(', ')"
+                                >
+                                    <i class="fa-solid fa-ban" />
+                                    {{ $t('domain.user.qualification.expired-count', { count: item.expiredQualifications.length }) }}
+                                </span>
+                                <span
+                                    v-else
+                                    class="whitespace-nowrap rounded-lg bg-green-container px-2 py-1 text-xs font-black text-ongreen-container"
+                                >
+                                    <i class="fa-solid fa-check" />
+                                    {{ $t('domain.user.qualification.all-valid') }}
+                                </span>
+
+                                <span v-if="!item.registration?.userKey" class="tag bg-secondary-container text-onsecondary-container">
+                                    <i class="fa-solid fa-info-circle" />
+                                    {{ $t('domain.registration.guest') }}
+                                </span>
+                                <span v-if="item.registration?.overnightStay" class="tag bg-secondary-container text-onsecondary-container">
+                                    <i class="fa-solid fa-bed" />
+                                    {{ $t('domain.registration.overnight-stay') }}
+                                </span>
+                                <span v-if="item.registration?.arrival" class="tag bg-secondary-container text-onsecondary-container">
+                                    <i class="fa-solid fa-calendar-day" />
+                                    {{ $t('domain.registration.arrival-on-day-before') }}
+                                </span>
+                            </p>
+                        </template>
+                        <template #tooltip>
+                            <RegistrationTooltip :registration="item" />
+                        </template>
+                    </VTooltip>
+                </td>
+                <td class="hidden w-2/3 overflow-hidden lg:table-cell">
+                    <span v-if="item.registration?.note" class="line-clamp-2 text-sm italic text-onsurface-variant">
+                        <i class="fa-solid fa-comment-dots" />
+                        {{ item.registration?.note.trim() }}
+                    </span>
+                </td>
+                <td class="w-0 lg:hidden"></td>
+            </template>
+            <td v-else colspan="2" class="w-full">
+                <p class="mb-1 font-semibold italic text-error opacity-50">
+                    {{ $t('domain.event.slot.empty') }}
+                </p>
+                <p v-if="item.slot" class="opacity-50">
+                    <span
+                        v-for="position in item.slot.positionKeys.map((it) => positions.get(it))"
+                        :key="position.key"
+                        :style="{ background: position.color }"
+                        class="position mr-1 text-xs"
+                    >
+                        {{ position.name }}
+                    </span>
+                </p>
+            </td>
+        </template>
+        <template #context-menu="{ item }">
+            <RouterLink
+                :to="{ name: Routes.UserDetails, params: { key: item.user?.key } }"
+                target="_blank"
+                class="context-menu-item"
+                :class="{ disabled: !item.user }"
+            >
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <span>{{ $t('views.events.edit.actions.show-user') }}</span>
+            </RouterLink>
+            <li v-if="item.slot" class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('removeFromCrew', item)">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
+            </li>
+            <li v-else class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('addToCrew', item)">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
+            </li>
+            <li class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('editRegistration', item)">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>{{ $t('views.events.edit.actions.edit-registration') }}</span>
+            </li>
+            <li v-if="item.slot" class="context-menu-item" @click="emit('editSlot', item)">
+                <i class="fa-solid fa-edit"></i>
+                <span>{{ $t('views.events.edit.actions.edit-slot') }}</span>
+            </li>
+            <li v-if="item.registration" class="context-menu-item text-error" @click="emit('deleteRegistration', item)">
+                <i class="fa-solid fa-trash-alt"></i>
+                <span>{{ $t('views.events.edit.actions.delete-registration') }}</span>
+            </li>
+            <li v-else class="context-menu-item text-error" @click="emit('deleteSlot', item)">
+                <i class="fa-solid fa-trash-alt"></i>
+                <span>{{ $t('views.events.edit.actions.delete-slot') }}</span>
+            </li>
+        </template>
+    </VTable>
+</template>
+<script lang="ts" setup>
+import type { Event, ResolvedRegistrationSlot } from '@/domain';
+import { RegistrationSlotState } from '@/domain';
+import { VTable, VTooltip } from '@/ui/components/common';
+import { usePositions } from '@/ui/composables/Positions.ts';
+import { Routes } from '@/ui/views/Routes.ts';
+import RegistrationTooltip from '@/ui/views/events/edit/components/RegistrationTooltip.vue';
+
+interface Props {
+    event: Event;
+    registrations: ResolvedRegistrationSlot[];
+}
+
+interface Emits {
+    (e: 'addToCrew', value: ResolvedRegistrationSlot): void;
+    (e: 'removeFromCrew', value: ResolvedRegistrationSlot): void;
+    (e: 'editRegistration', value: ResolvedRegistrationSlot): void;
+    (e: 'editSlot', value: ResolvedRegistrationSlot): void;
+    (e: 'deleteRegistration', value: ResolvedRegistrationSlot): void;
+    (e: 'deleteSlot', value: ResolvedRegistrationSlot): void;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+
+const positions = usePositions();
+</script>

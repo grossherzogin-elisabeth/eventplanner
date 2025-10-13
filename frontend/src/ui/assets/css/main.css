@@ -11,6 +11,7 @@
 @import 'styling/pagination.css';
 @import 'styling/scrollbar.css';
 @import 'styling/status-panels.css';
+@import 'styling/tags.css';
 
 @import 'domain/role.css';
 @import 'domain/permission.css';

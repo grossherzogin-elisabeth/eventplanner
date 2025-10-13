@@ -1,4 +1,5 @@
 import type { Event, Position, PositionKey, QualificationKey, Registration, RegistrationKey, Slot, User, UserKey } from '@/domain';
+import { EventSignupType, RegistrationSlotState } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class RegistrationService {
@@ -16,7 +17,17 @@ export class RegistrationService {
         // add registrations
         event.registrations.forEach((registration: Registration) => {
             const user = userMap.get(registration.userKey || 'none');
+            const slot = slotMap.get(registration.key);
+            let state = RegistrationSlotState.WAITING_LIST;
+            if (slot !== undefined || event.signupType === EventSignupType.Open) {
+                if (registration.confirmed) {
+                    state = RegistrationSlotState.CONFIRMED;
+                } else {
+                    state = RegistrationSlotState.ASSIGNED;
+                }
+            }
             resolved.push({
+                state: state,
                 position: positionMap.get(registration.positionKey) || {
                     key: registration.positionKey,
                     name: registration.positionKey,
@@ -27,7 +38,7 @@ export class RegistrationService {
                 name: user ? `${user.nickName || user.firstName} ${user.lastName}` : registration.name || '',
                 registration: registration,
                 user: user,
-                slot: slotMap.get(registration.key),
+                slot: slot,
                 expiredQualifications: this.filterExpiredQualifications(user, event.end),
                 hasOverwrittenPosition: this.hasOverwrittenPosition(registration, user),
             });
@@ -37,6 +48,7 @@ export class RegistrationService {
             .filter((slot) => !slot.assignedRegistrationKey)
             .forEach((slot) =>
                 resolved.push({
+                    state: RegistrationSlotState.OPEN,
                     position: positionMap.get(slot.positionKeys[0]) || {
                         key: slot.positionKeys[0],
                         name: slot.positionKeys[0],
