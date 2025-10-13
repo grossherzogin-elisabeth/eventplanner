@@ -24,7 +24,10 @@
                         <span class="flex-grow">
                             {{ formatDateRange(props.event.start, props.event.end) }}
                         </span>
-                        <span>{{ props.event.assignedUserCount }} Crew</span>
+                        <span v-if="props.event.signupType === EventSignupType.Open || props.event.state !== EventState.Planned">
+                            {{ props.event.registrations.length }} Anmeldungen
+                        </span>
+                        <span v-else>{{ props.event.assignedUserCount }} Crew</span>
                     </p>
                     <div class="flex flex-col items-stretch gap-6">
                         <div class="flex flex-grow flex-col flex-wrap gap-2 sm:flex-row">
@@ -76,6 +79,7 @@
 <script lang="ts" setup>
 import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
+import { EventSignupType, EventState } from '@/domain';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { Routes } from '@/ui/views/Routes';
 
