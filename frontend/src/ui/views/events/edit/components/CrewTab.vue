@@ -51,8 +51,7 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { hasAnyOverlap } from '@/common';
 import type { Event, PositionKey, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
-import { SlotCriticality } from '@/domain';
-import { EventSignupType, RegistrationSlotState } from '@/domain';
+import { EventSignupType, RegistrationSlotState, SlotCriticality } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import { useErrorHandling, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
@@ -137,8 +136,12 @@ async function init(): Promise<void> {
 
 async function fetchCrew(): Promise<void> {
     const all = await eventUseCase.resolveRegistrations(props.event);
-    crew.value = eventAdminUseCase.filterForCrew(all);
-    registrations.value = eventAdminUseCase.filterForWaitingList(all);
+    if (props.event.signupType === EventSignupType.Open) {
+        registrations.value = all;
+    } else {
+        crew.value = eventAdminUseCase.filterForCrew(all);
+        registrations.value = eventAdminUseCase.filterForWaitingList(all);
+    }
 }
 
 async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
