@@ -57,7 +57,9 @@ export function useQuery<T = string | number | boolean | string[]>(name: string,
         } else if (Array.isArray(defaultValue)) {
             const value = route.query[name] as string;
             if (value !== undefined && value !== null) {
-                parameter.value = decodeURIComponent(value).split(',');
+                parameter.value = decodeURIComponent(value)
+                    .split(',')
+                    .filter((it) => it.trim().length > 0);
             }
         } else if (typeof defaultValue === 'string') {
             const value = route.query[name] as string;
