@@ -1,6 +1,5 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
 import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
-import { EventType } from '@/domain';
 import { EventSignupType, EventState, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
@@ -254,9 +253,6 @@ export class EventService {
         const dayEnd = cropToPrecision(event.end, 'days');
         event.days = new Date(dayEnd.getTime() - dayStart.getTime()).getDate();
 
-        if ([EventType.MultiDayEvent, EventType.WeekendEvent].includes(event.type)) {
-            event.registrations.forEach((r) => (r.overnightStay = true));
-        }
         return event;
     }
 }
