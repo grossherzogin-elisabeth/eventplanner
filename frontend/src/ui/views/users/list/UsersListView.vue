@@ -21,96 +21,20 @@
         </VTabs>
 
         <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
-            <ContextMenuButton
-                anchor-align-x="left"
-                dropdown-position-x="right"
-                class="btn-tag"
-                :class="{ active: filterPositions.length > 0 }"
-            >
-                <template #icon>
-                    <span v-if="filterPositions.length === 0">Nach Positionen filtern...</span>
-                    <span v-else-if="filterPositions.length > 4">{{ filterPositions.length }} Positionen</span>
-                    <span v-else class="block max-w-64 truncate">
-                        {{
-                            filterPositions
-                                .map(positions.get)
-                                .map((it) => it.name)
-                                .join(', ')
-                        }}
-                    </span>
-                </template>
-                <template #default>
-                    <ul>
-                        <li v-if="filterPositions.length === 0" class="context-menu-item">
-                            <i class="fa-solid fa-check"></i>
-                            <span>Alle Positionen</span>
-                        </li>
-                        <li v-else class="context-menu-item" @click="filterPositions = []">
-                            <i class="w-4"></i>
-                            <span>Alle Positionen</span>
-                        </li>
-                        <template v-for="position in positions.all.value" :key="position.key">
-                            <li
-                                v-if="filterPositions.includes(position.key)"
-                                class="context-menu-item"
-                                @click="filterPositions = filterPositions.filter((it) => it !== position.key)"
-                            >
-                                <i class="fa-solid fa-check w-4"></i>
-                                <span>{{ position.name }}</span>
-                            </li>
-                            <li v-else class="context-menu-item" @click="filterPositions.push(position.key)">
-                                <i class="w-4"></i>
-                                <span>{{ position.name }}</span>
-                            </li>
-                        </template>
-                    </ul>
-                </template>
-            </ContextMenuButton>
-            <button class="btn-tag" :class="{ active: filterOnlyActive }" @click="filterOnlyActive = !filterOnlyActive">
-                <span>Aktive Stammcrew</span>
-            </button>
-            <button
-                class="btn-tag"
-                :class="{ active: filterExpiredQualifications }"
-                @click="filterExpiredQualifications = !filterExpiredQualifications"
-            >
-                <span>Abgelaufene Qualifikationen</span>
-            </button>
-            <ContextMenuButton anchor-align-x="left" dropdown-position-x="right" class="btn-tag" :class="{ active: filterEventKey }">
-                <template #icon>
-                    <span v-if="!filterEventKey">Nach Veranstaltungen filtern...</span>
-                    <span v-else class="block max-w-64 truncate"> Nimmt teil an {{ filterEvent?.name }} </span>
-                </template>
-                <template #default>
-                    <ul>
-                        <li v-if="!filterEventKey" class="context-menu-item">
-                            <i class="fa-solid fa-check"></i>
-                            <span>Alle Reisen</span>
-                        </li>
-                        <li v-else class="context-menu-item" @click="filterEventKey = ''">
-                            <i class="w-4"></i>
-                            <span>Alle Reisen</span>
-                        </li>
-                        <template v-for="event in events" :key="event.key">
-                            <li v-if="filterEventKey === event.key" class="context-menu-item" @click="filterEventKey = ''">
-                                <i class="fa-solid fa-check w-4"></i>
-                                <span class="truncate">{{ event.name }}</span>
-                            </li>
-                            <li v-else class="context-menu-item" @click="filterEventKey = event.key">
-                                <i class="w-4"></i>
-                                <span class="truncate">{{ event.name }}</span>
-                            </li>
-                        </template>
-                    </ul>
-                </template>
-            </ContextMenuButton>
-            <button
-                class="btn-tag"
-                :class="{ active: filterPendingVerification }"
-                @click="filterPendingVerification = !filterPendingVerification"
-            >
-                <span>Verifizierung ausstehend</span>
-            </button>
+            <FilterMultiselect v-model="filterPositions" placeholder="Alle Positionen" :options="positions.options.value" />
+            <FilterToggle v-model="filterOnlyActive" label="Aktive Stammcrew" />
+            <FilterToggle v-model="filterExpiredQualifications" label="Abgelaufene Qualifikationen" />
+            <FilterSelect
+                v-model="filterEventKey"
+                :options="
+                    events.map((it) => ({
+                        label: it.name,
+                        value: it.key,
+                    }))
+                "
+                placeholder="Alle Veranstaltungen"
+            />
+            <FilterToggle v-model="filterPendingVerification" label="Verifizierung ausstehend" />
         </div>
 
         <div class="w-full">
@@ -292,8 +216,9 @@ import { Permission } from '@/domain';
 import { EventType, Role } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VMultiSelectActions } from '@/ui/components/common';
-import { ContextMenuButton, VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
+import { VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
+import { FilterMultiselect, FilterSelect, FilterToggle } from '@/ui/components/filters';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useAuthUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useEventService, useUserService } from '@/ui/composables/Domain.ts';

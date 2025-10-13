@@ -1,0 +1,4 @@
+user:
+  qualification:
+    all-valid: 'Alle gültig'
+    expired-count: '{count} abgelaufene'

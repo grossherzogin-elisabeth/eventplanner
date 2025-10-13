@@ -61,40 +61,29 @@ events:
       message: 'Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event} absagen möchtest? Du hast dann keinen Anspruch mehr auf eine Teilnahme an der Veranstaltung und dein Platz wird an eine andere Person vergeben.'
       submit: 'Teilnahme absagen'
   edit:
-    crew-editor:
-      crew: 'Crew'
-      secure-crew: 'Sichere Besatzung'
-      add-to-crew: 'Zur Crew hinzufügen'
-      empty-crew:
-        title: 'Hier ist noch nichts...'
-        desc: 'Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.'
-      waiting-list: 'Warteliste'
-      move-to-waiting-list: 'Auf Warteliste verschieben'
-      delete-registration: 'Anmeldung löschen'
-      empty-waitinglist:
-        title: 'Die Warteliste ist leer...'
-        desc: 'Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Veranstaltung anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden.'
-      assign-error:
-        title: 'Zuweisung nicht möglich'
-        message: '{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die Position {position} gibt. Du kannst entweder einen passenden Slot freigeben, indem du jemand anderes aus der Crew entfernst oder einen neuen Slot für diese Veranstaltung hinzufügen.'
-        retry: 'Slot hinzufügen'
-    event-edit-view:
-      info-draft: 'Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen.'
-      info-canceled: 'Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab Reisedaten zurücknehmen.'
-      info-missing-crew: 'Die Voraussetzungen für eine sichere Mindestbesatzung für diese Veranstaltung sind noch nicht erfüllt!'
-      status: 'Status'
-      name: 'Veranstaltungsname'
-      category: 'Kategorie'
-      signup-type: 'Anmeldetyp'
-      description: 'Beschreibung'
-      start-date: 'Startdatum'
-      crew-on-board: 'Crew an Bord'
-      end-date: 'Enddatum'
-      crew-off-board: 'Crew von Bord'
-      add-registration: 'Anmeldung hinzufügen'
-      add-slot: 'Crewslot hinzufügen'
-      add-location: 'Reiseabschnitt hinzufügen'
+    filter:
+      all-positions: 'Alle Positionen'
+      free-slots: 'Freie Slots'
+      valid-qualifications: 'Gültige Qualifikationen'
+      pending-confirmation: 'Teilnahmebestätigung ausstehend'
+    actions:
+      show-user: 'Nutzer anzeigen'
       contact-crew: 'Crew kontaktieren'
+      move-to-waiting-list: 'Auf Warteliste setzen'
+      add-to-crew: 'Zur Crew hinzufügen'
+      add-registration: 'Anmeldung hinzufügen'
+      delete-registration: 'Anmeldung löschen'
+      edit-registration: 'Anmeldung bearbeiten'
+      add-slot: 'Crewslot hinzufügen'
+      delete-slot: 'Crewslot löschen'
+      edit-slot: 'Crewslot bearbeiten'
+      duplicate-slot: 'Crewslot duplizieren'
+      add-location: 'Reiseabschnitt hinzufügen'
+      delete-location: 'Reiseabschnitt löschen'
+      edit-location: 'Reiseabschnitt bearbeiten'
+      edit-start-location: 'Starthafen bearbeiten'
+      delete-eta: 'ETA löschen'
+      delete-etd: 'ETD löschen'
       generate-imo-list: 'IMO Liste generieren'
       generate-consumption-list: 'Verzehrliste generieren'
       generate-captain-list: 'Kapitänsliste generieren'
@@ -102,86 +91,50 @@ events:
       publish-crew: 'Crew veröffentlichen'
       reset-crew: 'Crew zurücksetzen'
       cancel-event: 'Veranstaltung absagen'
-      unsaved-changes:
-        title: 'Änderungen verwerfen?'
-        message: 'Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen verworfen. Möchtest du fortfahren?'
-      admin-details:
-        tab:
-          data: 'Reisedaten'
-          positions: 'Crew verwalten'
-          locations: 'Reiseroute'
-          slots: 'Crew Slots'
-    location-edit-dlg:
-      edit-start-port: 'Starthafen bearbeiten'
-      add-location: 'Reiseabschnitt hinzufügen'
-      edit-location: 'Reiseabschnitt bearbeiten'
-      name: 'Name'
-      icon: 'Icon'
-      icon-placeholder: 'fa-anchor'
-      delete-eta: 'ETA löschen'
-      delete-etd: 'ETD löschen'
-      address:
-        title: 'Liegeplatz'
-        link: 'Liegeplatz Link'
-      information:
-        title: 'Weitere Informationen'
-        link: 'Weitere Informationen Link'
-      validation:
-        name: 'Bitte gib einen Namen an'
-        icon: 'Bitte wähle ein Icon'
-    locations-table:
-      eta: 'ETA:'
-      etd: 'ETD:'
-      edit: 'Abschnitt bearbeiten'
-      move-up: 'Nach oben verschieben'
-      move-down: 'Nach unten verschieben'
-      delete: 'Abschnitt löschen'
-    registration-edit-dlg:
+    secure-crew: 'Sichere Besatzung'
+    empty-crew:
+      title: 'Hier ist noch nichts...'
+      desc: 'Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese 
+        Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.'
+    empty-waitinglist:
+      title: 'Die Warteliste ist leer...'
+      desc: 'Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Veranstaltung 
+        anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden.'
+    info-draft: 'Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen 
+      freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen.'
+    info-canceled: 'Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage 
+      im Tab Reisedaten zurücknehmen.'
+    info-missing-crew: 'Die Voraussetzungen für eine sichere Mindestbesatzung für diese Veranstaltung sind noch nicht 
+      erfüllt!'
+    unsaved-changes:
+      title: 'Änderungen verwerfen?'
+      message: 'Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen
+       verworfen. Möchtest du fortfahren?'
+    tab:
+      crew: 'Crew'
+      data: 'Reisedaten'
+      positions: 'Crew verwalten'
+      locations: 'Reiseroute'
+      slots: 'Crew Slots'
+    tooltip:
+      positions: 'Positionen'
+      information: 'Anmeldung'
+      qualifications: 'Qualifikationen'
+      guest-info: '{name} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.'
+    validation:
+      missing-location-name: 'Bitte gib einen Namen an'
+      missing-location-icon: 'Bitte wähle ein Icon'
+    edit-registration:
       title: 'Anmeldung von {name} {lastName}'
       guest-title: 'Gastcrewanmeldung'
-      name: 'Name'
-      position: 'Position'
-      overnightStay: 'Übernachtung an Bord'
-      arrival: 'Anreise am'
-      note: 'Notiz'
       no-qualification: '{name} hat keine Qualifikation für die Position {position}'
-      guest-warning: '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft werden.'
+      guest-warning: '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft
+       werden.'
       qualifications: '{name} hat zum Zeitpunkt der Reise die folgenden Qualifikationen:'
       select-position: 'Bitte wähle eine Position'
       select-user: 'Bitte wähle eine Stammcrew Mitglied'
-    registration-row:
-      show-user: 'Nutzer anzeigen'
-      move-to-waiting-list: 'Auf Warteliste setzen'
-      add-to-crew: 'Zur Crew hinzufügen'
-      edit-registration: 'Anmeldung bearbeiten'
-      edit-slot: 'Slot bearbeiten'
-      delete-registration: 'Anmeldung löschen'
-      delete-slot: 'Slot löschen'
-    registration-tooltip:
-      positions: 'Positionen'
-      qualifications: 'Qualifikationen'
-      guest-info: '{name} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.'
-    slot-edit-dlg:
-      title:
-        add: 'Slot hinzufügen'
-        edit: 'Slot bearbeiten'
-      position: 'Position'
-      display-name: 'Anzeigename'
-      criticality:
-        label: 'Kritikalität'
-        values:
-          required: 'Notwendig'
-          important: 'Wichtig'
-          optional: 'Optional'
-      alternative-positions: 'Alternative Positionen'
-    slots-table:
-      registration-id: 'Anmeldungs ID'
-      free: 'frei'
-      edit-slot: 'Slot bearbeiten'
-      duplicate-slot: 'Slot duplizieren'
-      move-up: 'Nach oben verschieben'
-      move-down: 'Nach unten verschieben'
-      delete-slot: 'Slot löschen'
+    registration-id: 'Anmeldungs ID'
+    free: 'frei'
   list:
     tab:
       future: 'Zukünftige'

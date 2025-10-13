@@ -27,93 +27,18 @@
         </VTabs>
 
         <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
-            <ContextMenuButton
-                anchor-align-x="left"
-                dropdown-position-x="right"
-                class="btn-tag"
-                :class="{ active: filterEventType.length > 0 }"
-            >
-                <template #icon>
-                    <span v-if="filterEventType.length === 0">{{ $t('views.events.admin-list.filter.all-events') }}</span>
-                    <span v-else class="block max-w-64 truncate">
-                        {{ filterEventType.map(eventTypes.getName).join(', ') }}
-                    </span>
-                </template>
-                <template #default>
-                    <ul>
-                        <li v-if="filterEventType.length === 0" class="context-menu-item">
-                            <i class="fa-solid fa-check"></i>
-                            <span>{{ $t('views.events.admin-list.filter.all-events') }}</span>
-                        </li>
-                        <li v-else class="context-menu-item" @click="filterEventType = []">
-                            <i class="w-4"></i>
-                            <span>{{ $t('views.events.admin-list.filter.all-events') }}</span>
-                        </li>
-                        <template v-for="eventType in eventTypes.options.value" :key="eventType.value">
-                            <li
-                                v-if="filterEventType.includes(eventType.value)"
-                                class="context-menu-item"
-                                @click="filterEventType = filterEventType.filter((it) => it !== eventType.value)"
-                            >
-                                <i class="fa-solid fa-check w-4"></i>
-                                <span>{{ eventType.label }}</span>
-                            </li>
-                            <li v-else class="context-menu-item" @click="filterEventType.push(eventType.value)">
-                                <i class="w-4"></i>
-                                <span>{{ eventType.label }}</span>
-                            </li>
-                        </template>
-                    </ul>
-                </template>
-            </ContextMenuButton>
-            <ContextMenuButton
-                anchor-align-x="left"
-                dropdown-position-x="right"
-                class="btn-tag"
-                :class="{ active: filterEventStates.length > 0 }"
-            >
-                <template #icon>
-                    <span v-if="filterEventStates.length === 0">{{ $t('views.events.admin-list.filter.all-status') }}</span>
-                    <span v-else-if="filterEventStates.length > 4">
-                        {{ filterEventStates.length }} {{ $t('views.events.admin-list.filter.status') }}
-                    </span>
-                    <span v-else class="block max-w-64 truncate">
-                        {{ filterEventStates.map(eventStates.getName).join(', ') }}
-                    </span>
-                </template>
-                <template #default>
-                    <ul>
-                        <li v-if="filterEventStates.length === 0" class="context-menu-item">
-                            <i class="fa-solid fa-check"></i>
-                            <span>{{ $t('views.events.admin-list.filter.all-status') }}</span>
-                        </li>
-                        <li v-else class="context-menu-item" @click="filterEventStates = []">
-                            <i class="w-4"></i>
-                            <span>{{ $t('views.events.admin-list.filter.all-status') }}</span>
-                        </li>
-                        <template v-for="eventStatus in eventStates.options.value" :key="eventStatus.value">
-                            <li
-                                v-if="filterEventStates.includes(eventStatus.value)"
-                                class="context-menu-item"
-                                @click="filterEventStates = filterEventStates.filter((it) => it !== eventStatus.value)"
-                            >
-                                <i class="fa-solid fa-check w-4"></i>
-                                <span>{{ eventStatus.label }}</span>
-                            </li>
-                            <li v-else class="context-menu-item" @click="filterEventStates.push(eventStatus.value)">
-                                <i class="w-4"></i>
-                                <span>{{ eventStatus.label }}</span>
-                            </li>
-                        </template>
-                    </ul>
-                </template>
-            </ContextMenuButton>
-            <button class="btn-tag" :class="{ active: filterFreeSlots }" @click="filterFreeSlots = !filterFreeSlots">
-                <span>{{ $t('views.events.admin-list.filter.free-slots') }}</span>
-            </button>
-            <button class="btn-tag" :class="{ active: filterWaitinglist }" @click="filterWaitinglist = !filterWaitinglist">
-                <span>{{ $t('views.events.admin-list.filter.waitinglist') }}</span>
-            </button>
+            <FilterMultiselect
+                v-model="filterEventType"
+                :placeholder="$t('views.events.admin-list.filter.all-events')"
+                :options="eventTypes.options.value"
+            />
+            <FilterMultiselect
+                v-model="filterEventStates"
+                :placeholder="$t('views.events.admin-list.filter.all-status')"
+                :options="eventStates.options.value"
+            />
+            <FilterToggle v-model="filterFreeSlots" :label="$t('views.events.admin-list.filter.free-slots')" />
+            <FilterToggle v-model="filterWaitinglist" :label="$t('views.events.admin-list.filter.waitinglist')" />
         </div>
 
         <div class="w-full">
@@ -398,11 +323,11 @@ import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
 import { EventState, Permission, SlotCriticality } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { ContextMenuButton, VConfirmationDialog, VMultiSelectActions, VTable, VTabs, VTooltip } from '@/ui/components/common';
-import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
+import { VConfirmationDialog, VMultiSelectActions, VSearchButton, VTable, VTabs, VTooltip } from '@/ui/components/common';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
+import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import {
     useAuthUseCase,

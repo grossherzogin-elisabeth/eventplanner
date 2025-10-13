@@ -22,6 +22,7 @@ export { default as VInputSlider } from './input/VInputSlider.vue';
 export { default as VInputSelect } from './input/VInputSelect.vue';
 export { default as VInputText } from './input/VInputText.vue';
 export { default as VInputTextArea } from './input/VInputTextArea.vue';
+export { default as VSearchButton } from './input/VSearchButton.vue';
 export { default as VInputFile } from './input/VInputFile.vue';
 export { default as VInputTime } from './input/VInputTime.vue';
 export { default as VLoadingSpinner } from './loading/VLoadingSpinner.vue';

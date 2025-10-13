@@ -7,7 +7,7 @@
         :anchor="element"
         class="pointer-events-none pt-4"
         min-width="0rem"
-        max-width="min(25rem, 90vw)"
+        max-width="min(26rem, 90vw)"
         anchor-align-x="center"
         anchor-align-y="center"
         dropdown-position-x="center"
