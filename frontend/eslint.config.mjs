@@ -1,13 +1,15 @@
-import vueTsEslintConfig from '@vue/eslint-config-typescript';
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import pluginVue from 'eslint-plugin-vue';
+import { globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
-export default [
+export default defineConfigWithVueTs([
+    globalIgnores(['*.yml']),
     ...tseslint.configs.strict,
     ...tseslint.configs.stylistic,
-    ...pluginVue.configs['flat/recommended'],
-    ...vueTsEslintConfig(),
+    pluginVue.configs['flat/recommended'],
+    vueTsConfigs.recommendedTypeChecked,
     eslintConfigPrettier,
     {
         rules: {
@@ -22,4 +24,4 @@ export default [
             '@typescript-eslint/explicit-function-return-type': ['error'],
         },
     },
-];
+]);
