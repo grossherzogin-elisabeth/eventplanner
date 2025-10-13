@@ -24,12 +24,14 @@ event:
 registration:
   unknown-user: 'Unbekannter Nutzer'
   guest: 'Gastcrew'
-  overnight-stay: 'Übernachtung'
+  overnight-stay: 'Übernachtung an Bord'
   arrival-on-day-before: 'Anreise am Vortag'
   arrival: 'Anreise am'
   name: 'Name'
   position: 'Position'
   note: 'Notiz'
+  confirmed: 'Teilnahme bestätigt'
+  confirmation-pending: 'Bestätigung austehend'
 location:
   eta: 'ETA'
   etd: 'ETD'

@@ -17,26 +17,26 @@
                     class="tag bg-green-container text-ongreen-container"
                 >
                     <i class="fa-solid fa-check" />
-                    Teilnahme bestätigt
+                    {{ $t('domain.registration.confirmed') }}
                 </span>
                 <span
                     v-if="props.registration?.state === RegistrationSlotState.ASSIGNED"
                     class="tag bg-error-container text-onerror-container"
                 >
                     <i class="fa-solid fa-clock" />
-                    Bestätigt ausstehend
+                    {{ $t('domain.registration.confirmation-pending') }}
                 </span>
                 <span v-if="!props.registration?.registration?.userKey" class="tag bg-secondary-container text-onsecondary-container">
                     <i class="fa-solid fa-info-circle" />
-                    Gastcrew
+                    {{ $t('domain.registration.guest') }}
                 </span>
                 <span v-if="props.registration?.registration?.overnightStay" class="tag bg-secondary-container text-onsecondary-container">
                     <i class="fa-solid fa-bed" />
-                    Übernachtung
+                    {{ $t('domain.registration.overnight-stay') }}
                 </span>
                 <span v-if="props.registration?.registration?.arrival" class="tag bg-secondary-container text-onsecondary-container">
                     <i class="fa-solid fa-calendar-day" />
-                    Anreise am Vortag
+                    {{ $t('domain.registration.arrival-on-day-before') }}
                 </span>
             </div>
             <h4 class="mb-2 text-sm font-bold">{{ $t('views.events.edit.tooltip.positions') }}</h4>

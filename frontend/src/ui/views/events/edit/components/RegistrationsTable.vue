@@ -35,13 +35,7 @@
                                     {{ item.slot?.positionName || item.position.name }}
                                 </span>
 
-                                <span
-                                    v-if="!item.user || item.user?.qualifications?.length === 0"
-                                    class="whitespace-nowrap rounded-lg bg-surface-container-highest px-2 py-1 text-xs font-black text-onsurface"
-                                >
-                                    <i class="fa-solid fa-question-circle" />
-                                    {{ $t('generic.no-information') }}
-                                </span>
+                                <template v-if="!item.user || item.user?.qualifications?.length === 0"></template>
                                 <span
                                     v-else-if="item.expiredQualifications.length > 0"
                                     class="whitespace-nowrap rounded-lg bg-red-container px-2 py-1 text-xs font-black text-onred-container"
