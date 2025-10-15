@@ -116,6 +116,13 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @GetMapping("/export/templates")
+    public ResponseEntity<List<String>> getExportTemplates() {
+        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var templates = eventExportUseCase.getAvailableTemplates(signedInUser);
+        return ResponseEntity.ok(templates);
+    }
+
     @GetMapping("/{eventKey}/export/{templateName}")
     public ResponseEntity<Resource> exportEvent(
         @PathVariable("eventKey") String eventKey,

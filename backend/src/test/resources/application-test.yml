@@ -40,7 +40,7 @@ notifications:
     enabled: true
 
 data:
-  db-url: jdbc:sqlite:src/test/resources/eventplanner-test.db
+  directory: src/test/resources
 
 server:
   protocol: http

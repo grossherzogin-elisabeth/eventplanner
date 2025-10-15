@@ -19,11 +19,9 @@ export interface EventRepository {
 
     createEvent(event: Event): Promise<Event>;
 
-    downloadImoList(event: Event): Promise<Blob>;
+    getExportTemplates(): Promise<string[]>;
 
-    downloadConsumptionList(event: Event): Promise<Blob>;
-
-    downloadCaptainList(event: Event): Promise<Blob>;
+    exportEvent(event: Event, template: string): Promise<Blob>;
 
     optimizeSlots(event: Event): Promise<Slot[]>;
 }

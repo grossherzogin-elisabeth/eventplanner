@@ -40,6 +40,9 @@ public class ApplicationProperties {
     @Value("${email.recipients-whitelist}")
     private String emailRecipientsWhitelist;
 
+    @Value("${data.directory}")
+    private String dataDirectory;
+
     public record NotificationProperties(
         @NonNull String name,
         boolean enabled

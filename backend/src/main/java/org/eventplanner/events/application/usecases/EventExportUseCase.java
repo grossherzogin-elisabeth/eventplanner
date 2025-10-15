@@ -3,16 +3,17 @@ package org.eventplanner.events.application.usecases;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eventplanner.common.StringUtils;
-import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.services.EventMatrixExportService;
@@ -26,8 +27,10 @@ import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -43,10 +46,30 @@ public class EventExportUseCase {
     private final EventService eventService;
     private final ExcelExportService excelExportService;
     private final EventMatrixExportService eventMatrixExportService;
-    private final EventRepository eventRepository;
     private final UserService userService;
     private final PositionRepository positionRepository;
     private final QualificationRepository qualificationRepository;
+
+    @Value("${templates.directory}")
+    private String templatesDirectory;
+
+    public @NonNull List<String> getAvailableTemplates(@NonNull final SignedInUser signedInUser) {
+        var dir = new File(templatesDirectory);
+        if (!dir.exists()) {
+            log.warn("Template directory {} does not exist", templatesDirectory);
+            return Collections.emptyList();
+        }
+        var files = dir.listFiles();
+        if (files == null) {
+            log.info("Template directory {} does not contain any template", templatesDirectory);
+            return Collections.emptyList();
+        }
+        return Arrays.stream(files)
+            .map(File::getName)
+            .filter(name -> name.endsWith(".xlsx"))
+            .map(name -> name.substring(0, name.lastIndexOf(".")))
+            .toList();
+    }
 
     public @NonNull ByteArrayOutputStream exportEvent(
         @NonNull final SignedInUser signedInUser,
@@ -58,8 +81,10 @@ public class EventExportUseCase {
 
         var event = eventService.getEvent(signedInUser, eventKey);
         var model = getEventExportModel(event);
-        var template = resolveResourceFile("templates/excel/" + templateName + ".xlsx")
-            .orElseThrow(() -> new NoSuchElementException("Cannot find template file"));
+        var template = new File(templatesDirectory + "/" + templateName + ".xlsx");
+        if (!template.exists()) {
+            throw new NoSuchElementException("Cannot find template file");
+        }
         log.info("Generating excel export {} for event {}", templateName, event.getName());
         return excelExportService.exportToExcel(template, model);
     }
@@ -82,8 +107,18 @@ public class EventExportUseCase {
 
         Map<String, Object> model = new HashMap<>();
         model.put("event", event);
-        model.put("crew", resolveRegistrations(event, users, positions, true));
-        model.put("waitinglist", resolveRegistrations(event, users, positions, false));
+        var assignedRegistrations = resolveRegistrations(event, users, positions, true);
+        var unassignedRegistrations = resolveRegistrations(event, users, positions, false);
+        if (event.getSignupType().equals(EventSignupType.ASSIGNMENT)) {
+            model.put("crew", assignedRegistrations);
+            model.put("waitinglist", unassignedRegistrations);
+        } else {
+            var allRegistrations = new ArrayList<>();
+            allRegistrations.addAll(assignedRegistrations);
+            allRegistrations.addAll(unassignedRegistrations);
+            model.put("crew", allRegistrations);
+            model.put("waitinglist", Collections.emptyList());
+        }
         model.put(
             "qualifications", qualificationRepository.findAll().stream()
                 .collect(Collectors.toMap(it -> it.getKey().value(), it -> it))
@@ -136,19 +171,6 @@ public class EventExportUseCase {
         }
 
         return crew;
-    }
-
-    private @NonNull Optional<File> resolveResourceFile(@NonNull String path) {
-        try {
-            var url = getClass().getClassLoader().getResource(path);
-            if (url == null) {
-                return Optional.empty();
-            }
-            return Optional.of(new File(url.toURI()));
-        } catch (Exception e) {
-            log.error("Error read resource file", e);
-        }
-        return Optional.empty();
     }
 
     @Getter

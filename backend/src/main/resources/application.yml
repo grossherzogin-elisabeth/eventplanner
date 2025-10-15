@@ -36,8 +36,8 @@ notifications:
     enabled: false
 
 email:
-  # If not empty, email notifications will only be sent to these email addresses
   enabled: true
+  # If not empty, email notifications will only be sent to these email addresses
   recipients-whitelist: ${EMAIL_WHITELIST:}
   title-prefix: ''
 
@@ -54,21 +54,26 @@ security:
   # temporary disabled until further investigation
   enable-csrf: false
 
+templates:
+  directory: ${data.directory}/templates/excel
+
 data:
   directory: ${DATA_DIRECTORY:data}
+  # the password to use for encrypting sensible data
   encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
+  # to rotate the encryption password we have to read all encrypted data with the old secret and then reencrypt with
+  # the new one
   encryption-rotation:
     rotate-users: ${ROTATE_USER_ENCRYPTION:false}
     old-secret: ${DATA_ENCRYPTION_PASSWORD_OLD:}
     new-secret: ${DATA_ENCRYPTION_PASSWORD:}
-  db-url: jdbc:sqlite:${data.directory}/eventplanner.db
 
 spring:
   datasource:
     hikari:
       maximum-pool-size: 1
     driver-class-name: org.sqlite.JDBC
-    url: ${data.db-url}
+    url: jdbc:sqlite:${data.directory}/eventplanner.db
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
     hibernate:
@@ -77,7 +82,7 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    url: ${data.db-url}
+    url: jdbc:sqlite:${data.directory}/eventplanner.db
   security:
     oauth2:
       client:
