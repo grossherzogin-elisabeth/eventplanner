@@ -85,7 +85,7 @@ public class ExcelExportService {
                             var directives = findDirectivesInString(cellContent);
                             content.append(directives);
                         } catch (Exception e) {
-                            // ignore
+                            log.debug("Failed to extract directives from cell content", e);
                         }
                     }
                 }
@@ -124,13 +124,24 @@ public class ExcelExportService {
                 try {
                     sheetDirectives = renderCellValue(cell, model, sheetDirectives);
                 } catch (Exception e) {
-                    log.warn(
-                        "Failed to render cell {}-{} on sheet {}",
-                        cell.getColumnIndex(),
-                        cell.getRowIndex(),
-                        sheet.getSheetName(),
-                        e
-                    );
+                    if (cell.getCellType().equals(CellType.STRING)) {
+                        var expression = cell.getStringCellValue();
+                        log.warn(
+                            "Failed to render template expression `{}` on sheet {}",
+                            expression,
+                            sheet.getSheetName()
+                        );
+                    } else {
+                        log.warn(
+                            "Failed to render cell {}-{} on sheet {}",
+                            cell.getColumnIndex(),
+                            cell.getRowIndex(),
+                            sheet.getSheetName()
+                        );
+                    }
+                    // template exceptions are quite detailed and we don't want to spam the logs with debugging
+                    // information
+                    log.debug(e.getMessage(), e);
                 }
             }
         }

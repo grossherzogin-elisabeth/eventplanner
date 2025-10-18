@@ -2,17 +2,14 @@ package org.eventplanner.events.domain.entities.users;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
+import static org.eventplanner.events.domain.entities.users.User.combineNames;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.eventplanner.common.StringUtils;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.functions.EncryptFunc;
 import org.eventplanner.events.domain.values.auth.Role;
@@ -73,27 +70,32 @@ public class UserDetails {
     private @Nullable String medication;
     private @Nullable Diet diet;
 
+    /**
+     * Returns the nickname of the user if present, or the first name otherwise
+     *
+     * @return the first name of the user
+     */
+    @TemplateAccessible
+    public @NonNull String getDisplayName() {
+        if (nickName != null && !nickName.isEmpty()) {
+            return nickName;
+        }
+        return firstName;
+    }
+
     @TemplateAccessible
     public @NonNull String getFullName() {
-        var activeFirstName = StringUtils.isBlank(nickName) ? firstName : nickName;
-        return Stream.of(activeFirstName, lastName)
-            .map(String::trim)
-            .collect(Collectors.joining(" "));
+        return combineNames(getDisplayName(), lastName);
     }
 
     @TemplateAccessible
     public @NonNull String getFullLegalName() {
-        return Stream.of(title, firstName, secondName, lastName)
-            .filter(Objects::nonNull)
-            .map(String::trim)
-            .collect(Collectors.joining(" "));
+        return combineNames(title, firstName, secondName, lastName);
     }
 
     @TemplateAccessible
     public @NonNull String getFirstNames() {
-        return Stream.of(firstName, secondName)
-            .filter(Objects::nonNull)
-            .collect(Collectors.joining(" "));
+        return combineNames(firstName, secondName);
     }
 
     public @NonNull User cropToUser() {
@@ -178,7 +180,7 @@ public class UserDetails {
 
     public @NonNull EncryptedUserDetails encrypt(@NonNull final EncryptFunc encryptFunc) {
         return new EncryptedUserDetails(
-            key,
+            getKey(),
             authKey,
             createdAt,
             updatedAt,
@@ -186,10 +188,10 @@ public class UserDetails {
             lastLoginAt,
             encryptFunc.apply(gender),
             encryptFunc.apply(title),
-            requireNonNull(encryptFunc.apply(firstName)),
-            encryptFunc.apply(nickName),
+            requireNonNull(encryptFunc.apply(getFirstName())),
+            encryptFunc.apply(getNickName()),
             encryptFunc.apply(secondName),
-            requireNonNull(encryptFunc.apply(lastName)),
+            requireNonNull(encryptFunc.apply(getLastName())),
             roles.stream().map(encryptFunc::apply).toList(),
             qualifications.stream()
                 .map(qualification -> qualification.encrypt(encryptFunc))

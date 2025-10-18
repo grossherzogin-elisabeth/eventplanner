@@ -157,6 +157,8 @@ public class Event {
         }
         if (counter > 0) {
             log.info("Removed {} invalid slot assignments for event {}", counter, name);
+        } else {
+            log.debug("All slot assignments for event {} are valid", name);
         }
         return this;
     }
