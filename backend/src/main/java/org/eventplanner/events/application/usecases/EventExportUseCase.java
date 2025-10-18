@@ -66,6 +66,7 @@ public class EventExportUseCase {
         }
         return Arrays.stream(files)
             .map(File::getName)
+            .filter(name -> !name.startsWith("~$"))
             .filter(name -> name.endsWith(".xlsx"))
             .map(name -> name.substring(0, name.lastIndexOf(".")))
             .toList();
