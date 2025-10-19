@@ -5,14 +5,14 @@ COPY ./frontend .
 RUN npm install && npm run build
 
 # build backend
-FROM eclipse-temurin:21-jdk-alpine AS backend-builder
+FROM eclipse-temurin:25-jdk-alpine AS backend-builder
 WORKDIR /builder
 COPY ./backend .
 COPY --from=frontend-builder /builder/dist/ ./src/main/resources/static/
 RUN ./gradlew build
 
 # combine frontend and backend
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:25-jdk-alpine
 
 ARG COMMIT="?"
 ARG BRANCH="main"
