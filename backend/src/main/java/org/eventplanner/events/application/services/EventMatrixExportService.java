@@ -28,7 +28,6 @@ import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.entities.positions.Position;
-import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
@@ -40,13 +39,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ExportService {
+public class EventMatrixExportService {
 
+    private static final String HEADER_STYLE = "header";
     private final ZoneId timezone = ZoneId.of("Europe/Berlin");
     private final PositionRepository positionRepository;
     private final UserService userService;
 
-    public @NonNull ByteArrayOutputStream exportEvents(@NonNull List<Event> events, int year) {
+    public @NonNull ByteArrayOutputStream exportEventMatrix(@NonNull List<Event> events) {
+        if (events.isEmpty()) {
+            throw new IllegalArgumentException("Cannot generate event matrix without any events");
+        }
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Einsatzmatrix");
         sheet.setDefaultColumnWidth(18);
@@ -58,15 +61,16 @@ public class ExportService {
         positions.forEach(position -> positionsByKey.put(position.getKey(), position));
 
         var r = 0;
+        var year = events.getFirst().getEnd().atZone(timezone).getYear();
         var yearCell = sheet.createRow(r++).createCell(0);
         yearCell.setCellValue(year);
-        yearCell.setCellStyle(cellStyles.get("header"));
+        yearCell.setCellStyle(cellStyles.get(HEADER_STYLE));
         sheet.createRow(r++);
         sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 0));
 
         var countCell = sheet.createRow(r++).createCell(0);
         countCell.setCellValue("Anzahl");
-        countCell.setCellStyle(cellStyles.get("header"));
+        countCell.setCellStyle(cellStyles.get(HEADER_STYLE));
 
         var assignedRows = getRequiredRows(events, positions, false);
         for (var key : assignedRows) {
@@ -94,10 +98,10 @@ public class ExportService {
             cell.setCellStyle(cellStyles.get(key.value() + "-header"));
         }
 
-        var users = new HashMap<UserKey, UserDetails>();
-        userService.getDetailedUsers().forEach(u -> users.put(u.getKey(), u));
+        var userNames = new HashMap<UserKey, String>();
+        userService.getDetailedUsers().forEach(u -> userNames.put(u.getKey(), u.getFullName()));
         for (int i = 0; i < events.size(); i++) {
-            fillEvent(events.get(i), users, sheet, cellStyles, assignedRows, waitinglistRows, i + 1);
+            fillEvent(events.get(i), userNames, sheet, cellStyles, assignedRows, waitinglistRows, i + 1);
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -125,7 +129,7 @@ public class ExportService {
         styleColumnHeader.setVerticalAlignment(VerticalAlignment.CENTER);
         styleColumnHeader.setBorderRight(BorderStyle.HAIR);
         styleColumnHeader.setBorderBottom(BorderStyle.HAIR);
-        cellStyles.put("header", styleColumnHeader);
+        cellStyles.put(HEADER_STYLE, styleColumnHeader);
 
         for (Position position : positions) {
             int red = Integer.valueOf(position.getColor().substring(1, 3), 16);
@@ -156,12 +160,32 @@ public class ExportService {
         return cellStyles;
     }
 
-    private @NonNull Map<PositionKey, Integer> getRequiredRowCount(@NonNull List<Event> events, boolean waitingList) {
+    private @NonNull Map<PositionKey, Integer> getRequiredRowCountForCrew(@NonNull List<Event> events) {
+        var positionCount = new HashMap<PositionKey, Integer>();
+        for (Event event : events) {
+            var positionsBySlot = event.getSlots().stream()
+                .map(slot -> event.findRegistrationByKey(slot.getAssignedRegistration())
+                    .map(Registration::getPosition)
+                    .orElse(slot.getPositions().getFirst()))
+                .toList();
+
+            var positions = positionsBySlot.stream().distinct().toList();
+            for (final PositionKey position : positions) {
+                var count = (int) positionsBySlot.stream().filter(position::equals).count();
+                if (positionCount.getOrDefault(position, 0) < count) {
+                    positionCount.put(position, count);
+                }
+            }
+        }
+        return positionCount;
+    }
+
+    private @NonNull Map<PositionKey, Integer> getRequiredRowCountForWaitingList(@NonNull List<Event> events) {
         var positionCount = new HashMap<PositionKey, Integer>();
         for (Event event : events) {
             var assignedRegistrationKeys = event.getAssignedRegistrationKeys();
             var filteredRegistrationPositions = event.getRegistrations().stream()
-                .filter(it -> !(waitingList && assignedRegistrationKeys.contains(it.getKey())))
+                .filter(it -> !assignedRegistrationKeys.contains(it.getKey()))
                 .map(Registration::getPosition)
                 .toList();
             var positions = filteredRegistrationPositions.stream().distinct().toList();
@@ -180,7 +204,9 @@ public class ExportService {
         @NonNull List<Position> positions,
         boolean waitingList
     ) {
-        var rowCountByPosition = getRequiredRowCount(events, waitingList);
+        var rowCountByPosition = waitingList
+            ? getRequiredRowCountForWaitingList(events)
+            : getRequiredRowCountForCrew(events);
         var rows = new LinkedList<PositionKey>();
         for (Position position : positions) {
             for (int i = 0; i < rowCountByPosition.getOrDefault(position.getKey(), 0); i++) {
@@ -192,7 +218,7 @@ public class ExportService {
 
     private void fillEvent(
         @NonNull Event event,
-        @NonNull Map<UserKey, UserDetails> users,
+        @NonNull Map<UserKey, String> userNames,
         @NonNull XSSFSheet sheet,
         @NonNull Map<String, XSSFCellStyle> cellStyles,
         @NonNull List<PositionKey> assignedRows,
@@ -207,7 +233,7 @@ public class ExportService {
                 .ifPresent(cell::setCellStyle);
         }
 
-        var headerStyle = cellStyles.get("header");
+        var headerStyle = cellStyles.get(HEADER_STYLE);
         sheet.getRow(0).getCell(column).setCellValue(event.getName());
         sheet.getRow(0).getCell(column).setCellStyle(headerStyle);
         sheet.getRow(1).getCell(column).setCellValue(
@@ -233,12 +259,8 @@ public class ExportService {
             while (cell.getRawValue() != null) {
                 cell = sheet.getRow(row++).getCell(column);
             }
-            var user = users.get(registration.getUserKey());
-            if (user != null) {
-                cell.setCellValue(user.getFullName());
-            } else {
-                cell.setCellValue(registration.getName());
-            }
+            var name = userNames.getOrDefault(registration.getUserKey(), registration.getName());
+            cell.setCellValue(name);
         }
     }
 }

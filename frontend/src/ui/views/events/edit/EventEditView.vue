@@ -198,18 +198,17 @@
                 <i class="fa-solid fa-envelope" />
                 <span>{{ $t('views.events.edit.actions.contact-crew') }}</span>
             </li>
-            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
-                <i class="fa-solid fa-clipboard-user" />
-                <span>{{ $t('views.events.edit.actions.generate-imo-list') }}</span>
-            </li>
-            <li v-if="event" class="permission-read-users context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
-                <i class="fa-solid fa-beer-mug-empty" />
-                <span>{{ $t('views.events.edit.actions.generate-consumption-list') }}</span>
-            </li>
-            <li v-if="event" class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(event)">
-                <i class="fa-solid fa-file-medical" />
-                <span>{{ $t('views.events.edit.actions.generate-captain-list') }}</span>
-            </li>
+            <template v-if="event">
+                <li
+                    v-for="template in exportTemplates"
+                    :key="template"
+                    class="permission-read-user-details context-menu-item"
+                    @click="eventAdministrationUseCase.exportEvent(event, template)"
+                >
+                    <i class="fa-solid fa-file-excel" />
+                    <span>{{ $t('views.events.admin-list.action.exportToTemplate', { template }) }}</span>
+                </li>
+            </template>
             <li
                 v-if="event?.state === EventState.Draft"
                 class="permission-write-event-details context-menu-item"
@@ -313,6 +312,7 @@ const usersUseCase = useUsersUseCase();
 const usersAdminUseCase = useUserAdministrationUseCase();
 const signedInUser = authUseCase.getSignedInUser();
 
+const exportTemplates = ref<string[]>([]);
 const eventOriginal = ref<Event | null>(null);
 const event = ref<Event | null>(null);
 const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
@@ -341,6 +341,7 @@ const hasEmptyRequiredSlots = computed<boolean>(() => {
 
 async function init(): Promise<void> {
     await fetchEvent();
+    await fetchExportTemplates();
     preventPageUnloadOnUnsavedChanges();
 }
 
@@ -350,6 +351,10 @@ async function fetchEvent(): Promise<void> {
     const event = await eventUseCase.getEventByKey(year, key, true);
     updateState(event);
     emit('update:tab-title', event.name);
+}
+
+async function fetchExportTemplates(): Promise<void> {
+    exportTemplates.value = await eventAdministrationUseCase.getExportTemplates();
 }
 
 function preventPageUnloadOnUnsavedChanges(): void {

@@ -132,18 +132,6 @@
                     <span>{{ $t('views.events.details.add-note') }}</span>
                 </li>
             </template>
-            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(event)">
-                <i class="fa-solid fa-clipboard-user" />
-                <span>{{ $t('views.events.details.generate-imo-list') }}</span>
-            </li>
-            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadConsumptionList(event)">
-                <i class="fa-solid fa-beer-mug-empty" />
-                <span>{{ $t('views.events.details.generate-consumption-list') }}</span>
-            </li>
-            <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(event)">
-                <i class="fa-solid fa-file-medical" />
-                <span>{{ $t('views.events.details.generate-captain-list') }}</span>
-            </li>
             <li class="permission-write-events">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-drafting-compass" />

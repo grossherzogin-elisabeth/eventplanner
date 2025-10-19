@@ -10,4 +10,8 @@ public abstract class HandledException extends RuntimeException {
     public HandledException(@NonNull String message) {
         super(message);
     }
+
+    public HandledException(@NonNull String message, @NonNull Throwable cause) {
+        super(message, cause);
+    }
 }

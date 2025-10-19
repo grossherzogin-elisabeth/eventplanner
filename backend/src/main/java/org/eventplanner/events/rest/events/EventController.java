@@ -1,13 +1,9 @@
 package org.eventplanner.events.rest.events;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
-import org.eventplanner.events.application.usecases.CaptainListUseCase;
-import org.eventplanner.events.application.usecases.ConsumtionListUseCase;
+import org.eventplanner.events.application.usecases.EventExportUseCase;
 import org.eventplanner.events.application.usecases.EventUseCase;
-import org.eventplanner.events.application.usecases.ImoListUseCase;
 import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.UpdateEventUseCase;
 import org.eventplanner.events.application.usecases.UserUseCase;
@@ -50,9 +46,7 @@ public class EventController {
     private final UserUseCase userUseCase;
     private final EventUseCase eventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
-    private final ImoListUseCase imoListUseCase;
-    private final ConsumtionListUseCase consumtionListUseCase;
-    private final CaptainListUseCase captainListUseCase;
+    private final EventExportUseCase eventExportUseCase;
     private final RegistrationConfirmationUseCase registrationConfirmationUseCase;
 
     @GetMapping("")
@@ -63,7 +57,7 @@ public class EventController {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
         if (accept.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-            var stream = eventUseCase.exportEvents(signedInUser, year);
+            var stream = eventExportUseCase.exportEventMatrix(signedInUser, year);
             byte[] binary = stream.toByteArray();
             ByteArrayResource resource = new ByteArrayResource(binary);
             return ResponseEntity.ok()
@@ -122,53 +116,25 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/{eventKey}/imo-list")
-    public ResponseEntity<Resource> downloadImoList(@PathVariable("eventKey") String eventKey) throws IOException {
-
+    @GetMapping("/export/templates")
+    public ResponseEntity<List<String>> getExportTemplates() {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream imoListStream = imoListUseCase.downloadImoList(signedInUser, new EventKey(eventKey));
-        byte[] imoListByteArray = imoListStream.toByteArray();
-
-        ByteArrayResource resource = new ByteArrayResource(imoListByteArray);
-
-        return ResponseEntity.ok()
-            .contentLength(imoListByteArray.length)
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource);
+        var templates = eventExportUseCase.getAvailableTemplates(signedInUser);
+        return ResponseEntity.ok(templates);
     }
 
-    @GetMapping("/{eventKey}/consumption-list")
-    public ResponseEntity<Resource> downloadConsumptionList(@PathVariable("eventKey") String eventKey)
-    throws IOException {
-
+    @GetMapping("/{eventKey}/export/{templateName}")
+    public ResponseEntity<Resource> exportEvent(
+        @PathVariable("eventKey") String eventKey,
+        @PathVariable("templateName") String templateName
+    ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream consumptionListStream =
-            consumtionListUseCase.downloadConsumptionList(signedInUser, new EventKey(eventKey));
-        byte[] consumptionListByteArray = consumptionListStream.toByteArray();
-
-        ByteArrayResource resource = new ByteArrayResource(consumptionListByteArray);
-
+        var outputStream = eventExportUseCase.exportEvent(signedInUser, new EventKey(eventKey), templateName);
+        byte[] bytes = outputStream.toByteArray();
         return ResponseEntity.ok()
-            .contentLength(consumptionListByteArray.length)
+            .contentLength(bytes.length)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource);
-    }
-
-    @GetMapping("/{eventKey}/captain-list")
-    public ResponseEntity<Resource> downloadCaptainList(@PathVariable("eventKey") String eventKey)
-    throws IOException {
-
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        ByteArrayOutputStream captainListStream =
-            captainListUseCase.downloadCaptainList(signedInUser, new EventKey(eventKey));
-        byte[] captainListByteArray = captainListStream.toByteArray();
-
-        ByteArrayResource resource = new ByteArrayResource(captainListByteArray);
-
-        return ResponseEntity.ok()
-            .contentLength(captainListByteArray.length)
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource);
+            .body(new ByteArrayResource(bytes));
     }
 
     @PostMapping("/{eventKey}/optimized-slots")

@@ -44,9 +44,7 @@ public record SignedInUser(
             orElse(user.getEmail(), ""),
             user.getPositions(),
             user.getGender(),
-            Optional.ofNullable(user.getNickName())
-                .filter(s -> !s.isBlank())
-                .orElse(user.getFirstName()),
+            user.getDisplayName(),
             user.getLastName()
         );
     }

@@ -2,13 +2,7 @@ package org.eventplanner.testutil;
 
 import java.io.IOException;
 
-import org.eventplanner.config.ObjectMapperFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class TestResources {
-    private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.defaultObjectMapper();
-
     public static String getString(String path) {
         return new String(getBytes(path));
     }

@@ -18,6 +18,7 @@ import org.eventplanner.events.domain.values.events.EventType;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -63,7 +64,7 @@ public class Event {
         return registrations.stream().filter(it -> keys.contains(it.getKey())).toList();
     }
 
-    public @NonNull Optional<Registration> findRegistrationByKey(@NonNull final RegistrationKey key) {
+    public @NonNull Optional<Registration> findRegistrationByKey(@Nullable final RegistrationKey key) {
         return registrations.stream().filter(it -> it.getKey().equals(key)).findFirst();
     }
 
@@ -119,7 +120,7 @@ public class Event {
         };
     }
 
-    public void clearConfidentialData(@NonNull final SignedInUser signedInUser) {
+    public @NonNull Event clearConfidentialData(@NonNull final SignedInUser signedInUser) {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
             && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(state)) {
             // clear assigned registrations on slots if crew is not published yet
@@ -140,9 +141,10 @@ public class Event {
                     it.setConfirmedAt(null);
                 });
         }
+        return this;
     }
 
-    public void removeInvalidSlotAssignments() {
+    public @NonNull Event removeInvalidSlotAssignments() {
         log.debug("Removing invalid slot assignments for event {}", name);
         var counter = 0;
         var validRegistrationKeys = registrations.stream().map(Registration::getKey).toList();
@@ -155,7 +157,10 @@ public class Event {
         }
         if (counter > 0) {
             log.info("Removed {} invalid slot assignments for event {}", counter, name);
+        } else {
+            log.debug("All slot assignments for event {} are valid", name);
         }
+        return this;
     }
 
     /**

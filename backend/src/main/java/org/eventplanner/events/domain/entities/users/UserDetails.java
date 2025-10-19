@@ -2,6 +2,7 @@ package org.eventplanner.events.domain.entities.users;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
+import static org.eventplanner.events.domain.entities.users.User.combineNames;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import freemarker.ext.beans.TemplateAccessible;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -68,21 +70,32 @@ public class UserDetails {
     private @Nullable String medication;
     private @Nullable Diet diet;
 
+    /**
+     * Returns the nickname of the user if present, or the first name otherwise
+     *
+     * @return the first name of the user
+     */
+    @TemplateAccessible
+    public @NonNull String getDisplayName() {
+        if (nickName != null && !nickName.isEmpty()) {
+            return nickName;
+        }
+        return firstName;
+    }
+
+    @TemplateAccessible
     public @NonNull String getFullName() {
-        StringBuilder stb = new StringBuilder();
-        if (title != null) {
-            stb.append(title).append(" ");
-        }
-        if (nickName != null && !nickName.isBlank()) {
-            stb.append(nickName).append(" ");
-        } else {
-            stb.append(firstName).append(" ");
-        }
-        if (secondName != null && !secondName.isBlank()) {
-            stb.append(secondName).append(" ");
-        }
-        stb.append(lastName);
-        return stb.toString();
+        return combineNames(getDisplayName(), lastName);
+    }
+
+    @TemplateAccessible
+    public @NonNull String getFullLegalName() {
+        return combineNames(title, firstName, secondName, lastName);
+    }
+
+    @TemplateAccessible
+    public @NonNull String getFirstNames() {
+        return combineNames(firstName, secondName);
     }
 
     public @NonNull User cropToUser() {
@@ -101,7 +114,7 @@ public class UserDetails {
         @NonNull final Qualification qualification,
         @Nullable final Instant expirationDate
     ) {
-        var maybeExistingQualification = getQualification(qualification.getKey());
+        var maybeExistingQualification = findQualification(qualification.getKey());
         if (maybeExistingQualification.isEmpty()) {
             throw new IllegalStateException("Qualification with key " + qualification.getKey() + " not found");
         }
@@ -110,7 +123,7 @@ public class UserDetails {
         var userQualification = new UserQualification(
             qualification.getKey(),
             expirationDate,
-            qualification.isExpires(),
+            qualification.getExpires(),
             UserQualification.State.VALID
         );
         if (userQualification.isExpired()) {
@@ -121,14 +134,14 @@ public class UserDetails {
     }
 
     public void addQualification(@NonNull final Qualification qualification, @Nullable final Instant expirationDate) {
-        var maybeExistingQualification = getQualification(qualification.getKey());
+        var maybeExistingQualification = findQualification(qualification.getKey());
         if (maybeExistingQualification.isPresent()) {
             throw new IllegalStateException("Qualification with key " + qualification.getKey() + " already assigned");
         }
         var userQualification = new UserQualification(
             qualification.getKey(),
             expirationDate,
-            qualification.isExpires(),
+            qualification.getExpires(),
             UserQualification.State.VALID
         );
         if (userQualification.isExpired()) {
@@ -153,15 +166,21 @@ public class UserDetails {
         //  qualifications here, this cannot be updated without making this type know the full qualification data
     }
 
-    public @NonNull Optional<UserQualification> getQualification(@NonNull QualificationKey qualificationKey) {
+    @TemplateAccessible
+    public @NonNull Optional<UserQualification> findQualification(@NonNull QualificationKey qualificationKey) {
         return qualifications.stream()
             .filter(it -> qualificationKey.equals(it.getQualificationKey()))
             .findFirst();
     }
 
+    @TemplateAccessible
+    public @Nullable UserQualification getQualification(@NonNull String qualificationKey) {
+        return findQualification(new QualificationKey(qualificationKey)).orElse(null);
+    }
+
     public @NonNull EncryptedUserDetails encrypt(@NonNull final EncryptFunc encryptFunc) {
         return new EncryptedUserDetails(
-            key,
+            getKey(),
             authKey,
             createdAt,
             updatedAt,
@@ -169,10 +188,10 @@ public class UserDetails {
             lastLoginAt,
             encryptFunc.apply(gender),
             encryptFunc.apply(title),
-            requireNonNull(encryptFunc.apply(firstName)),
-            encryptFunc.apply(nickName),
+            requireNonNull(encryptFunc.apply(getFirstName())),
+            encryptFunc.apply(getNickName()),
             encryptFunc.apply(secondName),
-            requireNonNull(encryptFunc.apply(lastName)),
+            requireNonNull(encryptFunc.apply(getLastName())),
             roles.stream().map(encryptFunc::apply).toList(),
             qualifications.stream()
                 .map(qualification -> qualification.encrypt(encryptFunc))

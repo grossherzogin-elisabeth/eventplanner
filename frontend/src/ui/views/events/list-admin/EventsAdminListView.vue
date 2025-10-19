@@ -163,17 +163,14 @@
                             <span>{{ $t('views.events.admin-list.action.edit-event') }}</span>
                         </RouterLink>
                     </li>
-                    <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadImoList(item)">
-                        <i class="fa-solid fa-clipboard-user" />
-                        <span>{{ $t('views.events.admin-list.action.generate-imo-list') }}</span>
-                    </li>
-                    <li class="permission-read-users context-menu-item" @click="eventUseCase.downloadConsumptionList(item)">
-                        <i class="fa-solid fa-beer-mug-empty" />
-                        <span>{{ $t('views.events.admin-list.action.generate-consumption-list') }}</span>
-                    </li>
-                    <li class="permission-read-user-details context-menu-item" @click="eventUseCase.downloadCaptainList(item)">
-                        <i class="fa-solid fa-file-medical" />
-                        <span>{{ $t('views.events.admin-list.action.generate-captain-list') }}</span>
+                    <li
+                        v-for="template in exportTemplates"
+                        :key="template"
+                        class="permission-read-user-details context-menu-item"
+                        @click="eventAdminUseCase.exportEvent(item, template)"
+                    >
+                        <i class="fa-solid fa-file-excel" />
+                        <span>{{ $t('views.events.admin-list.action.exportToTemplate', { template }) }}</span>
                     </li>
                     <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
                         <i class="fa-solid fa-user-plus" />
@@ -380,6 +377,7 @@ const filterEventStates = useQuery<EventState[]>('states', []).parameter;
 const filterEventType = useQuery<EventType[]>('types', []).parameter;
 
 const events = ref<EventTableViewItem[] | null>(null);
+const exportTemplates = ref<string[]>([]);
 const tab = ref<string>('future');
 
 const createEventDialog = ref<Dialog<Event> | null>(null);
@@ -434,6 +432,7 @@ async function init(): Promise<void> {
     await positions.loading;
     await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();
+    await fetchExportTemplates();
     restoreScrollPosition();
 }
 
@@ -457,6 +456,10 @@ async function fetchEvents(): Promise<void> {
             events.value = await fetchEventsByYear(year);
         }
     }
+}
+
+async function fetchExportTemplates(): Promise<void> {
+    exportTemplates.value = await eventAdminUseCase.getExportTemplates();
 }
 
 async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {

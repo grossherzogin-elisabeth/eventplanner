@@ -305,30 +305,19 @@ export class EventRestRepository implements EventRepository {
         }
     }
 
-    public async downloadImoList(event: Event): Promise<Blob> {
-        const response = await fetch(`/api/v1/events/${event.key}/imo-list`, {
+    public async getExportTemplates(): Promise<string[]> {
+        const response = await fetch('/api/v1/events/export/templates', {
             method: 'GET',
             credentials: 'include',
         });
         if (!response.ok) {
             throw response;
         }
-        return response.clone().blob();
+        return response.clone().json();
     }
 
-    public async downloadConsumptionList(event: Event): Promise<Blob> {
-        const response = await fetch(`/api/v1/events/${event.key}/consumption-list`, {
-            method: 'GET',
-            credentials: 'include',
-        });
-        if (!response.ok) {
-            throw response;
-        }
-        return response.clone().blob();
-    }
-
-    public async downloadCaptainList(event: Event): Promise<Blob> {
-        const response = await fetch(`/api/v1/events/${event.key}/captain-list`, {
+    public async exportEvent(event: Event, template: string): Promise<Blob> {
+        const response = await fetch(`/api/v1/events/${event.key}/export/${template}`, {
             method: 'GET',
             credentials: 'include',
         });
