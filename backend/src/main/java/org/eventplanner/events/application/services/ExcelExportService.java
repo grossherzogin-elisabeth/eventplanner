@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.eventplanner.events.domain.exceptions.ExcelExportFailedException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,7 @@ public class ExcelExportService {
     public @NonNull ByteArrayOutputStream exportToExcel(
         @NonNull final File template,
         @NonNull final Map<String, Object> model
-    ) {
+    ) throws ExcelExportFailedException {
         model.put("currentDate", Instant.now());
         try (FileInputStream fileTemplate = new FileInputStream(template)) {
             XSSFWorkbook workbook = new XSSFWorkbook(fileTemplate);
@@ -70,9 +71,9 @@ public class ExcelExportService {
             }
             return bos;
         } catch (TemplateException | IOException e) {
-            // TODO throw other exception
-            log.error("Failed to create excel export", e);
-            throw new RuntimeException(e);
+            log.error("Failed to generate excel export from template {}", template.getName(), e);
+            throw new ExcelExportFailedException(
+                "Failed to generate excel export from template " + template.getName(), e);
         }
     }
 

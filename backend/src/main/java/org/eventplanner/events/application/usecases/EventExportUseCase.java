@@ -82,7 +82,7 @@ public class EventExportUseCase {
 
         var event = eventService.getEvent(signedInUser, eventKey);
         var model = getEventExportModel(event);
-        var template = new File(templatesDirectory + "/" + templateName + ".xlsx");
+        var template = new File(templatesDirectory, templateName + ".xlsx");
         if (!template.exists()) {
             throw new NoSuchElementException("Cannot find template file");
         }
