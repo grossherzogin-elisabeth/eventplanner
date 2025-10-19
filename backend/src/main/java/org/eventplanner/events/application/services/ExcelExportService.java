@@ -60,6 +60,9 @@ public class ExcelExportService {
                 renderCopies(sheet);
                 renderSheet(sheet, model, directives);
             }
+            // reevaluate all expressions
+            workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
+
             var bos = new ByteArrayOutputStream();
             try (bos) {
                 workbook.write(bos);
