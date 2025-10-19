@@ -140,7 +140,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { cropToPrecision, isSameDate, subtractFromDate } from '@/common';
+import { cropToPrecision, deepCopy, isSameDate, subtractFromDate } from '@/common';
 import type { Event, InputSelectOption, PositionKey, Registration, UserDetails } from '@/domain';
 import { VInfo } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
@@ -182,7 +182,7 @@ const availablePositionsForSignedInUser = computed<InputSelectOption<string | un
 });
 
 function updateRegistration(update: Partial<Registration>): void {
-    const updated = Object.assign(props.registration, update);
+    const updated = Object.assign(deepCopy(props.registration), update);
     emit('update:registration', updated);
 }
 
