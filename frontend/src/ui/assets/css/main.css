@@ -35,15 +35,15 @@ body {
 }
 
 .h-screen {
-    height: var(--viewport-height);
+    height: var(--viewport-height, 100vh);
 }
 
 .min-h-screen {
-    min-height: var(--viewport-height);
+    min-height: var(--viewport-height, 100vh);
 }
 
 .max-h-screen {
-    max-height: var(--viewport-height);
+    max-height: var(--viewport-height, 100vh);
 }
 
 .pt-nav {

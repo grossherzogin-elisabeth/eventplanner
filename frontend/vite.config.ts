@@ -1,7 +1,7 @@
 import ViteYaml from '@modyfi/vite-plugin-yaml';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import svgLoader from 'vite-svg-loader';
 
@@ -35,24 +35,30 @@ const pwa = VitePWA({
 });
 
 // https://vitejs.dev/config/
-export default defineConfig({
-    plugins: [vue(), svgLoader(), pwa, ViteYaml()],
-    assetsInclude: ['**/*.csv'],
-    server: {
-        port: 8090,
-        host: true,
-        proxy: {
-            '/api/': 'http://localhost:8091',
-            '/auth/': 'http://localhost:8091',
-            '/login/oauth2/code/': 'http://localhost:8091',
+export default defineConfig(({ mode }) => {
+    process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+    const host = process.env.VITE_HOST || 'localhost';
+
+    return {
+        plugins: [vue(), svgLoader(), pwa, ViteYaml()],
+        assetsInclude: ['**/*.csv'],
+        server: {
+            port: 8090,
+            host: true,
+            proxy: {
+                '/api/': `http://${host}:8091`,
+                '/auth/': `http://${host}:8091`,
+                '/login/oauth2/code/': `http://${host}:8091`,
+            },
+            allowedHosts: [host],
         },
-    },
-    resolve: {
-        alias: {
-            // removes esm warning: https://github.com/intlify/vue-i18n-next/issues/789
-            'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
-            // use @ as placeholder for src dir
-            '@': path.resolve(__dirname, './src'),
+        resolve: {
+            alias: {
+                // removes esm warning: https://github.com/intlify/vue-i18n-next/issues/789
+                'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
+                // use @ as placeholder for src dir
+                '@': path.resolve(__dirname, './src'),
+            },
         },
-    },
+    };
 });
