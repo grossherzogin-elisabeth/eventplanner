@@ -12,8 +12,10 @@ export function useViewportSize() {
         document.documentElement.style.setProperty('--viewport-height', `${height.value}px`);
     }
 
-    onMounted(() => window.addEventListener('resize', update));
+    onMounted(() => window.addEventListener('resize', update, { passive: true }));
+    onMounted(() => window.addEventListener('scroll', update, { passive: true }));
     onUnmounted(() => window.removeEventListener('resize', update));
+    onUnmounted(() => window.removeEventListener('scroll', update));
 
     update();
 

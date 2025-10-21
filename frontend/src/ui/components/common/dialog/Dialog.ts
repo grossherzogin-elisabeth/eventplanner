@@ -1,3 +1,8 @@
+/**
+ * @template P type of the input parameter
+ * @template T type of the successful response
+ * @template E type of the error response
+ */
 export interface Dialog<P = void, T = void, E = void> {
     /**
      * Open this dialog, returning a promise that is resolve when it is closed
