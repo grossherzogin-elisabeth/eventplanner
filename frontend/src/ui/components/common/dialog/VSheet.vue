@@ -21,8 +21,9 @@
                     <div class="h-[100vh] w-screen sm:hidden" @click="reject()" @pointerdown="reject()"></div>
                     <div
                         class="flex max-h-screen flex-col overflow-clip rounded-t-3xl shadow-lg transition-all duration-200 sm:h-full sm:max-h-full sm:rounded-3xl sm:pb-0 sm:pt-4"
-                        :class="isFullyExpanded ? `${$attrs.class} bg-surface-container` : `${$attrs.class} bg-surface-container-low`"
-                        :style="{ minHeight: `${sheetMinHeight}` }"
+                        :class="
+                            isFullyExpanded ? `${$attrs.class} h-screen bg-surface-container` : `${$attrs.class} bg-surface-container-low`
+                        "
                     >
                         <div class="handle flex items-center justify-center sm:hidden">
                             <div class="mb-4 mt-4 h-1 min-h-1 w-8 rounded-full bg-onsurface-variant"></div>
@@ -69,13 +70,11 @@
 
 <script lang="ts" setup generic="T, E">
 import type { Ref } from 'vue';
-import { computed } from 'vue';
 import { nextTick, ref } from 'vue';
 import { disableScrolling, enableScrolling, wait } from '@/common';
 import type { Sheet } from '@/ui/components/common';
 
 interface Props {
-    minHeight?: string;
     showBackButton?: boolean;
 }
 
@@ -118,17 +117,19 @@ defineExpose<Sheet<void, T | undefined, E>>({
 });
 
 const animationDuration = 250;
-const sheetOpen: Ref<boolean> = ref(false);
-const sheetOpening: Ref<boolean> = ref(false);
+
 const background: Ref<HTMLElement | null> = ref(null);
 const wrapper: Ref<HTMLElement | null> = ref(null);
+
+const sheetOpen: Ref<boolean> = ref(false);
+const sheetOpening: Ref<boolean> = ref(false);
 const renderContent: Ref<boolean> = ref(false);
 const isFullyExpanded: Ref<boolean> = ref(false);
 const scrollTop: Ref<number> = ref(0);
+
 let promiseResolve: ((result: T | undefined) => void) | null = null;
 let promiseReject: ((reason: E | undefined) => void) | null = null;
 let closeTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
-const sheetMinHeight = computed<string>(() => props.minHeight || '10rem');
 
 function init(): void {
     window.addEventListener('resize', onWindowResize, { passive: true });
@@ -143,7 +144,6 @@ async function open(): Promise<T | undefined> {
     renderContent.value = true;
     await nextTick(() => (sheetOpen.value = true));
     background.value?.scrollTo({ top: 400 });
-
     await wait(animationDuration);
     sheetOpening.value = false;
     emit('opened');
@@ -200,21 +200,38 @@ function onWindowResize(): void {
 }
 
 async function onScroll(): Promise<void> {
-    if (!background.value) {
-        return;
-    }
     // give it a tick to render
     await nextTick();
 
-    // update the component state
-    scrollTop.value = background.value.scrollTop;
-    isFullyExpanded.value = background.value.scrollTop >= (window.visualViewport?.height ?? window.innerHeight);
+    calcIsFullyExpanded();
+    calcScrollTop();
+    detectScrollClose();
+}
 
-    // close the sheet when the users scrolls it to the bottom
-    const threshold = background.value.contains(document.activeElement) ? 25 : 100;
-    if (background.value.scrollTop < threshold) {
-        reject();
+function calcIsFullyExpanded(): void {
+    if (background.value) {
+        isFullyExpanded.value = background.value.scrollTop >= getViewportHeight();
     }
+}
+
+function calcScrollTop(): void {
+    if (background.value) {
+        scrollTop.value = background.value.scrollTop;
+    }
+}
+
+function detectScrollClose(): void {
+    if (background.value) {
+        // close the sheet when the users scrolls it to the bottom
+        const threshold = background.value.contains(document.activeElement) ? 25 : 100;
+        if (background.value.scrollTop < threshold) {
+            reject();
+        }
+    }
+}
+
+function getViewportHeight(): number {
+    return window.visualViewport?.height ?? window.innerHeight;
 }
 
 init();
