@@ -71,17 +71,29 @@ init();
 </script>
 <style>
 .tab {
-    @apply whitespace-nowrap border-b border-transparent pb-1;
+    white-space: nowrap;
+    border-bottom: 1px transparent;
+    @apply pb-1;
 }
+
 .tab button {
-    @apply text-base font-bold;
-    @apply -mx-4 rounded-lg px-4 py-2;
-    @apply bg-transparent;
+    background-color: transparent;
+    @apply text-base;
+    @apply font-bold;
+    @apply -mx-4;
+    @apply rounded-lg;
+    @apply px-4;
+    @apply py-2;
 }
+
 .tab button:hover {
-    @apply bg-secondary-container text-onsecondary-container;
+    @apply bg-secondary-container;
+    @apply text-onsecondary-container;
 }
+
 .active.tab {
-    @apply border-b border-primary text-primary;
+    border-bottom-width: 1px;
+    @apply border-primary;
+    @apply text-primary;
 }
 </style>

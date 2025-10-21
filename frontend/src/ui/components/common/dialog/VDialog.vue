@@ -180,11 +180,14 @@ async function close(): Promise<void> {
 }
 
 .modal-danger.dialog-background {
-    @apply z-50;
+    z-index: 50;
 }
 
 .modal-danger .dialog-header {
-    @apply border-onerror-container bg-error-container pl-8 text-onerror-container;
+    @apply bg-error-container;
+    @apply text-onerror-container;
+    @apply border-onerror-container;
+    @apply pl-8;
 }
 
 .modal-danger .dialog > .dialog-content,
@@ -203,8 +206,9 @@ async function close(): Promise<void> {
 @media (max-width: 639px) {
     .modal-danger .dialog,
     .modal .dialog {
-        @apply rounded-3xl shadow-lg;
         max-width: min(calc(100vw - 2rem), 35rem);
+        @apply rounded-3xl;
+        @apply shadow-lg;
     }
 }
 
@@ -215,29 +219,37 @@ async function close(): Promise<void> {
     }
 
     .fullscreen .dialog-wrapper {
-        @apply w-full overflow-hidden;
+        width: 100%;
+        overflow: hidden;
         height: var(--viewport-height);
     }
 
     .fullscreen .dialog {
-        @apply h-full max-h-full w-full max-w-full !important;
+        height: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     .fullscreen .dialog .dialog-header {
         height: var(--nav-height);
-        @apply truncate bg-primary text-onprimary;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        @apply bg-primary;
+        @apply text-onprimary;
     }
 
     .fullscreen .dialog .dialog-close-button {
-        @apply text-white;
+        @apply text-onprimary;
     }
 
     .fullscreen .dialog .fullscreen-back-button {
-        @apply block;
+        display: block;
     }
 
     .fullscreen .dialog .dialog-close-button-wrapper {
-        @apply hidden;
+        display: none;
     }
 }
 </style>

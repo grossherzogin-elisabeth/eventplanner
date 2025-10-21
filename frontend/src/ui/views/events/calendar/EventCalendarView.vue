@@ -352,44 +352,89 @@ init();
     --create-event-days: 1;
     --columns: 1.4;
     height: var(--viewport-height);
-    @apply flex snap-x snap-always items-stretch overflow-scroll;
-    @apply fixed left-0 right-0 top-0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: stretch;
+    overflow: scroll;
+    scroll-snap-stop: always;
+    @apply snap-x;
 }
 
 .calendar-month {
-    @apply snap-start;
+    scroll-snap-align: start;
 }
 
 .calendar-header {
-    @apply sticky top-0 z-50 sm:z-20;
-    @apply bg-primary py-2.5 pl-20 pr-4 text-onprimary sm:ml-2 sm:pl-16 md:ml-2 md:pl-20 xl:pb-4 xl:pt-8;
-    @apply border-r border-transparent sm:border-r-surface;
-    @apply text-lg font-bold;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-right-width: 1px;
+    border-right-color: transparent;
+    @apply bg-primary;
+    @apply py-2.5;
+    @apply pl-20;
+    @apply pr-4;
+    @apply text-onprimary;
+    @apply text-lg;
+    @apply font-bold;
+
+    @apply sm:z-20;
+    @apply sm:ml-2;
+    @apply sm:pl-16;
+    @apply sm:border-r-surface;
+
+    @apply md:ml-2;
+    @apply md:pl-20;
+
+    @apply xl:pb-4;
+    @apply xl:pt-8;
 }
 
 .impersonated .calendar-header {
-    @apply mb-16 sm:mb-0;
+    @apply mb-16;
+
+    @apply sm:mb-0;
 }
 
 .calendar-day {
     height: var(--row-height);
     width: calc(var(--scrollcontainer-width) / var(--columns));
-    @apply relative flex items-center border-b border-r border-surface bg-surface pl-2 pr-1;
-    @apply select-none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+    user-select: none;
+    @apply border-surface;
+    @apply bg-surface;
+    @apply pl-2;
+    @apply pr-1;
 }
 
 .calendar-day:nth-child(2) {
-    @apply mt-2 sm:mt-0;
+    @apply mt-2;
+
+    @apply sm:mt-0;
 }
 
 .calendar-filler {
     height: var(--row-height);
-    @apply border-r border-r-surface;
-    @apply border-b border-b-transparent;
+    border-bottom-width: 1px;
+    border-bottom-color: transparent;
+    border-right-width: 1px;
+    @apply border-r-surface;
 }
 
 .calendar-day-label {
-    @apply w-7 text-sm font-bold text-outline-variant md:w-8;
+    @apply w-7;
+    @apply text-sm;
+    @apply font-bold;
+    @apply text-outline-variant;
+
+    @apply md:w-8;
 }
 
 .calendar-day.holiday .calendar-day-label,
@@ -400,27 +445,55 @@ init();
 .calendar-day.holiday:before,
 .calendar-day.weekend:before {
     content: '';
-    @apply absolute bottom-0 left-0 right-0 top-0;
-    @apply rounded-lg bg-surface-variant bg-opacity-25;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    @apply rounded-lg;
+    @apply bg-surface-variant bg-opacity-25;
 }
 
 .create-event-overlay {
-    @apply pointer-events-none;
-    @apply absolute left-0 right-0 top-0 z-10;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 10;
+    pointer-events: none;
     height: calc((var(--create-event-days) * var(--row-height)) - 0.125rem);
-    @apply rounded-lg border border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
-    @apply cursor-pointer text-sm font-semibold;
-    @apply flex flex-col px-4 py-1;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: dashed;
+    @apply rounded-lg;
+    @apply border-onprimary-container;
+    @apply bg-primary-container;
+    @apply text-onprimary-container;
+    @apply text-sm;
+    @apply font-semibold;
+    @apply px-4;
+    @apply py-1;
 }
 
 .calendar-day.today {
-    @apply relative;
+    position: relative;
 }
 
 .calendar-day.today:after {
     content: '';
-    @apply pointer-events-none absolute bottom-0 left-0 right-0 top-0 z-10;
-    @apply rounded-lg border-2 border-error border-opacity-50 bg-error-container bg-opacity-25;
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 10;
+    border-width: 2px;
+    @apply rounded-lg;
+    @apply border-error border-opacity-50;
+    @apply bg-error-container bg-opacity-25;
 }
 
 @media only screen and (min-width: 450px) {
@@ -437,12 +510,20 @@ init();
     }
 
     .calendar-header {
-        @apply bg-transparent font-normal text-onsurface;
+        background-color: transparent;
+        @apply font-normal;
+        @apply text-onsurface;
     }
 
     .calendar-header::before {
         content: '';
-        @apply absolute -left-8 bottom-0 right-0 top-0 -z-10 bg-surface bg-opacity-95;
+        position: absolute;
+        bottom: 0;
+        top: 0;
+        right: 0;
+        z-index: -10;
+        @apply -left-8;
+        @apply bg-surface bg-opacity-95;
     }
 }
 

@@ -21,7 +21,12 @@ const rendered = computed<string>(() => {
 
 <style>
 .markdown a {
-    @apply font-bold text-primary hover:underline;
+    @apply font-bold;
+    @apply text-primary;
+}
+
+.markdown a:hover {
+    text-decoration-line: underline;
 }
 
 .markdown p {

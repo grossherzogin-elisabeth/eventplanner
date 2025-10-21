@@ -35,25 +35,51 @@ function onInput(event: Event): void {
 </script>
 <style scoped>
 .btn-search {
-    @apply hidden items-center lg:flex;
-    @apply cursor-pointer gap-4 rounded-xl px-4 py-2;
-    @apply transition-all duration-100;
+    display: none;
+    align-items: center;
+    cursor: pointer;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 100ms;
+    @apply lg:flex;
+    @apply gap-4;
+    @apply rounded-xl;
+    @apply px-4;
+    @apply py-2;
     @apply text-secondary;
 }
 
 .btn-search:hover {
-    @apply bg-secondary-container text-onsecondary-container;
+    @apply bg-secondary-container;
+    @apply text-onsecondary-container;
 }
 
 .btn-search.active,
 .btn-search:focus-within {
-    @apply w-64 cursor-text bg-surface-container text-onsurface 2xl:w-80;
+    cursor: text;
+    @apply w-64;
+    @apply bg-surface-container;
+    @apply text-onsurface;
+    @apply 2xl:w-80;
 }
 
 .btn-search input {
-    @apply w-0 flex-grow;
-    @apply cursor-pointer focus-within:cursor-text;
-    @apply bg-transparent text-secondary;
-    @apply placeholder-secondary placeholder-opacity-100 focus-within:placeholder-opacity-25;
+    width: 0;
+    flex-grow: 1;
+    cursor: pointer;
+    background-color: transparent;
+    @apply text-secondary;
+}
+
+.btn-search input::placeholder {
+    @apply placeholder-secondary placeholder-opacity-100;
+}
+
+.btn-search input:focus-within {
+    cursor: text;
+}
+
+.btn-search input:focus-within::placeholder {
+    @apply placeholder-secondary placeholder-opacity-25;
 }
 </style>

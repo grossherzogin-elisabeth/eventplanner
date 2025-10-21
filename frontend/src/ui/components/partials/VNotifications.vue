@@ -78,19 +78,32 @@ init();
 
 <style>
 .notification-wrapper {
-    @apply mb-4 h-20 overflow-hidden rounded-xl bg-surface shadow-xl;
+    overflow: hidden;
+    @apply mb-4;
+    @apply h-20;
+    @apply rounded-xl;
+    @apply bg-surface;
+    @apply shadow-xl;
 }
 
 .notification {
-    @apply flex h-full items-center gap-4 overflow-hidden px-6 py-0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+    @apply gap-4;
+    @apply px-6;
 }
 
 .notification button {
-    @apply pointer-events-auto;
+    pointer-events: auto;
 }
 
 .success .notification {
-    @apply bg-green-container text-ongreen-container;
+    @apply bg-green-container;
+    @apply text-ongreen-container;
 }
 
 .success .notification p {
@@ -98,7 +111,8 @@ init();
 }
 
 .info .notification {
-    @apply bg-blue-container text-onblue-container;
+    @apply bg-blue-container;
+    @apply text-onblue-container;
 }
 
 .info .notification p {
@@ -106,7 +120,8 @@ init();
 }
 
 .warning .notification {
-    @apply bg-yellow-container text-onyellow-container;
+    @apply bg-yellow-container;
+    @apply text-onyellow-container;
 }
 
 .warning .notification p {
@@ -114,7 +129,8 @@ init();
 }
 
 .error .notification {
-    @apply bg-red-container text-onred-container;
+    @apply bg-red-container;
+    @apply text-onred-container;
 }
 
 .error .notification p {

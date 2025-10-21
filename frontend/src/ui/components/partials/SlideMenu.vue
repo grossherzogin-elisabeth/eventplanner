@@ -54,9 +54,13 @@ function close(): void {
 .menu-wrapper {
     --duration: 0.25s;
     --menu-width: 100vw;
-    @apply fixed bottom-0 z-50 overflow-hidden;
-    @apply opacity-0;
-    @apply flex items-start;
+    position: fixed;
+    bottom: 0;
+    z-index: 50;
+    overflow: hidden;
+    opacity: 0;
+    display: flex;
+    align-items: start;
     top: 0;
     width: var(--menu-width);
     left: calc(var(--menu-width) * -1);
@@ -66,15 +70,22 @@ function close(): void {
 }
 
 .menu-wrapper.open {
-    @apply left-0 opacity-100;
+    left: 0;
+    opacity: 1;
     transition: left var(--duration) ease;
 }
 
 .menu {
-    @apply w-0 flex-grow;
-    @apply h-full overflow-hidden rounded-r-3xl shadow-xl;
-    @apply flex flex-col;
-    @apply bg-primary text-onprimary;
+    width: 0;
+    flex-grow: 1;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    @apply rounded-r-3xl;
+    @apply shadow-xl;
+    @apply bg-primary;
+    @apply text-onprimary;
 }
 
 @media (min-width: 30rem) {

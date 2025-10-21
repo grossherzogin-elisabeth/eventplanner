@@ -328,24 +328,42 @@ init();
 .dropzone-add,
 .dropzone-remove,
 .dropzone-delete {
-    @apply flex h-full flex-col items-center justify-center space-y-8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border-width: 2px;
+    border-style: dashed;
+    @apply space-y-8;
     @apply rounded-xl;
-    @apply border-2 border-dashed border-outline;
+    @apply border-outline;
 }
 
 .dropzone span {
-    @apply text-sm font-black uppercase;
+    @apply text-sm;
+    @apply font-black;
+    text-transform: uppercase;
 }
 
 .dropzone.hover .dropzone-add {
-    @apply border-2 border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
+    border: 2px dashed;
+    @apply bg-primary-container;
+    @apply text-onprimary-container;
+    @apply border-onprimary-container;
 }
 
 .dropzone.hover .dropzone-remove {
-    @apply border-2 border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
+    border: 2px dashed;
+    @apply bg-primary-container;
+    @apply text-onprimary-container;
+    @apply border-onprimary-container;
 }
 
 .dropzone.hover .dropzone-delete {
-    @apply border-2 border-dashed border-onerror-container bg-error-container text-onerror-container;
+    border: 2px dashed;
+    @apply bg-error-container;
+    @apply text-onerror-container;
+    @apply border-onerror-container;
 }
 </style>

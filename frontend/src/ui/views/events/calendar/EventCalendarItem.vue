@@ -72,13 +72,21 @@ init();
 
 <style scoped>
 .calendar-event-wrapper {
-    @apply absolute left-0 right-0 top-px z-10;
-    @apply rounded-md bg-surface-container shadow;
-    @apply overflow-hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 1px;
+    z-index: 10;
+    overflow: hidden;
+    @apply rounded-md;
+    @apply bg-surface-container;
+    @apply shadow;
 }
 
 .calendar-event-entry-bar {
-    @apply w-2 bg-current opacity-10;
+    height: 100%;
+    background-color: currentColor;
+    opacity: 0.1;
     --color-1: rgb(0 0 0 / 0.25);
     --color-2: rgb(255 255 255 / 0.25);
     --pattern: linear-gradient(
@@ -92,11 +100,13 @@ init();
         var(--color-2) 100%
     );
     background-size: 10px 10px;
+    @apply w-2;
 }
 
 .calendar-event-entry-bg {
-    @apply h-full w-0 flex-grow py-1 pl-2 pr-4 sm:px-2;
-    @apply text-sm font-semibold;
+    height: 100%;
+    width: 0;
+    flex-grow: 1;
     --color-1: rgb(0 0 0 / 0.5);
     --color-2: rgb(255 255 255 / 0.5);
     --pattern: linear-gradient(
@@ -110,13 +120,23 @@ init();
         var(--color-2) 100%
     );
     background-size: 10px 10px;
+    @apply py-1;
+    @apply pl-2;
+    @apply pr-4;
+    @apply text-sm;
+    @apply font-semibold;
+    @apply sm:px-2;
 }
 
 .calendar-event-entry {
-    @apply flex h-full w-full items-stretch;
-    @apply cursor-pointer;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    @apply font-bold;
     @apply bg-surface-container;
-    @apply font-bold text-onsurface;
+    @apply text-onsurface;
 }
 
 .calendar-event-entry.assigned {
@@ -131,7 +151,7 @@ init();
 
 .calendar-event-entry.waiting-list .calendar-event-entry-bar {
     @apply bg-primary-container bg-opacity-50;
-    @apply opacity-100;
+    opacity: 1;
     background-image: var(--pattern);
 }
 
@@ -141,16 +161,23 @@ init();
 
 .calendar-event-entry.draft .calendar-event-entry-bar {
     @apply bg-surface-container-low bg-opacity-50;
-    @apply opacity-100;
+    opacity: 1;
     background-image: var(--pattern);
 }
 
 .calendar-event-entry.small .calendar-event-entry-bg {
-    @apply flex items-center py-0;
+    display: flex;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
     font-size: 0.6rem;
 }
 
 .calendar-event-entry.in-past {
-    @apply border-opacity-10 opacity-50 hover:opacity-100;
+    opacity: 0.5;
+}
+
+.calendar-event-entry.in-past:hover {
+    opacity: 1;
 }
 </style>
