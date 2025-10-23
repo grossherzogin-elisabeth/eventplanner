@@ -20,6 +20,7 @@ lerna-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea
+.github/copilot-instructions.md
 .DS_Store
 *.suo
 *.ntvs*
