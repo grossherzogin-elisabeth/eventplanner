@@ -45,6 +45,9 @@ dependencies {
     implementation "org.apache.poi:poi:${apachePoiVersion}"
     implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
 
+    // ics
+    implementation "org.mnode.ical4j:ical4j:4.0.0"
+
     // tests
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testImplementation "org.springframework.security:spring-security-test:6.5.5"
