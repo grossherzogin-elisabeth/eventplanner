@@ -192,7 +192,7 @@ async function close(): Promise<void> {
 
 .modal-danger .dialog > .dialog-content,
 .modal-danger .dialog > .dialog-buttons {
-    @apply bg-error-container bg-opacity-50;
+    @apply bg-error-container/50;
 }
 
 .modal-danger .dialog-close-button {

@@ -6,7 +6,7 @@
                 <div class="flex items-center rounded-2xl bg-surface-container p-1">
                     <span class="px-2">{{ $t('domain.event.crew') }}</span>
                     <span
-                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs"
                     >
                         {{ props.event?.assignedUserCount }}
                     </span>
@@ -16,12 +16,12 @@
                     :class="
                         secureMinimumCrewMembers >= 8
                             ? 'bg-secondary-container text-onsecondary-container'
-                            : 'bg-error-container text-onerror-container'
+                            : 'bg-error-container/50 text-onerror-container'
                     "
                 >
                     <span class="whitespace-nowrap px-2">{{ $t('views.events.edit.secure-crew') }}</span>
                     <span
-                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs"
                     >
                         {{ secureMinimumCrewMembers }}
                     </span>
@@ -35,9 +35,7 @@
                     <span class="truncate px-2">
                         {{ pos.name }}
                     </span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
-                    >
+                    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs">
                         {{ summary[pos.key] || '0' }}
                     </span>
                 </div>

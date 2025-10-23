@@ -6,12 +6,12 @@
         class="absolute right-0 top-0 z-10 flex h-full items-center bg-primary px-8 transition-all md:px-16 xl:px-20"
         :class="showSearch ? 'left-0 md:left-auto' : 'left-full lg:left-auto'"
     >
-        <div class="-mx-4 flex flex-grow items-center space-x-8 rounded-full bg-p-500 px-4 py-1.5 focus-within:bg-p-500">
+        <div class="bg-p-500 focus-within:bg-p-500 -mx-4 flex flex-grow items-center space-x-8 rounded-full px-4 py-1.5">
             <i class="fa-solid fa-magnifying-glass text-white" />
             <input
                 ref="input"
                 :value="props.modelValue"
-                class="flex-grow bg-transparent placeholder-white placeholder-opacity-50"
+                class="flex-grow bg-transparent placeholder-white/50"
                 :placeholder="placeholder || 'Einträge filtern'"
                 @input="onInput($event)"
             />

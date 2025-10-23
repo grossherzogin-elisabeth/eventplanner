@@ -10,13 +10,13 @@
                     <i class="fa-solid fa-hourglass-half opacity-25" />
                 </span>
                 <span v-else-if="item.state === RegistrationSlotState.CONFIRMED">
-                    <i class="fa-solid fa-user-check text-green opacity-60" />
+                    <i class="fa-solid fa-user-check text-success opacity-60" />
                 </span>
                 <span v-else-if="item.state === RegistrationSlotState.ASSIGNED">
                     <i class="fa-solid fa-user-clock opacity-25" />
                 </span>
                 <span v-else-if="item.state === RegistrationSlotState.OPEN">
-                    <i class="fa-solid fa-user-xmark text-error text-opacity-50" />
+                    <i class="fa-solid fa-user-xmark text-error/50" />
                 </span>
             </td>
             <template v-if="item.registration">
@@ -38,7 +38,7 @@
                                 <template v-if="!item.user || item.user?.qualifications?.length === 0"></template>
                                 <span
                                     v-else-if="item.expiredQualifications.length > 0"
-                                    class="whitespace-nowrap rounded-lg bg-red-container px-2 py-1 text-xs font-black text-onred-container"
+                                    class="whitespace-nowrap rounded-lg bg-error-container/50 px-2 py-1 text-xs font-black text-onerror-container"
                                     :title="item.expiredQualifications.join(', ')"
                                 >
                                     <i class="fa-solid fa-ban" />
@@ -46,7 +46,7 @@
                                 </span>
                                 <span
                                     v-else
-                                    class="whitespace-nowrap rounded-lg bg-green-container px-2 py-1 text-xs font-black text-ongreen-container"
+                                    class="whitespace-nowrap rounded-lg bg-success-container/50 px-2 py-1 text-xs font-black text-onsuccess-container"
                                 >
                                     <i class="fa-solid fa-check" />
                                     {{ $t('domain.user.qualification.all-valid') }}

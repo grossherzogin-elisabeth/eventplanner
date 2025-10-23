@@ -14,14 +14,14 @@
             <div class="mb-4 flex flex-wrap items-center gap-1">
                 <span
                     v-if="props.registration?.state === RegistrationSlotState.CONFIRMED"
-                    class="tag bg-green-container text-ongreen-container"
+                    class="tag bg-success-container/50 text-onsuccess-container"
                 >
                     <i class="fa-solid fa-check" />
                     {{ $t('domain.registration.confirmed') }}
                 </span>
                 <span
                     v-if="props.registration?.state === RegistrationSlotState.ASSIGNED"
-                    class="tag bg-error-container text-onerror-container"
+                    class="tag bg-error-container/50 text-onerror-container"
                 >
                     <i class="fa-solid fa-clock" />
                     {{ $t('domain.registration.confirmation-pending') }}
@@ -51,7 +51,7 @@
                 </span>
                 <span
                     v-if="props.registration.hasOverwrittenPosition"
-                    class="position bg-error-container text-onerror-container line-through"
+                    class="position bg-error-container/50 text-onerror-container line-through"
                 >
                     <i class="fa-solid fa-warning"></i>
                     {{ positions.get(props.registration.registration?.positionKey).name }}
@@ -65,7 +65,7 @@
                     class="tag"
                     :class="
                         props.registration.expiredQualifications.includes(q.qualificationKey)
-                            ? 'bg-error-container text-onerror-container'
+                            ? 'bg-error-container/50 text-onerror-container'
                             : 'bg-secondary-container text-onsecondary-container'
                     "
                 >

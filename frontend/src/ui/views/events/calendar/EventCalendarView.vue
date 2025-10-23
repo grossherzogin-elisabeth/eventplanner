@@ -451,7 +451,8 @@ init();
     right: 0;
     top: 0;
     @apply rounded-lg;
-    @apply bg-surface-variant bg-opacity-25;
+    @apply bg-surface-variant/20;
+    @apply dark:bg-surface-variant/10;
 }
 
 .create-event-overlay {
@@ -492,8 +493,8 @@ init();
     z-index: 10;
     border-width: 2px;
     @apply rounded-lg;
-    @apply border-error border-opacity-50;
-    @apply bg-error-container bg-opacity-25;
+    @apply border-error/50;
+    @apply bg-error-container/25;
 }
 
 @media only screen and (min-width: 450px) {
@@ -523,7 +524,7 @@ init();
         right: 0;
         z-index: -10;
         @apply -left-8;
-        @apply bg-surface bg-opacity-95;
+        @apply bg-surface/95;
     }
 }
 

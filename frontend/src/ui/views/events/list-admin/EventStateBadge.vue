@@ -2,7 +2,7 @@
     <div class="flex items-center justify-end">
         <VTooltip v-if="unassignedRequiredPositions.length > 0 || unassignedOptionalPositions.length > 0" :delay="10">
             <template #default>
-                <div :key="state.icon" class="status-panel" :class="state.color">
+                <div :key="state.icon" class="status-badge" :class="state.color">
                     <i class="fa-solid w-4" :class="state.icon"></i>
                     <span class="whitespace-nowrap font-semibold">{{ state.name }}</span>
                 </div>
@@ -20,7 +20,7 @@
                             >
                                 {{ position.name }}
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 text-center text-xs"
+                                    class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 text-center text-xs"
                                 >
                                     {{ position.count }}
                                 </span>
@@ -38,7 +38,7 @@
                             >
                                 {{ position.name }}
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                                    class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs"
                                 >
                                     {{ position.count }}
                                 </span>
@@ -48,9 +48,9 @@
                 </div>
             </template>
         </VTooltip>
-        <div v-else :key="state.icon" class="status-panel" :class="state.color">
-            <i class="fa-solid w-4" :class="state.icon"></i>
-            <span class="whitespace-nowrap font-semibold">{{ state.name }}</span>
+        <div v-else :key="state.icon" class="status-badge" :class="state.color">
+            <i class="fa-solid" :class="state.icon"></i>
+            <span>{{ state.name }}</span>
         </div>
     </div>
 </template>
@@ -102,40 +102,28 @@ const unassignedOptionalPositions = computed<OpenPositionsCounter[]>(() =>
 const state = computed<StateDetails>(() => {
     switch (props.event.state) {
         case EventState.Draft:
-            return {
-                name: t('generic.event-state.draft'),
-                icon: 'fa-compass-drafting',
-                color: 'bg-surface-container-highest text-onsurface',
-            };
+            return { name: t('generic.event-state.draft'), icon: 'fa-compass-drafting', color: 'neutral' };
         case EventState.OpenForSignup:
-            return {
-                name: t('generic.event-state.open-for-signup'),
-                icon: 'fa-people-group',
-                color: 'bg-surface-container-highest text-onsurface',
-            };
+            return { name: t('generic.event-state.open-for-signup'), icon: 'fa-people-group', color: 'neutral' };
         case EventState.Canceled:
-            return { name: t('generic.event-state.canceled'), icon: 'fa-ban', color: 'bg-red-container text-onred-container' };
+            return { name: t('generic.event-state.canceled'), icon: 'fa-ban', color: 'error' };
     }
     if (openRequiredSlots.value.length > 0) {
-        return {
-            name: t('views.events.admin-list.state.missing-crew'),
-            icon: 'fa-warning',
-            color: 'bg-yellow-container text-onyellow-container',
-        };
+        return { name: t('views.events.admin-list.state.missing-crew'), icon: 'fa-warning', color: 'warning' };
     }
     if (openSlots.value.length > 0) {
         return {
             name: t('generic.event-state.open-slots'),
             icon: 'fa-info-circle',
             iconMobile: 'fa-info',
-            color: 'bg-blue-container text-onblue-container',
+            color: 'info',
         };
     }
     return {
         name: t('generic.event-state.full'),
         icon: 'fa-check-circle',
         iconMobile: 'fa-check',
-        color: 'bg-green-container text-ongreen-container',
+        color: 'success',
     };
 });
 </script>

@@ -34,7 +34,7 @@
                                 <span class="flex-grow">{{ item.label }}</span>
                                 <i
                                     v-if="selectedUser && item.value && !selectedUser.positionKeys?.includes(item.value)"
-                                    class="fa-solid fa-warning mr-4 text-yellow"
+                                    class="fa-solid fa-warning mr-4 text-warning"
                                 />
                             </template>
                         </VInputCombobox>
@@ -91,7 +91,7 @@
                             class="truncate whitespace-nowrap rounded-lg px-2 py-1 font-bold"
                             :class="
                                 expiredQualifications.includes(q.qualificationKey)
-                                    ? 'bg-error-container text-onerror-container'
+                                    ? 'bg-error-container/50 text-onerror-container'
                                     : 'bg-secondary-container text-onsecondary-container'
                             "
                         >

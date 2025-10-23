@@ -116,7 +116,7 @@
                             </p>
                         </td>
                         <td>
-                            <div class="status-panel bg-surface-container-highest">
+                            <div class="status-badge neutral">
                                 <i class="fa-solid fa-circle text-surface-container-high"></i>
                                 <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-surface-container-high"></span>
                             </div>

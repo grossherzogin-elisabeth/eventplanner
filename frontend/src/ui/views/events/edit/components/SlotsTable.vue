@@ -37,23 +37,17 @@
             </td>
             <td class="w-64">
                 <div class="flex items-center justify-end">
-                    <span v-if="item.criticality === 2" class="status-panel bg-red-container text-onred-container">
+                    <span v-if="item.criticality === 2" class="status-badge error">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="ml-2 whitespace-nowrap font-semibold">
-                            {{ $t('domain.event-slot.required') }}
-                        </span>
+                        <span>{{ $t('domain.event-slot.required') }}</span>
                     </span>
-                    <span v-else-if="item.criticality === 1" class="status-panel bg-yellow-container text-onyellow-container">
+                    <span v-else-if="item.criticality === 1" class="status-badge warning">
                         <i class="fa-solid fa-circle-info"></i>
-                        <span class="ml-2 whitespace-nowrap font-semibold">
-                            {{ $t('domain.event-slot.important') }}
-                        </span>
+                        <span>{{ $t('domain.event-slot.important') }}</span>
                     </span>
-                    <span v-else class="status-panel bg-surface-container-highest text-onsurface">
+                    <span v-else class="status-badge neutral">
                         <i class="fa-solid fa-circle-question"></i>
-                        <span class="ml-2 whitespace-nowrap font-semibold">
-                            {{ $t('domain.event-slot.optional') }}
-                        </span>
+                        <span>{{ $t('domain.event-slot.optional') }}</span>
                     </span>
                 </div>
             </td>

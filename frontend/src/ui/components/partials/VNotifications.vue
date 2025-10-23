@@ -102,39 +102,39 @@ init();
 }
 
 .success .notification {
-    @apply bg-green-container;
-    @apply text-ongreen-container;
+    @apply bg-success-container/50;
+    @apply text-onsuccess-container;
 }
 
 .success .notification p {
-    @apply text-ongreen-container;
+    @apply text-onsuccess-container;
 }
 
 .info .notification {
-    @apply bg-blue-container;
-    @apply text-onblue-container;
+    @apply bg-info-container/50;
+    @apply text-oninfo-container;
 }
 
 .info .notification p {
-    @apply text-onblue-container;
+    @apply text-oninfo-container;
 }
 
 .warning .notification {
-    @apply bg-yellow-container;
-    @apply text-onyellow-container;
+    @apply bg-warning-container/50;
+    @apply text-onwarning-container;
 }
 
 .warning .notification p {
-    @apply text-onyellow-container;
+    @apply text-onwarning-container;
 }
 
 .error .notification {
-    @apply bg-red-container;
-    @apply text-onred-container;
+    @apply bg-error-container/50;
+    @apply text-onerror-container;
 }
 
 .error .notification p {
-    @apply text-onred-container;
+    @apply text-onerror-container;
 }
 
 .animate-disappear {

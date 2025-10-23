@@ -24,10 +24,10 @@
                                 <i class="fa-solid fa-user-clock opacity-25"></i>
                             </span>
                             <span v-else-if="props.value.name && props.value.registration?.confirmed">
-                                <i class="fa-solid fa-user-check text-green opacity-60"></i>
+                                <i class="fa-solid fa-user-check text-success opacity-60"></i>
                             </span>
                             <span v-else>
-                                <i class="fa-solid fa-user-xmark text-error text-opacity-50"></i>
+                                <i class="fa-solid fa-user-xmark text-error/50"></i>
                             </span>
                         </template>
 
@@ -37,7 +37,7 @@
                             <template v-if="!props.value.user"> (Gastcrew) </template>
                         </span>
                         <span v-else-if="props.value.user" class="mx-2 truncate italic text-error"> Gelöschter Nutzer </span>
-                        <span v-else class="mx-2 truncate italic text-error text-opacity-50"> Noch nicht besetzt </span>
+                        <span v-else class="mx-2 truncate italic text-error/50"> Noch nicht besetzt </span>
 
                         <i
                             v-if="props.value.registration?.note"

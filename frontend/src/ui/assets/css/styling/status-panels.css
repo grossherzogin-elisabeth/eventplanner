@@ -1,7 +1,57 @@
-.status-panel {
-    @apply inline-flex w-auto items-center space-x-2 rounded-full py-1 pl-3 pr-4;
+.status-badge {
+    @apply inline-flex w-auto items-center space-x-2 rounded-full py-1 pl-3 pr-4 text-sm;
 }
 
-.status-gray {
-    @apply bg-surface-container-highest text-onsurface;
+.status-badge > span {
+    @apply whitespace-nowrap font-semibold;
 }
+
+.status-badge > i {
+    @apply w-4;
+}
+
+.status-panel {
+    @apply flex items-center overflow-hidden;
+}
+
+.status-panel.neutral,
+.status-badge.neutral {
+    @apply bg-surface-container-highest;
+    @apply text-onsurface;
+    @apply dark:bg-surface-container-highest/50;
+    @apply border-surface-container-highest dark:border;
+}
+
+.status-panel.info,
+.status-badge.info {
+    @apply bg-info-container;
+    @apply text-oninfo-container;
+    @apply dark:bg-info-container/25;
+    @apply border-info-container/75 dark:border;
+}
+
+.status-panel.success,
+.status-badge.success {
+    @apply bg-success-container/50;
+    @apply text-onsuccess-container;
+    @apply dark:bg-success-container/15;
+    @apply dark:border dark:border-success-container/75;
+}
+
+.status-panel.warning,
+.status-badge.warning {
+    @apply bg-warning-container/25;
+    @apply text-onwarning-container;
+    @apply dark:bg-warning-container/15;
+    @apply dark:border dark:border-warning-container/75;
+}
+
+.status-panel.error,
+.status-badge.error {
+    @apply bg-error-container;
+    @apply text-onerror-container;
+    @apply dark:text-error-container;
+    @apply dark:bg-error-container/15;
+    @apply border-error-container/50 dark:border;
+}
+

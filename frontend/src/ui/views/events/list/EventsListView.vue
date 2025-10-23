@@ -95,9 +95,9 @@
                     <!-- status -->
                     <td class="w-1/6" :class="{ 'opacity-50': item.isPastEvent }">
                         <div class="flex items-center lg:justify-end">
-                            <div :key="item.stateDetails.icon" class="status-panel" :class="item.stateDetails.color">
+                            <div :key="item.stateDetails.icon" class="status-badge" :class="item.stateDetails.color">
                                 <i class="fa-solid w-4" :class="item.stateDetails.icon"></i>
-                                <span class="whitespace-nowrap font-semibold">{{ item.stateDetails.name }}</span>
+                                <span>{{ item.stateDetails.name }}</span>
                             </div>
                         </div>
                     </td>
@@ -139,7 +139,7 @@
                             </p>
                         </td>
                         <td>
-                            <div class="status-panel bg-surface-container-highest">
+                            <div class="status-badge neutral">
                                 <i class="fa-solid fa-circle text-surface-container-high"></i>
                                 <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-surface-container-high"></span>
                             </div>
@@ -450,59 +450,27 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
 
 function getStateDetails(event: EventTableViewItem): StateDetails {
     if (event.state === EventState.Canceled) {
-        return {
-            name: t('generic.event-state.canceled'),
-            icon: 'fa-ban',
-            color: 'bg-red-container text-onred-container',
-        };
+        return { name: t('generic.event-state.canceled'), icon: 'fa-ban', color: 'error' };
     }
     if (event.isSignedInUserAssigned) {
-        return {
-            name: t('views.events.list.state.assigned'),
-            icon: 'fa-check-circle',
-            color: 'bg-green-container text-ongreen-container',
-        };
+        return { name: t('views.events.list.state.assigned'), icon: 'fa-check-circle', color: 'success' };
     }
     if (event.signedInUserRegistration) {
-        return {
-            name: t('views.events.list.state.waitinglist'),
-            icon: 'fa-hourglass-half',
-            color: 'bg-surface-container-highest text-onsurface',
-        };
+        return { name: t('views.events.list.state.waitinglist'), icon: 'fa-hourglass-half', color: 'neutral' };
     }
     if (event.state === EventState.Draft) {
-        return {
-            name: t('generic.event-state.draft'),
-            icon: 'fa-compass-drafting',
-            color: 'bg-surface-container-highest text-onsurface',
-        };
+        return { name: t('generic.event-state.draft'), icon: 'fa-compass-drafting', color: 'neutral' };
     }
     if (event.state === EventState.OpenForSignup) {
-        return {
-            name: t('generic.event-state.open-for-signup'),
-            icon: 'fa-people-group',
-            color: 'bg-blue-container text-onblue-container',
-        };
+        return { name: t('generic.event-state.open-for-signup'), icon: 'fa-people-group', color: 'info' };
     }
     if (event.hasOpenImportantSlots) {
-        return {
-            name: t('generic.event-state.crew-wanted'),
-            icon: 'fa-info-circle',
-            color: 'bg-yellow-container text-onyellow-container',
-        };
+        return { name: t('generic.event-state.crew-wanted'), icon: 'fa-info-circle', color: 'warning' };
     }
     if (event.hasOpenSlots) {
-        return {
-            name: t('generic.event-state.open-slots'),
-            icon: 'fa-info-circle',
-            color: 'bg-blue-container text-onblue-container',
-        };
+        return { name: t('generic.event-state.open-slots'), icon: 'fa-info-circle', color: 'info' };
     }
-    return {
-        name: t('generic.event-state.full'),
-        icon: 'fa-info-circle',
-        color: 'bg-surface-container-highest text-onsurface',
-    };
+    return { name: t('generic.event-state.full'), icon: 'fa-info-circle', color: 'neutral' };
 }
 
 async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {

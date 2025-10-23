@@ -72,7 +72,7 @@ function onInput(event: Event): void {
 }
 
 .btn-search input::placeholder {
-    @apply placeholder-secondary placeholder-opacity-100;
+    @apply text-secondary/100;
 }
 
 .btn-search input:focus-within {
@@ -80,6 +80,6 @@ function onInput(event: Event): void {
 }
 
 .btn-search input:focus-within::placeholder {
-    @apply placeholder-secondary placeholder-opacity-25;
+    @apply text-secondary/25;
 }
 </style>

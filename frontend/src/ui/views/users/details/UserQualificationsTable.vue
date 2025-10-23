@@ -42,17 +42,17 @@
             </td>
             <td>
                 <div class="flex items-center justify-end">
-                    <div v-if="item.isExpired" class="status-panel bg-red-container text-onred-container">
+                    <div v-if="item.isExpired" class="status-badge error">
                         <i class="fa-solid fa-ban"></i>
-                        <span class="whitespace-nowrap font-semibold">Abgelaufen</span>
+                        <span>Abgelaufen</span>
                     </div>
-                    <div v-else-if="item.willExpireSoon" class="status-panel bg-yellow-container text-onyellow-container">
+                    <div v-else-if="item.willExpireSoon" class="status-badge warning">
                         <i class="fa-solid fa-warning"></i>
-                        <span class="whitespace-nowrap font-semibold"> Läuft bald ab</span>
+                        <span> Läuft bald ab</span>
                     </div>
-                    <div v-else class="status-panel bg-green-container text-ongreen-container">
+                    <div v-else class="status-badge success">
                         <i class="fa-solid fa-check-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">Gültig</span>
+                        <span>Gültig</span>
                     </div>
                 </div>
             </td>

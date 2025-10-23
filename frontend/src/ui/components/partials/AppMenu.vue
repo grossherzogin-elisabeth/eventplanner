@@ -222,7 +222,7 @@ watch(route, () => {
 
 /* expand */
 .menu-item.expanded {
-    @apply bg-onprimary bg-opacity-5;
+    @apply bg-onprimary/5;
 }
 
 .menu-item .menu-chevron {
@@ -238,7 +238,7 @@ watch(route, () => {
 /* hover */
 .menu-item:hover:not(.expanded):not(.active) > a:not(.router-link-active),
 .menu-item:hover:not(.expanded):not(.active) > button:not(.router-link-active) {
-    @apply bg-onprimary bg-opacity-10;
+    @apply bg-onprimary/10;
 }
 
 /* active */

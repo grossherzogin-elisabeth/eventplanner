@@ -97,10 +97,10 @@ const props = defineProps<Props>();
     @apply shadow;
     @apply text-sm;
     @apply font-semibold;
-    @apply bg-surface-container bg-opacity-50;
+    @apply bg-surface-container/50;
 }
 .event-card:hover {
-    @apply bg-surface-container bg-opacity-75;
+    @apply bg-surface-container/75;
 }
 
 .event-card .border-event-card {
@@ -127,20 +127,20 @@ const props = defineProps<Props>();
 }
 
 .event-card.assigned {
-    @apply bg-primary-container bg-opacity-50;
+    @apply bg-primary-container/50;
     @apply text-onprimary-container;
 }
 
 .event-card.assigned:hover {
-    @apply bg-primary-container bg-opacity-75;
+    @apply bg-primary-container/75;
 }
 
 .event-card.assigned .border-event-card {
-    @apply border-onprimary-container border-opacity-20;
+    @apply border-onprimary-container/20;
 }
 
 .event-card.assigned > * {
     border-left-width: 0.5rem;
-    @apply border-onprimary-container border-opacity-20;
+    @apply border-onprimary-container/20;
 }
 </style>

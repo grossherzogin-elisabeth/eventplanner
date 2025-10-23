@@ -8,19 +8,19 @@
                         <div class="mb-4">
                             <VInputLabel>Heading (HDG)</VInputLabel>
                             <VInputSlider v-model="hdg" :min="0" :max="360">
-                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
+                                <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
                             </VInputSlider>
                         </div>
                         <div class="mb-4">
                             <VInputLabel>Course over ground(COG)</VInputLabel>
                             <VInputSlider v-model="cog" :min="0" :max="360">
-                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
+                                <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
                             </VInputSlider>
                         </div>
                         <div class="mb-8">
                             <VInputLabel>Speed over ground (SOG)</VInputLabel>
-                            <VInputNumber v-model="sog">
-                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
+                            <VInputNumber v-modael="sog">
+                                <template #after><span class="pr-4 text-onsurface-variant/50">kn</span></template>
                             </VInputNumber>
                         </div>
                     </section>
@@ -33,7 +33,7 @@
                                 :model-value="relativeWindSpeed"
                                 @update:model-value="recalculateFromRelativeWind($event, relativeWindDirection)"
                             >
-                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
+                                <template #after><span class="pr-4 text-onsurface-variant/50">kn</span></template>
                             </VInputNumber>
                         </div>
                         <div class="mb-8">
@@ -44,7 +44,7 @@
                                 :max="180"
                                 @update:model-value="recalculateFromRelativeWind(relativeWindSpeed, $event)"
                             >
-                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
+                                <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
                             </VInputSlider>
                         </div>
                     </section>
@@ -57,7 +57,7 @@
                                 :model-value="absoluteWindSpeed"
                                 @update:model-value="recalculateFromAbsoluteWind($event, absoluteWindDirection)"
                             >
-                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">kn</span></template>
+                                <template #after><span class="pr-4 text-onsurface-variant/50">kn</span></template>
                             </VInputNumber>
                         </div>
                         <div class="mb-4">
@@ -68,7 +68,7 @@
                                 :max="360"
                                 @update:model-value="recalculateFromAbsoluteWind(absoluteWindSpeed, $event)"
                             >
-                                <template #after><span class="pr-4 text-onsurface-variant text-opacity-50">deg</span></template>
+                                <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
                             </VInputSlider>
                         </div>
                     </section>

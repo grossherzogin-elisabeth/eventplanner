@@ -1,10 +1,6 @@
 <template>
-    <div class="rounded-2xl bg-surface">
-        <div
-            class="flex items-center overflow-hidden rounded-2xl bg-green-container text-ongreen-container shadow"
-            :class="{ hidden: dismissed }"
-            @click="clampActive = !clampActive"
-        >
+    <div class="rounded-2xl bg-surface shadow">
+        <div class="status-panel success rounded-2xl" :class="{ hidden: dismissed }" @click="clampActive = !clampActive">
             <i class="fa-solid my-5 ml-4 w-4 self-start" :class="props.icon ?? 'fa-info-circle'"></i>
             <span
                 class="mx-4 my-4 mr-1 w-0 flex-grow text-sm"

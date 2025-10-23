@@ -145,12 +145,12 @@ init();
 }
 
 .calendar-event-entry.waiting-list {
-    @apply bg-primary-container bg-opacity-50;
+    @apply bg-primary-container/50;
     @apply text-onsecondary-container;
 }
 
 .calendar-event-entry.waiting-list .calendar-event-entry-bar {
-    @apply bg-primary-container bg-opacity-50;
+    @apply bg-primary-container/50;
     opacity: 1;
     background-image: var(--pattern);
 }
@@ -160,7 +160,7 @@ init();
 }
 
 .calendar-event-entry.draft .calendar-event-entry-bar {
-    @apply bg-surface-container-low bg-opacity-50;
+    @apply bg-surface-container-low/50;
     opacity: 1;
     background-image: var(--pattern);
 }

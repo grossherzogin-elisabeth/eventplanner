@@ -23,11 +23,11 @@
 
 /* disabled */
 .input-field-wrapper:has([disabled]) {
-    @apply border border-onsurface border-opacity-10;
+    @apply border border-onsurface/10;
 }
 
 .input-field:disabled {
-    @apply text-onsurface text-opacity-50;
+    @apply text-onsurface/50;
 }
 
 .input-field-wrapper:has(.readonly) {
@@ -52,7 +52,7 @@
 /* label */
 .input-label {
     @apply mb-1 mt-1 text-xs font-bold;
-    @apply pointer-events-none relative z-10 -mb-5 ml-4 text-onsurface text-opacity-50;
+    @apply pointer-events-none relative z-10 -mb-5 ml-4 text-onsurface/50;
 }
 
 .input-label.required {

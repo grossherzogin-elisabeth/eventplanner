@@ -1,7 +1,7 @@
 <template>
     <div :class="$attrs.class">
         <h2
-            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-outline-variant px-4 text-base font-semibold xs:px-8 md:px-16 xl:px-20"
+            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-onsurface/20 px-4 text-base font-semibold xs:px-8 md:px-16 xl:px-20"
         >
             <slot name="before" />
             <div class="flex gap-x-8">
@@ -72,7 +72,8 @@ init();
 <style>
 .tab {
     white-space: nowrap;
-    border-bottom: 1px transparent;
+    border-bottom-width: 1px;
+    border-color: transparent;
     @apply pb-1;
 }
 
@@ -91,8 +92,7 @@ init();
     @apply text-onsecondary-container;
 }
 
-.active.tab {
-    border-bottom-width: 1px;
+.tab.active {
     @apply border-primary;
     @apply text-primary;
 }
