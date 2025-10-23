@@ -20,7 +20,7 @@
                     <h3 class="mb-2 flex items-center space-x-2">
                         <span>{{ props.event.name }}</span>
                     </h3>
-                    <p class="mb-4 flex text-sm opacity-50">
+                    <p class="mb-4 flex text-sm opacity-75">
                         <span class="flex-grow">
                             {{ formatDateRange(props.event.start, props.event.end) }}
                         </span>
@@ -97,10 +97,10 @@ const props = defineProps<Props>();
     @apply shadow;
     @apply text-sm;
     @apply font-semibold;
-    @apply bg-surface-container/50;
+    @apply bg-surface-container/75;
 }
 .event-card:hover {
-    @apply bg-surface-container/75;
+    @apply bg-surface-container;
 }
 
 .event-card .border-event-card {
@@ -128,11 +128,10 @@ const props = defineProps<Props>();
 
 .event-card.assigned {
     @apply bg-primary-container/50;
-    @apply text-onprimary-container;
 }
 
 .event-card.assigned:hover {
-    @apply bg-primary-container/75;
+    @apply bg-primary-container/85;
 }
 
 .event-card.assigned .border-event-card {

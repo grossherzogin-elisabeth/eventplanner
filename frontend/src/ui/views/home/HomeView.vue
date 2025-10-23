@@ -2,7 +2,7 @@
     <div class="xl:overflow-auto">
         <div class="flex px-4 pb-8 xs:px-8 md:px-16 xl:px-20">
             <div class="w-full xl:max-w-2xl">
-                <div class="sticky top-12 z-10 -mx-4 flex h-14 justify-end bg-surface pb-2 pt-4 xl:top-0 xl:h-16 xl:pt-8"></div>
+                <div class="sticky top-12 z-10 -mx-6 flex h-14 justify-end bg-surface pb-2 pt-4 xl:top-0 xl:h-16 xl:pt-8"></div>
                 <div v-if="loading" class="-mt-10">
                     <div class="pb-8">
                         <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">

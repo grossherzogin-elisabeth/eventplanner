@@ -173,9 +173,10 @@ export class UsersUseCase {
         const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (loadedSettings.theme === Theme.Dark || (loadedSettings.theme === Theme.System && prefersDarkMode)) {
             document.querySelector('html')?.classList.add('dark');
-        } else {
+        } else if (loadedSettings.theme === Theme.Light || (loadedSettings.theme === Theme.System && !prefersDarkMode)) {
             document.querySelector('html')?.classList.remove('dark');
         }
+        console.log(loadedSettings.theme);
     }
 
     public validate(user: UserDetails | null): Record<string, ValidationHint[]> {

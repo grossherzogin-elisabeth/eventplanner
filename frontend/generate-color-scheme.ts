@@ -19,11 +19,6 @@ function generateColorSchemeCss(baseColor: string, darkMode: boolean): string[] 
         `--color-black: ${renderColor('#000000')};`,
         `--color-white: ${renderColor('#ffffff')};`,
 
-        `--color-error: ${renderColor(scheme.error)};`,
-        `--color-error-container: ${renderColor(scheme.errorContainer)};`,
-        `--color-onerror: ${renderColor(scheme.onError)};`,
-        `--color-onerror-container: ${renderColor(scheme.onErrorContainer)};`,
-
         `--color-primary: ${renderColor(scheme.primary)};`,
         `--color-primary-container: ${renderColor(scheme.primaryContainer)};`,
         `--color-primary-fixed: ${renderColor(scheme.primaryFixed)};`,
@@ -66,6 +61,12 @@ function generateColorSchemeCss(baseColor: string, darkMode: boolean): string[] 
 
         `--color-outline: ${renderColor(scheme.outline)};`,
         `--color-outline-variant: ${renderColor(scheme.outlineVariant)};`,
+        `--color-scrim: ${renderColor(scheme.scrim)};`,
+
+        `--color-error: ${renderColor(scheme.error)};`,
+        `--color-error-container: ${renderColor(scheme.errorContainer)};`,
+        `--color-onerror: ${renderColor(scheme.onError)};`,
+        `--color-onerror-container: ${renderColor(scheme.onErrorContainer)};`,
     ];
 
     generateCustomColor(argb, 'success', argbFromHex('#3f6212'), darkMode).forEach((c) => colors.push(c));
@@ -106,16 +107,12 @@ const tailwindCss = `
 @tailwind utilities;
 
 @layer base {
-    @media (prefers-color-scheme: light) {
-        :root {
-            ${lightColors.join('\n            ')}
-        }
+    html {
+        ${lightColors.join('\n        ')}
     }
 
-    @media (prefers-color-scheme: dark) {
-        :root {
-            ${darkColors.join('\n            ')}
-        }
+    html.dark {
+        ${darkColors.join('\n        ')}
     }
 }`;
 

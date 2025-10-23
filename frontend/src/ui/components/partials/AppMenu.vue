@@ -222,7 +222,7 @@ watch(route, () => {
 
 /* expand */
 .menu-item.expanded {
-    @apply bg-onprimary/5;
+    @apply bg-secondary-container/10;
 }
 
 .menu-item .menu-chevron {
@@ -238,7 +238,7 @@ watch(route, () => {
 /* hover */
 .menu-item:hover:not(.expanded):not(.active) > a:not(.router-link-active),
 .menu-item:hover:not(.expanded):not(.active) > button:not(.router-link-active) {
-    @apply bg-onprimary/10;
+    @apply bg-secondary-container/50;
 }
 
 /* active */
@@ -246,9 +246,9 @@ watch(route, () => {
 .menu-item.active > a,
 .menu-item.active > button {
     position: relative;
-    @apply bg-onprimary;
+    @apply bg-secondary-container;
+    @apply text-onsecondary-container;
     @apply font-bold;
-    @apply text-primary;
 }
 
 .menu-item > a.router-link-active:before,

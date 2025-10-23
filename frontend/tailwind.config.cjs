@@ -11,6 +11,7 @@ module.exports = {
             black: '#000000',
             white: '#ffffff',
             inherit: 'inherit',
+            scrim: 'rgb(var(--color-scrim))',
 
             info: {
                 DEFAULT: 'rgb(var(--color-info))',

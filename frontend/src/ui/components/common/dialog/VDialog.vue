@@ -14,7 +14,7 @@
                     <slot name="dialog">
                         <div
                             :class="` ${props.width || 'w-screen max-w-xl'} ${props.height || 'h-auto max-h-[95vh]'} ${$attrs.class} `"
-                            class="dialog flex flex-col overflow-hidden bg-surface sm:rounded-3xl sm:shadow-lg"
+                            class="dialog flex flex-col overflow-hidden bg-surface-container-high sm:rounded-3xl sm:shadow-lg"
                         >
                             <div class="dialog-header flex h-16 w-full items-center justify-between pl-4 xs:pl-8 lg:pl-10 lg:pr-2">
                                 <div class="fullscreen-back-button -ml-4">
