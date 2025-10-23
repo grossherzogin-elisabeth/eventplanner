@@ -70,6 +70,7 @@
 
 <script lang="ts" setup generic="T, E">
 import type { Ref } from 'vue';
+import { onUnmounted } from 'vue';
 import { nextTick, ref } from 'vue';
 import { disableScrolling, enableScrolling, wait } from '@/common';
 import type { Sheet } from '@/ui/components/common';
@@ -133,6 +134,7 @@ let closeTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
 function init(): void {
     window.addEventListener('resize', onWindowResize, { passive: true });
+    onUnmounted(() => enableScrolling());
 }
 
 async function open(): Promise<T | undefined> {
