@@ -1,6 +1,6 @@
 <template>
     <div v-if="enableLoginView">
-        <div class="fixed bottom-0 left-0 right-0 top-0 overflow-y-auto bg-gradient-to-t from-p-800 to-p-700">
+        <div class="from-p-800 to-p-700 fixed bottom-0 left-0 right-0 top-0 overflow-y-auto bg-gradient-to-t">
             <div class="self-stretch p-8 pt-16 text-white sm:hidden">
                 <h1 class="mb-8 text-2xl font-thin">
                     Segelschulschiff<br />
@@ -18,7 +18,7 @@
                 <div class="mx-auto flex w-full flex-col rounded-t-3xl bg-surface sm:max-w-xl sm:rounded-3xl md:flex-row lg:max-w-5xl">
                     <div class="relative hidden w-0 flex-grow overflow-hidden rounded-l-3xl lg:block">
                         <img class="h-full w-full object-cover object-left opacity-50" src="@/ui/assets/images/login-1.jpg" />
-                        <div class="absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-l from-p-50 to-transparent"></div>
+                        <div class="from-p-50 absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-l to-transparent"></div>
                     </div>
                     <div class="flex flex-col p-8 sm:p-16 lg:mx-auto lg:max-w-xl">
                         <div class="mb-8 h-1 w-8 self-center rounded-full bg-surface-container sm:hidden"></div>

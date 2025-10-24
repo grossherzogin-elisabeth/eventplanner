@@ -99,11 +99,16 @@
 <script lang="ts" setup></script>
 <style scoped>
 .demo {
-    @apply mb-4 text-sm font-bold;
+    @apply mb-4;
+    @apply text-sm;
+    @apply font-bold;
 }
 
 .demo > div {
-    @apply flex h-24 items-center px-4;
+    display: flex;
+    align-items: center;
+    @apply h-24;
+    @apply px-4;
 }
 
 .demo > div:last-child {

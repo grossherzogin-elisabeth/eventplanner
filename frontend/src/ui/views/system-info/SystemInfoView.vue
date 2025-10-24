@@ -23,6 +23,16 @@
                     <code>CMD</code> + <code>R</code> (MacOS). Auf mobilen Geräten kannst du die Seite nach unten ziehen, um sie neu zu
                     laden.
                 </VInfo>
+
+                <h2 class="mb-4">Beta Features</h2>
+                <div class="mb-8">
+                    <VInputCheckBox
+                        label="Dark Mode ausprobieren"
+                        :model-value="settings?.theme === Theme.Dark"
+                        @update:model-value="enableDarkMode($event)"
+                    />
+                </div>
+
                 <h2 class="mb-4">System Status</h2>
                 <table class="mb-8">
                     <tbody>
@@ -69,8 +79,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
-import { VInfo } from '@/ui/components/common';
-import { useConfig } from '@/ui/composables/Application';
+import type { UserSettings } from '@/domain';
+import { Theme } from '@/domain';
+import { VInfo, VInputCheckBox } from '@/ui/components/common';
+import { useConfig, useUsersUseCase } from '@/ui/composables/Application';
 
 interface SystemInfo {
     buildDate?: Date;
@@ -83,16 +95,31 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 const emit = defineEmits<RouteEmits>();
 
 const config = useConfig();
+const usersUseCase = useUsersUseCase();
+
 const systemInfo = ref<SystemInfo>({});
+const settings = ref<UserSettings | undefined>(undefined);
 
 function init(): void {
     emit('update:tab-title', 'Feedback');
     fetchStatus();
+    fetchSettings();
 }
 
 async function fetchStatus(): Promise<void> {
     const response = await fetch('api/v1/status');
     systemInfo.value = await response.clone().json();
+}
+
+async function fetchSettings(): Promise<void> {
+    settings.value = await usersUseCase.getUserSettings();
+}
+
+async function enableDarkMode(enabled: boolean): Promise<void> {
+    if (settings.value) {
+        settings.value.theme = enabled ? Theme.Dark : Theme.Light;
+        settings.value = await usersUseCase.saveUserSettings(settings.value);
+    }
 }
 
 init();

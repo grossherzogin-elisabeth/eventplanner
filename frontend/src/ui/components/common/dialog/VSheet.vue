@@ -273,4 +273,14 @@ init();
         --open-close-animation-diff-y: 0;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    .sheet-background {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    .sheet-background.open {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+}
 </style>

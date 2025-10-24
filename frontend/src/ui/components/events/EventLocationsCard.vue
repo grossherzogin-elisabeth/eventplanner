@@ -3,7 +3,7 @@
         <h2 class="mb-2 font-bold text-secondary">
             {{ $t('components.event-locations-card.title', { count: props.event.locations.length }) }}
         </h2>
-        <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 pb-0 shadow xs:-mx-4">
+        <div class="space-y-1 rounded-2xl bg-surface-container/50 p-4 pb-0 shadow xs:-mx-4">
             <p v-if="props.event.locations.length === 0" class="pb-4 text-sm">
                 {{ $t('components.event-locations-card.placeholder') }}
             </p>
@@ -24,7 +24,7 @@
                             <span>{{ location.name }}</span>
                             <ContextMenuButton v-if="location.information">
                                 <template #icon>
-                                    <i class="fa-solid fa-info-circle text-primary text-opacity-75 hover:text-opacity-100"></i>
+                                    <i class="fa-solid fa-info-circle text-primary/75 hover:text-primary/100"></i>
                                 </template>
                                 <template #default>
                                     <div class="overflow-hidden" @click.stop @mouseup.stop>

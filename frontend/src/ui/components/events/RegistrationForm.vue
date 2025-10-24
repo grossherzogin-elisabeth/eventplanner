@@ -14,9 +14,9 @@
             </ul>
             <p>Du kannst alle Angaben später noch ändern.</p>
         </div>
-        <ul class="border-t border-onsurface-variant border-opacity-20 md:mx-0">
+        <ul class="border-t border-onsurface-variant/20 md:mx-0">
             <li
-                class="flex items-center border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                class="flex items-center border-b border-onsurface-variant/20 py-3 sm:px-0"
                 :class="availablePositionsForSignedInUser.length > 1 ? 'cursor-pointer' : 'pointer-events-none'"
                 @click="emit('update:view', View.POSITION)"
             >
@@ -30,7 +30,7 @@
             </li>
             <li
                 v-if="hasSingleDayEvent"
-                class="flex cursor-pointer items-center border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                class="flex cursor-pointer items-center border-b border-onsurface-variant/20 py-3 sm:px-0"
                 @click="emit('update:view', View.OVERNIGHT)"
             >
                 <div class="mr-4 w-0 flex-grow">
@@ -43,7 +43,7 @@
                 </button>
             </li>
             <li
-                class="flex cursor-pointer items-center border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                class="flex cursor-pointer items-center border-b border-onsurface-variant/20 py-3 sm:px-0"
                 @click="emit('update:view', View.ARRIVAL)"
             >
                 <div class="mr-4 w-0 flex-grow">
@@ -56,7 +56,7 @@
                 </button>
             </li>
             <li
-                class="flex cursor-pointer items-center border-b border-onsurface-variant border-opacity-20 py-3 sm:px-0"
+                class="flex cursor-pointer items-center border-b border-onsurface-variant/20 py-3 sm:px-0"
                 @click="emit('update:view', View.NOTE)"
             >
                 <div class="mr-4 w-0 flex-grow">

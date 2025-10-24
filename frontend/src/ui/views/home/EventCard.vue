@@ -20,7 +20,7 @@
                     <h3 class="mb-2 flex items-center space-x-2">
                         <span>{{ props.event.name }}</span>
                     </h3>
-                    <p class="mb-4 flex text-sm opacity-50">
+                    <p class="mb-4 flex text-sm opacity-75">
                         <span class="flex-grow">
                             {{ formatDateRange(props.event.start, props.event.end) }}
                         </span>
@@ -91,10 +91,16 @@ const props = defineProps<Props>();
 </script>
 <style>
 .event-card {
-    @apply overflow-hidden rounded-xl shadow;
-    @apply cursor-pointer;
-    @apply text-sm font-semibold;
-    @apply bg-surface-container bg-opacity-50 hover:bg-opacity-75;
+    overflow: hidden;
+    cursor: pointer;
+    @apply rounded-xl;
+    @apply shadow;
+    @apply text-sm;
+    @apply font-semibold;
+    @apply bg-surface-container/75;
+}
+.event-card:hover {
+    @apply bg-surface-container;
 }
 
 .event-card .border-event-card {
@@ -102,24 +108,38 @@ const props = defineProps<Props>();
 }
 
 .event-card > * {
-    @apply h-full w-full py-1 pl-2 pr-4 sm:px-2;
-    @apply border-l-[0.5rem] border-surface-container;
+    height: 100%;
+    width: 100%;
+    border-left-width: 0.5rem;
+    @apply py-1;
+    @apply pl-2;
+    @apply pr-4;
+    @apply sm:px-2;
+    @apply border-surface-container;
 }
 
 .event-card.loading {
-    @apply hover:shadow-none;
-    @apply cursor-default;
+    cursor: default;
+}
+
+.event-card.loading:hover {
+    box-shadow: none;
 }
 
 .event-card.assigned {
-    @apply bg-primary-container bg-opacity-50 text-onprimary-container hover:bg-opacity-75;
+    @apply bg-primary-container/50;
+}
+
+.event-card.assigned:hover {
+    @apply bg-primary-container/55;
 }
 
 .event-card.assigned .border-event-card {
-    @apply border-onprimary-container border-opacity-20;
+    @apply border-onprimary-container/20;
 }
 
 .event-card.assigned > * {
-    @apply border-l-[0.5rem] border-onprimary-container border-opacity-20;
+    border-left-width: 0.5rem;
+    @apply border-onprimary-container/20;
 }
 </style>

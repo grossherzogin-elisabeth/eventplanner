@@ -16,5 +16,5 @@
 }
 
 .input-label.invalid {
-    @apply text-error;
+    @apply text-onerror-container;
 }

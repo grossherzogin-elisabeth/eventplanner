@@ -6,7 +6,7 @@
                 <div class="flex items-center rounded-2xl bg-surface-container p-1">
                     <span class="px-2">{{ $t('domain.event.crew') }}</span>
                     <span
-                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs"
                     >
                         {{ props.event?.assignedUserCount }}
                     </span>
@@ -16,12 +16,12 @@
                     :class="
                         secureMinimumCrewMembers >= 8
                             ? 'bg-secondary-container text-onsecondary-container'
-                            : 'bg-error-container text-onerror-container'
+                            : 'bg-error-container/50 text-onerror-container'
                     "
                 >
                     <span class="whitespace-nowrap px-2">{{ $t('views.events.edit.secure-crew') }}</span>
                     <span
-                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
+                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs"
                     >
                         {{ secureMinimumCrewMembers }}
                     </span>
@@ -35,9 +35,7 @@
                     <span class="truncate px-2">
                         {{ pos.name }}
                     </span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white bg-opacity-25 px-1 pt-0.5 text-center text-xs"
-                    >
+                    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs">
                         {{ summary[pos.key] || '0' }}
                     </span>
                 </div>
@@ -78,7 +76,7 @@
                                 <i class="fa-regular fa-circle"></i>
                                 <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsecondary-container"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position h-4 w-20 bg-onsecondary-container"></span>
+                                <span class="tag neutral h-4 w-20"></span>
                             </li>
                         </ul>
                     </div>
@@ -140,7 +138,7 @@
                                 <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
                                 <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsurface"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position block h-4 w-20 bg-onsurface"> </span>
+                                <span class="tag neutral block h-4 w-20"> </span>
                             </li>
                         </ul>
                     </div>
@@ -328,24 +326,42 @@ init();
 .dropzone-add,
 .dropzone-remove,
 .dropzone-delete {
-    @apply flex h-full flex-col items-center justify-center space-y-8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border-width: 2px;
+    border-style: dashed;
+    @apply space-y-8;
     @apply rounded-xl;
-    @apply border-2 border-dashed border-outline;
+    @apply border-outline;
 }
 
 .dropzone span {
-    @apply text-sm font-black uppercase;
+    @apply text-sm;
+    @apply font-black;
+    text-transform: uppercase;
 }
 
 .dropzone.hover .dropzone-add {
-    @apply border-2 border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
+    border: 2px dashed;
+    @apply bg-primary-container;
+    @apply text-onprimary-container;
+    @apply border-onprimary-container;
 }
 
 .dropzone.hover .dropzone-remove {
-    @apply border-2 border-dashed border-onprimary-container bg-primary-container text-onprimary-container;
+    border: 2px dashed;
+    @apply bg-primary-container;
+    @apply text-onprimary-container;
+    @apply border-onprimary-container;
 }
 
 .dropzone.hover .dropzone-delete {
-    @apply border-2 border-dashed border-onerror-container bg-error-container text-onerror-container;
+    border: 2px dashed;
+    @apply bg-error-container;
+    @apply text-onerror-container;
+    @apply border-onerror-container;
 }
 </style>

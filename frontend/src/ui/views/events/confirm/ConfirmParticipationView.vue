@@ -83,7 +83,7 @@
                 </div>
             </div>
             <template v-else-if="registrationState === State.REGISTRATION_WAS_CONFIRMED">
-                <div class="mb-8 rounded-2xl bg-green-container p-4 font-bold text-ongreen-container xs:-mx-4 md:p-8">
+                <div class="mb-8 rounded-2xl bg-success-container/50 p-4 font-bold text-onsuccess-container xs:-mx-4 md:p-8">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-check"></i>
                         <span class="ml-4">{{ $t('views.events.confirm-participation.confirmed.title') }}</span>

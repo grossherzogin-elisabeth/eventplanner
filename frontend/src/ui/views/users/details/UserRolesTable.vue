@@ -12,13 +12,13 @@
             </td>
             <td class="w-1/3 min-w-48">
                 <div class="flex items-center justify-end" @click="toggleRole(item.role)">
-                    <div v-if="item.enabled" class="status-panel bg-green-container text-ongreen-container">
+                    <div v-if="item.enabled" class="status-badge success">
                         <i class="fa-solid fa-check-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">zugewiesen</span>
+                        <span>zugewiesen</span>
                     </div>
-                    <div v-else class="status-panel bg-surface-container-highest text-onsurface">
+                    <div v-else class="status-badge neutral">
                         <i class="fa-solid fa-xmark-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">nicht zugewiesen</span>
+                        <span>nicht zugewiesen</span>
                     </div>
                 </div>
             </td>

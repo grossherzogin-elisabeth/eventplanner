@@ -7,90 +7,134 @@
     @apply rounded-xl;
     @apply px-4 py-2;
     @apply font-bold;
-    @apply flex items-center justify-center gap-2;
-    @apply whitespace-nowrap;
-    @apply hover:no-underline;
+    @apply gap-2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
+
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-danger:hover,
+.btn-floating:hover,
+.btn-ghost:hover,
+.btn-ghost-danger:hover {
+    text-decoration-line: none;
+}
+
+/* Primary Button */
 
 .btn-primary {
-    @apply bg-primary bg-opacity-90 text-onprimary;
+    @apply bg-primary/90 text-onprimary;
 }
 
-.btn-primary:not(:disabled) {
-    @apply hover:bg-opacity-100 hover:shadow;
+.btn-primary:not(:disabled):hover {
+    @apply bg-primary shadow;
 }
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+    @apply bg-onsurface/10 text-onsurface/40;
+}
+
+/* Secondary Button */
 
 .btn-secondary {
-    @apply bg-secondary-container bg-opacity-90 text-onsecondary-container;
+    @apply bg-secondary-container/90 text-onsecondary-container;
 }
 
-.btn-secondary:not(:disabled) {
-    @apply hover:bg-opacity-100 hover:shadow;
+.btn-secondary:not(:disabled):hover {
+    @apply bg-secondary-container shadow;
 }
 
 .btn-secondary.disabled,
 .btn-secondary:disabled {
-    @apply bg-onsurface bg-opacity-15 text-onsurface text-opacity-40;
+    @apply bg-onsurface/10 text-onsurface/40;
 }
+
+/* Danger Button */
 
 .btn-danger {
-    @apply bg-error-container text-onerror-container;
+    @apply bg-error-container/90 text-onerror-container;
+    @apply dark:bg-onerror-container/90 dark:text-error-container;
 }
 
-a.btn-danger,
-.btn-danger:enabled {
-    @apply hover:shadow;
+a.btn-danger:not(:disabled):hover,
+.btn-danger:not(:disabled):hover {
+    @apply bg-error-container shadow;
 }
+
+.btn-danger.disabled,
+.btn-danger:disabled {
+    @apply bg-error-container/10 text-onerror-container/40;
+}
+
+/* Floating Action Button */
 
 .btn-floating,
 .btn-floating-danger {
+    position: relative;
     @apply gap-5 p-5 md:gap-6 md:p-6;
-    @apply rounded-2xl shadow-lg hover:shadow-xl;
+    @apply rounded-2xl shadow-lg;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.btn-primary.disabled,
-.btn-primary:disabled,
-.btn-danger.disabled,
-.btn-danger:disabled {
-    @apply text-opacity-75 opacity-25 !important;
-}
-
-.btn-floating:disabled,
-.btn-floating-danger:disabled {
-    @apply text-opacity-25 opacity-100 !important;
+.btn-floating:before,
+.btn-floating-danger:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    @apply bg-surface;
+    @apply rounded-2xl;
 }
 
 .btn-floating {
-    @apply bg-primary-container text-onprimary-container;
-    @apply hover:bg-primary-container hover:text-onprimary-container;
-    @apply truncate;
+    @apply bg-primary-container/90 text-onprimary-container;
+}
+
+.btn-floating:not(:disabled):hover {
+    @apply bg-primary-container shadow-xl;
 }
 
 .btn-floating-danger {
-    @apply bg-error-container text-onerror-container;
-    @apply hover:bg-error-container hover:text-onerror-container;
-    @apply truncate;
+    @apply bg-error-container/90 text-onerror-container;
 }
 
-.btn-ghost,
-.btn-ghost-danger {
-    /*@apply flex items-center justify-center gap-2;*/
-    /*@apply rounded-lg px-4 py-2;*/
-    /*@apply hover:no-underline;*/
+.btn-floating-danger:not(:disabled):hover {
+    @apply bg-error-container shadow-xl;
 }
+
+.btn-floating:disabled {
+    @apply bg-primary-container/40 text-onprimary-container/40;
+}
+
+.btn-floating-danger:disabled {
+    @apply bg-error-container/40 text-onerror-container/40;
+}
+
+/* Ghost Button */
 
 .btn-ghost {
     @apply text-secondary;
 }
 
 .btn-ghost:not(:disabled):hover {
-    @apply bg-secondary-container text-onsecondary-container;
+    @apply bg-surface-container-high text-onsurface-variant;
 }
 
 .btn-ghost:disabled,
 .btn-ghost-danger:disabled {
     @apply opacity-50;
 }
+
+/* Danger Ghost Button */
 
 .btn-ghost-danger {
     @apply text-error;
@@ -100,37 +144,52 @@ a.btn-danger,
     @apply bg-error-container text-onerror-container;
 }
 
+/* Icon Button */
+
 .icon-button {
-    @apply flex items-center justify-center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     @apply h-11 w-11;
-    @apply relative;
 }
 
 .icon-button:before {
     content: '';
-    @apply rounded-full bg-current opacity-5;
-    @apply pointer-events-none;
-    @apply absolute bottom-1/2 left-1/2 right-1/2 top-1/2;
+    background: currentColor;
+    opacity: 0.05;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
     transition: top, left, right, bottom;
     transition-duration: 100ms;
     transition-timing-function: ease-in-out;
+    @apply rounded-full;
 }
 
 .icon-button:hover:before {
     @apply bottom-0.5 left-0.5 right-0.5 top-0.5;
 }
 
+/* Back Button */
+
 .btn-back {
-    @apply flex items-center justify-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     @apply font-black hover:text-onsecondary-container;
     @apply rounded-full p-3;
     @apply hover:no-underline;
-    @apply relative;
 }
 
 .btn-back:before {
     content: '';
-    @apply pointer-events-none absolute bg-secondary-container bg-opacity-50;
+    pointer-events: none;
+    position: absolute;
     top: 50%;
     left: 50%;
     right: 50%;
@@ -140,39 +199,20 @@ a.btn-danger,
     transition-timing-function: ease-in-out;
     border-radius: inherit;
     z-index: -1;
+    @apply bg-secondary-container/50;
 }
 
 .btn-back:hover:before {
-    @apply bottom-0 left-0 right-0 top-0;
-}
-
-.btn-split {
-    @apply flex items-stretch;
-}
-
-.btn-split > button:not(:first-child) {
-    @apply rounded-l-none border-l border-opacity-25 pl-3;
-}
-
-.btn-split > button:not(:last-child) {
-    @apply rounded-r-none pr-3;
-}
-
-.btn-split > .btn-primary {
-    @apply border-onprimary;
-}
-
-.btn-split > .btn-secondary {
-    @apply border-onsecondary;
-}
-
-.btn-split > .btn-danger {
-    @apply border-white;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .btn-tag {
+    white-space: nowrap;
     @apply rounded-full border border-outline text-secondary;
-    @apply whitespace-nowrap px-4 py-1 text-sm font-bold;
+    @apply px-4 py-1 text-sm font-bold;
     @apply hover:border-secondary;
     @apply hover:shadow;
 }
@@ -183,12 +223,13 @@ a.btn-danger,
 
 .btn-tag.active .icon-inactive,
 .btn-tag .icon-active {
-    @apply hidden;
+    display: none;
 }
 
 .btn-tag .icon-inactive,
 .btn-tag.active > .icon-active {
-    @apply inline-block w-4;
+    display: inline-block;
+    @apply w-4;
 }
 
 @media (max-width: 1023px) {

@@ -79,12 +79,12 @@
                                 <div :data-index="index" class="w-1 flex-grow">
                                     <VTooltip :delay="50">
                                         <template #tooltip>
-                                            <div class="position text-sm shadow-xl" :style="{ backgroundColor: position.color }">
+                                            <span class="tag custom" :style="{ '--color': position.color }">
                                                 {{ position.name }}
-                                            </div>
+                                            </span>
                                         </template>
                                         <template #default>
-                                            <div class="h-2 rounded" :style="{ backgroundColor: position.color }" />
+                                            <div class="h-2 rounded" :style="{ '--color': position.color }" />
                                         </template>
                                     </VTooltip>
                                 </div>
@@ -116,7 +116,7 @@
                             </p>
                         </td>
                         <td>
-                            <div class="status-panel bg-surface-container-highest">
+                            <div class="status-badge neutral">
                                 <i class="fa-solid fa-circle text-surface-container-high"></i>
                                 <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-surface-container-high"></span>
                             </div>
