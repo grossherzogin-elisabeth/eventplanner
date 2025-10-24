@@ -229,6 +229,7 @@ async function close(): Promise<void> {
         max-height: 100% !important;
         width: 100% !important;
         max-width: 100% !important;
+        @apply bg-surface;
     }
 
     .fullscreen .dialog .dialog-header {
@@ -238,6 +239,7 @@ async function close(): Promise<void> {
         white-space: nowrap;
         @apply bg-primary;
         @apply text-onprimary;
+        @apply dark:bg-surface-container-high dark:text-onsurface-variant;
     }
 
     .fullscreen .dialog .dialog-close-button {

@@ -63,12 +63,12 @@
                         <p v-else class="max-w-64 truncate text-sm italic">Keine Rolle zugewiesen</p>
                     </td>
                     <td class="w-1/3">
-                        <div class="flex max-w-64 flex-wrap">
+                        <div class="flex max-w-64 flex-wrap gap-1">
                             <span
                                 v-for="position in item.positions"
                                 :key="position.key"
-                                class="position my-0.5 mr-1 bg-surface-container-highest text-xs opacity-75"
-                                :style="{ background: position.color }"
+                                class="tag custom"
+                                :style="{ '--color': position.color }"
                             >
                                 {{ position.name }}
                             </span>

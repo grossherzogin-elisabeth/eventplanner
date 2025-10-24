@@ -79,12 +79,12 @@
                                 <div :data-index="index" class="w-1 flex-grow">
                                     <VTooltip :delay="50">
                                         <template #tooltip>
-                                            <div class="position text-sm shadow-xl" :style="{ backgroundColor: position.color }">
+                                            <span class="tag custom" :style="{ '--color': position.color }">
                                                 {{ position.name }}
-                                            </div>
+                                            </span>
                                         </template>
                                         <template #default>
-                                            <div class="h-2 rounded" :style="{ backgroundColor: position.color }" />
+                                            <div class="h-2 rounded" :style="{ '--color': position.color }" />
                                         </template>
                                     </VTooltip>
                                 </div>

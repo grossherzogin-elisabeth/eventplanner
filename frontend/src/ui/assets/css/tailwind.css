@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
+    html {
         --color-transparent: transparent;
         --color-current: currentColor;
         --color-inherit: inherit;
@@ -48,26 +48,22 @@
         --color-outline: 114 119 127;
         --color-outline-variant: 194 199 207;
         --color-scrim: 0 0 0;
-        --color-error: 186 26 26;
-        --color-error-container: 255 218 214;
-        --color-onerror: 255 255 255;
-        --color-onerror-container: 147 0 10;
-        --color-success: 36 108 44;
-        --color-success-container: 169 245 165;
-        --color-onsuccess: 36 108 44;
-        --color-onsuccess-container: 0 33 5;
-        --color-warning: 107 95 0;
-        --color-warning-container: 251 228 71;
-        --color-onwarning: 107 95 0;
-        --color-onwarning-container: 32 28 0;
+        --color-success: 67 104 20;
+        --color-success-container: 195 241 141;
+        --color-onsuccess: 255 255 255;
+        --color-onsuccess-container: 16 32 0;
+        --color-warning: 120 90 0;
+        --color-warning-container: 255 223 154;
+        --color-onwarning: 255 255 255;
+        --color-onwarning-container: 37 26 0;
         --color-info: 0 98 157;
         --color-info-container: 207 229 255;
-        --color-oninfo: 0 98 157;
+        --color-oninfo: 255 255 255;
         --color-oninfo-container: 0 29 51;
-        --color-red: 186 14 72;
-        --color-red-container: 255 217 221;
-        --color-onred: 186 14 72;
-        --color-onred-container: 64 0 19;
+        --color-error: 185 28 28;
+        --color-error-container: 255 218 214;
+        --color-onerror: 255 255 255;
+        --color-onerror-container: 65 0 2;
     }
 
     html.dark {
@@ -115,25 +111,21 @@
         --color-outline: 236 240 248;
         --color-outline-variant: 190 195 203;
         --color-scrim: 0 0 0;
-        --color-error: 255 236 233;
-        --color-error-container: 255 174 164;
-        --color-onerror: 0 0 0;
-        --color-onerror-container: 34 0 1;
-        --color-success: 141 216 139;
-        --color-success-container: 1 83 23;
-        --color-onsuccess: 141 216 139;
-        --color-onsuccess-container: 169 245 165;
-        --color-warning: 221 200 43;
-        --color-warning-container: 80 71 0;
-        --color-onwarning: 221 200 43;
-        --color-onwarning-container: 251 228 71;
+        --color-success: 168 212 115;
+        --color-success-container: 46 79 0;
+        --color-onsuccess: 30 55 0;
+        --color-onsuccess-container: 195 241 141;
+        --color-warning: 247 190 29;
+        --color-warning-container: 90 67 0;
+        --color-onwarning: 63 46 0;
+        --color-onwarning-container: 255 223 154;
         --color-info: 152 203 255;
         --color-info-container: 0 74 119;
-        --color-oninfo: 152 203 255;
+        --color-oninfo: 0 51 84;
         --color-oninfo-container: 207 229 255;
-        --color-red: 255 178 188;
-        --color-red-container: 145 0 53;
-        --color-onred: 255 178 188;
-        --color-onred-container: 255 217 221;
+        --color-error: 255 180 171;
+        --color-error-container: 147 0 11;
+        --color-onerror: 105 0 5;
+        --color-onerror-container: 255 218 214;
     }
 }

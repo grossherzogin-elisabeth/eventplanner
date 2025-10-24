@@ -1,5 +1,5 @@
 <template>
-    <div v-if="props.open" class="bg-scrim/50 fixed bottom-0 left-0 right-0 top-0 z-50" @click="close()"></div>
+    <div v-if="props.open" class="fixed bottom-0 left-0 right-0 top-0 z-50 bg-scrim/50" @click="close()"></div>
     <div class="menu-wrapper" :class="{ open: props.open }" @click="close()">
         <div class="menu" @click.stop>
             <slot />

@@ -63,16 +63,16 @@ function generateColorSchemeCss(baseColor: string, darkMode: boolean): string[] 
         `--color-outline-variant: ${renderColor(scheme.outlineVariant)};`,
         `--color-scrim: ${renderColor(scheme.scrim)};`,
 
-        `--color-error: ${renderColor(scheme.error)};`,
-        `--color-error-container: ${renderColor(scheme.errorContainer)};`,
-        `--color-onerror: ${renderColor(scheme.onError)};`,
-        `--color-onerror-container: ${renderColor(scheme.onErrorContainer)};`,
+        // `--color-error: ${renderColor(scheme.error)};`,
+        // `--color-error-container: ${renderColor(scheme.errorContainer)};`,
+        // `--color-onerror: ${renderColor(scheme.onError)};`,
+        // `--color-onerror-container: ${renderColor(scheme.onErrorContainer)};`,
     ];
 
     generateCustomColor(argb, 'success', argbFromHex('#3f6212'), darkMode).forEach((c) => colors.push(c));
     generateCustomColor(argb, 'warning', argbFromHex('#eab308'), darkMode).forEach((c) => colors.push(c));
     generateCustomColor(argb, 'info', argbFromHex('#188edc'), darkMode).forEach((c) => colors.push(c));
-    generateCustomColor(argb, 'red', argbFromHex('#b91c1c'), darkMode).forEach((c) => colors.push(c));
+    generateCustomColor(argb, 'error', argbFromHex('#b91c1c'), darkMode).forEach((c) => colors.push(c));
 
     return colors;
 }
@@ -88,12 +88,12 @@ function renderColor(color: number | string): string {
 }
 
 function generateCustomColor(themeColor: number, name: string, color: number, darkMode: boolean): string[] {
-    const customColorGroup = customColor(themeColor, { value: color, name: name, blend: true });
+    const customColorGroup = customColor(themeColor, { value: color, name: name, blend: false });
     const c = darkMode ? customColorGroup.dark : customColorGroup.light;
     return [
         `--color-${name}: ${renderColor(c.color)};`,
         `--color-${name}-container: ${renderColor(c.colorContainer)};`,
-        `--color-on${name}: ${renderColor(c.color)};`,
+        `--color-on${name}: ${renderColor(c.onColor)};`,
         `--color-on${name}-container: ${renderColor(c.onColorContainer)};`,
     ];
 }

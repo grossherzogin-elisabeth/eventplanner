@@ -12,37 +12,37 @@
                     <div v-if="unassignedRequiredPositions.length > 0">
                         <h4 class="mb-2 font-bold">{{ $t('views.events.admin-list.state.missing-crew') }}</h4>
                         <div class="flex flex-wrap gap-2">
-                            <div
+                            <span
                                 v-for="position in unassignedRequiredPositions"
                                 :key="position.key"
-                                class="position flex gap-2"
-                                :style="{ backgroundColor: position.color }"
+                                class="tag custom flex gap-1"
+                                :style="{ '--color': position.color }"
                             >
                                 {{ position.name }}
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 text-center text-xs"
+                                    class="flex h-4 w-4 items-center justify-center whitespace-nowrap rounded-full bg-white/10 px-1 text-center text-xs"
                                 >
                                     {{ position.count }}
                                 </span>
-                            </div>
+                            </span>
                         </div>
                     </div>
                     <div v-if="unassignedOptionalPositions.length > 0">
                         <h4 class="mb-2 font-bold">{{ $t('views.events.admin-list.state.free-slots-for') }}</h4>
                         <div class="flex flex-wrap gap-2">
-                            <div
+                            <span
                                 v-for="position in unassignedOptionalPositions"
                                 :key="position.key"
-                                class="position flex gap-2"
-                                :style="{ backgroundColor: position.color }"
+                                class="tag custom flex gap-1"
+                                :style="{ '--color': position.color }"
                             >
                                 {{ position.name }}
                                 <span
-                                    class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs"
+                                    class="flex h-4 w-4 items-center justify-center whitespace-nowrap rounded-full bg-white/10 px-1 pt-0.5 text-center text-xs"
                                 >
                                     {{ position.count }}
                                 </span>
-                            </div>
+                            </span>
                         </div>
                     </div>
                 </div>

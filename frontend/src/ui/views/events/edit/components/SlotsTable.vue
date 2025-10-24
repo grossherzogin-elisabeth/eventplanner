@@ -24,12 +24,12 @@
                 </p>
             </td>
             <td class="w-2/3 min-w-96">
-                <div class="flex flex-wrap items-center">
+                <div class="flex flex-wrap items-center gap-1">
                     <div
                         v-for="positionKey in item.positionKeys"
                         :key="positionKey"
-                        :style="{ background: positions.get(positionKey).color }"
-                        class="position mb-1 mr-1 text-xs"
+                        :style="{ '--color': positions.get(positionKey).color }"
+                        class="tag custom"
                     >
                         <span>{{ positions.get(positionKey).name }}</span>
                     </div>

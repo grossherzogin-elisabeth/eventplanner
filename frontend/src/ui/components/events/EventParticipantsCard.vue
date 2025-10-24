@@ -61,11 +61,7 @@
                                 {{ $t('components.event-participants-card.empty') }}
                             </span>
                             <span class="flex-grow"></span>
-                            <span
-                                :style="{ background: it.position.color }"
-                                class="position ml-auto text-xs"
-                                :class="{ 'opacity-50': !it.registration }"
-                            >
+                            <span :style="{ '--color': it.position.color }" class="tag custom" :class="{ 'opacity-50': !it.registration }">
                                 {{ it.position.name }}
                             </span>
                         </li>
@@ -84,7 +80,7 @@
                             {{ it.name }}
                         </RouterLink>
                         <span v-else-if="it.name" class="flex-grow truncate">{{ it.name }}</span>
-                        <span :style="{ background: it.position.color }" class="position text-xs">
+                        <span :style="{ '--color': it.position.color }" class="tag custom">
                             {{ it.position.name }}
                         </span>
                     </li>

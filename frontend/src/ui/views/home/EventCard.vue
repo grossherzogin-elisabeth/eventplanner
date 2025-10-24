@@ -131,7 +131,7 @@ const props = defineProps<Props>();
 }
 
 .event-card.assigned:hover {
-    @apply bg-primary-container/85;
+    @apply bg-primary-container/55;
 }
 
 .event-card.assigned .border-event-card {

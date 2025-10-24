@@ -1,5 +1,51 @@
 .status-badge {
-    @apply inline-flex w-auto items-center space-x-2 rounded-full py-1 pl-3 pr-4 text-sm;
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    @apply space-x-2 rounded-full py-1 pl-3 pr-4 text-sm;
+}
+
+.tag {
+    --color: currentColor;
+    white-space: nowrap;
+    position: relative;
+    z-index: 5;
+    @apply rounded-lg px-2 py-1 text-xs font-black;
+    @apply text-onsurface-variant;
+}
+
+.tag.custom::before,
+.tag.custom::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    @apply rounded-lg;
+}
+
+.tag.custom::before {
+    background-color: var(--color);
+    z-index: -2;
+}
+
+.dark .tag.custom {
+    color: var(--color);
+}
+
+.dark .tag.custom::before {
+    opacity: 0.15;
+}
+
+.dark .tag.custom::after {
+    background-color: transparent;
+    border-width: 1px;
+    border-color: var(--color);
+    z-index: -1;
+    opacity: 0.2;
 }
 
 .status-badge > span {
@@ -14,22 +60,25 @@
     @apply flex items-center overflow-hidden;
 }
 
+.tag.neutral,
 .status-panel.neutral,
 .status-badge.neutral {
     @apply bg-surface-container-highest;
     @apply text-onsurface;
     @apply dark:bg-surface-container-highest/50;
-    @apply border-surface-container-highest dark:border;
+    @apply dark:border dark:border-surface-container-highest;
 }
 
+.tag.info,
 .status-panel.info,
 .status-badge.info {
     @apply bg-info-container;
     @apply text-oninfo-container;
     @apply dark:bg-info-container/25;
-    @apply border-info-container/75 dark:border;
+    @apply dark:border dark:border-info-container/75;
 }
 
+.tag.success,
 .status-panel.success,
 .status-badge.success {
     @apply bg-success-container/50;
@@ -38,6 +87,7 @@
     @apply dark:border dark:border-success-container/75;
 }
 
+.tag.warning,
 .status-panel.warning,
 .status-badge.warning {
     @apply bg-warning-container/25;
@@ -46,12 +96,11 @@
     @apply dark:border dark:border-warning-container/75;
 }
 
+.tag.error,
 .status-panel.error,
 .status-badge.error {
     @apply bg-error-container;
     @apply text-onerror-container;
-    @apply dark:text-error-container;
     @apply dark:bg-error-container/15;
-    @apply border-error-container/50 dark:border;
+    @apply border-onerror-container/20 dark:border;
 }
-

@@ -76,7 +76,7 @@
                                 <i class="fa-regular fa-circle"></i>
                                 <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsecondary-container"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position h-4 w-20 bg-onsecondary-container"></span>
+                                <span class="tag neutral h-4 w-20"></span>
                             </li>
                         </ul>
                     </div>
@@ -138,7 +138,7 @@
                                 <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
                                 <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsurface"> </span>
                                 <span class="flex-grow"></span>
-                                <span class="position block h-4 w-20 bg-onsurface"> </span>
+                                <span class="tag neutral block h-4 w-20"> </span>
                             </li>
                         </ul>
                     </div>
