@@ -41,4 +41,9 @@ const rendered = computed<string>(() => {
 .markdown h6 {
     @apply mt-4;
 }
+
+.markdown li {
+    list-style-type: disc;
+    @apply ml-4;
+}
 </style>

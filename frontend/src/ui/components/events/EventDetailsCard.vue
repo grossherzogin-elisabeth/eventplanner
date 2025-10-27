@@ -34,10 +34,7 @@
                     {{ $t('components.event-details-card.registrations', { count: props.event.registrations.length }) }}
                 </span>
             </p>
-            <p v-if="props.event.description" class="flex items-baseline space-x-4">
-                <i class="fa-solid fa-info-circle w-4" />
-                <span>{{ props.event.description }} </span>
-            </p>
+            <VMarkdown v-if="props.event.description" :value="props.event.description" class="pt-4 text-sm" />
         </div>
     </section>
 </template>
@@ -45,6 +42,7 @@
 import { computed } from 'vue';
 import { DateTimeFormat } from '@/common/date';
 import { type Event, EventState } from '@/domain';
+import { VMarkdown } from '@/ui/components/common';
 
 interface Props {
     event: Event;
