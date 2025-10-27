@@ -14,6 +14,10 @@
     @apply text-onsurface-variant;
 }
 
+.tag:invalid {
+    text-decoration-line: line-through;
+}
+
 .tag.custom::before,
 .tag.custom::after {
     content: '';
@@ -49,7 +53,8 @@
 }
 
 .status-badge > span {
-    @apply whitespace-nowrap font-semibold;
+    white-space: nowrap;
+    @apply font-semibold;
 }
 
 .status-badge > i {
@@ -57,7 +62,25 @@
 }
 
 .status-panel {
-    @apply flex items-center overflow-hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    @apply rounded-2xl;
+}
+
+.fixed > .status-panel::before,
+.sticky > .status-panel::before,
+.status-panel.sticky::before,
+.status-panel.fixed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    @apply bg-surface shadow;
 }
 
 .tag.neutral,

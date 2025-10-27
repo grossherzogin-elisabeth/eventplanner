@@ -31,7 +31,11 @@
                                 {{ item.registration?.note.trim() }}
                             </p>
                             <p class="mb-1 flex items-center gap-x-1 gap-y-2">
-                                <span :style="{ '--color': item.position.color }" class="tag custom">
+                                <span
+                                    :style="{ '--color': item.position.color }"
+                                    class="tag"
+                                    :class="item.hasOverwrittenPosition ? 'error line-through' : 'custom'"
+                                >
                                     {{ item.slot?.positionName || item.position.name }}
                                 </span>
 

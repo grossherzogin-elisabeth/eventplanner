@@ -84,7 +84,7 @@
                                             </span>
                                         </template>
                                         <template #default>
-                                            <div class="h-2 rounded" :style="{ '--color': position.color }" />
+                                            <div class="h-2 rounded" :style="{ backgroundColor: position.color }" />
                                         </template>
                                     </VTooltip>
                                 </div>

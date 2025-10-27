@@ -45,9 +45,14 @@
                         />
                         <!-- user position -->
                         <span class="flex-grow"></span>
-                        <span :style="{ '--color': props.value.position.color }" class="tag custom">
+                        <span
+                            :style="{ '--color': props.value.position.color }"
+                            class="tag"
+                            :class="props.value.hasOverwrittenPosition ? 'error line-through' : 'custom'"
+                        >
                             {{ props.value.slot?.positionName || props.value.position.name }}
                             <i v-if="props.value.expiredQualifications.length > 0" class="fa-solid fa-warning text-error"></i>
+                            <i v-else-if="props.value.hasOverwrittenPosition" class="fa-solid fa-warning text-error"></i>
                             <i v-else-if="props.value.registration && props.value.user" class="fa-solid fa-check"></i>
                             <i v-else-if="props.value.registration && !props.value.user" class="fa-solid fa-question"></i>
                         </span>
