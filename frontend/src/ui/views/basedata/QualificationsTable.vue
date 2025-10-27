@@ -18,8 +18,8 @@
                 <span
                     v-for="positionKey in item.grantsPositions"
                     :key="positionKey"
-                    class="position my-0.5 mr-1 bg-surface-container-high text-xs opacity-75"
-                    :style="{ background: positions.get(positionKey).color }"
+                    class="tag custom"
+                    :style="{ '--color': positions.get(positionKey).color }"
                 >
                     {{ positions.get(positionKey).name }}
                 </span>
