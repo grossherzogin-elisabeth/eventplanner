@@ -29,14 +29,14 @@
         "vuejs3-datepicker": "^1.1.3"
     },
     "devDependencies": {
-        "@babel/core": "^7.28.4",
-        "@babel/preset-env": "^7.28.3",
-        "@babel/preset-typescript": "^7.27.1",
+        "@babel/core": "^7.28.5",
+        "@babel/preset-env": "^7.28.5",
+        "@babel/preset-typescript": "^7.28.5",
         "@material/material-color-utilities": "^0.3.0",
         "@modyfi/vite-plugin-yaml": "^1.1.1",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/markdown-it": "^14.1.2",
-        "@types/node": "^24.8.1",
+        "@types/node": "^24.9.1",
         "@types/uuid": "^11.0.0",
         "@vitejs/plugin-vue": "^6.0.1",
         "@vue/eslint-config-typescript": "^14.6.0",
@@ -50,10 +50,10 @@
         "prettier-plugin-tailwindcss": "^0.7.1",
         "tailwindcss": "^3.4.17",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.46.1",
-        "vite": "^7.1.11",
+        "typescript-eslint": "^8.46.2",
+        "vite": "^7.1.12",
         "vite-plugin-pwa": "^1.1.0",
         "vite-svg-loader": "^5.1.0",
-        "vue-tsc": "^3.1.1"
+        "vue-tsc": "^3.1.2"
     }
 }
