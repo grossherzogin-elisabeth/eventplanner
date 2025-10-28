@@ -10,7 +10,7 @@
     overflow: hidden;
     border-bottom-width: 1px;
     padding-bottom: 1px;
-    @apply px-4 gap-4;
+    @apply gap-4 px-4;
     @apply bg-surface-container-highest/50;
     @apply rounded-t-md;
     @apply border-outline;
@@ -49,15 +49,15 @@
 }
 
 .input-field-wrapper label {
-     position: absolute;
-     top: 0.25rem;
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
-        @apply text-xs;
-     @apply font-bold;
-     @apply text-onsurface-variant;
- }
+    position: absolute;
+    top: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @apply text-xs;
+    @apply font-bold;
+    @apply text-onsurface-variant;
+}
 
 .input-field-wrapper label:has(+ textarea[required]):after,
 .input-field-wrapper label:has(+ input[required]):after {
@@ -100,7 +100,6 @@
         @apply bg-onsurface/10;
     }
 }
-
 
 /* --------------------------------------------------------------- */
 /* focus */
