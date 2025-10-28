@@ -23,7 +23,9 @@
     text-decoration-line: none;
 }
 
+/* --------------------------------------------------------------- */
 /* Primary Button */
+/* --------------------------------------------------------------- */
 
 .btn-primary {
     @apply bg-primary/90 text-onprimary;
@@ -38,7 +40,9 @@
     @apply bg-onsurface/10 text-onsurface/40;
 }
 
+/* --------------------------------------------------------------- */
 /* Secondary Button */
+/* --------------------------------------------------------------- */
 
 .btn-secondary {
     @apply bg-secondary-container/90 text-onsecondary-container;
@@ -53,7 +57,9 @@
     @apply bg-onsurface/10 text-onsurface/40;
 }
 
+/* --------------------------------------------------------------- */
 /* Danger Button */
+/* --------------------------------------------------------------- */
 
 .btn-danger {
     @apply bg-error-container/90 text-onerror-container;
@@ -70,7 +76,9 @@ a.btn-danger:not(:disabled):hover,
     @apply bg-error-container/10 text-onerror-container/40;
 }
 
+/* --------------------------------------------------------------- */
 /* Floating Action Button */
+/* --------------------------------------------------------------- */
 
 .btn-floating,
 .btn-floating-danger {
@@ -119,14 +127,16 @@ a.btn-danger:not(:disabled):hover,
     @apply bg-error-container/40 text-onerror-container/40;
 }
 
+/* --------------------------------------------------------------- */
 /* Ghost Button */
+/* --------------------------------------------------------------- */
 
 .btn-ghost {
     @apply text-secondary;
 }
 
 .btn-ghost:not(:disabled):hover {
-    @apply bg-surface-container-high text-onsurface-variant;
+    @apply bg-secondary-container text-onsecondary-container;
 }
 
 .btn-ghost:disabled,
@@ -134,7 +144,9 @@ a.btn-danger:not(:disabled):hover,
     @apply opacity-50;
 }
 
+/* --------------------------------------------------------------- */
 /* Danger Ghost Button */
+/* --------------------------------------------------------------- */
 
 .btn-ghost-danger {
     @apply text-error;
@@ -144,7 +156,9 @@ a.btn-danger:not(:disabled):hover,
     @apply bg-error-container text-onerror-container;
 }
 
+/* --------------------------------------------------------------- */
 /* Icon Button */
+/* --------------------------------------------------------------- */
 
 .icon-button {
     position: relative;
@@ -174,7 +188,9 @@ a.btn-danger:not(:disabled):hover,
     @apply bottom-0.5 left-0.5 right-0.5 top-0.5;
 }
 
+/* --------------------------------------------------------------- */
 /* Back Button */
+/* --------------------------------------------------------------- */
 
 .btn-back {
     display: flex;

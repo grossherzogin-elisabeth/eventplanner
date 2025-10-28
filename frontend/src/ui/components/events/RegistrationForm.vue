@@ -93,8 +93,11 @@
             könnten.
         </p>
         <div class="mb-4">
-            <VInputLabel>Notiz fürs Büro</VInputLabel>
-            <VInputTextArea :model-value="props.registration.note" @update:model-value="updateRegistration({ note: $event })" />
+            <VInputTextArea
+                label="Notiz fürs Büro"
+                :model-value="props.registration.note"
+                @update:model-value="updateRegistration({ note: $event })"
+            />
         </div>
     </div>
     <!-- overnight stay -->
@@ -144,7 +147,7 @@ import { cropToPrecision, deepCopy, isSameDate, subtractFromDate } from '@/commo
 import type { Event, InputSelectOption, PositionKey, Registration, UserDetails } from '@/domain';
 import { VInfo } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
-import { VInputLabel, VInputSelectionList, VInputTextArea } from '@/ui/components/common';
+import { VInputSelectionList, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions';
 

@@ -15,17 +15,18 @@
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div v-if="!registration.userKey" class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.name') }}</VInputLabel>
                         <VInputText
                             v-model.trim="registration.name"
+                            :label="$t('domain.registration.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.position') }}</VInputLabel>
                         <VInputCombobox
                             v-model="registration.positionKey"
+                            required
+                            :label="$t('domain.registration.position')"
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"
                             :errors-visible="validation.showErrors.value"
@@ -40,9 +41,10 @@
                         </VInputCombobox>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.overnight-stay') }}</VInputLabel>
                         <VInputSelect
                             v-model="registration.overnightStay"
+                            required
+                            :label="$t('domain.registration.overnight-stay')"
                             :options="[
                                 { value: undefined, label: $t('generic.no-information') },
                                 { value: true, label: $t('generic.yes') },
@@ -51,13 +53,12 @@
                         />
                     </div>
                     <div v-if="registration.overnightStay" class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.arrival') }}</VInputLabel>
-                        <VInputDate v-model="registration.arrival" />
+                        <VInputDate v-model="registration.arrival" :label="$t('domain.registration.arrival')" />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.note') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="registration.note"
+                            :label="$t('domain.registration.note')"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -126,7 +127,7 @@ import type { Dialog } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputDate } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputCombobox, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';

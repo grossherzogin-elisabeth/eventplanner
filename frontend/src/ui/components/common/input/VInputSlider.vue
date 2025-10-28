@@ -1,11 +1,9 @@
 <template>
-    <div :class="$attrs.class" class="flex items-start">
-        <label v-if="props.label" class="input-label">
-            {{ props.label }}
-        </label>
-        <div class="w-1/2 flex-grow">
-            <div class="input-field-wrapper">
-                <slot name="before"></slot>
+    <div :class="$attrs.class" class="v-input-slider">
+        <div class="input-field-wrapper">
+            <slot name="before"></slot>
+            <div>
+                <label :for="id">{{ props.label }}</label>
                 <input
                     :id="id"
                     v-model="value"
@@ -22,31 +20,31 @@
                     @input="onInput"
                     @keypress="onKeyPress"
                 />
-                <slot name="after"></slot>
-                <template v-if="props.min !== undefined && props.max !== undefined">
-                    <div
-                        class="pointer-events-none absolute bottom-0 left-0 right-0 top-0 z-0 h-full bg-primary opacity-10"
-                        :style="{ width: `${percent}%` }"
-                    ></div>
-                    <div class="absolute bottom-0 left-0 right-0 top-0 opacity-0">
-                        <input
-                            v-model="value"
-                            class="h-full w-full"
-                            :min="props.min"
-                            :max="props.max"
-                            :disabled="props.disabled"
-                            :aria-disabled="props.disabled"
-                            type="range"
-                            @input="onInput"
-                        />
-                    </div>
-                </template>
             </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+            <slot name="after"></slot>
+            <template v-if="props.min !== undefined && props.max !== undefined">
+                <div
+                    class="pointer-events-none absolute bottom-0 left-0 right-0 top-0 z-0 h-full bg-primary opacity-10"
+                    :style="{ width: `${percent}%` }"
+                ></div>
+                <div class="absolute bottom-0 left-0 right-0 top-0 opacity-0">
+                    <input
+                        v-model="value"
+                        class="h-full w-full"
+                        :min="props.min"
+                        :max="props.max"
+                        :disabled="props.disabled"
+                        :aria-disabled="props.disabled"
+                        type="range"
+                        @input="onInput"
+                    />
+                </div>
+            </template>
+        </div>
+        <div v-if="showErrors && hasErrors" class="input-errors">
+            <p v-for="err in errors" :key="err.key" class="input-error">
+                {{ $t(err.key, err.params) }}
+            </p>
         </div>
     </div>
 </template>

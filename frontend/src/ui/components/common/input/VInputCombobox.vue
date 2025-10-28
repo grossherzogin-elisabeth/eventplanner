@@ -1,57 +1,47 @@
 <template>
-    <div :class="$attrs.class" class="v-input-combobox flex items-start">
-        <label v-if="props.label" class="input-label">
-            {{ props.label }}
-        </label>
-        <div class="relative w-1/2 flex-grow">
-            <div ref="dropdownAnchor" class="input-field-wrapper overflow-hidden">
-                <slot name="before" />
-                <div class="relative flex flex-grow items-center">
-                    <input
-                        :id="id"
-                        :aria-disabled="props.disabled"
-                        :aria-invalid="hasErrors"
-                        :aria-required="props.required"
-                        :class="{ invalid: showErrors && hasErrors }"
-                        :disabled="props.disabled"
-                        :placeholder="props.placeholder || $t('generic.please-select')"
-                        :required="props.required"
-                        :value="displayValue"
-                        aria-haspopup="true"
-                        class="input-field w-full overflow-ellipsis pr-10"
-                        readonly
-                        @click="showDropdown()"
-                        @keydown.down.prevent="focusNextOption()"
-                        @keydown.up.prevent="focusPrevOption()"
-                        @keydown.enter="selectFocusedOption"
-                        @keydown.esc="hideDropdown(true)"
-                    />
-                    <div class="input-icon-right">
-                        <VLoadingSpinner v-if="loading"></VLoadingSpinner>
-                        <button
-                            v-else
-                            :class="focusOptionIndex === null ? 'rotate-0' : 'rotate-180'"
-                            class="transition-transform"
-                            tabindex="-1"
-                            @click="showDropdown()"
-                        >
-                            <i class="fa-solid fa-chevron-down text-sm text-primary"></i>
-                        </button>
-                    </div>
-                </div>
-                <slot name="after" />
-            </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+    <div :class="$attrs.class" class="v-input-combobox">
+        <div ref="dropdownAnchor" class="input-field-wrapper" @click="showDropdown()">
+            <slot name="before" />
+            <label :for="id">{{ props.label }}</label>
+            <input
+                :id="id"
+                :aria-disabled="props.disabled"
+                :aria-invalid="hasErrors"
+                :aria-required="props.required"
+                :class="{ invalid: showErrors && hasErrors }"
+                :disabled="props.disabled"
+                :placeholder="props.placeholder || $t('generic.please-select')"
+                :required="props.required"
+                :value="displayValue"
+                aria-haspopup="true"
+                class="input-field w-full overflow-ellipsis pr-10"
+                readonly
+                @keydown.down.prevent="focusNextOption()"
+                @keydown.up.prevent="focusPrevOption()"
+                @keydown.enter="selectFocusedOption"
+                @keydown.esc="hideDropdown(true)"
+            />
+            <VLoadingSpinner v-if="loading"></VLoadingSpinner>
+            <button
+                v-else
+                :class="focusOptionIndex === null ? 'rotate-0' : 'rotate-180'"
+                class="transition-transform"
+                tabindex="-1"
+                @click="showDropdown()"
+            >
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+        </div>
+        <div v-if="showErrors && hasErrors" class="input-errors">
+            <p v-for="err in errors" :key="err.key" class="input-error">
+                {{ $t(err.key, err.params) }}
+            </p>
         </div>
     </div>
     <VDropdownWrapper
         v-if="focusOptionIndex !== null"
         :anchor="dropdownAnchor"
-        anchor-align-y="top"
+        anchor-align-y="bottom"
         class="input-dropdown combobox"
         max-height="400px"
         :prefer-anchor-width="true"

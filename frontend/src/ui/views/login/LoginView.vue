@@ -37,12 +37,14 @@
                         <div v-if="enableDirectLogin">
                             <h2 class="mb-4 px-4">Bei deinem Lissi Account anmelden</h2>
                             <div class="mb-4">
-                                <VInputLabel>Email ode Benutzername</VInputLabel>
-                                <VInputText v-model.trim="username" placeholder="max.mustermensch@email.de" />
+                                <VInputText
+                                    v-model.trim="username"
+                                    label="Email oder Benutzername"
+                                    placeholder="max.mustermensch@email.de"
+                                />
                             </div>
                             <div class="mb-8">
-                                <VInputLabel>Passwort</VInputLabel>
-                                <VInputText v-model.trim="password" type="password" placeholder="**********" />
+                                <VInputText v-model.trim="password" label="Passwort" type="password" placeholder="**********" />
                             </div>
                             <div class="flex items-center justify-between sm:flex-row">
                                 <button class="btn-ghost">
@@ -85,7 +87,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { VInputLabel, VInputText } from '@/ui/components/common';
+import { VInputText } from '@/ui/components/common';
 import { useAuthUseCase } from '@/ui/composables/Application';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;

@@ -8,18 +8,18 @@
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.basedata.tab.qualifications.name') }}</VInputLabel>
                         <VInputText
                             v-model="qualification.name"
+                            :label="$t('views.basedata.tab.qualifications.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.basedata.tab.qualifications.icon') }}</VInputLabel>
                         <VInputText
                             v-model="qualification.icon"
+                            :label="$t('views.basedata.tab.qualifications.icon')"
                             :placeholder="$t('views.basedata.tab.qualifications.icon-placeholder')"
                             :errors="validation.errors.value['icon']"
                             :errors-visible="validation.showErrors.value"
@@ -33,9 +33,9 @@
                         </VInputText>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.basedata.tab.qualifications.description') }}</VInputLabel>
                         <VInputTextArea
                             v-model="qualification.description"
+                            :label="$t('views.basedata.tab.qualifications.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -76,7 +76,7 @@ import { deepCopy } from '@/common';
 import type { PositionKey, Qualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
-import { VDialog, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useQualificationService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';

@@ -2,7 +2,7 @@
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
             <div class="h-full lg:hidden">
-                <NavbarFilter v-model="filter" placeholder="Nutzer filtern" />
+                <NavbarFilter v-model="filter" placeholder="Einträge filtern" />
             </div>
         </teleport>
 
@@ -15,7 +15,7 @@
                             <span>Hinzufügen</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
+                    <VSearchButton v-model="filter" placeholder="Einträge filtern" />
                 </div>
             </template>
         </VTabs>

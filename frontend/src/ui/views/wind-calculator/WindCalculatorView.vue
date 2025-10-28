@@ -6,20 +6,17 @@
                     <section>
                         <h2 class="mb-4 font-bold text-secondary">Schiffsdaten</h2>
                         <div class="mb-4">
-                            <VInputLabel>Heading (HDG)</VInputLabel>
-                            <VInputSlider v-model="hdg" :min="0" :max="360">
+                            <VInputSlider v-model="hdg" label="Heading (HDG)" :min="0" :max="360">
                                 <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
                             </VInputSlider>
                         </div>
                         <div class="mb-4">
-                            <VInputLabel>Course over ground(COG)</VInputLabel>
-                            <VInputSlider v-model="cog" :min="0" :max="360">
+                            <VInputSlider v-model="cog" label="Course over ground(COG)" :min="0" :max="360">
                                 <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
                             </VInputSlider>
                         </div>
                         <div class="mb-8">
-                            <VInputLabel>Speed over ground (SOG)</VInputLabel>
-                            <VInputNumber v-modael="sog">
+                            <VInputNumber v-modael="sog" label="Speed over ground (SOG)">
                                 <template #after><span class="pr-4 text-onsurface-variant/50">kn</span></template>
                             </VInputNumber>
                         </div>
@@ -28,8 +25,8 @@
                     <section>
                         <h2 class="mb-4 font-bold text-secondary">Scheinbarer Wind</h2>
                         <div class="mb-4">
-                            <VInputLabel>Scheinbare Windgeschwindigkeit</VInputLabel>
                             <VInputNumber
+                                label="Scheinbare Windgeschwindigkeit"
                                 :model-value="relativeWindSpeed"
                                 @update:model-value="recalculateFromRelativeWind($event, relativeWindDirection)"
                             >
@@ -37,8 +34,8 @@
                             </VInputNumber>
                         </div>
                         <div class="mb-8">
-                            <VInputLabel>Scheinbare Windrichtung</VInputLabel>
                             <VInputSlider
+                                label="Scheinbare Windrichtung"
                                 :model-value="relativeWindDirection"
                                 :min="-180"
                                 :max="180"
@@ -52,8 +49,8 @@
                     <section>
                         <h2 class="mb-4 font-bold text-secondary">Wahrer Wind</h2>
                         <div class="mb-4">
-                            <VInputLabel>Wahre Windgeschwindigkeit</VInputLabel>
                             <VInputNumber
+                                label="Wahre Windgeschwindigkeit"
                                 :model-value="absoluteWindSpeed"
                                 @update:model-value="recalculateFromAbsoluteWind($event, absoluteWindDirection)"
                             >
@@ -61,8 +58,8 @@
                             </VInputNumber>
                         </div>
                         <div class="mb-4">
-                            <VInputLabel>Wahre Windrichtung</VInputLabel>
                             <VInputSlider
+                                label="Wahre Windrichtung"
                                 :model-value="absoluteWindDirection"
                                 :min="0"
                                 :max="360"
@@ -120,7 +117,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { VInputLabel, VInputNumber, VInputSlider } from '@/ui/components/common';
+import { VInputNumber, VInputSlider } from '@/ui/components/common';
 import type { Pointer } from '@/ui/views/wind-calculator/Pointer.ts';
 import { calculatePointerDirection } from '@/ui/views/wind-calculator/Pointer.ts';
 import { calculatePointer } from '@/ui/views/wind-calculator/Pointer.ts';

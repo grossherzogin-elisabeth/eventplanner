@@ -1,34 +1,31 @@
 <template>
-    <div :class="$attrs.class" class="flex items-start">
-        <label v-if="props.label" class="input-label">
-            {{ props.label }}
-        </label>
-        <div class="w-1/2 flex-grow">
-            <div ref="dropdownAnchor" class="input-field-wrapper">
-                <slot name="before"></slot>
-                <input
-                    :id="id"
-                    v-model="value"
-                    :aria-disabled="props.disabled"
-                    :aria-invalid="hasErrors"
-                    :aria-required="props.required"
-                    :class="{ invalid: showErrors && hasErrors }"
-                    :disabled="props.disabled"
-                    :placeholder="props.placeholder"
-                    :required="props.required"
-                    class="input-field"
-                    type="number"
-                    @blur="visited = true"
-                    @input="onInput"
-                    @keypress="onKeyPress"
-                />
-                <slot name="after"></slot>
-            </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+    <div :class="$attrs.class" class="v-input-number">
+        <div class="input-field-wrapper" @click="focus()">
+            <slot name="before"></slot>
+            <label :for="id">{{ props.label }}</label>
+            <input
+                :id="id"
+                ref="inputField"
+                v-model="value"
+                :aria-disabled="props.disabled"
+                :aria-invalid="hasErrors"
+                :aria-required="props.required"
+                :class="{ invalid: showErrors && hasErrors }"
+                :disabled="props.disabled"
+                :placeholder="props.placeholder"
+                :required="props.required"
+                class="input-field"
+                type="number"
+                @blur="visited = true"
+                @input="onInput"
+                @keypress="onKeyPress"
+            />
+            <slot name="after"></slot>
+        </div>
+        <div v-if="showErrors && hasErrors" class="input-errors">
+            <p v-for="err in errors" :key="err.key" class="input-error">
+                {{ $t(err.key, err.params) }}
+            </p>
         </div>
     </div>
 </template>
@@ -81,8 +78,13 @@ const value = ref<number | string>('');
 
 const id = uuidv4();
 const visited = ref(false);
+const inputField = ref<HTMLElement | undefined>(undefined);
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors.length > 0);
+
+function focus(): void {
+    inputField.value?.focus();
+}
 
 function onKeyPress(event: KeyboardEvent): void {
     if (!props.decimal && Number.isNaN(parseInt(event.key))) {

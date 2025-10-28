@@ -8,17 +8,25 @@
             <div class="flex flex-1 flex-col px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.event-slot.position') }}</VInputLabel>
-                        <VInputCombobox v-model="primaryPositionKey" :options="positions.options.value" />
+                        <VInputCombobox
+                            v-model="primaryPositionKey"
+                            required
+                            :label="$t('domain.event-slot.position')"
+                            :options="positions.options.value"
+                        />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.event-slot.display-name') }}</VInputLabel>
-                        <VInputText v-model.trim="slot.positionName" :placeholder="positions.get(primaryPositionKey).name" />
+                        <VInputText
+                            v-model.trim="slot.positionName"
+                            :label="$t('domain.event-slot.display-name')"
+                            :placeholder="positions.get(primaryPositionKey).name"
+                        />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.event-slot.criticality') }}</VInputLabel>
                         <VInputSelect
                             v-model="slot.criticality"
+                            required
+                            :label="$t('domain.event-slot.criticality')"
                             :options="[
                                 {
                                     value: SlotCriticality.Required,
@@ -36,7 +44,7 @@
                         />
                     </div>
                 </section>
-                <div class="mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm xs:-mx-4">
+                <div class="mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm sm:bg-surface-container-highest">
                     <h2 class="mb-4 text-xs font-bold">{{ $t('domain.event-slot.alternative-positions') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
@@ -68,7 +76,7 @@ import { deepCopy, filterDuplicates } from '@/common';
 import type { PositionKey, Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VDialog, VInputCheckBox, VInputCombobox, VInputLabel, VInputSelect, VInputText } from '@/ui/components/common';
+import { VDialog, VInputCheckBox, VInputCombobox, VInputSelect, VInputText } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { v4 as uuid } from 'uuid';
 

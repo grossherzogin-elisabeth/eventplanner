@@ -12,9 +12,9 @@
                                         {{ $t('views.account.data.title-app') }}
                                     </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.data.display-name') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.nickName"
+                                            :label="$t('views.account.data.display-name')"
                                             :placeholder="userDetails.firstName"
                                             :errors="validation.errors.value['nickName']"
                                             :errors-visible="validation.showErrors.value"
@@ -26,9 +26,9 @@
                                         {{ $t('views.account.data.diet.title') }}
                                     </h2>
                                     <div class="mb-4 sm:w-64">
-                                        <VInputLabel>{{ $t('views.account.data.diet.label') }}</VInputLabel>
                                         <VInputSelect
                                             v-model="userDetails.diet"
+                                            :label="$t('views.account.data.diet.label')"
                                             :options="[
                                                 { value: 'omnivore', label: $t('views.account.data.diet.values.omnivore') },
                                                 { value: 'vegetarian', label: $t('views.account.data.diet.values.vegetarian') },
@@ -39,9 +39,9 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.data.diet.intolerances') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.intolerances"
+                                            :label="$t('views.account.data.diet.intolerances')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['intolerances']"
                                             :errors-visible="validation.showErrors.value"
@@ -53,9 +53,9 @@
                                         {{ $t('views.account.data.personal.title') }}
                                     </h2>
                                     <div class="mb-4 sm:w-64">
-                                        <VInputLabel>{{ $t('views.account.data.personal.gender.label') }}</VInputLabel>
                                         <VInputSelect
                                             v-model="userDetails.gender"
+                                            :label="$t('views.account.data.personal.gender.label')"
                                             :options="genderOptions"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['gender']"
@@ -63,8 +63,8 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.data.personal.first-name') }}</VInputLabel>
                                         <VInputText
+                                            :label="$t('views.account.data.personal.first-name')"
                                             :model-value="`${userDetails.firstName} ${userDetails.secondName || ''}`.trim()"
                                             required
                                             disabled
@@ -72,17 +72,17 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.data.personal.middle-name') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.secondName"
+                                            :label="$t('views.account.data.personal.middle-name')"
                                             disabled
                                             :placeholder="$t('generic.no-information')"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.data.personal.last-name') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.lastName"
+                                            :label="$t('views.account.data.personal.last-name')"
                                             required
                                             disabled
                                             :placeholder="$t('generic.no-information')"
@@ -90,9 +90,9 @@
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
-                                            <VInputLabel>{{ $t('views.account.data.personal.birthday') }}</VInputLabel>
                                             <VInputDate
                                                 v-model="userDetails.dateOfBirth"
+                                                :label="$t('views.account.data.personal.birthday')"
                                                 required
                                                 :disabled="!enableEditingDateOfBirth"
                                                 :placeholder="$t('generic.no-information')"
@@ -101,9 +101,9 @@
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>{{ $t('views.account.data.personal.place-of-birth') }}</VInputLabel>
                                             <VInputText
                                                 v-model="userDetails.placeOfBirth"
+                                                :label="$t('views.account.data.personal.place-of-birth')"
                                                 required
                                                 :disabled="!enableEditingPlaceOfBirth"
                                                 :placeholder="$t('generic.no-information')"
@@ -114,9 +114,9 @@
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-64">
-                                            <VInputLabel>{{ $t('views.account.data.personal.passport-number') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.passNr"
+                                                :label="$t('views.account.data.personal.passport-number')"
                                                 required
                                                 :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['passNr']"
@@ -124,9 +124,9 @@
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>{{ $t('views.account.data.personal.nationality') }}</VInputLabel>
                                             <VInputCombobox
                                                 v-model="userDetails.nationality"
+                                                :label="$t('views.account.data.personal.nationality')"
                                                 :options="nationalities.options"
                                                 required
                                                 :placeholder="$t('generic.no-information')"
@@ -166,9 +166,9 @@
                                         {{ $t('views.account.contact.mail-phone.title') }}
                                     </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.contact.mail-phone.email') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.email"
+                                            :label="$t('views.account.contact.mail-phone.email')"
                                             required
                                             disabled
                                             :placeholder="$t('generic.no-information')"
@@ -177,27 +177,27 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.contact.mail-phone.phone') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.phone"
+                                            :label="$t('views.account.contact.mail-phone.phone')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['phone']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.contact.mail-phone.phone-work') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.phoneWork"
+                                            :label="$t('views.account.contact.mail-phone.phone-work')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['phoneWork']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.contact.mail-phone.mobile') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.mobile"
+                                            :label="$t('views.account.contact.mail-phone.mobile')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['mobile']"
                                             :errors-visible="validation.showErrors.value"
@@ -209,9 +209,9 @@
                                         {{ $t('views.account.contact.address.title') }}
                                     </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.contact.address.address-line1') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.address.addressLine1"
+                                            :label="$t('views.account.contact.address.address-line1')"
                                             required
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['address.addressLine1']"
@@ -219,9 +219,9 @@
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.contact.address.address-line2') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.address.addressLine2"
+                                            :label="$t('views.account.contact.address.address-line2')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['address.addressLine2']"
                                             :errors-visible="validation.showErrors.value"
@@ -229,9 +229,9 @@
                                     </div>
                                     <div class="flex flex-col sm:flex-row sm:space-x-4">
                                         <div class="mb-4 sm:w-36">
-                                            <VInputLabel>{{ $t('views.account.contact.address.zip') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.address.zipcode"
+                                                :label="$t('views.account.contact.address.zip')"
                                                 required
                                                 :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['address.zipcode']"
@@ -239,9 +239,9 @@
                                             />
                                         </div>
                                         <div class="mb-4 sm:flex-grow">
-                                            <VInputLabel>{{ $t('views.account.contact.address.city') }}</VInputLabel>
                                             <VInputText
                                                 v-model.trim="userDetails.address.town"
+                                                :label="$t('views.account.contact.address.city')"
                                                 required
                                                 :placeholder="$t('generic.no-information')"
                                                 :errors="validation.errors.value['address.town']"
@@ -250,9 +250,9 @@
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.contact.address.country') }}</VInputLabel>
                                         <VInputCombobox
                                             v-model="userDetails.address.country"
+                                            :label="$t('views.account.contact.address.country')"
                                             :options="countries.options"
                                             required
                                             :placeholder="$t('generic.no-information')"
@@ -298,18 +298,18 @@
                                         {{ $t('views.account.emergency.contact.title') }}
                                     </h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.emergency.contact.name') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.emergencyContact.name"
+                                            :label="$t('views.account.emergency.contact.name')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['emergencyContact.name']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.emergency.contact.phone') }}</VInputLabel>
                                         <VInputText
                                             v-model.trim="userDetails.emergencyContact.phone"
+                                            :label="$t('views.account.emergency.contact.phone')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['emergencyContact.phone']"
                                             :errors-visible="validation.showErrors.value"
@@ -319,18 +319,18 @@
                                 <section>
                                     <h2 class="mb-4 font-bold text-secondary">{{ $t('views.account.emergency.medical.title') }}</h2>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.emergency.medical.diseases') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.diseases"
+                                            :label="$t('views.account.emergency.medical.diseases')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['diseases']"
                                             :errors-visible="validation.showErrors.value"
                                         />
                                     </div>
                                     <div class="mb-4">
-                                        <VInputLabel>{{ $t('views.account.emergency.medical.medication') }}</VInputLabel>
                                         <VInputTextArea
                                             v-model.trim="userDetails.medication"
+                                            :label="$t('views.account.emergency.medical.medication')"
                                             :placeholder="$t('generic.no-information')"
                                             :errors="validation.errors.value['medication']"
                                             :errors-visible="validation.showErrors.value"
@@ -379,17 +379,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { deepCopy } from '@/common';
 import type { InputSelectOption, UserDetails } from '@/domain';
-import {
-    AsyncButton,
-    VInfo,
-    VInputCombobox,
-    VInputDate,
-    VInputLabel,
-    VInputSelect,
-    VInputText,
-    VInputTextArea,
-    VTabs,
-} from '@/ui/components/common';
+import { AsyncButton, VInfo, VInputCombobox, VInputDate, VInputSelect, VInputText, VInputTextArea, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useConfig, useUsersUseCase } from '@/ui/composables/Application';
 import { useCountries } from '@/ui/composables/Countries.ts';

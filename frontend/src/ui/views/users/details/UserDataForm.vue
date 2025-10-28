@@ -2,45 +2,64 @@
     <section v-if="user">
         <h2 class="mb-4 font-bold text-secondary">App</h2>
         <div class="mb-4">
-            <VInputLabel>OpenID Connect Subject ID</VInputLabel>
             <VInputText
                 v-model.trim="user.authKey"
+                label="OpenID Connect Subject ID"
                 placeholder="Nicht verknüpft"
                 :errors="props.errors['authKey']"
                 :errors-visible="true"
             />
         </div>
         <div class="mb-4">
-            <VInputLabel>Anzeigename</VInputLabel>
             <VInputText
                 v-model.trim="user.nickName"
+                label="Anzeigename"
                 :placeholder="user.firstName"
                 :errors="props.errors['nickName']"
                 :errors-visible="true"
             />
         </div>
         <div class="mb-4">
-            <VInputLabel>Erstellt am</VInputLabel>
-            <VInputDate v-model.trim="user.createdAt" disabled :errors="props.errors['createdAt']" :errors-visible="true" />
+            <VInputDate
+                v-model.trim="user.createdAt"
+                label="Erstellt am"
+                disabled
+                :errors="props.errors['createdAt']"
+                :errors-visible="true"
+            />
         </div>
         <div class="mb-4">
-            <VInputLabel>Letzte Änderung am</VInputLabel>
-            <VInputDate v-model.trim="user.updatedAt" disabled :errors="props.errors['updatedAt']" :errors-visible="true" />
+            <VInputDate
+                v-model.trim="user.updatedAt"
+                label="Letzte Änderung am"
+                disabled
+                :errors="props.errors['updatedAt']"
+                :errors-visible="true"
+            />
         </div>
         <div class="mb-4">
-            <VInputLabel>Letzter Login am</VInputLabel>
-            <VInputDate v-model.trim="user.lastLoginAt" disabled :errors="props.errors['lastLoginAt']" :errors-visible="true" />
+            <VInputDate
+                v-model.trim="user.lastLoginAt"
+                label="Letzter Login am"
+                disabled
+                :errors="props.errors['lastLoginAt']"
+                :errors-visible="true"
+            />
         </div>
         <div class="mb-4">
-            <VInputLabel>Daten verifiziert am</VInputLabel>
-            <VInputDate v-model.trim="user.verifiedAt" :errors="props.errors['verifiedAt']" :errors-visible="true" />
+            <VInputDate
+                v-model.trim="user.verifiedAt"
+                label="Daten verifiziert am"
+                :errors="props.errors['verifiedAt']"
+                :errors-visible="true"
+            />
         </div>
 
         <h2 class="mb-4 mt-8 font-bold text-secondary">Persönliche Daten</h2>
         <div class="mb-4 sm:w-64">
-            <VInputLabel>Geschlecht</VInputLabel>
             <VInputSelect
                 v-model="user.gender"
+                label="Geschlecht"
                 :options="genderOptions"
                 placeholder="keine Angabe"
                 :errors="props.errors['gender']"
@@ -48,26 +67,30 @@
             />
         </div>
         <div class="mb-4 sm:w-64">
-            <VInputLabel>Titel</VInputLabel>
-            <VInputText v-model.trim="user.title" placeholder="keine Angabe" :errors="props.errors['title']" :errors-visible="true" />
+            <VInputText
+                v-model.trim="user.title"
+                label="Titel"
+                placeholder="keine Angabe"
+                :errors="props.errors['title']"
+                :errors-visible="true"
+            />
         </div>
         <div class="mb-4">
-            <VInputLabel>Vorname</VInputLabel>
-            <VInputText v-model.trim="user.firstName" required :errors="props.errors['firstName']" :errors-visible="true" />
+            <VInputText v-model.trim="user.firstName" label="Vorname" required :errors="props.errors['firstName']" :errors-visible="true" />
         </div>
         <div class="mb-4">
-            <VInputLabel>Zweiter Vorname</VInputLabel>
             <VInputText
                 v-model.trim="user.secondName"
+                label="Zweiter Vorname"
                 placeholder="keine Angabe"
                 :errors="props.errors['secondName']"
                 :errors-visible="true"
             />
         </div>
         <div class="mb-4">
-            <VInputLabel>Nachname</VInputLabel>
             <VInputText
                 v-model.trim="user.lastName"
+                label="Nachname"
                 required
                 placeholder="keine Angabe"
                 :errors="props.errors['lastName']"
@@ -76,9 +99,9 @@
         </div>
         <div class="flex flex-col sm:flex-row sm:space-x-4">
             <div class="mb-4 sm:w-64">
-                <VInputLabel>Geboren am</VInputLabel>
                 <VInputDate
                     v-model="user.dateOfBirth"
+                    label="Geboren am"
                     required
                     placeholder="keine Angabe"
                     :errors="props.errors['dateOfBirth']"
@@ -86,9 +109,9 @@
                 />
             </div>
             <div class="mb-4 sm:flex-grow">
-                <VInputLabel>Geburtsort</VInputLabel>
                 <VInputText
                     v-model.trim="user.placeOfBirth"
+                    label="Geburtsort"
                     required
                     placeholder="keine Angabe"
                     :errors="props.errors['placeOfBirth']"
@@ -98,9 +121,9 @@
         </div>
         <div class="flex flex-col sm:flex-row sm:space-x-4">
             <div class="mb-4 sm:w-64">
-                <VInputLabel>Pass Nummer</VInputLabel>
                 <VInputText
                     v-model.trim="user.passNr"
+                    label="Pass Nummer"
                     required
                     placeholder="keine Angabe"
                     :errors="props.errors['passNr']"
@@ -108,9 +131,9 @@
                 />
             </div>
             <div class="mb-4 sm:flex-grow">
-                <VInputLabel>Nationalität</VInputLabel>
                 <VInputCombobox
                     v-model="user.nationality"
+                    label="Nationalität"
                     :options="nationalities.options"
                     required
                     :errors="props.errors['nationality']"
@@ -123,7 +146,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { InputSelectOption, UserDetails, ValidationHint } from '@/domain';
-import { VInputCombobox, VInputDate, VInputLabel, VInputSelect, VInputText } from '@/ui/components/common';
+import { VInputCombobox, VInputDate, VInputSelect, VInputText } from '@/ui/components/common';
 import { useNationalities } from '@/ui/composables/Nationalities.ts';
 
 interface Props {

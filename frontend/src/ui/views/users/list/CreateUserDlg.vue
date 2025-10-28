@@ -4,30 +4,30 @@
             <h1>Nutzer hinzufügen</h1>
         </template>
         <template #default>
-            <div class="px-4 pt-4 xs:px-8 lg:px-10">
+            <div class="px-4 pt-4 sm:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>Vorname</VInputLabel>
                         <VInputText
                             v-model="user.firstName"
+                            label="Vorname"
                             :errors="validation.errors.value['firstName']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Vorname laut Auweisdokument"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Nachname</VInputLabel>
                         <VInputText
                             v-model="user.lastName"
+                            label="Nachname"
                             :errors="validation.errors.value['lastName']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Nachname laut Auweisdokument"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Email</VInputLabel>
                         <VInputText
                             v-model="user.email"
+                            label="Email"
                             :errors="validation.errors.value['email']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Kontakt Email Adresse"
@@ -57,7 +57,7 @@ import type { User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInfo } from '@/ui/components/common';
 import { VInputText } from '@/ui/components/common';
-import { AsyncButton, VDialog, VInputLabel } from '@/ui/components/common';
+import { AsyncButton, VDialog } from '@/ui/components/common';
 import { useUserAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';

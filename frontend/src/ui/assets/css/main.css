@@ -4,7 +4,7 @@
 @import 'lib/collapsible-pane.css';
 
 @import 'styling/animations.css';
-@import 'styling/inputs.css';
+@import 'inputs/inputs.css';
 @import 'styling/typography.css';
 @import 'styling/buttons.css';
 @import 'styling/table.css';

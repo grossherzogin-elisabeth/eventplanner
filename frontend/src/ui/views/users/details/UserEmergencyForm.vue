@@ -2,18 +2,18 @@
     <section v-if="user">
         <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
         <div class="mb-4">
-            <VInputLabel>Name des Notfallkontakts</VInputLabel>
             <VInputText
                 v-model.trim="user.emergencyContact.name"
+                label="Name des Notfallkontakts"
                 placeholder="Keine Angabe"
                 :errors="props.errors['emergencyContact.name']"
                 :errors-visible="true"
             />
         </div>
         <div class="mb-4">
-            <VInputLabel>Telefonnummer des Notfallkontakts</VInputLabel>
             <VInputText
                 v-model.trim="user.emergencyContact.phone"
+                label="Telefonnummer des Notfallkontakts"
                 placeholder="Keine Angabe"
                 :errors="props.errors['emergencyContact.phone']"
                 :errors-visible="true"
@@ -25,18 +25,18 @@
             Stammcrew freiwillig gemacht.
         </VInfo>
         <div class="mb-4">
-            <VInputLabel>Krankheiten</VInputLabel>
             <VInputTextArea
                 v-model.trim="user.diseases"
+                label="Krankheiten"
                 placeholder="Keine Angabe"
                 :errors="props.errors['diseases']"
                 :errors-visible="true"
             />
         </div>
         <div class="mb-4">
-            <VInputLabel>Medikamente</VInputLabel>
             <VInputTextArea
                 v-model.trim="user.medication"
+                label="Medikamente"
                 placeholder="Keine Angabe"
                 :errors="props.errors['medication']"
                 :errors-visible="true"
@@ -47,7 +47,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { UserDetails, ValidationHint } from '@/domain';
-import { VInfo, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
+import { VInfo, VInputText, VInputTextArea } from '@/ui/components/common';
 
 interface Props {
     modelValue: UserDetails;

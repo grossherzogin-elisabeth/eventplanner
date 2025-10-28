@@ -54,6 +54,10 @@ function onInput(event: Event): void {
     @apply text-onsecondary-container;
 }
 
+.btn-search:hover input::placeholder {
+    @apply text-onsecondary-container;
+}
+
 .btn-search.active,
 .btn-search:focus-within {
     cursor: text;
