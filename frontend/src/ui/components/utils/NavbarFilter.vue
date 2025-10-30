@@ -1,22 +1,18 @@
 <template>
-    <button class="icon-button -mx-4 flex h-full items-center" @click="openSearch()">
-        <i class="fa-solid fa-search"></i>
-    </button>
-    <div
-        class="absolute right-0 top-0 z-10 flex h-full items-center bg-primary px-8 transition-all md:px-16 xl:px-20 dark:bg-surface-container"
-        :class="showSearch ? 'left-0 md:left-auto' : 'left-full lg:left-auto'"
-    >
-        <div class="-mx-4 flex flex-grow items-center space-x-8 rounded-full bg-onprimary/10 px-4 py-1.5 dark:bg-onsurface/10">
-            <i class="fa-solid fa-magnifying-glass text-white" />
+    <div class="search xs:pr-6 md:pr-14" :class="showSearch ? 'open' : ''">
+        <div class="wrapper flex flex-grow items-stretch self-stretch rounded-lg">
+            <button :class="showSearch ? 'w-11 px-4' : 'icon-button'" @click="openSearch()">
+                <i class="fa-solid fa-search"></i>
+            </button>
             <input
                 ref="input"
                 :value="props.modelValue"
-                class="flex-grow bg-transparent placeholder-white/50"
                 :placeholder="placeholder || 'Einträge filtern'"
+                :disabled="!showSearch"
                 @input="onInput($event)"
             />
-            <button class="lg:hidden" @click="cancel()">
-                <i class="fa-solid fa-xmark text-white" />
+            <button class="px-4" @click="cancel()">
+                <i class="fa-solid fa-xmark" />
             </button>
         </div>
     </div>
@@ -57,3 +53,71 @@ function cancel(): void {
     }
 }
 </script>
+<style scoped>
+.search {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(100vw - 3.25rem);
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    transition-property: left, top;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+    @apply bg-primary dark:bg-surface-container;
+}
+
+.search input {
+    flex-grow: 1;
+    opacity: 0;
+    background-color: transparent;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+}
+
+.search input::placeholder {
+    @apply text-onprimary/30 dark:text-onsurface/30;
+}
+
+.search .wrapper {
+    transition-property: background-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+}
+
+.search.open {
+    left: 0;
+}
+
+.search.open input {
+    opacity: 1;
+}
+
+@media (min-width: 400px) {
+    .search {
+        left: calc(100vw - 4.25rem);
+    }
+}
+
+@media (min-width: 786px) {
+    .search {
+        left: calc(100vw - 6.25rem);
+    }
+}
+
+@media (min-width: 40rem) {
+    .search {
+        width: 25rem;
+    }
+
+    .search.open {
+        left: calc(100vw - 25rem);
+    }
+
+    .search.open .wrapper {
+        @apply bg-onprimary/10;
+    }
+}
+</style>
