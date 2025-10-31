@@ -24,10 +24,14 @@
                     <button class="btn-ghost" name="save" @click="cancel()">
                         <span>{{ $t('generic.cancel') }}</span>
                     </button>
-                    <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit()">
-                        <i class="fa-solid fa-save"></i>
-                        <span>{{ $t('generic.save') }}</span>
-                    </button>
+                    <AsyncButton class="btn-primary" :disabled="validation.disableSubmit.value" :action="submit">
+                        <template #icon>
+                            <i class="fa-solid fa-save"></i>
+                        </template>
+                        <template #label>
+                            <span>{{ $t('generic.save') }}</span>
+                        </template>
+                    </AsyncButton>
                 </div>
             </template>
         </VSheet>
@@ -35,8 +39,8 @@
 </template>
 <script lang="ts" setup generic="T">
 import { ref } from 'vue';
-import { deepCopy } from '@/common';
-import { type Sheet, VSheet } from '@/ui/components/common';
+import { deepCopy, wait } from '@/common';
+import { AsyncButton, type Sheet, VSheet } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation';
 
 interface Props {
@@ -73,8 +77,10 @@ function cancel(): void {
     editSheet.value?.close();
 }
 
-function submit(): void {
+async function submit(): Promise<void> {
     emit('update:modelValue', mutableCopy.value);
+    // TODO replace fake delay with actual request await
+    await wait(1000);
     editSheet.value?.close();
 }
 </script>
