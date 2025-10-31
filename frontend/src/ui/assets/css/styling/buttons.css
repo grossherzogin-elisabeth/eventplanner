@@ -32,7 +32,6 @@
     @apply text-onprimary;
 }
 
-
 @media not all and (hover: none) {
     .btn-primary:not(:disabled):hover {
         @apply bg-primary;
@@ -40,7 +39,6 @@
         @apply shadow;
     }
 }
-
 
 .btn-primary.disabled,
 .btn-primary:disabled {
@@ -88,7 +86,6 @@ a.btn-danger:not(:disabled):hover,
     @apply dark:bg-onerror-container;
     @apply dark:text-error-container;
 }
-
 
 .btn-danger.disabled,
 .btn-danger:disabled {
@@ -170,7 +167,6 @@ a.btn-danger:not(:disabled):hover,
 .btn-ghost {
     @apply text-primary;
 }
-
 
 .btn-ghost:not(:disabled):hover {
     @apply bg-primary/10;
