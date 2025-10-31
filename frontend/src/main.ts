@@ -18,6 +18,8 @@ async function init(): Promise<void> {
     const applicationServices = initApplicationServices({ adapters });
     const useCases = initUseCases({ config, adapters, domainServices, applicationServices });
 
+    await useCases.usersUseCase.applyUserSettings();
+
     setupVue({ config, domainServices, applicationServices, useCases });
 }
 init();

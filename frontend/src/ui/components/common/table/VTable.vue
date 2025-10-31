@@ -48,7 +48,7 @@
                 >
                     <td></td>
                     <td v-if="props.sortable && viewPortSize.width.value > 1024" class="w-0">
-                        <i class="fa-solid fa-grip-vertical cursor-move text-secondary-variant"></i>
+                        <i class="fa-solid fa-grip-vertical text-secondary-variant cursor-move"></i>
                     </td>
                     <td
                         v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"

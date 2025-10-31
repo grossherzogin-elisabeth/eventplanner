@@ -50,7 +50,10 @@ function handleDragStop(dragEvent: DragEvent): void {
 
 <style>
 .dropzone {
-    @apply scale-100 transform p-0 transition-all duration-200;
+    padding: 0;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
     --anim-distance: 1rem;
     animation: anim-dropzone 0.5s;
 }

@@ -1,56 +1,48 @@
 <template>
-    <div :class="$attrs.class" class="v-input-select flex items-start">
-        <label v-if="props.label" class="input-label">
-            {{ props.label }}
-        </label>
-        <div class="relative w-1/2 flex-grow">
-            <div ref="dropdownAnchor" class="input-field-wrapper cursor-pointer" @click="showDropdown()">
-                <slot name="before" />
-                <input
-                    :id="id"
-                    :aria-disabled="props.disabled"
-                    :aria-invalid="hasErrors"
-                    :aria-required="props.required"
-                    :class="{ invalid: showErrors && hasErrors }"
-                    :disabled="props.disabled"
-                    :placeholder="props.placeholder || $t('generic.please-select')"
-                    :required="props.required"
-                    :value="displayValue"
-                    aria-haspopup="true"
-                    class="input-field w-full cursor-pointer overflow-ellipsis"
-                    readonly
-                    @blur="onBlur"
-                    @focus="onFocus()"
-                    @keydown.down.prevent="focusNextOption()"
-                    @keydown.up.prevent="focusPrevOption()"
-                    @keydown.enter="selectFocusedOption"
-                    @keydown.esc="hideDropdown(true)"
-                />
-                <div class="input-icon-right">
-                    <VLoadingSpinner v-if="loading"></VLoadingSpinner>
-                    <button
-                        v-else
-                        :class="focusOptionIndex === null ? 'rotate-0' : 'rotate-180'"
-                        class="transition-transform"
-                        tabindex="-1"
-                        @click="showDropdown()"
-                    >
-                        <i class="fa-solid fa-chevron-down text-sm text-primary"></i>
-                    </button>
-                </div>
-                <slot name="after" />
-            </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+    <div :class="$attrs.class" class="v-input-select">
+        <div ref="dropdownAnchor" class="input-field-wrapper cursor-pointer" @click="showDropdown()">
+            <slot name="before" />
+            <label :for="id">{{ props.label }}</label>
+            <input
+                :id="id"
+                :aria-disabled="props.disabled"
+                :aria-invalid="hasErrors"
+                :aria-required="props.required"
+                :class="{ invalid: showErrors && hasErrors }"
+                :disabled="props.disabled"
+                :placeholder="props.placeholder || $t('generic.please-select')"
+                :required="props.required"
+                :value="displayValue"
+                aria-haspopup="true"
+                readonly
+                @blur="onBlur"
+                @focus="onFocus()"
+                @keydown.down.prevent="focusNextOption()"
+                @keydown.up.prevent="focusPrevOption()"
+                @keydown.enter="selectFocusedOption"
+                @keydown.esc="hideDropdown(true)"
+            />
+            <VLoadingSpinner v-if="loading"></VLoadingSpinner>
+            <button
+                v-else
+                :class="focusOptionIndex === null ? 'rotate-0' : 'rotate-180'"
+                class="transition-transform"
+                tabindex="-1"
+                @click="showDropdown()"
+            >
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+        </div>
+        <div v-if="showErrors && hasErrors" class="input-errors">
+            <p v-for="err in errors" :key="err.key" class="input-error">
+                {{ $t(err.key, err.params) }}
+            </p>
         </div>
     </div>
     <VDropdownWrapper
         v-if="focusOptionIndex !== null"
         :anchor="dropdownAnchor"
-        anchor-align-y="top"
+        anchor-align-y="bottom"
         class="input-dropdown"
         max-height="300px"
         min-width="50px"

@@ -14,7 +14,7 @@
                     <slot name="dialog">
                         <div
                             :class="` ${props.width || 'w-screen max-w-xl'} ${props.height || 'h-auto max-h-[95vh]'} ${$attrs.class} `"
-                            class="dialog flex flex-col overflow-hidden bg-surface sm:rounded-3xl sm:shadow-lg"
+                            class="dialog flex flex-col overflow-hidden bg-surface-container-high sm:rounded-3xl sm:shadow-lg"
                         >
                             <div class="dialog-header flex h-16 w-full items-center justify-between pl-4 xs:pl-8 lg:pl-10 lg:pr-2">
                                 <div class="fullscreen-back-button -ml-4">
@@ -25,7 +25,7 @@
                                 <div class="flex w-0 flex-grow items-center overflow-hidden">
                                     <slot name="title"></slot>
                                 </div>
-                                <div class="dialog-close-button-wrapper flex w-20 items-center justify-center lg:w-16">
+                                <div class="dialog-close-button-wrapper flex w-16 items-center justify-center">
                                     <button class="dialog-close-button icon-button" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
@@ -180,16 +180,25 @@ async function close(): Promise<void> {
 }
 
 .modal-danger.dialog-background {
-    @apply z-50;
+    z-index: 50;
 }
 
 .modal-danger .dialog-header {
-    @apply border-onerror-container bg-error-container pl-8 text-onerror-container;
+    @apply bg-error-container;
+    @apply dark:bg-error-container/30;
+    @apply text-onerror-container;
+    @apply border-onerror-container;
+    @apply selection:bg-onerror-container;
+    @apply selection:text-error-container;
 }
 
-.modal-danger .dialog > .dialog-content,
-.modal-danger .dialog > .dialog-buttons {
-    @apply bg-error-container bg-opacity-50;
+.modal-danger .dialog-content,
+.modal-danger .dialog-buttons {
+    @apply bg-error-container;
+    @apply text-onerror-container;
+    @apply selection:bg-onerror-container;
+    @apply selection:text-error-container;
+    @apply dark:bg-error-container/30;
 }
 
 .modal-danger .dialog-close-button {
@@ -203,8 +212,9 @@ async function close(): Promise<void> {
 @media (max-width: 639px) {
     .modal-danger .dialog,
     .modal .dialog {
-        @apply rounded-3xl shadow-lg;
-        max-width: min(calc(100vw - 2rem), 35rem);
+        max-width: min(calc(100vw - 1rem), 35rem);
+        @apply rounded-3xl;
+        @apply shadow-lg;
     }
 }
 
@@ -215,29 +225,39 @@ async function close(): Promise<void> {
     }
 
     .fullscreen .dialog-wrapper {
-        @apply w-full overflow-hidden;
+        width: 100%;
+        overflow: hidden;
         height: var(--viewport-height);
     }
 
     .fullscreen .dialog {
-        @apply h-full max-h-full w-full max-w-full !important;
+        height: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        @apply bg-surface;
     }
 
     .fullscreen .dialog .dialog-header {
         height: var(--nav-height);
-        @apply truncate bg-primary text-onprimary;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        @apply bg-primary;
+        @apply text-onprimary;
+        @apply dark:bg-surface-container-high dark:text-onsurface-variant;
     }
 
     .fullscreen .dialog .dialog-close-button {
-        @apply text-white;
+        @apply text-onprimary;
     }
 
     .fullscreen .dialog .fullscreen-back-button {
-        @apply block;
+        display: block;
     }
 
     .fullscreen .dialog .dialog-close-button-wrapper {
-        @apply hidden;
+        display: none;
     }
 }
 </style>

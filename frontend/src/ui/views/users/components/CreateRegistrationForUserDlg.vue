@@ -12,27 +12,27 @@
                         bearbeiten.
                     </p>
                     <div class="mb-4">
-                        <VInputLabel>Reise</VInputLabel>
                         <VInputCombobox
                             v-model="registration.eventKey"
+                            label="Reise"
                             :options="eventOptions"
                             :errors="validation.errors.value['eventKey']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Position</VInputLabel>
                         <VInputCombobox
                             v-model="registration.positionKey"
+                            label="Position"
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Notiz</VInputLabel>
                         <VInputTextArea
                             v-model="registration.note"
+                            label="Notiz"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -58,7 +58,7 @@ import { DateTimeFormat } from '@/common/date';
 import type { Event, EventKey, InputSelectOption, PositionKey, User, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputLabel, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputCombobox, VInputTextArea } from '@/ui/components/common';
 import { useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';

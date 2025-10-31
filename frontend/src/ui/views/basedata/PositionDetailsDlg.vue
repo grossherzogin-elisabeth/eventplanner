@@ -8,31 +8,30 @@
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div v-if="position.key" class="mb-4">
-                        <VInputLabel>{{ $t('views.basedata.tab.positions.id') }}</VInputLabel>
-                        <VInputText v-model.trim="position.key" required disabled />
+                        <VInputText v-model.trim="position.key" :label="$t('views.basedata.tab.positions.id')" required disabled />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.basedata.tab.positions.name') }}</VInputLabel>
                         <VInputText
                             v-model="position.name"
+                            :label="$t('views.basedata.tab.positions.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.basedata.tab.positions.imoListRank') }}</VInputLabel>
                         <VInputText
                             v-model="position.imoListRank"
+                            :label="$t('views.basedata.tab.positions.imoListRank')"
                             :errors="validation.errors.value['imoListRank']"
                             :errors-visible="validation.showErrors.value"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.basedata.tab.positions.color') }}</VInputLabel>
                         <VInputText
                             v-model="position.color"
+                            :label="$t('views.basedata.tab.positions.color')"
                             :errors="validation.errors.value['color']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -43,9 +42,9 @@
                         </VInputText>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.basedata.tab.positions.prio') }}</VInputLabel>
                         <VInputNumber
                             v-model="position.prio"
+                            :label="$t('views.basedata.tab.positions.prio')"
                             :errors="validation.errors.value['prio']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -71,7 +70,7 @@ import { deepCopy } from '@/common';
 import type { Position } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputNumber } from '@/ui/components/common';
-import { VDialog, VInputLabel, VInputText } from '@/ui/components/common';
+import { VDialog, VInputText } from '@/ui/components/common';
 import { usePositionService } from '@/ui/composables/Domain.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 

@@ -164,7 +164,7 @@ events:
       future: 'Zukünftige'
     tab-title: 'Reisen verwalten'
     filter:
-      search: 'Reisen durchsuchen'
+      search: 'Einträge filtern'
       all-events: 'Alle Veranstaltungen'
       all-status: 'Alle Status'
       status: 'Status'

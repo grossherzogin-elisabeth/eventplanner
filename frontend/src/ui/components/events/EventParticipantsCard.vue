@@ -17,7 +17,7 @@
         </h2>
         <div
             v-if="props.event.assignedUserCount === 0 && waitingList.length === 0"
-            class="rounded-2xl bg-surface-container bg-opacity-50 px-4 shadow xs:-mx-4 md:-mx-4 md:-mt-4 md:bg-transparent md:shadow-none"
+            class="rounded-2xl bg-surface-container/50 px-4 shadow xs:-mx-4 md:-mx-4 md:-mt-4 md:bg-transparent md:shadow-none"
         >
             <div class="flex items-center py-4">
                 <div class="mr-4">
@@ -38,7 +38,7 @@
         </div>
         <div
             v-else
-            class="rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow xs:-mx-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0 md:shadow-none"
+            class="rounded-2xl bg-surface-container/50 p-4 shadow xs:-mx-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0 md:shadow-none"
         >
             <template v-if="tab === Tab.Team">
                 <ul class="space-y-2">
@@ -57,15 +57,11 @@
                             <span v-else-if="it.user?.key" class="italic text-error">
                                 {{ $t('components.event-participants-card.unknown') }}
                             </span>
-                            <span v-else class="truncate italic text-error text-opacity-60">
+                            <span v-else class="truncate italic text-error/60">
                                 {{ $t('components.event-participants-card.empty') }}
                             </span>
                             <span class="flex-grow"></span>
-                            <span
-                                :style="{ background: it.position.color }"
-                                class="position ml-auto text-xs"
-                                :class="{ 'opacity-50': !it.registration }"
-                            >
+                            <span :style="{ '--color': it.position.color }" class="tag custom" :class="{ 'opacity-50': !it.registration }">
                                 {{ it.position.name }}
                             </span>
                         </li>
@@ -84,12 +80,12 @@
                             {{ it.name }}
                         </RouterLink>
                         <span v-else-if="it.name" class="flex-grow truncate">{{ it.name }}</span>
-                        <span :style="{ background: it.position.color }" class="position text-xs">
+                        <span :style="{ '--color': it.position.color }" class="tag custom">
                             {{ it.position.name }}
                         </span>
                     </li>
                 </ul>
-                <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container bg-opacity-50 p-4 text-sm shadow">
+                <div v-if="waitingList.length === 0" class="-mx-4 -mt-4 rounded-xl bg-surface-container/50 p-4 text-sm shadow">
                     <p v-if="hasHiddenCrewAssignments">
                         {{ $t('components.event-participants-card.no-registrations') }}
                     </p>

@@ -1,9 +1,5 @@
 <template>
-    <div
-        class="flex items-center overflow-hidden rounded-2xl bg-error-container bg-opacity-75 text-onerror-container shadow backdrop-blur"
-        :class="{ hidden: dismissed }"
-        @click="clampActive = !clampActive"
-    >
+    <div class="status-panel error" :class="{ hidden: dismissed }" @click="clampActive = !clampActive">
         <i class="fa-solid fa-exclamation-circle my-5 ml-4 w-4 self-start text-xl"></i>
         <span
             class="mx-4 my-4 mr-1 w-0 flex-grow text-sm"

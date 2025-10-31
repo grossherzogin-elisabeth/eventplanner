@@ -11,16 +11,6 @@
                         Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die Reise absagst.
                     </p>
                 </section>
-                <!--                <section>-->
-                <!--                    <p class="mb-8 max-w-lg">-->
-                <!--                        Wenn du die Reise absagst wird vom System automatisch eine Benachrichtigung an die Crew gesendet. Du kannst die zu-->
-                <!--                        versendene Nachricht hier anpassen.-->
-                <!--                    </p>-->
-                <!--                    <div class="mb-4">-->
-                <!--                        <VInputLabel>Nachricht an die Crew</VInputLabel>-->
-                <!--                        <VInputTextArea v-model.trim="message" class="min-h-64" />-->
-                <!--                    </div>-->
-                <!--                </section>-->
             </div>
         </template>
         <template #buttons>

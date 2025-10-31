@@ -10,13 +10,13 @@
                     <i class="fa-solid fa-hourglass-half opacity-25" />
                 </span>
                 <span v-else-if="item.state === RegistrationSlotState.CONFIRMED">
-                    <i class="fa-solid fa-user-check text-green opacity-60" />
+                    <i class="fa-solid fa-user-check text-success opacity-60" />
                 </span>
                 <span v-else-if="item.state === RegistrationSlotState.ASSIGNED">
                     <i class="fa-solid fa-user-clock opacity-25" />
                 </span>
                 <span v-else-if="item.state === RegistrationSlotState.OPEN">
-                    <i class="fa-solid fa-user-xmark text-error text-opacity-50" />
+                    <i class="fa-solid fa-user-xmark text-error/50" />
                 </span>
             </td>
             <template v-if="item.registration">
@@ -31,36 +31,37 @@
                                 {{ item.registration?.note.trim() }}
                             </p>
                             <p class="mb-1 flex items-center gap-x-1 gap-y-2">
-                                <span :style="{ background: item.position.color }" class="position text-xs">
+                                <span
+                                    :style="{ '--color': item.position.color }"
+                                    class="tag"
+                                    :class="item.hasOverwrittenPosition ? 'error line-through' : 'custom'"
+                                >
                                     {{ item.slot?.positionName || item.position.name }}
                                 </span>
 
                                 <template v-if="!item.user || item.user?.qualifications?.length === 0"></template>
                                 <span
                                     v-else-if="item.expiredQualifications.length > 0"
-                                    class="whitespace-nowrap rounded-lg bg-red-container px-2 py-1 text-xs font-black text-onred-container"
+                                    class="tag error"
                                     :title="item.expiredQualifications.join(', ')"
                                 >
                                     <i class="fa-solid fa-ban" />
                                     {{ $t('domain.user.qualification.expired-count', { count: item.expiredQualifications.length }) }}
                                 </span>
-                                <span
-                                    v-else
-                                    class="whitespace-nowrap rounded-lg bg-green-container px-2 py-1 text-xs font-black text-ongreen-container"
-                                >
+                                <span v-else class="tag success">
                                     <i class="fa-solid fa-check" />
                                     {{ $t('domain.user.qualification.all-valid') }}
                                 </span>
 
-                                <span v-if="!item.registration?.userKey" class="tag bg-secondary-container text-onsecondary-container">
+                                <span v-if="!item.registration?.userKey" class="tag info">
                                     <i class="fa-solid fa-info-circle" />
                                     {{ $t('domain.registration.guest') }}
                                 </span>
-                                <span v-if="item.registration?.overnightStay" class="tag bg-secondary-container text-onsecondary-container">
+                                <span v-if="item.registration?.overnightStay" class="tag info">
                                     <i class="fa-solid fa-bed" />
                                     {{ $t('domain.registration.overnight-stay') }}
                                 </span>
-                                <span v-if="item.registration?.arrival" class="tag bg-secondary-container text-onsecondary-container">
+                                <span v-if="item.registration?.arrival" class="tag info">
                                     <i class="fa-solid fa-calendar-day" />
                                     {{ $t('domain.registration.arrival-on-day-before') }}
                                 </span>
@@ -83,12 +84,12 @@
                 <p class="mb-1 font-semibold italic text-error opacity-50">
                     {{ $t('domain.event.slot.empty') }}
                 </p>
-                <p v-if="item.slot" class="opacity-50">
+                <p v-if="item.slot" class="flex items-center gap-x-1 gap-y-2 opacity-50">
                     <span
                         v-for="position in item.slot.positionKeys.map((it) => positions.get(it))"
                         :key="position.key"
-                        :style="{ background: position.color }"
-                        class="position mr-1 text-xs"
+                        :style="{ '--color': position.color }"
+                        class="tag custom"
                     >
                         {{ position.name }}
                     </span>

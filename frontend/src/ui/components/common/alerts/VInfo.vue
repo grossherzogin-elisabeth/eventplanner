@@ -1,9 +1,5 @@
 <template>
-    <div
-        class="flex items-center overflow-hidden rounded-2xl bg-secondary-container text-onsecondary-container shadow"
-        :class="{ hidden: dismissed }"
-        @click="clampActive = !clampActive"
-    >
+    <div class="status-panel info rounded-2xl" :class="{ hidden: dismissed }" @click="clampActive = !clampActive">
         <i class="fa-solid my-5 ml-4 w-4 self-start" :class="props.icon ?? 'fa-info-circle'"></i>
         <span
             class="mx-4 my-4 mr-1 w-0 flex-grow text-sm"

@@ -11,26 +11,29 @@
                         auf der Warteliste ändern.
                     </p>
                     <div class="mb-4">
-                        <VInputLabel>Nutzer</VInputLabel>
                         <VInputCombobox
                             v-model="registration.userKey"
+                            label="Nutzer"
+                            required
                             :options="userOptions"
                             :errors="validation.errors.value['userKey']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div v-if="!registration.userKey" class="mb-4">
-                        <VInputLabel>Name</VInputLabel>
                         <VInputText
                             v-model="registration.name"
+                            required
+                            label="Name"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Position</VInputLabel>
                         <VInputCombobox
                             v-model="registration.positionKey"
+                            label="Position"
+                            required
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"
                             :errors-visible="validation.showErrors.value"
@@ -39,15 +42,15 @@
                                 <span class="flex-grow">{{ item.label }}</span>
                                 <i
                                     v-if="selectedUser && item.value && !selectedUser.positionKeys?.includes(item.value)"
-                                    class="fa-solid fa-warning mr-4 text-yellow"
+                                    class="fa-solid fa-warning mr-4 text-warning"
                                 />
                             </template>
                         </VInputCombobox>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Notiz</VInputLabel>
                         <VInputTextArea
                             v-model="registration.note"
+                            label="Notiz"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -61,9 +64,9 @@
                         />
                     </div>
                     <div v-if="registration.overnightStay" class="mb-4">
-                        <VInputLabel>Anreise am</VInputLabel>
                         <VInputDate
                             v-model="registration.arrival"
+                            label="Anreise am"
                             :errors="validation.errors.value['arrival']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Am ersten Tag der Reise"
@@ -110,7 +113,7 @@ import type { Dialog } from '@/ui/components/common';
 import { VInputDate } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputCombobox, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';

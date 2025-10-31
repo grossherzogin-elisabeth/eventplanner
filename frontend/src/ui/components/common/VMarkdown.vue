@@ -21,7 +21,12 @@ const rendered = computed<string>(() => {
 
 <style>
 .markdown a {
-    @apply font-bold text-primary hover:underline;
+    @apply font-bold;
+    @apply text-primary;
+}
+
+.markdown a:hover {
+    text-decoration-line: underline;
 }
 
 .markdown p {
@@ -35,5 +40,10 @@ const rendered = computed<string>(() => {
 .markdown h5,
 .markdown h6 {
     @apply mt-4;
+}
+
+.markdown li {
+    list-style-type: disc;
+    @apply ml-4;
 }
 </style>

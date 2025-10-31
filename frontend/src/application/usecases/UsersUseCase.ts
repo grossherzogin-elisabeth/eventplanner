@@ -16,6 +16,7 @@ import type {
     UserSettings,
     ValidationHint,
 } from '@/domain';
+import { Theme } from '@/domain';
 import { Permission } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
@@ -48,6 +49,8 @@ export class UsersUseCase {
         this.qualificationCachingService = params.qualificationCachingService;
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.applyUserSettings());
     }
 
     public async getUserDetailsForSignedInUser(): Promise<UserDetails> {
@@ -161,7 +164,19 @@ export class UsersUseCase {
         let settings = await this.getUserSettings();
         settings = Object.assign(settings, patch);
         localStorage.setItem('settings', JSON.stringify(settings));
+        await this.applyUserSettings(settings);
         return settings;
+    }
+
+    public async applyUserSettings(settings?: UserSettings): Promise<void> {
+        const loadedSettings = settings ?? (await this.getUserSettings());
+        const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (loadedSettings.theme === Theme.Dark || (loadedSettings.theme === Theme.System && prefersDarkMode)) {
+            document.querySelector('html')?.classList.add('dark');
+        } else if (loadedSettings.theme === Theme.Light || (loadedSettings.theme === Theme.System && !prefersDarkMode)) {
+            document.querySelector('html')?.classList.remove('dark');
+        }
+        console.log(loadedSettings.theme);
     }
 
     public validate(user: UserDetails | null): Record<string, ValidationHint[]> {

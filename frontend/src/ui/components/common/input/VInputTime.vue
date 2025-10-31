@@ -1,35 +1,34 @@
 <template>
-    <div :class="$attrs.class" class="input-datepicker flex items-start">
-        <label v-if="props.label" class="input-label">
-            {{ props.label }}
-        </label>
-        <div class="relative w-1/2 flex-grow">
-            <div ref="dropdownAnchor" class="input-field-wrapper">
-                <input
-                    :id="id"
-                    :aria-disabled="props.disabled"
-                    :aria-invalid="hasErrors"
-                    :aria-required="props.required"
-                    :class="{ invalid: showErrors && hasErrors }"
-                    :disabled="props.disabled"
-                    :placeholder="$t('generic.please-select')"
-                    :required="props.required"
-                    :value="displayValue"
-                    aria-haspopup="true"
-                    class="input-field w-full overflow-ellipsis pr-10"
-                    maxlength="7"
-                    @blur="onBlur()"
-                    @input="onInput($event)"
-                    @focus="inputValue = displayValue"
-                    @keydown.up.prevent="onArrowUp()"
-                    @keydown.down.prevent="onArrowDown()"
-                />
-            </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+    <div :class="$attrs.class" class="v-input-time">
+        <div class="input-field-wrapper" @click="focus()">
+            <slot name="before" />
+            <label :for="id">{{ props.label }}</label>
+            <input
+                :id="id"
+                ref="inputField"
+                :aria-disabled="props.disabled"
+                :aria-invalid="hasErrors"
+                :aria-required="props.required"
+                :class="{ invalid: showErrors && hasErrors }"
+                :disabled="props.disabled"
+                :placeholder="$t('generic.please-select')"
+                :required="props.required"
+                :value="displayValue"
+                aria-haspopup="true"
+                class="input-field w-full overflow-ellipsis pr-10"
+                maxlength="7"
+                @blur="onBlur()"
+                @input="onInput($event)"
+                @focus="inputValue = displayValue"
+                @keydown.up.prevent="onArrowUp()"
+                @keydown.down.prevent="onArrowDown()"
+            />
+            <slot name="after" />
+        </div>
+        <div v-if="showErrors && hasErrors" class="input-errors">
+            <p v-for="err in errors" :key="err.key" class="input-error">
+                {{ $t(err.key, err.params) }}
+            </p>
         </div>
     </div>
 </template>
@@ -77,6 +76,7 @@ const i18n = useI18n();
 const id = uuidv4();
 const visited = ref<boolean>(false);
 const inputValue = ref<string | null>(null);
+const inputField = ref<HTMLInputElement | undefined>(undefined);
 
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
@@ -89,6 +89,10 @@ const displayValue = computed<string>(() => {
     }
     return '-- : --';
 });
+
+function focus(): void {
+    inputField.value?.focus();
+}
 
 function onBlur(): void {
     visited.value = true;

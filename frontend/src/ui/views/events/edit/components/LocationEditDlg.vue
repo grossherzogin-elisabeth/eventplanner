@@ -9,18 +9,18 @@
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.location.name') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.name"
+                            :label="$t('domain.location.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             required
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.location.icon') }}</VInputLabel>
                         <VInputSelect
                             v-model="location.icon"
+                            :label="$t('domain.location.icon')"
                             placeholder="fa-anchor"
                             :errors="validation.errors.value['icon']"
                             :errors-visible="validation.showErrors.value"
@@ -39,18 +39,16 @@
                                 <span class="flex-grow">{{ item.label }}</span>
                             </template>
                             <template #before>
-                                <span :key="location.icon">
-                                    <i class="fa-solid ml-4 mt-5" :class="location.icon"></i>
+                                <span :key="location.icon" class="pt-5">
+                                    <i class="fa-solid" :class="location.icon"></i>
                                 </span>
                             </template>
                         </VInputSelect>
                     </div>
                     <div class="mb-2 flex space-x-4">
                         <div class="w-3/5">
-                            <VInputLabel>
-                                {{ $t('domain.location.eda') }}
-                            </VInputLabel>
                             <VInputDate
+                                :label="$t('domain.location.eda')"
                                 :model-value="location.eta"
                                 :errors="validation.errors.value['start']"
                                 :errors-visible="validation.showErrors.value"
@@ -58,10 +56,8 @@
                             />
                         </div>
                         <div class="w-2/5">
-                            <VInputLabel>
-                                {{ $t('domain.location.eta') }}
-                            </VInputLabel>
                             <VInputTime
+                                :label="$t('domain.location.eta')"
                                 :model-value="location.eta"
                                 :errors="validation.errors.value['start']"
                                 :errors-visible="validation.showErrors.value"
@@ -76,10 +72,8 @@
                     </div>
                     <div class="mb-2 flex space-x-4">
                         <div class="w-3/5">
-                            <VInputLabel>
-                                {{ $t('domain.location.edd') }}
-                            </VInputLabel>
                             <VInputDate
+                                :label="$t('domain.location.edd')"
                                 :model-value="location.etd"
                                 :errors="validation.errors.value['etd']"
                                 :errors-visible="validation.showErrors.value"
@@ -87,10 +81,8 @@
                             />
                         </div>
                         <div class="w-2/5">
-                            <VInputLabel>
-                                {{ $t('domain.location.etd') }}
-                            </VInputLabel>
                             <VInputTime
+                                :label="$t('domain.location.etd')"
                                 :model-value="location.etd"
                                 :errors="validation.errors.value['etd']"
                                 :errors-visible="validation.showErrors.value"
@@ -104,35 +96,35 @@
                         </button>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.location.address') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="location.address"
+                            :label="$t('domain.location.address')"
                             class="h-24"
                             :errors="validation.errors.value['address']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.location.address-link') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.addressLink"
+                            :label="$t('domain.location.address-link')"
                             :errors="validation.errors.value['addressLink']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.location.information') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="location.information"
+                            :label="$t('domain.location.information')"
                             class="h-24"
                             :errors="validation.errors.value['information']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.location.information-link') }}</VInputLabel>
                         <VInputText
                             v-model.trim="location.informationLink"
+                            :label="$t('domain.location.information-link')"
                             :errors="validation.errors.value['informationLink']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -157,7 +149,7 @@ import { useI18n } from 'vue-i18n';
 import { deepCopy, updateDate, updateTime } from '@/common';
 import type { Location, ValidationHint } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VDialog, VInputDate, VInputLabel, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
+import { VDialog, VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 const { t } = useI18n();

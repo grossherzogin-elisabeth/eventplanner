@@ -1,10 +1,10 @@
 <template>
     <div>
-        <ul class="border-t border-onsurface-variant border-opacity-20">
+        <ul class="border-t border-onsurface-variant/20">
             <li
                 v-for="option in props.options"
                 :key="String(option.value)"
-                class="flex cursor-pointer items-center space-x-4 border-b border-onsurface-variant border-opacity-20 py-4 hover:bg-surface-container-low"
+                class="flex cursor-pointer items-center space-x-4 border-b border-onsurface-variant/20 py-4 hover:bg-surface-container-low"
                 @click="emit('update:modelValue', option.value)"
             >
                 <div v-if="props.modelValue === option.value">

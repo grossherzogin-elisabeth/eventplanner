@@ -3,7 +3,7 @@
         <h2 class="mb-2 font-bold text-secondary">
             {{ $t('components.event-details-card.title') }}
         </h2>
-        <div class="space-y-1 rounded-2xl bg-surface-container bg-opacity-50 p-4 shadow xs:-mx-4">
+        <div class="space-y-1 rounded-2xl bg-surface-container/50 p-4 shadow xs:-mx-4">
             <p class="flex items-center space-x-4">
                 <i class="fa-solid fa-calendar-day w-4" />
                 <span>{{ $d(props.event.start, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
@@ -34,10 +34,7 @@
                     {{ $t('components.event-details-card.registrations', { count: props.event.registrations.length }) }}
                 </span>
             </p>
-            <p v-if="props.event.description" class="flex items-baseline space-x-4">
-                <i class="fa-solid fa-info-circle w-4" />
-                <span>{{ props.event.description }} </span>
-            </p>
+            <VMarkdown v-if="props.event.description" :value="props.event.description" class="pt-4 text-sm" />
         </div>
     </section>
 </template>
@@ -45,6 +42,7 @@
 import { computed } from 'vue';
 import { DateTimeFormat } from '@/common/date';
 import { type Event, EventState } from '@/domain';
+import { VMarkdown } from '@/ui/components/common';
 
 interface Props {
     event: Event;

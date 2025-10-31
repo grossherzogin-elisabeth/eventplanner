@@ -2,7 +2,7 @@
     <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
         <teleport to="#nav-right">
             <div class="h-full lg:hidden">
-                <NavbarFilter v-model="filter" placeholder="Nutzer filtern" />
+                <NavbarFilter v-model="filter" placeholder="Einträge filtern" />
             </div>
         </teleport>
 
@@ -15,7 +15,7 @@
                             <span>Hinzufügen</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="filter" placeholder="Nutzer filtern" />
+                    <VSearchButton v-model="filter" placeholder="Einträge filtern" />
                 </div>
             </template>
         </VTabs>
@@ -52,9 +52,9 @@
                             {{ item.nickName || item.firstName }} {{ item.lastName }}
                             <span
                                 v-if="item.verified"
-                                class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-container"
+                                class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-success-container/50"
                             >
-                                <i class="fa-solid fa-check text-xs text-ongreen-container"></i>
+                                <i class="fa-solid fa-check text-xs text-onsuccess-container"></i>
                             </span>
                         </p>
                         <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
@@ -63,12 +63,12 @@
                         <p v-else class="max-w-64 truncate text-sm italic">Keine Rolle zugewiesen</p>
                     </td>
                     <td class="w-1/3">
-                        <div class="flex max-w-64 flex-wrap">
+                        <div class="flex max-w-64 flex-wrap gap-1">
                             <span
                                 v-for="position in item.positions"
                                 :key="position.key"
-                                class="position my-0.5 mr-1 bg-surface-container-highest text-xs opacity-75"
-                                :style="{ background: position.color }"
+                                class="tag custom"
+                                :style="{ '--color': position.color }"
                             >
                                 {{ position.name }}
                             </span>
@@ -96,32 +96,32 @@
                     </td>
                     <td class="w-1/12">
                         <div class="flex items-center justify-end">
-                            <div v-if="item.qualifications?.length === 0" class="status-panel bg-surface-container-highest text-onsurface">
+                            <div v-if="item.qualifications?.length === 0" class="status-badge neutral">
                                 <i class="fa-solid fa-question-circle"></i>
-                                <span class="whitespace-nowrap font-semibold">Keine Angaben</span>
+                                <span>Keine Angaben</span>
                             </div>
                             <div
                                 v-else-if="item.expiredQualifications.length > 0"
-                                class="status-panel bg-red-container text-onred-container"
+                                class="status-badge error"
                                 :title="item.expiredQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-ban"></i>
-                                <span class="whitespace-nowrap font-semibold"> {{ item.expiredQualifications.length }} abgelaufen </span>
+                                <span> {{ item.expiredQualifications.length }} abgelaufen </span>
                             </div>
                             <div
                                 v-else-if="item.soonExpiringQualifications.length > 0"
-                                class="status-panel bg-yellow-container text-onyellow-container"
+                                class="status-badge warning"
                                 :title="item.soonExpiringQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-warning"></i>
-                                <span class="whitespace-nowrap font-semibold">
+                                <span>
                                     <template v-if="item.soonExpiringQualifications.length === 1"> 1 läuft bald ab </template>
                                     <template v-else> {{ item.soonExpiringQualifications.length }} laufen bald ab </template>
                                 </span>
                             </div>
-                            <div v-else class="status-panel bg-green-container text-ongreen-container">
+                            <div v-else class="status-badge success">
                                 <i class="fa-solid fa-check-circle"></i>
-                                <span class="whitespace-nowrap font-semibold">Alle gültig</span>
+                                <span>Alle gültig</span>
                             </div>
                         </div>
                     </td>

@@ -25,7 +25,7 @@
                 </div>
             </td>
             <td class="w-96">
-                <span class="position text-sm" :style="{ background: item.color }">
+                <span class="tag custom" :style="{ '--color': item.color }">
                     {{ item.name }}
                 </span>
             </td>

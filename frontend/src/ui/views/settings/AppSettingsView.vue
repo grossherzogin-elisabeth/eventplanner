@@ -8,20 +8,20 @@
                         <div class="items-start gap-32">
                             <section class="max-w-2xl">
                                 <div class="mb-4">
-                                    <VInputLabel>Menü Titel</VInputLabel>
-                                    <VInputText v-model.trim="settings.ui.menuTitle" required />
+                                    <VInputText v-model.trim="settings.ui.menuTitle" label="Menü Titel" required />
                                 </div>
                                 <div class="mb-4">
-                                    <VInputLabel>Tab Titel Präfix</VInputLabel>
-                                    <VInputText v-model.trim="settings.ui.tabTitle" required />
+                                    <VInputText v-model.trim="settings.ui.tabTitle" label="Tab Titel Präfix" required />
                                 </div>
                                 <div class="mb-4 mt-12">
-                                    <VInputLabel>Technischer Support Email</VInputLabel>
-                                    <VInputText v-model.trim="settings.ui.technicalSupportEmail" required />
+                                    <VInputText
+                                        v-model.trim="settings.ui.technicalSupportEmail"
+                                        label="Technischer Support Email"
+                                        required
+                                    />
                                 </div>
                                 <div class="mb-4">
-                                    <VInputLabel>Fachlicher Support Email</VInputLabel>
-                                    <VInputText v-model.trim="settings.ui.supportEmail" required />
+                                    <VInputText v-model.trim="settings.ui.supportEmail" label="Fachlicher Support Email" required />
                                 </div>
                             </section>
                         </div>
@@ -30,28 +30,22 @@
                         <div class="items-start gap-32">
                             <section class="max-w-2xl">
                                 <div class="mb-4">
-                                    <VInputLabel>From</VInputLabel>
-                                    <VInputText v-model.trim="settings.email.from" required />
+                                    <VInputText v-model.trim="settings.email.from" label="From" required />
                                 </div>
                                 <div class="mb-4">
-                                    <VInputLabel>From Anzeigename</VInputLabel>
-                                    <VInputText v-model.trim="settings.email.fromDisplayName" required />
+                                    <VInputText v-model.trim="settings.email.fromDisplayName" label="From Anzeigename" required />
                                 </div>
                                 <div class="mb-4">
-                                    <VInputLabel>Reply to</VInputLabel>
-                                    <VInputText v-model.trim="settings.email.replyTo" required />
+                                    <VInputText v-model.trim="settings.email.replyTo" label="Reply to" required />
                                 </div>
                                 <div class="mb-4">
-                                    <VInputLabel>Reply to Anzeigename</VInputLabel>
-                                    <VInputText v-model.trim="settings.email.replyToDisplayName" required />
+                                    <VInputText v-model.trim="settings.email.replyToDisplayName" label="Reply to Anzeigename" required />
                                 </div>
                                 <div class="mb-4 mt-12">
-                                    <VInputLabel>Hostname</VInputLabel>
-                                    <VInputText v-model.trim="settings.email.host" required />
+                                    <VInputText v-model.trim="settings.email.host" label="Hostname" required />
                                 </div>
                                 <div class="mb-4">
-                                    <VInputLabel>Port</VInputLabel>
-                                    <VInputNumber v-model="settings.email.port" required />
+                                    <VInputNumber v-model="settings.email.port" label="Port" required />
                                 </div>
                                 <div class="mb-4">
                                     <VInputCheckBox v-model="settings.email.enableStartTls" label="Start TLS" />
@@ -60,17 +54,15 @@
                                     <VInputCheckBox v-model="settings.email.enableSSL" label="SSL" />
                                 </div>
                                 <div class="mb-4 mt-12">
-                                    <VInputLabel>Authentifizierungsmethode</VInputLabel>
-                                    <VInputText model-value="Benutzername / Passwort" required disabled />
+                                    <VInputText label="Authentifizierungsmethode" model-value="Benutzername / Passwort" required disabled />
                                 </div>
                                 <div class="mb-4">
-                                    <VInputLabel>Benutzername</VInputLabel>
-                                    <VInputText v-model.trim="settings.email.username" required />
+                                    <VInputText v-model.trim="settings.email.username" label="Benutzername" required />
                                 </div>
                                 <div class="mb-4">
-                                    <VInputLabel>Password</VInputLabel>
                                     <VInputText
                                         v-model.trim="settings.email.password"
+                                        label="Password"
                                         type="password"
                                         placeholder="****************"
                                         required
@@ -83,8 +75,7 @@
                         <div class="items-start gap-32">
                             <section class="max-w-2xl">
                                 <div class="mb-4">
-                                    <VInputLabel>MS Teams Webhook</VInputLabel>
-                                    <VInputTextArea v-model.trim="settings.notifications.teamsWebhookUrl" />
+                                    <VInputTextArea v-model.trim="settings.notifications.teamsWebhookUrl" label="MS Teams Webhook" />
                                 </div>
                             </section>
                         </div>
@@ -108,7 +99,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { AppSettings } from '@/domain';
-import { AsyncButton, VInputCheckBox, VInputLabel, VInputNumber, VInputText, VInputTextArea, VTabs } from '@/ui/components/common';
+import { AsyncButton, VInputCheckBox, VInputNumber, VInputText, VInputTextArea, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useAppSettingsUseCase } from '@/ui/composables/Application.ts';
 

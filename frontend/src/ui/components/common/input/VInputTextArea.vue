@@ -1,40 +1,38 @@
 <template>
-    <div class="flex items-stretch" :class="$attrs.class">
-        <label v-if="props.label" class="input-label self-start">
-            {{ props.label }}
-        </label>
-        <div class="relative w-1/2 flex-grow">
-            <div class="h-full">
-                <div class="input-field-wrapper h-full">
-                    <textarea
-                        :id="id"
-                        :value="props.modelValue"
-                        :placeholder="props.placeholder"
-                        :disabled="props.disabled"
-                        :readonly="props.readonly"
-                        :required="props.required"
-                        rows="5"
-                        :maxlength="props.maxLength"
-                        :class="{
-                            invalid: showErrors && hasErrors,
-                            readonly: props.readonly,
-                            disabled: props.disabled,
-                        }"
-                        class="input-field h-full"
-                        aria-multiline="true"
-                        @input="onInput"
-                        @blur="visited = true"
-                    />
-                    <span v-if="maxLength && props.modelValue" class="input-character-counter">
-                        {{ props.modelValue.length }}/{{ maxLength }}
-                    </span>
-                </div>
-            </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+    <div class="v-input-textarea" :class="$attrs.class">
+        <div class="input-field-wrapper" @click="focus()">
+            <label :for="id">{{ props.label }}</label>
+            <textarea
+                :id="id"
+                ref="inputField"
+                :value="props.modelValue"
+                :placeholder="props.placeholder"
+                :disabled="props.disabled"
+                :readonly="props.readonly"
+                :required="props.required"
+                rows="5"
+                :maxlength="props.maxLength"
+                :class="{
+                    invalid: showErrors && hasErrors,
+                    readonly: props.readonly,
+                    disabled: props.disabled,
+                }"
+                class="input-field h-full"
+                aria-multiline="true"
+                @input="onInput"
+                @blur="visited = true"
+            />
+            <span v-if="maxLength && props.modelValue" class="input-character-counter">
+                {{ props.modelValue.length }}/{{ maxLength }}
+            </span>
+        </div>
+        <div v-if="showErrors && hasErrors" class="input-errors">
+            <p v-for="err in errors" :key="err.key" class="input-error">
+                {{ $t(err.key, err.params) }}
+            </p>
+        </div>
+        <div v-else-if="props.hint" class="input-hint">
+            {{ props.hint }}
         </div>
     </div>
 </template>
@@ -45,8 +43,8 @@ import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
-    // an optional label to render before the input field
-    label?: string;
+    label: string;
+    hint?: string;
     // the value we edit, bind with v-model
     modelValue?: string;
     // disables this input
@@ -80,8 +78,13 @@ const emit = defineEmits<Emits>();
 
 const id = uuidv4();
 const visited = ref(false);
+const inputField = ref<HTMLTextAreaElement | undefined>(undefined);
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
+
+function focus(): void {
+    inputField.value?.focus();
+}
 
 function onInput(event: Event): void {
     visited.value = true;
