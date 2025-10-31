@@ -1,7 +1,7 @@
 <template>
     <div :class="$attrs.class">
         <h2
-            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-onsurface/20 px-4 text-base font-semibold xs:px-8 md:px-16 xl:px-20"
+            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-outline-variant/50 px-4 text-base font-semibold xs:px-8 md:px-16 xl:px-20"
         >
             <slot name="before" />
             <div class="flex gap-x-8">
@@ -74,6 +74,7 @@ init();
     white-space: nowrap;
     border-bottom-width: 1px;
     border-color: transparent;
+    @apply text-onsurface-variant;
     @apply pb-1;
 }
 
@@ -87,9 +88,11 @@ init();
     @apply py-2;
 }
 
-.tab button:hover {
-    @apply bg-secondary-container;
-    @apply text-onsecondary-container;
+@media not all and (hover: none) {
+    .tab button:hover {
+        @apply bg-primary/10;
+        @apply text-primary;
+    }
 }
 
 .tab.active {

@@ -1,17 +1,21 @@
 <template>
-    <div class="btn-search" :class="`${$attrs.class || 'w-48'} ${modelValue ? 'active' : ''}`" @click="input?.focus()">
+    <div class="btn-search" :class="modelValue ? 'active' : ''" @click="input?.focus()">
         <i class="fa-solid fa-search" />
-        <input
-            ref="input"
-            name="search"
-            :value="props.modelValue"
-            :placeholder="placeholder ?? 'Einträge filtern'"
-            @input="onInput"
-            @keydown.esc="input?.blur()"
-        />
-        <button v-if="props.modelValue !== ''" @click="emit('update:modelValue', '')">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
+        <div class="relative">
+            <input
+                ref="input"
+                :placeholder="placeholder ?? 'Einträge filtern'"
+                class="absolute"
+                name="search"
+                :value="props.modelValue"
+                @input="onInput"
+                @keydown.esc="input?.blur()"
+            />
+            <div class="placeholder pointer-events-none opacity-0">{{ placeholder ?? 'Einträge filtern' }}</div>
+            <button v-if="props.modelValue !== ''" class="absolute bottom-0 right-0 top-0" @click="emit('update:modelValue', '')">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -38,37 +42,45 @@ function onInput(event: Event): void {
     display: none;
     align-items: center;
     cursor: pointer;
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 100ms;
     @apply lg:flex;
     @apply gap-4;
     @apply rounded-xl;
     @apply px-4;
     @apply py-2;
-    @apply text-secondary;
+    @apply text-primary;
+}
+
+.btn-search .placeholder {
+    min-width: 0;
+    transition-property: min-width;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 100ms;
 }
 
 .btn-search:hover {
-    @apply bg-secondary-container;
-    @apply text-onsecondary-container;
+    @apply bg-primary/10;
+    @apply text-primary;
 }
 
 .btn-search:hover input::placeholder {
-    @apply text-onsecondary-container;
+    @apply text-primary;
 }
 
 .btn-search.active,
 .btn-search:focus-within {
     cursor: text;
-    @apply w-64;
     @apply bg-surface-container;
     @apply text-onsurface;
-    @apply 2xl:w-80;
+}
+
+.btn-search.active .placeholder,
+.btn-search:focus-within .placeholder {
+    @apply min-w-64;
 }
 
 .btn-search input {
-    width: 0;
+    display: inline-block;
+    width: auto;
     flex-grow: 1;
     cursor: pointer;
     background-color: transparent;
@@ -76,7 +88,7 @@ function onInput(event: Event): void {
 }
 
 .btn-search input::placeholder {
-    @apply text-secondary/100;
+    @apply text-secondary;
 }
 
 .btn-search input:focus-within {

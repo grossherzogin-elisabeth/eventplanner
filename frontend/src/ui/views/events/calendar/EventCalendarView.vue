@@ -350,7 +350,7 @@ init();
     --scrollcontainer-width: 100vw;
     --scrollcontainer-height: 100vh;
     --create-event-days: 1;
-    --columns: 1.4;
+    --columns: 1.2;
     height: var(--viewport-height);
     position: fixed;
     left: 0;
@@ -374,10 +374,10 @@ init();
     border-right-width: 1px;
     border-right-color: transparent;
     @apply bg-primary;
+    @apply text-onprimary;
     @apply py-2.5;
     @apply pl-20;
     @apply pr-4;
-    @apply text-onprimary;
     @apply text-lg;
     @apply font-bold;
 
@@ -391,6 +391,9 @@ init();
 
     @apply xl:pb-4;
     @apply xl:pt-8;
+
+    @apply dark:bg-surface-container;
+    @apply dark:text-onsurface;
 }
 
 .impersonated .calendar-header {
@@ -451,8 +454,7 @@ init();
     right: 0;
     top: 0;
     @apply rounded-lg;
-    @apply bg-surface-variant/20;
-    @apply dark:bg-surface-variant/10;
+    @apply bg-secondary/5;
 }
 
 .create-event-overlay {
