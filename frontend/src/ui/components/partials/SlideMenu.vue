@@ -5,7 +5,7 @@
             <slot />
         </div>
         <button class="icon-button ml-2 mr-6 text-xl">
-            <i class="fa-solid fa-close"></i>
+            <i class="fa-solid fa-close text-white"></i>
         </button>
     </div>
 </template>
