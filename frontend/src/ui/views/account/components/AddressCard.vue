@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-map-location-dot"
-        :label="$t('views.account.contact.address.title')"
+        :label="$t('domain.user.address')"
         :validate="UserService.validateAddress"
         @update:model-value="emit('update:modelValue', $event)"
     >
@@ -30,11 +30,11 @@
             </p>
         </template>
         <template #edit="{ value, errors }">
-            <p class="mb-8 text-sm">{{ $t('views.account.contact.address.hint') }}</p>
+            <p class="mb-8 text-sm">{{ $t('views.account.contact.address-description') }}</p>
             <div class="mb-4">
                 <VInputText
                     v-model.trim="value.address.addressLine1"
-                    :label="$t('views.account.contact.address.address-line1')"
+                    :label="$t('domain.address.address-line-1')"
                     required
                     :errors="errors['address.addressLine1']"
                     :errors-visible="true"
@@ -44,7 +44,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model.trim="value.address.addressLine2"
-                    :label="$t('views.account.contact.address.address-line2')"
+                    :label="$t('domain.address.address-line-2')"
                     :errors="errors['address.addressLine2']"
                     :errors-visible="true"
                     :placeholder="$t('generic.optional')"
@@ -54,7 +54,7 @@
                 <div class="mb-4 sm:w-36">
                     <VInputText
                         v-model.trim="value.address.zipcode"
-                        :label="$t('views.account.contact.address.zip')"
+                        :label="$t('domain.address.zipcode')"
                         required
                         :errors="errors['address.zipcode']"
                         :errors-visible="true"
@@ -64,7 +64,7 @@
                 <div class="mb-4 sm:flex-grow">
                     <VInputText
                         v-model.trim="value.address.town"
-                        :label="$t('views.account.contact.address.city')"
+                        :label="$t('domain.address.town')"
                         required
                         :errors="errors['address.town']"
                         :errors-visible="true"
@@ -75,7 +75,7 @@
             <div class="mb-4">
                 <VInputCombobox
                     v-model="value.address.country"
-                    :label="$t('views.account.contact.address.country')"
+                    :label="$t('domain.address.country')"
                     :options="countries.options"
                     required
                     :errors="errors['address.country']"

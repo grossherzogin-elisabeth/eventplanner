@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-wheat-awn-circle-exclamation"
-        :label="$t('views.account.diet.intolerances.label')"
+        :label="$t('domain.user.intolerances')"
         :validate="UserService.validateIntolerances"
         @update:model-value="emit('update:modelValue', $event)"
     >
@@ -13,14 +13,14 @@
             <span v-else>{{ $t('generic.no-information') }}</span>
         </template>
         <template #edit="{ value, errors }">
-            <p class="mb-8 text-sm">{{ $t('views.account.diet.intolerances.hint') }}</p>
+            <p class="mb-8 text-sm">{{ $t('views.account.diet.intolerances-description') }}</p>
             <div class="mb-4">
                 <VInputTextArea
                     v-model="value.intolerances"
                     :errors="errors['intolerances']"
                     :errors-visible="true"
                     :max-length="1000"
-                    :label="$t('views.account.diet.intolerances.label')"
+                    :label="$t('domain.user.intolerances')"
                 />
             </div>
         </template>

@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-briefcase"
-        :label="$t('views.account.contact.phone-work')"
+        :label="$t('domain.user.phone-work')"
         :validate="UserService.validatePhoneWork"
         @update:model-value="emit('update:modelValue', $event)"
     >
@@ -12,14 +12,14 @@
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">
-                {{ $t('views.account.contact.hint-phone') }}
+                {{ $t('views.account.contact.phone-description') }}
             </p>
             <div class="mb-4">
                 <VInputText
                     v-model="value.phoneWork"
                     :errors="errors['phoneWork']"
                     :errors-visible="true"
-                    :label="$t('views.account.contact.phone-work')"
+                    :label="$t('domain.user.phone-work')"
                 />
             </div>
         </template>

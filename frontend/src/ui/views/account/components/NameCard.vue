@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-user-tag"
-        :label="$t('views.account.personal.name')"
+        :label="$t('domain.user.name')"
         :validate="UserService.validateName"
         @update:model-value="emit('update:modelValue', $event)"
     >
@@ -21,25 +21,23 @@
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-4 text-sm">
-                {{ $t('views.account.personal.hint') }}
+                {{ $t('views.account.personal.name-description') }}
             </p>
-            <p class="mb-4 text-sm">
-                {{ $t('views.account.personal.display-name.hint') }}
-            </p>
-            <p class="mb-8 text-sm font-bold">{{ $t('views.account.personal.passport.hint') }}</p>
+            <p class="mb-8 text-sm font-bold">{{ $t('views.account.personal.passport-info') }}</p>
             <div class="mb-4">
                 <VInputText
                     v-model="value.nickName"
-                    :label="$t('views.account.personal.display-name.label')"
+                    :label="$t('domain.user.nick-name')"
                     :errors="errors['nickName']"
                     :errors-visible="true"
                     :placeholder="value.firstName"
+                    :hint="$t('views.account.personal.nick-name-hint')"
                 />
             </div>
             <div class="mb-4">
                 <VInputText
                     v-model="value.title"
-                    :label="$t('views.account.personal.degree')"
+                    :label="$t('domain.user.title')"
                     :placeholder="$t('generic.no-information')"
                     :errors="errors['title']"
                     :errors-visible="true"
@@ -47,22 +45,29 @@
                 />
             </div>
             <div class="mb-4">
-                <VInputText v-model="value.firstName" :label="$t('views.account.personal.first-name')" required disabled />
+                <VInputText
+                    v-model="value.firstName"
+                    :label="$t('domain.user.first-name')"
+                    required
+                    disabled
+                    :hint="$t('views.account.personal.official-name-hint')"
+                />
             </div>
             <div class="mb-4">
                 <VInputText
                     v-model="value.secondName"
-                    :label="$t('views.account.personal.middle-name')"
+                    :label="$t('domain.user.middle-name')"
                     :placeholder="$t('generic.no-information')"
                     :errors="errors['secondName']"
                     :errors-visible="true"
+                    :hint="$t('views.account.personal.official-name-hint')"
                     disabled
                 />
             </div>
             <div class="mb-4">
                 <VInputText
                     v-model="value.lastName"
-                    :label="$t('views.account.personal.last-name')"
+                    :label="$t('domain.user.last-name')"
                     required
                     :placeholder="$t('generic.no-information')"
                     :errors="errors['lastName']"

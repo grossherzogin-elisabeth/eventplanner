@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-birthday-cake"
-        :label="$t('views.account.personal.birth.label')"
+        :label="$t('domain.user.date-and-place-of-birth')"
         :validate="UserService.validateDateAndPlaceOfBirth"
         @update:model-value="emit('update:modelValue', $event)"
     >
@@ -14,24 +14,24 @@
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-4 text-sm">
-                {{ $t('views.account.personal.hint') }}
+                {{ $t('views.account.personal.date-and-place-of-birth-description') }}
             </p>
-            <p class="mb-8 text-sm font-bold">{{ $t('views.account.personal.passport.hint') }}</p>
+            <p class="mb-8 text-sm font-bold">{{ $t('views.account.personal.passport-info') }}</p>
             <div class="mb-4">
                 <VInputDate
                     v-model="value.dateOfBirth"
+                    :label="$t('domain.user.date-of-birth')"
                     :errors="errors['dateOfBirth']"
                     :errors-visible="true"
-                    :label="$t('views.account.personal.birth.day')"
                     disabled
                 />
             </div>
             <div class="mb-4">
                 <VInputText
                     v-model="value.placeOfBirth"
+                    :label="$t('domain.user.place-of-birth')"
                     :errors="errors['placeOfBirth']"
                     :errors-visible="true"
-                    :label="$t('views.account.personal.birth.place-of-birth')"
                     disabled
                 />
             </div>

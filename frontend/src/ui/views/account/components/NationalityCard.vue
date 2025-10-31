@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-flag"
-        :label="$t('views.account.personal.nationality.label')"
+        :label="$t('domain.user.nationality')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -11,10 +11,10 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                {{ $t('views.account.personal.nationality.hint') }}
+                {{ $t('views.account.personal.nationality-description') }}
             </p>
             <p class="mb-8 text-sm font-bold">
-                {{ $t('views.account.personal.passport.hint') }}
+                {{ $t('views.account.personal.passport-info') }}
             </p>
             <VInputSelectionList v-model="value.nationality" :options="nationalities.options" />
         </template>

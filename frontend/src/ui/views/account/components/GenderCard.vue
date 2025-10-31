@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-venus-mars"
-        :label="$t('views.account.personal.gender.label')"
+        :label="$t('domain.user.gender')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -12,7 +12,7 @@
             <span v-else> {{ $t('generic.no-information') }} </span>
         </template>
         <template #edit="{ value }">
-            <p class="mb-4 text-sm">{{ $t('views.account.personal.gender.hint') }}</p>
+            <p class="mb-4 text-sm">{{ $t('views.account.personal.gender-description') }}</p>
             <VInputSelectionList v-model="value.gender" :options="gender.options" />
         </template>
     </VInteractiveListItem>

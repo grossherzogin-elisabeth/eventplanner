@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-passport"
-        :label="$t('views.account.personal.passport.number.label')"
+        :label="$t('domain.user.pass-nr')"
         :validate="UserService.validatePassNr"
         @update:model-value="emit('update:modelValue', $event)"
     >
@@ -12,24 +12,24 @@
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-4 text-sm">
-                {{ $t('views.account.personal.passport.number.hint') }}
+                {{ $t('views.account.personal.passport-description') }}
             </p>
             <p class="mb-8 text-sm font-bold">
-                {{ $t('views.account.personal.passport.hint') }}
+                {{ $t('views.account.personal.passport-info') }}
             </p>
             <p class="mb-8 text-sm italic">
-                <a :href="$t('views.account.personal.passport.number.link')" target="_blank" class="link">
-                    {{ $t('views.account.personal.passport.number.hint-link') }}
+                <a href="https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png" target="_blank" class="link">
+                    {{ $t('views.account.personal.passport-link') }}
                     <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                 </a>
             </p>
             <div class="mb-4">
                 <VInputText
                     v-model="value.passNr"
+                    :label="$t('domain.user.pass-nr')"
+                    required
                     :errors="errors['passNr']"
                     :errors-visible="true"
-                    required
-                    :label="$t('views.account.personal.passport.number.label')"
                 />
             </div>
         </template>

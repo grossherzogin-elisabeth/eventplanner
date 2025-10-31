@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-mobile"
-        :label="$t('views.account.contact.mobile')"
+        :label="$t('domain.user.mobile')"
         :validate="UserService.validateMobile"
         @update:model-value="emit('update:modelValue', $event)"
     >
@@ -12,15 +12,10 @@
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">
-                {{ $t('views.account.contact.hint-phone') }}
+                {{ $t('views.account.contact.phone-description') }}
             </p>
             <div class="mb-4">
-                <VInputText
-                    v-model="value.mobile"
-                    :errors="errors['mobile']"
-                    :errors-visible="true"
-                    :label="$t('views.account.contact.mobile')"
-                />
+                <VInputText v-model="value.mobile" :errors="errors['mobile']" :errors-visible="true" :label="$t('domain.user.mobile')" />
             </div>
         </template>
     </VInteractiveListItem>

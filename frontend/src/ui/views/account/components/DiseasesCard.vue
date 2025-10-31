@@ -2,20 +2,20 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-file-medical-alt"
-        :label="$t('views.account.emergency.diseases.label')"
+        :label="$t('domain.user.diseases')"
         :validate="UserService.validateDiseases"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.diseases"> {{ $t('views.account.emergency.hint-show') }} </span>
+            <span v-if="props.modelValue.diseases"> {{ $t('views.account.emergency.click-to-show') }} </span>
             <span v-else>{{ $t('generic.no-information') }}</span>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-4 text-sm">
-                {{ $t('views.account.emergency.diseases.hint') }}
+                {{ $t('views.account.emergency.diseases-description') }}
             </p>
             <p class="mb-8 text-sm font-bold">
-                {{ $t('views.account.emergency.hint-privacy') }}
+                {{ $t('views.account.emergency.privacy') }}
             </p>
             <div class="mb-4">
                 <VInputTextArea
@@ -23,7 +23,7 @@
                     :errors="errors['diseases']"
                     :errors-visible="true"
                     :max-length="1000"
-                    :label="$t('views.account.emergency.diseases.label')"
+                    :label="$t('domain.user.diseases')"
                 />
             </div>
         </template>

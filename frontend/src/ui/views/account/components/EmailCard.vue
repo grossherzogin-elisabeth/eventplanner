@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-envelope"
-        :label="$t('views.account.contact.email')"
+        :label="$t('domain.user.email')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -10,7 +10,7 @@
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">
-                {{ $t('views.account.contact.hint-mail') }}
+                {{ $t('views.account.contact.email-description') }}
             </p>
             <div class="mb-4">
                 <VInputText
@@ -18,7 +18,7 @@
                     :errors="errors['email']"
                     :errors-visible="true"
                     required
-                    :label="$t('views.account.contact.email')"
+                    :label="$t('domain.user.email')"
                     disabled
                 />
             </div>

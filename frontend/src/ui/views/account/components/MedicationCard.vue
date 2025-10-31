@@ -2,27 +2,27 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-pills"
-        :label="$t('views.account.emergency.medication.label')"
+        :label="$t('domain.user.medication')"
         :validate="UserService.validateMedication"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.medication">{{ $t('views.account.emergency.hint-show') }}</span>
+            <span v-if="props.modelValue.medication">{{ $t('views.account.emergency.click-to-show') }}</span>
             <span v-else>{{ $t('generic.no-information') }}</span>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-4 text-sm">
-                {{ $t('views.account.emergency.medication.hint') }}
+                {{ $t('views.account.emergency.medication-description') }}
             </p>
             <p class="mb-8 text-sm font-bold">
-                {{ $t('views.account.emergency.hint-privacy') }}
+                {{ $t('views.account.emergency.privacy') }}
             </p>
             <div class="mb-4">
                 <VInputTextArea
                     v-model="value.medication"
                     :errors="errors['medication']"
                     :errors-visible="true"
-                    :label="$t('views.account.emergency.medication.label')"
+                    :label="$t('domain.user.medication')"
                 />
             </div>
         </template>

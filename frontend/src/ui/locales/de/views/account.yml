@@ -9,88 +9,46 @@ account:
     settings: 'App Einstellungen'
   personal:
     title: 'Persönliche Daten'
-    degree: 'Title'
-    name: 'Name'
-    first-name: 'Vorname'
-    middle-name: 'Zweiter Vorname'
-    last-name: 'Nachname'
-    display-name:
-      label: 'Anzeigename'
-      hint: 'Solltest du mit einem anderen Namen angesprochen werden wollen, kannst du einen Anzeigenamen
-        angeben. Dieser wird in der App angezeigt und beim Kammerplan und der Getränkeliste verwendet.'
-    birth:
-      label: 'Geburtsdatum und -ort'
-      day: 'Geboren am'
-      place-of-birth: 'Geburtsort'
-    gender:
-      label: 'Geschlecht'
-      values:
-        male: 'männlich'
-        female: 'weiblich'
-        diverse: 'divers'
-      hint: 'Mit welchem Geschlecht identifizierst du dich?'
-    passport:
-      number:
-        label: 'Personalaus- oder Passnummer'
-        hint: 'Bitte gib die Nummer eines offiziellen Ausweisdokuments an. Dies kann entweder dein Personalausweis
-          oder alternativ auch dein Reisepass sein.'
-        hint-link: 'So findest du deine Personalausweis Nummer'
-        link: 'https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png'
-      hint: 'Bitte beachte, dass du dein eingetragenes Ausweisdokument auf allen Reisen mitführen musst!'
-    nationality:
-      label: 'Nationalität'
-      hint: 'Deine Nationalität wird für das Erstellen der offiziellen Crewliste benötigt. Solltest du mehrere
+    passport-info: 'Bitte beachte, dass du dein eingetragenes Ausweisdokument auf allen Reisen mitführen musst!'
+    name-description: 'Solltest du mit einem anderen Namen angesprochen werden wollen, kannst du einen 
+        Anzeigenamen angeben. Dieser wird in der App angezeigt und beim Kammerplan und der Getränkeliste verwendet.'
+    nick-name-hint: 'Wie möchtest du angesprochen werden?'
+    official-name-hint: 'Name wie im Ausweisdokument'
+    gender-description: 'Mit welchem Geschlecht identifizierst du dich?'
+    passport-description: 'Bitte gib die Nummer eines offiziellen Ausweisdokuments an. Dies kann entweder dein 
+        Personalausweis oder alternativ auch dein Reisepass sein.'
+    passport-link: 'So findest du deine Personalausweis Nummer'
+    nationality-description: 'Deine Nationalität wird für das Erstellen der offiziellen Crewliste benötigt. Solltest du mehrere
         Nationalitäten haben, gib hier bitte diejenige an, die auch auf deinem Ausweisdokumentes steht.'
+    date-and-place-of-birth-description: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum Erstellen der
+        offiziellen Crew Liste verwendet werden.'
     hint: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum Erstellen der
-      offiziellen Crew Liste verwendet werden.'
+        offiziellen Crew Liste verwendet werden.'
   diet:
     title: 'Ernährung'
-    label: 'Ernährungsweise'
-    values:
-      vegetarian: 'Vegetarisch'
-      vegan: 'Vegan'
-      omnivore: 'Fleisch'
-    hint: 'Bitte gib an, falls du dich vegetarisch oder vegan ernährst. Diese Information ist wichtig, damit die
-      Kombüse ausreichend planen kann.'
-    intolerances:
-      label: 'Unverträglichkeiten'
-      hint: 'Hier kannst du Unverträglichkeiten und Allergien angeben, die der Kombüse bekannt sein sollten.'
+    diet-description: 'Bitte gib an, falls du dich vegetarisch oder vegan ernährst. Diese Information ist wichtig, damit die
+        Kombüse ausreichend planen kann.'
+    intolerances-description: 'Hier kannst du Unverträglichkeiten und Allergien angeben, die der Kombüse bekannt sein sollten.'
     kitchen-info: 'Informationen für die Kombüse'
   contact:
     title: 'Kontakt Daten'
-    email: 'Email'
-    phone: 'Telefon Festnetz'
-    phone-work: 'Telefon dienstlich'
-    mobile: 'Telefon Mobil'
-    address:
-      title: 'Adresse'
-      address-line1: 'Straße, Hausnr.'
-      address-line2: 'Adresszusatz'
-      zip: 'PLZ'
-      city: 'Ort'
-      country: 'Land'
-      hint: 'Bitte gib deine primäre Wohnanschrift an.'
-    hint-mail: 'Deine Email Adresse wird sowohl als Kontakt Email für Benachrichtigungen, als auch für deinen Login verwendet.
-      Wenn du sie ändern möchtest, schreib uns bitte eine Email, damit wir auch den Login für dich anpassen können.'
-    hint-phone: 'Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer an: Festnetz, mobil oder dienstlich.'
+    email-description: 'Deine Email Adresse wird sowohl als Kontakt Email für Benachrichtigungen, als auch für deinen Login 
+        verwendet. Wenn du sie ändern möchtest, schreib uns bitte eine Email, damit wir auch den Login für dich anpassen 
+        können.'
+    address-description: 'Bitte gib deine primäre Wohnanschrift an.'
+    phone-description: 'Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer an: Festnetz, mobil oder dienstlich.'
   emergency:
     title: 'Notfall Informationen'
-    contact:
-      title: 'Notfallkontakt'
-      name: 'Name des Notfallkontakts'
-      phone: 'Telefonnummer des Notfallkontakts'
-      hint: 'Im Notfall zählt jede Sekunde. Hier kannst du eine Person hinterlegen, die wir im Falle eines medizinischen
+    emergency-contact-description: 'Im Notfall zählt jede Sekunde. Hier kannst du eine Person hinterlegen, die wir im Falle eines medizinischen
         Notfalls oder einer anderen dringenden Situation kontaktieren können. Bitte gib Namen und Telefonnummer der Person an.'
-    diseases:
-      label: 'Krankheiten'
-      hint: 'Sollte während einer Reise etwas passieren, kann es wichtig sein, dass jemand an Bord über
+    diseases-description: 'Sollte während einer Reise etwas passieren, kann es wichtig sein, dass jemand an Bord über
         eventuelle Krankheiten informiert ist, die besondere Behandlungen erfordern.'
-    medication:
-      label: 'Medikamente'
-      hint: 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, welche Medikamente du benötigst.'
-    hint-show: '[zum Ansehen klicken]'
-    hint-privacy: 'Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für
-      autorisierte Personen einsehbar!'
+    medication-description: 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, welche Medikamente 
+        du benötigst.'
+    click-to-show: '[zum Ansehen klicken]'
+    privacy: 'Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für
+        autorisierte Personen einsehbar!'
+
   qualifications:
     status-expires-on: 'Gültig bis'
     status-no-expires: 'Ohne Ablaufdatum'

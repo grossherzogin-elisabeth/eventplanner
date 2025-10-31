@@ -2,7 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-utensils"
-        :label="$t('views.account.diet.label')"
+        :label="$t('domain.user.diet')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -13,7 +13,7 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">
-                {{ $t('views.account.diet.hint') }}
+                {{ $t('views.account.diet.diet-description') }}
             </p>
             <VInputSelectionList v-model="value.diet" :options="diet.options" required />
         </template>
