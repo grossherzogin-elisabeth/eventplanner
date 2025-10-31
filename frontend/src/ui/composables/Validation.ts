@@ -1,26 +1,28 @@
-import type { Ref } from 'vue';
+import type { ComputedRef, Ref } from 'vue';
+import { watchEffect } from 'vue';
+import { toValue } from 'vue';
 import { computed, ref } from 'vue';
-import type { ValidationHint } from '@/domain';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useValidation<T>(t: Ref<T>, validationFunction: (t: T) => Record<string, ValidationHint[]>) {
+export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunction: (t: T) => Record<string, string[]>) {
     const showErrors = ref<boolean>(false);
+    const errors = ref<Record<string, string[]>>({});
+    const isValid = ref<boolean>(true);
 
-    const errors = computed<Record<string, ValidationHint[]>>(() => {
-        return validationFunction(t.value);
-    });
-
-    const isValid = computed<boolean>(() => {
-        return Object.keys(errors.value).length === 0;
-    });
+    watchEffect(() => validate());
 
     const disableSubmit = computed<boolean>(() => {
         return showErrors.value && !isValid.value;
     });
 
+    function validate(): void {
+        errors.value = validationFunction(toValue(t));
+        isValid.value = Object.keys(errors.value).length === 0;
+    }
+
     function reset(): void {
         showErrors.value = false;
     }
 
-    return { errors, isValid, showErrors, disableSubmit, reset };
+    return { errors, isValid, showErrors, disableSubmit, validate, reset };
 }

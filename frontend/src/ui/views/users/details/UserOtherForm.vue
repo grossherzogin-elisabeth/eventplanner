@@ -23,12 +23,12 @@
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import type { UserDetails, ValidationHint } from '@/domain';
+import type { UserDetails } from '@/domain';
 import { VInputSelect, VInputTextArea } from '@/ui/components/common';
 
 interface Props {
     modelValue: UserDetails;
-    errors: Record<string, ValidationHint[]>;
+    errors: Record<string, string[]>;
 }
 
 type Emits = (e: 'update:modelValue', user: UserDetails) => void;

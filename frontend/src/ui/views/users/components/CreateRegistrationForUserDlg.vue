@@ -55,7 +55,8 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, EventKey, InputSelectOption, PositionKey, User, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { Event, EventKey, InputSelectOption, PositionKey, User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputTextArea } from '@/ui/components/common';
@@ -82,20 +83,7 @@ const hiddenEvents = ref<string[]>([]);
 const registration = ref<UserRegistration | undefined>(undefined);
 
 const validation = useValidation(registration, (value) => {
-    // TODO extract to service
-    const errors: Record<string, ValidationHint[]> = {};
-    if (!value) {
-        return errors;
-    }
-    if (!value.positionKey) {
-        errors.positionKey = errors.positionKey || [];
-        errors.positionKey.push({ key: 'Bitte wähle eine Position', params: {} });
-    }
-    if (!value.eventKey) {
-        errors.eventKey = errors.eventKey || [];
-        errors.eventKey.push({ key: 'Bitte wähle eine Reise', params: {} });
-    }
-    return errors;
+    return Validator.validate('positionKey', value?.positionKey, notEmpty()).validate('eventKey', value?.eventKey, notEmpty()).getErrors();
 });
 
 const eventOptions = computed<InputSelectOption<string | undefined>[]>(() => {

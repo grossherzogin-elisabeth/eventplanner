@@ -122,7 +122,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { deepCopy, filterUndefined } from '@/common';
-import type { Event, Position, QualificationKey, Registration, User, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { Event, Position, QualificationKey, Registration, User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputDate } from '@/ui/components/common';
@@ -153,15 +154,10 @@ const registration = ref<Registration>({
     positionKey: '',
 });
 const validation = useValidation(registration, (value) => {
-    // TODO extract to service
-    const errors: Record<string, ValidationHint[]> = {};
-    if (!value.positionKey) {
-        errors.positionKey = errors.positionKey || [];
-        errors.positionKey.push({ key: 'views.events.edit.edit-registration.select-position', params: {} });
-    }
+    const errors = Validator.validate('positionKey', value.positionKey, notEmpty()).getErrors();
     if (!value.name && !value.userKey) {
         errors.userKey = errors.userKey || [];
-        errors.userKey.push({ key: 'views.events.edit.edit-registration.select-user', params: {} });
+        errors.userKey.push('views.events.edit.edit-registration.select-user');
     }
     return errors;
 });

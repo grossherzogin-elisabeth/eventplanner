@@ -1,29 +1,11 @@
-import type { Qualification, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { Qualification } from '@/domain';
 
 export class QualificationService {
-    public validate(qualification: Qualification): Record<string, ValidationHint[]> {
-        const errors: Record<string, ValidationHint[]> = {};
-        if (qualification.name.trim().length === 0) {
-            errors.name = errors.name || [];
-            errors.name.push({
-                key: 'Bitte gib einen Anzeigenamen für die Qualifikation an',
-                params: {},
-            });
-        }
-        if (qualification.description.trim().length === 0) {
-            errors.description = errors.description || [];
-            errors.description.push({
-                key: 'Bitte gib eine Beschreibung für die Qualifikation an',
-                params: {},
-            });
-        }
-        if (qualification.icon.trim().length === 0) {
-            errors.icon = errors.description || [];
-            errors.icon.push({
-                key: 'Bitte gib ein Icon für die Qualifikation an',
-                params: {},
-            });
-        }
-        return errors;
+    public validate(qualification: Qualification): Record<string, string[]> {
+        return Validator.validate('name', qualification.name, notEmpty())
+            .validate('description', qualification.description, notEmpty())
+            .validate('icon', qualification.icon, notEmpty())
+            .getErrors();
     }
 }

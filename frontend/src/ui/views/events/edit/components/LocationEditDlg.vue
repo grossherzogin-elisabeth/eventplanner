@@ -145,14 +145,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { deepCopy, updateDate, updateTime } from '@/common';
-import type { Location, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { Location } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation.ts';
-
-const { t } = useI18n();
 
 const dlg = ref<Dialog<Location | undefined, Location | undefined> | null>(null);
 const location = ref<Location>({
@@ -164,17 +162,7 @@ const location = ref<Location>({
 });
 
 const validation = useValidation(location, (value) => {
-    // TODO extract to service
-    const errors: Record<string, ValidationHint[]> = {};
-    if (!value.name) {
-        errors.name = errors.name || [];
-        errors.name.push({ key: t('views.events.edit.validation.missing-location-name'), params: {} });
-    }
-    if (!value.icon) {
-        errors.icon = errors.icon || [];
-        errors.icon.push({ key: t('views.events.edit.validation.missing-location-icon'), params: {} });
-    }
-    return errors;
+    return Validator.validate('name', value.name, notEmpty()).validate('icon', value.icon, notEmpty()).getErrors();
 });
 
 async function open(value?: Location): Promise<Location | undefined> {

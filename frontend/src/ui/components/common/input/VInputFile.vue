@@ -31,17 +31,14 @@
             />
             <slot name="after"></slot>
         </div>
-        <div v-if="showErrors && hasErrors" class="input-errors">
-            <p v-for="err in errors" :key="err.key" class="input-error">
-                {{ $t(err.key, err.params) }}
-            </p>
-        </div>
+        <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import type { Event, ValidationHint } from '@/domain';
+import type { Event } from '@/domain';
+import VInputHint from '@/ui/components/common/input/VInputHint.vue';
 import { v4 as uuidv4 } from 'uuid';
 
 interface InputFileEvent extends Event {
@@ -49,19 +46,13 @@ interface InputFileEvent extends Event {
 }
 
 interface Props {
-    // an optional label to render before the input field
     label?: string;
-    // the value we edit, bind with v-model
+    hint?: string;
     modelValue?: Blob;
-    // disables this input
     disabled?: boolean;
-    // marks this input as required
     required?: boolean;
-    // validation and/or service errors for this input
-    errors?: ValidationHint[];
-    // show errors, even if this field has not been focused jet, e.g. after pressing save
+    errors?: string[];
     errorsVisible?: boolean;
-    // placeholder to display if no value is entered
     placeholder?: string;
 }
 

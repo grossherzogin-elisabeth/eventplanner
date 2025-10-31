@@ -22,36 +22,25 @@
             />
             <slot name="after"></slot>
         </div>
-        <div v-if="showErrors && hasErrors" class="input-errors">
-            <p v-for="err in errors" :key="err.key" class="input-error">
-                {{ $t(err.key, err.params) }}
-            </p>
-        </div>
+        <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
+import VInputHint from './VInputHint.vue';
 
 interface Props {
-    // an optional label to render before the input field
-    label?: string | undefined;
-    // the value we edit, bind with v-model
-    modelValue?: number | string | undefined;
-    // disables this input
-    disabled?: boolean | undefined;
-    // marks this input as required
-    required?: boolean | undefined;
-    // validation and/or service errors for this input
-    errors?: ValidationHint[] | undefined;
-    // show errors, even if this field has not been focused jet, e.g. after pressing save
-    errorsVisible?: boolean | undefined;
-    // placeholder to display if no value is entered
-    placeholder?: string | undefined;
-    // flag to disable decimal numbers
-    decimal?: boolean | undefined;
+    label?: string;
+    hint?: string;
+    modelValue?: number | string;
+    disabled?: boolean;
+    required?: boolean;
+    errors?: string[];
+    errorsVisible?: boolean;
+    placeholder?: string;
+    decimal?: boolean;
 }
 
 type Emits = (e: 'update:modelValue', value: number | string) => void;
@@ -64,6 +53,7 @@ type Emits = (e: 'update:modelValue', value: number | string) => void;
 
 const props = withDefaults(defineProps<Props>(), {
     label: '',
+    hint: undefined,
     placeholder: '',
     modelValue: undefined,
     disabled: false,

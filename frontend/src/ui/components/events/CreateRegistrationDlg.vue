@@ -108,7 +108,8 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { filterUndefined } from '@/common';
-import type { Event, InputSelectOption, Position, Registration, User, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { Event, InputSelectOption, Position, Registration, User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputDate } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
@@ -144,15 +145,10 @@ const hiddenUsers = ref<string[]>([]);
 let date: Date = new Date();
 
 const validation = useValidation(registration, (value) => {
-    // TODO extract to service
-    const errors: Record<string, ValidationHint[]> = {};
-    if (!value.positionKey) {
-        errors.positionKey = errors.positionKey || [];
-        errors.positionKey.push({ key: 'Bitte wähle eine Position', params: {} });
-    }
+    const errors = Validator.validate('positionKey', value.positionKey, notEmpty()).getErrors();
     if (!value.name && !value.userKey) {
         errors.userKey = errors.userKey || [];
-        errors.userKey.push({ key: 'Bitte wähle eine Stammcrew Mitglied', params: {} });
+        errors.userKey.push('Bitte wähle eine Stammcrew Mitglied');
     }
     return errors;
 });
