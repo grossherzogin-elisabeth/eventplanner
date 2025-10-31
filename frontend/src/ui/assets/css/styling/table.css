@@ -103,13 +103,19 @@ table.v-table {
     @apply relative z-10;
 }
 
+/* ------------------------------------------------------ */
 /* normal */
+/* ------------------------------------------------------ */
+
 .v-table tbody tr td:first-child::before {
     content: '';
     @apply absolute bottom-1 left-0 right-0 top-1 -z-10 rounded-xl bg-surface-container-low;
 }
 
+/* ------------------------------------------------------ */
 /* hover */
+/* ------------------------------------------------------ */
+
 .interactive-table:not(.loading) .v-table tbody tr:not(.no-data):hover td:first-child::before {
     @apply bg-surface-container;
 }
@@ -118,13 +124,17 @@ table.v-table {
     @apply cursor-pointer;
 }
 
+
+/* ------------------------------------------------------ */
 /* selected */
+/* ------------------------------------------------------ */
+
 .v-table tbody tr:not(.no-data).selected td {
-    @apply text-onprimary-container !important;
+    @apply text-primary !important;
 }
 
 .v-table tbody tr:not(.no-data).selected td::before {
-    @apply bg-primary-container !important;
+    @apply bg-primary/20 !important;
 }
 
 .v-table td.p-0 {
