@@ -31,7 +31,7 @@
                     <div class="mb-4">
                         <VInputSelect
                             v-model="patch.type"
-                            :label="$t('domain.events.category')"
+                            :label="$t('domain.event.category')"
                             :options="eventTypes.options.value"
                             :errors="validation.errors.value['type']"
                             :errors-visible="validation.showErrors.value"
@@ -41,7 +41,7 @@
                     <div class="mb-4">
                         <VInputSelect
                             v-model="patch.signupType"
-                            :label="$t('views.events.edit.signup-type')"
+                            :label="$t('domain.event.signup-type')"
                             :options="eventSignupTypes.options.value"
                             :errors="validation.errors.value['signupType']"
                             :errors-visible="validation.showErrors.value"
@@ -51,7 +51,7 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model="patch.description"
-                            :label="$t('views.events.edit.description')"
+                            :label="$t('domain.event.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
                             :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
