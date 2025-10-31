@@ -383,6 +383,7 @@ import { AsyncButton, VInfo, VInputCombobox, VInputDate, VInputSelect, VInputTex
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useConfig, useUsersUseCase } from '@/ui/composables/Application';
 import { useCountries } from '@/ui/composables/Countries.ts';
+import { useUserService } from '@/ui/composables/Domain.ts';
 import { useNationalities } from '@/ui/composables/Nationalities.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import UserQualificationsTable from './UserQualificationsTable.vue';
@@ -401,11 +402,12 @@ const emit = defineEmits<RouteEmits>();
 const { t } = useI18n();
 const config = useConfig();
 const usersUseCase = useUsersUseCase();
+const userService = useUserService();
 const nationalities = useNationalities();
 const countries = useCountries();
 const userDetails = ref<UserDetails | null>(null);
 const userDetailsOriginal = ref<UserDetails | null>(null);
-const validation = useValidation<UserDetails | null>(userDetails, usersUseCase.validate);
+const validation = useValidation<UserDetails | null>(userDetails, userService.validate);
 
 const genderOptions: InputSelectOption[] = [
     { value: 'm', label: t('views.account.data.personal.gender.values.male') },

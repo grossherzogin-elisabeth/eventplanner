@@ -50,7 +50,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { deepCopy } from '@/common';
-import type { InputSelectOption, Qualification, QualificationKey, UserQualification, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { InputSelectOption, Qualification, QualificationKey, UserQualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputDate, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application.ts';
@@ -64,12 +65,7 @@ const qualifications = ref<Map<QualificationKey, Qualification>>(new Map<Qualifi
 const userQualification = ref<UserQualification>({ qualificationKey: '', expires: false });
 
 const validation = useValidation(userQualification, (value) => {
-    const errors: Record<string, ValidationHint[]> = {};
-    if (!value.qualificationKey) {
-        errors.qualificationKey = errors.qualificationKey || [];
-        errors.qualificationKey.push({ key: 'Bitte wähle eine Qualifikation aus', params: {} });
-    }
-    return errors;
+    return Validator.validate('qualificationKey', value.qualificationKey, notEmpty()).getErrors();
 });
 
 const qualificationOptions = computed<InputSelectOption<QualificationKey>[]>(() => {

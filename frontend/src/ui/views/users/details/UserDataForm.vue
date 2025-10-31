@@ -145,13 +145,13 @@
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import type { InputSelectOption, UserDetails, ValidationHint } from '@/domain';
+import type { InputSelectOption, UserDetails } from '@/domain';
 import { VInputCombobox, VInputDate, VInputSelect, VInputText } from '@/ui/components/common';
 import { useNationalities } from '@/ui/composables/Nationalities.ts';
 
 interface Props {
     modelValue: UserDetails;
-    errors: Record<string, ValidationHint[]>;
+    errors: Record<string, string[]>;
 }
 
 type Emits = (e: 'update:modelValue', user: UserDetails) => void;

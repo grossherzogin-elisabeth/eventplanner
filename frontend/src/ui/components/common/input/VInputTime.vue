@@ -25,11 +25,7 @@
             />
             <slot name="after" />
         </div>
-        <div v-if="showErrors && hasErrors" class="input-errors">
-            <p v-for="err in errors" :key="err.key" class="input-error">
-                {{ $t(err.key, err.params) }}
-            </p>
-        </div>
+        <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />
     </div>
 </template>
 
@@ -38,26 +34,18 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
 import { addToDate, subtractFromDate } from '@/common/date/DateUtils';
-import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
+import VInputHint from './VInputHint.vue';
 
 interface Props {
-    // an optional label to render before the input field
     label?: string;
-    // the value we edit, bind with v-model
+    hint?: string;
     modelValue?: Date;
-    // disables this input
     disabled?: boolean;
-    // marks this input as required
     required?: boolean;
-    // validation and/or service errors for this input
-    errors?: ValidationHint[];
-    // show errors, even if this field has not been focused jet, e.g. after pressing save
+    errors?: string[];
     errorsVisible?: boolean;
-    // placeholder to display if no value is entered
     placeholder?: string;
-    // input type used, defaults to text
-    type?: 'text' | 'passwort' | 'email' | 'time' | 'number';
 }
 
 type Emits = (e: 'update:modelValue', value: Date) => void;

@@ -26,42 +26,25 @@
                 {{ props.modelValue.length }}/{{ maxLength }}
             </span>
         </div>
-        <div v-if="showErrors && hasErrors" class="input-errors">
-            <p v-for="err in errors" :key="err.key" class="input-error">
-                {{ $t(err.key, err.params) }}
-            </p>
-        </div>
-        <div v-else-if="props.hint" class="input-hint">
-            {{ props.hint }}
-        </div>
+        <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
+import VInputHint from './VInputHint.vue';
 
 interface Props {
     label: string;
     hint?: string;
-    // the value we edit, bind with v-model
     modelValue?: string;
-    // disables this input
     disabled?: boolean;
-    // makes this input readonly
     readonly?: boolean;
-    // marks this input as required
     required?: boolean;
-    // validation and/or service errors for this input
-    errors?: ValidationHint[];
-    // show errors, even if this field has not been focused jet, e.g. after pressing save
+    errors?: string[];
     errorsVisible?: boolean;
-    // placeholder to display if no value is entered
     placeholder?: string;
-    // input type used, defaults to text
-    type?: 'text' | 'passwort' | 'email' | 'time' | 'number';
-    // max number of characters a user can enter
     maxLength?: number;
 }
 

@@ -1,29 +1,11 @@
-import type { Position, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { Position } from '@/domain';
 
 export class PositionService {
-    public validate(position: Position): Record<string, ValidationHint[]> {
-        const errors: Record<string, ValidationHint[]> = {};
-        if (position.name.trim().length === 0) {
-            errors.name = errors.name || [];
-            errors.name.push({
-                key: 'Bitte gib einen Anzeigenamen für die Position an',
-                params: {},
-            });
-        }
-        if (position.imoListRank.trim().length === 0) {
-            errors.imoListRank = errors.imoListRank || [];
-            errors.imoListRank.push({
-                key: 'Bitte gib einen Anzeigenamen für die IMO Liste an',
-                params: {},
-            });
-        }
-        if (position.color.trim().length === 0) {
-            errors.description = errors.description || [];
-            errors.description.push({
-                key: 'Bitte gib eine Anzeigefarbe für die Position an',
-                params: {},
-            });
-        }
-        return errors;
+    public validate(position: Position): Record<string, string[]> {
+        return Validator.validate('name', position.name, notEmpty())
+            .validate('imoListRank', position.imoListRank, notEmpty())
+            .validate('color', position.color, notEmpty())
+            .getErrors();
     }
 }
