@@ -48,7 +48,13 @@ account:
     click-to-show: '[zum Ansehen klicken]'
     privacy: 'Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für
         autorisierte Personen einsehbar!'
-
+  app-settings:
+    title: 'App'
+    theme: 'Design'
+    preferred-position: 'Standard Position'
+    preferred-position-description: 'Mit welcher Position möchtest du dich standardmäßg bei Veranstaltungen anmelden? 
+        Du kannst deine Position für jede Anmeldung individuall anpassen.'
+    notifications: 'Benachrichtigungen'
   qualifications:
     status-expires-on: 'Gültig bis'
     status-no-expires: 'Ohne Ablaufdatum'

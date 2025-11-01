@@ -1,5 +1,5 @@
 <template>
-    <div class="group cursor-pointer" @click="edit()">
+    <div class="group" :class="props.disabled ? '' : 'cursor-pointer'" @click="edit()">
         <div class="relative flex items-start space-x-6">
             <i class="fa-solid mt-2 w-4 text-onsurface-variant sm:w-8 sm:text-xl" :class="props.icon" />
             <div class="w-0 flex-grow">
@@ -8,11 +8,11 @@
                     {{ props.content }}
                 </slot>
             </div>
-            <button class="icon-button">
+            <button v-if="!props.disabled" class="icon-button">
                 <i class="fa-solid fa-pen hidden group-hover:inline" />
             </button>
         </div>
-        <VDialog ref="editSheet">
+        <VDialog v-if="!props.disabled" ref="editSheet">
             <template #title> {{ props.label }} </template>
             <template #content>
                 <div class="px-4 py-4 xs:px-8 lg:px-10">
@@ -20,7 +20,12 @@
                 </div>
             </template>
             <template #buttons>
-                <div class="flex justify-end gap-2">
+                <div v-if="props.direct" class="flex justify-end gap-2">
+                    <button class="btn-ghost" name="save" @click="submit()">
+                        <span>{{ $t('generic.close') }}</span>
+                    </button>
+                </div>
+                <div v-else class="flex justify-end gap-2">
                     <button class="btn-ghost" name="save" @click="cancel()">
                         <span>{{ $t('generic.cancel') }}</span>
                     </button>
@@ -36,6 +41,7 @@
 </template>
 <script lang="ts" setup generic="T">
 import type { Ref } from 'vue';
+import { watch } from 'vue';
 import { ref } from 'vue';
 import { deepCopy, wait } from '@/common';
 import { AsyncButton, type Sheet, VDialog } from '@/ui/components/common';
@@ -46,6 +52,8 @@ interface Props {
     icon: string;
     label: string;
     content?: string;
+    disabled?: boolean;
+    direct?: boolean;
     validate?: (t: T) => Record<string, string[]>;
 }
 
@@ -60,16 +68,28 @@ const editSheet = ref<Sheet<T, T | undefined> | null>(null);
 const validation = useValidation(mutableCopy, props.validate ?? defaultValidation);
 validation.showErrors.value = true;
 
+function init(): void {
+    if (props.direct) {
+        watch(
+            () => mutableCopy.value,
+            () => update(),
+            { deep: true }
+        );
+    }
+}
+
 function defaultValidation(): Record<string, string[]> {
     return {};
 }
 
 function edit(): void {
-    mutableCopy.value = deepCopy(props.modelValue);
-    validation.reset();
-    editSheet.value?.open(mutableCopy.value).catch(() => {
-        // ignore
-    });
+    if (!props.disabled) {
+        mutableCopy.value = deepCopy(props.modelValue);
+        validation.reset();
+        editSheet.value?.open(mutableCopy.value).catch(() => {
+            // ignore
+        });
+    }
 }
 
 function cancel(): void {
@@ -79,8 +99,16 @@ function cancel(): void {
 
 async function submit(): Promise<void> {
     emit('update:modelValue', mutableCopy.value);
-    // TODO replace fake delay with actual request await
-    await wait(1000);
+    if (!props.direct) {
+        // TODO replace fake delay with actual request await
+        await wait(1000);
+    }
     editSheet.value?.close();
 }
+
+function update(): void {
+    emit('update:modelValue', mutableCopy.value);
+}
+
+init();
 </script>

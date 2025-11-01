@@ -3,13 +3,23 @@
         <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
             <template #[Tab.PERSONAL_DATA]>
                 <div class="lg:max-w-xl">
-                    <AccountData v-if="userDetails" :model-value="userDetails" @update:model-value="update($event)" />
+                    <AccountDataTab v-if="userDetails" :model-value="userDetails" @update:model-value="updateUserDetails($event)" />
+                </div>
+            </template>
+            <template #[Tab.SETTINGS]>
+                <div class="lg:max-w-xl">
+                    <UserSettingsTab
+                        v-if="userDetails && userSettings"
+                        :user="userDetails"
+                        :model-value="userSettings"
+                        @update:model-value="updateUserSettings($event)"
+                    />
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
                 <div class="xl:max-w-5xl">
                     <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
-                        <UserQualificationsTable v-if="userDetails" :user="userDetails" />
+                        <UserQualificationsTab v-if="userDetails" :user="userDetails" />
                     </div>
                 </div>
             </template>
@@ -19,11 +29,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { InputSelectOption, UserDetails } from '@/domain';
+import type { InputSelectOption, UserDetails, UserSettings } from '@/domain';
 import { VTabs } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application';
-import AccountData from '@/ui/views/account/AccountData.vue';
-import UserQualificationsTable from './UserQualificationsTable.vue';
+import AccountDataTab from '@/ui/views/account/AccountDataTab.vue';
+import UserSettingsTab from '@/ui/views/account/UserSettingsTab.vue';
+import UserQualificationsTab from './UserQualificationsTab.vue';
 
 enum Tab {
     PERSONAL_DATA = 'data',
@@ -38,26 +49,35 @@ const emit = defineEmits<RouteEmits>();
 const { t } = useI18n();
 const usersUseCase = useUsersUseCase();
 const userDetails = ref<UserDetails | null>(null);
+const userSettings = ref<UserSettings | null>(null);
 
-const tabs: InputSelectOption[] = [Tab.PERSONAL_DATA, Tab.QUALIFICATIONS].map((it) => ({
+const tabs: InputSelectOption[] = [Tab.PERSONAL_DATA, Tab.SETTINGS, Tab.QUALIFICATIONS].map((it) => ({
     value: it,
     label: t(`views.account.tab.${it}`),
 }));
 const tab = ref<string>(tabs[0].value);
 
+function init(): void {
+    emit('update:tab-title', t('views.account.title'));
+    fetchUserDetails();
+    fetchUserSettings();
+}
 async function fetchUserDetails(): Promise<void> {
     userDetails.value = await usersUseCase.getUserDetailsForSignedInUser();
 }
 
-async function update(changes: UserDetails): Promise<void> {
+async function updateUserDetails(changes: UserDetails): Promise<void> {
     if (userDetails.value) {
         userDetails.value = await usersUseCase.updateUserDetailsForSignedInUser(userDetails.value, changes);
     }
 }
 
-function init(): void {
-    emit('update:tab-title', t('views.account.title'));
-    fetchUserDetails();
+async function fetchUserSettings(): Promise<void> {
+    userSettings.value = await usersUseCase.getUserSettings();
+}
+
+async function updateUserSettings(settings: UserSettings): Promise<void> {
+    userSettings.value = await usersUseCase.saveUserSettings(settings);
 }
 
 init();

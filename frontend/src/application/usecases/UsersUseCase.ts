@@ -6,8 +6,7 @@ import type { QualificationCachingService } from '@/application/services/Qualifi
 import type { UserCachingService } from '@/application/services/UserCachingService';
 import { diff } from '@/common';
 import type { Position, PositionKey, Qualification, QualificationKey, User, UserDetails, UserKey, UserSettings } from '@/domain';
-import { Theme } from '@/domain';
-import { Permission } from '@/domain';
+import { Permission, Theme } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
 export class UsersUseCase {
@@ -146,6 +145,9 @@ export class UsersUseCase {
         const settingsJson = localStorage.getItem('settings') || '{}';
         if (settingsJson) {
             settings = Object.assign(settings, JSON.parse(settingsJson));
+        }
+        if (!settings.theme) {
+            settings.theme = Theme.System;
         }
         return settings;
     }
