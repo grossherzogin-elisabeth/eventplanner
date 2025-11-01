@@ -91,6 +91,10 @@
     @apply text-onsurface/50;
 }
 
+.input-field-wrapper:has(input[disabled]) + .input-hint {
+    @apply text-onsurface-variant/40;
+}
+
 /* --------------------------------------------------------------- */
 /* hover */
 /* --------------------------------------------------------------- */
