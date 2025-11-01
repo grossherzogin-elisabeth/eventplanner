@@ -9,7 +9,6 @@
                     :available-positions="user.positionKeys"
                     @update:model-value="emit('update:modelValue', $event)"
                 />
-                <!--                <NotificationsCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />-->
             </VInteractiveList>
         </div>
     </div>
@@ -17,7 +16,6 @@
 <script lang="ts" setup>
 import type { UserDetails, UserSettings } from '@/domain';
 import VInteractiveList from '@/ui/components/common/list/VInteractiveList.vue';
-import NotificationsCard from '@/ui/views/account/components/NotificationsCard.vue';
 import PreferredPositionCard from '@/ui/views/account/components/PreferredPositionCard.vue';
 import ThemeCard from '@/ui/views/account/components/ThemeCard.vue';
 

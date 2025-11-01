@@ -168,6 +168,5 @@ export class UsersUseCase {
         } else if (loadedSettings.theme === Theme.Light || (loadedSettings.theme === Theme.System && !prefersDarkMode)) {
             document.querySelector('html')?.classList.remove('dark');
         }
-        console.log(loadedSettings.theme);
     }
 }
