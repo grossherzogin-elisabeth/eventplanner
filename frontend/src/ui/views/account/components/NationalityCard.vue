@@ -13,16 +13,17 @@
             <p class="mb-4 text-sm">
                 {{ $t('views.account.personal.nationality-description') }}
             </p>
-            <p class="mb-8 text-sm font-bold">
+            <VInfo class="mb-8">
                 {{ $t('views.account.personal.passport-info') }}
-            </p>
+            </VInfo>
             <VInputSelectionList v-model="value.nationality" :options="nationalities.options" />
         </template>
     </VInteractiveListItem>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { UserDetails } from '@/domain';
-import { VInputSelectionList, VInteractiveListItem } from '@/ui/components/common';
+import { VInfo, VInputSelectionList, VInteractiveListItem } from '@/ui/components/common';
 import { useNationalities } from '@/ui/composables/Nationalities';
 
 interface Props {
@@ -35,4 +36,6 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const nationalities = useNationalities();
+
+const filter = ref<string>('');
 </script>

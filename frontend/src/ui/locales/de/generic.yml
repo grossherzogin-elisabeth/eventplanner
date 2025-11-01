@@ -71,6 +71,9 @@ generic:
     system: 'Automatisch'
     dark: 'Dunkel'
     light: 'Hell'
+  language:
+    de: 'Deutsch'
+    en: 'Englisch (Beta)'
   validation:
     required: 'Eingabe ist erforderlich'
     invalid: 'Eingabe enthält ungültige Zeichen'

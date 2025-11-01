@@ -14,15 +14,15 @@
             <p class="mb-4 text-sm">
                 {{ $t('views.account.personal.passport-description') }}
             </p>
-            <p class="mb-8 text-sm font-bold">
-                {{ $t('views.account.personal.passport-info') }}
-            </p>
-            <p class="mb-8 text-sm italic">
+            <p class="mb-4 text-sm italic">
                 <a href="https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png" target="_blank" class="link">
                     {{ $t('views.account.personal.passport-link') }}
                     <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                 </a>
             </p>
+            <VInfo class="mb-8">
+                {{ $t('views.account.personal.passport-info') }}
+            </VInfo>
             <div class="mb-4">
                 <VInputText
                     :model-value="value.passNr"
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import type { UserDetails } from '@/domain';
 import { UserService } from '@/domain';
-import { VInputText, VInteractiveListItem } from '@/ui/components/common';
+import { VInfo, VInputText, VInteractiveListItem } from '@/ui/components/common';
 
 interface Props {
     modelValue: UserDetails;

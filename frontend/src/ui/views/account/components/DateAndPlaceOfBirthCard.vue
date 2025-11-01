@@ -16,7 +16,9 @@
             <p class="mb-4 text-sm">
                 {{ $t('views.account.personal.date-and-place-of-birth-description') }}
             </p>
-            <p class="mb-8 text-sm font-bold">{{ $t('views.account.personal.passport-info') }}</p>
+            <VInfo class="mb-8">
+                {{ $t('views.account.personal.passport-info') }}
+            </VInfo>
             <div class="mb-4">
                 <VInputDate
                     v-model="value.dateOfBirth"
@@ -42,7 +44,7 @@
 import { DateTimeFormat } from '@/common/date';
 import type { UserDetails } from '@/domain';
 import { UserService } from '@/domain';
-import { VInputDate, VInputText, VInteractiveListItem } from '@/ui/components/common';
+import { VInfo, VInputDate, VInputText, VInteractiveListItem } from '@/ui/components/common';
 
 interface Props {
     modelValue: UserDetails;

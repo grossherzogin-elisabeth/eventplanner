@@ -23,7 +23,9 @@
             <p class="mb-4 text-sm">
                 {{ $t('views.account.personal.name-description') }}
             </p>
-            <p class="mb-8 text-sm font-bold">{{ $t('views.account.personal.passport-info') }}</p>
+            <VInfo class="mb-8">
+                {{ $t('views.account.personal.passport-info') }}
+            </VInfo>
             <div class="mb-4">
                 <VInputText
                     v-model="value.nickName"
@@ -82,7 +84,7 @@
 <script setup lang="ts">
 import type { UserDetails } from '@/domain';
 import { UserService } from '@/domain';
-import { VInputText, VInteractiveListItem } from '@/ui/components/common';
+import { VInfo, VInputText, VInteractiveListItem } from '@/ui/components/common';
 
 interface Props {
     modelValue: UserDetails;

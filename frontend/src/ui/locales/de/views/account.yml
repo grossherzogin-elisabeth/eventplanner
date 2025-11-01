@@ -10,8 +10,9 @@ account:
   personal:
     title: 'Persönliche Daten'
     passport-info: 'Bitte beachte, dass du dein eingetragenes Ausweisdokument auf allen Reisen mitführen musst!'
-    name-description: 'Solltest du mit einem anderen Namen angesprochen werden wollen, kannst du einen 
-        Anzeigenamen angeben. Dieser wird in der App angezeigt und beim Kammerplan und der Getränkeliste verwendet.'
+    name-description: 'Dein Name, wie hier angegeben, muss genau so auch auf deinem Ausweisdokument 
+        stehen, da dieser zum Erstellen der offiziellen Crew Liste verwendet wird. Solltest du mit einem anderen 
+        Namen angesprochen werden wollen, kannst du einen Anzeigenamen für die App vergeben.'
     nick-name-hint: 'Wie möchtest du angesprochen werden?'
     official-name-hint: 'Name wie im Ausweisdokument'
     gender-description: 'Mit welchem Geschlecht identifizierst du dich?'
@@ -20,8 +21,8 @@ account:
     passport-link: 'So findest du deine Personalausweis Nummer'
     nationality-description: 'Deine Nationalität wird für das Erstellen der offiziellen Crewliste benötigt. Solltest du mehrere
         Nationalitäten haben, gib hier bitte diejenige an, die auch auf deinem Ausweisdokumentes steht.'
-    date-and-place-of-birth-description: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum Erstellen der
-        offiziellen Crew Liste verwendet werden.'
+    date-and-place-of-birth-description: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument 
+        stehen, da diese zum Erstellen der offiziellen Crew Liste verwendet werden.'
     hint: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum Erstellen der
         offiziellen Crew Liste verwendet werden.'
   diet:
@@ -55,6 +56,7 @@ account:
     preferred-position-description: 'Mit welcher Position möchtest du dich standardmäßg bei Veranstaltungen anmelden? 
         Du kannst deine Position für jede Anmeldung individuall anpassen.'
     notifications: 'Benachrichtigungen'
+    language: 'Sprache'
   qualifications:
     status-expires-on: 'Gültig bis'
     status-no-expires: 'Ohne Ablaufdatum'
