@@ -4,16 +4,14 @@
 @import 'lib/collapsible-pane.css';
 
 @import 'styling/animations.css';
-@import 'styling/inputs.css';
+@import 'inputs/inputs.css';
 @import 'styling/typography.css';
 @import 'styling/buttons.css';
 @import 'styling/table.css';
 @import 'styling/pagination.css';
 @import 'styling/scrollbar.css';
 @import 'styling/status-panels.css';
-@import 'styling/tags.css';
 
-@import 'domain/role.css';
 @import 'domain/permission.css';
 
 html {

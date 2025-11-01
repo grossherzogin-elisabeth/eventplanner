@@ -15,17 +15,18 @@
             <div class="px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div v-if="!registration.userKey" class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.name') }}</VInputLabel>
                         <VInputText
                             v-model.trim="registration.name"
+                            :label="$t('domain.registration.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.position') }}</VInputLabel>
                         <VInputCombobox
                             v-model="registration.positionKey"
+                            required
+                            :label="$t('domain.registration.position')"
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"
                             :errors-visible="validation.showErrors.value"
@@ -34,15 +35,16 @@
                                 <span class="flex-grow">{{ item.label }}</span>
                                 <i
                                     v-if="selectedUser && item.value && !selectedUser.positionKeys?.includes(item.value)"
-                                    class="fa-solid fa-warning mr-4 text-yellow"
+                                    class="fa-solid fa-warning mr-4 text-warning"
                                 />
                             </template>
                         </VInputCombobox>
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.overnight-stay') }}</VInputLabel>
                         <VInputSelect
                             v-model="registration.overnightStay"
+                            required
+                            :label="$t('domain.registration.overnight-stay')"
                             :options="[
                                 { value: undefined, label: $t('generic.no-information') },
                                 { value: true, label: $t('generic.yes') },
@@ -51,13 +53,12 @@
                         />
                     </div>
                     <div v-if="registration.overnightStay" class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.arrival') }}</VInputLabel>
-                        <VInputDate v-model="registration.arrival" />
+                        <VInputDate v-model="registration.arrival" :label="$t('domain.registration.arrival')" />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.registration.note') }}</VInputLabel>
                         <VInputTextArea
                             v-model.trim="registration.note"
+                            :label="$t('domain.registration.note')"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -91,7 +92,7 @@
                             class="truncate whitespace-nowrap rounded-lg px-2 py-1 font-bold"
                             :class="
                                 expiredQualifications.includes(q.qualificationKey)
-                                    ? 'bg-error-container text-onerror-container'
+                                    ? 'bg-error-container/50 text-onerror-container'
                                     : 'bg-secondary-container text-onsecondary-container'
                             "
                         >
@@ -121,12 +122,13 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { deepCopy, filterUndefined } from '@/common';
-import type { Event, Position, QualificationKey, Registration, User, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { Event, Position, QualificationKey, Registration, User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputDate } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputLabel, VInputText, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputCombobox, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
@@ -152,15 +154,10 @@ const registration = ref<Registration>({
     positionKey: '',
 });
 const validation = useValidation(registration, (value) => {
-    // TODO extract to service
-    const errors: Record<string, ValidationHint[]> = {};
-    if (!value.positionKey) {
-        errors.positionKey = errors.positionKey || [];
-        errors.positionKey.push({ key: 'views.events.edit.edit-registration.select-position', params: {} });
-    }
+    const errors = Validator.validate('positionKey', value.positionKey, notEmpty()).getErrors();
     if (!value.name && !value.userKey) {
         errors.userKey = errors.userKey || [];
-        errors.userKey.push({ key: 'views.events.edit.edit-registration.select-user', params: {} });
+        errors.userKey.push('views.events.edit.edit-registration.select-user');
     }
     return errors;
 });

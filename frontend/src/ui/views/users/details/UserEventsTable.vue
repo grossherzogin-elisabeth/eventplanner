@@ -9,7 +9,7 @@
             <template #row="{ item }">
                 <td class="w-0 text-xl opacity-50">
                     <span v-if="!item.waitingList">
-                        <i class="fa-solid fa-check text-green"></i>
+                        <i class="fa-solid fa-check text-success"></i>
                     </span>
                     <span v-else>
                         <i class="fa-solid fa-hourglass-half"></i>
@@ -36,9 +36,9 @@
                     <p class="text-sm">{{ item.duration }} Tage</p>
                 </td>
                 <td>
-                    <div :style="{ background: item.position.color }" class="position inline-flex">
-                        <span class="px-2 text-sm">{{ item.positionName }}</span>
-                    </div>
+                    <span :style="{ '--color': item.position.color }" class="tag custom">
+                        {{ item.positionName }}
+                    </span>
                 </td>
             </template>
             <template #context-menu="{ item }">

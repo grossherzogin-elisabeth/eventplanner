@@ -1,54 +1,44 @@
 <template>
-    <div class="flex items-start" :class="$attrs.class">
-        <label v-if="props.label" class="input-label">
-            {{ props.label }}
-        </label>
-        <div class="relative w-1/2 flex-grow">
-            <div class="input-field-wrapper cursor-pointer">
-                <slot name="before"></slot>
-                <input
-                    :id="id"
-                    :aria-disabled="props.disabled"
-                    :aria-invalid="hasErrors"
-                    :aria-required="props.required"
-                    :class="{ invalid: showErrors && hasErrors }"
-                    :disabled="props.disabled"
-                    :placeholder="props.placeholder || $t('generic.please-select')"
-                    :required="props.required"
-                    :value="fileName"
-                    aria-haspopup="true"
-                    class="input-field w-full cursor-pointer overflow-ellipsis"
-                    readonly
-                />
-                <div v-if="file" class="absolute bottom-0 right-0 top-0 z-20 flex w-12 items-center justify-center">
-                    <button class="h-10 w-10 rounded-full hover:bg-primary-container" tabindex="-1" @click.stop="clearSelection()">
-                        <i class="fa-solid fa-file-circle-xmark text-onprimary-container" />
-                    </button>
-                </div>
-                <div v-else>
-                    <i class="fa-regular fa-file pr-4 text-primary" />
-                </div>
-                <input
-                    class="absolute bottom-0 left-0 right-0 top-0 z-10 mr-12 cursor-pointer opacity-0"
-                    :aria-disabled="props.disabled"
-                    :disabled="props.disabled"
-                    type="file"
-                    @change="onInput($event as unknown as InputFileEvent)"
-                />
-                <slot name="after"></slot>
-            </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+    <div class="v-input-file" :class="$attrs.class">
+        <div class="input-field-wrapper">
+            <slot name="before"></slot>
+            <input
+                :id="id"
+                :aria-disabled="props.disabled"
+                :aria-invalid="hasErrors"
+                :aria-required="props.required"
+                :class="{ invalid: showErrors && hasErrors }"
+                :disabled="props.disabled"
+                :placeholder="props.placeholder || $t('generic.please-select')"
+                :required="props.required"
+                :value="fileName"
+                aria-haspopup="true"
+                class="input-field w-full cursor-pointer overflow-ellipsis"
+                readonly
+            />
+            <button v-if="file" class="h-10 w-10 rounded-full hover:bg-primary-container" tabindex="-1" @click.stop="clearSelection()">
+                <i class="fa-solid fa-file-circle-xmark text-onprimary-container" />
+            </button>
+            <span v-else>
+                <i class="fa-regular fa-file pr-4 text-primary" />
+            </span>
+            <input
+                class="absolute bottom-0 left-0 right-0 top-0 z-10 mr-12 cursor-pointer opacity-0"
+                :aria-disabled="props.disabled"
+                :disabled="props.disabled"
+                type="file"
+                @change="onInput($event as unknown as InputFileEvent)"
+            />
+            <slot name="after"></slot>
         </div>
+        <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import type { Event, ValidationHint } from '@/domain';
+import type { Event } from '@/domain';
+import VInputHint from '@/ui/components/common/input/VInputHint.vue';
 import { v4 as uuidv4 } from 'uuid';
 
 interface InputFileEvent extends Event {
@@ -56,19 +46,13 @@ interface InputFileEvent extends Event {
 }
 
 interface Props {
-    // an optional label to render before the input field
     label?: string;
-    // the value we edit, bind with v-model
+    hint?: string;
     modelValue?: Blob;
-    // disables this input
     disabled?: boolean;
-    // marks this input as required
     required?: boolean;
-    // validation and/or service errors for this input
-    errors?: ValidationHint[];
-    // show errors, even if this field has not been focused jet, e.g. after pressing save
+    errors?: string[];
     errorsVisible?: boolean;
-    // placeholder to display if no value is entered
     placeholder?: string;
 }
 

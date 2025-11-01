@@ -10,7 +10,7 @@ html {
         opacity: 0;
         transform: translate(var(--anim-slide-diff-x), var(--anim-slide-diff-y));
     }
-    20% {
+    50% {
         opacity: 1;
     }
     100% {
@@ -24,7 +24,7 @@ html {
         opacity: 1;
         transform: translate(0, 0);
     }
-    80% {
+    50% {
         opacity: 1;
     }
     100% {
@@ -48,14 +48,5 @@ html {
     }
     100% {
         opacity: 0;
-    }
-}
-
-@keyframes anim-color {
-    0% {
-        background-color: var(--anim-color-from);
-    }
-    100% {
-        background-color: var(--anim-color-to);
     }
 }

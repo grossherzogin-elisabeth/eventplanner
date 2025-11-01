@@ -10,8 +10,7 @@
                         Du hast die Qualifikation für mehrere Positionen. Mit welcher Position möchtest du dich für diese Reise anmelden?
                     </p>
                     <div class="mb-8">
-                        <VInputLabel>Position</VInputLabel>
-                        <VInputSelect v-model="position" :options="availablePositions" required />
+                        <VInputSelect v-model="position" label="Position" :options="availablePositions" required />
                     </div>
                     <p class="mb-4 text-sm">
                         Du kannst die ausgewählte Position als Standard festlegen, um dich für weitere Reisen noch einfacher anmelden zu
@@ -39,7 +38,7 @@ import type { InputSelectOption, PositionKey, UserDetails } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
-import { VDialog, VInputLabel } from '@/ui/components/common';
+import { VDialog } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions';
 

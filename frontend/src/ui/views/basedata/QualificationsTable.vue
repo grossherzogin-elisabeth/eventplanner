@@ -18,21 +18,21 @@
                 <span
                     v-for="positionKey in item.grantsPositions"
                     :key="positionKey"
-                    class="position my-0.5 mr-1 bg-surface-container-high text-xs opacity-75"
-                    :style="{ background: positions.get(positionKey).color }"
+                    class="tag custom"
+                    :style="{ '--color': positions.get(positionKey).color }"
                 >
                     {{ positions.get(positionKey).name }}
                 </span>
             </td>
             <td class="w-80">
                 <div class="flex justify-end">
-                    <div v-if="item.expires" class="status-panel bg-yellow-container text-onyellow-container">
+                    <div v-if="item.expires" class="status-badge warning">
                         <i class="fa-solid fa-clock"></i>
-                        <span class="whitespace-nowrap font-semibold">{{ $t('views.basedata.tab.qualifications.status-expires') }}</span>
+                        <span>{{ $t('views.basedata.tab.qualifications.status-expires') }}</span>
                     </div>
-                    <div v-else class="status-panel bg-green-container text-ongreen-container">
+                    <div v-else class="status-badge success">
                         <i class="fa-solid fa-check-circle"></i>
-                        <span class="whitespace-nowrap font-semibold">{{ $t('views.basedata.tab.qualifications.status-no-expires') }}</span>
+                        <span>{{ $t('views.basedata.tab.qualifications.status-no-expires') }}</span>
                     </div>
                 </div>
             </td>

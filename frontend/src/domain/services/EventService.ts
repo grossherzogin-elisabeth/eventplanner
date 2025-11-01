@@ -1,5 +1,6 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
-import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey, ValidationHint } from '@/domain';
+import { Validator, before, maxLength, notEmpty } from '@/common/validation';
+import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
 import { EventSignupType, EventState, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
@@ -187,35 +188,17 @@ export class EventService {
         return event.registrations.filter((reg) => !event.slots.find((slt) => slt.assignedRegistrationKey === reg.key));
     }
 
-    public validate(event: Event): Record<string, ValidationHint[]> {
-        const errors: Record<string, ValidationHint[]> = {};
-        if (event.name.trim().length === 0) {
-            errors.name = errors.name || [];
-            errors.name.push({
-                key: 'Bitte gib einen Anzeigenamen für das Event an',
-                params: {},
-            });
-        }
-        if (event.end.getTime() < event.start.getTime()) {
-            errors.end = errors.end || [];
-            errors.end.push({
-                key: 'Das Enddatum muss nach dem Startdatum sein',
-                params: {},
-            });
-        }
-        return errors;
+    public validate(event: Event): Record<string, string[]> {
+        return Validator.validate('name', event.name, notEmpty(), maxLength(35))
+            .validate('start', event.start, notEmpty())
+            .validate('end', event.end, notEmpty(), before(event.start, 'Das Enddatum muss nach dem Startdatum liegen'))
+            .getErrors();
     }
 
-    public validatePartial(event: Partial<Event>): Record<string, ValidationHint[]> {
-        const errors: Record<string, ValidationHint[]> = {};
-        if (event.end && event.start && event.end.getTime() < event.start.getTime()) {
-            errors.end = errors.end || [];
-            errors.end.push({
-                key: 'Das Enddatum muss nach dem Startdatum sein',
-                params: {},
-            });
-        }
-        return errors;
+    public validatePartial(event: Partial<Event>): Record<string, string[]> {
+        return Validator.validate('name', event.name, maxLength(35))
+            .validate('end', event.end, before(event.start, 'Das Enddatum muss nach dem Startdatum liegen'))
+            .getErrors();
     }
 
     public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {

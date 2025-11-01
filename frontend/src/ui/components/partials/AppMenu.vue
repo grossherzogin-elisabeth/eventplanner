@@ -189,33 +189,46 @@ watch(route, () => {
 
 <style>
 .menu-list {
-    @apply space-y-1 px-4 xl:px-8;
+    @apply space-y-1;
+    @apply px-4;
+    @apply xl:px-8;
 }
 
 .menu-list * {
-    @apply text-left;
-    @apply hover:no-underline;
+    text-align: left;
+}
+
+.menu-list *:hover {
+    text-decoration-line: none;
 }
 
 .menu-item {
-    @apply overflow-hidden rounded-2xl;
-    @apply font-semibold md:text-lg;
-    @apply cursor-pointer;
+    overflow: hidden;
+    cursor: pointer;
+    @apply rounded-2xl;
+    @apply font-semibold;
+    @apply md:text-lg;
 }
 
 .menu-item > a,
 .menu-item > button {
-    @apply px-4 py-2 xl:px-6;
-    @apply flex w-full items-center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    @apply px-4;
+    @apply py-2;
+    @apply xl:px-6;
 }
 
 /* expand */
 .menu-item.expanded {
-    @apply bg-onprimary bg-opacity-5;
+    @apply bg-secondary-container/10;
 }
 
 .menu-item .menu-chevron {
-    @apply transition-transform duration-75;
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 75ms;
 }
 
 .menu-item.expanded .menu-chevron {
@@ -225,42 +238,61 @@ watch(route, () => {
 /* hover */
 .menu-item:hover:not(.expanded):not(.active) > a:not(.router-link-active),
 .menu-item:hover:not(.expanded):not(.active) > button:not(.router-link-active) {
-    @apply bg-onprimary bg-opacity-10;
+    @apply bg-secondary-container/50;
 }
 
 /* active */
 .menu-item > a.router-link-active,
 .menu-item.active > a,
 .menu-item.active > button {
-    @apply relative bg-onprimary font-bold text-primary;
+    position: relative;
+    @apply bg-secondary-container;
+    @apply text-onsecondary-container;
+    @apply font-bold;
 }
 
 .menu-item > a.router-link-active:before,
 .menu-item.active > a:before {
-    @apply absolute bottom-auto left-0 top-auto;
-    @apply h-5 w-1;
-    @apply rounded-full bg-current;
+    position: absolute;
+    top: auto;
+    bottom: auto;
+    left: 0;
+    background-color: currentColor;
+    @apply h-5;
+    @apply w-1;
+    @apply rounded-full;
 }
 
 /* 2nd level */
 .menu-item.level-2 {
-    @apply mx-2 rounded-xl text-base;
+    @apply mx-2;
+    @apply rounded-xl;
+    @apply text-base;
 }
 
 .menu-item.level-2 > a,
 .menu-item.level-2 > button {
-    @apply pl-8 xl:pl-8;
+    @apply pl-8;
 }
 
 .menu-item span {
-    @apply ml-4 flex-grow md:ml-8;
+    flex-grow: 1;
+    @apply ml-4;
+    @apply md:ml-8;
 }
 
 .menu-item svg {
-    @apply inline-block h-4 w-4;
+    display: inline-block;
+    @apply h-4;
+    @apply w-4;
 }
 
 .menu-subheading {
-    @apply mt-8 pl-8 text-sm font-semibold opacity-50 xl:pl-14;
+    @apply mt-8;
+    @apply pl-8;
+    @apply text-sm;
+    @apply font-semibold;
+    @apply opacity-50;
+    @apply xl:pl-14;
 }
 </style>

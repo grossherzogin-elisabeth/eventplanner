@@ -12,27 +12,27 @@
                         bearbeiten.
                     </p>
                     <div class="mb-4">
-                        <VInputLabel>Reise</VInputLabel>
                         <VInputCombobox
                             v-model="registration.eventKey"
+                            label="Reise"
                             :options="eventOptions"
                             :errors="validation.errors.value['eventKey']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Position</VInputLabel>
                         <VInputCombobox
                             v-model="registration.positionKey"
+                            label="Position"
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Notiz</VInputLabel>
                         <VInputTextArea
                             v-model="registration.note"
+                            label="Notiz"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -55,10 +55,11 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, EventKey, InputSelectOption, PositionKey, User, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { Event, EventKey, InputSelectOption, PositionKey, User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputLabel, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputCombobox, VInputTextArea } from '@/ui/components/common';
 import { useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
@@ -82,20 +83,7 @@ const hiddenEvents = ref<string[]>([]);
 const registration = ref<UserRegistration | undefined>(undefined);
 
 const validation = useValidation(registration, (value) => {
-    // TODO extract to service
-    const errors: Record<string, ValidationHint[]> = {};
-    if (!value) {
-        return errors;
-    }
-    if (!value.positionKey) {
-        errors.positionKey = errors.positionKey || [];
-        errors.positionKey.push({ key: 'Bitte wähle eine Position', params: {} });
-    }
-    if (!value.eventKey) {
-        errors.eventKey = errors.eventKey || [];
-        errors.eventKey.push({ key: 'Bitte wähle eine Reise', params: {} });
-    }
-    return errors;
+    return Validator.validate('positionKey', value?.positionKey, notEmpty()).validate('eventKey', value?.eventKey, notEmpty()).getErrors();
 });
 
 const eventOptions = computed<InputSelectOption<string | undefined>[]>(() => {

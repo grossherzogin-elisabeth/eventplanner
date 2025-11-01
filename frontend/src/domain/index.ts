@@ -16,7 +16,6 @@ export * from './values/EventSignupType.ts';
 export * from './values/Permission';
 export * from './values/Role';
 export * from './values/Address';
-export * from './values/ValidationHint';
 export * from './values/InputSelectOption';
 export * from './values/SlotCriticality';
 export * from './values/UserSettings';

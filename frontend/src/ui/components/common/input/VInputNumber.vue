@@ -1,60 +1,46 @@
 <template>
-    <div :class="$attrs.class" class="flex items-start">
-        <label v-if="props.label" class="input-label">
-            {{ props.label }}
-        </label>
-        <div class="w-1/2 flex-grow">
-            <div ref="dropdownAnchor" class="input-field-wrapper">
-                <slot name="before"></slot>
-                <input
-                    :id="id"
-                    v-model="value"
-                    :aria-disabled="props.disabled"
-                    :aria-invalid="hasErrors"
-                    :aria-required="props.required"
-                    :class="{ invalid: showErrors && hasErrors }"
-                    :disabled="props.disabled"
-                    :placeholder="props.placeholder"
-                    :required="props.required"
-                    class="input-field"
-                    type="number"
-                    @blur="visited = true"
-                    @input="onInput"
-                    @keypress="onKeyPress"
-                />
-                <slot name="after"></slot>
-            </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+    <div :class="$attrs.class" class="v-input-number">
+        <div class="input-field-wrapper" @click="focus()">
+            <slot name="before"></slot>
+            <label :for="id">{{ props.label }}</label>
+            <input
+                :id="id"
+                ref="inputField"
+                v-model="value"
+                :aria-disabled="props.disabled"
+                :aria-invalid="hasErrors"
+                :aria-required="props.required"
+                :class="{ invalid: showErrors && hasErrors }"
+                :disabled="props.disabled"
+                :placeholder="props.placeholder"
+                :required="props.required"
+                class="input-field"
+                type="number"
+                @blur="visited = true"
+                @input="onInput"
+                @keypress="onKeyPress"
+            />
+            <slot name="after"></slot>
         </div>
+        <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
+import VInputHint from './VInputHint.vue';
 
 interface Props {
-    // an optional label to render before the input field
-    label?: string | undefined;
-    // the value we edit, bind with v-model
-    modelValue?: number | string | undefined;
-    // disables this input
-    disabled?: boolean | undefined;
-    // marks this input as required
-    required?: boolean | undefined;
-    // validation and/or service errors for this input
-    errors?: ValidationHint[] | undefined;
-    // show errors, even if this field has not been focused jet, e.g. after pressing save
-    errorsVisible?: boolean | undefined;
-    // placeholder to display if no value is entered
-    placeholder?: string | undefined;
-    // flag to disable decimal numbers
-    decimal?: boolean | undefined;
+    label?: string;
+    hint?: string;
+    modelValue?: number | string;
+    disabled?: boolean;
+    required?: boolean;
+    errors?: string[];
+    errorsVisible?: boolean;
+    placeholder?: string;
+    decimal?: boolean;
 }
 
 type Emits = (e: 'update:modelValue', value: number | string) => void;
@@ -67,6 +53,7 @@ type Emits = (e: 'update:modelValue', value: number | string) => void;
 
 const props = withDefaults(defineProps<Props>(), {
     label: '',
+    hint: undefined,
     placeholder: '',
     modelValue: undefined,
     disabled: false,
@@ -81,8 +68,13 @@ const value = ref<number | string>('');
 
 const id = uuidv4();
 const visited = ref(false);
+const inputField = ref<HTMLElement | undefined>(undefined);
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors.length > 0);
+
+function focus(): void {
+    inputField.value?.focus();
+}
 
 function onKeyPress(event: KeyboardEvent): void {
     if (!props.decimal && Number.isNaN(parseInt(event.key))) {

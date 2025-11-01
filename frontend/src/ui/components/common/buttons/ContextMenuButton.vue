@@ -53,16 +53,32 @@ const open = ref<boolean>(false);
 
 <style>
 .context-menu-item {
-    @apply -mx-4 flex cursor-pointer items-center space-x-4 px-4 py-3 md:py-2;
-    @apply -mx-3 rounded-lg hover:bg-surface-container-highest hover:no-underline;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    @apply -mx-4;
+    @apply px-4;
+    @apply space-x-4;
+    @apply py-3;
+    @apply -mx-3;
+    @apply rounded-lg;
+
+    @apply md:py-2;
+}
+
+.context-menu-item:hover {
+    @apply bg-surface-container-highest;
+    text-decoration-line: none;
 }
 
 .context-menu-item.disabled {
-    @apply pointer-events-none opacity-50;
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 .context-menu-item > i,
 .context-menu-item > svg:first-child {
-    @apply block w-6;
+    display: block;
+    @apply w-6;
 }
 </style>

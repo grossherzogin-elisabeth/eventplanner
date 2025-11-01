@@ -1,36 +1,31 @@
 <template>
-    <div :class="$attrs.class" class="input-datepicker flex items-start">
-        <label v-if="props.label" class="input-label">
-            {{ props.label }}
-        </label>
-        <div class="relative w-1/2 flex-grow">
-            <div ref="dropdownAnchor" class="input-field-wrapper">
-                <input
-                    :id="id"
-                    :aria-disabled="props.disabled"
-                    :aria-invalid="hasErrors"
-                    :aria-required="props.required"
-                    :class="{ invalid: showErrors && hasErrors }"
-                    :disabled="props.disabled"
-                    :placeholder="$t('generic.please-select')"
-                    :required="props.required"
-                    :value="displayValue"
-                    aria-haspopup="true"
-                    class="input-field w-full overflow-ellipsis pr-10"
-                    maxlength="7"
-                    @blur="onBlur()"
-                    @input="onInput($event)"
-                    @focus="inputValue = displayValue"
-                    @keydown.up.prevent="onArrowUp()"
-                    @keydown.down.prevent="onArrowDown()"
-                />
-            </div>
-            <div v-if="showErrors && hasErrors" class="input-errors">
-                <p v-for="err in errors" :key="err.key" class="input-error">
-                    {{ $t(err.key, err.params) }}
-                </p>
-            </div>
+    <div :class="$attrs.class" class="v-input-time">
+        <div class="input-field-wrapper" @click="focus()">
+            <slot name="before" />
+            <label :for="id">{{ props.label }}</label>
+            <input
+                :id="id"
+                ref="inputField"
+                :aria-disabled="props.disabled"
+                :aria-invalid="hasErrors"
+                :aria-required="props.required"
+                :class="{ invalid: showErrors && hasErrors }"
+                :disabled="props.disabled"
+                :placeholder="$t('generic.please-select')"
+                :required="props.required"
+                :value="displayValue"
+                aria-haspopup="true"
+                class="input-field w-full overflow-ellipsis pr-10"
+                maxlength="7"
+                @blur="onBlur()"
+                @input="onInput($event)"
+                @focus="inputValue = displayValue"
+                @keydown.up.prevent="onArrowUp()"
+                @keydown.down.prevent="onArrowDown()"
+            />
+            <slot name="after" />
         </div>
+        <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />
     </div>
 </template>
 
@@ -39,26 +34,18 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
 import { addToDate, subtractFromDate } from '@/common/date/DateUtils';
-import type { ValidationHint } from '@/domain';
 import { v4 as uuidv4 } from 'uuid';
+import VInputHint from './VInputHint.vue';
 
 interface Props {
-    // an optional label to render before the input field
     label?: string;
-    // the value we edit, bind with v-model
+    hint?: string;
     modelValue?: Date;
-    // disables this input
     disabled?: boolean;
-    // marks this input as required
     required?: boolean;
-    // validation and/or service errors for this input
-    errors?: ValidationHint[];
-    // show errors, even if this field has not been focused jet, e.g. after pressing save
+    errors?: string[];
     errorsVisible?: boolean;
-    // placeholder to display if no value is entered
     placeholder?: string;
-    // input type used, defaults to text
-    type?: 'text' | 'passwort' | 'email' | 'time' | 'number';
 }
 
 type Emits = (e: 'update:modelValue', value: Date) => void;
@@ -77,6 +64,7 @@ const i18n = useI18n();
 const id = uuidv4();
 const visited = ref<boolean>(false);
 const inputValue = ref<string | null>(null);
+const inputField = ref<HTMLInputElement | undefined>(undefined);
 
 const showErrors = computed<boolean>(() => visited.value || props.errorsVisible === true);
 const hasErrors = computed<boolean>(() => props.errors !== undefined && props.errors.length > 0);
@@ -89,6 +77,10 @@ const displayValue = computed<string>(() => {
     }
     return '-- : --';
 });
+
+function focus(): void {
+    inputField.value?.focus();
+}
 
 function onBlur(): void {
     visited.value = true;

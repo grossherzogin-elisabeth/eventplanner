@@ -22,9 +22,9 @@
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event">
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('domain.event.status') }}</VInputLabel>
                                 <VInputSelect
                                     v-model="event.state"
+                                    :label="$t('domain.event.status')"
                                     :options="eventStates.options.value"
                                     :errors="validation.errors.value['state']"
                                     :errors-visible="validation.showErrors.value"
@@ -33,9 +33,9 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('domain.event.name') }}</VInputLabel>
                                 <VInputText
                                     v-model.trim="event.name"
+                                    :label="$t('domain.event.name')"
                                     :errors="validation.errors.value['name']"
                                     :errors-visible="validation.showErrors.value"
                                     required
@@ -43,9 +43,9 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('domain.event.category') }}</VInputLabel>
                                 <VInputSelect
                                     v-model="event.type"
+                                    :label="$t('domain.event.category')"
                                     :options="eventTypes.options.value"
                                     :errors="validation.errors.value['type']"
                                     :errors-visible="validation.showErrors.value"
@@ -54,9 +54,9 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('domain.event.signup-type') }}</VInputLabel>
                                 <VInputSelect
                                     v-model="event.signupType"
+                                    :label="$t('domain.event.signup-type')"
                                     :options="eventSignupTypes.options.value"
                                     :errors="validation.errors.value['signupType']"
                                     :errors-visible="validation.showErrors.value"
@@ -65,9 +65,10 @@
                                 />
                             </div>
                             <div class="mb-4">
-                                <VInputLabel>{{ $t('domain.event.description') }}</VInputLabel>
                                 <VInputTextArea
                                     v-model.trim="event.description"
+                                    :label="$t('domain.event.description')"
+                                    hint="Markdown wird unterstützt"
                                     :errors="validation.errors.value['description']"
                                     :errors-visible="validation.showErrors.value"
                                     :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
@@ -75,8 +76,8 @@
                             </div>
                             <div class="mb-4 flex space-x-4">
                                 <div class="w-3/5">
-                                    <VInputLabel>{{ $t('domain.event.start-date') }}</VInputLabel>
                                     <VInputDate
+                                        :label="$t('domain.event.start-date')"
                                         :model-value="event.start"
                                         :highlight-from="event.start"
                                         :highlight-to="event.end"
@@ -88,8 +89,8 @@
                                     />
                                 </div>
                                 <div class="w-2/5">
-                                    <VInputLabel>{{ $t('domain.event.crew-on-board') }}</VInputLabel>
                                     <VInputTime
+                                        :label="$t('domain.event.crew-on-board')"
                                         :model-value="event.start"
                                         :errors="validation.errors.value['start']"
                                         :errors-visible="validation.showErrors.value"
@@ -102,8 +103,8 @@
 
                             <div class="mb-4 flex space-x-4">
                                 <div class="w-3/5">
-                                    <VInputLabel>{{ $t('domain.event.end-date') }}</VInputLabel>
                                     <VInputDate
+                                        :label="$t('domain.event.end-date')"
                                         :model-value="event.end"
                                         :highlight-from="event.start"
                                         :highlight-to="event.end"
@@ -115,8 +116,8 @@
                                     />
                                 </div>
                                 <div class="w-2/5">
-                                    <VInputLabel>{{ $t('domain.event.crew-off-board') }}</VInputLabel>
                                     <VInputTime
+                                        :label="$t('domain.event.crew-off-board')"
                                         :model-value="event.end"
                                         :errors="validation.errors.value['end']"
                                         :errors-visible="validation.showErrors.value"
@@ -255,7 +256,6 @@ import {
     VConfirmationDialog,
     VInfo,
     VInputDate,
-    VInputLabel,
     VInputSelect,
     VInputText,
     VInputTextArea,

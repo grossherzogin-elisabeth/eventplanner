@@ -13,10 +13,12 @@
                 <div ref="wrapper" class="dialog-wrapper xl:ml-20" @click.stop="" @mousedown.stop="">
                     <slot name="dialog">
                         <div
-                            :class="` ${props.width || 'w-screen max-w-xl'} ${props.height || 'h-auto max-h-[95vh]'} ${$attrs.class} `"
-                            class="dialog flex flex-col overflow-hidden bg-surface sm:rounded-3xl sm:shadow-lg"
+                            class="dialog flex flex-col overflow-hidden bg-surface-container-high sm:rounded-3xl sm:shadow-lg"
+                            :class="`${scrolls ? 'scrolls' : ''} ${props.width || 'w-screen max-w-xl'} ${props.height || 'h-auto max-h-[95vh]'} ${$attrs.class} `"
                         >
-                            <div class="dialog-header flex h-16 w-full items-center justify-between pl-4 xs:pl-8 lg:pl-10 lg:pr-2">
+                            <div
+                                class="dialog-header flex h-16 w-full items-center justify-between border-outline-variant/40 pl-4 xs:pl-8 lg:pl-10 lg:pr-2"
+                            >
                                 <div class="fullscreen-back-button -ml-4">
                                     <button class="icon-button" @click="reject()">
                                         <i class="fa-solid fa-arrow-left"></i>
@@ -25,17 +27,20 @@
                                 <div class="flex w-0 flex-grow items-center overflow-hidden">
                                     <slot name="title"></slot>
                                 </div>
-                                <div class="dialog-close-button-wrapper flex w-20 items-center justify-center lg:w-16">
+                                <div class="dialog-close-button-wrapper flex w-16 items-center justify-center">
                                     <button class="dialog-close-button icon-button" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="dialog-content flex flex-1 flex-col overflow-y-auto">
+                            <div ref="content" class="dialog-content flex flex-1 flex-col overflow-y-auto">
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>
-                            <div v-if="$slots.buttons" class="dialog-buttons flex justify-end gap-2 px-4 py-4 xs:px-8 lg:px-10">
+                            <div
+                                v-if="$slots.buttons"
+                                class="dialog-buttons flex justify-end gap-2 border-outline-variant/40 px-4 py-4 xs:px-8 lg:px-10"
+                            >
                                 <slot :close="reject" :reject="reject" :submit="submit" name="buttons"></slot>
                             </div>
                         </div>
@@ -47,9 +52,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { Ref } from 'vue';
 import { nextTick, ref } from 'vue';
-import { disableScrolling, enableScrolling } from '@/common';
+import { disableScrolling, enableScrolling, isTouchDevice } from '@/common';
 import type { Dialog } from './Dialog';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,9 +100,11 @@ defineExpose<Dialog>({
 });
 
 const animationDuration = 250;
-const dialogOpen: Ref<boolean> = ref(false);
-const wrapper: Ref<HTMLElement | null> = ref(null);
-const renderContent: Ref<boolean> = ref(false);
+const dialogOpen = ref<boolean>(false);
+const scrolls = ref<boolean>(false);
+const wrapper = ref<HTMLElement | null>(null);
+const content = ref<HTMLElement | null>(null);
+const renderContent = ref<boolean>(false);
 let promiseResolve: ((result: T) => void) | null = null;
 let promiseReject: ((reason: T) => void) | null = null;
 let closeTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
@@ -111,7 +117,11 @@ async function open(): Promise<T> {
     await nextTick(() => (dialogOpen.value = true));
     setTimeout(() => {
         emit('opened');
-        wrapper.value?.querySelector('input')?.focus();
+        if (!isTouchDevice()) {
+            const input = wrapper.value?.querySelector('input,textarea') as HTMLTextAreaElement | HTMLInputElement | null;
+            input?.focus();
+        }
+        scrolls.value = content.value !== null && content.value.scrollHeight > content.value.offsetHeight;
     }, animationDuration);
     window.addEventListener('cancel', close, { once: true });
 
@@ -155,12 +165,13 @@ async function close(): Promise<void> {
     --anim-slide-diff-y: 2rem;
     --anim-color-from: rgba(0, 0, 0, 0);
     --anim-color-to: rgba(0, 0, 0, 0.6);
-    animation: anim-color var(--animation-duration) ease-in reverse;
+    transition: background-color;
+    transition-duration: var(--animation-duration);
+    transition-timing-function: ease-in-out;
     background-color: var(--anim-color-from);
 }
 
 .dialog-background.open {
-    animation: anim-color var(--animation-duration) ease-in;
     background-color: var(--anim-color-to);
     pointer-events: auto;
 }
@@ -180,16 +191,26 @@ async function close(): Promise<void> {
 }
 
 .modal-danger.dialog-background {
-    @apply z-50;
+    z-index: 50;
 }
 
 .modal-danger .dialog-header {
-    @apply border-onerror-container bg-error-container pl-8 text-onerror-container;
+    @apply bg-error-container;
+    @apply dark:bg-error-container/30;
+    @apply text-onerror-container;
+    @apply border-onerror-container;
+    @apply selection:bg-onerror-container;
+    @apply selection:text-error-container;
+    @apply border-outline-variant/40;
 }
 
-.modal-danger .dialog > .dialog-content,
-.modal-danger .dialog > .dialog-buttons {
-    @apply bg-error-container bg-opacity-50;
+.modal-danger .dialog-content,
+.modal-danger .dialog-buttons {
+    @apply bg-error-container;
+    @apply text-onerror-container;
+    @apply selection:bg-onerror-container;
+    @apply selection:text-error-container;
+    @apply dark:bg-error-container/30;
 }
 
 .modal-danger .dialog-close-button {
@@ -200,44 +221,65 @@ async function close(): Promise<void> {
     @apply text-onerror-container;
 }
 
-@media (max-width: 639px) {
-    .modal-danger .dialog,
-    .modal .dialog {
-        @apply rounded-3xl shadow-lg;
-        max-width: min(calc(100vw - 2rem), 35rem);
-    }
+.dialog.scrolls .dialog-buttons {
+    border-top-width: 1px;
+}
+
+.dialog.scrolls .dialog-header {
+    border-bottom-width: 1px;
 }
 
 @media (max-width: 639px) {
+    .modal-danger .dialog,
+    .modal .dialog {
+        max-width: min(calc(100vw - 1rem), 35rem);
+        @apply rounded-3xl;
+        @apply shadow-lg;
+    }
+
+    .fullscreen .dialog.scrolls .dialog-header {
+        border-bottom: none;
+    }
+
     .fullscreen.dialog-background {
         --anim-slide-diff-x: 100vw;
         --anim-slide-diff-y: 0;
     }
 
     .fullscreen .dialog-wrapper {
-        @apply w-full overflow-hidden;
+        width: 100%;
+        overflow: hidden;
         height: var(--viewport-height);
     }
 
     .fullscreen .dialog {
-        @apply h-full max-h-full w-full max-w-full !important;
+        height: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        @apply bg-surface;
     }
 
     .fullscreen .dialog .dialog-header {
         height: var(--nav-height);
-        @apply truncate bg-primary text-onprimary;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        @apply bg-primary;
+        @apply text-onprimary;
+        @apply dark:bg-surface-container-high dark:text-onsurface-variant;
     }
 
     .fullscreen .dialog .dialog-close-button {
-        @apply text-white;
+        @apply text-onprimary;
     }
 
     .fullscreen .dialog .fullscreen-back-button {
-        @apply block;
+        display: block;
     }
 
     .fullscreen .dialog .dialog-close-button-wrapper {
-        @apply hidden;
+        display: none;
     }
 }
 </style>

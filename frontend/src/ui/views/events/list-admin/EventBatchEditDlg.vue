@@ -10,9 +10,9 @@
                         {{ $t('views.events.admin-list.batch-edit.info') }}
                     </p>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.event.status') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.state"
+                            :label="$t('domain.event.status')"
                             :options="eventStates.options.value"
                             :errors="validation.errors.value['state']"
                             :errors-visible="validation.showErrors.value"
@@ -20,18 +20,18 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.event.name') }}</VInputLabel>
                         <VInputText
                             v-model="patch.name"
+                            :label="$t('domain.event.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('domain.events.category') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.type"
+                            :label="$t('domain.event.category')"
                             :options="eventTypes.options.value"
                             :errors="validation.errors.value['type']"
                             :errors-visible="validation.showErrors.value"
@@ -39,9 +39,9 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.signup-type') }}</VInputLabel>
                         <VInputSelect
                             v-model="patch.signupType"
+                            :label="$t('domain.event.signup-type')"
                             :options="eventSignupTypes.options.value"
                             :errors="validation.errors.value['signupType']"
                             :errors-visible="validation.showErrors.value"
@@ -49,9 +49,9 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>{{ $t('views.events.edit.description') }}</VInputLabel>
                         <VInputTextArea
                             v-model="patch.description"
+                            :label="$t('domain.event.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
                             :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
@@ -75,7 +75,7 @@
 import { ref } from 'vue';
 import type { Event } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { AsyncButton, VDialog, VInputLabel, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
+import { AsyncButton, VDialog, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useEventAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';

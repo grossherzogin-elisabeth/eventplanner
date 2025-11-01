@@ -1,11 +1,11 @@
 <template>
-    <div v-if="props.open" class="fixed bottom-0 left-0 right-0 top-0 z-50 bg-black bg-opacity-75" @click="close()"></div>
-    <div class="menu-wrapper text-white" :class="{ open: props.open }" @click="close()">
+    <div v-if="props.open" class="fixed bottom-0 left-0 right-0 top-0 z-50 bg-scrim/50" @click="close()"></div>
+    <div class="menu-wrapper" :class="{ open: props.open }" @click="close()">
         <div class="menu" @click.stop>
             <slot />
         </div>
-        <button class="icon-button ml-2 mr-6 text-xl text-white">
-            <i class="fa-solid fa-close"></i>
+        <button class="icon-button ml-2 mr-6 text-xl">
+            <i class="fa-solid fa-close text-white"></i>
         </button>
     </div>
 </template>
@@ -54,9 +54,13 @@ function close(): void {
 .menu-wrapper {
     --duration: 0.25s;
     --menu-width: 100vw;
-    @apply fixed bottom-0 z-50 overflow-hidden;
-    @apply opacity-0;
-    @apply flex items-start;
+    position: fixed;
+    bottom: 0;
+    z-index: 50;
+    overflow: hidden;
+    opacity: 0;
+    display: flex;
+    align-items: start;
     top: 0;
     width: var(--menu-width);
     left: calc(var(--menu-width) * -1);
@@ -66,15 +70,24 @@ function close(): void {
 }
 
 .menu-wrapper.open {
-    @apply left-0 opacity-100;
+    left: 0;
+    opacity: 1;
     transition: left var(--duration) ease;
 }
 
 .menu {
-    @apply w-0 flex-grow;
-    @apply h-full overflow-hidden rounded-r-3xl shadow-xl;
-    @apply flex flex-col;
-    @apply bg-primary text-onprimary;
+    width: 0;
+    flex-grow: 1;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    @apply rounded-r-3xl;
+    @apply shadow-xl;
+    @apply bg-primary;
+    @apply text-onprimary;
+    @apply dark:bg-surface-container;
+    @apply dark:text-onsurface-variant;
 }
 
 @media (min-width: 30rem) {

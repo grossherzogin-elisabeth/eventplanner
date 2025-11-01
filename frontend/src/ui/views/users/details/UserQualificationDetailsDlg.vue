@@ -8,9 +8,9 @@
             <div v-if="userQualification" class="flex flex-1 flex-col px-4 pt-4 xs:px-8 lg:px-10">
                 <section>
                     <div class="mb-4">
-                        <VInputLabel>Qualifikation</VInputLabel>
                         <VInputCombobox
                             v-model="userQualification.qualificationKey"
+                            label="Qualifikation"
                             :options="qualificationOptions"
                             :disabled="editing"
                             :errors="validation.errors.value['qualificationKey']"
@@ -18,17 +18,17 @@
                         />
                     </div>
                     <div v-if="selectedQualification?.expires" class="mb-4">
-                        <VInputLabel>Gültig bis</VInputLabel>
                         <VInputDate
                             v-model="userQualification.expiresAt"
+                            label="Gültig bis"
                             :errors="validation.errors.value['expiresAt']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputLabel>Bemerkung</VInputLabel>
                         <VInputTextArea
                             v-model="userQualification.note"
+                            label="Bemerkung"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -50,9 +50,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { deepCopy } from '@/common';
-import type { InputSelectOption, Qualification, QualificationKey, UserQualification, ValidationHint } from '@/domain';
+import { Validator, notEmpty } from '@/common/validation';
+import type { InputSelectOption, Qualification, QualificationKey, UserQualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputDate, VInputLabel, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputCombobox, VInputDate, VInputTextArea } from '@/ui/components/common';
 import { useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
@@ -64,12 +65,7 @@ const qualifications = ref<Map<QualificationKey, Qualification>>(new Map<Qualifi
 const userQualification = ref<UserQualification>({ qualificationKey: '', expires: false });
 
 const validation = useValidation(userQualification, (value) => {
-    const errors: Record<string, ValidationHint[]> = {};
-    if (!value.qualificationKey) {
-        errors.qualificationKey = errors.qualificationKey || [];
-        errors.qualificationKey.push({ key: 'Bitte wähle eine Qualifikation aus', params: {} });
-    }
-    return errors;
+    return Validator.validate('qualificationKey', value.qualificationKey, notEmpty()).getErrors();
 });
 
 const qualificationOptions = computed<InputSelectOption<QualificationKey>[]>(() => {
