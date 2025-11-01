@@ -28,9 +28,9 @@ export class Validator {
 
 export function notEmpty(message?: string): ValidateFunc<unknown> {
     return (value: unknown) => {
-        if (value !== undefined && value !== null && value !== '') {
-            return undefined;
+        if (value === undefined || value === null || (typeof value === 'string' && value.trim().length === 0)) {
+            return message ?? 'generic.validation.required';
         }
-        return message ?? 'generic.validation.required';
+        return undefined;
     };
 }

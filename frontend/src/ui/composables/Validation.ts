@@ -21,7 +21,10 @@ export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunct
     }
 
     function reset(): void {
+        errors.value = {};
+        isValid.value = true;
         showErrors.value = false;
+        validate();
     }
 
     return { errors, isValid, showErrors, disableSubmit, validate, reset };

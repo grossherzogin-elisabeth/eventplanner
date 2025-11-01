@@ -23,7 +23,7 @@ export function matchesPattern(pattern: RegExp, message?: string): ValidateFunc<
         if (!value || pattern.test(value)) {
             return undefined;
         }
-        return message ?? 'generic.validation.pattern';
+        return message ?? 'generic.validation.invalid';
     };
 }
 
