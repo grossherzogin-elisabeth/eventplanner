@@ -67,6 +67,7 @@ generic:
     vegan: 'Vegan'
   validation:
     required: 'Eingabe ist erforderlich'
+    invalid: 'Eingabe enthält ungültige Zeichen'
     max-length: 'Eingabe darf maximal {0} Zeichen lang sein'
     min-length: 'Eingabe muss mindestens {0} Zeichen lang sein'
     invalid-phone-number: 'Eingabe ist keine gültige Telefon Nummer'

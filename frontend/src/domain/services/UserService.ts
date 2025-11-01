@@ -1,4 +1,4 @@
-import { NAME_REGEX, PHONE_REGEX } from '@/application/utils/RegExpresions.ts';
+import { NAME_REGEX, PASS_NR_REGEX, PHONE_REGEX } from '@/application/utils/RegExpresions.ts';
 import { addToDate, compareBoolean } from '@/common';
 import { Validator, before, doesNotContain, matchesPattern, maxLength, notEmpty } from '@/common/validation';
 import type { Qualification, QualificationKey, User, UserDetails } from '@/domain';
@@ -131,7 +131,7 @@ export class UserService {
     }
 
     public static validatePassNr(user: UserDetails | null): Record<string, string[]> {
-        return Validator.validate('passNr', user?.passNr, maxLength(50)).getErrors();
+        return Validator.validate('passNr', user?.passNr, notEmpty(), maxLength(50), matchesPattern(PASS_NR_REGEX)).getErrors();
     }
 
     public static validateAddress(user: UserDetails | null): Record<string, string[]> {
