@@ -165,12 +165,13 @@ async function close(): Promise<void> {
     --anim-slide-diff-y: 2rem;
     --anim-color-from: rgba(0, 0, 0, 0);
     --anim-color-to: rgba(0, 0, 0, 0.6);
-    animation: anim-color var(--animation-duration) ease-in reverse;
+    transition: background-color;
+    transition-duration: var(--animation-duration);
+    transition-timing-function: ease-in-out;
     background-color: var(--anim-color-from);
 }
 
 .dialog-background.open {
-    animation: anim-color var(--animation-duration) ease-in;
     background-color: var(--anim-color-to);
     pointer-events: auto;
 }
