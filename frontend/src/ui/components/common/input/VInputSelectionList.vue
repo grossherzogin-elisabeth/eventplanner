@@ -1,18 +1,19 @@
 <template>
     <div>
-        <ul class="border-t border-onsurface-variant/20">
+        <ul class="">
             <li
                 v-for="option in props.options"
                 :key="String(option.value)"
-                class="flex cursor-pointer items-center space-x-4 border-b border-onsurface-variant/20 py-4 hover:bg-surface-container-low"
+                class="-mx-3 flex cursor-pointer items-center gap-2 py-1"
                 @click="emit('update:modelValue', option.value)"
             >
-                <div v-if="props.modelValue === option.value">
-                    <i class="fa-solid fa-check-circle w-5 text-xl text-primary sm:text-2xl"></i>
-                </div>
-                <div v-else>
-                    <i class="fa-solid fa-circle w-5 text-xl text-surface-container-high sm:text-2xl"></i>
-                </div>
+                <button v-if="props.modelValue === option.value" class="icon-button">
+                    <i class="fa-regular fa-circle text-xl text-primary" />
+                    <i class="fa-solid fa-circle absolute text-xs text-primary" />
+                </button>
+                <button v-else class="icon-button">
+                    <i class="fa-regular fa-circle text-xl text-onsurface-variant" />
+                </button>
                 <span>{{ option.label }}</span>
             </li>
         </ul>
