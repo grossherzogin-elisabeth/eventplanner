@@ -1,4 +1,42 @@
 user:
+  title: 'Titel'
+  name: 'Name'
+  first-name: 'Vorname'
+  middle-name: 'Zweiter Vorname'
+  last-name: 'Nachname'
+  nick-name: 'Anzeigename'
+  date-of-birth: 'Geburtstag'
+  place-of-birth: 'Geburtsort'
+  date-and-place-of-birth: 'Geburtsdatum und -ort'
+  gender: 'Geschlecht'
+  pass-nr: 'Personalausweis- oder Passnummer'
+  nationality: 'Nationalität'
+  email: 'Email'
+  phone: 'Telefon Festnetz'
+  phone-work: 'Telefon dienstlich'
+  mobile: 'Telefon Mobil'
+  address: 'Adresse'
+  emergency-contact: 'Notfallkontakt'
+  diseases: 'Krankheiten'
+  medication: 'Medikamente'
+  diet: 'Ernährungsweise'
+  intolerances: 'Unverträglichkeiten'
   qualification:
     all-valid: 'Alle gültig'
     expired-count: '{count} abgelaufene'
+
+emergency-contact:
+    name: 'Name des Notfallkontakts'
+    phone: 'Telefonnummer des Notfallkontakts'
+
+address:
+  address-line-1: 'Straße, Hausnr.'
+  address-line-2: 'Adresszusatz'
+  zipcode: 'Postleitzahl'
+  town: 'Ort'
+  country: 'Land'
+
+diet:
+  vegetarian: 'Vegetarisch'
+  vegan: 'Vegan'
+  omnivore: 'Fleisch'

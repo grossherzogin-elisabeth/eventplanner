@@ -10,7 +10,7 @@ navigation:
   manageUsers: 'Nutzer verwalten'
   manageBaseData: 'Stammdaten verwalten'
   manageSettings: 'Einstellungen'
-  account: 'Meine Daten'
+  account: 'Mein Profil'
   feedback: 'Feedback'
   signOut: 'Abmelden'
   legal: 'Rechtliches'

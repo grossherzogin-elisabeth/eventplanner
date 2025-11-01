@@ -3,7 +3,7 @@ import nationalities from 'i18n-nationality';
 import de from 'i18n-nationality/langs/de.json';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useNationalities(favorites: string[] = ['DE', 'NL', 'BE', 'FR', 'GB', 'NO', 'SE', 'FI', 'PL', 'DK', 'LT', 'LV', 'EE']) {
+export function useNationalities(favorites: string[] = []) {
     nationalities.registerLocale(de);
 
     const options: InputSelectOption[] = Object.keys(nationalities.getAlpha2Codes())

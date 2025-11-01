@@ -81,7 +81,7 @@
                     <span>{{ $t('navigation.manageSettings') }}</span>
                 </RouterLink>
             </li>
-            <li class="menu-item">
+            <li class="menu-item hidden">
                 <RouterLink :to="{ name: Routes.SystemInfo }">
                     <i class="fa-solid fa-comment"></i>
                     <span>{{ $t('navigation.feedback') }}</span>

@@ -2,91 +2,61 @@
 # messages used in account views
 # -----------------------------------
 account:
-  title: 'Meine Daten'
+  title: 'Profil'
   tab:
-    data: 'Persönliche Daten'
-    contact: 'Kontaktdaten'
-    qualifications: 'Qualifikationen'
-    emergency: 'Notfallinformationen'
-  data:
-    title-app: 'App'
-    personal:
-      title: 'Persönliche Daten'
-      first-name: 'Vorname'
-      middle-name: 'Zweiter Vorname'
-      last-name: 'Nachname'
-      birthday: 'Geboren am'
-      place-of-birth: 'Geburtsort'
-      gender:
-        label: 'Geschlecht'
-        values:
-          male: 'männlich'
-          female: 'weiblich'
-          diverse: 'divers'
-      passport-number: 'Personalausweis Nummer'
-      nationality: 'Nationalität'
-    display-name: 'Anzeigename'
-    diet:
-      title: 'Ernährung'
-      label: 'Ernährungsweise'
-      values:
-        vegetarian: 'Vegetarisch'
-        vegan: 'Vegan'
-        omnivore: 'Fleisch'
-      intolerances: 'Unverträglichkeiten'
-    hint-name-passport:
-      title: 'Name und Personalausweis Nummer'
-      messages:
-        - 'Dein Name wie du ihn hier angibst, muss genau so auch auf deinem Ausweis stehen, da dieser auch zum 
-                Erstellen der IMO Liste verwendet wird. Bitte beachte, das du den Personalausweis bei Reisen mitführen 
-                musst!'
-        - 'Solltest du mit einem anderen Namen oder Spitznamen angesprochen werden wollen, kannst du einen 
-                abweichenden Anzeigenamen angeben. Dieser wird dann in der App angezeigt und auch beim Kammerplan und 
-                der Getränkeliste verwendet.'
-        - '{link}'
-      link:
-        label: 'Wo finde ich meine Personalausweis Nummer?'
-        url: 'https://commons.wikimedia.org/wiki/File:Personalausweis-nummer.png'
+    data: 'Meine Daten'
+    qualifications: 'Meine Qualifikationen'
+    settings: 'App Einstellungen'
+  personal:
+    title: 'Persönliche Daten'
+    passport-info: 'Bitte beachte, dass du dein eingetragenes Ausweisdokument auf allen Reisen mitführen musst!'
+    name-description: 'Dein Name, wie hier angegeben, muss genau so auch auf deinem Ausweisdokument 
+        stehen, da dieser zum Erstellen der offiziellen Crew Liste verwendet wird. Solltest du mit einem anderen 
+        Namen angesprochen werden wollen, kannst du einen Anzeigenamen für die App vergeben.'
+    nick-name-hint: 'Wie möchtest du angesprochen werden?'
+    official-name-hint: 'Name wie im Ausweisdokument'
+    gender-description: 'Mit welchem Geschlecht identifizierst du dich?'
+    passport-description: 'Bitte gib die Nummer eines offiziellen Ausweisdokuments an. Dies kann entweder dein 
+        Personalausweis oder alternativ auch dein Reisepass sein.'
+    passport-link: 'So findest du deine Personalausweis Nummer'
+    nationality-description: 'Deine Nationalität wird für das Erstellen der offiziellen Crewliste benötigt. Solltest du mehrere
+        Nationalitäten haben, gib hier bitte diejenige an, die auch auf deinem Ausweisdokumentes steht.'
+    date-and-place-of-birth-description: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument 
+        stehen, da diese zum Erstellen der offiziellen Crew Liste verwendet werden.'
+    hint: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum Erstellen der
+        offiziellen Crew Liste verwendet werden.'
+  diet:
+    title: 'Ernährung'
+    diet-description: 'Bitte gib an, falls du dich vegetarisch oder vegan ernährst. Diese Information ist wichtig, damit die
+        Kombüse ausreichend planen kann.'
+    intolerances-description: 'Hier kannst du Unverträglichkeiten und Allergien angeben, die der Kombüse bekannt sein sollten.'
+    kitchen-info: 'Informationen für die Kombüse'
   contact:
-    mail-phone:
-      title: 'Email & Telefon'
-      email: 'Email'
-      phone: 'Telefon'
-      phone-work: 'Telefon (dienstlich)'
-      mobile: 'Mobil'
-    address:
-      title: 'Adresse'
-      address-line1: 'Straße, Hausnr.'
-      address-line2: 'Adresszusatz'
-      zip: 'PLZ'
-      city: 'Ort'
-      country: 'Land'
-    hint-mail:
-      title: 'Du möchtest deine Email Adresse ändern?'
-      messages:
-        - 'Deine Email Adresse wird sowohl als Kontakt Email, als auch für den Login verwendet. Wenn du die Email 
-                Adresse ändern möchtest wende dich bitte ans {link}'
-      link: 'Büro'
+    title: 'Kontakt Daten'
+    email-description: 'Deine Email Adresse wird sowohl als Kontakt Email für Benachrichtigungen, als auch für deinen Login 
+        verwendet. Wenn du sie ändern möchtest, schreib uns bitte eine Email, damit wir auch den Login für dich anpassen 
+        können.'
+    address-description: 'Bitte gib deine primäre Wohnanschrift an.'
+    phone-description: 'Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer an: Festnetz, mobil oder dienstlich.'
   emergency:
-    contact:
-      title: 'Notfallkontakt'
-      name: 'Name des Notfallkontakts'
-      phone: 'Telefonnummer des Notfallkontakts'
-    medical:
-      title: 'Wichtige gesundheitliche Informationen'
-      diseases: 'Krankheiten'
-      medication: 'Medikamente'
-    hint-emergency-contact:
-      title: 'Notfall Informationen'
-      messages:
-        - 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, dass du bestimmte 
-                Krankheiten hast oder welche wichtigen Medikamente du benötigst. Außerdem kannst du einen Notfallkontakt
-                angeben, den wir kontaktieren können, falls du mal nicht mehr ansprechbar bist.'
-        - 'Deine Daten werden {encrypted} gespeichert und sind nur für autorisierte Personen einsehbar. In 
-                der Regel sind dies das Büro und der Kapitän der jeweiligen Reise.'
-        - '{hint-all-data-optional}'
-      encrypted: 'verschlüsselt'
-      hint-all-data-optional: 'All diese Angaben sind freiwillig und dienen deiner eigenen Sicherheit an Bord!'
+    title: 'Notfall Informationen'
+    emergency-contact-description: 'Im Notfall zählt jede Sekunde. Hier kannst du eine Person hinterlegen, die wir im Falle eines medizinischen
+        Notfalls oder einer anderen dringenden Situation kontaktieren können. Bitte gib Namen und Telefonnummer der Person an.'
+    diseases-description: 'Sollte während einer Reise etwas passieren, kann es wichtig sein, dass jemand an Bord über
+        eventuelle Krankheiten informiert ist, die besondere Behandlungen erfordern.'
+    medication-description: 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, welche Medikamente 
+        du benötigst.'
+    click-to-show: '[zum Ansehen klicken]'
+    privacy: 'Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für
+        autorisierte Personen einsehbar!'
+  app-settings:
+    title: 'App'
+    theme: 'Design'
+    preferred-position: 'Standard Position'
+    preferred-position-description: 'Mit welcher Position möchtest du dich standardmäßg bei Veranstaltungen anmelden? 
+        Du kannst deine Position für jede Anmeldung individuall anpassen.'
+    notifications: 'Benachrichtigungen'
+    language: 'Sprache'
   qualifications:
     status-expires-on: 'Gültig bis'
     status-no-expires: 'Ohne Ablaufdatum'
