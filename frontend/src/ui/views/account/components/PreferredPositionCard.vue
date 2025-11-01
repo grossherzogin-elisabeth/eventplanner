@@ -37,5 +37,5 @@ const emit = defineEmits<Emits>();
 
 const positions = usePositions();
 
-const filteredPositions = computed(() => positions.options.value.filter((it) => props.availablePositions.includes(it.value)));
+const filteredPositions = computed(() => positions.options.value.filter((it) => it.value && props.availablePositions.includes(it.value)));
 </script>

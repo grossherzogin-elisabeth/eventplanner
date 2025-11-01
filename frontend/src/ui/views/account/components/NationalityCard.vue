@@ -21,7 +21,6 @@
     </VInteractiveListItem>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
 import type { UserDetails } from '@/domain';
 import { VInfo, VInputSelectionList, VInteractiveListItem } from '@/ui/components/common';
 import { useNationalities } from '@/ui/composables/Nationalities';
@@ -36,6 +35,4 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const nationalities = useNationalities();
-
-const filter = ref<string>('');
 </script>
