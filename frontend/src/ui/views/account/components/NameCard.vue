@@ -28,10 +28,10 @@
                 <VInputText
                     v-model="value.nickName"
                     :label="$t('domain.user.nick-name')"
-                    :errors="errors['nickName']"
-                    :errors-visible="true"
                     :placeholder="value.firstName"
                     :hint="$t('views.account.personal.nick-name-hint')"
+                    :errors="errors['nickName']"
+                    :errors-visible="true"
                 />
             </div>
             <div class="mb-4">
@@ -39,18 +39,18 @@
                     v-model="value.title"
                     :label="$t('domain.user.title')"
                     :placeholder="$t('generic.no-information')"
+                    disabled
                     :errors="errors['title']"
                     :errors-visible="true"
-                    disabled
                 />
             </div>
             <div class="mb-4">
                 <VInputText
                     v-model="value.firstName"
                     :label="$t('domain.user.first-name')"
+                    :hint="$t('views.account.personal.official-name-hint')"
                     required
                     disabled
-                    :hint="$t('views.account.personal.official-name-hint')"
                 />
             </div>
             <div class="mb-4">
@@ -58,21 +58,22 @@
                     v-model="value.secondName"
                     :label="$t('domain.user.middle-name')"
                     :placeholder="$t('generic.no-information')"
-                    :errors="errors['secondName']"
-                    :errors-visible="true"
                     :hint="$t('views.account.personal.official-name-hint')"
                     disabled
+                    :errors="errors['secondName']"
+                    :errors-visible="true"
                 />
             </div>
             <div class="mb-4">
                 <VInputText
                     v-model="value.lastName"
                     :label="$t('domain.user.last-name')"
-                    required
                     :placeholder="$t('generic.no-information')"
+                    :hint="$t('views.account.personal.official-name-hint')"
+                    required
+                    disabled
                     :errors="errors['lastName']"
                     :errors-visible="true"
-                    disabled
                 />
             </div>
         </template>

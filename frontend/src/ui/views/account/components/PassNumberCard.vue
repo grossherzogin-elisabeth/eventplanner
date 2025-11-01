@@ -25,11 +25,12 @@
             </p>
             <div class="mb-4">
                 <VInputText
-                    v-model="value.passNr"
+                    :model-value="value.passNr"
                     :label="$t('domain.user.pass-nr')"
                     required
                     :errors="errors['passNr']"
                     :errors-visible="true"
+                    @update:model-value="value.passNr = $event.toUpperCase()"
                 />
             </div>
         </template>

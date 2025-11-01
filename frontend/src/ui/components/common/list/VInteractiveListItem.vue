@@ -12,35 +12,33 @@
                 <i class="fa-solid fa-pen hidden group-hover:inline" />
             </button>
         </div>
-        <VSheet ref="editSheet">
+        <VDialog ref="editSheet">
             <template #title> {{ props.label }} </template>
             <template #content>
-                <div class="min-h-[10rem] px-4 pb-4 xs:px-8 sm:w-[30rem] lg:px-10">
+                <div class="px-4 py-4 xs:px-8 lg:px-10">
                     <slot name="edit" :value="mutableCopy" :errors="validation.errors.value" />
                 </div>
             </template>
-            <template #bottom>
-                <div class="lg:px-10-lg flex justify-end gap-2 px-4 py-4 xs:px-8">
+            <template #buttons>
+                <div class="flex justify-end gap-2">
                     <button class="btn-ghost" name="save" @click="cancel()">
                         <span>{{ $t('generic.cancel') }}</span>
                     </button>
-                    <AsyncButton class="btn-primary" :disabled="validation.disableSubmit.value" :action="submit">
-                        <template #icon>
-                            <i class="fa-solid fa-save"></i>
-                        </template>
+                    <AsyncButton class="btn-ghost" :disabled="validation.disableSubmit.value" :action="submit">
                         <template #label>
                             <span>{{ $t('generic.save') }}</span>
                         </template>
                     </AsyncButton>
                 </div>
             </template>
-        </VSheet>
+        </VDialog>
     </div>
 </template>
 <script lang="ts" setup generic="T">
+import type { Ref } from 'vue';
 import { ref } from 'vue';
 import { deepCopy, wait } from '@/common';
-import { AsyncButton, type Sheet, VSheet } from '@/ui/components/common';
+import { AsyncButton, type Sheet, VDialog } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation';
 
 interface Props {
@@ -56,10 +54,10 @@ type Emits = (e: 'update:modelValue', updated: T) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const mutableCopy = ref<T>(deepCopy(props.modelValue));
+const mutableCopy = ref<T>(deepCopy(props.modelValue)) as Ref<T>;
 const editSheet = ref<Sheet<T, T | undefined> | null>(null);
 
-const validation = useValidation(mutableCopy.value, props.validate ?? defaultValidation);
+const validation = useValidation(mutableCopy, props.validate ?? defaultValidation);
 validation.showErrors.value = true;
 
 function defaultValidation(): Record<string, string[]> {
@@ -67,6 +65,8 @@ function defaultValidation(): Record<string, string[]> {
 }
 
 function edit(): void {
+    mutableCopy.value = deepCopy(props.modelValue);
+    validation.reset();
     editSheet.value?.open(mutableCopy.value).catch(() => {
         // ignore
     });
