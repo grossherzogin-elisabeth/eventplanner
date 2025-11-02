@@ -9,6 +9,8 @@ FROM eclipse-temurin:25-jdk-alpine AS backend-builder
 WORKDIR /builder
 COPY ./backend .
 COPY --from=frontend-builder /builder/dist/ ./src/main/resources/static/
+RUN ./gradlew --version
+RUN java --version
 RUN ./gradlew build
 
 # combine frontend and backend
