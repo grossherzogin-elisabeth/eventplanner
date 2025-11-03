@@ -5,3 +5,7 @@
 @import 'btn-ghost.css';
 @import 'btn-fab.css';
 @import 'btn-icon.css';
+
+button {
+    cursor: pointer;
+}

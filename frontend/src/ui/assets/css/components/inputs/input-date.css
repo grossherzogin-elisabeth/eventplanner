@@ -1,5 +1,6 @@
 @layer components {
-    .v-input-date .input-field-wrapper:not(:has(input:disabled)) {
+    .v-input-date .input-field-wrapper:not(:has(input:disabled)),
+    .v-input-date .input-field-wrapper input:not(:disabled) {
         cursor: pointer;
     }
 

@@ -11,6 +11,7 @@
         overflow: hidden;
         border-bottom-width: 1px;
         padding-bottom: 1px;
+        cursor: text;
         @apply gap-4 px-4;
         @apply bg-surface-container-highest/50;
         @apply rounded-t-md;

@@ -1,0 +1,51 @@
+@layer components {
+    .v-input-select .input-field-wrapper:not(:has(input:disabled)),
+    .v-input-select .input-field-wrapper input:not(:disabled),
+    .v-input-slider .input-field-wrapper:not(:has(input:disabled)),
+    .v-input-slider .input-field-wrapper input:not(:disabled),
+    .v-input-file .input-field-wrapper:not(:has(input:disabled)),
+    .v-input-file .input-field-wrapper input:not(:disabled),
+    .v-input-combobox .input-field-wrapper:not(:has(input:disabled)),
+    .v-input-combobox .input-field-wrapper input:not(:disabled) {
+        cursor: pointer;
+    }
+
+    .input-dropdown,
+    .input-datepicker-dropdown {
+        margin-top: 2px;
+        @apply rounded;
+        @apply border-outline-variant;
+        @apply bg-surface-container;
+        @apply shadow-xl;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .input-dropdown li {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        @apply py-4 pl-4;
+    }
+
+    .input-dropdown li.input-dropdown-option {
+    }
+
+    .input-dropdown li.input-dropdown-option:hover {
+        @apply bg-onsurface/10;
+        @apply text-onsurface;
+    }
+
+    .input-dropdown li.input-dropdown-option-focus {
+        @apply bg-secondary-container;
+        @apply font-bold;
+        @apply text-onsecondary-container;
+    }
+
+    .input-dropdown li.input-dropdown-option-focus:hover {
+        @apply bg-secondary-container/90;
+        @apply text-onsecondary-container;
+    }
+}
