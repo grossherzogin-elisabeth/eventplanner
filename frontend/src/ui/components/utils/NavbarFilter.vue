@@ -56,6 +56,7 @@ function cancel(): void {
 </script>
 <style scoped>
 .search {
+    --animation-duration: 100ms;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -65,7 +66,7 @@ function cancel(): void {
     align-items: center;
     transition-property: left, top;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
+    transition-duration: var(--animation-duration);
     background-color: var(--color-primary);
 }
 
@@ -79,7 +80,7 @@ html.dark .search {
     background-color: transparent;
     transition-property: opacity;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
+    transition-duration: var(--animation-duration);
 }
 
 .search input::placeholder {
@@ -95,7 +96,7 @@ html.dark .search input::placeholder {
 .search .wrapper {
     transition-property: background-color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
+    transition-duration: var(--animation-duration);
 }
 
 .search.open {

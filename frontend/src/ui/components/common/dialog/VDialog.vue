@@ -99,7 +99,7 @@ defineExpose<Dialog>({
     reject: (reason?: E) => reject(reason),
 });
 
-const animationDuration = 250;
+const animationDuration = 150;
 const dialogOpen = ref<boolean>(false);
 const scrolls = ref<boolean>(false);
 const wrapper = ref<HTMLElement | null>(null);
