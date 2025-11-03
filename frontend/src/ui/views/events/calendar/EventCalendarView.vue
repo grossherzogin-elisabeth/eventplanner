@@ -1,14 +1,14 @@
 <template>
-    <div class="flex flex-1 flex-col bg-surface">
+    <div class="bg-surface flex flex-1 flex-col">
         <div v-if="events" class="flex h-full flex-1 flex-col">
             <div class="relative flex h-full flex-1 items-stretch">
-                <div class="absolute left-0 top-0 z-30 hidden w-14 bg-surface pt-0.5 lg:block xl:pt-6">
-                    <button class="icon-button ml-5" name="previous" @click="scrollLeft()">
+                <div class="bg-surface absolute top-0 left-0 z-30 hidden w-14 pt-0.5 lg:block xl:pt-6">
+                    <button class="btn-icon ml-5" name="previous" @click="scrollLeft()">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                 </div>
-                <div class="absolute right-0 top-0 z-30 hidden w-14 bg-surface pt-0.5 lg:block xl:pt-6">
-                    <button class="icon-button" name="next" @click="scrollRight()">
+                <div class="bg-surface absolute top-0 right-0 z-30 hidden w-14 pt-0.5 lg:block xl:pt-6">
+                    <button class="btn-icon" name="next" @click="scrollRight()">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
@@ -34,7 +34,7 @@
                         >
                             <div class="calendar-day-label">{{ d.weekday }}</div>
                             <div class="calendar-day-label">{{ d.dayOfMonth }}</div>
-                            <div class="relative w-0 flex-grow self-start">
+                            <div class="relative w-0 grow self-start">
                                 <template v-if="d.events.length > 0">
                                     <EventCalendarItem
                                         v-for="evt in d.events"
@@ -345,6 +345,8 @@ init();
 </script>
 
 <style>
+@reference "tailwindcss";
+
 .calendar {
     --row-height: max(2rem, calc((var(--viewport-height) - var(--nav-height) - 3.5rem) / 31));
     --scrollcontainer-width: 100vw;
@@ -373,27 +375,34 @@ init();
     z-index: 50;
     border-right-width: 1px;
     border-right-color: transparent;
-    @apply bg-primary;
-    @apply text-onprimary;
+    background-color: var(--color-primary);
+    color: var(--color-onprimary);
     @apply py-2.5;
     @apply pl-20;
     @apply pr-4;
-    @apply text-lg;
-    @apply font-bold;
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-bold);
 
     @apply sm:z-20;
     @apply sm:ml-2;
     @apply sm:pl-16;
-    @apply sm:border-r-surface;
 
     @apply md:ml-2;
     @apply md:pl-20;
 
     @apply xl:pb-4;
     @apply xl:pt-8;
+}
 
-    @apply dark:bg-surface-container;
-    @apply dark:text-onsurface;
+@media (width >= 40rem) {
+    .calendar-header {
+        border-right-color: var(--color-surface);
+    }
+}
+
+html.dark .calendar-header {
+    background-color: var(--color-surface-container);
+    color: var(--color-onsurface);
 }
 
 .impersonated .calendar-header {
@@ -411,8 +420,8 @@ init();
     border-bottom-width: 1px;
     border-right-width: 1px;
     user-select: none;
-    @apply border-surface;
-    @apply bg-surface;
+    border-color: var(--color-surface);
+    background-color: var(--color-surface);
     @apply pl-2;
     @apply pr-1;
 }
@@ -428,21 +437,20 @@ init();
     border-bottom-width: 1px;
     border-bottom-color: transparent;
     border-right-width: 1px;
-    @apply border-r-surface;
+    border-right-color: var(--color-surface);
 }
 
 .calendar-day-label {
     @apply w-7;
-    @apply text-sm;
-    @apply font-bold;
-    @apply text-outline-variant;
-
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-outline-variant);
     @apply md:w-8;
 }
 
 .calendar-day.holiday .calendar-day-label,
 .calendar-day.weekend .calendar-day-label {
-    @apply text-secondary;
+    color: var(--color-secondary);
 }
 
 .calendar-day.holiday:before,
@@ -453,8 +461,8 @@ init();
     left: 0;
     right: 0;
     top: 0;
-    @apply rounded-lg;
-    @apply bg-secondary/5;
+    border-radius: var(--radius-lg);
+    background-color: --alpha(var(--color-secondary) / 5%);
 }
 
 .create-event-overlay {
@@ -470,12 +478,12 @@ init();
     cursor: pointer;
     border-width: 1px;
     border-style: dashed;
-    @apply rounded-lg;
-    @apply border-onprimary-container;
-    @apply bg-primary-container;
-    @apply text-onprimary-container;
-    @apply text-sm;
-    @apply font-semibold;
+    border-radius: var(--radius-lg);
+    border-color: var(--color-onprimary-container);
+    background-color: var(--color-primary-container);
+    color: var(--color-onprimary-container);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
     @apply px-4;
     @apply py-1;
 }
@@ -494,9 +502,9 @@ init();
     top: 0;
     z-index: 10;
     border-width: 2px;
-    @apply rounded-lg;
-    @apply border-error/50;
-    @apply bg-error-container/25;
+    border-radius: var(--radius-lg);
+    border-color: --alpha(var(--color-error) / 50%);
+    background-color: --alpha(var(--color-error-container) / 25%);
 }
 
 @media only screen and (min-width: 450px) {
@@ -514,8 +522,8 @@ init();
 
     .calendar-header {
         background-color: transparent;
-        @apply font-normal;
-        @apply text-onsurface;
+        font-weight: var(--font-weight-normal);
+        color: var(--color-onsurface);
     }
 
     .calendar-header::before {
@@ -526,7 +534,7 @@ init();
         right: 0;
         z-index: -10;
         @apply -left-8;
-        @apply bg-surface/95;
+        background-color: --alpha(var(--color-surface) / 95%);
     }
 }
 

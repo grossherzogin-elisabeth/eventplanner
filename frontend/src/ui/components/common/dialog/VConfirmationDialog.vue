@@ -6,7 +6,7 @@
             </h1>
         </template>
         <template #content>
-            <div class="px-4 py-8 xs:px-8 lg:px-10">
+            <div class="xs:px-8 px-4 py-8 lg:px-10">
                 <p>
                     <slot name="message">{{ content?.message }}</slot>
                 </p>

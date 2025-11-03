@@ -1,10 +1,10 @@
 <template>
-    <div v-if="props.open" class="fixed bottom-0 left-0 right-0 top-0 z-50 bg-scrim/50" @click="close()"></div>
+    <div v-if="props.open" class="bg-scrim/50 fixed top-0 right-0 bottom-0 left-0 z-50" @click="close()"></div>
     <div class="menu-wrapper" :class="{ open: props.open }" @click="close()">
         <div class="menu" @click.stop>
             <slot />
         </div>
-        <button class="icon-button ml-2 mr-6 text-xl">
+        <button class="btn-icon mr-6 ml-2 text-xl">
             <i class="fa-solid fa-close text-white"></i>
         </button>
     </div>
@@ -51,6 +51,8 @@ function close(): void {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
+
 .menu-wrapper {
     --duration: 0.25s;
     --menu-width: 100vw;
@@ -82,12 +84,16 @@ function close(): void {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    @apply rounded-r-3xl;
+    border-top-right-radius: var(--radius-3xl);
+    border-bottom-right-radius: var(--radius-3xl);
     @apply shadow-xl;
-    @apply bg-primary;
-    @apply text-onprimary;
-    @apply dark:bg-surface-container;
-    @apply dark:text-onsurface-variant;
+    background-color: var(--color-primary);
+    color: var(--color-onprimary);
+}
+
+html.dark .menu {
+    background-color: var(--color-surface-container);
+    color: var(--color-onsurface-variant);
 }
 
 @media (min-width: 30rem) {

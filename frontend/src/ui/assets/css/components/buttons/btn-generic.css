@@ -1,0 +1,31 @@
+/* --------------------------------------------------------------- */
+/* Basic Button styles  */
+/* --------------------------------------------------------------- */
+
+@layer components {
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger,
+    .btn-floating,
+    .btn-ghost,
+    .btn-ghost-danger {
+        @apply rounded-xl;
+        @apply px-4 py-2;
+        @apply font-bold;
+        @apply gap-2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover,
+    .btn-secondary:hover,
+    .btn-danger:hover,
+    .btn-floating:hover,
+    .btn-ghost:hover,
+    .btn-ghost-danger:hover {
+        text-decoration-line: none;
+    }
+}

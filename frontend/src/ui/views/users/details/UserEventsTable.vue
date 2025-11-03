@@ -1,5 +1,5 @@
 <template>
-    <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+    <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
         <VTable
             :items="renderedEvents"
             :page-size="-1"
@@ -17,11 +17,11 @@
                 </td>
                 <td class="w-1/2 max-w-[20rem] border-none font-semibold">
                     <div class="mb-1 md:flex">
-                        <p class="flex-grow truncate md:w-0">{{ item.name }}</p>
+                        <p class="grow truncate md:w-0">{{ item.name }}</p>
                     </div>
                     <p class="truncate text-sm font-light">{{ item.locations }}</p>
                 </td>
-                <td class="whitespace-nowrap text-center">
+                <td class="text-center whitespace-nowrap">
                     <p class="mb-1 w-12 font-semibold">
                         {{ item.crewCount }}
                         <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
@@ -84,31 +84,31 @@
                     </td>
                     <td class="w-1/2 max-w-[65vw]">
                         <!-- event name and locations -->
-                        <p class="mb-1 h-5 w-64 rounded-lg bg-surface-container-highest"></p>
+                        <p class="bg-surface-container-highest mb-1 h-5 w-64 rounded-lg"></p>
                         <p class="flex items-center space-x-2 text-sm font-light">
-                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
-                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
-                            <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
                         </p>
                     </td>
                     <td>
                         <!-- crew -->
-                        <p class="mb-1 h-5 w-12 rounded-lg bg-surface-container-highest"></p>
-                        <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
+                        <p class="bg-surface-container-highest mb-1 h-5 w-12 rounded-lg"></p>
+                        <p class="bg-surface-container-highest h-3 w-10 rounded-lg"></p>
                     </td>
                     <td>
                         <!-- date -->
                         <div class="mb-1 font-semibold">
-                            <p class="hidden h-5 w-56 rounded-lg bg-surface-container-highest lg:block"></p>
-                            <p class="h-5 w-20 rounded-lg bg-surface-container-highest lg:hidden"></p>
+                            <p class="bg-surface-container-highest hidden h-5 w-56 rounded-lg lg:block"></p>
+                            <p class="bg-surface-container-highest h-5 w-20 rounded-lg lg:hidden"></p>
                         </div>
-                        <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
+                        <p class="bg-surface-container-highest h-3 w-16 rounded-lg"></p>
                     </td>
 
                     <td>
                         <!-- role -->
                         <div
-                            class="inline-flex h-6 w-32 items-center space-x-2 rounded-full bg-surface-container-highest py-1 pl-3 pr-4"
+                            class="bg-surface-container-highest inline-flex h-6 w-32 items-center space-x-2 rounded-full py-1 pr-4 pl-3"
                         ></div>
                     </td>
 

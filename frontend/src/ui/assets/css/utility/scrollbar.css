@@ -1,0 +1,29 @@
+@layer utilities {
+    .scrollbar-invisible {
+        overflow-x: scroll;
+        /* hide scrollbar on IE and Edge */
+        -ms-overflow-style: none;
+        /* hide scrollbar on Firefox */
+        scrollbar-width: none;
+    }
+
+    .scrollbar-invisible::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scrollbar-floating {
+        --scrollbar-color: rgba(0, 0, 0, 0.25);
+        scrollbar-color: var(--scrollbar-color) transparent;
+    }
+
+    .scrollbar-floating::-webkit-scrollbar {
+        background: transparent;
+        width: 0.5rem;
+        height: 0.5rem;
+    }
+
+    .scrollbar-floating::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-color);
+        border-radius: 1em;
+    }
+}

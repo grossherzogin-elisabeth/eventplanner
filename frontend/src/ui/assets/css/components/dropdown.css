@@ -1,0 +1,53 @@
+/* --------------------------------------------------------------- */
+/* Dropdowns */
+/* --------------------------------------------------------------- */
+@layer components {
+    .dropdown-wrapper {
+        margin: -1px 0 0 0;
+        position: fixed;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        animation: anim-open-dropdown 0.15s ease-in-out;
+        --anim-from-x: 0rem;
+        --anim-from-y: -1rem;
+    }
+
+    @keyframes anim-open-dropdown {
+        0% {
+            pointer-events: none;
+            transform: translate(var(--anim-from-x), var(--anim-from-y));
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+        1000% {
+            pointer-events: auto;
+            transform: translate(0, 0);
+            opacity: 1;
+        }
+    }
+
+    .dropdown-wrapper-background {
+        @apply bg-black/50;
+        @apply md:bg-transparent;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        margin: 0 !important;
+        z-index: 40;
+        animation: anim-open-dropdown-background 0.15s ease-in-out;
+    }
+
+    @keyframes anim-open-dropdown-background {
+        0% {
+            opacity: 0;
+        }
+        1000% {
+            opacity: 1;
+        }
+    }
+}

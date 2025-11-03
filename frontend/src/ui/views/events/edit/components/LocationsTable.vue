@@ -9,14 +9,14 @@
     >
         <template #row="{ item, first, last }">
             <td class="hidden py-0">
-                <div class="flex flex-col items-center text-secondary">
+                <div class="text-secondary flex flex-col items-center">
                     <div
-                        class="min-h-4 flex-grow border-r-2 border-dashed border-current"
+                        class="min-h-4 grow border-r-2 border-dashed border-current"
                         :class="{ 'min-h-2 opacity-0': first, 'min-h-6': last }"
                     ></div>
                     <div class="my-1 h-4 w-4 rounded-full border-2 border-current"></div>
                     <div
-                        class="min-h-4 flex-grow border-r-2 border-dashed border-current"
+                        class="min-h-4 grow border-r-2 border-dashed border-current"
                         :class="{ 'min-h-2 opacity-0': last, 'min-h-6': first }"
                     ></div>
                 </div>

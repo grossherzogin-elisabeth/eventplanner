@@ -18,7 +18,7 @@
         <template #default>
             <slot name="tooltip">
                 <div
-                    class="pointer-events-none rounded-xl bg-surface-container-high p-2 text-sm text-onsurface shadow-xl"
+                    class="bg-surface-container-high text-onsurface pointer-events-none rounded-xl p-2 text-sm shadow-xl"
                     :class="$attrs.class"
                 >
                     <slot name="text" />

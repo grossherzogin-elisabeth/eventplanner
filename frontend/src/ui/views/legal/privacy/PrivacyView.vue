@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full overflow-y-auto px-8 pb-8 pt-8 md:px-16 xl:px-20">
+    <div class="h-full overflow-y-auto px-8 pt-8 pb-8 md:px-16 xl:px-20">
         <h1 class="mb-8 hidden">Datenschutzerklärung</h1>
         <h2 class="mb-4">Lorem ipsum dolor sit amet</h2>
         <p class="mb-8">

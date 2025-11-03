@@ -5,7 +5,7 @@
             <h1 v-else>{{ $t('views.basedata.tab.positions.add-new') }}</h1>
         </template>
         <template #default>
-            <div class="px-4 pt-4 xs:px-8 lg:px-10">
+            <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <div v-if="position.key" class="mb-4">
                         <VInputText v-model.trim="position.key" :label="$t('views.basedata.tab.positions.id')" required disabled />

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
+    <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
             <div class="h-full lg:hidden">
                 <NavbarFilter v-model="filter" :placeholder="$t('views.events.list.filter.search')" />
@@ -12,7 +12,7 @@
             </VInfo>
         </div>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <VSearchButton v-model="filter" :placeholder="$t('views.events.list.filter.search')" />
@@ -131,26 +131,26 @@
                     <tr v-for="i in 20" :key="i" class="animate-pulse">
                         <td></td>
                         <td class="w-1/2 max-w-[65vw]">
-                            <p class="mb-1 h-5 w-64 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-64 rounded-lg"></p>
                             <p class="flex items-center space-x-2 text-sm font-light">
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
                             </p>
                         </td>
                         <td>
                             <div class="status-badge neutral">
                                 <i class="fa-solid fa-circle text-surface-container-high"></i>
-                                <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-surface-container-high"></span>
+                                <span class="bg-surface-container-high my-0.5 inline-block h-4 w-12 rounded-lg"></span>
                             </div>
                         </td>
                         <td class="w-1/6">
-                            <p class="mb-1 h-5 w-16 rounded-lg bg-surface-container-highest"></p>
-                            <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-16 rounded-lg"></p>
+                            <p class="bg-surface-container-highest h-3 w-10 rounded-lg"></p>
                         </td>
                         <td class="w-2/6">
-                            <p class="mb-1 h-5 w-56 rounded-lg bg-surface-container-highest"></p>
-                            <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-56 rounded-lg"></p>
+                            <p class="bg-surface-container-highest h-3 w-16 rounded-lg"></p>
                         </td>
 
                         <td>

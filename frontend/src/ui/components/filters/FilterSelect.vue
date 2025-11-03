@@ -24,11 +24,11 @@
                 <template v-for="option in props.options" :key="String(option)">
                     <li v-if="modelValue === option.value" class="context-menu-item" @click="modelValue = undefined">
                         <i class="fa-solid fa-check w-4"></i>
-                        <span class="w-0 flex-grow truncate">{{ option.label }}</span>
+                        <span class="w-0 grow truncate">{{ option.label }}</span>
                     </li>
                     <li v-else class="context-menu-item" @click="modelValue = option.value">
                         <i class="w-4"></i>
-                        <span class="w-0 flex-grow truncate">{{ option.label }}</span>
+                        <span class="w-0 grow truncate">{{ option.label }}</span>
                     </li>
                 </template>
             </ul>

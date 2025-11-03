@@ -14,63 +14,63 @@
             </ul>
             <p>Du kannst alle Angaben später noch ändern.</p>
         </div>
-        <ul class="border-t border-onsurface-variant/20 md:mx-0">
+        <ul class="border-onsurface-variant/20 border-t md:mx-0">
             <li
-                class="flex items-center border-b border-onsurface-variant/20 py-3 sm:px-0"
+                class="border-onsurface-variant/20 flex items-center border-b py-3 sm:px-0"
                 :class="availablePositionsForSignedInUser.length > 1 ? 'cursor-pointer' : 'pointer-events-none'"
                 @click="emit('update:view', View.POSITION)"
             >
-                <div class="mr-4 w-0 flex-grow">
+                <div class="mr-4 w-0 grow">
                     <p class="mb-1 text-sm font-bold">Deine Position</p>
                     <p>{{ positions.get(props.registration.positionKey).name }}</p>
                 </div>
-                <button v-if="availablePositionsForSignedInUser.length > 1" class="icon-button -mr-4">
+                <button v-if="availablePositionsForSignedInUser.length > 1" class="btn-icon -mr-4">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
             <li
                 v-if="hasSingleDayEvent"
-                class="flex cursor-pointer items-center border-b border-onsurface-variant/20 py-3 sm:px-0"
+                class="border-onsurface-variant/20 flex cursor-pointer items-center border-b py-3 sm:px-0"
                 @click="emit('update:view', View.OVERNIGHT)"
             >
-                <div class="mr-4 w-0 flex-grow">
+                <div class="mr-4 w-0 grow">
                     <p class="mb-1 text-sm font-bold">Übernachtung an Bord</p>
                     <p v-if="!props.registration.overnightStay">Nein</p>
                     <p v-else>Ja</p>
                 </div>
-                <button class="icon-button -mr-4">
+                <button class="btn-icon -mr-4">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
             <li
-                class="flex cursor-pointer items-center border-b border-onsurface-variant/20 py-3 sm:px-0"
+                class="border-onsurface-variant/20 flex cursor-pointer items-center border-b py-3 sm:px-0"
                 @click="emit('update:view', View.ARRIVAL)"
             >
-                <div class="mr-4 w-0 flex-grow">
+                <div class="mr-4 w-0 grow">
                     <p class="mb-1 text-sm font-bold">Anreise am Vortag</p>
                     <p v-if="props.registration.arrival">Ja</p>
                     <p v-else>Nein</p>
                 </div>
-                <button class="icon-button -mr-4">
+                <button class="btn-icon -mr-4">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
             <li
-                class="flex cursor-pointer items-center border-b border-onsurface-variant/20 py-3 sm:px-0"
+                class="border-onsurface-variant/20 flex cursor-pointer items-center border-b py-3 sm:px-0"
                 @click="emit('update:view', View.NOTE)"
             >
-                <div class="mr-4 w-0 flex-grow">
+                <div class="mr-4 w-0 grow">
                     <p class="mb-1 text-sm font-bold">Notiz fürs Büro</p>
                     <p v-if="props.registration.note" class="truncate italic">{{ props.registration.note }}</p>
                     <p v-else>-</p>
                 </div>
-                <button class="icon-button -mr-4">
+                <button class="btn-icon -mr-4">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
         </ul>
 
-        <VInfo v-if="filteredEvents.length > 1" class="mt-8 text-sm xs:-mx-4">
+        <VInfo v-if="filteredEvents.length > 1" class="xs:-mx-4 mt-8 text-sm">
             Wenn du dich bei mehreren Veranstaltungen anmeldest, werden diese Angaben für alle Anmeldungen übernommen. Du kannst jede
             Anmeldung im Nachgang einzeln bearbeiten, um z.B. individuelle Notizen fürs Büro zu hinterlegen.
         </VInfo>
@@ -112,7 +112,7 @@
                 @update:model-value="updateRegistration({ overnightStay: $event })"
             />
         </div>
-        <VInfo class="mt-8 xs:-mx-4">
+        <VInfo class="xs:-mx-4 mt-8">
             Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann.
         </VInfo>
     </div>
@@ -136,7 +136,7 @@
                 "
             />
         </div>
-        <VInfo class="mt-8 xs:-mx-4">
+        <VInfo class="xs:-mx-4 mt-8">
             Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann.
         </VInfo>
     </div>

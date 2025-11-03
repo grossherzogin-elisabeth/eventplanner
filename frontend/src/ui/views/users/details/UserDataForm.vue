@@ -1,6 +1,6 @@
 <template>
     <section v-if="user">
-        <h2 class="mb-4 font-bold text-secondary">App</h2>
+        <h2 class="text-secondary mb-4 font-bold">App</h2>
         <div class="mb-4">
             <VInputText
                 v-model.trim="user.authKey"
@@ -55,7 +55,7 @@
             />
         </div>
 
-        <h2 class="mb-4 mt-8 font-bold text-secondary">Persönliche Daten</h2>
+        <h2 class="text-secondary mt-8 mb-4 font-bold">Persönliche Daten</h2>
         <div class="mb-4 sm:w-64">
             <VInputSelect
                 v-model="user.gender"
@@ -108,7 +108,7 @@
                     :errors-visible="true"
                 />
             </div>
-            <div class="mb-4 sm:flex-grow">
+            <div class="mb-4 sm:grow">
                 <VInputText
                     v-model.trim="user.placeOfBirth"
                     label="Geburtsort"
@@ -130,7 +130,7 @@
                     :errors-visible="true"
                 />
             </div>
-            <div class="mb-4 sm:flex-grow">
+            <div class="mb-4 sm:grow">
                 <VInputCombobox
                     v-model="user.nationality"
                     label="Nationalität"

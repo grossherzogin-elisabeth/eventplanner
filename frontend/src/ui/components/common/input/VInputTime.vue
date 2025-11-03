@@ -15,7 +15,7 @@
                 :required="props.required"
                 :value="displayValue"
                 aria-haspopup="true"
-                class="input-field w-full overflow-ellipsis pr-10"
+                class="input-field w-full pr-10 text-ellipsis"
                 maxlength="7"
                 @blur="onBlur()"
                 @input="onInput($event)"

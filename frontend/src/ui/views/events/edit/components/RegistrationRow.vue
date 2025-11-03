@@ -4,7 +4,7 @@
             <ContextMenuButton class="w-full" anchor-align-x="right" dropdown-position-x="left">
                 <template #icon>
                     <VDraggable
-                        class="flex items-center rounded-xl px-4 py-2 hover:bg-surface-container md:space-x-4"
+                        class="hover:bg-surface-container flex items-center rounded-xl px-4 py-2 md:space-x-4"
                         :class="{
                             'cursor-move': props.value.registration !== undefined,
                             'pointer-events-none': props.value.registration === undefined,
@@ -16,7 +16,7 @@
                         @dragstart="emit('dragstart')"
                     >
                         <!-- drag icon -->
-                        <i class="fa-solid fa-grip-vertical hidden text-sm text-onsurface-variant opacity-50 lg:inline"></i>
+                        <i class="fa-solid fa-grip-vertical text-onsurface-variant hidden text-sm opacity-50 lg:inline"></i>
 
                         <template v-if="props.value.slot">
                             <!-- user status -->
@@ -36,15 +36,15 @@
                             {{ props.value.name }}
                             <template v-if="!props.value.user"> (Gastcrew) </template>
                         </span>
-                        <span v-else-if="props.value.user" class="mx-2 truncate italic text-error"> Gelöschter Nutzer </span>
-                        <span v-else class="mx-2 truncate italic text-error/50"> Noch nicht besetzt </span>
+                        <span v-else-if="props.value.user" class="text-error mx-2 truncate italic"> Gelöschter Nutzer </span>
+                        <span v-else class="text-error/50 mx-2 truncate italic"> Noch nicht besetzt </span>
 
                         <i
                             v-if="props.value.registration?.note"
-                            class="fa-solid fa-comment-dots text-sm text-onsurface-variant opacity-50"
+                            class="fa-solid fa-comment-dots text-onsurface-variant text-sm opacity-50"
                         />
                         <!-- user position -->
-                        <span class="flex-grow"></span>
+                        <span class="grow"></span>
                         <span
                             :style="{ '--color': props.value.position.color }"
                             class="tag"

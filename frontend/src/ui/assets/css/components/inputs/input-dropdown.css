@@ -1,0 +1,31 @@
+@layer components {
+    .input-dropdown,
+    .input-datepicker-dropdown {
+        margin-top: 1px;
+        @apply rounded;
+        @apply border-outline-variant;
+        @apply bg-surface-container;
+        @apply shadow-xl;
+    }
+
+    .input-dropdown li {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        @apply py-4 pl-4;
+    }
+
+    .input-dropdown li.input-dropdown-option {
+    }
+
+    .input-dropdown li.input-dropdown-option:hover {
+        @apply bg-onsurface/10;
+    }
+
+    .input-dropdown li.input-dropdown-option-focus {
+        @apply bg-secondary-container/75;
+        @apply font-bold;
+        @apply text-onsecondary-container;
+    }
+}

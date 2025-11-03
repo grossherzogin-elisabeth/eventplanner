@@ -1,9 +1,9 @@
 <template>
-    <div class="xl:overflow-y-auto xl:overflow-x-hidden">
+    <div class="xl:overflow-x-hidden xl:overflow-y-auto">
         <DetailsPage :back-to="{ name: Routes.UsersList }">
             <template #header> {{ user?.firstName }} {{ user?.lastName }} bearbeiten </template>
             <template #content>
-                <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-20 xl:pt-8">
+                <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-20 xl:pt-8">
                     <template #[Tab.USER_DATA]>
                         <div class="max-w-2xl space-y-8 xl:space-y-16">
                             <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />
@@ -17,7 +17,7 @@
                     <template #[Tab.USER_EVENTS]>
                         <div class="xl:max-w-5xl">
                             <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`">
-                                <h2 class="mb-4 font-bold text-secondary">
+                                <h2 class="text-secondary mb-4 font-bold">
                                     <template v-if="year === 0">Zukünftige Reisen</template>
                                     <template v-else>Reisen {{ year }}</template>
                                 </h2>
@@ -27,7 +27,7 @@
                                     :user="user"
                                     @update:events="year === 0 ? fetchUserFutureEvents() : fetchUserEventsOfYear(year)"
                                 />
-                                <div class="mb-4 mt-8 flex items-center justify-center">
+                                <div class="mt-8 mb-4 flex items-center justify-center">
                                     <div v-if="eventsLoadedUntilYear === year">
                                         <AsyncButton :action="fetchNextEvents" class="btn-ghost">
                                             <template #label>
@@ -44,14 +44,14 @@
                     </template>
                     <template #[Tab.USER_CERTIFICATES]>
                         <div class="xl:max-w-5xl">
-                            <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+                            <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
                                 <UserQualificationsTable v-if="user" v-model="user" />
                             </div>
                         </div>
                     </template>
                     <template #[Tab.USER_ROLES]>
                         <div class="xl:max-w-5xl">
-                            <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+                            <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
                                 <UserRolesTable v-if="user" v-model="user" />
                             </div>
                         </div>

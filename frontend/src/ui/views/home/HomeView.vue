@@ -1,22 +1,22 @@
 <template>
     <div class="xl:overflow-auto">
-        <div class="flex px-4 pb-8 xs:px-8 md:px-16 xl:px-20">
+        <div class="xs:px-8 flex px-4 pb-8 md:px-16 xl:px-20">
             <div class="w-full xl:max-w-2xl">
-                <div class="sticky top-12 z-10 -mx-6 flex h-14 justify-end bg-surface pb-2 pt-4 xl:top-0 xl:h-16 xl:pt-8"></div>
+                <div class="bg-surface sticky top-12 z-10 -mx-6 flex h-14 justify-end pt-4 pb-2 xl:top-0 xl:h-16 xl:pt-8"></div>
                 <div v-if="loading" class="-mt-10">
                     <div class="pb-8">
-                        <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">
-                            <h2 class="inline-block font-bold text-secondary">{{ $t('views.home.home-view.loading-events') }}</h2>
+                        <div class="pointer-events-none sticky top-16 z-10 flex pt-2 pb-1 xl:top-8">
+                            <h2 class="text-secondary inline-block font-bold">{{ $t('views.home.home-view.loading-events') }}</h2>
                         </div>
-                        <ul class="max-w-xl xs:-mx-4">
+                        <ul class="xs:-mx-4 max-w-xl">
                             <li v-for="i in 3" :key="i" class="mt-4">
                                 <EventCard />
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div v-else-if="events.length === 0" class="relative z-10 -mt-10 rounded-2xl bg-surface-container p-4 xs:-mx-4">
-                    <h3 class="mb-2 font-bold text-secondary">{{ $t('views.home.home-view.no-upcoming-events-title') }}</h3>
+                <div v-else-if="events.length === 0" class="bg-surface-container xs:-mx-4 relative z-10 -mt-10 rounded-2xl p-4">
+                    <h3 class="text-secondary mb-2 font-bold">{{ $t('views.home.home-view.no-upcoming-events-title') }}</h3>
                     <p class="mb-4">
                         {{ $t('views.home.home-view.no-upcoming-events-description') }}
                     </p>
@@ -29,12 +29,12 @@
                 </div>
                 <div v-else class="-mt-10">
                     <div v-for="entry in eventsByMonth.entries()" :key="entry[0]" class="pb-8">
-                        <div class="pointer-events-none sticky top-16 z-10 flex pb-1 pt-2 xl:top-8">
-                            <h2 class="inline-block text-secondary">
+                        <div class="pointer-events-none sticky top-16 z-10 flex pt-2 pb-1 xl:top-8">
+                            <h2 class="text-secondary inline-block">
                                 {{ entry[0] }}
                             </h2>
                         </div>
-                        <ul class="max-w-xl xs:-mx-4">
+                        <ul class="xs:-mx-4 max-w-xl">
                             <li v-for="event in entry[1]" :key="event.key" class="mt-4">
                                 <EventCard :event="event" />
                             </li>

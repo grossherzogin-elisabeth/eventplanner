@@ -1,21 +1,27 @@
 <template>
-    <div class="interactive-list">
+    <div class="interactive-list xs:-mx-4 -mx-2">
         <slot></slot>
     </div>
 </template>
 <script setup lang="ts"></script>
 <style>
+@reference "tailwindcss";
+
 .interactive-list {
     @apply space-y-0.5;
 }
 
 .interactive-list > * {
-    @apply -mx-2 rounded-md bg-surface-container-low p-4 xs:-mx-4;
+    background-color: var(--color-surface-container-low);
+    border-radius: var(--radius-md);
+    @apply p-4;
 }
 .interactive-list > *:first-child {
-    @apply rounded-t-2xl;
+    border-top-left-radius: var(--radius-2xl);
+    border-top-right-radius: var(--radius-2xl);
 }
 .interactive-list > *:last-child {
-    @apply rounded-b-2xl;
+    border-bottom-left-radius: var(--radius-2xl);
+    border-bottom-right-radius: var(--radius-2xl);
 }
 </style>

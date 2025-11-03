@@ -55,10 +55,10 @@
                         @click.stop.prevent="row.selected = !row.selected"
                     >
                         <div v-if="row.selected">
-                            <i class="fa-solid fa-check-square text-xl text-primary sm:text-2xl"></i>
+                            <i class="fa-solid fa-check-square text-primary text-xl sm:text-2xl"></i>
                         </div>
                         <div v-else>
-                            <i class="fa-solid fa-square text-xl text-surface-container-high sm:text-2xl"></i>
+                            <i class="fa-solid fa-square text-surface-container-high text-xl sm:text-2xl"></i>
                         </div>
                     </td>
                     <slot
@@ -78,7 +78,7 @@
                         class="w-0"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
-                        <button class="icon-button">
+                        <button class="btn-icon">
                             <i class="fa-solid fa-ellipsis-vertical" />
                         </button>
                     </td>
@@ -97,7 +97,7 @@
             max-width="20rem"
             @close="dropdownAnchor = null"
         >
-            <div class="mt-2 rounded-xl bg-surface-container-high p-4 shadow-xl">
+            <div class="bg-surface-container-high mt-2 rounded-xl p-4 shadow-xl">
                 <ul>
                     <template v-if="props.multiselection">
                         <li v-if="dropdownItem.selected" class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">

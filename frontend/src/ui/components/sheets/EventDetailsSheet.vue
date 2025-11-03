@@ -6,22 +6,22 @@
             </h1>
         </template>
         <template #content>
-            <div class="space-y-8 px-4 pb-4 xs:px-8 sm:w-[30rem] lg:px-10">
+            <div class="xs:px-8 space-y-8 px-4 pb-4 sm:w-120 lg:px-10">
                 <VSuccess
                     v-if="event.signedInUserRegistration && event.isSignedInUserAssigned"
-                    class="my-4 text-sm xs:-mx-4"
+                    class="xs:-mx-4 my-4 text-sm"
                     icon="fa-check"
                 >
                     <i18n-t tag="span" keypath="components.event-details-sheet.note-assigned">
                         <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
                     </i18n-t>
                 </VSuccess>
-                <VInfo v-else-if="event.signedInUserRegistration" class="my-4 text-sm xs:-mx-4" icon="fa-hourglass-half">
+                <VInfo v-else-if="event.signedInUserRegistration" class="xs:-mx-4 my-4 text-sm" icon="fa-hourglass-half">
                     <i18n-t tag="span" keypath="components.event-details-sheet.note-on-waiting-list">
                         <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
                     </i18n-t>
                 </VInfo>
-                <VWarning v-else-if="openPositions.length > 0 && event.state === EventState.Planned" class="my-4 text-sm xs:-mx-4">
+                <VWarning v-else-if="openPositions.length > 0 && event.state === EventState.Planned" class="xs:-mx-4 my-4 text-sm">
                     {{ $t('components.event-details-sheet.note-missing-crew') }}
                     {{ openPositions.map((it) => it.name).join(', ') }}
                 </VWarning>

@@ -7,12 +7,12 @@
                 class="-mx-3 flex cursor-pointer items-center gap-2 py-1"
                 @click="emit('update:modelValue', option.value)"
             >
-                <button v-if="props.modelValue === option.value" class="icon-button">
-                    <i class="fa-regular fa-circle text-xl text-primary" />
-                    <i class="fa-solid fa-circle absolute text-xs text-primary" />
+                <button v-if="props.modelValue === option.value" class="btn-icon">
+                    <i class="fa-regular fa-circle text-primary text-xl" />
+                    <i class="fa-solid fa-circle text-primary absolute text-xs" />
                 </button>
-                <button v-else class="icon-button">
-                    <i class="fa-regular fa-circle text-xl text-onsurface-variant" />
+                <button v-else class="btn-icon">
+                    <i class="fa-regular fa-circle text-onsurface-variant text-xl" />
                 </button>
                 <span>{{ option.label }}</span>
             </li>

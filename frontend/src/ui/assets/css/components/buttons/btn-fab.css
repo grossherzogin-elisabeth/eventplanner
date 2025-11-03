@@ -1,0 +1,78 @@
+/* --------------------------------------------------------------- */
+/* Floating Action Button */
+/* --------------------------------------------------------------- */
+
+@layer components {
+    .floating > .btn-primary,
+    .btn-floating,
+    .floating > .btn-danger,
+    .btn-floating-danger {
+        position: relative;
+        @apply gap-5 md:gap-6;
+        @apply p-5 md:p-6;
+        @apply rounded-2xl;
+        @apply shadow-lg;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .floating > .btn-primary:before,
+    .btn-floating:before,
+    .floating > .btn-danger:before,
+    .btn-floating-danger:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        @apply bg-surface;
+        @apply rounded-2xl;
+    }
+
+    /* Primary FAB */
+
+    .floating > .btn-primary,
+    .btn-floating {
+        @apply bg-primary-container/90;
+        @apply text-onprimary-container;
+    }
+
+    .floating > .btn-primary:not(:disabled):hover,
+    .btn-floating:not(:disabled):hover {
+        @apply bg-primary-container;
+        @apply shadow-xl;
+    }
+
+    /* Danger FAB */
+
+    .floating > .btn-danger,
+    .btn-floating-danger {
+        @apply bg-error-container/90;
+        @apply text-onerror-container;
+        @apply dark:bg-onerror-container/90;
+        @apply dark:text-error-container;
+    }
+
+    .floating > .btn-danger:not(:disabled):hover,
+    .btn-floating-danger:not(:disabled):hover {
+        @apply bg-error-container;
+        @apply shadow-xl;
+        @apply dark:bg-onerror-container;
+        @apply dark:text-error-container;
+    }
+
+    .floating > .btn-primary:disabled,
+    .btn-floating:disabled {
+        @apply bg-primary-container/40;
+        @apply text-onprimary-container/40;
+    }
+
+    .floating > .btn-danger:disabled,
+    .btn-floating-danger:disabled {
+        @apply bg-error-container/40;
+        @apply text-onerror-container/40;
+    }
+}

@@ -1,0 +1,18 @@
+/* --------------------------------------------------------------- */
+/* Text Button */
+/* --------------------------------------------------------------- */
+
+@layer components {
+    .btn-ghost {
+        @apply text-primary;
+    }
+
+    .btn-ghost:not(:disabled):hover {
+        @apply bg-primary/10;
+    }
+
+    .btn-ghost:disabled,
+    .btn-ghost-danger:disabled {
+        @apply opacity-50;
+    }
+}

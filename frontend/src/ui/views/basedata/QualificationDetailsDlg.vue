@@ -5,7 +5,7 @@
             <h1 v-else>{{ $t('views.basedata.tab.qualifications.edit') }}</h1>
         </template>
         <template #default>
-            <div class="px-4 pt-4 xs:px-8 lg:px-10">
+            <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <div class="mb-4">
                         <VInputText
@@ -45,7 +45,7 @@
                 <div class="mb-4">
                     <VInputCheckBox v-model="qualification.expires" :label="$t('views.basedata.tab.qualifications.expires')" />
                 </div>
-                <div class="mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm xs:-mx-4">
+                <div class="bg-surface-container-low xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold">{{ $t('views.basedata.tab.positions.title') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">

@@ -1,0 +1,116 @@
+@layer components {
+    .v-input-date .input-field-wrapper:not(:has(input:disabled)) {
+        cursor: pointer;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar {
+        user-select: none;
+        height: 24rem;
+        background-color: inherit;
+        @apply rounded;
+    }
+
+    .input-datepicker-dropdown {
+        @apply overflow-hidden border-none;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar-topbar {
+        display: none;
+    }
+
+    .input-datepicker-dropdown .day-header {
+        @apply font-bold;
+        @apply text-secondary;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar {
+        margin-top: 0;
+        width: 100%;
+        @apply text-onsurface;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-width: 1px;
+        border-color: transparent;
+        @apply text-onsurface;
+        @apply my-1 h-10;
+        @apply rounded-full;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.day:not(.blank):not(.disabled),
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.month:not(.blank):not(.disabled),
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.year:not(.blank):not(.disabled),
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .prev:not(.disabled),
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .up:not(.disabled),
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .next:not(.disabled) {
+        border-color: transparent;
+        @apply rounded-full;
+        @apply hover:bg-surface-container-highest;
+        @apply hover:text-onsurface;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .prev:not(.disabled):after,
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .next:not(.disabled):after {
+        @apply border-onsurface;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.today:not(.blank):not(.disabled) {
+        border-width: 1px;
+        @apply border-primary;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.day.highlighted {
+        background-color: transparent;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.day.highlight-start,
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.day.highlight-end {
+        @apply bg-primary;
+        @apply text-onprimary;
+        @apply hover:bg-primary;
+        @apply hover:text-onprimary;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.day.highlighted:before {
+        content: '';
+        position: absolute;
+        border-radius: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        z-index: -10;
+        @apply -top-0.5 -right-4 -bottom-0.5 -left-4;
+        @apply my-0.5;
+        @apply font-bold;
+        @apply bg-primary-container;
+        @apply text-onprimary-container;
+        @apply hover:bg-primary-container;
+        @apply hover:text-onprimary-container;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.day.highlight-start:before {
+        left: 0;
+        @apply rounded-l-full;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.day.highlight-end:before {
+        right: 0;
+        @apply rounded-r-full;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.selected {
+        @apply font-bold;
+        @apply bg-primary;
+        @apply text-onprimary;
+        @apply hover:bg-primary;
+    }
+
+    .input-datepicker-dropdown .vuejs3-datepicker__calendar .cell.today {
+        border-width: 1px;
+        @apply font-bold;
+        @apply border-primary;
+    }
+}

@@ -1,0 +1,24 @@
+/* --------------------------------------------------------------- */
+/* Secondary Button */
+/* --------------------------------------------------------------- */
+@layer components {
+    .btn-secondary {
+        @apply bg-secondary-container/90;
+        @apply text-onsecondary-container;
+    }
+
+    @media not all and (hover: none) {
+        a.btn-secondary:not(:disabled):hover,
+        .btn-secondary:not(:disabled):hover {
+            @apply bg-secondary-container;
+            @apply text-onsecondary-container;
+            @apply shadow;
+        }
+    }
+
+    .btn-secondary.disabled,
+    .btn-secondary:disabled {
+        @apply bg-onsurface/10;
+        @apply text-onsurface/40;
+    }
+}

@@ -14,7 +14,7 @@
                 :required="props.required"
                 :value="displayValue"
                 aria-haspopup="true"
-                class="input-field w-full overflow-ellipsis pr-10"
+                class="input-field w-full pr-10 text-ellipsis"
                 readonly
                 @keydown.down.prevent="focusNextOption()"
                 @keydown.up.prevent="focusPrevOption()"
@@ -44,7 +44,7 @@
         @close="hideDropdown(true)"
     >
         <div class="flex h-full flex-col overflow-hidden">
-            <div class="flex items-stretch border-b border-outline-variant">
+            <div class="border-outline-variant flex items-stretch border-b">
                 <slot name="before-filter">
                     <i class="fa-solid fa-search mx-4 self-center text-sm opacity-50" />
                 </slot>
@@ -60,7 +60,7 @@
                     :required="props.required"
                     :value="focusOptionIndex === null ? displayValue : filter"
                     aria-haspopup="true"
-                    class="h-14 w-full overflow-ellipsis bg-transparent py-3 placeholder-opacity-50"
+                    class="placeholder:text-onsurface-variant/50 h-14 w-full bg-transparent py-3 text-ellipsis"
                     @blur="onBlur"
                     @click="showDropdown()"
                     @input="filterValues($event)"
@@ -99,8 +99,6 @@
                                 {{ option.label }}
                             </slot>
                         </li>
-                        <li v-if="!filter" class="input-dropdown-heading">Alle Ergebnisse</li>
-                        <li v-else class="input-dropdown-heading">Ergebnisse für '{{ filter }}'</li>
                         <li
                             v-for="(option, i) in filteredOptions"
                             :key="String(option.value)"

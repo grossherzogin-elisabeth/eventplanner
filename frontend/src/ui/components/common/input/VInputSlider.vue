@@ -24,10 +24,10 @@
             <slot name="after"></slot>
             <template v-if="props.min !== undefined && props.max !== undefined">
                 <div
-                    class="pointer-events-none absolute bottom-0 left-0 right-0 top-0 z-0 h-full bg-primary opacity-10"
+                    class="bg-primary pointer-events-none absolute top-0 right-0 bottom-0 left-0 z-0 h-full opacity-10"
                     :style="{ width: `${percent}%` }"
                 ></div>
-                <div class="absolute bottom-0 left-0 right-0 top-0 opacity-0">
+                <div class="absolute top-0 right-0 bottom-0 left-0 opacity-0">
                     <input
                         v-model="value"
                         class="h-full w-full"

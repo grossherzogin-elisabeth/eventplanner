@@ -12,7 +12,7 @@
                 @keydown.esc="input?.blur()"
             />
             <div class="placeholder pointer-events-none opacity-0">{{ placeholder ?? 'Einträge filtern' }}</div>
-            <button v-if="props.modelValue !== ''" class="absolute bottom-0 right-0 top-0" @click="emit('update:modelValue', '')">
+            <button v-if="props.modelValue !== ''" class="absolute top-0 right-0 bottom-0" @click="emit('update:modelValue', '')">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -38,16 +38,18 @@ function onInput(event: Event): void {
 }
 </script>
 <style scoped>
+@reference "tailwindcss";
+
 .btn-search {
     display: none;
     align-items: center;
     cursor: pointer;
     @apply lg:flex;
     @apply gap-4;
-    @apply rounded-xl;
+    border-radius: var(--radius-xl);
     @apply px-4;
     @apply py-2;
-    @apply text-primary;
+    color: var(--color-primary);
 }
 
 .btn-search .placeholder {
@@ -58,19 +60,19 @@ function onInput(event: Event): void {
 }
 
 .btn-search:hover {
-    @apply bg-primary/10;
-    @apply text-primary;
+    background-color: --alpha(var(--color-primary) / 10%);
+    color: var(--color-primary);
 }
 
 .btn-search:hover input::placeholder {
-    @apply text-primary;
+    color: var(--color-primary);
 }
 
 .btn-search.active,
 .btn-search:focus-within {
     cursor: text;
-    @apply bg-surface-container;
-    @apply text-onsurface;
+    background-color: var(--color-surface-container);
+    color: var(--color-onsurface);
 }
 
 .btn-search.active .placeholder,
@@ -84,11 +86,11 @@ function onInput(event: Event): void {
     flex-grow: 1;
     cursor: pointer;
     background-color: transparent;
-    @apply text-secondary;
+    color: var(--color-secondary);
 }
 
 .btn-search input::placeholder {
-    @apply text-secondary;
+    color: var(--color-secondary);
 }
 
 .btn-search input:focus-within {
@@ -96,6 +98,6 @@ function onInput(event: Event): void {
 }
 
 .btn-search input:focus-within::placeholder {
-    @apply text-secondary/25;
+    color: --alpha(var(--color-secondary) / 25%);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div class="grid gap-x-32 gap-y-8 md:grid-cols-1">
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.app-settings.title') }}</h2>
+            <h2 class="text-secondary mb-2 flex items-center justify-between font-bold">{{ $t('views.account.app-settings.title') }}</h2>
             <VInteractiveList>
                 <ThemeCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <PreferredPositionCard

@@ -1,0 +1,29 @@
+/* --------------------------------------------------------------- */
+/* Danger Button */
+/* --------------------------------------------------------------- */
+
+@layer components {
+    .btn-danger {
+        @apply bg-error-container/90;
+        @apply text-onerror-container;
+        @apply dark:bg-onerror-container/90;
+        @apply dark:text-error-container;
+    }
+
+    @media not all and (hover: none) {
+        a.btn-danger:not(:disabled):hover,
+        .btn-danger:not(:disabled):hover {
+            @apply bg-error-container;
+            @apply text-onerror-container;
+            @apply shadow;
+            @apply dark:bg-onerror-container;
+            @apply dark:text-error-container;
+        }
+    }
+
+    .btn-danger.disabled,
+    .btn-danger:disabled {
+        @apply bg-error-container/10;
+        @apply text-onerror-container/40;
+    }
+}

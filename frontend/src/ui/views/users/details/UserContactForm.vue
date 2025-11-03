@@ -1,6 +1,6 @@
 <template>
     <section v-if="user">
-        <h2 class="mb-4 font-bold text-secondary">Email & Telefon</h2>
+        <h2 class="text-secondary mb-4 font-bold">Email & Telefon</h2>
         <div class="mb-4">
             <VInputText
                 v-model.trim="user.email"
@@ -39,7 +39,7 @@
             />
         </div>
 
-        <h2 class="mb-4 mt-8 font-bold text-secondary">Addresse</h2>
+        <h2 class="text-secondary mt-8 mb-4 font-bold">Addresse</h2>
         <div class="mb-4">
             <VInputText
                 v-model.trim="user.address.addressLine1"
@@ -70,7 +70,7 @@
                     :errors-visible="true"
                 />
             </div>
-            <div class="mb-4 sm:flex-grow">
+            <div class="mb-4 sm:grow">
                 <VInputText
                     v-model.trim="user.address.town"
                     label="Ort"

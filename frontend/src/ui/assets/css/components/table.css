@@ -1,6 +1,5 @@
 table.v-table {
     --side-padding: 1rem;
-    @apply w-full;
     margin-left: calc(-1 * var(--side-padding));
     margin-right: calc(-1 * var(--side-padding));
     width: calc(100% + calc(2 * var(--side-padding)));
@@ -13,12 +12,16 @@ table.v-table {
 }
 
 .v-table thead tr {
-    @apply bg-transparent text-sm font-bold text-onsurface-variant;
+    background: transparent;
+    @apply text-onsurface-variant;
+    @apply text-sm;
+    @apply font-bold;
 }
 
 .v-table th {
+    text-align: left;
     @apply font-bold;
-    @apply px-4 pb-4 pt-8 text-left;
+    @apply px-4 pt-8 pb-4;
 }
 
 .v-table th[data-sortby] {
@@ -53,26 +56,41 @@ table.v-table {
 }
 
 .v-table td {
-    @apply px-2 py-4 text-left md:px-4;
+    text-align: left;
+    @apply px-2 py-4;
+    @apply md:px-4;
 }
 
 .v-table tbody td {
 }
 
 .sticky-table-header .v-table th {
-    @apply sticky top-12 z-10 bg-surface pt-4 xl:top-0;
+    position: sticky;
+    z-index: 10;
+    @apply bg-surface;
+    @apply top-12;
+    @apply pt-4;
+    @apply xl:top-0;
 }
 
 .sticky-table-header .v-table th:before {
     content: '';
-    @apply absolute bottom-0 left-0 right-0 top-0;
-    @apply border-b border-primary-container;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 1px;
+    @apply border-primary-container;
 }
 
 .v-table th:first-child,
 .v-table td:first-child {
     padding-right: var(--side-padding) !important;
-    @apply w-0 border-none pl-0 pr-4;
+    width: 0;
+    border-style: none;
+    padding-left: 0;
+    @apply pr-4;
 }
 
 .v-table td:first-child::before {
@@ -82,25 +100,28 @@ table.v-table {
 .v-table th:last-child,
 .v-table td:last-child {
     padding-left: var(--side-padding) !important;
-    @apply w-0 border-none pr-0;
+    width: 0;
+    padding-right: 0;
+    border-style: none;
 }
 
 .v-table th:nth-child(2),
 .v-table td:nth-child(2) {
-    @apply pl-0;
+    padding-left: 0;
 }
 
 .v-table th:nth-last-child(2),
 .v-table td:nth-last-child(2) {
-    @apply pr-0;
+    padding-right: 0;
 }
 
 .no-header .v-table thead {
-    @apply hidden;
+    display: none;
 }
 
 .v-table tbody tr {
-    @apply relative z-10;
+    position: relative;
+    z-index: 10;
 }
 
 /* ------------------------------------------------------ */
@@ -109,7 +130,14 @@ table.v-table {
 
 .v-table tbody tr td:first-child::before {
     content: '';
-    @apply absolute bottom-1 left-0 right-0 top-1 -z-10 rounded-xl bg-surface-container-low;
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: -10;
+    @apply bg-surface-container-low;
+    @apply top-1;
+    @apply bottom-1;
+    @apply rounded-xl;
 }
 
 /* ------------------------------------------------------ */
@@ -121,7 +149,7 @@ table.v-table {
 }
 
 .interactive-table:not(.loading) .v-table tbody tr:not(.no-data) {
-    @apply cursor-pointer;
+    cursor: pointer;
 }
 
 /* ------------------------------------------------------ */
@@ -129,11 +157,11 @@ table.v-table {
 /* ------------------------------------------------------ */
 
 .v-table tbody tr:not(.no-data).selected td {
-    @apply text-primary !important;
+    @apply text-primary!;
 }
 
 .v-table tbody tr:not(.no-data).selected td::before {
-    @apply bg-primary/20 !important;
+    @apply bg-primary/20!;
 }
 
 .v-table td.p-0 {
@@ -160,5 +188,6 @@ table.v-table {
 
 .with-multi-selection .v-table,
 .interactive-table .v-table {
-    @apply select-none;
+    -webkit-user-select: none;
+    user-select: none;
 }

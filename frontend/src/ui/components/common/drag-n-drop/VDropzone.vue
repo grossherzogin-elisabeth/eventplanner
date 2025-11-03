@@ -64,7 +64,7 @@ function handleDragStop(dragEvent: DragEvent): void {
 }
 
 .dropzone.hover {
-    @apply p-1;
+    padding: 0.25rem;
 }
 
 @keyframes anim-dropzone {

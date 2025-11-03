@@ -61,7 +61,7 @@
                         :placeholder="$t('generic.no-information')"
                     />
                 </div>
-                <div class="mb-4 sm:flex-grow">
+                <div class="mb-4 sm:grow">
                     <VInputText
                         v-model.trim="value.address.town"
                         :label="$t('domain.address.town')"

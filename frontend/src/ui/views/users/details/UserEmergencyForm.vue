@@ -1,6 +1,6 @@
 <template>
     <section v-if="user">
-        <h2 class="mb-4 font-bold text-secondary">Notfallkontakt</h2>
+        <h2 class="text-secondary mb-4 font-bold">Notfallkontakt</h2>
         <div class="mb-4">
             <VInputText
                 v-model.trim="user.emergencyContact.name"
@@ -19,7 +19,7 @@
                 :errors-visible="true"
             />
         </div>
-        <h2 class="mb-4 mt-8 font-bold text-secondary">Wichtige gesundheitliche Informationen</h2>
+        <h2 class="text-secondary mt-8 mb-4 font-bold">Wichtige gesundheitliche Informationen</h2>
         <VInfo class="mb-8">
             Diese Daten sind vertraulich zu behandlen und nur für den Kapitän im Rahmen der Reiseunterlagen bestimmt! Angaben werden von der
             Stammcrew freiwillig gemacht.

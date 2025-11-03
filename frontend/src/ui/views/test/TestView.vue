@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 xs:p-8">
+    <div class="xs:p-8 p-4">
         <div class="grid grid-cols-4 gap-4">
             <div class="flex flex-col">
                 <div class="demo">
@@ -98,10 +98,12 @@
 </template>
 <script lang="ts" setup></script>
 <style scoped>
+@reference "tailwindcss"
+
 .demo {
     @apply mb-4;
-    @apply text-sm;
-    @apply font-bold;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
 }
 
 .demo > div {

@@ -1,9 +1,9 @@
 <template>
-    <div class="xl:overflow-y-auto xl:overflow-x-hidden">
+    <div class="xl:overflow-x-hidden xl:overflow-y-auto">
         <DetailsPage>
             <template #header> Einstellungen </template>
             <template #content>
-                <VTabs v-if="settings" v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-20 xl:pt-8">
+                <VTabs v-if="settings" v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-20 xl:pt-8">
                     <template #[Tab.GENERAL_SETTINGS]>
                         <div class="items-start gap-32">
                             <section class="max-w-2xl">
@@ -13,7 +13,7 @@
                                 <div class="mb-4">
                                     <VInputText v-model.trim="settings.ui.tabTitle" label="Tab Titel Präfix" required />
                                 </div>
-                                <div class="mb-4 mt-12">
+                                <div class="mt-12 mb-4">
                                     <VInputText
                                         v-model.trim="settings.ui.technicalSupportEmail"
                                         label="Technischer Support Email"
@@ -41,7 +41,7 @@
                                 <div class="mb-4">
                                     <VInputText v-model.trim="settings.email.replyToDisplayName" label="Reply to Anzeigename" required />
                                 </div>
-                                <div class="mb-4 mt-12">
+                                <div class="mt-12 mb-4">
                                     <VInputText v-model.trim="settings.email.host" label="Hostname" required />
                                 </div>
                                 <div class="mb-4">
@@ -53,7 +53,7 @@
                                 <div class="mb-4">
                                     <VInputCheckBox v-model="settings.email.enableSSL" label="SSL" />
                                 </div>
-                                <div class="mb-4 mt-12">
+                                <div class="mt-12 mb-4">
                                     <VInputText label="Authentifizierungsmethode" model-value="Benutzername / Passwort" required disabled />
                                 </div>
                                 <div class="mb-4">

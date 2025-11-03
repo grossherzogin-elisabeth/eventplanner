@@ -71,6 +71,8 @@ init();
 </script>
 
 <style scoped>
+@reference "tailwindcss";
+
 .calendar-event-wrapper {
     position: absolute;
     left: 0;
@@ -78,8 +80,8 @@ init();
     top: 1px;
     z-index: 10;
     overflow: hidden;
-    @apply rounded-md;
-    @apply bg-surface-container;
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-container);
     @apply shadow;
 }
 
@@ -123,8 +125,8 @@ init();
     @apply py-1;
     @apply pl-2;
     @apply pr-4;
-    @apply text-sm;
-    @apply font-semibold;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
     @apply sm:px-2;
 }
 
@@ -134,33 +136,33 @@ init();
     display: flex;
     align-items: center;
     cursor: pointer;
-    @apply font-bold;
-    @apply bg-surface-container;
-    @apply text-onsurface;
+    font-weight: var(--font-weight-bold);
+    background-color: var(--color-surface-container);
+    color: var(--color-onsurface);
 }
 
 .calendar-event-entry.assigned {
-    @apply bg-primary-container;
-    @apply text-onprimary-container;
+    background-color: var(--color-primary-container);
+    color: var(--color-onprimary-container);
 }
 
 .calendar-event-entry.waiting-list {
-    @apply bg-primary-container/50;
-    @apply text-onsecondary-container;
+    background-color: --alpha(var(--color-primary-container) / 50%);
+    color: var(--color-onprimary-container);
 }
 
 .calendar-event-entry.waiting-list .calendar-event-entry-bar {
-    @apply bg-primary-container/50;
+    background-color: --alpha(var(--color-primary-container) / 50%);
     opacity: 1;
     background-image: var(--pattern);
 }
 
 .calendar-event-entry.draft {
-    @apply bg-surface-container-low;
+    background-color: var(--color-surface-container-low);
 }
 
 .calendar-event-entry.draft .calendar-event-entry-bar {
-    @apply bg-surface-container-low/50;
+    background-color: --alpha(var(--color-surface-container) / 50%);
     opacity: 1;
     background-image: var(--pattern);
 }

@@ -7,28 +7,28 @@
                 :style="{
                     '--animation-duration': `${animationDuration}ms`,
                 }"
-                class="dialog-background scrollbar-invisible pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-40 flex items-center justify-center"
+                class="dialog-background scrollbar-invisible pointer-events-none fixed top-0 right-0 bottom-0 left-0 z-40 flex items-center justify-center"
                 @mousedown="reject()"
             >
                 <div ref="wrapper" class="dialog-wrapper xl:ml-20" @click.stop="" @mousedown.stop="">
                     <slot name="dialog">
                         <div
-                            class="dialog flex flex-col overflow-hidden bg-surface-container-high sm:rounded-3xl sm:shadow-lg"
+                            class="dialog bg-surface-container-high flex flex-col overflow-hidden sm:rounded-3xl sm:shadow-lg"
                             :class="`${scrolls ? 'scrolls' : ''} ${props.width || 'w-screen max-w-xl'} ${props.height || 'h-auto max-h-[95vh]'} ${$attrs.class} `"
                         >
                             <div
-                                class="dialog-header flex h-16 w-full items-center justify-between border-outline-variant/40 pl-4 xs:pl-8 lg:pl-10 lg:pr-2"
+                                class="dialog-header border-outline-variant/40 xs:pl-8 flex h-16 w-full items-center justify-between pl-4 lg:pr-2 lg:pl-10"
                             >
                                 <div class="fullscreen-back-button -ml-4">
-                                    <button class="icon-button" @click="reject()">
+                                    <button class="btn-icon" @click="reject()">
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
                                 </div>
-                                <div class="flex w-0 flex-grow items-center overflow-hidden">
+                                <div class="flex w-0 grow items-center overflow-hidden">
                                     <slot name="title"></slot>
                                 </div>
                                 <div class="dialog-close-button-wrapper flex w-16 items-center justify-center">
-                                    <button class="dialog-close-button icon-button" @click="reject()">
+                                    <button class="dialog-close-button btn-icon" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>
@@ -39,7 +39,7 @@
                             </div>
                             <div
                                 v-if="$slots.buttons"
-                                class="dialog-buttons flex justify-end gap-2 border-outline-variant/40 px-4 py-4 xs:px-8 lg:px-10"
+                                class="dialog-buttons border-outline-variant/40 xs:px-8 flex justify-end gap-2 px-4 py-4 lg:px-10"
                             >
                                 <slot :close="reject" :reject="reject" :submit="submit" name="buttons"></slot>
                             </div>
@@ -159,6 +159,8 @@ async function close(): Promise<void> {
 }
 </script>
 <style scoped>
+@reference "tailwindcss";
+
 .dialog-background {
     --animation-duration: 250ms;
     --anim-slide-diff-x: 0;
@@ -194,31 +196,33 @@ async function close(): Promise<void> {
     z-index: 50;
 }
 
-.modal-danger .dialog-header {
-    @apply bg-error-container;
-    @apply dark:bg-error-container/30;
-    @apply text-onerror-container;
-    @apply border-onerror-container;
-    @apply selection:bg-onerror-container;
-    @apply selection:text-error-container;
-    @apply border-outline-variant/40;
-}
-
+.modal-danger .dialog-header,
 .modal-danger .dialog-content,
 .modal-danger .dialog-buttons {
-    @apply bg-error-container;
-    @apply text-onerror-container;
-    @apply selection:bg-onerror-container;
-    @apply selection:text-error-container;
-    @apply dark:bg-error-container/30;
+    background-color: var(--color-error-container);
+    border-color: --alpha(var(--color-outline-variant) / 40%);
+    color: var(--color-onerror-container);
+}
+
+html.dark .modal-danger .dialog-header,
+html.dark .modal-danger .dialog-content,
+html.dark .modal-danger .dialog-buttons {
+    background-color: --alpha(var(--color-error-container) / 30%);
+}
+
+.modal-danger .dialog-header::selection,
+.modal-danger .dialog-content::selection,
+.modal-danger .dialog-buttons::selection {
+    background-color: var(--color-onerror-container);
+    color: var(--color-error-container);
 }
 
 .modal-danger .dialog-close-button {
-    @apply text-onerror-container;
+    color: var(--color-onerror-container);
 }
 
 .modal-danger h1 {
-    @apply text-onerror-container;
+    color: var(--color-onerror-container);
 }
 
 .dialog.scrolls .dialog-buttons {
@@ -233,7 +237,7 @@ async function close(): Promise<void> {
     .modal-danger .dialog,
     .modal .dialog {
         max-width: min(calc(100vw - 1rem), 35rem);
-        @apply rounded-3xl;
+        border-radius: var(--radius-3xl);
         @apply shadow-lg;
     }
 
@@ -257,7 +261,7 @@ async function close(): Promise<void> {
         max-height: 100% !important;
         width: 100% !important;
         max-width: 100% !important;
-        @apply bg-surface;
+        background-color: var(--color-surface);
     }
 
     .fullscreen .dialog .dialog-header {
@@ -265,13 +269,17 @@ async function close(): Promise<void> {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        @apply bg-primary;
-        @apply text-onprimary;
-        @apply dark:bg-surface-container-high dark:text-onsurface-variant;
+        background-color: var(--color-primary);
+        color: var(--color-onprimary);
+    }
+
+    html.dark .fullscreen .dialog .dialog-header {
+        background-color: var(--color-surface-container-high);
+        color: var(--color-onsurface-variant);
     }
 
     .fullscreen .dialog .dialog-close-button {
-        @apply text-onprimary;
+        color: var(--color-onprimary);
     }
 
     .fullscreen .dialog .fullscreen-back-button {
