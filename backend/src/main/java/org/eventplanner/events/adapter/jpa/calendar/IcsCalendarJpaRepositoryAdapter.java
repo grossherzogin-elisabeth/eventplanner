@@ -1,8 +1,11 @@
 package org.eventplanner.events.adapter.jpa.calendar;
 
+import lombok.RequiredArgsConstructor;
 import org.eventplanner.events.application.ports.IcsCalendarRepository;
 import org.eventplanner.events.domain.entities.calendar.IcsCalendarInfo;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +29,10 @@ import java.util.UUID;
  * {@link IcsCalendarInfo}.
  */
 @Component
+@RequiredArgsConstructor
 public class IcsCalendarJpaRepositoryAdapter implements IcsCalendarRepository {
+    private static final Logger log = LoggerFactory.getLogger(IcsCalendarJpaRepositoryAdapter.class);
     private final IcsCalendarJpaRepository repository;
-
-    public IcsCalendarJpaRepositoryAdapter(IcsCalendarJpaRepository repository) {
-        this.repository = repository;
-    }
-
 
     @Override
     public @NonNull Optional<IcsCalendarInfo> findByKeyAndToken(@NonNull String key, @NonNull String token) {
@@ -50,6 +50,7 @@ public class IcsCalendarJpaRepositoryAdapter implements IcsCalendarRepository {
         entity.setKey(UUID.randomUUID().toString());
         entity.setToken(UUID.randomUUID().toString());
         entity.setUserKey(user.toString());
+        log.info("Entity: {}", entity.toDomain());
         return repository.save(entity).toDomain();
     }
 

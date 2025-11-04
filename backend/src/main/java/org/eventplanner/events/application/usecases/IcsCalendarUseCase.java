@@ -13,8 +13,10 @@ import org.eventplanner.events.application.ports.IcsCalendarRepository;
 import org.eventplanner.events.domain.entities.calendar.IcsCalendarInfo;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,7 +50,8 @@ public class IcsCalendarUseCase {
      * @param userKey The unique identifier of the user for whom the calendar is being created.
      * @return An {@link IcsCalendarInfo} object containing details of the created calendar.
      */
-    public IcsCalendarInfo createCalendar(UserKey userKey) {
+    @NonNull
+    public IcsCalendarInfo createCalendar(@NonNull UserKey userKey) {
         return icsCalendarJpaRepository.create(userKey);
     }
 
@@ -61,7 +64,8 @@ public class IcsCalendarUseCase {
      * @return An {@link Optional} containing the retrieved {@link IcsCalendarInfo} if a matching
      * calendar is found; otherwise, an empty {@link Optional}.
      */
-    public Optional<IcsCalendarInfo> getCalendarDetails(String key, String token) {
+    @NonNull
+    public Optional<IcsCalendarInfo> getCalendarDetails(@NonNull String key, @NonNull String token) {
         return icsCalendarJpaRepository.findByKeyAndToken(key, token);
     }
 
@@ -75,7 +79,8 @@ public class IcsCalendarUseCase {
      * @return A string representation of the ICS calendar in iCalendar format,
      * incorporating the user's events.
      */
-    public String getIcsCalendarValueString(IcsCalendarInfo calendarInfo) {
+    @NonNull
+    public String getIcsCalendarValueString(@NonNull IcsCalendarInfo calendarInfo) {
         Calendar calendar = new Calendar();
         calendar.add(ImmutableVersion.VERSION_2_0);
         calendar.add(ImmutableCalScale.GREGORIAN);
@@ -87,7 +92,7 @@ public class IcsCalendarUseCase {
 
     }
 
-    private void addEventToCalendar(Calendar calendar, Event event) {
+    private void addEventToCalendar(@NonNull Calendar calendar, @NonNull Event event) {
         VEvent meeting = new VEvent(event.getStart(), event.getEnd(), event.getName());
         meeting.add(new Uid(getUuidFromEventDetails(event)));
         meeting.add(new Description(event.getDescription()));
@@ -96,11 +101,14 @@ public class IcsCalendarUseCase {
         calendar.add(meeting);
     }
 
-    private String getUuidFromEventDetails(Event event) {
-        return UUID.fromString(
-                event.getStart().getEpochSecond() +
+    @NonNull
+    private String getUuidFromEventDetails(@NonNull Event event) {
+        return UUID.nameUUIDFromBytes(
+                (
+                        event.getStart().getEpochSecond() +
                         event.getEnd().getEpochSecond() +
                         event.getName()
+                ).getBytes(StandardCharsets.UTF_8)
         ).toString();
     }
 

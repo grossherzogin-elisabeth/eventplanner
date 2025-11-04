@@ -1,6 +1,7 @@
 package org.eventplanner.events.adapter.jpa.calendar;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -19,9 +20,11 @@ import java.util.Optional;
 @Repository
 public interface IcsCalendarJpaRepository extends JpaRepository<IcsCalendarJpaEntity, String> {
 
-    Optional<IcsCalendarJpaEntity> findFirstByKeyAndToken(String key, String token);
+    @NonNull
+    Optional<IcsCalendarJpaEntity> findFirstByKeyAndToken(@NonNull String key, @NonNull String token);
 
-    Optional<IcsCalendarJpaEntity> findAllByUserKey(String user_key);
+    @NonNull
+    Optional<IcsCalendarJpaEntity> findAllByUserKey(@NonNull String user_key);
 
-    void deleteByUserKey(String userKey);
+    void deleteByUserKey(@NonNull String userKey);
 }

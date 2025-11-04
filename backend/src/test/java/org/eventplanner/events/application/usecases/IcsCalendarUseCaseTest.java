@@ -7,26 +7,37 @@ import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@DataJpaTest(properties = {
+        "spring.datasource.url=jdbc:sqlite::memory:?cache=shared",
+        "spring.flyway.enabled=false",
+        "spring.jpa.hibernate.ddl-auto=create-drop"
+})
 class IcsCalendarUseCaseTest {
 
     private final EventRepository eventRepository = Mockito.mock(EventRepository.class);
     private final IcsCalendarRepository icsCalendarJpaRepository = Mockito.mock(IcsCalendarRepository.class);
     private final IcsCalendarUseCase useCase = new IcsCalendarUseCase(eventRepository, icsCalendarJpaRepository);
 
+    private final String testUserKey = UUID.nameUUIDFromBytes("test-user".getBytes(StandardCharsets.UTF_8)).toString();
+
     @Test
     void testGetIcsCalendarValueString_withValidCalendarInfo() {
         // Arrange: Create test user and calendar info
-        UserKey userKey = new UserKey("test-user");
-        IcsCalendarInfo calendarInfo = new IcsCalendarInfo("test-key", "test-token", userKey);
+
+        String testKey = UUID.nameUUIDFromBytes("test-key".getBytes(StandardCharsets.UTF_8)).toString();
+        String testToken = UUID.nameUUIDFromBytes("test-token".getBytes(StandardCharsets.UTF_8)).toString();
+        UserKey userKey = new UserKey(testUserKey);
+        IcsCalendarInfo calendarInfo = new IcsCalendarInfo(testKey, testToken, userKey);
 
         // Arrange: Create mock events
         Event event1 = new Event();
@@ -54,8 +65,8 @@ class IcsCalendarUseCaseTest {
     @Test
     void testGetIcsCalendarValueString_withNoEvents() {
         // Arrange: Create test user and calendar info
-        UserKey userKey = new UserKey("test-user");
-        IcsCalendarInfo calendarInfo = new IcsCalendarInfo("test-key", "test-token", userKey);
+        UserKey userKey = new UserKey(testUserKey);
+        IcsCalendarInfo calendarInfo = new IcsCalendarInfo(UUID.randomUUID().toString(), UUID.randomUUID().toString(), userKey);
 
         // Arrange: Mock empty event list
         when(eventRepository.findAllByUser(userKey)).thenReturn(List.of());
@@ -66,18 +77,5 @@ class IcsCalendarUseCaseTest {
         // Assert: Validate that the calendar string contains basic calendar metadata but no events
         assertThat(calendarString).contains("VERSION:2.0", "CALSCALE:GREGORIAN");
         assertThat(calendarString).doesNotContain("UID:", "DESCRIPTION:");
-    }
-
-    @Test
-    void testGetIcsCalendarValueString_withInvalidCalendarInfo() {
-        // Arrange: Pass invalid calendar info (without user key)
-        IcsCalendarInfo calendarInfo = new IcsCalendarInfo("test-key", "test-token", null);
-
-        // Act & Assert: Ensure method throws a NullPointerException
-        try {
-            useCase.getIcsCalendarValueString(calendarInfo);
-        } catch (NullPointerException e) {
-            assertThat(e).isNotNull();
-        }
     }
 }

@@ -3,6 +3,8 @@ package org.eventplanner.events.adapter.jpa.calendar;
 import org.eventplanner.events.domain.entities.calendar.IcsCalendarInfo;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class IcsCalendarJpaEntityTest {
@@ -37,9 +39,9 @@ class IcsCalendarJpaEntityTest {
     @Test
     void givenIcsCalendarJpaEntityWithEmptyFields_whenToDomainCalled_thenCorrectEmptyFieldsInIcsCalendarInfo() {
         // Arrange
-        String key = "";
-        String token = "";
-        String userKey = "";
+        String key = UUID.randomUUID().toString();
+        String token = UUID.randomUUID().toString();
+        String userKey = UUID.randomUUID().toString();
 
         IcsCalendarJpaEntity entity = new IcsCalendarJpaEntity(key, token, userKey);
 

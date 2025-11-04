@@ -18,6 +18,7 @@ public interface RegistrationJpaRepository extends JpaRepository<RegistrationJpa
     @NonNull
     List<RegistrationJpaEntity> findAllByEventKeyIn(@NonNull List<String> eventKey);
 
+    @NonNull
     List<RegistrationJpaEntity> findAllByUserKey(@NonNull String userKey);
 
     void deleteAllByEventKey(@NonNull String eventKey);

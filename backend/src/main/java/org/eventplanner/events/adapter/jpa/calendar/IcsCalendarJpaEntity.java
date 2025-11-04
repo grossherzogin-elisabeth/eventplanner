@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.eventplanner.events.domain.entities.calendar.IcsCalendarInfo;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.springframework.lang.NonNull;
 
 /**
  * Represents a JPA entity for storing ICS calendar information.
@@ -30,7 +31,7 @@ import org.eventplanner.events.domain.values.users.UserKey;
 @EqualsAndHashCode
 public class IcsCalendarJpaEntity {
     @Id
-    @Column(name = "key", nullable = false, updatable = false)
+    @Column(name = "key_id", nullable = false, updatable = false)
     private String key;
 
     @Column(name = "token", nullable = false)
@@ -39,6 +40,7 @@ public class IcsCalendarJpaEntity {
     @Column(name = "user_key", nullable = false)
     private String userKey;
 
+    @NonNull
     public IcsCalendarInfo toDomain() {
         return new IcsCalendarInfo(this.key, this.token, new UserKey(this.userKey));
     }
