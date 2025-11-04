@@ -16,7 +16,7 @@ public interface EventRepository {
     List<Event> findAllByYear(int year);
 
     @NonNull
-    List<Event> findAllByUser(UserKey userKey);
+    List<Event> findAllByUser(@NonNull UserKey userKey);
 
     @NonNull
     Event create(@NonNull Event event);

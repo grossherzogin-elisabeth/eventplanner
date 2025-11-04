@@ -40,7 +40,7 @@ notifications:
     enabled: true
 
 data:
-  directory: src/test/resources
+  directory: ./src/test/resources
 
 server:
   protocol: http
@@ -51,4 +51,5 @@ security:
 
 logging:
   level:
-    org.eventplanner: DEBUG
+    org:
+      eventplanner: DEBUG

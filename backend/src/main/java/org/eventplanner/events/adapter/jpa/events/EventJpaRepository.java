@@ -12,7 +12,8 @@ public interface EventJpaRepository extends JpaRepository<EventJpaEntity, String
     @NonNull
     List<EventJpaEntity> findAllByYear(int year);
 
-    List<EventJpaEntity> findAllByKeyIn(List<String> key);
+    @NonNull
+    List<EventJpaEntity> findAllByKeyIn(@NonNull List<String> key);
 
     void deleteAllByYear(int year);
 }
