@@ -4,6 +4,7 @@ export const NAME_REGEX = new RegExp(
 );
 export const EMAIL_REGEX = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,8}$');
 export const PASS_NR_REGEX = new RegExp('^[0-9A-Z ]+$');
+export const COLOR_REGEX = new RegExp('^#[0-9A-Fa-f]{6}$');
 export const NUMBER_REGEX = new RegExp('^\\d*$');
 
 const DD = '(0?[1-9]|[12][0-9]|3[01])';

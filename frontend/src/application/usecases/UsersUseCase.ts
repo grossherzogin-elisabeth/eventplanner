@@ -8,6 +8,7 @@ import type {
     UserCachingService,
 } from '@/application/services';
 import { diff } from '@/common';
+import { generateColorSchemeCssVariables } from '@/common/theme/ThemeGenerator.ts';
 import type { Position, PositionKey, User, UserDetails, UserKey, UserSettings } from '@/domain';
 import { Permission, Theme } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
@@ -140,6 +141,12 @@ export class UsersUseCase {
         if (!settings.theme) {
             settings.theme = Theme.System;
         }
+        if (!settings.contrast) {
+            settings.contrast = 0;
+        }
+        if (!settings.color) {
+            settings.color = '#188edc';
+        }
         return settings;
     }
 
@@ -159,5 +166,24 @@ export class UsersUseCase {
         } else if (loadedSettings.theme === Theme.Light || (loadedSettings.theme === Theme.System && !prefersDarkMode)) {
             document.querySelector('html')?.classList.remove('dark');
         }
+        console.log(`🎨 Applying custom theme color ${loadedSettings.color}`);
+        const contrast = loadedSettings.contrast ?? 0;
+        const color = loadedSettings.color ?? '#188edc';
+        const light = `html.theme {
+            ${generateColorSchemeCssVariables(color, false, contrast).join('\n    ')}
+        }`;
+        const dark = `html.theme.dark {
+            ${generateColorSchemeCssVariables(color, true, contrast).join('\n    ')}
+        }`;
+        this.appendCustomStyles('theme-light', light);
+        this.appendCustomStyles('theme-dark', dark);
+        document.querySelector('html')?.classList.add('theme');
+    }
+
+    private appendCustomStyles(name: string, style: string): void {
+        const css = document.createElement('style');
+        css.id = name;
+        css.innerHTML = style;
+        document.querySelector('head')?.appendChild(css);
     }
 }
