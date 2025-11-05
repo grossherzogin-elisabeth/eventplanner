@@ -13,17 +13,17 @@
                 :required="props.required"
                 :value="fileName"
                 aria-haspopup="true"
-                class="input-field w-full cursor-pointer overflow-ellipsis"
+                class="input-field w-full cursor-pointer text-ellipsis"
                 readonly
             />
-            <button v-if="file" class="h-10 w-10 rounded-full hover:bg-primary-container" tabindex="-1" @click.stop="clearSelection()">
+            <button v-if="file" class="hover:bg-primary-container h-10 w-10 rounded-full" tabindex="-1" @click.stop="clearSelection()">
                 <i class="fa-solid fa-file-circle-xmark text-onprimary-container" />
             </button>
             <span v-else>
-                <i class="fa-regular fa-file pr-4 text-primary" />
+                <i class="fa-regular fa-file text-primary pr-4" />
             </span>
             <input
-                class="absolute bottom-0 left-0 right-0 top-0 z-10 mr-12 cursor-pointer opacity-0"
+                class="absolute top-0 right-0 bottom-0 left-0 z-10 mr-12 cursor-pointer opacity-0"
                 :aria-disabled="props.disabled"
                 :disabled="props.disabled"
                 type="file"

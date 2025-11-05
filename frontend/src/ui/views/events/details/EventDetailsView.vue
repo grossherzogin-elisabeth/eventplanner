@@ -4,12 +4,12 @@
             {{ event?.name }}
         </template>
         <template #content>
-            <div v-if="event" class="px-4 pb-8 pt-6 xs:px-8 md:px-16 xl:px-20">
-                <div class="space-y-4 md:grid md:grid-cols-5 md:gap-x-20 md:gap-y-4 md:space-y-0 md:pr-4 xl:max-w-5xl 2xl:grid-cols-6">
+            <div v-if="event" class="xs:px-8 px-4 pt-6 pb-8 md:px-16 xl:px-20">
+                <div class="space-y-4 md:grid md:grid-cols-5 md:space-y-0 md:gap-x-20 md:gap-y-4 md:pr-4 xl:max-w-5xl 2xl:grid-cols-6">
                     <!-- state info banner -->
                     <section
                         v-if="event.state === EventState.OpenForSignup && event.signupType === EventSignupType.Assignment"
-                        class="col-span-2 col-start-4 xs:-mx-4 2xl:col-span-3"
+                        class="xs:-mx-4 col-span-2 col-start-4 2xl:col-span-3"
                     >
                         <VInfo clamp>
                             {{ $t('views.events.details.info-planning') }}
@@ -17,13 +17,13 @@
                     </section>
                     <section
                         v-else-if="event.state === EventState.Canceled"
-                        class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
+                        class="xs:-mx-4 sticky top-14 right-4 left-4 z-10 col-span-2 col-start-4 md:static 2xl:col-span-3"
                     >
                         <VWarning> {{ $t('views.events.details.info-canceled') }} </VWarning>
                     </section>
                     <section
                         v-else-if="event.signedInUserRegistration && event.isSignedInUserAssigned"
-                        class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
+                        class="xs:-mx-4 sticky top-14 right-4 left-4 z-10 col-span-2 col-start-4 md:static 2xl:col-span-3"
                     >
                         <VSuccess icon="fa-check">
                             <i18n-t tag="span" keypath="views.events.details.info-assigned">
@@ -38,7 +38,7 @@
                     </section>
                     <section
                         v-else-if="event.signedInUserRegistration"
-                        class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
+                        class="xs:-mx-4 sticky top-14 right-4 left-4 z-10 col-span-2 col-start-4 md:static 2xl:col-span-3"
                     >
                         <VInfo icon="fa-hourglass-half">
                             <i18n-t tag="span" keypath="views.events.details.info-waitinglist">
@@ -50,7 +50,7 @@
                     </section>
                     <section
                         v-else-if="openPositions.length > 0"
-                        class="sticky left-4 right-4 top-14 z-10 col-span-2 col-start-4 xs:-mx-4 md:static 2xl:col-span-3"
+                        class="xs:-mx-4 sticky top-14 right-4 left-4 z-10 col-span-2 col-start-4 md:static 2xl:col-span-3"
                     >
                         <VWarning>
                             {{ $t('views.events.details.info-missing-crew', { positions: openPositions.map((it) => it.name).join(', ') }) }}

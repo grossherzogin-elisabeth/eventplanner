@@ -20,10 +20,10 @@
                     @input="onInput(option.value)"
                 />
                 <span v-if="props.modelValue === option.value">
-                    <i class="fa-solid fa-check-circle w-5 text-xl text-primary sm:text-2xl"></i>
+                    <i class="fa-solid fa-check-circle text-primary w-5 text-xl sm:text-2xl"></i>
                 </span>
                 <span v-else>
-                    <i class="fa-solid fa-circle w-5 text-xl text-surface-container-high sm:text-2xl"></i>
+                    <i class="fa-solid fa-circle text-surface-container-high w-5 text-xl sm:text-2xl"></i>
                 </span>
                 <span :class="{ invalid: showErrors && hasErrors }" class="ml-4 cursor-pointer">
                     {{ $t(option.label) }}

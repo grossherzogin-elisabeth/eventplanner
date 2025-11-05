@@ -1,7 +1,7 @@
 <template>
     <div class="grid gap-x-32 gap-y-8 md:grid-cols-1">
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.personal.title') }}</h2>
+            <h2 class="text-secondary mb-2 flex items-center justify-between font-bold">{{ $t('views.account.personal.title') }}</h2>
             <VInteractiveList>
                 <NameCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <GenderCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
@@ -11,7 +11,7 @@
             </VInteractiveList>
         </div>
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.contact.title') }}</h2>
+            <h2 class="text-secondary mb-2 flex items-center justify-between font-bold">{{ $t('views.account.contact.title') }}</h2>
             <VInteractiveList>
                 <EmailCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <PhoneCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
@@ -21,7 +21,7 @@
             </VInteractiveList>
         </div>
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">
+            <h2 class="text-secondary mb-2 flex items-center justify-between font-bold">
                 {{ $t('views.account.diet.kitchen-info') }}
             </h2>
             <VInteractiveList>
@@ -30,7 +30,7 @@
             </VInteractiveList>
         </div>
         <div class="col-start-1">
-            <h2 class="mb-2 flex items-center justify-between font-bold text-secondary">{{ $t('views.account.emergency.title') }}</h2>
+            <h2 class="text-secondary mb-2 flex items-center justify-between font-bold">{{ $t('views.account.emergency.title') }}</h2>
             <VInteractiveList>
                 <EmergencyContactCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
                 <MedicationCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />

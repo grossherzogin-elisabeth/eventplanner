@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex min-h-screen flex-col xl:bg-primary xl:dark:bg-surface-container-low"
+        class="xl:bg-primary xl:dark:bg-surface-container-low flex min-h-screen flex-col"
         :class="{ impersonated: signedInUser?.impersonated }"
     >
         <div id="navbar" class="xl:hidden">
@@ -9,9 +9,9 @@
         <VNotifications id="notifications" />
         <div class="flex flex-1 items-stretch">
             <div class="relative hidden h-screen w-96 flex-col xl:flex">
-                <AppMenu class="relative z-10 text-onprimary dark:text-onsurface-variant" />
+                <AppMenu class="text-onprimary dark:text-onsurface-variant relative z-10" />
             </div>
-            <div class="relative flex w-0 flex-grow flex-col bg-surface xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl">
+            <div class="bg-surface relative flex w-0 grow flex-col xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl">
                 <RouterView id="router-view" v-model:tab-title="title" class="flex flex-1 flex-col" />
             </div>
         </div>

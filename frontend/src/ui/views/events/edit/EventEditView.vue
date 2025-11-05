@@ -17,7 +17,7 @@
             </section>
         </template>
         <template #content>
-            <VTabs v-model="tab" :tabs="tabs" class="sticky top-10 z-20 bg-surface pt-4 xl:top-20">
+            <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-10 z-20 pt-4 xl:top-20">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <section v-if="event">
@@ -137,14 +137,14 @@
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
                     <div class="xl:max-w-5xl">
-                        <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+                        <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
                             <SlotsTable v-if="event" :event="event" />
                         </div>
                     </div>
                 </template>
                 <template #[Tab.EVENT_LOCATIONS]>
                     <div class="xl:max-w-5xl">
-                        <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+                        <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
                             <LocationsTable v-if="event" :event="event" />
                         </div>
                     </div>

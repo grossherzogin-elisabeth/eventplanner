@@ -1,6 +1,6 @@
 <template>
     <div
-        class="scrollbar-invisible -mx-4 mb-4 flex items-center gap-2 overflow-x-auto px-4 xs:-mx-8 xs:px-8 md:-mx-16 md:-mt-4 md:px-16 xl:-mx-20 xl:px-20"
+        class="scrollbar-invisible xs:-mx-8 xs:px-8 -mx-4 mb-4 flex items-center gap-2 overflow-x-auto px-4 md:-mx-16 md:-mt-4 md:px-16 xl:-mx-20 xl:px-20"
     >
         <FilterMultiselect
             v-model="filterPositions"
@@ -12,10 +12,10 @@
         <FilterToggle v-model="filterUnconfirmed" :label="$t('views.events.edit.filter.pending-confirmation')" />
     </div>
     <template v-if="props.event.signupType !== EventSignupType.Open">
-        <h2 class="mb-4 font-bold text-secondary">
+        <h2 class="text-secondary mb-4 font-bold">
             {{ $t('domain.event.crew-count', { count: filteredCrew.length }) }}
         </h2>
-        <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+        <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
             <RegistrationsTable
                 :event="props.event"
                 :registrations="filteredCrew"
@@ -28,10 +28,10 @@
             />
         </div>
     </template>
-    <h2 class="mb-4 font-bold text-secondary">
+    <h2 class="text-secondary mb-4 font-bold">
         {{ $t('domain.event.registration-count', { count: filteredRegistrations.length }) }}
     </h2>
-    <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+    <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
         <RegistrationsTable
             :event="props.event"
             :registrations="filteredRegistrations"

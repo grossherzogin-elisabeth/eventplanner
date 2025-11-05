@@ -1,6 +1,6 @@
 <template>
-    <div class="xl:overflow-y-auto xl:overflow-x-hidden">
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+    <div class="xl:overflow-x-hidden xl:overflow-y-auto">
+        <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #[Tab.PERSONAL_DATA]>
                 <div class="lg:max-w-xl">
                     <AccountDataTab v-if="userDetails" :model-value="userDetails" @update:model-value="updateUserDetails($event)" />
@@ -18,7 +18,7 @@
             </template>
             <template #[Tab.QUALIFICATIONS]>
                 <div class="xl:max-w-5xl">
-                    <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+                    <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
                         <UserQualificationsTab v-if="userDetails" :user="userDetails" />
                     </div>
                 </div>

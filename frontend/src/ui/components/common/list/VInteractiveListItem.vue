@@ -1,21 +1,21 @@
 <template>
     <div class="group" :class="props.disabled ? '' : 'cursor-pointer'" @click="edit()">
         <div class="relative flex items-start space-x-6">
-            <i class="fa-solid mt-2 w-4 text-onsurface-variant sm:w-8 sm:text-xl" :class="props.icon" />
-            <div class="w-0 flex-grow">
-                <h4 class="mb-1 text-xs font-bold text-onsurface/50">{{ props.label }}</h4>
+            <i class="fa-solid text-onsurface-variant mt-2 w-4 sm:w-8 sm:text-xl" :class="props.icon" />
+            <div class="w-0 grow">
+                <h4 class="text-onsurface/50 mb-1 text-xs font-bold">{{ props.label }}</h4>
                 <slot name="default">
                     {{ props.content }}
                 </slot>
             </div>
-            <button v-if="!props.disabled" class="icon-button">
-                <i class="fa-solid fa-pen hidden group-hover:inline" />
+            <button v-if="!props.disabled" class="btn-icon hidden group-hover:inline">
+                <i class="fa-solid fa-pen" />
             </button>
         </div>
         <VDialog v-if="!props.disabled" ref="editSheet">
             <template #title> {{ props.label }} </template>
             <template #content>
-                <div class="px-4 py-4 xs:px-8 lg:px-10">
+                <div class="xs:px-8 px-4 py-4 lg:px-10">
                     <slot name="edit" :value="mutableCopy" :errors="validation.errors.value" />
                 </div>
             </template>

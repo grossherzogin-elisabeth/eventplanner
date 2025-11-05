@@ -1,11 +1,12 @@
 <template>
     <div class="search xs:pr-6 md:pr-14" :class="showSearch ? 'open' : ''">
-        <div class="wrapper flex flex-grow items-stretch self-stretch rounded-lg">
-            <button :class="showSearch ? 'w-11 px-4' : 'icon-button'" @click="openSearch()">
+        <div class="wrapper flex grow items-stretch self-stretch rounded-lg">
+            <button :class="showSearch ? 'w-11 px-4' : 'btn-icon'" @click="openSearch()">
                 <i class="fa-solid fa-search"></i>
             </button>
             <input
                 ref="input"
+                name="search"
                 :value="props.modelValue"
                 :placeholder="placeholder || 'Einträge filtern'"
                 :disabled="!showSearch"
@@ -55,6 +56,7 @@ function cancel(): void {
 </script>
 <style scoped>
 .search {
+    --animation-duration: 100ms;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -64,8 +66,12 @@ function cancel(): void {
     align-items: center;
     transition-property: left, top;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
-    @apply bg-primary dark:bg-surface-container;
+    transition-duration: var(--animation-duration);
+    background-color: var(--color-primary);
+}
+
+html.dark .search {
+    background-color: var(--color-surface-container);
 }
 
 .search input {
@@ -74,17 +80,23 @@ function cancel(): void {
     background-color: transparent;
     transition-property: opacity;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
+    transition-duration: var(--animation-duration);
 }
 
 .search input::placeholder {
-    @apply text-onprimary/30 dark:text-onsurface/30;
+    color: var(--color-onprimary);
+    opacity: 0.3;
+}
+
+html.dark .search input::placeholder {
+    color: var(--color-onsurface);
+    opacity: 0.3;
 }
 
 .search .wrapper {
     transition-property: background-color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
+    transition-duration: var(--animation-duration);
 }
 
 .search.open {
@@ -117,7 +129,7 @@ function cancel(): void {
     }
 
     .search.open .wrapper {
-        @apply bg-onprimary/10;
+        background-color: --alpha(var(--color-onprimary) / 10%);
     }
 }
 </style>

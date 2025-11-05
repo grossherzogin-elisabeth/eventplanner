@@ -1,12 +1,12 @@
 <template>
-    <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
+    <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
             <div class="h-full lg:hidden">
                 <NavbarFilter v-model="filter" placeholder="Einträge filtern" />
             </div>
         </teleport>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <div class="permission-write-users hidden 2xl:block">
@@ -47,14 +47,14 @@
                 @click="editUser($event.item, $event.event)"
             >
                 <template #row="{ item }">
-                    <td class="w-1/3 whitespace-nowrap font-semibold">
+                    <td class="w-1/3 font-semibold whitespace-nowrap">
                         <p class="mb-2">
                             {{ item.nickName || item.firstName }} {{ item.lastName }}
                             <span
                                 v-if="item.verified"
-                                class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-success-container/50"
+                                class="bg-success-container/50 inline-flex h-5 w-5 items-center justify-center rounded-full"
                             >
-                                <i class="fa-solid fa-check text-xs text-onsuccess-container"></i>
+                                <i class="fa-solid fa-check text-onsuccess-container text-xs"></i>
                             </span>
                         </p>
                         <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
@@ -196,7 +196,7 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
-            class="permission-write-users pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-write-users pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden"
         >
             <button class="btn-floating pointer-events-auto" @click="createUser()">
                 <i class="fa-solid fa-user-plus"></i>

@@ -1,0 +1,38 @@
+@layer components {
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        @apply space-x-2;
+        @apply mr-1;
+        @apply px-4 py-2;
+        @apply bg-surface;
+        @apply md:px-12;
+        @apply xl:px-16;
+    }
+
+    .pagination-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.25;
+        @apply w-10;
+        @apply rounded-xl;
+        @apply px-2 py-2;
+        @apply font-semibold;
+    }
+
+    .pagination-page.enabled {
+        opacity: 1;
+        @apply hover:bg-surface-container-low;
+        @apply hover:shadow;
+    }
+
+    .pagination-page.active {
+        @apply bg-primary-container;
+        @apply text-onprimary-container;
+        @apply font-bold;
+        @apply shadow-none;
+        @apply hover:bg-primary-container;
+    }
+}

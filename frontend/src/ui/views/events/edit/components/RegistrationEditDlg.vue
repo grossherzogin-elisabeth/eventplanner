@@ -12,7 +12,7 @@
             <h1 v-else>{{ $t('views.events.edit.edit-registration.guest-title') }}</h1>
         </template>
         <template #default>
-            <div class="px-4 pt-4 xs:px-8 lg:px-10">
+            <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <div v-if="!registration.userKey" class="mb-4">
                         <VInputText
@@ -32,10 +32,10 @@
                             :errors-visible="validation.showErrors.value"
                         >
                             <template #item="{ item }">
-                                <span class="flex-grow">{{ item.label }}</span>
+                                <span class="grow">{{ item.label }}</span>
                                 <i
                                     v-if="selectedUser && item.value && !selectedUser.positionKeys?.includes(item.value)"
-                                    class="fa-solid fa-warning mr-4 text-warning"
+                                    class="fa-solid fa-warning text-warning mr-4"
                                 />
                             </template>
                         </VInputCombobox>
@@ -89,7 +89,7 @@
                         <span
                             v-for="q in selectedUser.qualifications"
                             :key="q.qualificationKey"
-                            class="truncate whitespace-nowrap rounded-lg px-2 py-1 font-bold"
+                            class="truncate rounded-lg px-2 py-1 font-bold whitespace-nowrap"
                             :class="
                                 expiredQualifications.includes(q.qualificationKey)
                                     ? 'bg-error-container/50 text-onerror-container'

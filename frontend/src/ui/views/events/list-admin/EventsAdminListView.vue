@@ -1,12 +1,12 @@
 <template>
-    <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
+    <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
             <div class="h-full lg:hidden">
                 <NavbarFilter v-model="filter" :placeholder="$t('views.events.admin-list.filter.search')" />
             </div>
         </teleport>
 
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <div class="permission-create-events hidden 2xl:block">
@@ -58,7 +58,7 @@
                         <p class="text-sm">{{ $t('views.events.admin-list.table.day-count', { count: item.days }) }}</p>
                     </td>
                     <!-- name -->
-                    <td class="w-2/3 max-w-[80vw] whitespace-nowrap font-semibold" style="max-width: min(65vw, 20rem)">
+                    <td class="w-2/3 max-w-[80vw] font-semibold whitespace-nowrap" style="max-width: min(65vw, 20rem)">
                         <p class="mb-1 truncate" :class="{ 'text-error line-through': item.state === EventState.Canceled }">
                             <span v-if="item.state === EventState.Draft" class="opacity-50">{{ $t('generic.event-state.draft') }}: </span>
                             <span v-else-if="item.state === EventState.Canceled">{{ $t('generic.event-state.canceled') }}: </span>
@@ -76,7 +76,7 @@
                         </p>
                         <div class="flex w-full items-center gap-px pt-2">
                             <template v-for="(position, index) in item.assignedPositions" :key="`${position.key}-${index}`">
-                                <div :data-index="index" class="w-1 flex-grow">
+                                <div :data-index="index" class="w-1 grow">
                                     <VTooltip :delay="50">
                                         <template #tooltip>
                                             <span class="tag custom" :style="{ '--color': position.color }">
@@ -84,7 +84,7 @@
                                             </span>
                                         </template>
                                         <template #default>
-                                            <div class="h-2 rounded" :style="{ backgroundColor: position.color }" />
+                                            <div class="h-2 rounded-sm" :style="{ backgroundColor: position.color }" />
                                         </template>
                                     </VTooltip>
                                 </div>
@@ -108,26 +108,26 @@
                     <tr v-for="i in 20" :key="i" class="animate-pulse">
                         <td></td>
                         <td class="w-1/2 max-w-[65vw]">
-                            <p class="mb-1 h-5 w-64 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-64 rounded-lg"></p>
                             <p class="flex items-center space-x-2 text-sm font-light">
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
-                                <span class="inline-block h-3 w-16 rounded-lg bg-surface-container-highest"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
+                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
                             </p>
                         </td>
                         <td>
                             <div class="status-badge neutral">
                                 <i class="fa-solid fa-circle text-surface-container-high"></i>
-                                <span class="my-0.5 inline-block h-4 w-12 rounded-lg bg-surface-container-high"></span>
+                                <span class="bg-surface-container-high my-0.5 inline-block h-4 w-12 rounded-lg"></span>
                             </div>
                         </td>
                         <td class="w-1/6">
-                            <p class="mb-1 h-5 w-16 rounded-lg bg-surface-container-highest"></p>
-                            <p class="h-3 w-10 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-16 rounded-lg"></p>
+                            <p class="bg-surface-container-highest h-3 w-10 rounded-lg"></p>
                         </td>
                         <td class="w-2/6">
-                            <p class="mb-1 h-5 w-56 rounded-lg bg-surface-container-highest"></p>
-                            <p class="h-3 w-16 rounded-lg bg-surface-container-highest"></p>
+                            <p class="bg-surface-container-highest mb-1 h-5 w-56 rounded-lg"></p>
+                            <p class="bg-surface-container-highest h-3 w-16 rounded-lg"></p>
                         </td>
 
                         <td>
@@ -300,7 +300,7 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
-            class="permission-create-events pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-create-events pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden"
         >
             <button class="btn-floating pointer-events-auto" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>

@@ -6,7 +6,7 @@
             <h1 v-else>{{ $t('views.events.edit.actions.edit-location') }}</h1>
         </template>
         <template #default>
-            <div class="px-4 pt-4 xs:px-8 lg:px-10">
+            <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <div class="mb-4">
                         <VInputText
@@ -36,7 +36,7 @@
                         >
                             <template #item="{ item }">
                                 <i class="fa-solid mr-4" :class="item.value"></i>
-                                <span class="flex-grow">{{ item.label }}</span>
+                                <span class="grow">{{ item.label }}</span>
                             </template>
                             <template #before>
                                 <span :key="location.icon" class="pt-5">

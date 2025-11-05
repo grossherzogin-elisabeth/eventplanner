@@ -1,36 +1,36 @@
 <template>
     <div class="xl:overflow-auto">
-        <div class="px-4 py-4 xs:px-8 md:px-16 lg:pt-10 xl:px-20">
+        <div class="xs:px-8 px-4 py-4 md:px-16 lg:pt-10 xl:px-20">
             <div class="flex flex-col items-stretch gap-8 xl:flex-row xl:gap-16">
                 <div class="w-full md:max-w-sm">
                     <section>
-                        <h2 class="mb-4 font-bold text-secondary">Schiffsdaten</h2>
+                        <h2 class="text-secondary mb-4 font-bold">Schiffsdaten</h2>
                         <div class="mb-4">
                             <VInputSlider v-model="hdg" label="Heading (HDG)" :min="0" :max="360">
-                                <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
+                                <template #after><span class="text-onsurface-variant/50 pr-4">deg</span></template>
                             </VInputSlider>
                         </div>
                         <div class="mb-4">
                             <VInputSlider v-model="cog" label="Course over ground(COG)" :min="0" :max="360">
-                                <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
+                                <template #after><span class="text-onsurface-variant/50 pr-4">deg</span></template>
                             </VInputSlider>
                         </div>
                         <div class="mb-8">
                             <VInputNumber v-modael="sog" label="Speed over ground (SOG)">
-                                <template #after><span class="pr-4 text-onsurface-variant/50">kn</span></template>
+                                <template #after><span class="text-onsurface-variant/50 pr-4">kn</span></template>
                             </VInputNumber>
                         </div>
                     </section>
 
                     <section>
-                        <h2 class="mb-4 font-bold text-secondary">Scheinbarer Wind</h2>
+                        <h2 class="text-secondary mb-4 font-bold">Scheinbarer Wind</h2>
                         <div class="mb-4">
                             <VInputNumber
                                 label="Scheinbare Windgeschwindigkeit"
                                 :model-value="relativeWindSpeed"
                                 @update:model-value="recalculateFromRelativeWind($event, relativeWindDirection)"
                             >
-                                <template #after><span class="pr-4 text-onsurface-variant/50">kn</span></template>
+                                <template #after><span class="text-onsurface-variant/50 pr-4">kn</span></template>
                             </VInputNumber>
                         </div>
                         <div class="mb-8">
@@ -41,20 +41,20 @@
                                 :max="180"
                                 @update:model-value="recalculateFromRelativeWind(relativeWindSpeed, $event)"
                             >
-                                <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
+                                <template #after><span class="text-onsurface-variant/50 pr-4">deg</span></template>
                             </VInputSlider>
                         </div>
                     </section>
 
                     <section>
-                        <h2 class="mb-4 font-bold text-secondary">Wahrer Wind</h2>
+                        <h2 class="text-secondary mb-4 font-bold">Wahrer Wind</h2>
                         <div class="mb-4">
                             <VInputNumber
                                 label="Wahre Windgeschwindigkeit"
                                 :model-value="absoluteWindSpeed"
                                 @update:model-value="recalculateFromAbsoluteWind($event, absoluteWindDirection)"
                             >
-                                <template #after><span class="pr-4 text-onsurface-variant/50">kn</span></template>
+                                <template #after><span class="text-onsurface-variant/50 pr-4">kn</span></template>
                             </VInputNumber>
                         </div>
                         <div class="mb-4">
@@ -65,14 +65,14 @@
                                 :max="360"
                                 @update:model-value="recalculateFromAbsoluteWind(absoluteWindSpeed, $event)"
                             >
-                                <template #after><span class="pr-4 text-onsurface-variant/50">deg</span></template>
+                                <template #after><span class="text-onsurface-variant/50 pr-4">deg</span></template>
                             </VInputSlider>
                         </div>
                     </section>
                 </div>
-                <section class="flex-grow">
-                    <div class="relative flex min-h-[85vh] items-stretch rounded-2xl bg-surface-container-low lg:min-h-[75vh]">
-                        <div class="absolute right-4 top-4 flex gap-2">
+                <section class="grow">
+                    <div class="bg-surface-container-low relative flex min-h-[85vh] items-stretch rounded-2xl lg:min-h-[75vh]">
+                        <div class="absolute top-4 right-4 flex gap-2">
                             <button class="btn-secondary" @click="scale -= 2">-</button>
                             <button class="btn-secondary" @click="scale += 2">+</button>
                         </div>
@@ -87,25 +87,25 @@
                                 <PointerArrow :pointer="absoluteWind" arrow-start class="text-error" />
                             </g>
                         </svg>
-                        <div class="absolute bottom-4 right-4 text-sm">
+                        <div class="absolute right-4 bottom-4 text-sm">
                             <div class="flex items-center gap-2">
-                                <hr class="my-0 w-4 border border-dashed border-primary" />
+                                <hr class="border-primary my-0 w-4 border border-dashed" />
                                 <span class="text-primary">Kurs über Grund</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <hr class="my-0 w-4 border border-dashed border-onsurface-variant opacity-50" />
+                                <hr class="border-onsurface-variant my-0 w-4 border border-dashed opacity-50" />
                                 <span class="text-onsurface-variant">Heading</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <hr class="my-0 w-4 border border-primary" />
+                                <hr class="border-primary my-0 w-4 border" />
                                 <span class="text-primary">Fahrtwind</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <hr class="my-0 w-4 border border-secondary" />
+                                <hr class="border-secondary my-0 w-4 border" />
                                 <span class="text-secondary">Scheinbarer Wind</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <hr class="my-0 w-4 border border-error" />
+                                <hr class="border-error my-0 w-4 border" />
                                 <span class="text-error">Wahrer Wind</span>
                             </div>
                         </div>

@@ -1,12 +1,12 @@
 <template>
     <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4">
         <!-- position counters -->
-        <div class="top-32 -mx-8 mb-4 overflow-x-auto bg-surface pb-4">
-            <div class="scrollbar-invisible flex items-start gap-2 px-8 text-sm font-bold text-onsurface-variant md:flex-wrap">
-                <div class="flex items-center rounded-2xl bg-surface-container p-1">
+        <div class="bg-surface top-32 -mx-8 mb-4 overflow-x-auto pb-4">
+            <div class="scrollbar-invisible text-onsurface-variant flex items-start gap-2 px-8 text-sm font-bold md:flex-wrap">
+                <div class="bg-surface-container flex items-center rounded-2xl p-1">
                     <span class="px-2">{{ $t('domain.event.crew') }}</span>
                     <span
-                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs"
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs whitespace-nowrap"
                     >
                         {{ props.event?.assignedUserCount }}
                     </span>
@@ -19,9 +19,9 @@
                             : 'bg-error-container/50 text-onerror-container'
                     "
                 >
-                    <span class="whitespace-nowrap px-2">{{ $t('views.events.edit.secure-crew') }}</span>
+                    <span class="px-2 whitespace-nowrap">{{ $t('views.events.edit.secure-crew') }}</span>
                     <span
-                        class="flex h-5 w-5 items-center justify-center whitespace-nowrap rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs"
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs whitespace-nowrap"
                     >
                         {{ secureMinimumCrewMembers }}
                     </span>
@@ -43,7 +43,7 @@
         </div>
         <div class="-mx-4 flex-1 gap-16 md:flex">
             <div class="crew mb-8 px-4 pb-4 md:w-1/2 lg:mb-0">
-                <h2 class="mb-4 font-bold text-secondary">{{ $t('domain.event.crew') }}</h2>
+                <h2 class="text-secondary mb-4 font-bold">{{ $t('domain.event.crew') }}</h2>
                 <!-- slot list-admin dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute z-10 w-full" :class="{ hidden: dragSource !== DragSource.FROM_WAITING_LIST }">
@@ -57,8 +57,8 @@
                 </div>
                 <div class="-mx-4" :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_WAITING_LIST }">
                     <!-- empty slot list placeholder -->
-                    <div v-if="team.length === 0" class="rounded-xl bg-secondary-container text-onsecondary-container">
-                        <div class="flex items-center py-8 pl-4 pr-8">
+                    <div v-if="team.length === 0" class="bg-secondary-container text-onsecondary-container rounded-xl">
+                        <div class="flex items-center py-8 pr-8 pl-4">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
                                     <i class="fa-solid fa-list-check opacity-75"></i>
@@ -74,8 +74,8 @@
                             <li v-for="i in 5" :key="i" class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4">
                                 <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
                                 <i class="fa-regular fa-circle"></i>
-                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsecondary-container"> </span>
-                                <span class="flex-grow"></span>
+                                <span class="bg-onsecondary-container mx-2 inline-block h-4 w-64 rounded-full"> </span>
+                                <span class="grow"></span>
                                 <span class="tag neutral h-4 w-20"></span>
                             </li>
                         </ul>
@@ -100,7 +100,7 @@
             </div>
 
             <div class="waiting-list px-4 md:w-1/2">
-                <h2 class="mb-4 font-bold text-secondary">{{ $t('domain.event.waiting-list') }}</h2>
+                <h2 class="text-secondary mb-4 font-bold">{{ $t('domain.event.waiting-list') }}</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute w-full space-y-8" :class="{ hidden: dragSource !== DragSource.FROM_TEAM }">
@@ -120,8 +120,8 @@
                 </div>
                 <div class="-mx-4" :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_TEAM }">
                     <!-- empty waitinglist placeholder -->
-                    <div v-if="registrations.length === 0" class="rounded-xl bg-surface-container-low text-onsurface">
-                        <div class="flex items-center py-8 pl-4 pr-8">
+                    <div v-if="registrations.length === 0" class="bg-surface-container-low text-onsurface rounded-xl">
+                        <div class="flex items-center py-8 pr-8 pl-4">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
                                     <i class="fa-solid fa-list-check opacity-75"></i>
@@ -136,8 +136,8 @@
                         <ul class="pb-8 opacity-10">
                             <li v-for="i in 5" :key="i" class="mr-4 flex items-center rounded-xl px-4 py-2 md:space-x-4">
                                 <i class="fa-solid fa-grip-vertical hidden text-sm lg:inline"></i>
-                                <span class="mx-2 inline-block h-4 w-64 rounded-full bg-onsurface"> </span>
-                                <span class="flex-grow"></span>
+                                <span class="bg-onsurface mx-2 inline-block h-4 w-64 rounded-full"> </span>
+                                <span class="grow"></span>
                                 <span class="tag neutral block h-4 w-20"> </span>
                             </li>
                         </ul>
@@ -323,6 +323,8 @@ init();
 </script>
 
 <style>
+@reference "tailwindcss";
+
 .dropzone-add,
 .dropzone-remove,
 .dropzone-delete {
@@ -334,34 +336,34 @@ init();
     border-width: 2px;
     border-style: dashed;
     @apply space-y-8;
-    @apply rounded-xl;
-    @apply border-outline;
+    border-radius: var(--radius-xl);
+    border-color: var(--color-outline);
 }
 
 .dropzone span {
-    @apply text-sm;
-    @apply font-black;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-black);
     text-transform: uppercase;
 }
 
 .dropzone.hover .dropzone-add {
     border: 2px dashed;
-    @apply bg-primary-container;
-    @apply text-onprimary-container;
-    @apply border-onprimary-container;
+    background-color: var(--color-primary-container);
+    color: var(--color-onprimary-container);
+    border-color: var(--color-onprimary-container);
 }
 
 .dropzone.hover .dropzone-remove {
     border: 2px dashed;
-    @apply bg-primary-container;
-    @apply text-onprimary-container;
-    @apply border-onprimary-container;
+    background-color: var(--color-primary-container);
+    color: var(--color-onprimary-container);
+    border-color: var(--color-onprimary-container);
 }
 
 .dropzone.hover .dropzone-delete {
     border: 2px dashed;
-    @apply bg-error-container;
-    @apply text-onerror-container;
-    @apply border-onerror-container;
+    background-color: var(--color-error-container);
+    color: var(--color-onerror-container);
+    border-color: var(--color-onerror-container);
 }
 </style>

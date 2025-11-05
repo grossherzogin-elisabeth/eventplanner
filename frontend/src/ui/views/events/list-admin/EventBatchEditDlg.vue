@@ -4,7 +4,7 @@
             <h1>{{ $t('views.events.admin-list.batch-edit.title') }}</h1>
         </template>
         <template #default>
-            <div class="px-4 pt-4 xs:px-8 lg:px-10">
+            <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8">
                         {{ $t('views.events.admin-list.batch-edit.info') }}

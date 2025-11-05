@@ -15,7 +15,7 @@
                     gerne an admin@grossherzogin-elisabeth.de.
                 </p>
                 <div v-if="error.error" class="mt-8">
-                    <h2 class="mb-4 text-error">Details</h2>
+                    <h2 class="text-error mb-4">Details</h2>
                     <p>
                         {{ details }}
                     </p>

@@ -10,12 +10,12 @@
     >
         <template #row="{ item, index }">
             <td class="w-0">
-                <span class="inline-block rounded-full bg-surface-container-highest px-2 py-1 text-sm font-semibold">
+                <span class="bg-surface-container-highest inline-block rounded-full px-2 py-1 text-sm font-semibold">
                     #{{ index + 1 }}
                 </span>
             </td>
             <td class="w-1/3">
-                <p class="whitespace-nowrap font-semibold">
+                <p class="font-semibold whitespace-nowrap">
                     {{ item.positionName || positions.get(item.positionKeys[0]).name }}
                 </p>
                 <p class="truncate text-sm">

@@ -12,7 +12,7 @@
     </div>
     <teleport to="#nav-right">
         <div class="flex items-center py-2 lg:hidden">
-            <ContextMenuButton class="-mr-6 -mt-2 pr-6 pt-3">
+            <ContextMenuButton class="-mt-2 -mr-6 pt-3 pr-6">
                 <slot></slot>
             </ContextMenuButton>
         </div>

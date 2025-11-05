@@ -4,11 +4,11 @@
             <template #default>
                 <div :key="state.icon" class="status-badge" :class="state.color">
                     <i class="fa-solid w-4" :class="state.icon"></i>
-                    <span class="whitespace-nowrap font-semibold">{{ state.name }}</span>
+                    <span class="font-semibold whitespace-nowrap">{{ state.name }}</span>
                 </div>
             </template>
             <template #tooltip>
-                <div class="flex flex-col gap-8 rounded-xl bg-surface-container-high p-4 text-sm text-onsurface shadow-xl">
+                <div class="bg-surface-container-high text-onsurface flex flex-col gap-8 rounded-xl p-4 text-sm shadow-xl">
                     <div v-if="unassignedRequiredPositions.length > 0">
                         <h4 class="mb-2 font-bold">{{ $t('views.events.admin-list.state.missing-crew') }}</h4>
                         <div class="flex flex-wrap gap-2">
@@ -20,7 +20,7 @@
                             >
                                 {{ position.name }}
                                 <span
-                                    class="flex h-4 w-4 items-center justify-center whitespace-nowrap rounded-full bg-white/10 px-1 text-center text-xs"
+                                    class="flex h-4 w-4 items-center justify-center rounded-full bg-white/10 px-1 text-center text-xs whitespace-nowrap"
                                 >
                                     {{ position.count }}
                                 </span>
@@ -38,7 +38,7 @@
                             >
                                 {{ position.name }}
                                 <span
-                                    class="flex h-4 w-4 items-center justify-center whitespace-nowrap rounded-full bg-white/10 px-1 pt-0.5 text-center text-xs"
+                                    class="flex h-4 w-4 items-center justify-center rounded-full bg-white/10 px-1 pt-0.5 text-center text-xs whitespace-nowrap"
                                 >
                                     {{ position.count }}
                                 </span>

@@ -5,7 +5,7 @@
             <h1 v-else>{{ $t('views.events.edit.actions.edit-slot') }}</h1>
         </template>
         <template #default>
-            <div class="flex flex-1 flex-col px-4 pt-4 xs:px-8 lg:px-10">
+            <div class="xs:px-8 flex flex-1 flex-col px-4 pt-4 lg:px-10">
                 <section>
                     <div class="mb-4">
                         <VInputCombobox
@@ -44,7 +44,7 @@
                         />
                     </div>
                 </section>
-                <div class="mt-8 rounded-xl bg-surface-container-low p-4 pr-8 text-sm sm:bg-surface-container-highest">
+                <div class="bg-surface-container-low sm:bg-surface-container-highest mt-8 rounded-xl p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold">{{ $t('domain.event-slot.alternative-positions') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">

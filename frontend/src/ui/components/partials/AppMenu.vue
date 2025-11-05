@@ -1,13 +1,13 @@
 <template>
     <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
-        <h1 class="mb-8 mt-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
+        <h1 class="mt-8 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
 
-        <div v-if="signedInUser.impersonated" class="mx-4 rounded-2xl bg-error-container pl-4 text-onerror-container xl:mx-8 xl:pl-6">
+        <div v-if="signedInUser.impersonated" class="bg-error-container text-onerror-container mx-4 rounded-2xl pl-4 xl:mx-8 xl:pl-6">
             <div class="flex items-center">
-                <i18n-t tag="p" keypath="navigation.impersonate" class="mr-2 w-0 flex-grow py-4 text-sm font-bold">
+                <i18n-t tag="p" keypath="navigation.impersonate" class="mr-2 w-0 grow py-4 text-sm font-bold">
                     <span class="italic">{{ signedInUser.firstName }} {{ signedInUser.lastName }}</span>
                 </i18n-t>
-                <button class="icon-button mr-2" title="Impersonate Modus beenden" @click="authUseCase.impersonateUser(null)">
+                <button class="btn-icon mr-2" title="Impersonate Modus beenden" @click="authUseCase.impersonateUser(null)">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
             </div>
@@ -129,7 +129,7 @@
         <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
     </div>
     <div v-else>
-        <h1 class="mb-8 mt-4 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
+        <h1 class="mt-4 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
         <VInfo class="mx-8">
             <h2 class="mb-2">Noch kein Account?</h2>
             <p class="mb-2">
@@ -188,6 +188,8 @@ watch(route, () => {
 </script>
 
 <style>
+@reference "tailwindcss";
+
 .menu-list {
     @apply space-y-1;
     @apply px-4;
@@ -205,8 +207,8 @@ watch(route, () => {
 .menu-item {
     overflow: hidden;
     cursor: pointer;
-    @apply rounded-2xl;
-    @apply font-semibold;
+    border-radius: var(--radius-2xl);
+    font-weight: var(--font-weight-semibold);
     @apply md:text-lg;
 }
 
@@ -222,7 +224,7 @@ watch(route, () => {
 
 /* expand */
 .menu-item.expanded {
-    @apply bg-secondary-container/10;
+    background-color: --alpha(var(--color-secondary-container) / 10%);
 }
 
 .menu-item .menu-chevron {
@@ -238,7 +240,7 @@ watch(route, () => {
 /* hover */
 .menu-item:hover:not(.expanded):not(.active) > a:not(.router-link-active),
 .menu-item:hover:not(.expanded):not(.active) > button:not(.router-link-active) {
-    @apply bg-secondary-container/50;
+    background-color: --alpha(var(--color-secondary-container) / 50%);
 }
 
 /* active */
@@ -246,9 +248,9 @@ watch(route, () => {
 .menu-item.active > a,
 .menu-item.active > button {
     position: relative;
-    @apply bg-secondary-container;
-    @apply text-onsecondary-container;
-    @apply font-bold;
+    background-color: var(--color-secondary-container);
+    color: var(--color-onsecondary-container);
+    font-weight: var(--font-weight-bold);
 }
 
 .menu-item > a.router-link-active:before,
@@ -260,14 +262,14 @@ watch(route, () => {
     background-color: currentColor;
     @apply h-5;
     @apply w-1;
-    @apply rounded-full;
+    border-radius: calc(infinity * 1px);
 }
 
 /* 2nd level */
 .menu-item.level-2 {
     @apply mx-2;
-    @apply rounded-xl;
-    @apply text-base;
+    border-radius: var(--radius-xl);
+    font-size: var(--text-base);
 }
 
 .menu-item.level-2 > a,
@@ -290,8 +292,8 @@ watch(route, () => {
 .menu-subheading {
     @apply mt-8;
     @apply pl-8;
-    @apply text-sm;
-    @apply font-semibold;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
     @apply opacity-50;
     @apply xl:pl-14;
 }

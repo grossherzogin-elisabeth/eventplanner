@@ -1,18 +1,20 @@
-@import 'tailwind.css';
+@import './tailwind.css';
+@import './theme/light.css';
+@import './theme/dark.css';
 
-@import 'lib/dropdown.css';
-@import 'lib/collapsible-pane.css';
+@import './base/typography.css';
 
-@import 'styling/animations.css';
-@import 'inputs/inputs.css';
-@import 'styling/typography.css';
-@import 'styling/buttons.css';
-@import 'styling/table.css';
-@import 'styling/pagination.css';
-@import 'styling/scrollbar.css';
-@import 'styling/status-panels.css';
+@import './utility/animations.css';
+@import './utility/scrollbar.css';
 
-@import 'domain/permission.css';
+@import './components/dropdown.css';
+@import './components/inputs/index.css';
+@import './components/buttons/index.css';
+@import './components/table.css';
+@import './components/pagination.css';
+@import './components/status-panels.css';
+
+@import './domain/permission.css';
 
 html {
     box-sizing: border-box;

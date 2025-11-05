@@ -1,6 +1,5 @@
 export { default as AsyncButton } from './buttons/AsyncButton.vue';
 export { default as ContextMenuButton } from './buttons/ContextMenuButton.vue';
-export { default as VCollapsiblePane } from './collapsible/VCollapsiblePane.vue';
 export { default as VDialog } from './dialog/VDialog.vue';
 export { default as VSheet } from './dialog/VSheet.vue';
 export { default as VErrorDialog } from './dialog/VErrorDialog.vue';
@@ -35,6 +34,6 @@ export { default as VInfo } from './alerts/VInfo.vue';
 export { default as VSuccess } from './alerts/VSuccess.vue';
 export { default as VError } from './alerts/VError.vue';
 export { default as VTooltip } from './tooltip/VTooltip.vue';
-export { default as VMarkdown } from './VMarkdown.vue';
+export { default as VMarkdown } from './markdown/VMarkdown.vue';
 export { default as VInteractiveList } from './list/VInteractiveList.vue';
 export { default as VInteractiveListItem } from './list/VInteractiveListItem.vue';

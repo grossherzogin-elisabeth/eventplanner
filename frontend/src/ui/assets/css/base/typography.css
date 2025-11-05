@@ -1,0 +1,72 @@
+@layer base {
+    html {
+        font-family: 'Comfortaa', sans-serif;
+        font-size: 16px;
+        word-spacing: 1px;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        font-weight: normal;
+        @apply text-onsurface;
+    }
+
+    body {
+        @apply text-base;
+    }
+
+    h1 {
+        @apply text-lg;
+        @apply font-bold;
+    }
+
+    h2 {
+        @apply text-sm;
+        @apply font-bold;
+    }
+
+    h3 {
+        @apply text-base;
+        @apply font-semibold;
+    }
+
+    hr {
+        @apply border-outline-variant;
+        @apply my-4;
+    }
+
+    .link {
+        @apply text-primary;
+        @apply font-bold;
+    }
+
+    .link:hover {
+        text-decoration-line: underline;
+    }
+
+    code {
+        @apply bg-surface-container-highest;
+        @apply text-onsurface;
+        @apply rounded-lg;
+        @apply p-1;
+    }
+
+    ::-moz-selection {
+        @apply bg-secondary;
+        @apply text-onsecondary;
+    }
+
+    ::selection {
+        @apply bg-secondary;
+        @apply text-onsecondary;
+    }
+
+    @font-face {
+        font-family: 'Comfortaa';
+        src: url('../../fonts/Comfortaa-VariableFont_wght.woff2') format('woff2 supports variations');
+        src: url('../../fonts/Comfortaa-VariableFont_wght.woff2') format('woff2-variations');
+        src: url('../../fonts/Comfortaa-VariableFont_wght.woff2') format('woff2') tech('variations');
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+    }
+}

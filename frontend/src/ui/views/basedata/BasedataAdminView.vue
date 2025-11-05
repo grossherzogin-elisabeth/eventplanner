@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
+    <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
             <NavbarFilter
                 v-if="tab === Tab.QUALIFICATIONS"
@@ -12,7 +12,7 @@
                 :placeholder="$t('views.basedata.tab.positions.search-placeholder')"
             />
         </teleport>
-        <VTabs v-model="tab" :tabs="tabs" class="sticky top-12 z-20 bg-surface pt-4 xl:top-0 xl:pt-8">
+        <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div v-if="tab === Tab.QUALIFICATIONS" class="flex items-stretch gap-2 pb-2">
                     <div class="hidden 2xl:block">
@@ -34,12 +34,12 @@
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
-                <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+                <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
                     <QualificationsTable ref="qualificationsTable" :filter="qualificationFilter" />
                 </div>
             </template>
             <template #[Tab.POSITIONS]>
-                <div class="-mx-4 xs:-mx-8 md:-mx-16 xl:-mx-20">
+                <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
                     <PositionsTable ref="positionsTable" :filter="positionsFilter" />
                 </div>
             </template>
@@ -48,7 +48,7 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-if="tab === Tab.POSITIONS"
-            class="permission-write-positions pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-write-positions pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden"
         >
             <button class="btn-floating pointer-events-auto" @click="createPosition()">
                 <i class="fa-solid fa-file-circle-plus"></i>
@@ -57,7 +57,7 @@
         </div>
         <div
             v-else-if="tab === Tab.QUALIFICATIONS"
-            class="permission-write-positions pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-write-positions pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden"
         >
             <button class="btn-floating pointer-events-auto" @click="createQualification()">
                 <i class="fa-solid fa-file-circle-plus"></i>

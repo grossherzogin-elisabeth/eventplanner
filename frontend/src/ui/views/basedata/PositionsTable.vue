@@ -6,7 +6,7 @@
     >
         <template #row="{ item }">
             <td>
-                <div class="flex w-12 items-center justify-center rounded-full bg-surface-container-high px-2 py-1">
+                <div class="bg-surface-container-high flex w-12 items-center justify-center rounded-full px-2 py-1">
                     <i class="fa-solid fa-arrow-up text-xs"></i>
                     <span class="ml-2 text-center text-sm font-semibold">
                         {{ item.prio }}

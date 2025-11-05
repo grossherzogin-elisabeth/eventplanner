@@ -5,7 +5,7 @@
                 v-if="renderContent"
                 ref="background"
                 :class="`${sheetOpen ? 'open' : 'closed'}`"
-                class="sheet-background scrollbar-invisible fixed bottom-0 left-0 right-0 top-0 z-40 overflow-y-auto overscroll-contain sm:flex"
+                class="sheet-background scrollbar-invisible fixed top-0 right-0 bottom-0 left-0 z-40 overflow-y-auto overscroll-contain sm:flex"
                 :style="{
                     '--open-close-animation-duration': `${animationDuration}ms`,
                 }"
@@ -14,50 +14,50 @@
             >
                 <div
                     ref="wrapper"
-                    class="sheet-wrapper overflow-clip sm:ml-auto sm:mt-0 sm:h-full sm:w-auto sm:p-4"
+                    class="sheet-wrapper overflow-clip sm:mt-0 sm:ml-auto sm:h-full sm:w-auto sm:p-4"
                     @click.stop=""
                     @mousedown.stop=""
                 >
-                    <div class="h-[100vh] w-screen sm:hidden" @click="reject()" @pointerdown="reject()"></div>
+                    <div class="h-screen w-screen sm:hidden" @click="reject()" @pointerdown="reject()"></div>
                     <div
-                        class="flex max-h-screen flex-col overflow-clip rounded-t-3xl shadow-lg transition-all duration-200 sm:h-full sm:max-h-full sm:rounded-3xl sm:pb-0 sm:pt-4"
+                        class="flex max-h-screen flex-col overflow-clip rounded-t-3xl shadow-lg transition-all duration-200 sm:h-full sm:max-h-full sm:rounded-3xl sm:pt-4 sm:pb-0"
                         :class="
-                            isFullyExpanded ? `${$attrs.class} h-screen bg-surface-container` : `${$attrs.class} bg-surface-container-low`
+                            isFullyExpanded ? `${$attrs.class} bg-surface-container h-screen` : `${$attrs.class} bg-surface-container-low`
                         "
                     >
                         <div class="handle flex items-center justify-center sm:hidden">
-                            <div class="mb-4 mt-4 h-1 min-h-1 w-8 rounded-full bg-onsurface-variant"></div>
+                            <div class="bg-onsurface-variant mt-4 mb-4 h-1 min-h-1 w-8 rounded-full"></div>
                         </div>
                         <div
                             class="flex h-screen flex-1 flex-col overflow-hidden"
                             style="max-height: calc(var(--viewport-height, 100vh) - 2.25rem)"
                         >
                             <div
-                                class="sheet-header z-10 flex h-12 w-full items-center justify-between pl-4 xs:pl-8 sm:pr-8 lg:pl-10 lg:pr-10"
-                                :class="{ shadow: isFullyExpanded }"
+                                class="sheet-header xs:pl-8 z-10 flex h-12 w-full items-center justify-between pl-4 sm:pr-8 lg:pr-10 lg:pl-10"
+                                :class="{ 'shadow-sm': isFullyExpanded }"
                             >
-                                <div v-if="props.showBackButton" class="-ml-4 mr-4">
-                                    <button class="icon-button" @click="back()">
+                                <div v-if="props.showBackButton" class="mr-4 -ml-4">
+                                    <button class="btn-icon" @click="back()">
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
                                 </div>
-                                <div class="flex h-16 w-0 flex-grow items-center overflow-hidden font-bold">
+                                <div class="flex h-16 w-0 grow items-center overflow-hidden font-bold">
                                     <slot name="title"></slot>
                                 </div>
                                 <div class="-mr-4 hidden sm:block">
-                                    <button class="icon-button" @click="reject()">
+                                    <button class="btn-icon" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>
                             </div>
                             <div
-                                class="sheet-content mb-0 flex flex-1 flex-col bg-surface-container-low pt-4 md:mb-0 md:overflow-y-auto"
+                                class="sheet-content bg-surface-container-low mb-0 flex flex-1 flex-col pt-4 md:mb-0 md:overflow-y-auto"
                                 :class="{ 'overflow-y-auto': isFullyExpanded }"
                             >
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>
-                            <div class="sticky bottom-0 z-50 bg-surface-container-low sm:bottom-4">
+                            <div class="bg-surface-container-low sticky bottom-0 z-50 sm:bottom-4">
                                 <slot name="bottom"></slot>
                             </div>
                         </div>

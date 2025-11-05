@@ -1,5 +1,5 @@
 <template>
-    <div class="grid h-96 w-96 grid-cols-7 rounded-2xl bg-surface-container p-4">
+    <div class="bg-surface-container grid h-96 w-96 grid-cols-7 rounded-2xl p-4">
         <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.mo') }}</span>
         <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.di') }}</span>
         <span class="text-center opacity-50">{{ $t('views.home.month-overview.weekdays.mi') }}</span>

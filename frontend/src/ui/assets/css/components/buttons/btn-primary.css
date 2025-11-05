@@ -1,0 +1,25 @@
+/* --------------------------------------------------------------- */
+/* Primary Button */
+/* --------------------------------------------------------------- */
+
+@layer components {
+    .btn-primary {
+        @apply bg-primary/90;
+        @apply text-onprimary;
+    }
+
+    @media not all and (hover: none) {
+        a.btn-primary:not(:disabled):hover,
+        .btn-primary:not(:disabled):hover {
+            @apply bg-primary;
+            @apply text-onprimary;
+            @apply shadow;
+        }
+    }
+
+    .btn-primary.disabled,
+    .btn-primary:disabled {
+        @apply bg-onsurface/10;
+        @apply text-onsurface/40;
+    }
+}

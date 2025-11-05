@@ -2,29 +2,25 @@
     <nav class="fixed top-0 z-40 w-screen print:hidden">
         <div
             :class="meta.hasTransparentHeader ? 'sm:bg-primary sm:dark:bg-surface-container' : 'bg-primary dark:bg-surface-container'"
-            class="h-nav flex items-center text-onprimary shadow dark:text-onsurface"
+            class="h-nav text-onprimary dark:text-onsurface flex items-center shadow-sm"
         >
             <div class="h-full">
-                <div class="flex h-full items-center bg-primary xl:hidden dark:bg-surface-container">
-                    <!--                    <RouterLink v-if="backTo" :to="backTo" class="icon-button mx-4 md:ml-12">-->
+                <div class="bg-primary dark:bg-surface-container flex h-full items-center xl:hidden">
+                    <!--                    <RouterLink v-if="backTo" :to="backTo" class="btn-icon mx-4 md:ml-12">-->
                     <!--                        <i class="fa-solid fa-arrow-left"></i>-->
                     <!--                    </RouterLink>-->
-                    <button class="icon-button mr-1 xs:ml-4 md:ml-12" @click="menuOpen = true">
+                    <button class="btn-icon xs:ml-4 mr-1 md:ml-12" @click="menuOpen = true">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
             </div>
-            <div class="flex flex-grow">
-                <h1
-                    v-if="props.title"
-                    class="w-0 flex-grow truncate xl:hidden"
-                    :class="meta.hasTransparentHeader ? 'hidden sm:block' : 'block'"
-                >
+            <div class="flex grow">
+                <h1 v-if="props.title" class="w-0 grow truncate xl:hidden" :class="meta.hasTransparentHeader ? 'hidden sm:block' : 'block'">
                     {{ props.title }}
                 </h1>
             </div>
             <div class="flex h-full justify-end">
-                <div id="nav-right" class="mx-4 h-full xs:mx-8 md:mr-16 xl:mr-20"></div>
+                <div id="nav-right" class="xs:mx-8 mx-4 h-full md:mr-16 xl:mr-20"></div>
             </div>
         </div>
     </nav>
@@ -32,15 +28,15 @@
     <div class="h-nav"></div>
     <div
         v-if="signedInUser && signedInUser.impersonated"
-        class="h-16 bg-error-container pl-8 pr-4 text-onerror-container shadow-inner md:pl-16 md:pr-12"
+        class="bg-error-container text-onerror-container h-16 pr-4 pl-8 shadow-inner md:pr-12 md:pl-16"
     >
         <div class="flex h-full items-center">
             <i class="fa-solid fa-warning" />
-            <p class="ml-4 mr-2 line-clamp-3 w-0 flex-grow py-4 text-sm font-bold">
+            <p class="mr-2 ml-4 line-clamp-3 w-0 grow py-4 text-sm font-bold">
                 Du siehst die Anwendung aus Sicht von
                 <span class="italic">{{ signedInUser.firstName }} {{ signedInUser.lastName }}</span>
             </p>
-            <button class="icon-button" @click="authUseCase.impersonateUser(null)">
+            <button class="btn-icon" @click="authUseCase.impersonateUser(null)">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </button>
         </div>

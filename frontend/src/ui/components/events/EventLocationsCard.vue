@@ -1,9 +1,9 @@
 <template>
     <section>
-        <h2 class="mb-2 font-bold text-secondary">
+        <h2 class="text-secondary mb-2 font-bold">
             {{ $t('components.event-locations-card.title', { count: props.event.locations.length }) }}
         </h2>
-        <div class="space-y-1 rounded-2xl bg-surface-container/50 p-4 pb-0 shadow xs:-mx-4">
+        <div class="bg-surface-container/50 xs:-mx-4 space-y-1 rounded-2xl p-4 pb-0 shadow-sm">
             <p v-if="props.event.locations.length === 0" class="pb-4 text-sm">
                 {{ $t('components.event-locations-card.placeholder') }}
             </p>
@@ -19,12 +19,12 @@
                             :class="{ 'border-r-2 border-dashed border-current': index < props.event.locations.length - 1 }"
                         ></div>
                     </div>
-                    <div class="mb-4 w-0 flex-grow">
+                    <div class="mb-4 w-0 grow">
                         <h3 class="mb-1 flex items-center justify-between space-x-2">
                             <span>{{ location.name }}</span>
                             <ContextMenuButton v-if="location.information">
                                 <template #icon>
-                                    <i class="fa-solid fa-info-circle text-primary/75 hover:text-primary/100"></i>
+                                    <i class="fa-solid fa-info-circle text-primary/75 hover:text-primary"></i>
                                 </template>
                                 <template #default>
                                     <div class="overflow-hidden" @click.stop @mouseup.stop>

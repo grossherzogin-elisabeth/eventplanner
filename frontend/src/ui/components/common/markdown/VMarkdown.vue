@@ -21,8 +21,8 @@ const rendered = computed<string>(() => {
 
 <style>
 .markdown a {
-    @apply font-bold;
-    @apply text-primary;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
 }
 
 .markdown a:hover {
@@ -30,7 +30,7 @@ const rendered = computed<string>(() => {
 }
 
 .markdown p {
-    @apply mb-4;
+    margin-bottom: 1rem;
 }
 
 .markdown h1,
@@ -39,11 +39,11 @@ const rendered = computed<string>(() => {
 .markdown h4,
 .markdown h5,
 .markdown h6 {
-    @apply mt-4;
+    margin-top: 1rem;
 }
 
 .markdown li {
     list-style-type: disc;
-    @apply ml-4;
+    margin-left: 1rem;
 }
 </style>

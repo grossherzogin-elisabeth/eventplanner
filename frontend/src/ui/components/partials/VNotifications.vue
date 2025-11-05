@@ -1,6 +1,6 @@
 <template>
     <div
-        class="pointer-events-none fixed left-0 right-0 top-12 z-40 flex w-full flex-col items-stretch px-4 py-2 sm:left-auto sm:w-96 xl:right-16 xl:top-2"
+        class="pointer-events-none fixed top-12 right-0 left-0 z-40 flex w-full flex-col items-stretch px-4 py-2 sm:left-auto sm:w-96 xl:top-2 xl:right-16"
     >
         <template v-for="(notification, index) in notifications" :key="index">
             <div v-if="!notification.hidden">
@@ -8,7 +8,7 @@
                     <div class="notification">
                         <i class="fa-solid text-xl" :class="notification.icon" />
                         <p class="text-sm font-bold">{{ notification.text }}</p>
-                        <div class="w-0 flex-grow"></div>
+                        <div class="w-0 grow"></div>
                         <button class="self-stretch" @click="hideNotification(index)">
                             <i class="fa-solid fa-xmark text-xl"></i>
                         </button>
@@ -77,12 +77,14 @@ init();
 </script>
 
 <style>
+@reference "tailwindcss";
+
 .notification-wrapper {
     overflow: hidden;
     @apply mb-4;
     @apply h-20;
-    @apply rounded-xl;
-    @apply bg-surface;
+    border-radius: var(--radius-xl);
+    background-color: var(--color-surface);
     @apply shadow-xl;
 }
 
@@ -102,39 +104,39 @@ init();
 }
 
 .success .notification {
-    @apply bg-success-container/50;
-    @apply text-onsuccess-container;
+    background-color: --alpha(var(--color-success-container) / 50%);
+    color: var(--color-onsuccess-container);
 }
 
 .success .notification p {
-    @apply text-onsuccess-container;
+    color: var(--color-onsuccess-container);
 }
 
 .info .notification {
-    @apply bg-info-container/50;
-    @apply text-oninfo-container;
+    background-color: --alpha(var(--color-info-container) / 50%);
+    color: var(--color-oninfo-container);
 }
 
 .info .notification p {
-    @apply text-oninfo-container;
+    color: var(--color-oninfo-container);
 }
 
 .warning .notification {
-    @apply bg-warning-container/50;
-    @apply text-onwarning-container;
+    background-color: --alpha(var(--color-warning-container) / 50%);
+    color: var(--color-onwarning-container);
 }
 
 .warning .notification p {
-    @apply text-onwarning-container;
+    color: var(--color-onwarning-container);
 }
 
 .error .notification {
-    @apply bg-error-container/50;
-    @apply text-onerror-container;
+    background-color: --alpha(var(--color-error-container) / 50%);
+    color: var(--color-onerror-container);
 }
 
 .error .notification p {
-    @apply text-onerror-container;
+    color: var(--color-onerror-container);
 }
 
 .animate-disappear {

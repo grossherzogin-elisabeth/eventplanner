@@ -1,0 +1,38 @@
+/* --------------------------------------------------------------- */
+/* Back Button */
+/* --------------------------------------------------------------- */
+
+@layer components {
+    .btn-back {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        @apply hover:text-onsecondary-container font-black;
+        @apply rounded-full p-3;
+        @apply hover:no-underline;
+    }
+
+    .btn-back:before {
+        content: '';
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        right: 50%;
+        bottom: 50%;
+        transition: top, left, right, bottom;
+        transition-duration: 100ms;
+        transition-timing-function: ease-in-out;
+        border-radius: inherit;
+        z-index: -1;
+        @apply bg-secondary-container/50;
+    }
+
+    .btn-back:hover:before {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}

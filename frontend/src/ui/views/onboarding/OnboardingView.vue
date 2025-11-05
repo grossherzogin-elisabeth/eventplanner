@@ -1,6 +1,6 @@
 <template>
-    <div class="flex h-full flex-1 flex-col xl:overflow-y-auto xl:overflow-x-hidden">
-        <div class="px-4 pb-8 pt-8 xs:px-8 md:px-16 xl:px-20">
+    <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
+        <div class="xs:px-8 px-4 pt-8 pb-8 md:px-16 xl:px-20">
             <div class="max-w-2xl">
                 <h1 class="mb-4 font-bold">Dein Account konnte nicht zugeordnet werden</h1>
                 <p class="mb-4">
@@ -17,7 +17,7 @@
                 </ul>
                 <section>
                     <VInfo class="my-8">
-                        <h2 class="mb-4 mt-1 text-base font-bold">Noch Kein Stammcrew Mitglied?</h2>
+                        <h2 class="mt-1 mb-4 text-base font-bold">Noch Kein Stammcrew Mitglied?</h2>
                         <p class="mb-4 text-base">
                             Solltest du noch kein Vereinsmitglied sein, kannst du auf unserer Website einen Mitgliedsantrag stellen. Du
                             bekommst innerhalb einiger Werktage eine Bestätigung und kannst die App dann vollumfänglich nutzen.
@@ -37,7 +37,7 @@
                 </p>
             </div>
         </div>
-        <div class="pointer-events-none sticky bottom-0 right-0 z-10 mt-4 flex justify-end pb-4 pr-3 md:pr-7 xl:pr-12 2xl:hidden">
+        <div class="pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden">
             <a href="https://www.grossherzogin-elisabeth.de/mitglied-werden/" class="btn-floating pointer-events-auto">
                 <i class="fa-solid fa-edit"></i>
                 <span> Jetzt Mitglied werden! </span>

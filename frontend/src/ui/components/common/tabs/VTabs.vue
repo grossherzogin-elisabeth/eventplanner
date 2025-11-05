@@ -1,7 +1,7 @@
 <template>
     <div :class="$attrs.class">
         <h2
-            class="scrollbar-invisible flex gap-x-4 overflow-x-auto border-b border-outline-variant/50 px-4 text-base font-semibold xs:px-8 md:px-16 xl:px-20"
+            class="scrollbar-invisible border-outline-variant/50 xs:px-8 flex gap-x-4 overflow-x-auto border-b px-4 text-base font-semibold md:px-16 xl:px-20"
         >
             <slot name="before" />
             <div class="flex gap-x-8">
@@ -19,12 +19,12 @@
                 </div>
             </div>
             <slot name="after" />
-            <span class="flex-grow"></span>
+            <span class="grow"></span>
             <slot name="end" />
         </h2>
     </div>
     <!-- tab pane -->
-    <div v-if="props.modelValue && $slots[props.modelValue]" class="flex-1 px-4 py-4 xs:px-8 md:px-16 md:py-8 xl:px-20">
+    <div v-if="props.modelValue && $slots[props.modelValue]" class="xs:px-8 flex-1 px-4 py-4 md:px-16 md:py-8 xl:px-20">
         <template v-for="tab in localizedTabs" :key="tab.value">
             <div v-show="tab.value === props.modelValue" class="h-full">
                 <slot :name="tab.value" :active="tab.value === props.modelValue" />
@@ -70,33 +70,35 @@ function init(): void {
 init();
 </script>
 <style>
+@reference "tailwindcss";
+
 .tab {
     white-space: nowrap;
     border-bottom-width: 1px;
     border-color: transparent;
-    @apply text-onsurface-variant;
+    color: var(--color-onsurface-variant);
     @apply pb-1;
 }
 
 .tab button {
     background-color: transparent;
-    @apply text-base;
-    @apply font-bold;
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-bold);
     @apply -mx-4;
-    @apply rounded-lg;
+    border-radius: var(--radius-lg);
     @apply px-4;
     @apply py-2;
 }
 
 @media not all and (hover: none) {
     .tab button:hover {
-        @apply bg-primary/10;
-        @apply text-primary;
+        background-color: --alpha(var(--color-primary) / 10%);
+        color: var(--color-primary);
     }
 }
 
 .tab.active {
-    @apply border-primary;
-    @apply text-primary;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
 }
 </style>

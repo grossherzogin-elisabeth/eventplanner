@@ -1,6 +1,6 @@
 <template>
-    <div class="rounded-xl bg-surface-container-high p-4 text-sm text-onsurface shadow-xl">
-        <h3 class="mb-4 flex items-center gap-2 text-base text-secondary">
+    <div class="bg-surface-container-high text-onsurface rounded-xl p-4 text-sm shadow-xl">
+        <h3 class="text-secondary mb-4 flex items-center gap-2 text-base">
             <i class="fa-solid fa-user-circle"></i>
             <span>
                 {{ props.registration.name }}

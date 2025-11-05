@@ -26,7 +26,7 @@
                             <p class="mb-1 flex items-center gap-x-1 font-semibold">
                                 {{ item.name || $t('domain.registration.unknown-user') }}
                             </p>
-                            <p v-if="item.registration?.note" class="mb-2 line-clamp-2 text-sm italic text-onsurface-variant lg:hidden">
+                            <p v-if="item.registration?.note" class="text-onsurface-variant mb-2 line-clamp-2 text-sm italic lg:hidden">
                                 <i class="fa-solid fa-comment-dots" />
                                 {{ item.registration?.note.trim() }}
                             </p>
@@ -73,7 +73,7 @@
                     </VTooltip>
                 </td>
                 <td class="hidden w-2/3 overflow-hidden lg:table-cell">
-                    <span v-if="item.registration?.note" class="line-clamp-2 text-sm italic text-onsurface-variant">
+                    <span v-if="item.registration?.note" class="text-onsurface-variant line-clamp-2 text-sm italic">
                         <i class="fa-solid fa-comment-dots" />
                         {{ item.registration?.note.trim() }}
                     </span>
@@ -81,7 +81,7 @@
                 <td class="w-0 lg:hidden"></td>
             </template>
             <td v-else colspan="2" class="w-full">
-                <p class="mb-1 font-semibold italic text-error opacity-50">
+                <p class="text-error mb-1 font-semibold italic opacity-50">
                     {{ $t('domain.event.slot.empty') }}
                 </p>
                 <p v-if="item.slot" class="flex items-center gap-x-1 gap-y-2 opacity-50">

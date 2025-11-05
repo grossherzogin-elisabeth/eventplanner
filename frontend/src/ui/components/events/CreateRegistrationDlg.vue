@@ -4,7 +4,7 @@
             <h1>Anmeldung hinzufügen</h1>
         </template>
         <template #default>
-            <div class="px-4 pt-4 xs:px-8 lg:px-10">
+            <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
                         Du kannst eine Anmeldung für ein Stammcrew Mitglied oder Gastcrew anlegen. Die Position kannst du nachträglich noch
@@ -39,10 +39,10 @@
                             :errors-visible="validation.showErrors.value"
                         >
                             <template #item="{ item }">
-                                <span class="flex-grow">{{ item.label }}</span>
+                                <span class="grow">{{ item.label }}</span>
                                 <i
                                     v-if="selectedUser && item.value && !selectedUser.positionKeys?.includes(item.value)"
-                                    class="fa-solid fa-warning mr-4 text-warning"
+                                    class="fa-solid fa-warning text-warning mr-4"
                                 />
                             </template>
                         </VInputCombobox>
@@ -82,7 +82,7 @@
                         </VWarning>
                         <VWarning v-if="expiredQualifications.length > 0" class="my-4">
                             Die folgenden Qualificationen sind abgelaufen oder laufen vor Ende der Reise ab:
-                            <ul class="ml-4 mt-2 list-disc">
+                            <ul class="mt-2 ml-4 list-disc">
                                 <li v-for="quali in expiredQualifications" :key="quali">{{ quali }}</li>
                             </ul>
                         </VWarning>
