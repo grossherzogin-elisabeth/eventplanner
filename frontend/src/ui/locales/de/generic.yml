@@ -87,6 +87,10 @@ generic:
     system: 'Automatisch'
     dark: 'Dunkel'
     light: 'Hell'
+  contrast:
+    0: 'Normal'
+    1: 'Medium'
+    2: 'Hoch'
   language:
     de: 'Deutsch'
     en: 'Englisch (Beta)'
