@@ -1,26 +1,25 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
-        icon="fa-moon"
-        :label="$t('views.account.app-settings.theme')"
+        icon="fa-circle-half-stroke"
+        :label="$t('views.account.app-settings.contrast')"
         direct
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.theme">
-                {{ $t(`generic.theme.${props.modelValue.theme}`) }}
+            <span v-if="props.modelValue.contrast">
+                {{ $t(`generic.contrast.${props.modelValue.contrast}`) }}
             </span>
-            <span v-else> {{ $t('generic.theme.system') }} </span>
+            <span v-else> {{ $t('generic.contrast.0') }} </span>
         </template>
         <template #edit="{ value }">
-            <VInputSelectionList v-model="value.theme" :options="options" />
+            <VInputSelectionList v-model="value.contrast" :options="options" />
         </template>
     </VInteractiveListItem>
 </template>
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import type { InputSelectOption, UserSettings } from '@/domain';
-import { Theme } from '@/domain';
 import { VInputSelectionList, VInteractiveListItem } from '@/ui/components/common';
 
 interface Props {
@@ -29,14 +28,13 @@ interface Props {
 
 type Emits = (e: 'update:modelValue', value: UserSettings) => void;
 
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
-
 const { t } = useI18n();
 
-const options: InputSelectOption<Theme>[] = [
-    { value: Theme.System, label: t('generic.theme.system') },
-    { value: Theme.Dark, label: t('generic.theme.dark') },
-    { value: Theme.Light, label: t('generic.theme.light') },
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+const options: InputSelectOption<number>[] = [
+    { value: 0, label: t('generic.contrast.0') },
+    { value: 1, label: t('generic.contrast.1') },
+    { value: 2, label: t('generic.contrast.2') },
 ];
 </script>

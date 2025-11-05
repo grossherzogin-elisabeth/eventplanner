@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^7.1.0",
+        "@material/material-color-utilities": "^0.3.0",
         "feiertagejs": "^1.4.1",
         "i18n-iso-countries": "^7.14.0",
         "i18n-nationality": "^1.4.0",
@@ -31,7 +32,6 @@
         "@babel/core": "^7.28.5",
         "@babel/preset-env": "^7.28.5",
         "@babel/preset-typescript": "^7.28.5",
-        "@material/material-color-utilities": "^0.3.0",
         "@modyfi/vite-plugin-yaml": "^1.1.1",
         "@tailwindcss/postcss": "^4.1.16",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
