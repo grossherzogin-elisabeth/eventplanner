@@ -52,6 +52,8 @@ account:
   app-settings:
     title: 'App'
     theme: 'Design'
+    color: 'Akzentfarbe'
+    contrast: 'Kontrast'
     preferred-position: 'Standard Position'
     preferred-position-description: 'Mit welcher Position möchtest du dich standardmäßg bei Veranstaltungen anmelden? 
         Du kannst deine Position für jede Anmeldung individuall anpassen.'
