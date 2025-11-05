@@ -1,11 +1,11 @@
 <template>
     <VSheet ref="sheet" min-height="20rem" :show-back-button="view !== View.OVERVIEW" @back="view = View.OVERVIEW">
         <template #title>
-            <h1 v-if="view === View.POSITION">Position auswählen</h1>
-            <h1 v-else-if="view === View.NOTE">Notiz fürs Büro</h1>
-            <h1 v-else-if="view === View.OVERNIGHT">Übernachtung an Bord</h1>
-            <h1 v-else-if="registration.key">Anmeldung bearbeiten</h1>
-            <h1 v-else>Anmeldung erstellen</h1>
+            <template v-if="view === View.POSITION">Position auswählen</template>
+            <template v-else-if="view === View.NOTE">Notiz fürs Büro</template>
+            <template v-else-if="view === View.OVERNIGHT">Übernachtung an Bord</template>
+            <template v-else-if="registration.key">Anmeldung bearbeiten</template>
+            <template v-else>Anmeldung erstellen</template>
         </template>
         <template #content>
             <div class="xs:px-8 h-100 px-4 sm:w-120 lg:px-10">

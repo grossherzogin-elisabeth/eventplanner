@@ -1,9 +1,9 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="location.order === 1">{{ $t('views.events.edit.actions.edit-start-location') }}</h1>
-            <h1 v-else-if="location.order === -1">{{ $t('views.events.edit.actions.add-location') }}</h1>
-            <h1 v-else>{{ $t('views.events.edit.actions.edit-location') }}</h1>
+            <template v-if="location.order === 1">{{ $t('views.events.edit.actions.edit-start-location') }}</template>
+            <template v-else-if="location.order === -1">{{ $t('views.events.edit.actions.add-location') }}</template>
+            <template v-else>{{ $t('views.events.edit.actions.edit-location') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -136,7 +136,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>

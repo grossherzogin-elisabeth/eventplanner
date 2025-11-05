@@ -100,22 +100,6 @@
                 </a>
             </li>
         </ul>
-        <!-- TODO do we need this? -->
-        <h2 class="menu-subheading hidden">{{ $t('navigation.legal') }}</h2>
-        <ul class="menu-list my-4 hidden">
-            <li class="menu-item">
-                <RouterLink :to="{ name: Routes.Privacy }">
-                    <i class="fa-solid fa-user-shield"></i>
-                    <span>{{ $t('navigation.dataPrivacy') }}</span>
-                </RouterLink>
-            </li>
-            <li class="menu-item">
-                <RouterLink :to="{ name: Routes.Imprint }">
-                    <i class="fa-solid fa-section"></i>
-                    <span>{{ $t('navigation.imprint') }}</span>
-                </RouterLink>
-            </li>
-        </ul>
     </div>
     <div v-else-if="loading || route.name === Routes.Login" class="menu animate-pulse">
         <div class="mx-12 my-4 h-6 rounded-full bg-current opacity-10"></div>

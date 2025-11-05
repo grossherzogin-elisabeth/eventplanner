@@ -1,8 +1,6 @@
 <template>
     <VDialog ref="dlg">
-        <template #title>
-            <h1>Nutzer hinzufügen</h1>
-        </template>
+        <template #title>Nutzer hinzufügen</template>
         <template #default>
             <div class="px-4 pt-4 sm:px-8 lg:px-10">
                 <section>
@@ -41,11 +39,9 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <div class="w-auto">
-                <AsyncButton name="save" :action="submit" :disabled="validation.disableSubmit.value">
-                    <template #label> Speichern </template>
-                </AsyncButton>
-            </div>
+            <AsyncButton class="btn-ghost" name="save" :action="submit" :disabled="validation.disableSubmit.value">
+                <template #label> Speichern </template>
+            </AsyncButton>
         </template>
     </VDialog>
 </template>

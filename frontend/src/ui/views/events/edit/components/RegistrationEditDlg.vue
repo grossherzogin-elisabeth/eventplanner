@@ -1,15 +1,15 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="selectedUser">
+            <template v-if="selectedUser">
                 {{
                     $t('views.events.edit.edit-registration.title', {
                         name: selectedUser.nickName || selectedUser.firstName,
                         lastName: selectedUser.lastName,
                     })
                 }}
-            </h1>
-            <h1 v-else>{{ $t('views.events.edit.edit-registration.guest-title') }}</h1>
+            </template>
+            <template v-else>{{ $t('views.events.edit.edit-registration.guest-title') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -112,7 +112,7 @@
             <button class="btn-ghost" name="save" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>

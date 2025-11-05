@@ -1,8 +1,6 @@
 <template>
     <VDialog ref="dlg">
-        <template #title>
-            <h1 class="truncate">Anmeldung hinzufügen</h1>
-        </template>
+        <template #title>Anmeldung hinzufügen</template>
         <template #default>
             <div v-if="registration" class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
@@ -44,7 +42,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <AsyncButton class="btn-primary" name="save" :action="submit" :disabled="validation.disableSubmit.value">
+            <AsyncButton class="btn-ghost" name="save" :action="submit" :disabled="validation.disableSubmit.value">
                 <template #label>Speichern</template>
             </AsyncButton>
         </template>

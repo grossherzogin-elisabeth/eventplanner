@@ -25,7 +25,9 @@
                                     </button>
                                 </div>
                                 <div class="flex w-0 grow items-center overflow-hidden">
-                                    <slot name="title"></slot>
+                                    <h1 class="truncate">
+                                        <slot name="title" />
+                                    </h1>
                                 </div>
                                 <div class="dialog-close-button-wrapper flex w-16 items-center justify-center">
                                     <button class="dialog-close-button btn-icon" @click="reject()">

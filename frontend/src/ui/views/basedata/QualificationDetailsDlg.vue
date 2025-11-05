@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="!qualification.key">{{ $t('views.basedata.tab.qualifications.add-new') }}</h1>
-            <h1 v-else>{{ $t('views.basedata.tab.qualifications.edit') }}</h1>
+            <template v-if="!qualification.key">{{ $t('views.basedata.tab.qualifications.add-new') }}</template>
+            <template v-else>{{ $t('views.basedata.tab.qualifications.edit') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -45,7 +45,7 @@
                 <div class="mb-4">
                     <VInputCheckBox v-model="qualification.expires" :label="$t('views.basedata.tab.qualifications.expires')" />
                 </div>
-                <div class="bg-surface-container-low xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
+                <div class="bg-surface-container-highest xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold">{{ $t('views.basedata.tab.positions.title') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
@@ -63,7 +63,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.save') }}</span>
             </button>
         </template>

@@ -1,8 +1,6 @@
 <template>
     <VDialog ref="dlg">
-        <template #title>
-            <h1>Anmeldung hinzufügen</h1>
-        </template>
+        <template #title>Anmeldung hinzufügen</template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
@@ -98,7 +96,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ props.submitText || 'Übernehmen' }}</span>
             </button>
         </template>

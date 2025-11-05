@@ -1,8 +1,6 @@
 <template>
     <VDialog ref="dlg" height="h-auto max-h-screen" type="modal" :class="$attrs.class">
-        <template #title>
-            <h1>Position auswählen</h1>
-        </template>
+        <template #title>Position auswählen</template>
         <template #default>
             <div class="px-8 pt-4 lg:px-10">
                 <section>
@@ -26,7 +24,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" @click="submit">
+            <button class="btn-ghost" @click="submit">
                 <span>Anmelden</span>
             </button>
         </template>

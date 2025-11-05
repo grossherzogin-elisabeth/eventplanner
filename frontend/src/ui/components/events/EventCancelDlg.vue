@@ -1,8 +1,6 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto" type="modal-danger">
-        <template #title>
-            <h1>Reise absagen</h1>
-        </template>
+        <template #title>Reise absagen</template>
         <template #default>
             <div v-if="event" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
                 <section>

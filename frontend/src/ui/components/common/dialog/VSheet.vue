@@ -42,7 +42,9 @@
                                     </button>
                                 </div>
                                 <div class="flex h-16 w-0 grow items-center overflow-hidden font-bold">
-                                    <slot name="title"></slot>
+                                    <div class="truncate">
+                                        <slot name="title" />
+                                    </div>
                                 </div>
                                 <div class="-mr-4 hidden sm:block">
                                     <button class="btn-icon" @click="reject()">

@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto">
         <template #title>
-            <h1 v-if="editing">Qualifikation bearbeiten</h1>
-            <h1 v-else>Qualifikation hinzufügen</h1>
+            <template v-if="editing">Qualifikation bearbeiten</template>
+            <template v-else>Qualifikation hinzufügen</template>
         </template>
         <template #default>
             <div v-if="userQualification" class="xs:px-8 flex flex-1 flex-col px-4 pt-4 lg:px-10">
@@ -40,7 +40,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>Übernehmen</span>
             </button>
         </template>

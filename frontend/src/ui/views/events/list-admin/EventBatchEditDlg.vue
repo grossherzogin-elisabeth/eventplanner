@@ -1,8 +1,6 @@
 <template>
     <VDialog ref="dlg">
-        <template #title>
-            <h1>{{ $t('views.events.admin-list.batch-edit.title') }}</h1>
-        </template>
+        <template #title>{{ $t('views.events.admin-list.batch-edit.title') }}</template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
@@ -64,7 +62,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <AsyncButton class="btn-primary" name="save" :action="submit" :disabled="validation.disableSubmit.value">
+            <AsyncButton class="btn-ghost" name="save" :action="submit" :disabled="validation.disableSubmit.value">
                 <template #label>{{ $t('generic.save') }}</template>
             </AsyncButton>
         </template>

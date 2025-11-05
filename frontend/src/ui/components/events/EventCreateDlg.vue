@@ -1,8 +1,6 @@
 <template>
     <VDialog ref="dlg">
-        <template #title>
-            <h1>Neue Reise erstellen</h1>
-        </template>
+        <template #title>Neue Reise erstellen</template>
         <template #default>
             <div class="px-4 pt-4 sm:px-8 lg:px-10">
                 <section>
@@ -118,7 +116,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" name="save" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" name="save" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>Speichern</span>
             </button>
         </template>
