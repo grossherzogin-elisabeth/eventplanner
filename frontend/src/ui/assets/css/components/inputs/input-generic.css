@@ -79,22 +79,18 @@
     /* --------------------------------------------------------------- */
 
     .input-field-wrapper:has([disabled]) {
-        opacity: 0.5;
         border-bottom-width: 1px;
+        @apply bg-onsurface/5;
         @apply border-onsurface/10;
     }
 
-    .input-field-wrapper input:disabled {
-        @apply text-onsurface/50;
-    }
-
-    .input-field-wrapper input:disabled + i,
-    .input-field-wrapper input:disabled + svg {
-        @apply text-onsurface/50;
-    }
-
+    .input-field-wrapper input:disabled,
+    .input-field-wrapper:has([disabled]) label,
+    .input-field-wrapper:has([disabled]) label::after,
+    .input-field-wrapper:has([disabled]) i,
+    .input-field-wrapper:has([disabled]) svg,
     .input-field-wrapper:has(input[disabled]) + .input-hint {
-        @apply text-onsurface-variant/40;
+        @apply text-onsurface/40!;
     }
 
     /* --------------------------------------------------------------- */
