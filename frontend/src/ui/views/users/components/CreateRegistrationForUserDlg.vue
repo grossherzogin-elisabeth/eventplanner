@@ -1,8 +1,6 @@
 <template>
     <VDialog ref="dlg">
-        <template #title>
-            <h1 class="truncate">Anmeldung hinzufügen</h1>
-        </template>
+        <template #title>Anmeldung hinzufügen</template>
         <template #default>
             <div v-if="registration" class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>

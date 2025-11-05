@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="position.key">{{ $t('views.basedata.tab.positions.edit') }}</h1>
-            <h1 v-else>{{ $t('views.basedata.tab.positions.add-new') }}</h1>
+            <template v-if="position.key">{{ $t('views.basedata.tab.positions.edit') }}</template>
+            <template v-else>{{ $t('views.basedata.tab.positions.add-new') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">

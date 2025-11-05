@@ -1,9 +1,7 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto" :type="content?.danger ? 'modal-danger' : 'modal'">
         <template #title>
-            <h1 class="truncate">
-                <slot name="title">{{ content?.title }}</slot>
-            </h1>
+            <slot name="title">{{ content?.title }}</slot>
         </template>
         <template #content>
             <div class="xs:px-8 px-4 py-8 lg:px-10">

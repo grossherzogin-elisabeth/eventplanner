@@ -24,9 +24,11 @@
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
                                 </div>
-                                <h1 class="flex w-0 grow items-center overflow-hidden">
-                                    <slot name="title"></slot>
-                                </h1>
+                                <div class="flex w-0 grow items-center overflow-hidden">
+                                    <h1 class="truncate">
+                                        <slot name="title" />
+                                    </h1>
+                                </div>
                                 <div class="dialog-close-button-wrapper flex w-16 items-center justify-center">
                                     <button class="dialog-close-button btn-icon" @click="reject()">
                                         <i class="fa-solid fa-close"></i>

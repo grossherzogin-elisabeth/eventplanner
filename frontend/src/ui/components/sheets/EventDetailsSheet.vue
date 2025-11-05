@@ -1,10 +1,6 @@
 <template>
     <VSheet v-if="event" ref="sheet">
-        <template #title>
-            <h1 class="truncate">
-                {{ event.name }}
-            </h1>
-        </template>
+        <template #title>{{ event.name }}</template>
         <template #content>
             <div class="xs:px-8 space-y-8 px-4 pb-4 sm:w-120 lg:px-10">
                 <VSuccess

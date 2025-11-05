@@ -1,93 +1,8 @@
 <template>
-    <div v-if="enableLoginView">
-        <div class="from-p-800 to-p-700 fixed top-0 right-0 bottom-0 left-0 overflow-y-auto bg-linear-to-t">
-            <div class="self-stretch p-8 pt-16 text-white sm:hidden">
-                <h1 class="mb-8 text-2xl font-thin">
-                    Segelschulschiff<br />
-                    Großherzogin Elisabeth
-                </h1>
-                <p class="mb-8 text-lg">
-                    Diese Seite ist nur für angemeldete Stammcrew Mitglieder sichtbar. Bitte melde dich mit deinem Crew Account an um die
-                    App zu nutzen.
-                </p>
-            </div>
-        </div>
-        <div class="fixed top-0 right-0 bottom-0 left-0 overflow-y-auto">
-            <div class="mx-auto flex min-h-full flex-col justify-end sm:p-8">
-                <div class="h-96 sm:hidden"></div>
-                <div class="bg-surface mx-auto flex w-full flex-col rounded-t-3xl sm:max-w-xl sm:rounded-3xl md:flex-row lg:max-w-5xl">
-                    <div class="relative hidden w-0 grow overflow-hidden rounded-l-3xl lg:block">
-                        <img class="h-full w-full object-cover object-left opacity-50" src="@/ui/assets/images/login-1.jpg" />
-                        <div class="from-p-50 absolute top-0 right-0 bottom-0 left-0 bg-linear-to-l to-transparent"></div>
-                    </div>
-                    <div class="flex flex-col p-8 sm:p-16 lg:mx-auto lg:max-w-xl">
-                        <div class="bg-surface-container mb-8 h-1 w-8 self-center rounded-full sm:hidden"></div>
-
-                        <div class="hidden sm:block">
-                            <h1 class="mb-8 text-2xl font-thin">
-                                Segelschulschiff<br />
-                                Großherzogin Elisabeth
-                            </h1>
-                            <p class="mb-8 text-lg">
-                                Diese Seite ist nur für angemeldete Stammcrew Mitglieder sichtbar. Bitte melde dich mit deinem Crew Account
-                                an um die App zu nutzen.
-                            </p>
-                        </div>
-
-                        <div v-if="enableDirectLogin">
-                            <h2 class="mb-4 px-4">Bei deinem Lissi Account anmelden</h2>
-                            <div class="mb-4">
-                                <VInputText
-                                    v-model.trim="username"
-                                    label="Email oder Benutzername"
-                                    placeholder="max.mustermensch@email.de"
-                                />
-                            </div>
-                            <div class="mb-8">
-                                <VInputText v-model.trim="password" label="Passwort" type="password" placeholder="**********" />
-                            </div>
-                            <div class="flex items-center justify-between sm:flex-row">
-                                <button class="btn-ghost">
-                                    <span class="mx-auto"> Passwort vergessen? </span>
-                                </button>
-                                <button class="btn-primary sm:mb-0" @click="authUseCase.login()">
-                                    <span class="mx-auto py-2"> Anmelden </span>
-                                </button>
-                            </div>
-                        </div>
-                        <button v-else class="btn-primary mb-4" @click="authUseCase.login()">
-                            <i class="fa-solid fa-user text-xl sm:mx-4" />
-                            <span class="mx-auto py-2"> Anmelden mit Lissi Account </span>
-                        </button>
-
-                        <div class="flex justify-center py-8">
-                            <p>oder</p>
-                        </div>
-                        <button class="btn-secondary mb-4" @click="authUseCase.login()">
-                            <i class="fa-brands fa-google text-xl sm:mx-4" />
-                            <span class="mx-auto py-2"> Anmelden mit Google </span>
-                        </button>
-                        <button class="btn-secondary mb-4" @click="authUseCase.login()">
-                            <i class="fa-brands fa-apple text-xl sm:mx-4" />
-                            <span class="mx-auto py-2"> Anmelden mit Apple </span>
-                        </button>
-                        <button class="btn-secondary mb-4" @click="authUseCase.login()">
-                            <i class="fa-brands fa-microsoft text-xl sm:mx-4" />
-                            <span class="mx-auto py-2"> Anmelden mit Microsoft </span>
-                        </button>
-                    </div>
-                </div>
-                <div class="bg-surface h-0 grow sm:hidden"></div>
-            </div>
-        </div>
-    </div>
-    <div v-else class="h-full overflow-y-auto px-8 pt-8 pb-8 md:px-16 xl:px-20"></div>
+    <div class="fixed h-screen w-screen animate-pulse"></div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { VInputText } from '@/ui/components/common';
 import { useAuthUseCase } from '@/ui/composables/Application';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -95,23 +10,10 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 const emit = defineEmits<RouteEmits>();
 
 const authUseCase = useAuthUseCase();
-const router = useRouter();
-
-const enableLoginView = localStorage.getItem('flag.login-show-any') === 'true';
-const enableDirectLogin = localStorage.getItem('flag.login-show-fields') === 'true';
-const username = ref<string>('');
-const password = ref<string>('');
 
 async function init(): Promise<void> {
     emit('update:tab-title', 'Login');
-    if (!enableLoginView) {
-        await authUseCase.login();
-    } else {
-        if (!authUseCase.isLoggedIn()) {
-            await authUseCase.onLogin();
-        }
-        await router.push('/');
-    }
+    await authUseCase.login();
 }
 
 init();

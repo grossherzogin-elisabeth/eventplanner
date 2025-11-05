@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <h1 v-if="!qualification.key">{{ $t('views.basedata.tab.qualifications.add-new') }}</h1>
-            <h1 v-else>{{ $t('views.basedata.tab.qualifications.edit') }}</h1>
+            <template v-if="!qualification.key">{{ $t('views.basedata.tab.qualifications.add-new') }}</template>
+            <template v-else>{{ $t('views.basedata.tab.qualifications.edit') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
