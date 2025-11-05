@@ -98,7 +98,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ props.submitText || 'Übernehmen' }}</span>
             </button>
         </template>

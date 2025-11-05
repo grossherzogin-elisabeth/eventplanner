@@ -29,7 +29,7 @@
         border: none;
         outline: none;
         background: transparent;
-        margin-top: 1.5rem;
+        margin-top: 1.75rem;
         @apply text-onsurface;
     }
 

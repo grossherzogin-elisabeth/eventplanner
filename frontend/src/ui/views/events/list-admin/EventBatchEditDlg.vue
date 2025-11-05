@@ -64,7 +64,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <AsyncButton class="btn-primary" name="save" :action="submit" :disabled="validation.disableSubmit.value">
+            <AsyncButton class="btn-ghost" name="save" :action="submit" :disabled="validation.disableSubmit.value">
                 <template #label>{{ $t('generic.save') }}</template>
             </AsyncButton>
         </template>

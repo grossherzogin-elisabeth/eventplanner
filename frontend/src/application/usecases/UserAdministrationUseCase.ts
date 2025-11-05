@@ -147,7 +147,6 @@ export class UserAdministrationUseCase {
             .validate(
                 'nickName',
                 user?.nickName,
-                notEmpty(),
                 matchesPattern(NAME_REGEX, 'generic.validation.invalid-name'),
                 doesNotContain(user?.lastName, 'generic.validation.must-not-include-lastname')
             )

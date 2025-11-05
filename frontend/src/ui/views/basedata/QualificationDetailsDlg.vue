@@ -45,7 +45,7 @@
                 <div class="mb-4">
                     <VInputCheckBox v-model="qualification.expires" :label="$t('views.basedata.tab.qualifications.expires')" />
                 </div>
-                <div class="bg-surface-container-low xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
+                <div class="bg-surface-container-highest xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold">{{ $t('views.basedata.tab.positions.title') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
@@ -63,7 +63,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.save') }}</span>
             </button>
         </template>

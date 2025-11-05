@@ -112,7 +112,7 @@
             <button class="btn-ghost" name="save" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-primary" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>

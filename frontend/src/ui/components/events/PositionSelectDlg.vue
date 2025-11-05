@@ -26,7 +26,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" @click="submit">
+            <button class="btn-ghost" @click="submit">
                 <span>Anmelden</span>
             </button>
         </template>

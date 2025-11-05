@@ -118,7 +118,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>Abbrechen</span>
             </button>
-            <button class="btn-primary" name="save" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" name="save" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>Speichern</span>
             </button>
         </template>

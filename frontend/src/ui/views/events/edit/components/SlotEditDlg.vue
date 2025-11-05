@@ -63,7 +63,7 @@
             <button class="btn-ghost" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-primary" @click="submit">
+            <button class="btn-ghost" @click="submit">
                 <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>
