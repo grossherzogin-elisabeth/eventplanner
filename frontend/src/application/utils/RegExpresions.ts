@@ -4,3 +4,12 @@ export const NAME_REGEX = new RegExp(
 );
 export const EMAIL_REGEX = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,8}$');
 export const PASS_NR_REGEX = new RegExp('^[0-9A-Z ]+$');
+export const NUMBER_REGEX = new RegExp('^\\d*$');
+
+const DD = '(0?[1-9]|[12][0-9]|3[01])';
+const MM = '(0?[1-9]|1[012])';
+const YYYY = '\\d{2,4}';
+const DELIMITER = '[- /.]';
+export const DATE_DD_MM_YYYY_REGEX = new RegExp(`^${DD}${DELIMITER}${MM}${DELIMITER}${YYYY}$`);
+export const DATE_MM_DD_YYYY_REGEX = new RegExp(`^${MM}${DELIMITER}${DD}${DELIMITER}${YYYY}$`);
+export const DATE_YYYY_MM_DD_REGEX = new RegExp(`^${YYYY}${DELIMITER}${MM}${DELIMITER}${DD}$`);

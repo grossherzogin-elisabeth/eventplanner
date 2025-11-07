@@ -35,7 +35,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div ref="content" class="dialog-content flex flex-1 flex-col overflow-y-auto">
+                            <div ref="content" class="dialog-content flex flex-1 flex-col overflow-y-auto bg-inherit">
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>

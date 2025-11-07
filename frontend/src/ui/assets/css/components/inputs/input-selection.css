@@ -21,7 +21,7 @@
         overflow-x: hidden;
     }
 
-    .input-dropdown li {
+    .input-dropdown-option {
         width: 100%;
         white-space: nowrap;
         overflow: hidden;
@@ -30,21 +30,21 @@
         @apply py-4 pl-4;
     }
 
-    .input-dropdown li.input-dropdown-option {
+    .input-dropdown-option {
     }
 
-    .input-dropdown li.input-dropdown-option:hover {
+    .input-dropdown-option:hover {
         @apply bg-onsurface/10;
         @apply text-onsurface;
     }
 
-    .input-dropdown li.input-dropdown-option-focus {
+    .input-dropdown-option-focus {
         @apply bg-secondary-container;
         @apply font-bold;
         @apply text-onsecondary-container;
     }
 
-    .input-dropdown li.input-dropdown-option-focus:hover {
+    .input-dropdown-option-focus:hover {
         @apply bg-secondary-container/90;
         @apply text-onsecondary-container;
     }
