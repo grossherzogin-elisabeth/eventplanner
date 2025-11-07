@@ -98,6 +98,9 @@ function cancel(): void {
 }
 
 async function submit(): Promise<void> {
+    if (!validation.isValid.value) {
+        return;
+    }
     emit('update:modelValue', mutableCopy.value);
     if (!props.direct) {
         // TODO replace fake delay with actual request await
@@ -107,7 +110,9 @@ async function submit(): Promise<void> {
 }
 
 function update(): void {
-    emit('update:modelValue', mutableCopy.value);
+    if (validation.isValid.value) {
+        emit('update:modelValue', mutableCopy.value);
+    }
 }
 
 init();
