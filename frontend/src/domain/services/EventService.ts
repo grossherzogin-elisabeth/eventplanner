@@ -1,5 +1,5 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
-import { Validator, before, maxLength, notEmpty } from '@/common/validation';
+import { Validator, after, before, maxLength, notEmpty } from '@/common/validation';
 import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
 import { EventSignupType, EventState, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
@@ -191,7 +191,7 @@ export class EventService {
     public validate(event: Event): Record<string, string[]> {
         return Validator.validate('name', event.name, notEmpty(), maxLength(35))
             .validate('start', event.start, notEmpty())
-            .validate('end', event.end, notEmpty(), before(event.start, 'Das Enddatum muss nach dem Startdatum liegen'))
+            .validate('end', event.end, notEmpty(), after(event.start, 'Das Enddatum muss nach dem Startdatum liegen'))
             .getErrors();
     }
 

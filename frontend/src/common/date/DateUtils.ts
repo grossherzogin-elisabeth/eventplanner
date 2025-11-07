@@ -22,9 +22,11 @@ export function subtractFromDate(date: Date | number, diff: DateDiff): Date {
     return new Date(year, month, day, hours, minutes, seconds);
 }
 
-export function updateDate(target: Date | undefined, date: Date): Date {
+export function updateDate(target?: Date, date?: Date): Date {
     const result = target ? new Date(target) : new Date();
-    result.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    if (date) {
+        result.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    }
     return result;
 }
 
@@ -76,4 +78,8 @@ export function deserializeDate(date: string): Date {
 
 export function isSameDate(a?: Date, b?: Date): boolean {
     return a?.getFullYear() === b?.getFullYear() && a?.getMonth() === b?.getMonth() && a?.getDate() === b?.getDate();
+}
+
+export function getDaysOfMonth(date: Date): number {
+    return new Date(date.getFullYear(), date.getMonth() + 1, -1).getDate() + 1;
 }

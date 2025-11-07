@@ -9,7 +9,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        @apply h-11 w-11;
+        @apply h-10 w-10;
     }
 
     .btn-icon:before {
@@ -29,6 +29,9 @@
     }
 
     .btn-icon:hover:before {
-        @apply top-0.5 right-0.5 bottom-0.5 left-0.5;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 }
