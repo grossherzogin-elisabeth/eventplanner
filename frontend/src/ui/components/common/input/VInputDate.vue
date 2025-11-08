@@ -76,9 +76,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { DATE_DD_MM_YYYY_REGEX, DATE_MM_DD_YYYY_REGEX, DATE_YYYY_MM_DD_REGEX, NUMBER_REGEX } from '@/application/utils/RegExpresions.ts';
+import {
+    DATE_DD_MM_YYYY_REGEX,
+    DATE_DD_MM_YY_REGEX,
+    DATE_MM_DD_YYYY_REGEX,
+    DATE_YYYY_MM_DD_REGEX,
+    NUMBER_REGEX,
+} from '@/application/utils/RegExpresions.ts';
 import { DateTimeFormat, getDaysOfMonth } from '@/common/date';
 import { addToDate, subtractFromDate } from '@/common/date/DateUtils';
 import type { Dialog } from '@/ui/components/common';
@@ -137,6 +143,20 @@ const allErrors = computed<string[] | undefined>(() => {
     return props.errors;
 });
 
+function init(): void {
+    updateDisplayValue(props.modelValue);
+    watch(
+        () => props.modelValue,
+        () => updateDisplayValue(props.modelValue)
+    );
+}
+
+function updateDisplayValue(date?: Date): void {
+    if (date) {
+        displayValue.value = i18n.d(date, DateTimeFormat.DD_MM_YYYY);
+    }
+}
+
 function focus(): void {
     inputField.value?.focus();
 }
@@ -190,9 +210,7 @@ function updatedSelectedDate(input: Date | string): void {
         hasInvalidInput.value = false;
     }
     visited.value = true;
-    if (date) {
-        displayValue.value = i18n.d(date, DateTimeFormat.DD_MM_YYYY);
-    }
+    updateDisplayValue(date);
     emit('update:modelValue', date);
 }
 
@@ -206,10 +224,10 @@ function parseDate(value: string): Date | undefined {
     let day: number | undefined = undefined;
     if (value.match(DATE_YYYY_MM_DD_REGEX)) {
         const parts = value.split(new RegExp('[- /.]'));
-        day = parseInt(parts[1], 10);
+        day = parseInt(parts[2], 10);
         month = parseInt(parts[1], 10);
         year = parseInt(parts[0], 10);
-    } else if (value.match(DATE_DD_MM_YYYY_REGEX)) {
+    } else if (value.match(DATE_DD_MM_YYYY_REGEX) || value.match(DATE_DD_MM_YY_REGEX)) {
         const parts = value.split(new RegExp('[- /.]'));
         day = parseInt(parts[0], 10);
         month = parseInt(parts[1], 10);
@@ -240,4 +258,6 @@ function parseDate(value: string): Date | undefined {
     }
     return undefined;
 }
+
+init();
 </script>

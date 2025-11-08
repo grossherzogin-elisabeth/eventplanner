@@ -36,7 +36,7 @@ import { v4 as uuidv4 } from 'uuid';
 import VInputHint from './VInputHint.vue';
 
 interface Props {
-    label: string;
+    label?: string;
     hint?: string;
     modelValue?: string;
     disabled?: boolean;

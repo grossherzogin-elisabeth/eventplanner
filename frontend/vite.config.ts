@@ -58,7 +58,15 @@ export default defineConfig(({ mode }) => {
                 'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
                 // use @ as placeholder for src dir
                 '@': path.resolve(__dirname, './src'),
+                // use ~ as placeholder for test dir
+                '~': path.resolve(__dirname, './test'),
             },
+        },
+        test: {
+            pool: 'vmThreads',
+            globals: true,
+            environment: 'happy-dom',
+            setupFiles: ['test/vitest.setup.ts'],
         },
     };
 });
