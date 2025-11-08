@@ -1,6 +1,6 @@
 <template>
     <div>
-        <teleport to="#app">
+        <teleport to="body">
             <div
                 v-if="renderContent"
                 ref="background"

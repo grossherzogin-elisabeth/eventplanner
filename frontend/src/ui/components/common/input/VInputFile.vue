@@ -2,6 +2,7 @@
     <div class="v-input-file" :class="$attrs.class">
         <div class="input-field-wrapper">
             <slot name="before"></slot>
+            <label :for="id">{{ props.label }}</label>
             <input
                 :id="id"
                 :aria-disabled="props.disabled"

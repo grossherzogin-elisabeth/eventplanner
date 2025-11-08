@@ -1,6 +1,6 @@
 <template>
     <div>
-        <teleport to="#app">
+        <teleport to="body">
             <div
                 v-if="renderContent"
                 :class="`${dialogOpen ? 'open' : 'closed'} ${props.type || 'fullscreen'}`"
@@ -154,7 +154,7 @@ async function close(): Promise<void> {
 
     await nextTick();
     closeTimeout = setTimeout(() => {
-        // renderContent.value = false;
+        renderContent.value = false;
         emit('closed');
         enableScrolling();
     }, animationDuration + 100);

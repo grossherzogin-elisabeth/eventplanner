@@ -8,8 +8,10 @@ export const NUMBER_REGEX = new RegExp('^\\d*$');
 
 const DD = '(0?[1-9]|[12][0-9]|3[01])';
 const MM = '(0?[1-9]|1[012])';
-const YYYY = '\\d{2,4}';
+const YY = '\\d{2}';
+const YYYY = '\\d{4}';
 const DELIMITER = '[- /.]';
 export const DATE_DD_MM_YYYY_REGEX = new RegExp(`^${DD}${DELIMITER}${MM}${DELIMITER}${YYYY}$`);
+export const DATE_DD_MM_YY_REGEX = new RegExp(`^${DD}${DELIMITER}${MM}${DELIMITER}${YY}$`);
 export const DATE_MM_DD_YYYY_REGEX = new RegExp(`^${MM}${DELIMITER}${DD}${DELIMITER}${YYYY}$`);
 export const DATE_YYYY_MM_DD_REGEX = new RegExp(`^${YYYY}${DELIMITER}${MM}${DELIMITER}${DD}$`);
