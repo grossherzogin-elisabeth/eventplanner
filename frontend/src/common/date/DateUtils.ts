@@ -30,7 +30,7 @@ export function updateDate(target?: Date, date?: Date): Date {
     return result;
 }
 
-export function updateTime(target: Date | undefined, time: Date, precision: 'hours' | 'minutes' | 'seconds' | 'millis'): Date {
+export function updateTime(target: Date | undefined, time: Date, precision: 'hours' | 'minutes' | 'seconds' | 'millis' = 'millis'): Date {
     const result = target ? new Date(target) : new Date();
     switch (precision) {
         case 'hours':
