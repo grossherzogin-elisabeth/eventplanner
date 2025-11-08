@@ -45,3 +45,8 @@ jobs:
         shell: bash
         working-directory: frontend
         run: npm run build
+
+      - name: Check tests
+        shell: bash
+        working-directory: frontend
+        run: npm run test
