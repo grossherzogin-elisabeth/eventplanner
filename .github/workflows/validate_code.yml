@@ -108,7 +108,7 @@ jobs:
         working-directory: backend
         run: ./gradlew build test jacocoTestReport
 
-      - name: Upload test coverage artifact
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: backend-build-output
@@ -133,13 +133,13 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Download frontend coverage
+      - name: Download frontend test coverage artifacts
         uses: actions/download-artifact@v4
         with:
           name: frontend-test-report
           path: frontend/coverage
 
-      - name: Download backend coverage
+      - name: Download backend build artifacts
         uses: actions/download-artifact@v4
         with:
           name: backend-build-output
@@ -163,4 +163,4 @@ jobs:
         working-directory: backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar -Dsonar.projectBaseDir=/home/runner/work/eventplanner/eventplanner/ -x test -x build
+        run: ./gradlew sonar -Dsonar.projectBaseDir=/home/runner/work/eventplanner/eventplanner/ -x test -x build -x compileJava
