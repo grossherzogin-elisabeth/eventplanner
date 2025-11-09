@@ -1,4 +1,4 @@
-name: Backend
+name: Checks
 
 on:
   workflow_dispatch:
@@ -30,6 +30,7 @@ jobs:
   # -----------------------------------------------------------------
 
   validate-frontend:
+    name: Frontend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -80,6 +81,7 @@ jobs:
   # -----------------------------------------------------------------
 
   validate-backend:
+    name: Backend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -117,6 +119,7 @@ jobs:
   # -----------------------------------------------------------------
 
   validate:
+    name: Sonar
     needs:
       - validate-backend
       - validate-frontend
