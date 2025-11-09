@@ -18,7 +18,7 @@ export class AppSettingsUseCase {
 
     public async getAdminSettings(): Promise<AppSettings> {
         try {
-            return this.settingsRepository.readAdminSettings();
+            return await this.settingsRepository.readAdminSettings();
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;

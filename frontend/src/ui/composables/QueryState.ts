@@ -45,7 +45,7 @@ export function useQuery<T = string | number | boolean | string[]>(name: string,
     function readFromQuery(): void {
         const route = router.currentRoute.value;
         if (typeof defaultValue === 'number') {
-            const value = parseInt(route.query[name] as string, 10);
+            const value = Number.parseInt(route.query[name] as string, 10);
             if (!Number.isNaN(value)) {
                 parameter.value = value as T;
             }

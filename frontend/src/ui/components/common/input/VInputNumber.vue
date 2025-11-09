@@ -77,7 +77,7 @@ function focus(): void {
 }
 
 function onKeyPress(event: KeyboardEvent): void {
-    if (!props.decimal && Number.isNaN(parseInt(event.key))) {
+    if (!props.decimal && Number.isNaN(Number.parseInt(event.key, 10))) {
         event.preventDefault();
     }
 }

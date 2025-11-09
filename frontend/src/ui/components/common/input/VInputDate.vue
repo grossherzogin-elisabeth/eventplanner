@@ -224,23 +224,23 @@ function parseDate(value: string): Date | undefined {
     let day: number | undefined = undefined;
     if (value.match(DATE_YYYY_MM_DD_REGEX)) {
         const parts = value.split(new RegExp('[- /.]'));
-        day = parseInt(parts[2], 10);
-        month = parseInt(parts[1], 10);
-        year = parseInt(parts[0], 10);
+        day = Number.parseInt(parts[2], 10);
+        month = Number.parseInt(parts[1], 10);
+        year = Number.parseInt(parts[0], 10);
     } else if (value.match(DATE_DD_MM_YYYY_REGEX) || value.match(DATE_DD_MM_YY_REGEX)) {
         const parts = value.split(new RegExp('[- /.]'));
-        day = parseInt(parts[0], 10);
-        month = parseInt(parts[1], 10);
-        year = parseInt(parts[2], 10);
+        day = Number.parseInt(parts[0], 10);
+        month = Number.parseInt(parts[1], 10);
+        year = Number.parseInt(parts[2], 10);
     } else if (value.match(DATE_MM_DD_YYYY_REGEX)) {
         const parts = value.split(new RegExp('[- /.]'));
-        day = parseInt(parts[1], 10);
-        month = parseInt(parts[0], 10);
-        year = parseInt(parts[2], 10);
+        day = Number.parseInt(parts[1], 10);
+        month = Number.parseInt(parts[0], 10);
+        year = Number.parseInt(parts[2], 10);
     } else if (value.match(NUMBER_REGEX) && value.length >= 6) {
-        day = parseInt(value.substring(0, 2), 10);
-        month = parseInt(value.substring(2, 4), 10);
-        year = parseInt(value.substring(4), 10);
+        day = Number.parseInt(value.substring(0, 2), 10);
+        month = Number.parseInt(value.substring(2, 4), 10);
+        year = Number.parseInt(value.substring(4), 10);
     } else {
         throw new Error('Invalid date input');
     }

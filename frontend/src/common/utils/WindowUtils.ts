@@ -24,7 +24,7 @@ export function enableScrolling(): void {
     document.documentElement.style.removeProperty('height');
     document.documentElement.style.removeProperty('margin-top');
     document.documentElement.style.removeProperty('padding-right');
-    const scrollY = parseInt(document.documentElement.getAttribute('scrollTop') || '0', 10);
+    const scrollY = Number.parseInt(document.documentElement.getAttribute('scrollTop') || '0', 10);
     window.scrollTo(0, scrollY);
 }
 

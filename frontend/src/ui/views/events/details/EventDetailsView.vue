@@ -208,7 +208,7 @@ function init(): void {
 async function fetchEvent(): Promise<void> {
     try {
         const key = route.params.key as string;
-        const year = parseInt(route.params.year as string, 10) || new Date().getFullYear();
+        const year = Number.parseInt(route.params.year as string, 10) || new Date().getFullYear();
         event.value = await eventUseCase.getEventByKey(year, key);
     } catch (e) {
         console.error(e);

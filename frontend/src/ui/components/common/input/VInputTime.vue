@@ -97,8 +97,8 @@ function onInput(inputEvent: Event): void {
     const [hourRaw, minuteRaw] = inputValue.value.split(':').map((it) => it.trim());
     try {
         const d = new Date(props.modelValue?.getTime() || new Date().getTime());
-        const hh = parseInt(hourRaw, 10);
-        const mm = parseInt(minuteRaw, 10);
+        const hh = Number.parseInt(hourRaw, 10);
+        const mm = Number.parseInt(minuteRaw, 10);
         if (hh >= 0 && hh < 24) {
             d.setHours(hh);
         }

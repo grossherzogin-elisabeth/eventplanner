@@ -5,7 +5,7 @@ export interface ErrorDetails {
     message?: string;
     error?: unknown | Error | Response;
     retryText?: string;
-    retry?: () => void;
+    retry?: () => unknown;
     cancelText?: string;
 }
 
