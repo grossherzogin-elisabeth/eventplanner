@@ -114,11 +114,25 @@ jobs:
           name: backend-build-output
           path: backend/build
 
+
+  # -----------------------------------------------------------------
+  # Combine results of validate-backend and validate-frontend
+  # -----------------------------------------------------------------
+
+  validate:
+    needs:
+      - validate-backend
+      - validate-frontend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+
   # -----------------------------------------------------------------
   # Run Sonar
   # -----------------------------------------------------------------
 
-  validate:
+  sonar:
     name: Sonar
     needs:
       - validate-backend
