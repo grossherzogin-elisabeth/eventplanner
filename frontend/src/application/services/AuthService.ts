@@ -2,8 +2,8 @@ import type { SignedInUser, UserDetails } from '@/domain';
 import { Permission, Role } from '@/domain';
 
 export class AuthService {
-    private loginListeners: (() => void)[] = [];
-    private logoutListeners: (() => void)[] = [];
+    private readonly loginListeners: (() => void)[] = [];
+    private readonly logoutListeners: (() => void)[] = [];
     private signedInUser: SignedInUser | undefined = undefined;
     private impersonating: UserDetails | null = null;
 
@@ -51,7 +51,7 @@ export class AuthService {
 
     public async onLogout(): Promise<void> {
         if (!this.signedInUser) {
-            return Promise.resolve();
+            return;
         }
         return new Promise((resolve) => {
             this.logoutListeners.push(() => resolve());

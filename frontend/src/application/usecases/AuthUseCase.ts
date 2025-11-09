@@ -32,7 +32,7 @@ export class AuthUseCase {
         this.authService.setSignedInUser(user);
         if (!user) {
             if (redirectPath) {
-                localStorage.setItem('auth.redirect', redirectPath || window.location.pathname);
+                localStorage.setItem('auth.redirect', redirectPath);
             }
             return undefined;
         }
