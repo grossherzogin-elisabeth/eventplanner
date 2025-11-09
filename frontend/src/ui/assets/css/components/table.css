@@ -61,9 +61,6 @@ table.v-table {
     @apply md:px-4;
 }
 
-.v-table tbody td {
-}
-
 .sticky-table-header .v-table th {
     position: sticky;
     z-index: 10;

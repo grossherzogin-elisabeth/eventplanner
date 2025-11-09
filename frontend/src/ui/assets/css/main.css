@@ -24,12 +24,6 @@ html {
     --viewport-height: 100vh;
 }
 
-html,
-body {
-    /* disables drag to reload */
-    /* overscroll-behavior: none; */
-}
-
 .h-nav {
     height: var(--nav-height);
 }

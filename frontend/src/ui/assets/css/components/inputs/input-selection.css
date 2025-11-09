@@ -30,9 +30,6 @@
         @apply py-4 pl-4;
     }
 
-    .input-dropdown-option {
-    }
-
     .input-dropdown-option:hover {
         @apply bg-onsurface/10;
         @apply text-onsurface;
