@@ -130,7 +130,7 @@ export class UserAdministrationUseCase {
         document.body.appendChild(mailToElement);
         mailToElement.click();
         await wait(1000);
-        document.body.removeChild(mailToElement);
+        mailToElement.remove();
     }
 
     public validateForCreate(user: User): Record<string, string[]> {
