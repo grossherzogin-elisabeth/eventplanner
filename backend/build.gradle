@@ -82,8 +82,7 @@ sonar {
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.plugins.downloadOnlyRequired", true
         property "sonar.coverage.jacoco.xmlReportPaths", "backend/build/reports/jacoco/test/jacocoTestReport.xml"
-        property "sonar.projectBaseDir", ".."
-        property "sonar.sources", "backend/src/main/java, frontend/src"
-        property "sonar.tests", "backend/src/test/java, frontend/test"
+        property "sonar.sources", "src/main/java, ../frontend/src"
+        property "sonar.tests", "src/test/java, ../frontend/test"
     }
 }
