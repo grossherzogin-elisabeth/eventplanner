@@ -15,8 +15,8 @@
                             <span>{{ $t('views.events.admin-list.action.add-event') }}</span>
                         </button>
                     </div>
-                    <div v-if="!Number.isNaN(parseInt(tab))" class="permission-read-events hidden lg:block">
-                        <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(parseInt(tab))">
+                    <div v-if="!Number.isNaN(Number.parseInt(tab, 10))" class="permission-read-events hidden lg:block">
+                        <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(Number.parseInt(tab, 10))">
                             <i class="fa-solid fa-download"></i>
                             <span>{{ $t('views.events.admin-list.action.export') }}</span>
                         </button>
@@ -451,7 +451,7 @@ async function fetchEvents(): Promise<void> {
         const nextYear = await fetchEventsByYear(now.getFullYear() + 1);
         events.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
     } else {
-        const year = parseInt(tab.value);
+        const year = Number.parseInt(tab.value, 10);
         if (year) {
             events.value = await fetchEventsByYear(year);
         }

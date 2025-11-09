@@ -420,7 +420,7 @@ async function fetchEvents(): Promise<void> {
         const nextYear = await fetchEventsByYear(now.getFullYear() + 1);
         events.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
     } else {
-        const year = parseInt(tab.value);
+        const year = Number.parseInt(tab.value);
         if (year) {
             events.value = await fetchEventsByYear(year);
         }

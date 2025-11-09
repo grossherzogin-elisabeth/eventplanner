@@ -100,7 +100,7 @@ const showErrors = computed<boolean>(() => visited.value || props.errorsVisible 
 const hasErrors = computed<boolean>(() => props.errors.length > 0);
 
 function onKeyPress(event: KeyboardEvent): void {
-    if (!props.decimal && Number.isNaN(parseInt(event.key))) {
+    if (!props.decimal && Number.isNaN(Number.parseInt(event.key, 10))) {
         event.preventDefault();
     }
 }

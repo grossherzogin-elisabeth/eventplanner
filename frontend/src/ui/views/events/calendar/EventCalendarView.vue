@@ -184,7 +184,7 @@ function scrollRight(): void {
 }
 
 async function fetchEvents(): Promise<void> {
-    year.value = parseInt(route.params.year as string, 10) || new Date().getFullYear();
+    year.value = Number.parseInt(route.params.year as string, 10) || new Date().getFullYear();
     if (months.value.size === 0) {
         months.value = buildCalender(year.value);
     }

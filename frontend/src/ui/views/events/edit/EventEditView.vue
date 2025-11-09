@@ -346,7 +346,7 @@ async function init(): Promise<void> {
 }
 
 async function fetchEvent(): Promise<void> {
-    const year = parseInt(route.params.year as string, 10);
+    const year = Number.parseInt(route.params.year as string, 10);
     const key = route.params.key as string;
     const event = await eventUseCase.getEventByKey(year, key, true);
     updateState(event);
