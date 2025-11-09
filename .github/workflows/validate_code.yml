@@ -1,0 +1,165 @@
+name: Backend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - 'backend/build.gradle'
+      - 'backend/settings.gradle'
+      - 'backend/src/**'
+      - 'frontend/**'
+
+env:
+  JAVA_VERSION: 25
+  JAVA_DISTRIBUTION: temurin
+  NODE_VERSION: 24.10.0
+
+jobs:
+
+  # -----------------------------------------------------------------
+  # Validate frontend code
+  # -----------------------------------------------------------------
+
+  validate-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        shell: bash
+        working-directory: frontend
+        run: npm ci
+
+      - name: Check format
+        shell: bash
+        working-directory: frontend
+        run: npm run check:format
+
+      - name: Check eslint
+        shell: bash
+        working-directory: frontend
+        run: npm run check:lint
+
+      - name: Check build
+        shell: bash
+        working-directory: frontend
+        run: npm run build
+
+      - name: Run tests
+        shell: bash
+        working-directory: frontend
+        run: npm run test
+
+      - name: Upload test coverage artifact
+        uses: actions/upload-artifact@v4
+        working-directory: frontend
+        with:
+          name: test-coverage-frontend
+          path: coverage
+
+
+  # -----------------------------------------------------------------
+  # Validate backend code
+  # -----------------------------------------------------------------
+
+  validate-backend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Run tests
+        shell: bash
+        working-directory: backend
+        run: ./gradlew build test jacocoTestReport
+
+      - name: Upload test coverage artifact
+        uses: actions/upload-artifact@v4
+        working-directory: backend
+        with:
+          name: test-coverage-backend
+          path: build/reports
+
+  # -----------------------------------------------------------------
+  # Run Sonar
+  # -----------------------------------------------------------------
+
+  validate:
+    needs:
+      - validate-backend
+      - validate-frontend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Download frontend coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: test-coverage-frontend
+          path: frontend/coverage
+
+      - name: Download backend coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: test-coverage-backend
+          path: backend/build/reports
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Run SonarQube Analysis
+        shell: bash
+        working-directory: backend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar --info

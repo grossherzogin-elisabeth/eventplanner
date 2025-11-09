@@ -67,6 +67,10 @@ export default defineConfig(({ mode }) => {
             globals: true,
             environment: 'happy-dom',
             setupFiles: ['test/vitest.setup.ts'],
+            coverage: {
+                reporter: ['text', 'lcov'],
+                exclude: ['postcss.config.cjs', 'babel.config.js', 'eslint.config.mjs', 'vite.config.ts', 'dist', 'test'],
+            },
         },
     };
 });
