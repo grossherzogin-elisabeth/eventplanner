@@ -69,7 +69,7 @@ export default defineConfig(({ mode }) => {
             setupFiles: ['test/vitest.setup.ts'],
             coverage: {
                 reporter: ['text', 'lcov'],
-                exclude: ['postcss.config.cjs', 'babel.config.js', 'eslint.config.mjs', 'vite.config.ts', 'dist', 'test'],
+                exclude: ['postcss.config.cjs', 'babel.config.js', 'eslint.config.mjs', 'vite.config.ts', 'dist', 'test', '*.yml'],
             },
         },
     };
