@@ -70,10 +70,9 @@ jobs:
 
       - name: Upload test coverage artifact
         uses: actions/upload-artifact@v4
-        working-directory: frontend
         with:
           name: test-coverage-frontend
-          path: coverage
+          path: frontend/coverage
 
 
   # -----------------------------------------------------------------
@@ -109,10 +108,9 @@ jobs:
 
       - name: Upload test coverage artifact
         uses: actions/upload-artifact@v4
-        working-directory: backend
         with:
           name: test-coverage-backend
-          path: build/reports
+          path: backend/build/reports
 
   # -----------------------------------------------------------------
   # Run Sonar
