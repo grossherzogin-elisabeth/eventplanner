@@ -132,6 +132,7 @@ jobs:
         shell: bash
         run: echo "All checks succeeded"
 
+
   # -----------------------------------------------------------------
   # Run Sonar
   # -----------------------------------------------------------------
@@ -181,4 +182,4 @@ jobs:
         working-directory: backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar -Dsonar.projectBaseDir=/home/runner/work/eventplanner/eventplanner/ -x test -x build -x compileJava
+        run: ./gradlew sonar -Dsonar.projectBaseDir=/home/runner/work/eventplanner/eventplanner/ -Dsonar.gradle.skipCompile=true
