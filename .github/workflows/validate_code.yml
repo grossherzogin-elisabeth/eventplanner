@@ -163,4 +163,4 @@ jobs:
         working-directory: backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar -x test -x build
+        run: ./gradlew sonar -Dsonar.projectBaseDir=/home/runner/work/eventplanner/eventplanner/ -x test -x build
