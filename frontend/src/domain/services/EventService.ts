@@ -1,5 +1,5 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
-import { Validator, after, before, maxLength, notEmpty } from '@/common/validation';
+import { Validator, after, maxLength, notEmpty } from '@/common/validation';
 import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
 import { EventSignupType, EventState, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
@@ -38,12 +38,14 @@ export class EventService {
     }
 
     public cancelUserRegistration(event: Event, userKey?: UserKey): Event {
-        event.registrations = event.registrations.filter((it) => it.userKey !== userKey);
+        if (userKey) {
+            event.registrations = event.registrations.filter((it) => it.userKey !== userKey);
+        }
         return event;
     }
 
     public cancelGuestRegistration(event: Event, name?: string): Event {
-        event.registrations = event.registrations.filter((it) => it.name !== name);
+        event.registrations = event.registrations.filter((it) => it.name !== name || it.userKey !== undefined);
         return event;
     }
 
@@ -65,7 +67,9 @@ export class EventService {
 
     public updateSlot(event: Event, slot: Slot): Event {
         const index = event.slots.findIndex((it) => it.key === slot.key);
-        event.slots[index] = slot;
+        if (index >= 0) {
+            event.slots[index] = slot;
+        }
         return event;
     }
 
@@ -117,12 +121,15 @@ export class EventService {
 
     public updateLocation(event: Event, location: Location): Event {
         const index = event.locations.findIndex((it) => it.order === location.order);
-        event.locations[index] = location;
+        if (index >= 0) {
+            event.locations[index] = location;
+        }
         return event;
     }
 
     public removeLocation(event: Event, location: Location): Event {
         event.locations = event.locations.filter((it) => it.order !== location.order);
+        event.locations.forEach((it, index) => (it.order = index + 1));
         return event;
     }
 
@@ -197,7 +204,7 @@ export class EventService {
 
     public validatePartial(event: Partial<Event>): Record<string, string[]> {
         return Validator.validate('name', event.name, maxLength(35))
-            .validate('end', event.end, before(event.start, 'Das Enddatum muss nach dem Startdatum liegen'))
+            .validate('end', event.end, after(event.start, 'Das Enddatum muss nach dem Startdatum liegen'))
             .getErrors();
     }
 
