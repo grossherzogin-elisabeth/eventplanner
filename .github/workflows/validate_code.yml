@@ -72,7 +72,7 @@ jobs:
       - name: Upload test coverage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: test-coverage-frontend
+          name: frontend-test-report
           path: frontend/coverage
 
 
@@ -111,8 +111,8 @@ jobs:
       - name: Upload test coverage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: test-coverage-backend
-          path: backend/build/reports
+          name: backend-build-output
+          path: backend/build
 
   # -----------------------------------------------------------------
   # Run Sonar
@@ -136,14 +136,14 @@ jobs:
       - name: Download frontend coverage
         uses: actions/download-artifact@v4
         with:
-          name: test-coverage-frontend
+          name: frontend-test-report
           path: frontend/coverage
 
       - name: Download backend coverage
         uses: actions/download-artifact@v4
         with:
-          name: test-coverage-backend
-          path: backend/build/reports
+          name: backend-build-output
+          path: backend/build
 
       - name: Set up Java
         uses: actions/setup-java@v5
@@ -163,4 +163,4 @@ jobs:
         working-directory: backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar -x test
+        run: ./gradlew sonar -x test -x build
