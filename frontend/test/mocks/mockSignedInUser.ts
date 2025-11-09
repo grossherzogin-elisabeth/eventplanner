@@ -1,6 +1,6 @@
 import type { SignedInUser } from '@/domain';
 import { Permission, Role } from '@/domain';
-import { DECKHAND } from '~/mocks/mockPosition.ts';
+import { DECKHAND } from './mockPosition';
 
 export function mockSignedInUser(overwrite?: Partial<SignedInUser>): SignedInUser {
     const user: SignedInUser = {

@@ -10,6 +10,7 @@
         "lint": "npx eslint --fix src",
         "format": "./node_modules/.bin/prettier . --ignore-path .gitignore --ignore-path .prettierignore --write",
         "test": "TZ=CET vitest",
+        "test:coverage": "TZ=CET vitest run --coverage",
         "check:format": "./node_modules/.bin/prettier --ignore-path .gitignore --ignore-path .prettierignore --check .",
         "check:lint": "npx eslint src",
         "check:typescript": "vue-tsc"
@@ -39,6 +40,7 @@
         "@types/node": "^24.10.0",
         "@types/uuid": "^11.0.0",
         "@vitejs/plugin-vue": "^6.0.1",
+        "@vitest/coverage-v8": "^3.2.4",
         "@vue/eslint-config-typescript": "^14.6.0",
         "@vue/test-utils": "^2.4.6",
         "eslint": "^9.39.1",

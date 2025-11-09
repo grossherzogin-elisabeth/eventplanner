@@ -1,6 +1,6 @@
 import type { Registration } from '@/domain';
-import { CAPTAIN, DECKHAND, ENGINEER, MATE } from '~/mocks/mockPosition';
-import { USER_CAPTAIN, USER_DECKHAND, USER_ENGINEER, USER_MATE } from '~/mocks/mockUsers';
+import { CAPTAIN, DECKHAND, ENGINEER, MATE } from './mockPosition';
+import { USER_CAPTAIN, USER_DECKHAND, USER_ENGINEER, USER_MATE } from './mockUsers';
 
 export const REGISTRATION_CAPTAIN = 'reg-captain-key';
 export const REGISTRATION_ENGINEER = 'reg-engineer-key';
