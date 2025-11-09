@@ -2,48 +2,41 @@ import type { Event } from '@/domain';
 import { EventState, SlotCriticality } from '@/domain';
 import { EventService } from '@/domain/services/EventService';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mockEvent } from '~/mocks/mockEvent';
-import { mockLocation1, mockLocation2, mockLocation3 } from '~/mocks/mockLocation';
-import { CAPTAIN, ENGINEER } from '~/mocks/mockPosition.ts';
 import {
+    CAPTAIN,
+    ENGINEER,
     REGISTRATION_CAPTAIN,
     REGISTRATION_DECKHAND,
     REGISTRATION_ENGINEER,
     REGISTRATION_GUEST,
     REGISTRATION_MATE,
+    SLOT_CAPTAIN,
+    SLOT_DECKHAND,
+    SLOT_MATE,
+    USER_CAPTAIN,
+    USER_MATE,
+    mockEvent,
+    mockLocation1,
+    mockLocation2,
+    mockLocation3,
     mockRegistrationCaptain,
     mockRegistrationDeckhand,
     mockRegistrationGuest,
     mockRegistrationMate,
-} from '~/mocks/mockRegistration';
-import { mockSignedInUser } from '~/mocks/mockSignedInUser.ts';
-import {
-    SLOT_CAPTAIN,
-    SLOT_DECKHAND,
-    SLOT_MATE,
+    mockSignedInUser,
     mockSlotCaptain,
     mockSlotDeckhand,
     mockSlotEngineer,
     mockSlotMate,
-} from '~/mocks/mockSlot.ts';
-import { USER_CAPTAIN, USER_MATE, mockUserCaptain, mockUserDeckhand } from '~/mocks/mockUsers';
-
-vi.mock('uuid', () => ({
-    v4: vi.fn(() => 'mock-uuid-123'),
-}));
+    mockUserCaptain,
+    mockUserDeckhand,
+} from '~/mocks';
 
 describe('EventService', () => {
     let testee: EventService;
 
     beforeEach(() => {
         testee = new EventService();
-        // Set a fixed system time for predictable date calculations
-        vi.setSystemTime(new Date('2024-07-01T12:00:00Z'));
-    });
-
-    afterEach(() => {
-        // Restore real system time after each test
-        vi.useRealTimers();
     });
 
     describe('doEventsHaveOverlappingDays', () => {
@@ -247,6 +240,14 @@ describe('EventService', () => {
     });
 
     describe('duplicateSlot', () => {
+        vi.mock('uuid', () => ({
+            v4: vi.fn(() => 'mock-uuid-123'),
+        }));
+
+        afterEach(() => {
+            vi.clearAllMocks();
+        });
+
         it('should create slot with new key', () => {
             const event = mockEvent();
             const slotToDuplicate = mockSlotDeckhand();
@@ -621,7 +622,14 @@ describe('EventService', () => {
         soonEvent.slots[0].assignedRegistrationKey = REGISTRATION_CAPTAIN;
         futureEvent.slots[0].assignedRegistrationKey = REGISTRATION_CAPTAIN;
 
-        vi.setSystemTime(new Date('2024-07-01T12:00:00Z'));
+        beforeEach(() => {
+            vi.setSystemTime(new Date('2024-07-01T12:00:00Z'));
+        });
+
+        afterEach(() => {
+            // Restore real system time after each test
+            vi.useRealTimers();
+        });
 
         it('should set isInPast correctly', () => {
             let updatedEvent = testee.updateComputedValues({ ...futureEvent });

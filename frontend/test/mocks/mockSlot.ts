@@ -1,6 +1,6 @@
 import type { Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
-import { CAPTAIN, DECKHAND, ENGINEER, MATE } from '~/mocks/mockPosition';
+import { CAPTAIN, DECKHAND, ENGINEER, MATE } from './mockPosition';
 
 export const SLOT_CAPTAIN = 'slot-captain';
 export const SLOT_ENGINEER = 'slot-engineer';
