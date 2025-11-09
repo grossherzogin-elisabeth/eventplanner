@@ -1,0 +1,185 @@
+name: Checks
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - 'backend/build.gradle'
+      - 'backend/settings.gradle'
+      - 'backend/src/**'
+      - 'frontend/**'
+
+env:
+  JAVA_VERSION: 25
+  JAVA_DISTRIBUTION: temurin
+  NODE_VERSION: 24.10.0
+
+jobs:
+
+  # -----------------------------------------------------------------
+  # Validate frontend code
+  # -----------------------------------------------------------------
+
+  validate-frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        shell: bash
+        working-directory: frontend
+        run: npm ci
+
+      - name: Check format
+        shell: bash
+        working-directory: frontend
+        run: npm run check:format
+
+      - name: Check eslint
+        shell: bash
+        working-directory: frontend
+        run: npm run check:lint
+
+      - name: Check build
+        shell: bash
+        working-directory: frontend
+        run: npm run build
+
+      - name: Run tests
+        shell: bash
+        working-directory: frontend
+        run: npm run test:coverage
+
+      - name: Upload test coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-test-report
+          path: frontend/coverage
+
+
+  # -----------------------------------------------------------------
+  # Validate backend code
+  # -----------------------------------------------------------------
+
+  validate-backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Run tests
+        shell: bash
+        working-directory: backend
+        run: ./gradlew build test jacocoTestReport
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build-output
+          path: backend/build
+
+
+  # -----------------------------------------------------------------
+  # Combine results of validate-backend and validate-frontend
+  # -----------------------------------------------------------------
+
+  validate:
+    needs:
+      - validate-backend
+      - validate-frontend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Success
+        shell: bash
+        run: echo "All checks succeeded"
+
+
+  # -----------------------------------------------------------------
+  # Run Sonar
+  # -----------------------------------------------------------------
+
+  sonar:
+    name: Sonar
+    needs:
+      - validate-backend
+      - validate-frontend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Download frontend test coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-test-report
+          path: frontend/coverage
+
+      - name: Download backend build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-build-output
+          path: backend/build
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Run SonarQube Analysis
+        shell: bash
+        working-directory: backend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar -Dsonar.projectBaseDir=/home/runner/work/eventplanner/eventplanner/ -Dsonar.gradle.skipCompile=true
