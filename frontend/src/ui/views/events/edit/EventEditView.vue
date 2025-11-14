@@ -20,114 +20,7 @@
             <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-10 z-20 pt-4 xl:top-20">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
-                        <section v-if="event">
-                            <div class="mb-4">
-                                <VInputSelect
-                                    v-model="event.state"
-                                    :label="$t('domain.event.status')"
-                                    :options="eventStates.options.value"
-                                    :errors="validation.errors.value['state']"
-                                    :errors-visible="validation.showErrors.value"
-                                    required
-                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <VInputText
-                                    v-model.trim="event.name"
-                                    :label="$t('domain.event.name')"
-                                    :errors="validation.errors.value['name']"
-                                    :errors-visible="validation.showErrors.value"
-                                    required
-                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <VInputSelect
-                                    v-model="event.type"
-                                    :label="$t('domain.event.category')"
-                                    :options="eventTypes.options.value"
-                                    :errors="validation.errors.value['type']"
-                                    :errors-visible="validation.showErrors.value"
-                                    required
-                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <VInputSelect
-                                    v-model="event.signupType"
-                                    :label="$t('domain.event.signup-type')"
-                                    :options="eventSignupTypes.options.value"
-                                    :errors="validation.errors.value['signupType']"
-                                    :errors-visible="validation.showErrors.value"
-                                    required
-                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                />
-                            </div>
-                            <div class="mb-4">
-                                <VInputTextArea
-                                    v-model.trim="event.description"
-                                    :label="$t('domain.event.description')"
-                                    hint="Markdown wird unterstützt"
-                                    :errors="validation.errors.value['description']"
-                                    :errors-visible="validation.showErrors.value"
-                                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                />
-                            </div>
-                            <div class="mb-4 flex space-x-4">
-                                <div class="w-3/5">
-                                    <VInputDate
-                                        :label="$t('domain.event.start-date')"
-                                        :model-value="event.start"
-                                        :highlight-from="event.start"
-                                        :highlight-to="event.end"
-                                        :errors="validation.errors.value['start']"
-                                        :errors-visible="validation.showErrors.value"
-                                        required
-                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                        @update:model-value="event.start = updateDate(event.start, $event)"
-                                    />
-                                </div>
-                                <div class="w-2/5">
-                                    <VInputTime
-                                        :label="$t('domain.event.crew-on-board')"
-                                        :model-value="event.start"
-                                        :errors="validation.errors.value['start']"
-                                        :errors-visible="validation.showErrors.value"
-                                        required
-                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                        @update:model-value="event.start = updateTime(event.start, $event, 'minutes')"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="mb-4 flex space-x-4">
-                                <div class="w-3/5">
-                                    <VInputDate
-                                        :label="$t('domain.event.end-date')"
-                                        :model-value="event.end"
-                                        :highlight-from="event.start"
-                                        :highlight-to="event.end"
-                                        :errors="validation.errors.value['end']"
-                                        :errors-visible="validation.showErrors.value"
-                                        required
-                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                        @update:model-value="event.end = updateDate(event.end, $event)"
-                                    />
-                                </div>
-                                <div class="w-2/5">
-                                    <VInputTime
-                                        :label="$t('domain.event.crew-off-board')"
-                                        :model-value="event.end"
-                                        :errors="validation.errors.value['end']"
-                                        :errors-visible="validation.showErrors.value"
-                                        required
-                                        :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
-                                        @update:model-value="event.end = updateTime(event.end, $event, 'minutes')"
-                                    />
-                                </div>
-                            </div>
-                        </section>
+                        <EventDetailsForm v-if="event" v-model:event="event" />
                     </div>
                 </template>
                 <template #[Tab.EVENT_TEAM]>
@@ -172,6 +65,14 @@
                     <i class="fa-solid fa-user-plus" />
                     <span>{{ $t('views.events.edit.actions.add-registration') }}</span>
                 </button>
+                <button
+                    v-else-if="tab === Tab.EVENT_REGISTRATIONS"
+                    class="permission-write-registrations btn-secondary"
+                    @click="addRegistration()"
+                >
+                    <i class="fa-solid fa-user-plus" />
+                    <span>{{ $t('views.events.edit.actions.add-registration') }}</span>
+                </button>
                 <button v-else-if="tab === Tab.EVENT_SLOTS" class="permission-write-event-slots btn-secondary" @click="addSlot()">
                     <i class="fa-solid fa-list" />
                     <span>{{ $t('views.events.edit.actions.add-slot') }}</span>
@@ -187,7 +88,11 @@
                 <i class="fa-solid fa-user-plus" />
                 <span>{{ $t('views.events.edit.actions.add-registration') }}</span>
             </li>
-            <li class="permission-write-event-slots context-menu-item" @click="addSlot()">
+            <li
+                v-if="event?.signupType === EventSignupType.Assignment"
+                class="permission-write-event-slots context-menu-item"
+                @click="addSlot()"
+            >
                 <i class="fa-solid fa-list" />
                 <span>{{ $t('views.events.edit.actions.add-slot') }}</span>
             </li>
@@ -210,26 +115,28 @@
                     <span>{{ $t('views.events.admin-list.action.exportToTemplate', { template }) }}</span>
                 </li>
             </template>
-            <li
-                v-if="event?.state === EventState.Draft"
-                class="permission-write-event-details context-menu-item"
-                @click="openEventForCrewSignup()"
-            >
-                <i class="fa-solid fa-lock-open" />
-                <span>{{ $t('views.events.edit.open-signup') }}</span>
-            </li>
-            <li
-                v-if="event?.state === EventState.OpenForSignup"
-                class="permission-write-event-details context-menu-item"
-                @click="publishPlannedCrew()"
-            >
-                <i class="fa-solid fa-earth-europe" />
-                <span>{{ $t('views.events.edit.actions.publish-crew') }}</span>
-            </li>
-            <li class="permission-write-event-slots context-menu-item" @click="resetTeam()">
-                <i class="fa-solid fa-rotate" />
-                <span>{{ $t('views.events.edit.actions.reset-crew') }}</span>
-            </li>
+            <template v-if="event?.signupType === EventSignupType.Assignment">
+                <li
+                    v-if="event?.state === EventState.Draft"
+                    class="permission-write-event-details context-menu-item"
+                    @click="openEventForCrewSignup()"
+                >
+                    <i class="fa-solid fa-lock-open" />
+                    <span>{{ $t('views.events.edit.open-signup') }}</span>
+                </li>
+                <li
+                    v-if="event?.state === EventState.OpenForSignup"
+                    class="permission-write-event-details context-menu-item"
+                    @click="publishPlannedCrew()"
+                >
+                    <i class="fa-solid fa-earth-europe" />
+                    <span>{{ $t('views.events.edit.actions.publish-crew') }}</span>
+                </li>
+                <li class="permission-write-event-slots context-menu-item" @click="resetTeam()">
+                    <i class="fa-solid fa-rotate" />
+                    <span>{{ $t('views.events.edit.actions.reset-crew') }}</span>
+                </li>
+            </template>
             <li class="permission-write-event-details context-menu-item text-error" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
                 <span>{{ $t('views.events.edit.actions.cancel-event') }}</span>
@@ -254,31 +161,19 @@ import {
     useUserAdministrationUseCase,
     useUsersUseCase,
 } from '@/application';
-import { deepCopy, diff, filterUndefined, updateDate, updateTime } from '@/common';
+import { deepCopy, diff, filterUndefined } from '@/common';
 import type { Event, InputSelectOption, Location, Registration, Slot } from '@/domain';
-import { EventState, Permission } from '@/domain';
+import { EventSignupType, EventState, Permission } from '@/domain';
 import { useEventService } from '@/domain/services.ts';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import {
-    AsyncButton,
-    VConfirmationDialog,
-    VInfo,
-    VInputDate,
-    VInputSelect,
-    VInputText,
-    VInputTextArea,
-    VInputTime,
-    VTabs,
-} from '@/ui/components/common';
+import { AsyncButton, VConfirmationDialog, VInfo, VTabs } from '@/ui/components/common';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
-import { useEventStates } from '@/ui/composables/EventStates.ts';
-import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CrewTab from '@/ui/views/events/edit/components/CrewTab.vue';
+import EventDetailsForm from '@/ui/views/events/edit/components/EventDetailsForm.vue';
 import VWarning from '../../../components/common/alerts/VWarning.vue';
 import CrewEditor from './components/CrewEditor.vue';
 import LocationEditDlg from './components/LocationEditDlg.vue';
@@ -291,7 +186,7 @@ enum Tab {
     EVENT_TEAM = 'positions',
     EVENT_SLOTS = 'slots',
     EVENT_LOCATIONS = 'locations',
-    EVENT_REGISTRATIONS = 'crew',
+    EVENT_REGISTRATIONS = 'registrations',
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -301,9 +196,6 @@ const emit = defineEmits<RouteEmits>();
 const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
-const eventStates = useEventStates();
-const eventTypes = useEventTypes();
-const eventSignupTypes = useEventSignupTypes();
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
@@ -318,16 +210,18 @@ const event = ref<Event | null>(null);
 const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
 const hasChanges = ref<boolean>(false);
 
-const tab = ref<Tab>(Tab.EVENT_TEAM);
 const tabs = computed<InputSelectOption<Tab>[]>(() => {
     const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
     if (signedInUser.permissions.includes(Permission.WRITE_EVENT_SLOTS)) {
-        visibleTabs.push(Tab.EVENT_TEAM);
-        visibleTabs.push(Tab.EVENT_SLOTS);
         visibleTabs.push(Tab.EVENT_REGISTRATIONS);
+        if (event.value?.signupType === EventSignupType.Assignment) {
+            visibleTabs.push(Tab.EVENT_SLOTS);
+            visibleTabs.push(Tab.EVENT_TEAM);
+        }
     }
     return visibleTabs.map((it) => ({ value: it, label: t(`views.events.edit.tab.${it}`) }));
 });
+const tab = ref<Tab>(tabs.value[0].value);
 
 const createLocationDialog = ref<Dialog<void, Location | undefined> | null>(null);
 const createSlotDialog = ref<Dialog<void, Slot | undefined> | null>(null);
