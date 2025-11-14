@@ -24,7 +24,7 @@
             <td :key="item.icon" class="text-xl">
                 <i class="fa-solid" :class="item.icon" />
             </td>
-            <td class="w-1/2 max-w-[50vw] sm:max-w-full">
+            <td class="w-full max-w-[50vw] sm:w-1/2 sm:max-w-full">
                 <p class="font-semibold">
                     <span>{{ item.name }}</span>
                 </p>
@@ -32,7 +32,7 @@
                     <span>{{ item.address }}</span>
                 </p>
             </td>
-            <td class="w-1/2 whitespace-nowrap">
+            <td class="hidden w-1/2 whitespace-nowrap sm:table-cell">
                 <p class="mb-2 text-sm">
                     <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.eta') }}:</span>
                     <span v-if="item.eta" class="font-semibold">{{ $d(item.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
