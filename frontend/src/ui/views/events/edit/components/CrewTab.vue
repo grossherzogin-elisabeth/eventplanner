@@ -7,11 +7,15 @@
             :placeholder="$t('views.events.edit.filter.all-positions')"
             :options="positions.options.value"
         />
-        <FilterToggle v-model="filterFreeSlots" :label="$t('views.events.edit.filter.free-slots')" />
+        <FilterToggle
+            v-if="props.event.signupType === EventSignupType.Assignment"
+            v-model="filterFreeSlots"
+            :label="$t('views.events.edit.filter.free-slots')"
+        />
         <FilterToggle v-model="filterValidQualifications" :label="$t('views.events.edit.filter.valid-qualifications')" />
         <FilterToggle v-model="filterUnconfirmed" :label="$t('views.events.edit.filter.pending-confirmation')" />
     </div>
-    <template v-if="props.event.signupType !== EventSignupType.Open">
+    <template v-if="props.event.signupType === EventSignupType.Assignment">
         <h2 class="text-secondary mb-4 font-bold">
             {{ $t('domain.event.crew-count', { count: filteredCrew.length }) }}
         </h2>
@@ -27,10 +31,10 @@
                 @remove-from-crew="removeFromCrew($event)"
             />
         </div>
+        <h2 class="text-secondary mb-4 font-bold">
+            {{ $t('domain.event.registration-count', { count: filteredRegistrations.length }) }}
+        </h2>
     </template>
-    <h2 class="text-secondary mb-4 font-bold">
-        {{ $t('domain.event.registration-count', { count: filteredRegistrations.length }) }}
-    </h2>
     <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
         <RegistrationsTable
             :event="props.event"

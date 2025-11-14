@@ -78,7 +78,7 @@
                         class="w-0"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
-                        <button class="btn-icon">
+                        <button class="btn-icon xl:mr-3">
                             <i class="fa-solid fa-ellipsis-vertical" />
                         </button>
                     </td>

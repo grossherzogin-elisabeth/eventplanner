@@ -3,41 +3,22 @@
         <!-- position counters -->
         <div class="bg-surface top-32 -mx-8 mb-4 overflow-x-auto pb-4">
             <div class="scrollbar-invisible text-onsurface-variant flex items-start gap-2 px-8 text-sm font-bold md:flex-wrap">
-                <div class="bg-surface-container flex items-center rounded-2xl p-1">
-                    <span class="px-2">{{ $t('domain.event.crew') }}</span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs whitespace-nowrap"
-                    >
-                        {{ props.event?.assignedUserCount }}
-                    </span>
+                <div class="tag info flex items-center space-x-1">
+                    <span>{{ $t('domain.event.crew') }}</span>
+                    <span>({{ props.event?.assignedUserCount }})</span>
                 </div>
-                <div
-                    class="flex items-center rounded-2xl p-1"
-                    :class="
-                        secureMinimumCrewMembers >= 8
-                            ? 'bg-secondary-container text-onsecondary-container'
-                            : 'bg-error-container/50 text-onerror-container'
-                    "
-                >
-                    <span class="px-2 whitespace-nowrap">{{ $t('views.events.edit.secure-crew') }}</span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs whitespace-nowrap"
-                    >
-                        {{ secureMinimumCrewMembers }}
-                    </span>
+                <div class="tag flex items-center space-x-1" :class="secureMinimumCrewMembers >= 8 ? 'info' : 'error'">
+                    <span>{{ $t('views.events.edit.secure-crew') }}</span>
+                    <span>({{ secureMinimumCrewMembers }})</span>
                 </div>
                 <div
                     v-for="pos in positions.all.value"
                     :key="pos.key"
-                    :style="{ 'background-color': pos.color }"
-                    class="flex items-center rounded-2xl p-1"
+                    :style="{ '--color': pos.color }"
+                    class="tag custom flex items-center space-x-1"
                 >
-                    <span class="truncate px-2">
-                        {{ pos.name }}
-                    </span>
-                    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-white/25 px-1 pt-0.5 text-center text-xs">
-                        {{ summary[pos.key] || '0' }}
-                    </span>
+                    <span>{{ pos.name }}</span>
+                    <span>({{ summary[pos.key] || '0' }})</span>
                 </div>
             </div>
         </div>

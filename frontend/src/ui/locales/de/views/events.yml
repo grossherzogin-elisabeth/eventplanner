@@ -109,11 +109,12 @@ events:
       message: 'Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen
        verworfen. Möchtest du fortfahren?'
     tab:
+      registrations: 'Anmeldungen'
       crew: 'Crew'
       data: 'Reisedaten'
-      positions: 'Crew verwalten'
+      positions: 'Crewplanung'
       locations: 'Reiseroute'
-      slots: 'Crew Slots'
+      slots: 'Slots'
     tooltip:
       positions: 'Positionen'
       information: 'Anmeldung'
