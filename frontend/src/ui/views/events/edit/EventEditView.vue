@@ -20,31 +20,31 @@
             <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 lg:top-14 xl:top-20">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
-                        <EventDetailsForm v-if="event" v-model:event="event" />
+                        <TabEventDetailsForm v-if="event" v-model:event="event" />
                     </div>
                 </template>
-                <template #[Tab.EVENT_TEAM]>
+                <template #[Tab.EVENT_CREW_EDITOR]>
                     <div class="xl:max-w-5xl">
-                        <CrewEditor v-if="event" v-model:event="event" />
+                        <TabCrewEditor v-if="event" v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
                     </div>
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
                     <div class="xl:max-w-5xl">
                         <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-                            <SlotsTable v-if="event" :event="event" />
+                            <TabSlots v-if="event" v-model:event="event" :crew="crew" :registrations="registrations" />
                         </div>
                     </div>
                 </template>
                 <template #[Tab.EVENT_LOCATIONS]>
                     <div class="xl:max-w-5xl">
                         <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-                            <LocationsTable v-if="event" :event="event" />
+                            <TabLocations v-if="event" v-model:event="event" />
                         </div>
                     </div>
                 </template>
                 <template #[Tab.EVENT_REGISTRATIONS]>
                     <div class="xl:max-w-5xl">
-                        <CrewTab v-if="event" :event="event" />
+                        <TabRegistrations v-if="event" v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
                     </div>
                 </template>
             </VTabs>
@@ -61,7 +61,11 @@
         </template>
         <template #secondary-buttons>
             <div class="hidden items-stretch space-x-2 lg:flex">
-                <button v-if="tab === Tab.EVENT_TEAM" class="permission-write-registrations btn-secondary" @click="addRegistration()">
+                <button
+                    v-if="tab === Tab.EVENT_CREW_EDITOR"
+                    class="permission-write-registrations btn-secondary"
+                    @click="addRegistration()"
+                >
                     <i class="fa-solid fa-user-plus" />
                     <span>{{ $t('views.events.edit.actions.add-registration') }}</span>
                 </button>
@@ -100,7 +104,7 @@
                 <i class="fa-solid fa-route" />
                 <span>{{ $t('views.events.edit.actions.add-location') }}</span>
             </li>
-            <li class="permission-read-user-details context-menu-item" @click="contactTeam()">
+            <li class="permission-read-user-details context-menu-item" @click="contactCrew()">
                 <i class="fa-solid fa-envelope" />
                 <span>{{ $t('views.events.edit.actions.contact-crew') }}</span>
             </li>
@@ -132,7 +136,7 @@
                     <i class="fa-solid fa-earth-europe" />
                     <span>{{ $t('views.events.edit.actions.publish-crew') }}</span>
                 </li>
-                <li class="permission-write-event-slots context-menu-item" @click="resetTeam()">
+                <li class="permission-write-event-slots context-menu-item" @click="resetCrewPlanning()">
                     <i class="fa-solid fa-rotate" />
                     <span>{{ $t('views.events.edit.actions.reset-crew') }}</span>
                 </li>
@@ -162,7 +166,7 @@ import {
     useUsersUseCase,
 } from '@/application';
 import { deepCopy, diff, filterUndefined } from '@/common';
-import type { Event, InputSelectOption, Location, Registration, Slot } from '@/domain';
+import type { Event, InputSelectOption, Location, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
 import { useEventService } from '@/domain/services.ts';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -172,18 +176,18 @@ import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
-import CrewTab from '@/ui/views/events/edit/components/CrewTab.vue';
-import EventDetailsForm from '@/ui/views/events/edit/components/EventDetailsForm.vue';
+import TabEventDetailsForm from '@/ui/views/events/edit/TabEventDetailsForm.vue';
+import TabRegistrations from '@/ui/views/events/edit/TabRegistrations.vue';
 import VWarning from '../../../components/common/alerts/VWarning.vue';
-import CrewEditor from './components/CrewEditor.vue';
+import TabCrewEditor from './TabCrewEditor.vue';
+import TabLocations from './TabLocations.vue';
+import TabSlots from './TabSlots.vue';
 import LocationEditDlg from './components/LocationEditDlg.vue';
-import LocationsTable from './components/LocationsTable.vue';
 import SlotEditDlg from './components/SlotEditDlg.vue';
-import SlotsTable from './components/SlotsTable.vue';
 
 enum Tab {
     EVENT_DATA = 'data',
-    EVENT_TEAM = 'positions',
+    EVENT_CREW_EDITOR = 'crew',
     EVENT_SLOTS = 'slots',
     EVENT_LOCATIONS = 'locations',
     EVENT_REGISTRATIONS = 'registrations',
@@ -207,15 +211,18 @@ const signedInUser = authUseCase.getSignedInUser();
 const exportTemplates = ref<string[]>([]);
 const eventOriginal = ref<Event | null>(null);
 const event = ref<Event | null>(null);
+const waitinglist = ref<ResolvedRegistrationSlot[]>([]);
+const crew = ref<ResolvedRegistrationSlot[]>([]);
 const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
 const hasChanges = ref<boolean>(false);
 
+const registrations = computed<ResolvedRegistrationSlot[]>(() => crew.value.concat(waitinglist.value));
 const tabs = computed<InputSelectOption<Tab>[]>(() => {
     const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
     if (signedInUser.permissions.includes(Permission.WRITE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_REGISTRATIONS);
         if (event.value?.signupType === EventSignupType.Assignment) {
-            visibleTabs.push(Tab.EVENT_SLOTS, Tab.EVENT_TEAM);
+            visibleTabs.push(Tab.EVENT_SLOTS, Tab.EVENT_CREW_EDITOR);
         }
     }
     return visibleTabs.map((it) => ({ value: it, label: t(`views.events.edit.tab.${it}`) }));
@@ -233,6 +240,11 @@ const hasEmptyRequiredSlots = computed<boolean>(() => {
 });
 
 async function init(): Promise<void> {
+    watch(
+        () => event.value,
+        () => fetchCrew(),
+        { deep: true }
+    );
     await fetchEvent();
     await fetchExportTemplates();
     preventPageUnloadOnUnsavedChanges();
@@ -244,6 +256,23 @@ async function fetchEvent(): Promise<void> {
     const event = await eventUseCase.getEventByKey(year, key, true);
     updateState(event);
     emit('update:tab-title', event.name);
+}
+
+async function fetchCrew(): Promise<void> {
+    console.log('⚙️ Resolving crew and waiting list');
+    if (!event.value) {
+        crew.value = [];
+        waitinglist.value = [];
+        return;
+    }
+    const all = await eventUseCase.resolveRegistrations(event.value);
+    if (event.value?.signupType === EventSignupType.Open) {
+        crew.value = all;
+        waitinglist.value = [];
+    } else {
+        crew.value = eventAdministrationUseCase.filterForCrew(all);
+        waitinglist.value = eventAdministrationUseCase.filterForWaitingList(all);
+    }
 }
 
 async function fetchExportTemplates(): Promise<void> {
@@ -282,7 +311,7 @@ function updateHasChanges(): void {
     }
 }
 
-function resetTeam(): void {
+function resetCrewPlanning(): void {
     if (event.value) {
         event.value.slots.forEach((it) => (it.assignedRegistrationKey = undefined));
         event.value.assignedUserCount = 0;
@@ -325,12 +354,15 @@ async function addSlot(): Promise<void> {
     }
 }
 
-async function contactTeam(): Promise<void> {
+async function contactCrew(): Promise<void> {
     if (event.value) {
-        const userKeys = eventService
-            .getAssignedRegistrations(event.value)
-            .map((it) => it.userKey)
-            .filter(filterUndefined);
+        let userKeys = event.value.registrations.map((it) => it.userKey).filter(filterUndefined);
+        if (event.value.signupType === EventSignupType.Open) {
+            userKeys = eventService
+                .getAssignedRegistrations(event.value)
+                .map((it) => it.userKey)
+                .filter(filterUndefined);
+        }
         const users = await usersUseCase.getUsers(userKeys);
         await usersAdminUseCase.contactUsers(users);
     }

@@ -19,26 +19,11 @@
         <h2 class="text-secondary mb-4 font-bold">
             {{ $t('domain.event.crew-count', { count: filteredCrew.length }) }}
         </h2>
-        <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-            <RegistrationsTable
-                :event="props.event"
-                :registrations="filteredCrew"
-                @delete-registration="deleteRegistration($event)"
-                @edit-registration="editRegistration($event)"
-                @edit-slot="editSlot($event)"
-                @delete-slot="deleteSlot($event)"
-                @add-to-crew="addToCrew($event)"
-                @remove-from-crew="removeFromCrew($event)"
-            />
-        </div>
-        <h2 class="text-secondary mb-4 font-bold">
-            {{ $t('domain.event.registration-count', { count: filteredRegistrations.length }) }}
-        </h2>
     </template>
     <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
         <RegistrationsTable
             :event="props.event"
-            :registrations="filteredRegistrations"
+            :registrations="filteredCrew"
             @delete-registration="deleteRegistration($event)"
             @edit-registration="editRegistration($event)"
             @edit-slot="editSlot($event)"
@@ -47,14 +32,31 @@
             @remove-from-crew="removeFromCrew($event)"
         />
     </div>
+    <template v-if="props.event.signupType === EventSignupType.Assignment">
+        <h2 class="text-secondary mb-4 font-bold">
+            {{ $t('domain.event.registration-count', { count: filteredRegistrations.length }) }}
+        </h2>
+        <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
+            <RegistrationsTable
+                :event="props.event"
+                :registrations="filteredRegistrations"
+                @delete-registration="deleteRegistration($event)"
+                @edit-registration="editRegistration($event)"
+                @edit-slot="editSlot($event)"
+                @delete-slot="deleteSlot($event)"
+                @add-to-crew="addToCrew($event)"
+                @remove-from-crew="removeFromCrew($event)"
+            />
+        </div>
+    </template>
     <RegistrationEditDlg ref="editRegistrationDialog" :event="props.event" />
     <SlotEditDlg ref="editSlotDialog" />
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useErrorHandlingService, useEventAdministrationUseCase, useEventUseCase } from '@/application';
-import { hasAnyOverlap } from '@/common';
+import { useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
+import { deepCopy, hasAnyOverlap } from '@/common';
 import type { Event, PositionKey, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
 import { EventSignupType, RegistrationSlotState, SlotCriticality, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
@@ -68,6 +70,8 @@ import { v4 as uuid } from 'uuid';
 
 interface Props {
     event: Event;
+    waitinglist: ResolvedRegistrationSlot[];
+    crew: ResolvedRegistrationSlot[];
 }
 
 type Emit = (e: 'update:event', event: Event) => void;
@@ -76,7 +80,6 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 const { t } = useI18n();
-const eventUseCase = useEventUseCase();
 const eventAdminUseCase = useEventAdministrationUseCase();
 const eventService = useEventService();
 const errorHandler = useErrorHandlingService();
@@ -86,22 +89,19 @@ const filterPositions = useQuery<PositionKey[]>('positions', []).parameter;
 const filterFreeSlots = useQuery<boolean>('free-slots', false).parameter;
 const filterValidQualifications = useQuery<boolean>('valid-qualifications', false).parameter;
 const filterUnconfirmed = useQuery<boolean>('pending-confirmation', false).parameter;
-const loading = ref<boolean>(false);
-const registrations = ref<ResolvedRegistrationSlot[]>([]);
-const crew = ref<ResolvedRegistrationSlot[]>([]);
 
 const editRegistrationDialog = ref<Dialog<Registration, Registration | undefined> | null>(null);
 const editSlotDialog = ref<Dialog<Slot, Slot | undefined> | null>(null);
 
 const filteredCrew = computed(() =>
-    crew.value
+    props.crew
         .filter(matchesFreeSlotsFilter)
         .filter(matchesUnconfirmedFilter)
         .filter(matchesValidQualificationsFilter)
         .filter(matchesPositionsFilter)
 );
 const filteredRegistrations = computed(() =>
-    registrations.value.filter(matchesUnconfirmedFilter).filter(matchesValidQualificationsFilter).filter(matchesPositionsFilter)
+    props.waitinglist.filter(matchesUnconfirmedFilter).filter(matchesValidQualificationsFilter).filter(matchesPositionsFilter)
 );
 
 function matchesFreeSlotsFilter(value: ResolvedRegistrationSlot): boolean {
@@ -130,23 +130,6 @@ function matchesUnconfirmedFilter(value: ResolvedRegistrationSlot): boolean {
     return filterUnconfirmed.value !== true || value.state !== RegistrationSlotState.CONFIRMED;
 }
 
-async function init(): Promise<void> {
-    await fetchCrew();
-    watch(props.event.registrations, () => fetchCrew(), { deep: true });
-    watch(props.event.slots, () => fetchCrew(), { deep: true });
-    loading.value = false;
-}
-
-async function fetchCrew(): Promise<void> {
-    const all = await eventUseCase.resolveRegistrations(props.event);
-    if (props.event.signupType === EventSignupType.Open) {
-        registrations.value = all;
-    } else {
-        crew.value = eventAdminUseCase.filterForCrew(all);
-        registrations.value = eventAdminUseCase.filterForWaitingList(all);
-    }
-}
-
 async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
     const slot = eventService.getOpenSlots(props.event).find((it) => it.positionKeys.includes(aggregate.position.key));
     if (!slot) {
@@ -156,7 +139,7 @@ async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
             cancelText: t('generic.cancel'),
             retryText: t('domain.event.no-slot-for-position-error.retry'),
             retry: async () => {
-                const event = props.event;
+                const event = deepCopy(props.event);
                 event.slots.push({
                     key: uuid(),
                     positionKeys: [aggregate.position.key],
@@ -165,33 +148,28 @@ async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
                     order: event.slots.length,
                 });
                 emit('update:event', event);
-                await fetchCrew();
             },
         });
     } else if (aggregate.user) {
-        emit('update:event', await eventAdminUseCase.assignUserToSlot(props.event, aggregate.user, slot.key));
-        await fetchCrew();
+        emit('update:event', await eventAdminUseCase.assignUserToSlot(deepCopy(props.event), aggregate.user, slot.key));
     } else {
-        emit('update:event', await eventAdminUseCase.assignGuestToSlot(props.event, aggregate.name, slot.key));
-        await fetchCrew();
+        emit('update:event', await eventAdminUseCase.assignGuestToSlot(deepCopy(props.event), aggregate.name, slot.key));
     }
 }
 
 async function removeFromCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (aggregate.slot) {
-        emit('update:event', await eventAdminUseCase.unassignSlot(props.event, aggregate.slot.key));
-        await fetchCrew();
+        emit('update:event', await eventAdminUseCase.unassignSlot(deepCopy(props.event), aggregate.slot.key));
     }
 }
 
 async function deleteRegistration(aggregate: ResolvedRegistrationSlot): Promise<void> {
     await removeFromCrew(aggregate);
     if (aggregate.user) {
-        emit('update:event', eventService.cancelUserRegistration(props.event, aggregate.user?.key));
+        emit('update:event', eventService.cancelUserRegistration(deepCopy(props.event), aggregate.user?.key));
     } else if (aggregate.name) {
-        emit('update:event', eventService.cancelGuestRegistration(props.event, aggregate.name));
+        emit('update:event', eventService.cancelGuestRegistration(deepCopy(props.event), aggregate.name));
     }
-    await fetchCrew();
 }
 
 async function editSlot(aggregate: ResolvedRegistrationSlot): Promise<void> {
@@ -200,20 +178,22 @@ async function editSlot(aggregate: ResolvedRegistrationSlot): Promise<void> {
     }
     const editedSlot = await editSlotDialog.value?.open(aggregate.slot);
     if (editedSlot) {
-        const updatedEvent = eventService.updateSlot(props.event, editedSlot);
+        const updatedEvent = eventService.updateSlot(deepCopy(props.event), editedSlot);
         emit('update:event', updatedEvent);
     }
 }
 
 async function editRegistration(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (aggregate.user || aggregate.name) {
-        const registration = eventService.findRegistration(props.event, aggregate.user?.key, aggregate.name);
+        const updatedEvent = deepCopy(props.event);
+        const registration = eventService.findRegistration(updatedEvent, aggregate.user?.key, aggregate.name);
         if (registration) {
             const updatedRegistration = await editRegistrationDialog.value?.open(registration);
             if (updatedRegistration) {
                 registration.positionKey = updatedRegistration.positionKey;
                 registration.note = updatedRegistration.note;
                 registration.name = updatedRegistration.name;
+                emit('update:event', updatedEvent);
             }
         }
     }
@@ -223,10 +203,7 @@ async function deleteSlot(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (!aggregate.slot || aggregate.user) {
         return;
     }
-    const updatedEvent = eventService.removeSlot(props.event, aggregate.slot);
+    const updatedEvent = eventService.removeSlot(deepCopy(props.event), aggregate.slot);
     emit('update:event', updatedEvent);
-    await fetchCrew();
 }
-
-init();
 </script>
