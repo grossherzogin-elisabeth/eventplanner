@@ -119,9 +119,9 @@ import { deepCopy, updateDate, updateTime } from '@/common';
 import type { Event } from '@/domain';
 import { Permission, useEventService } from '@/domain';
 import { VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
-import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes';
-import { useEventStates } from '@/ui/composables/EventStates';
-import { useEventTypes } from '@/ui/composables/EventTypes';
+import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
+import { useEventStates } from '@/ui/composables/EventStates.ts';
+import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 interface Props {

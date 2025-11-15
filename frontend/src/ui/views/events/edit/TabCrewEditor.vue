@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!loading" class="-mx-4 flex h-full flex-col px-4">
+    <div class="-mx-4 flex h-full flex-col px-4">
         <!-- position counters -->
         <div class="bg-surface top-32 -mx-8 mb-4 overflow-x-auto pb-4">
             <div class="scrollbar-invisible text-onsurface-variant flex items-start gap-2 px-8 text-sm font-bold md:flex-wrap">
@@ -28,7 +28,7 @@
                 <!-- slot list-admin dropzone -->
                 <div class="sticky top-24">
                     <div class="absolute z-10 w-full" :class="{ hidden: dragSource !== DragSource.FROM_WAITING_LIST }">
-                        <VDropzone class="h-96" @drop="addToTeam($event as ResolvedRegistrationSlot)">
+                        <VDropzone class="h-96" @drop="addToCrew($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-add">
                                 <i class="fa-regular fa-calendar-plus text-3xl opacity-75"></i>
                                 <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="-mx-4" :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_WAITING_LIST }">
                     <!-- empty slot list placeholder -->
-                    <div v-if="team.length === 0" class="bg-secondary-container text-onsecondary-container rounded-xl">
+                    <div v-if="props.crew.length === 0" class="bg-secondary-container text-onsecondary-container rounded-xl">
                         <div class="flex items-center py-8 pr-8 pl-4">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
@@ -64,17 +64,17 @@
                     <!-- slot list -->
                     <ul v-else>
                         <RegistrationRow
-                            v-for="it in team"
+                            v-for="it in props.crew"
                             :key="`${it.slot?.key}_${it.registration?.key}_${it.user?.key}_${it.position.key}`"
                             :value="it"
                             @cancel-registration="cancelRegistration(it)"
                             @edit-registration="editSlotRegistration(it)"
                             @edit-slot="editSlot(it)"
                             @delete-slot="deleteSlot(it)"
-                            @add-to-team="addToTeam(it)"
-                            @remove-from-team="removeFromTeam(it)"
+                            @add-to-crew="addToCrew(it)"
+                            @remove-from-crew="removeFromCrew(it)"
                             @dragend="dragSource = null"
-                            @dragstart="dragSource = DragSource.FROM_TEAM"
+                            @dragstart="dragSource = DragSource.FROM_CREW"
                         />
                     </ul>
                 </div>
@@ -84,8 +84,8 @@
                 <h2 class="text-secondary mb-4 font-bold">{{ $t('domain.event.waiting-list') }}</h2>
                 <!-- waitinglist dropzone -->
                 <div class="sticky top-24">
-                    <div class="absolute w-full space-y-8" :class="{ hidden: dragSource !== DragSource.FROM_TEAM }">
-                        <VDropzone class="h-44" @drop="removeFromTeam($event as ResolvedRegistrationSlot)">
+                    <div class="absolute w-full space-y-8" :class="{ hidden: dragSource !== DragSource.FROM_CREW }">
+                        <VDropzone class="h-44" @drop="removeFromCrew($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-remove">
                                 <i class="fa-regular fa-calendar-minus text-3xl opacity-75"></i>
                                 <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
@@ -99,9 +99,9 @@
                         </VDropzone>
                     </div>
                 </div>
-                <div class="-mx-4" :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_TEAM }">
+                <div class="-mx-4" :class="{ 'pointer-events-none opacity-10': dragSource === DragSource.FROM_CREW }">
                     <!-- empty waitinglist placeholder -->
-                    <div v-if="registrations.length === 0" class="bg-surface-container-low text-onsurface rounded-xl">
+                    <div v-if="props.waitinglist.length === 0" class="bg-surface-container-low text-onsurface rounded-xl">
                         <div class="flex items-center py-8 pr-8 pl-4">
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
@@ -126,15 +126,15 @@
                     <!-- waitinglist -->
                     <ul>
                         <RegistrationRow
-                            v-for="it in registrations"
+                            v-for="it in props.waitinglist"
                             :key="`${it.slot?.key}_${it.registration?.key}_${it.user?.key}_${it.position.key}`"
                             :value="it"
                             @cancel-registration="cancelRegistration(it)"
                             @edit-registration="editSlotRegistration(it)"
                             @edit-slot="editSlot(it)"
                             @delete-slot="deleteSlot(it)"
-                            @add-to-team="addToTeam(it)"
-                            @remove-from-team="removeFromTeam(it)"
+                            @add-to-crew="addToCrew(it)"
+                            @remove-from-crew="removeFromCrew(it)"
                             @dragend="dragSource = null"
                             @dragstart="dragSource = DragSource.FROM_WAITING_LIST"
                         />
@@ -148,12 +148,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useErrorHandlingService, useEventAdministrationUseCase, useEventUseCase } from '@/application';
+import { useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
+import { deepCopy } from '@/common';
 import type { Event, PositionKey, Registration, Slot } from '@/domain';
-import { SlotCriticality } from '@/domain';
-import { useEventService } from '@/domain';
+import { SlotCriticality, useEventService } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 import type { Dialog } from '@/ui/components/common';
 import { VDropzone } from '@/ui/components/common';
@@ -161,15 +161,17 @@ import { usePositions } from '@/ui/composables/Positions';
 import RegistrationRow from '@/ui/views/events/edit/components/RegistrationRow.vue';
 import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';
 import { v4 as uuid } from 'uuid';
-import RegistrationEditDlg from './RegistrationEditDlg.vue';
+import RegistrationEditDlg from './components/RegistrationEditDlg.vue';
 
 enum DragSource {
-    FROM_TEAM = 'team',
+    FROM_CREW = 'crew',
     FROM_WAITING_LIST = 'waitinglist',
 }
 
 interface Props {
     event: Event;
+    waitinglist: ResolvedRegistrationSlot[];
+    crew: ResolvedRegistrationSlot[];
 }
 
 type Emits = (e: 'update:event', value: Event) => void;
@@ -178,23 +180,19 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
-const eventUseCase = useEventUseCase();
 const eventAdminUseCase = useEventAdministrationUseCase();
 const eventService = useEventService();
 const errorHandler = useErrorHandlingService();
 const positions = usePositions();
 
-const registrations = ref<ResolvedRegistrationSlot[]>([]);
-const team = ref<ResolvedRegistrationSlot[]>([]);
 const dragSource = ref<DragSource | null>(null);
-const loading = ref<boolean>(true);
 
 const editRegistrationDialog = ref<Dialog<Registration, Registration | undefined> | null>(null);
 const editSlotDialog = ref<Dialog<Slot, Slot | undefined> | null>(null);
 
 const summary = computed<Record<PositionKey, number>>(() => {
     const sum: Record<PositionKey, number> = {};
-    team.value
+    props.crew
         .filter((it) => it.name)
         .forEach((it) => {
             let count = sum[it.position.key] || 0;
@@ -205,17 +203,10 @@ const summary = computed<Record<PositionKey, number>>(() => {
 });
 
 const secureMinimumCrewMembers = computed<number>(() => {
-    return team.value.filter((it) => it.registration).filter((it) => it.expiredQualifications.length === 0).length;
+    return props.crew.filter((it) => it.registration).filter((it) => it.expiredQualifications.length === 0).length;
 });
 
-async function init(): Promise<void> {
-    await fetchTeam();
-    watch(props.event.registrations, () => fetchTeam(), { deep: true });
-    watch(props.event.slots, () => fetchTeam(), { deep: true });
-    loading.value = false;
-}
-
-async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
+async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
     const slot = eventService.getOpenSlots(props.event).find((it) => it.positionKeys.includes(aggregate.position.key));
     if (!slot) {
         errorHandler.handleError({
@@ -224,7 +215,7 @@ async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
             cancelText: t('generic.cancel'),
             retryText: t('domain.event.no-slot-for-position-error.retry'),
             retry: async () => {
-                const event = props.event;
+                const event = deepCopy(props.event);
                 event.slots.push({
                     key: uuid(),
                     positionKeys: [aggregate.position.key],
@@ -233,32 +224,27 @@ async function addToTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
                     order: event.slots.length,
                 });
                 emit('update:event', event);
-                await fetchTeam();
             },
         });
     } else if (aggregate.user) {
-        emit('update:event', await eventAdminUseCase.assignUserToSlot(props.event, aggregate.user, slot.key));
-        await fetchTeam();
+        emit('update:event', await eventAdminUseCase.assignUserToSlot(deepCopy(props.event), aggregate.user, slot.key));
     } else {
-        emit('update:event', await eventAdminUseCase.assignGuestToSlot(props.event, aggregate.name, slot.key));
-        await fetchTeam();
+        emit('update:event', await eventAdminUseCase.assignGuestToSlot(deepCopy(props.event), aggregate.name, slot.key));
     }
 }
 
-async function removeFromTeam(aggregate: ResolvedRegistrationSlot): Promise<void> {
+async function removeFromCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (aggregate.slot) {
-        emit('update:event', await eventAdminUseCase.unassignSlot(props.event, aggregate.slot.key));
-        await fetchTeam();
+        emit('update:event', await eventAdminUseCase.unassignSlot(deepCopy(props.event), aggregate.slot.key));
     }
 }
 
 async function cancelRegistration(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (aggregate.user) {
-        emit('update:event', eventService.cancelUserRegistration(props.event, aggregate.user?.key));
+        emit('update:event', eventService.cancelUserRegistration(deepCopy(props.event), aggregate.user?.key));
     } else if (aggregate.name) {
-        emit('update:event', eventService.cancelGuestRegistration(props.event, aggregate.name));
+        emit('update:event', eventService.cancelGuestRegistration(deepCopy(props.event), aggregate.name));
     }
-    await fetchTeam();
 }
 
 async function editSlot(aggregate: ResolvedRegistrationSlot): Promise<void> {
@@ -267,7 +253,7 @@ async function editSlot(aggregate: ResolvedRegistrationSlot): Promise<void> {
     }
     const editedSlot = await editSlotDialog.value?.open(aggregate.slot);
     if (editedSlot) {
-        const updatedEvent = eventService.updateSlot(props.event, editedSlot);
+        const updatedEvent = eventService.updateSlot(deepCopy(props.event), editedSlot);
         emit('update:event', updatedEvent);
     }
 }
@@ -276,7 +262,7 @@ async function deleteSlot(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (!aggregate.slot || aggregate.user) {
         return;
     }
-    const updatedEvent = eventService.removeSlot(props.event, aggregate.slot);
+    const updatedEvent = eventService.removeSlot(deepCopy(props.event), aggregate.slot);
     emit('update:event', updatedEvent);
 }
 
@@ -293,14 +279,6 @@ async function editSlotRegistration(aggregate: ResolvedRegistrationSlot): Promis
         }
     }
 }
-
-async function fetchTeam(): Promise<void> {
-    const all = await eventUseCase.resolveRegistrations(props.event);
-    team.value = eventAdminUseCase.filterForCrew(all);
-    registrations.value = eventAdminUseCase.filterForWaitingList(all);
-}
-
-init();
 </script>
 
 <style>

@@ -110,9 +110,8 @@ events:
        verworfen. Möchtest du fortfahren?'
     tab:
       registrations: 'Anmeldungen'
-      crew: 'Crew'
       data: 'Reisedaten'
-      positions: 'Crewplanung'
+      crew: 'Crewplanung'
       locations: 'Reiseroute'
       slots: 'Slots'
     tooltip:

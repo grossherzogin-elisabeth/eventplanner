@@ -8,7 +8,6 @@ export function useQuery<T = string | number | boolean | string[]>(name: string,
     const parameter = ref<T>(defaultValue);
 
     async function updateQuery(): Promise<void> {
-        console.log('update query');
         const value = parameter.value;
         const route = router.currentRoute.value;
         if (value !== undefined && value !== null && value !== defaultValue) {
