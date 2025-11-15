@@ -20,7 +20,7 @@
                 </span>
             </td>
             <template v-if="item.registration">
-                <td class="w-full lg:w-1/3">
+                <td class="w-full">
                     <VTooltip :delay="500">
                         <template #default>
                             <p class="mb-1 flex items-center gap-x-1 font-semibold">
