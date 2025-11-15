@@ -2,7 +2,7 @@ import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { PositionRepository } from '@/application';
 import type { Position, PositionKey } from '@/domain';
 
-interface PositionRepresentation {
+export interface PositionRepresentation {
     key: string;
     name: string;
     imoListRank: string;

@@ -1,8 +1,8 @@
 import type { Event } from '@/domain';
 import { EventSignupType, EventState, EventType } from '@/domain';
-import { mockLocations } from './mockLocation';
-import { mockRegistrations } from './mockRegistration';
-import { mockSlots } from './mockSlot';
+import { mockLocations } from './mockLocation.ts';
+import { mockRegistrations } from './mockRegistration.ts';
+import { mockSlots } from './mockSlot.ts';
 
 export function mockEvent(overwrite?: Partial<Event>): Event {
     const event: Event = {

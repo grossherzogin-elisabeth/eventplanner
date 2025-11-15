@@ -18,7 +18,7 @@ interface UpdateQualificationRequest {
     grantsPositions?: string[];
 }
 
-interface QualificationRepresentation {
+export interface QualificationRepresentation {
     key: string;
     name: string;
     icon: string;

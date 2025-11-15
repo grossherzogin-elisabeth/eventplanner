@@ -2,14 +2,14 @@ import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { SettingsRepository } from '@/application';
 import type { AppSettings, UiSettings } from '@/domain';
 
-interface UiSettingsRepresentation {
+export interface UiSettingsRepresentation {
     menuTitle?: string;
     tabTitle?: string;
     technicalSupportEmail?: string;
     supportEmail?: string;
 }
 
-interface SettingsRepresentation {
+export interface SettingsRepresentation {
     ui: UiSettingsRepresentation;
     notifications: {
         teamsWebhookUrl?: string;
@@ -27,7 +27,7 @@ interface SettingsRepresentation {
     };
 }
 
-interface UpdateSettingsRequest {
+export interface UpdateSettingsRequest {
     ui: UiSettingsRepresentation;
     notifications: {
         teamsWebhookUrl?: string;

@@ -1,9 +1,5 @@
 import type { Position } from '@/domain';
-
-export const CAPTAIN = 'position-captain-key';
-export const ENGINEER = 'position-engineer-key';
-export const MATE = 'position-mate-key';
-export const DECKHAND = 'position-deckhand-key';
+import { CAPTAIN, DECKHAND, ENGINEER, MATE } from '~/mocks/keys';
 
 export function mockPositionCaptain(overwrite?: Partial<Position>): Position {
     const position: Position = {

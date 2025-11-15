@@ -1,30 +1,32 @@
-import type { User } from '@/domain';
+import type { UserRepresentation } from '@/adapter';
 import { Role } from '@/domain';
-import { CAPTAIN, DECKHAND, ENGINEER, MATE } from './mockPosition';
 import {
+    CAPTAIN,
+    DECKHAND,
+    ENGINEER,
+    MATE,
     QUALIFICATION_CAPTAIN,
     QUALIFICATION_DECKHAND,
     QUALIFICATION_ENGINEER,
     QUALIFICATION_EXPIRES,
     QUALIFICATION_GENERIC,
     QUALIFICATION_MATE,
-} from './mockQualification.ts';
+    USER_CAPTAIN,
+    USER_DECKHAND,
+    USER_ENGINEER,
+    USER_MATE,
+} from '~/mocks/keys';
 
-export const USER_CAPTAIN = 'user-captain-key';
-export const USER_ENGINEER = 'user-engineer-key';
-export const USER_MATE = 'user-mate-key';
-export const USER_DECKHAND = 'user-deckhand-key';
-
-export function mockUserCaptain(overwrite?: Partial<User>): User {
-    const user: User = {
+export function mockUserRepresentationCaptain(overwrite?: Partial<UserRepresentation>): UserRepresentation {
+    const user: UserRepresentation = {
         key: USER_CAPTAIN,
         firstName: 'Charlie',
         lastName: 'Captain',
         email: 'charlie.captain@example.com',
-        positionKeys: [CAPTAIN, MATE],
+        positions: [CAPTAIN, MATE],
         roles: [Role.TEAM_MEMBER],
         qualifications: [
-            { qualificationKey: QUALIFICATION_CAPTAIN, expires: true, expiresAt: new Date('2024-07-10T09:00:00Z') },
+            { qualificationKey: QUALIFICATION_CAPTAIN, expires: true, expiresAt: '2024-07-10T09:00:00Z' },
             { qualificationKey: QUALIFICATION_MATE, expires: false },
         ],
         verified: true,
@@ -32,13 +34,13 @@ export function mockUserCaptain(overwrite?: Partial<User>): User {
     return overwrite ? Object.assign(user, overwrite) : user;
 }
 
-export function mockUserEngineer(overwrite?: Partial<User>): User {
-    const user: User = {
+export function mockUserRepresentationEngineer(overwrite?: Partial<UserRepresentation>): UserRepresentation {
+    const user: UserRepresentation = {
         key: USER_ENGINEER,
         firstName: 'Alice',
         lastName: 'Engine',
         email: 'alice.engine@example.com',
-        positionKeys: [ENGINEER],
+        positions: [ENGINEER],
         roles: [Role.TEAM_MEMBER],
         qualifications: [
             { qualificationKey: QUALIFICATION_ENGINEER, expires: false },
@@ -49,30 +51,30 @@ export function mockUserEngineer(overwrite?: Partial<User>): User {
     return overwrite ? Object.assign(user, overwrite) : user;
 }
 
-export function mockUserMate(overwrite?: Partial<User>): User {
-    const user: User = {
+export function mockUserRepresentationMate(overwrite?: Partial<UserRepresentation>): UserRepresentation {
+    const user: UserRepresentation = {
         key: USER_MATE,
         firstName: 'Max',
         lastName: 'Mate',
         email: 'max.mate@example.com',
-        positionKeys: [MATE],
+        positions: [MATE],
         roles: [Role.TEAM_MEMBER],
         qualifications: [
             { qualificationKey: QUALIFICATION_MATE, expires: false },
-            { qualificationKey: QUALIFICATION_EXPIRES, expires: true, expiresAt: new Date('1990-07-10T09:00:00Z') },
+            { qualificationKey: QUALIFICATION_EXPIRES, expires: true, expiresAt: '1990-07-10T09:00:00Z' },
         ],
         verified: true,
     };
     return overwrite ? Object.assign(user, overwrite) : user;
 }
 
-export function mockUserDeckhand(overwrite?: Partial<User>): User {
-    const user: User = {
-        key: USER_ENGINEER,
+export function mockUserRepresentationDeckhand(overwrite?: Partial<UserRepresentation>): UserRepresentation {
+    const user: UserRepresentation = {
+        key: USER_DECKHAND,
         firstName: 'Dean',
         lastName: 'Deck',
         email: 'dean.deck@example.com',
-        positionKeys: [DECKHAND],
+        positions: [DECKHAND],
         roles: [Role.TEAM_MEMBER],
         qualifications: [
             { qualificationKey: QUALIFICATION_DECKHAND, expires: false },
@@ -83,6 +85,11 @@ export function mockUserDeckhand(overwrite?: Partial<User>): User {
     return overwrite ? Object.assign(user, overwrite) : user;
 }
 
-export function mockUsers(): User[] {
-    return [mockUserCaptain(), mockUserEngineer(), mockUserMate(), mockUserDeckhand()];
+export function mockUserRepresentations(): UserRepresentation[] {
+    return [
+        mockUserRepresentationCaptain(),
+        mockUserRepresentationEngineer(),
+        mockUserRepresentationMate(),
+        mockUserRepresentationDeckhand(),
+    ];
 }
