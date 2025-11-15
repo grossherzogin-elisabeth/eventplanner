@@ -1,12 +1,16 @@
 import type { Qualification } from '@/domain';
-import { CAPTAIN, DECKHAND, ENGINEER, MATE } from './mockPosition';
-
-export const QUALIFICATION_CAPTAIN = 'qualification-captain-key';
-export const QUALIFICATION_ENGINEER = 'qualification-engineer-key';
-export const QUALIFICATION_MATE = 'qualification-mate-key';
-export const QUALIFICATION_DECKHAND = 'qualification-deckhand-key';
-export const QUALIFICATION_EXPIRES = 'qualification-expires-key';
-export const QUALIFICATION_GENERIC = 'qualification-generic-key';
+import {
+    CAPTAIN,
+    DECKHAND,
+    ENGINEER,
+    MATE,
+    QUALIFICATION_CAPTAIN,
+    QUALIFICATION_DECKHAND,
+    QUALIFICATION_ENGINEER,
+    QUALIFICATION_EXPIRES,
+    QUALIFICATION_GENERIC,
+    QUALIFICATION_MATE,
+} from '~/mocks/keys';
 
 export function mockQualificationCaptain(overwrite?: Partial<Qualification>): Qualification {
     const qualification: Qualification = {

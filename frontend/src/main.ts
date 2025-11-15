@@ -15,7 +15,7 @@ async function init(): Promise<void> {
     config.technicalSupportEmail = serverConfig.technicalSupportEmail || 'support@example.de';
 
     const domainServices = initDomainServices();
-    const applicationServices = initApplicationServices({ adapters });
+    const applicationServices = initApplicationServices({ adapters, storage: 'indexeddb' });
     const useCases = initUseCases({ config, adapters, domainServices, applicationServices });
 
     await useCases.usersUseCase.applyUserSettings();
