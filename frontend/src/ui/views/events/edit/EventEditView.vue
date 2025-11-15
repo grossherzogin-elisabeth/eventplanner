@@ -17,7 +17,7 @@
             </section>
         </template>
         <template #content>
-            <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-10 z-20 pt-4 xl:top-20">
+            <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 lg:top-14 xl:top-20">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
                         <EventDetailsForm v-if="event" v-model:event="event" />
@@ -215,8 +215,7 @@ const tabs = computed<InputSelectOption<Tab>[]>(() => {
     if (signedInUser.permissions.includes(Permission.WRITE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_REGISTRATIONS);
         if (event.value?.signupType === EventSignupType.Assignment) {
-            visibleTabs.push(Tab.EVENT_SLOTS);
-            visibleTabs.push(Tab.EVENT_TEAM);
+            visibleTabs.push(Tab.EVENT_SLOTS, Tab.EVENT_TEAM);
         }
     }
     return visibleTabs.map((it) => ({ value: it, label: t(`views.events.edit.tab.${it}`) }));
