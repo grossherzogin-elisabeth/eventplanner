@@ -120,9 +120,9 @@ import { Permission } from '@/domain';
 import { VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
 import { useAuthUseCase } from '@/ui/composables/Application.ts';
 import { useEventService } from '@/ui/composables/Domain.ts';
-import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes';
-import { useEventStates } from '@/ui/composables/EventStates';
-import { useEventTypes } from '@/ui/composables/EventTypes';
+import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
+import { useEventStates } from '@/ui/composables/EventStates.ts';
+import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 interface Props {
