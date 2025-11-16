@@ -24,7 +24,7 @@
             <td :key="item.icon" class="text-xl">
                 <i class="fa-solid" :class="item.icon" />
             </td>
-            <td class="w-1/2 max-w-[50vw] sm:max-w-full">
+            <td class="w-full max-w-[50vw] sm:w-1/2 sm:max-w-full">
                 <p class="font-semibold">
                     <span>{{ item.name }}</span>
                 </p>
@@ -32,7 +32,7 @@
                     <span>{{ item.address }}</span>
                 </p>
             </td>
-            <td class="w-1/2 whitespace-nowrap">
+            <td class="hidden w-1/2 whitespace-nowrap sm:table-cell">
                 <p class="mb-2 text-sm">
                     <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.eta') }}:</span>
                     <span v-if="item.eta" class="font-semibold">{{ $d(item.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
@@ -69,6 +69,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useAuthUseCase } from '@/application';
+import { deepCopy } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Location } from '@/domain';
 import { Permission } from '@/domain';
@@ -81,7 +82,7 @@ interface Props {
     event: Event;
 }
 
-type Emit = (e: 'update:modelValue', event: Event) => void;
+type Emit = (e: 'update:event', event: Event) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
@@ -97,27 +98,29 @@ async function editLocation(location: Location): Promise<void> {
     }
     const editedLocation = await editLocationDialog.value?.open(location);
     if (editedLocation) {
-        const updatedEvent = eventService.updateLocation(props.event, editedLocation);
-        emit('update:modelValue', updatedEvent);
+        const updatedEvent = eventService.updateLocation(deepCopy(props.event), editedLocation);
+        emit('update:event', updatedEvent);
     }
 }
 
 async function moveLocationUp(location: Location): Promise<void> {
-    const updatedEvent = eventService.moveLocation(props.event, location, -1);
-    emit('update:modelValue', updatedEvent);
+    const updatedEvent = eventService.moveLocation(deepCopy(props.event), location, -1);
+    emit('update:event', updatedEvent);
 }
 
 async function moveLocationDown(location: Location): Promise<void> {
-    const updatedEvent = eventService.moveLocation(props.event, location, 1);
-    emit('update:modelValue', updatedEvent);
+    const updatedEvent = eventService.moveLocation(deepCopy(props.event), location, 1);
+    emit('update:event', updatedEvent);
 }
 
 async function updateOrders(): Promise<void> {
-    props.event.locations.forEach((location, index) => (location.order = index + 1));
+    const updatedEvent = deepCopy(props.event);
+    updatedEvent.locations.forEach((location, index) => (location.order = index + 1));
+    emit('update:event', updatedEvent);
 }
 
 function deleteLocation(location: Location): void {
-    const updatedEvent = eventService.removeLocation(props.event, location);
-    emit('update:modelValue', updatedEvent);
+    const updatedEvent = eventService.removeLocation(deepCopy(props.event), location);
+    emit('update:event', updatedEvent);
 }
 </script>

@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     CAPTAIN,
     ENGINEER,
+    MOCK_UUID,
     REGISTRATION_CAPTAIN,
     REGISTRATION_DECKHAND,
     REGISTRATION_ENGINEER,
@@ -246,20 +247,12 @@ describe('EventService', () => {
     });
 
     describe('duplicateSlot', () => {
-        vi.mock('uuid', () => ({
-            v4: vi.fn(() => 'mock-uuid-123'),
-        }));
-
-        afterEach(() => {
-            vi.clearAllMocks();
-        });
-
         it('should create slot with new key', () => {
             const event = mockEvent();
             const slotToDuplicate = mockSlotDeckhand();
             const updatedEvent = testee.duplicateSlot(event, slotToDuplicate);
             expect(updatedEvent.slots).toHaveLength(mockEvent().slots.length + 1);
-            const duplicatedSlot = updatedEvent.slots.find((s) => s.key === 'mock-uuid-123');
+            const duplicatedSlot = updatedEvent.slots.find((s) => s.key === MOCK_UUID);
             expect(duplicatedSlot).toBeDefined();
             expect(duplicatedSlot?.positionKeys).toBe(slotToDuplicate.positionKeys);
             expect(duplicatedSlot?.criticality).toBe(slotToDuplicate.criticality);
@@ -270,7 +263,7 @@ describe('EventService', () => {
             const event = mockEvent({ slots: [slotToDuplicate] });
             const updatedEvent = testee.duplicateSlot(event, slotToDuplicate);
 
-            const duplicatedSlot = updatedEvent.slots.find((s) => s.key === 'mock-uuid-123');
+            const duplicatedSlot = updatedEvent.slots.find((s) => s.key === MOCK_UUID);
             expect(duplicatedSlot).toBeDefined();
             expect(duplicatedSlot?.assignedRegistrationKey).toBeUndefined();
         });
