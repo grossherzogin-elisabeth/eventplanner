@@ -98,10 +98,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useAppSettingsUseCase } from '@/application';
 import type { AppSettings } from '@/domain';
 import { AsyncButton, VInputCheckBox, VInputNumber, VInputText, VInputTextArea, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import { useAppSettingsUseCase } from '@/ui/composables/Application.ts';
 
 enum Tab {
     GENERAL_SETTINGS = 'general',

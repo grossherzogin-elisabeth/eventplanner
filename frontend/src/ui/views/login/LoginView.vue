@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuthUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase } from '@/application';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 

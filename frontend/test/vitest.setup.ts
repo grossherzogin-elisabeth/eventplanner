@@ -1,13 +1,12 @@
-import { config } from '@/config.ts';
-import { setupI18n } from '@/ui/plugins/i18n.ts';
-import { config as testConfig } from '@vue/test-utils';
+import { setupI18n } from '@/ui/plugins/i18n';
+import { config } from '@vue/test-utils';
 import { vi } from 'vitest';
 
 // ---------------------------------------------------------------
 // mock global vue plugins
 // ---------------------------------------------------------------
 
-testConfig.global.plugins = [setupI18n({ ...config })];
+config.global.plugins = [setupI18n({ locale: 'de', fallbackLocale: 'de', availableLocales: ['de'] })];
 
 // ---------------------------------------------------------------
 // mock global elements not present in happy dom by default

@@ -247,9 +247,17 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import {
+    useAuthUseCase,
+    useEventAdministrationUseCase,
+    useEventUseCase,
+    useUserAdministrationUseCase,
+    useUsersUseCase,
+} from '@/application';
 import { deepCopy, diff, filterUndefined, updateDate, updateTime } from '@/common';
 import type { Event, InputSelectOption, Location, Registration, Slot } from '@/domain';
 import { EventState, Permission } from '@/domain';
+import { useEventService } from '@/domain/services.ts';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import {
     AsyncButton,
@@ -265,14 +273,6 @@ import {
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import {
-    useAuthUseCase,
-    useEventAdministrationUseCase,
-    useEventUseCase,
-    useUserAdministrationUseCase,
-    useUsersUseCase,
-} from '@/ui/composables/Application.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';

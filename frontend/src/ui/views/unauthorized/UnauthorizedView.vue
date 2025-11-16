@@ -5,7 +5,7 @@
 </template>
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import { useAuthUseCase } from '@/ui/composables/Application';
+import { useAuthUseCase } from '@/application';
 import { Routes } from '@/ui/views/Routes';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;

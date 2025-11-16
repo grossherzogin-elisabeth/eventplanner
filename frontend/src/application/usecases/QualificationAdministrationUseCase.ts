@@ -1,4 +1,5 @@
-import type { ErrorHandlingService, NotificationService, QualificationCachingService, QualificationRepository } from '@/application';
+import type { QualificationRepository } from '@/application/ports';
+import type { ErrorHandlingService, NotificationService, QualificationCachingService } from '@/application/services';
 import type { Qualification } from '@/domain';
 
 export class QualificationAdministrationUseCase {
@@ -25,7 +26,7 @@ export class QualificationAdministrationUseCase {
             const filterLc = filter?.trim().toLowerCase();
             if (filterLc) {
                 qualifications = qualifications.filter(
-                    (q) =>
+                    (q: Qualification) =>
                         q.key.toLowerCase().includes(filterLc) ||
                         q.icon.toLowerCase().includes(filterLc) ||
                         q.name.toLowerCase().includes(filterLc) ||

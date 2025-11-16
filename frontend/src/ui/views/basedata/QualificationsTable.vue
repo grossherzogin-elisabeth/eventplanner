@@ -54,11 +54,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useQualificationsAdministrationUseCase } from '@/application';
 import type { Qualification } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
-import { useQualificationsAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import QualificationEditDlg from './QualificationDetailsDlg.vue';
 

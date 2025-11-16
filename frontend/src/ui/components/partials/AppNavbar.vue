@@ -50,8 +50,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAuthUseCase } from '@/application';
 import type { SignedInUser } from '@/domain';
-import { useAuthUseCase } from '@/ui/composables/Application';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import AppMenu from './AppMenu.vue';
 import SlideMenu from './SlideMenu.vue';

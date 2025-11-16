@@ -49,12 +49,12 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useUsersUseCase } from '@/application';
 import { deepCopy } from '@/common';
 import { Validator, notEmpty } from '@/common/validation';
 import type { InputSelectOption, Qualification, QualificationKey, UserQualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputDate, VInputTextArea } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 const usersUseCase = useUsersUseCase();

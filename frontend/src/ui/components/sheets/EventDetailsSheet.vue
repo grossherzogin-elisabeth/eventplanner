@@ -44,12 +44,12 @@ import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Event, Position } from '@/domain';
 import { EventState } from '@/domain';
+import { useEventService } from '@/domain/services.ts';
 import type { Sheet } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VInfo, VSheet, VSuccess } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
 import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 

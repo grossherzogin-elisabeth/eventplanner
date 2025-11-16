@@ -1,4 +1,5 @@
-import type { ErrorHandlingService, NotificationService, SettingsRepository } from '@/application';
+import type { SettingsRepository } from '@/application/ports';
+import type { ErrorHandlingService, NotificationService } from '@/application/services';
 import type { AppSettings } from '@/domain';
 
 export class AppSettingsUseCase {

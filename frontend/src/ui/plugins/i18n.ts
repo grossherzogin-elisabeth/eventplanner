@@ -1,6 +1,5 @@
 import type { DateTimeOptions, I18n } from 'vue-i18n';
 import { createI18n } from 'vue-i18n';
-import type { Config } from '@/application/values/Config';
 import { DateTimeFormat } from '@/common/date';
 import messages from '@/ui/locales';
 
@@ -48,13 +47,13 @@ datetimeFormatsDe[DateTimeFormat.DDD_DD_MM_hh_mm] = {
     minute: '2-digit',
 };
 
-export function setupI18n(config: Config): I18n {
+export function setupI18n(config: { locale: string; fallbackLocale: string; availableLocales: string[] }): I18n {
     return createI18n({
         legacy: false, // required to enable useI18n in Vue setup script
-        locale: config.i18nLocale,
-        fallbackLocale: config.i18nFallbackLocale,
+        locale: config.locale,
+        fallbackLocale: config.fallbackLocale,
         messages: messages,
-        availableLocales: config.i18nAvailableLocales,
+        availableLocales: config.availableLocales,
         silentFallbackWarn: true,
         silentTranslationWarn: true,
         missingWarn: false,

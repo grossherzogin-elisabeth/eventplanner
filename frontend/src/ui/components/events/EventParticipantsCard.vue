@@ -99,9 +99,9 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { useAuthUseCase, useEventUseCase } from '@/application';
 import type { Event, ResolvedRegistrationSlot, SignedInUser } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
-import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
 enum Tab {

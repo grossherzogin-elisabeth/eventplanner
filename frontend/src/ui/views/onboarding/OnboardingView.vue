@@ -47,9 +47,9 @@
 </template>
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
+import { useAuthUseCase, useConfigService } from '@/application';
 import { Role } from '@/domain';
 import { VInfo } from '@/ui/components/common';
-import { useAuthUseCase, useConfig } from '@/ui/composables/Application.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -57,7 +57,7 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 const emit = defineEmits<RouteEmits>();
 
 const router = useRouter();
-const config = useConfig();
+const config = useConfigService().getConfig();
 const auth = useAuthUseCase();
 const signedInUser = auth.getSignedInUser();
 

@@ -70,12 +70,12 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import { DateTimeFormat, Month, addToDate } from '@/common/date';
 import { type Event, EventState, Permission } from '@/domain';
+import { useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import CreateEventDlg from '@/ui/components/events/EventCreateDlg.vue';
-import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application';
-import { useEventService } from '@/ui/composables/Domain';
 import { isHoliday } from 'feiertagejs';
 import EventCalendarItem from './EventCalendarItem.vue';
 

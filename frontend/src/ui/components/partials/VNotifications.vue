@@ -20,8 +20,8 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useNotificationService } from '@/application';
 import { wait } from '@/common';
-import { useNotifications } from '@/ui/composables/Application';
 
 interface Notification {
     icon: string;
@@ -30,7 +30,7 @@ interface Notification {
     hidden: boolean;
 }
 
-const notificationService = useNotifications();
+const notificationService = useNotificationService();
 const notifications = ref<Notification[]>([]);
 
 async function showNotification(message: string, type: 'success' | 'warning' | 'error' | 'info' = 'success'): Promise<void> {

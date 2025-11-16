@@ -29,12 +29,12 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useErrorHandlingService } from '@/application';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog } from '@/ui/components/common';
-import { useErrorHandling } from '@/ui/composables/Application';
 import type { ErrorDialogMessage } from './ErrorDialog';
 
-const errorHandlingUseCase = useErrorHandling();
+const errorHandlingService = useErrorHandlingService();
 const dlg = ref<Dialog<ErrorDialogMessage, void> | null>(null);
 const error = ref<ErrorDialogMessage>({});
 
@@ -51,7 +51,7 @@ const details = computed<string>(() => {
 });
 
 function init(): void {
-    errorHandlingUseCase.registerErrorHandler((err) => open(err));
+    errorHandlingService.registerErrorHandler((err) => open(err));
 }
 
 function submit(): void {

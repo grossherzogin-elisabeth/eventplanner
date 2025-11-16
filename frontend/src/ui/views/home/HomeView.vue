@@ -53,11 +53,11 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useAuthUseCase, useEventUseCase } from '@/application';
 import { DateTimeFormat, Month } from '@/common/date';
 import type { Event } from '@/domain';
 import { Permission } from '@/domain';
-import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application';
-import { useEventService } from '@/ui/composables/Domain';
+import { useEventService } from '@/domain/services.ts';
 import { Routes } from '@/ui/views/Routes';
 import EventCard from '@/ui/views/home/EventCard.vue';
 

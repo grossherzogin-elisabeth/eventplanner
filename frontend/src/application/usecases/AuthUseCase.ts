@@ -1,30 +1,32 @@
-import type { AccountRepository, AuthService, Config, UserRepository } from '@/application';
+import type { AccountRepository, UserRepository } from '@/application/ports';
+import type { AuthService, ConfigService } from '@/application/services';
 import type { SignedInUser, UserKey } from '@/domain';
 import { Permission } from '@/domain';
 
 export class AuthUseCase {
-    private readonly config: Config;
+    private readonly configService: ConfigService;
     private readonly authService: AuthService;
     private readonly accountRepository: AccountRepository;
     private readonly userRepository: UserRepository;
     private authentication?: Promise<string | undefined>;
 
     constructor(params: {
-        config: Config;
+        configService: ConfigService;
         authService: AuthService;
         accountRepository: AccountRepository;
         userRepository: UserRepository;
     }) {
-        this.config = params.config;
+        this.configService = params.configService;
         this.authService = params.authService;
         this.accountRepository = params.accountRepository;
         this.userRepository = params.userRepository;
     }
 
     public async authenticate(redirectPath?: string): Promise<string | undefined> {
+        const overrideSignedInUserKey = this.configService.getConfig().overrideSignedInUserKey;
         const user = await this.accountRepository.getAccount();
-        if (user && user.permissions.includes(Permission.READ_USER_DETAILS) && this.config.overrideSignedInUserKey) {
-            const impersonatedUser = await this.userRepository.findByKey(this.config.overrideSignedInUserKey);
+        if (user && user.permissions.includes(Permission.READ_USER_DETAILS) && overrideSignedInUserKey) {
+            const impersonatedUser = await this.userRepository.findByKey(overrideSignedInUserKey);
             if (impersonatedUser) {
                 this.authService.impersonate(impersonatedUser);
             }

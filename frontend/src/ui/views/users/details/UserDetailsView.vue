@@ -127,13 +127,13 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useAuthUseCase, useErrorHandlingService, useEventUseCase, useUserAdministrationUseCase } from '@/application';
 import { deepCopy, diff } from '@/common';
 import type { Event, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import { useAuthUseCase, useErrorHandling, useEventUseCase, useUserAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
@@ -166,7 +166,7 @@ const router = useRouter();
 const userAdministrationUseCase = useUserAdministrationUseCase();
 const eventsUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
-const errorHandlingUseCase = useErrorHandling();
+const errorHandlingUseCase = useErrorHandlingService();
 const signedInUser = authUseCase.getSignedInUser();
 
 const tabs = [

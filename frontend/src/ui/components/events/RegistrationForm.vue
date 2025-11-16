@@ -143,12 +143,12 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { useUsersUseCase } from '@/application';
 import { cropToPrecision, deepCopy, isSameDate, subtractFromDate } from '@/common';
 import type { Event, InputSelectOption, PositionKey, Registration, UserDetails } from '@/domain';
 import { VInfo } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
 import { VInputSelectionList, VInputTextArea } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions';
 
 interface Props {
