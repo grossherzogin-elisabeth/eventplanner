@@ -1,4 +1,4 @@
-import { QualificationService } from '@/domain';
+import { QualificationService, useQualificationService } from '@/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { mockQualificationCaptain } from '~/mocks';
 
@@ -9,6 +9,11 @@ describe('QualificationService', () => {
 
     beforeEach(() => {
         testee = new QualificationService();
+    });
+
+    it('should construct instance with useQualificationService', () => {
+        const testee = useQualificationService();
+        expect(testee).toBeDefined();
     });
 
     describe('validate', () => {

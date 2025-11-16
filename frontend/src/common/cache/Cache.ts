@@ -1,16 +1,8 @@
-import type { StoreChangedEvent } from '@/common/cache/indexeddb/IndexedDBRepository';
-
 export interface CacheableEntity<K extends string | number = string> {
     key: K;
 }
 
 export interface Cache<K extends string | number, T extends CacheableEntity<K>> {
-    /**
-     * Register a listener to receive an event every time an entry is created, updated or deleted
-     * @param callback
-     */
-    addChangedListener(callback: (event: StoreChangedEvent<K>) => void): void;
-
     /**
      * Get the number of cached entries
      */

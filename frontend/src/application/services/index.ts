@@ -6,7 +6,9 @@ import {
     useSettingsRepository,
     useUserRepository,
 } from '@/adapter';
-import { IndexedDBRepository, getConnection } from '@/common';
+import type { CacheableEntity } from '@/common';
+import { type Cache, IndexedDBRepository, getConnection } from '@/common';
+import { InMemoryCache } from '@/common/cache/memory/InMemoryCache.ts';
 import { AuthService } from './AuthService';
 import { CalendarService } from './CalendarService';
 import { ConfigService } from './ConfigService';
@@ -93,11 +95,18 @@ export function useIndexedDb(): Promise<IDBDatabase> {
     return indexedDb;
 }
 
+function useCache<K extends string | number, T extends CacheableEntity<K>>(name: string): Cache<K, T> {
+    if (import.meta.env.VITE_USE_INDEXED_DB === 'true') {
+        return new IndexedDBRepository(useIndexedDb(), name, { invalidateOnReload: true });
+    }
+    return new InMemoryCache();
+}
+
 export function useEventCachingService(): EventCachingService {
     if (!eventCachingService) {
         eventCachingService = new EventCachingService({
             eventRepository: useEventRepository(),
-            cache: new IndexedDBRepository(useIndexedDb(), StoreNames.Events, { invalidateOnReload: true }),
+            cache: useCache(StoreNames.Events),
         });
     }
     return eventCachingService;
@@ -107,7 +116,7 @@ export function useUserCachingService(): UserCachingService {
     if (!userCachingService) {
         userCachingService = new UserCachingService({
             userRepository: useUserRepository(),
-            cache: new IndexedDBRepository(useIndexedDb(), StoreNames.Users, { invalidateOnReload: true }),
+            cache: useCache(StoreNames.Users),
         });
     }
     return userCachingService;
@@ -117,7 +126,7 @@ export function usePositionCachingService(): PositionCachingService {
     if (!positionCachingService) {
         positionCachingService = new PositionCachingService({
             positionRepository: usePositionRepository(),
-            cache: new IndexedDBRepository(useIndexedDb(), StoreNames.Positions, { invalidateOnReload: true }),
+            cache: useCache(StoreNames.Positions),
         });
     }
     return positionCachingService;
@@ -127,7 +136,7 @@ export function useQualificationCachingService(): QualificationCachingService {
     if (!qualificationCachingService) {
         qualificationCachingService = new QualificationCachingService({
             qualificationRepository: useQualificationRepository(),
-            cache: new IndexedDBRepository(useIndexedDb(), StoreNames.Qualifications, { invalidateOnReload: true }),
+            cache: useCache(StoreNames.Qualifications),
         });
     }
     return qualificationCachingService;
