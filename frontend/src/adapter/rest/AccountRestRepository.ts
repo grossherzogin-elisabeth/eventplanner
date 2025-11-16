@@ -1,9 +1,8 @@
 import type { AccountRepository } from '@/application';
 import { wait } from '@/common';
-import type { PositionKey, SignedInUser } from '@/domain';
-import type { Permission, Role } from '@/domain';
+import type { Permission, PositionKey, Role, SignedInUser } from '@/domain';
 
-interface AccountRepresentation {
+export interface AccountRepresentation {
     key: string;
     email: string;
     roles: string[];

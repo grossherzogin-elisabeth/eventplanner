@@ -2,7 +2,7 @@ import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { UserRepository } from '@/application';
 import type { PositionKey, Role, User, UserDetails, UserKey } from '@/domain';
 
-interface UserRepresentation {
+export interface UserRepresentation {
     key: string;
     firstName: string;
     nickName?: string;
@@ -14,7 +14,7 @@ interface UserRepresentation {
     verified?: boolean;
 }
 
-interface UserDetailsRepresentation {
+export interface UserDetailsRepresentation {
     readonly key: string;
     readonly authKey: string;
     createdAt?: string;

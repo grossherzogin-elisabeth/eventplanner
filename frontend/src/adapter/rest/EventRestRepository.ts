@@ -4,7 +4,7 @@ import { deserializeDate } from '@/common';
 import type { Event, EventKey, EventSignupType, EventState, EventType, Registration, Slot } from '@/domain';
 import type { RegistrationCreateRequest, RegistrationUpdateRequest } from './EventRegistrationRestRepository';
 
-interface SlotRepresentation {
+export interface SlotRepresentation {
     key: string;
     order: number;
     criticality: number;
@@ -13,7 +13,7 @@ interface SlotRepresentation {
     assignedRegistrationKey?: string | null;
 }
 
-interface RegistrationRepresentation {
+export interface RegistrationRepresentation {
     key: string;
     positionKey: string;
     name?: string | null;
@@ -24,7 +24,7 @@ interface RegistrationRepresentation {
     arrival?: string | null;
 }
 
-interface LocationRepresentation {
+export interface LocationRepresentation {
     name: string;
     icon: string;
     address?: string;
@@ -41,7 +41,6 @@ export interface EventRepresentation {
     type: string;
     signupType: string;
     state: string;
-    templateKey: string;
     name: string;
     description: string;
     start: string;

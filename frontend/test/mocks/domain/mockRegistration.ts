@@ -1,12 +1,19 @@
 import type { Registration } from '@/domain';
-import { CAPTAIN, DECKHAND, ENGINEER, MATE } from './mockPosition';
-import { USER_CAPTAIN, USER_DECKHAND, USER_ENGINEER, USER_MATE } from './mockUsers';
-
-export const REGISTRATION_CAPTAIN = 'reg-captain-key';
-export const REGISTRATION_ENGINEER = 'reg-engineer-key';
-export const REGISTRATION_MATE = 'reg-mate-key';
-export const REGISTRATION_DECKHAND = 'reg-deckhand-key';
-export const REGISTRATION_GUEST = 'reg-guest-key';
+import {
+    CAPTAIN,
+    DECKHAND,
+    ENGINEER,
+    MATE,
+    REGISTRATION_CAPTAIN,
+    REGISTRATION_DECKHAND,
+    REGISTRATION_ENGINEER,
+    REGISTRATION_GUEST,
+    REGISTRATION_MATE,
+    USER_CAPTAIN,
+    USER_DECKHAND,
+    USER_ENGINEER,
+    USER_MATE,
+} from '~/mocks/keys';
 
 export function mockRegistrationCaptain(overwrite?: Partial<Registration>): Registration {
     const registration: Registration = {
