@@ -1,4 +1,4 @@
-import type { PositionRepository } from '@/application';
+import type { PositionRepository } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Cache } from '@/common';
 import type { Position, PositionKey } from '@/domain';

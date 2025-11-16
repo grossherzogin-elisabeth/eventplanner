@@ -14,9 +14,9 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useEventUseCase } from '@/application';
 import { addToDate, cropToPrecision, subtractFromDate } from '@/common';
 import type { Event } from '@/domain';
-import { useEventUseCase } from '@/ui/composables/Application.ts';
 
 const eventUseCase = useEventUseCase();
 const events = ref<Event[]>([]);

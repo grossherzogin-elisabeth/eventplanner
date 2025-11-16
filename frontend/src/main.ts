@@ -1,25 +1,26 @@
-import { config } from '@/config';
-import { initAdapters } from '@/initAdapters';
-import { initApplicationServices } from '@/initApplicationServices';
-import { initDomainServices } from '@/initDomainServices';
-import { initUseCases } from '@/initUseCases';
-import { setupVue } from '@/ui';
+import { createApp } from 'vue';
+import { useAuthUseCase, useConfigService, useUsersUseCase } from '@/application';
+import App from '@/ui/App.vue';
+import '@/ui/plugins/countries';
+import '@/ui/plugins/fontawesome';
+import { setupI18n } from '@/ui/plugins/i18n';
+import { setupRouter } from '@/ui/plugins/router';
+import '@/ui/plugins/shortcuts';
+import { setupTooltips } from '@/ui/plugins/tooltip';
+import '@/ui/assets/css/main.css';
 
-async function init(): Promise<void> {
-    const adapters = initAdapters();
+const config = useConfigService().getConfig();
 
-    const serverConfig = await adapters.settingsRepository.readConfig();
-    config.menuTitle = serverConfig.menuTitle || 'Reiseplaner';
-    config.tabTitle = serverConfig.tabTitle || 'Reiseplaner';
-    config.supportEmail = serverConfig.supportEmail || 'support@example.de';
-    config.technicalSupportEmail = serverConfig.technicalSupportEmail || 'support@example.de';
+const app = createApp(App);
+app.use(
+    setupI18n({
+        locale: config.i18nLocale,
+        fallbackLocale: config.i18nFallbackLocale,
+        availableLocales: config.i18nAvailableLocales,
+    })
+);
+app.use(setupRouter(useAuthUseCase()));
+app.use(setupTooltips());
+app.mount('#app');
 
-    const domainServices = initDomainServices();
-    const applicationServices = initApplicationServices({ adapters });
-    const useCases = initUseCases({ config, adapters, domainServices, applicationServices });
-
-    await useCases.usersUseCase.applyUserSettings();
-
-    setupVue({ config, domainServices, applicationServices, useCases });
-}
-init();
+useUsersUseCase().applyUserSettings();

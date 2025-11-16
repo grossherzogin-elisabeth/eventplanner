@@ -1,4 +1,4 @@
-import type { ErrorHandlingService, PositionCachingService } from '@/application';
+import type { ErrorHandlingService, PositionCachingService } from '@/application/services';
 import type { Position } from '@/domain';
 
 export class PositionUseCase {

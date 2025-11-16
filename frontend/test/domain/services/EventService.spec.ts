@@ -1,4 +1,5 @@
 import type { Event } from '@/domain';
+import { useEventService } from '@/domain';
 import { EventState, SlotCriticality } from '@/domain';
 import { EventService } from '@/domain/services/EventService';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -37,6 +38,11 @@ describe('EventService', () => {
 
     beforeEach(() => {
         testee = new EventService();
+    });
+
+    it('should construct instance with useEventService', () => {
+        const testee = useEventService();
+        expect(testee).toBeDefined();
     });
 
     describe('doEventsHaveOverlappingDays', () => {

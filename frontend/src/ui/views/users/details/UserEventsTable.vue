@@ -127,14 +127,13 @@
 import { computed } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
+import { useAuthUseCase, useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, UserDetails } from '@/domain';
-import { Permission } from '@/domain';
+import { Permission, useEventService } from '@/domain';
 import { VTable } from '@/ui/components/common';
-import { useAuthUseCase, useErrorHandling, useEventAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
@@ -167,7 +166,7 @@ const router = useRouter();
 const authUseCase = useAuthUseCase();
 const eventService = useEventService();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
-const errorHandling = useErrorHandling();
+const errorHandling = useErrorHandlingService();
 const signedInUser = authUseCase.getSignedInUser();
 const positions = usePositions();
 

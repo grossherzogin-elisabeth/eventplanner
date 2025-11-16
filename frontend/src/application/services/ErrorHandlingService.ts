@@ -1,4 +1,4 @@
-import type { AccountRepository } from '@/application';
+import type { AccountRepository } from '@/application/ports';
 
 export interface ErrorDetails {
     title?: string;

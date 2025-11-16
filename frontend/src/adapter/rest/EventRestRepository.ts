@@ -1,8 +1,8 @@
-import type { RegistrationCreateRequest, RegistrationUpdateRequest } from '@/adapter';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
 import { deserializeDate } from '@/common';
 import type { Event, EventKey, EventSignupType, EventState, EventType, Registration, Slot } from '@/domain';
+import type { RegistrationCreateRequest, RegistrationUpdateRequest } from './EventRegistrationRestRepository';
 
 interface SlotRepresentation {
     key: string;

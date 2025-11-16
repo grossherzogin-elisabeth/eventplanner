@@ -80,9 +80,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { Event, Slot } from '@/domain';
+import { useEventService } from '@/domain/services.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';
 

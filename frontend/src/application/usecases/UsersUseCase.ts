@@ -1,16 +1,20 @@
-import type { AuthService, Config, NotificationService } from '@/application';
-import type { UserRepository } from '@/application/ports/UserRepository';
-import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
-import type { PositionCachingService } from '@/application/services/PositionCachingService';
-import type { QualificationCachingService } from '@/application/services/QualificationCachingService';
-import type { UserCachingService } from '@/application/services/UserCachingService';
+import type { UserRepository } from '@/application/ports';
+import type {
+    AuthService,
+    ConfigService,
+    ErrorHandlingService,
+    NotificationService,
+    PositionCachingService,
+    QualificationCachingService,
+    UserCachingService,
+} from '@/application/services';
 import { diff } from '@/common';
 import type { Position, PositionKey, Qualification, QualificationKey, User, UserDetails, UserKey, UserSettings } from '@/domain';
 import { Permission, Theme } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
 export class UsersUseCase {
-    private readonly config: Config;
+    private readonly configService: ConfigService;
     private readonly userRepository: UserRepository;
     private readonly authService: AuthService;
     private readonly positionCachingService: PositionCachingService;
@@ -20,7 +24,7 @@ export class UsersUseCase {
     private readonly errorHandlingService: ErrorHandlingService;
 
     constructor(params: {
-        config: Config;
+        configService: ConfigService;
         userRepository: UserRepository;
         authService: AuthService;
         registrationService: RegistrationService;
@@ -30,7 +34,7 @@ export class UsersUseCase {
         notificationService: NotificationService;
         errorHandlingService: ErrorHandlingService;
     }) {
-        this.config = params.config;
+        this.configService = params.configService;
         this.userRepository = params.userRepository;
         this.authService = params.authService;
         this.positionCachingService = params.positionCachingService;
@@ -43,13 +47,11 @@ export class UsersUseCase {
     }
 
     public async getUserDetailsForSignedInUser(): Promise<UserDetails> {
+        const overrideSignedInUserKey = this.configService.getConfig().overrideSignedInUserKey;
         try {
             let user: UserDetails;
-            if (
-                this.config.overrideSignedInUserKey &&
-                this.authService.getSignedInUser()?.permissions.includes(Permission.READ_USER_DETAILS)
-            ) {
-                user = await this.userRepository.findByKey(this.config.overrideSignedInUserKey);
+            if (overrideSignedInUserKey && this.authService.getSignedInUser()?.permissions.includes(Permission.READ_USER_DETAILS)) {
+                user = await this.userRepository.findByKey(overrideSignedInUserKey);
             } else {
                 user = await this.userRepository.findBySignedInUser();
             }

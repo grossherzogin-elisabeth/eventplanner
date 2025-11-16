@@ -74,10 +74,10 @@
 import { ref } from 'vue';
 import { deepCopy } from '@/common';
 import type { PositionKey, Qualification } from '@/domain';
+import { useQualificationService } from '@/domain/services.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
 import { VDialog, VInputText, VInputTextArea } from '@/ui/components/common';
-import { useQualificationService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 

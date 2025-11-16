@@ -49,12 +49,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserAdministrationUseCase } from '@/application';
 import type { User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInfo } from '@/ui/components/common';
 import { VInputText } from '@/ui/components/common';
 import { AsyncButton, VDialog } from '@/ui/components/common';
-import { useUserAdministrationUseCase } from '@/ui/composables/Application.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 

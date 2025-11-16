@@ -60,8 +60,8 @@ import { useI18n } from 'vue-i18n';
 import type { Event, Position, Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
 import { EventState } from '@/domain';
+import { useEventService } from '@/domain/services.ts';
 import { VTooltip } from '@/ui/components/common';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 
 interface OpenPositionsCounter extends Position {

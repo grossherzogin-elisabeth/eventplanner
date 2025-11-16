@@ -68,10 +68,10 @@
 import { ref } from 'vue';
 import { deepCopy } from '@/common';
 import type { Position } from '@/domain';
+import { usePositionService } from '@/domain/services.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VInputNumber } from '@/ui/components/common';
 import { VDialog, VInputText } from '@/ui/components/common';
-import { usePositionService } from '@/ui/composables/Domain.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 const positionService = usePositionService();

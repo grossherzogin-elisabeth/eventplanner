@@ -1,4 +1,4 @@
-import type { UserRepository } from '@/application';
+import type { UserRepository } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Cache } from '@/common';
 import type { User, UserKey } from '@/domain';

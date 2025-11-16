@@ -74,9 +74,9 @@
 import { computed, ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
 import type { ResolvedUserQualification, UserDetails, UserQualification } from '@/domain';
+import { useUserService } from '@/domain/services.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
-import { useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';

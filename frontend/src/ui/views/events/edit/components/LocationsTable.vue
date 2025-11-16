@@ -68,13 +68,13 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useAuthUseCase } from '@/application';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Location } from '@/domain';
 import { Permission } from '@/domain';
+import { useEventService } from '@/domain/services.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
-import { useAuthUseCase } from '@/ui/composables/Application.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import LocationEditDlg from '@/ui/views/events/edit/components/LocationEditDlg.vue';
 
 interface Props {

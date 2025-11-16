@@ -71,11 +71,11 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useEventAdministrationUseCase } from '@/application';
 import type { Event } from '@/domain';
+import { useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VDialog, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
-import { useEventAdministrationUseCase } from '@/ui/composables/Application.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';

@@ -84,7 +84,7 @@ import {
     DATE_MM_DD_YYYY_REGEX,
     DATE_YYYY_MM_DD_REGEX,
     NUMBER_REGEX,
-} from '@/application/utils/RegExpresions.ts';
+} from '@/application/utils/RegExpresions';
 import { DateTimeFormat, getDaysOfMonth } from '@/common/date';
 import { addToDate, subtractFromDate } from '@/common/date/DateUtils';
 import type { Dialog } from '@/ui/components/common';

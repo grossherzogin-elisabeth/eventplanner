@@ -148,8 +148,10 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useAuthUseCase, useEventUseCase } from '@/application';
 import type { Event, Position, Registration, SignedInUser } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
+import { useEventService } from '@/domain/services.ts';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VInfo, VSuccess, VWarning } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
@@ -157,8 +159,6 @@ import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
 import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
-import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 

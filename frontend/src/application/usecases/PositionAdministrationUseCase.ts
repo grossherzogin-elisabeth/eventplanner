@@ -1,4 +1,5 @@
-import type { ErrorHandlingService, NotificationService, PositionCachingService, PositionRepository } from '@/application';
+import type { PositionRepository } from '@/application/ports';
+import type { ErrorHandlingService, NotificationService, PositionCachingService } from '@/application/services';
 import type { Position } from '@/domain';
 
 export class PositionAdministrationUseCase {

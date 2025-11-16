@@ -1,19 +1,26 @@
+import type { EventRegistrationsRepository, EventRepository } from '@/application/ports';
 import type {
     AuthService,
     CalendarService,
     ErrorHandlingService,
     EventCachingService,
-    EventRegistrationsRepository,
-    EventRepository,
     NotificationService,
     PositionCachingService,
     UserCachingService,
-} from '@/application';
+} from '@/application/services';
 import { isSameDate, subtractFromDate } from '@/common';
-import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils.ts';
-import type { Event, EventKey, EventService, Registration, RegistrationKey, RegistrationService, UserKey } from '@/domain';
+import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils';
+import type {
+    Event,
+    EventKey,
+    EventService,
+    Registration,
+    RegistrationKey,
+    RegistrationService,
+    ResolvedRegistrationSlot,
+    UserKey,
+} from '@/domain';
 import { EventSignupType, EventState } from '@/domain';
-import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class EventUseCase {
     private readonly notificationService: NotificationService;

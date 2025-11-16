@@ -315,10 +315,17 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import {
+    useAuthUseCase,
+    useEventAdministrationUseCase,
+    useEventUseCase,
+    useUserAdministrationUseCase,
+    useUsersUseCase,
+} from '@/application';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
-import { EventState, Permission, SlotCriticality } from '@/domain';
+import { EventState, Permission, SlotCriticality, useEventService } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog, VMultiSelectActions, VSearchButton, VTable, VTabs, VTooltip } from '@/ui/components/common';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
@@ -326,15 +333,7 @@ import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import {
-    useAuthUseCase,
-    useEventAdministrationUseCase,
-    useEventUseCase,
-    useUserAdministrationUseCase,
-    useUsersUseCase,
-} from '@/ui/composables/Application.ts';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';

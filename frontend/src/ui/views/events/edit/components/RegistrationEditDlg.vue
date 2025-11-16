@@ -121,16 +121,16 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useUsersUseCase } from '@/application';
 import { deepCopy, filterUndefined } from '@/common';
 import { Validator, notEmpty } from '@/common/validation';
 import type { Event, Position, QualificationKey, Registration, User } from '@/domain';
+import { useUserService } from '@/domain/services.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputDate } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputText, VInputTextArea } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application.ts';
-import { useUserService } from '@/ui/composables/Domain.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';

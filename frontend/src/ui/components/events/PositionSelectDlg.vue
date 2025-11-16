@@ -32,12 +32,12 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useUsersUseCase } from '@/application';
 import type { InputSelectOption, PositionKey, UserDetails } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputCheckBox } from '@/ui/components/common';
 import { VDialog } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application';
 import { usePositions } from '@/ui/composables/Positions';
 
 const positions = usePositions();
