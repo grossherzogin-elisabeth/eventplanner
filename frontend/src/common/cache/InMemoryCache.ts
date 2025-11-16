@@ -1,12 +1,7 @@
-import type { Cache, CacheableEntity, StoreChangedEvent } from '@/common';
+import type { Cache, CacheableEntity } from '@/common';
 
 export class InMemoryCache<K extends string | number, T extends CacheableEntity<K>> implements Cache<K, T> {
     private readonly items = new Map<K, T>();
-    private readonly callbacks: ((event: StoreChangedEvent<K>) => void)[] = [];
-
-    public addChangedListener(callback: (event: StoreChangedEvent<K>) => void): void {
-        this.callbacks.push(callback);
-    }
 
     public async count(): Promise<number> {
         return this.items.size;
