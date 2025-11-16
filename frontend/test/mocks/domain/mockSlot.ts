@@ -1,11 +1,6 @@
 import type { Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
-import { CAPTAIN, DECKHAND, ENGINEER, MATE } from './mockPosition';
-
-export const SLOT_CAPTAIN = 'slot-captain';
-export const SLOT_ENGINEER = 'slot-engineer';
-export const SLOT_MATE = 'slot-mate';
-export const SLOT_DECKHAND = 'slot-deckhand';
+import { CAPTAIN, DECKHAND, ENGINEER, MATE, SLOT_CAPTAIN, SLOT_DECKHAND, SLOT_ENGINEER, SLOT_MATE } from '~/mocks/keys';
 
 export function mockSlotCaptain(overwrite?: Partial<Slot>): Slot {
     const slot = {
