@@ -4,7 +4,7 @@ plugins {
     id "org.springframework.boot" version "3.5.7"
     id "io.spring.dependency-management" version "1.1.7"
     id "io.freefair.lombok" version "9.1.0"
-    id "org.sonarqube" version "7.0.1.6134"
+    id "org.sonarqube" version "7.1.0.6387"
 }
 
 group = "org.eventplanner"
@@ -17,7 +17,7 @@ java {
 ext {
     springBootVersion = "3.5.7"
     hibernateVersion = "6.6.13.Final"
-    apachePoiVersion = "5.4.1"
+    apachePoiVersion = "5.5.0"
 }
 
 repositories {
@@ -39,7 +39,7 @@ dependencies {
     implementation "org.xerial:sqlite-jdbc:3.51.0.0"
     implementation "org.hibernate.orm:hibernate-core:${hibernateVersion}"
     implementation "org.hibernate.orm:hibernate-community-dialects:${hibernateVersion}"
-    implementation "org.flywaydb:flyway-core:11.16.0"
+    implementation "org.flywaydb:flyway-core:11.17.1"
 
     // excel
     implementation "org.apache.poi:poi:${apachePoiVersion}"
@@ -59,7 +59,7 @@ dependencies {
     runtimeOnly "io.micrometer:micrometer-registry-prometheus"
 
     // util
-    implementation "org.apache.commons:commons-lang3:3.19.0"
+    implementation "org.apache.commons:commons-lang3:3.20.0"
 }
 
 test {
