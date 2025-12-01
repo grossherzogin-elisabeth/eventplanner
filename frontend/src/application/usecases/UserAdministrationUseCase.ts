@@ -1,7 +1,6 @@
-import type { NotificationService, UserRepository } from '@/application';
-import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
-import type { UserCachingService } from '@/application/services/UserCachingService';
-import { EMAIL_REGEX, NAME_REGEX, PHONE_REGEX } from '@/application/utils/RegExpresions.ts';
+import type { UserRepository } from '@/application/ports';
+import type { ErrorHandlingService, NotificationService, UserCachingService } from '@/application/services';
+import { EMAIL_REGEX, NAME_REGEX, PHONE_REGEX } from '@/application/utils/RegExpresions';
 import { diff, filterUndefined, wait } from '@/common';
 import { Validator, doesNotContain, matchesPattern, notEmpty } from '@/common/validation';
 import type { User, UserDetails, UserKey } from '@/domain';

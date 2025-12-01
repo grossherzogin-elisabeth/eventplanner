@@ -1,19 +1,21 @@
 import type { User } from '@/domain';
 import { Role } from '@/domain';
-import { CAPTAIN, DECKHAND, ENGINEER, MATE } from './mockPosition';
 import {
+    CAPTAIN,
+    DECKHAND,
+    ENGINEER,
+    MATE,
     QUALIFICATION_CAPTAIN,
     QUALIFICATION_DECKHAND,
     QUALIFICATION_ENGINEER,
     QUALIFICATION_EXPIRES,
     QUALIFICATION_GENERIC,
     QUALIFICATION_MATE,
-} from './mockQualification.ts';
-
-export const USER_CAPTAIN = 'user-captain-key';
-export const USER_ENGINEER = 'user-engineer-key';
-export const USER_MATE = 'user-mate-key';
-export const USER_DECKHAND = 'user-deckhand-key';
+    USER_CAPTAIN,
+    USER_DECKHAND,
+    USER_ENGINEER,
+    USER_MATE,
+} from '~/mocks/keys';
 
 export function mockUserCaptain(overwrite?: Partial<User>): User {
     const user: User = {
@@ -68,7 +70,7 @@ export function mockUserMate(overwrite?: Partial<User>): User {
 
 export function mockUserDeckhand(overwrite?: Partial<User>): User {
     const user: User = {
-        key: USER_ENGINEER,
+        key: USER_DECKHAND,
         firstName: 'Dean',
         lastName: 'Deck',
         email: 'dean.deck@example.com',

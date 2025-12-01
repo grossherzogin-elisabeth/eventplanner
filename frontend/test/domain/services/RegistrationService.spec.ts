@@ -1,4 +1,4 @@
-import { RegistrationService, RegistrationSlotState } from '@/domain';
+import { RegistrationService, RegistrationSlotState, useRegistrationService } from '@/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
     CAPTAIN,
@@ -26,6 +26,11 @@ describe('RegistrationService', () => {
 
     beforeEach(() => {
         testee = new RegistrationService();
+    });
+
+    it('should construct instance with useRegistrationService', () => {
+        const testee = useRegistrationService();
+        expect(testee).toBeDefined();
     });
 
     describe('resolveRegistrations', () => {

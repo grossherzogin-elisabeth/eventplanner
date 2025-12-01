@@ -78,11 +78,11 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useConfigService, useUsersUseCase } from '@/application';
 import { DateTimeFormat } from '@/common/date';
 import type { UserSettings } from '@/domain';
 import { Theme } from '@/domain';
 import { VInfo, VInputCheckBox } from '@/ui/components/common';
-import { useConfig, useUsersUseCase } from '@/ui/composables/Application';
 
 interface SystemInfo {
     buildDate?: Date;
@@ -94,7 +94,7 @@ type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
 const emit = defineEmits<RouteEmits>();
 
-const config = useConfig();
+const config = useConfigService().getConfig();
 const usersUseCase = useUsersUseCase();
 
 const systemInfo = ref<SystemInfo>({});

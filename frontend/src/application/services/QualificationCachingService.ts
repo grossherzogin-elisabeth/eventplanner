@@ -1,4 +1,4 @@
-import type { QualificationRepository } from '@/application';
+import type { QualificationRepository } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Cache } from '@/common';
 import type { Qualification, QualificationKey } from '@/domain';

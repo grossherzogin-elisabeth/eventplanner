@@ -49,15 +49,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useErrorHandlingService, useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import { hasAnyOverlap } from '@/common';
 import type { Event, PositionKey, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
-import { EventSignupType, RegistrationSlotState, SlotCriticality } from '@/domain';
+import { EventSignupType, RegistrationSlotState, SlotCriticality, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
-import { useErrorHandling, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
-import { usePositions } from '@/ui/composables/Positions.ts';
-import { useQuery } from '@/ui/composables/QueryState.ts';
+import { usePositions } from '@/ui/composables/Positions';
+import { useQuery } from '@/ui/composables/QueryState';
 import RegistrationEditDlg from '@/ui/views/events/edit/components/RegistrationEditDlg.vue';
 import RegistrationsTable from '@/ui/views/events/edit/components/RegistrationsTable.vue';
 import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';
@@ -76,7 +75,7 @@ const { t } = useI18n();
 const eventUseCase = useEventUseCase();
 const eventAdminUseCase = useEventAdministrationUseCase();
 const eventService = useEventService();
-const errorHandler = useErrorHandling();
+const errorHandler = useErrorHandlingService();
 const positions = usePositions();
 
 const filterPositions = useQuery<PositionKey[]>('positions', []).parameter;

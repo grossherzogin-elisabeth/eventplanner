@@ -125,14 +125,13 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { deepCopy, updateDate, updateTime } from '@/common';
-import { DateTimeFormat, cropToPrecision } from '@/common/date';
+import { useEventUseCase } from '@/application';
+import { cropToPrecision, deepCopy, updateDate, updateTime } from '@/common';
+import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
-import { EventSignupType, EventState, EventType } from '@/domain';
+import { EventSignupType, EventState, EventType, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
-import { useEventUseCase } from '@/ui/composables/Application';
-import { useEventService } from '@/ui/composables/Domain';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation';

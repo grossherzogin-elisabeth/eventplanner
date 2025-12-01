@@ -1,11 +1,9 @@
-import type { AuthService, EventRegistrationsRepository, EventRepository, NotificationService } from '@/application';
-import type { ErrorHandlingService } from '@/application/services/ErrorHandlingService';
-import type { EventCachingService } from '@/application/services/EventCachingService';
+import type { EventRegistrationsRepository, EventRepository } from '@/application/ports';
+import type { AuthService, ErrorHandlingService, EventCachingService, NotificationService } from '@/application/services';
 import { filterUndefined } from '@/common';
-import { saveBlobToFile } from '@/common/utils/DownloadUtils.ts';
-import type { Event, EventKey, EventService, Registration, SlotKey, User } from '@/domain';
+import { saveBlobToFile } from '@/common/utils/DownloadUtils';
+import type { Event, EventKey, EventService, Registration, ResolvedRegistrationSlot, SlotKey, User } from '@/domain';
 import { EventState } from '@/domain';
-import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class EventAdministrationUseCase {
     private readonly eventCachingService: EventCachingService;

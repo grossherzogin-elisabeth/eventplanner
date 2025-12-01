@@ -1,12 +1,13 @@
-import type { SignedInUser } from '@/domain';
+import type { AccountRepresentation } from '@/adapter/rest/AccountRestRepository';
 import { Permission, Role } from '@/domain';
-import { DECKHAND } from './mockPosition';
+import { DECKHAND } from '~/mocks/keys';
 
-export function mockSignedInUser(overwrite?: Partial<SignedInUser>): SignedInUser {
-    const user: SignedInUser = {
+export function mockAccountRepresentation(overwrite?: Partial<AccountRepresentation>): AccountRepresentation {
+    const account: AccountRepresentation = {
         key: 'mocked',
         firstName: 'John',
         lastName: 'Doe',
+        gender: 'd',
         email: 'john.doe@email.com',
         roles: [Role.TEAM_MEMBER],
         permissions: [
@@ -18,7 +19,6 @@ export function mockSignedInUser(overwrite?: Partial<SignedInUser>): SignedInUse
             Permission.READ_POSITIONS,
         ],
         positions: [DECKHAND],
-        impersonated: false,
     };
-    return overwrite ? Object.assign(user, overwrite) : user;
+    return overwrite ? Object.assign(account, overwrite) : account;
 }

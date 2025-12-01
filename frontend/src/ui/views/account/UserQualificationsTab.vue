@@ -43,11 +43,11 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useUsersUseCase } from '@/application';
 import { DateTimeFormat } from '@/common/date';
 import type { Qualification, QualificationKey, ResolvedUserQualification, UserDetails } from '@/domain';
+import { useUserService } from '@/domain/services.ts';
 import { VTable } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application';
-import { useUserService } from '@/ui/composables/Domain';
 
 interface Props {
     user: UserDetails;

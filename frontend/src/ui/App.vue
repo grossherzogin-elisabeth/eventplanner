@@ -22,17 +22,17 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
+import { useAuthUseCase, useConfigService } from '@/application';
 import type { SignedInUser } from '@/domain';
 import { Permission } from '@/domain';
 import { VErrorDialog } from '@/ui/components/common';
 import AppMenu from '@/ui/components/partials/AppMenu.vue';
 import AppNavbar from '@/ui/components/partials/AppNavbar.vue';
 import VNotifications from '@/ui/components/partials/VNotifications.vue';
-import { useAuthUseCase, useConfig } from '@/ui/composables/Application';
 import { useViewportSize } from '@/ui/composables/ViewportSize';
 
 useViewportSize();
-const config = useConfig();
+const configService = useConfigService();
 const authUseCase = useAuthUseCase();
 
 const signedInUser = ref<SignedInUser | null>(null);
@@ -51,10 +51,11 @@ async function init(): Promise<void> {
 }
 
 function setTitle(): void {
+    const tabTitle = configService.getConfig().tabTitle;
     if (title.value) {
-        document.title = `${config.tabTitle} | ${title.value}`;
+        document.title = `${tabTitle} | ${title.value}`;
     } else {
-        document.title = config.tabTitle;
+        document.title = tabTitle;
     }
 }
 

@@ -1,6 +1,6 @@
 <template>
     <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
-        <h1 class="mt-8 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
+        <h1 class="mt-8 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ menuTitle }}</h1>
 
         <div v-if="signedInUser.impersonated" class="bg-error-container text-onerror-container mx-4 rounded-2xl pl-4 xl:mx-8 xl:pl-6">
             <div class="flex items-center">
@@ -113,7 +113,7 @@
         <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
     </div>
     <div v-else>
-        <h1 class="mt-4 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ config.menuTitle }}</h1>
+        <h1 class="mt-4 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ menuTitle }}</h1>
         <VInfo class="mx-8">
             <h2 class="mb-2">Noch kein Account?</h2>
             <p class="mb-2">
@@ -139,13 +139,13 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAuthUseCase, useConfigService } from '@/application';
 import type { SignedInUser } from '@/domain';
 import { Permission } from '@/domain';
 import { VInfo } from '@/ui/components/common';
-import { useAuthUseCase, useConfig } from '@/ui/composables/Application';
 import { Routes } from '@/ui/views/Routes';
 
-const config = useConfig();
+const menuTitle = useConfigService().getConfig().menuTitle;
 const authUseCase = useAuthUseCase();
 const route = useRoute();
 

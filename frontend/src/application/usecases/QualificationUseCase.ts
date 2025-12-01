@@ -1,4 +1,4 @@
-import type { ErrorHandlingService, QualificationCachingService } from '@/application';
+import type { ErrorHandlingService, QualificationCachingService } from '@/application/services';
 import type { Qualification } from '@/domain';
 
 export class QualificationUseCase {

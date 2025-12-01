@@ -29,9 +29,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useUsersUseCase } from '@/application';
 import type { InputSelectOption, UserDetails, UserSettings } from '@/domain';
 import { VTabs } from '@/ui/components/common';
-import { useUsersUseCase } from '@/ui/composables/Application';
 import AccountDataTab from '@/ui/views/account/AccountDataTab.vue';
 import UserSettingsTab from '@/ui/views/account/UserSettingsTab.vue';
 import UserQualificationsTab from './UserQualificationsTab.vue';

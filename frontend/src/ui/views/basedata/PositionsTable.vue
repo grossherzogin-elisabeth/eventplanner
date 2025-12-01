@@ -47,11 +47,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { usePositionAdministrationUseCase } from '@/application';
 import type { Position } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
-import { usePositionAdministrationUseCase } from '@/ui/composables/Application.ts';
 import PositionDetailsDlg from './PositionDetailsDlg.vue';
 
 interface Props {

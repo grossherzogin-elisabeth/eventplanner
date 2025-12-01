@@ -1,12 +1,6 @@
 import { deepCopy } from '@/common';
 import type { Cache, CacheableEntity } from '../Cache';
 
-export interface StoreChangedEvent<K extends string | number = string> {
-    action: 'update' | 'remove' | 'clear';
-    keys: K[];
-    store: string;
-}
-
 export interface CacheInvalidationOptions {
     invalidateOnReload: boolean;
     invalidateOnInterval: number;
@@ -32,7 +26,6 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
         invalidateOnInterval: 1000 * 60 * 60 * 6, // invalidate cache every 6 hours
     };
     private readonly cacheInvalidationOptions: CacheInvalidationOptions;
-    private readonly listeners: ((event: StoreChangedEvent<K>) => void)[] = [];
 
     /**
      * Create an IndexedDB repository for the specified store. The database passed may be still connecting. All
@@ -51,14 +44,6 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
         if (this.cacheInvalidationOptions.invalidateOnInterval > 0) {
             setInterval(() => this.deleteAll(), this.cacheInvalidationOptions.invalidateOnInterval);
         }
-    }
-
-    /**
-     * Register a listener to receive an event every time an entry is created, updated or deleted
-     * @param callback
-     */
-    public addChangedListener(callback: (event: StoreChangedEvent<K>) => void): void {
-        this.listeners.push(callback);
     }
 
     /**
@@ -127,10 +112,7 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
                 updated: new Date(),
                 value: clone,
             });
-            query.onsuccess = (): void => {
-                resolve(clone);
-                this.emitChangeEvent('update', [clone.key]);
-            };
+            query.onsuccess = (): void => resolve(clone);
             query.onerror = (): void => reject(query.error);
         });
     }
@@ -154,13 +136,7 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
                     value: entity,
                 });
             });
-            transaction.oncomplete = (): void => {
-                resolve(entities);
-                this.emitChangeEvent(
-                    'update',
-                    entities.map((e) => e.key)
-                );
-            };
+            transaction.oncomplete = (): void => resolve(entities);
             transaction.onerror = (): void => reject(transaction.error);
         });
     }
@@ -175,10 +151,7 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
             const transaction = database.transaction(this.store, 'readwrite');
             const store = transaction.objectStore(this.store);
             const query = store.delete(key);
-            query.onsuccess = (): void => {
-                resolve();
-                this.emitChangeEvent('remove', [key]);
-            };
+            query.onsuccess = (): void => resolve();
             query.onerror = (): void => reject(query.error);
         });
     }
@@ -196,36 +169,12 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
      */
     public async deleteAll(): Promise<void> {
         const database = await this.database;
-        const allEntities = await this.findAll();
         return new Promise<void>((resolve, reject) => {
             const transaction = database.transaction(this.store, 'readwrite');
             const store = transaction.objectStore(this.store);
             const query = store.clear();
-            query.onsuccess = (): void => {
-                resolve();
-                this.emitChangeEvent(
-                    'clear',
-                    allEntities.map((e) => e.key)
-                );
-            };
+            query.onsuccess = (): void => resolve();
             query.onerror = (): void => reject(query.error);
         });
-    }
-
-    private async emitChangeEvent(action: 'update' | 'remove' | 'clear', keys: K[]): Promise<void> {
-        if (keys.length > 0) {
-            const event = {
-                store: this.store,
-                action: action,
-                keys: keys,
-            };
-            this.listeners.forEach((callback) => {
-                try {
-                    callback(event);
-                } catch (e) {
-                    console.error(e);
-                }
-            });
-        }
     }
 }

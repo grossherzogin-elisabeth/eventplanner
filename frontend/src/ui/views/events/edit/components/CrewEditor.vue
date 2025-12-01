@@ -169,14 +169,14 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useErrorHandlingService, useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import type { Event, PositionKey, Registration, Slot } from '@/domain';
 import { SlotCriticality } from '@/domain';
-import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
+import { useEventService } from '@/domain';
+import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 import type { Dialog } from '@/ui/components/common';
 import { VDropzone } from '@/ui/components/common';
-import { useErrorHandling, useEventAdministrationUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
-import { useEventService } from '@/ui/composables/Domain.ts';
-import { usePositions } from '@/ui/composables/Positions.ts';
+import { usePositions } from '@/ui/composables/Positions';
 import RegistrationRow from '@/ui/views/events/edit/components/RegistrationRow.vue';
 import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';
 import { v4 as uuid } from 'uuid';
@@ -200,7 +200,7 @@ const { t } = useI18n();
 const eventUseCase = useEventUseCase();
 const eventAdminUseCase = useEventAdministrationUseCase();
 const eventService = useEventService();
-const errorHandler = useErrorHandling();
+const errorHandler = useErrorHandlingService();
 const positions = usePositions();
 
 const registrations = ref<ResolvedRegistrationSlot[]>([]);

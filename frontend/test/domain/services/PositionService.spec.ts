@@ -1,4 +1,4 @@
-import { PositionService } from '@/domain';
+import { PositionService, usePositionService } from '@/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { mockPositionCaptain } from '~/mocks';
 
@@ -9,6 +9,11 @@ describe('PositionService', () => {
 
     beforeEach(() => {
         testee = new PositionService();
+    });
+
+    it('should construct instance with usePositionService', () => {
+        const testee = usePositionService();
+        expect(testee).toBeDefined();
     });
 
     describe('validate', () => {

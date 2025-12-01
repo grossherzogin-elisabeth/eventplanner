@@ -113,8 +113,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAuthUseCase, useEventUseCase } from '@/application';
 import type { Event, EventKey, RegistrationKey, SignedInUser } from '@/domain';
-import { useAuthUseCase, useEventUseCase } from '@/ui/composables/Application.ts';
 import EventDetails from '@/ui/views/events/confirm/EventDetails.vue';
 
 enum State {

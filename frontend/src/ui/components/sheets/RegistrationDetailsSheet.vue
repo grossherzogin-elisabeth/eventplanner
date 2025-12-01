@@ -28,12 +28,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useUsersUseCase } from '@/application';
 import { deepCopy, isSameDate } from '@/common';
 import type { Event, Registration, UserDetails } from '@/domain';
 import type { Sheet } from '@/ui/components/common';
 import { VSheet } from '@/ui/components/common';
 import RegistrationForm, { View } from '@/ui/components/events/RegistrationForm.vue';
-import { useUsersUseCase } from '@/ui/composables/Application.ts';
 import { v4 as uuid } from 'uuid';
 
 const usersUseCase = useUsersUseCase();
