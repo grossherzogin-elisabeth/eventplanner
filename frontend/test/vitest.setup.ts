@@ -1,23 +1,12 @@
 import { setupI18n } from '@/ui/plugins/i18n';
-import { setupRouter } from '@/ui/plugins/router.ts';
 import { config } from '@vue/test-utils';
 import { vi } from 'vitest';
-import { MOCK_UUID, mockSignedInUser } from '~/mocks';
 
 // ---------------------------------------------------------------
 // mock global vue plugins
 // ---------------------------------------------------------------
 
-const AuthUseCase = vi.fn();
-AuthUseCase.prototype.firstAuthentication = vi.fn(() => Promise.resolve(undefined));
-AuthUseCase.prototype.isLoggedIn = vi.fn(() => true);
-AuthUseCase.prototype.getSignedInUser = vi.fn(() => mockSignedInUser());
-
-vi.mock('uuid', () => ({
-    v4: vi.fn(() => MOCK_UUID),
-}));
-
-config.global.plugins = [setupI18n({ locale: 'de', fallbackLocale: 'de', availableLocales: ['de'] }), setupRouter(new AuthUseCase())];
+config.global.plugins = [setupI18n({ locale: 'de', fallbackLocale: 'de', availableLocales: ['de'] })];
 
 // ---------------------------------------------------------------
 // mock global elements not present in happy dom by default

@@ -1,6 +1,10 @@
+import type { Router } from 'vue-router';
+import { createWebHistory } from 'vue-router';
+import { createRouter } from 'vue-router';
+import { setupRouter } from '@/ui/plugins/router.ts';
 import TabLocations from '@/ui/views/events/edit/TabLocations.vue';
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     given,
     mockAccountRepresentation,
@@ -8,10 +12,26 @@ import {
     mockEvent,
     mockPositionRepresentations,
     mockQualificationRepresentations,
+    mockSignedInUser,
     mockUserRepresentations,
 } from '~/mocks';
 
 describe('TabLocations', () => {
+    let router: Router = createRouter({ history: createWebHistory(import.meta.env.BASE_URL), routes: [] });
+
+    beforeEach(() => {
+        const AuthUseCase = vi.fn();
+        AuthUseCase.prototype.firstAuthentication = vi.fn(() => Promise.resolve(undefined));
+        AuthUseCase.prototype.isLoggedIn = vi.fn(() => true);
+        AuthUseCase.prototype.getSignedInUser = vi.fn(() => undefined);
+        AuthUseCase.prototype.getSignedInUser = vi.fn(() => mockSignedInUser());
+        router = setupRouter(new AuthUseCase());
+    });
+
+    afterEach(() => {
+        vi.clearAllMocks();
+    });
+
     it('should fetch event data initially', () => {
         given.get('/api/v1/config').willReturn(200, mockConfigRepresentation());
         given.get('/api/v1/account').willReturn(200, mockAccountRepresentation());
@@ -22,6 +42,9 @@ describe('TabLocations', () => {
 
         const testee = mount(TabLocations, {
             props: { event: mockEvent() },
+            global: {
+                plugins: [router],
+            },
         });
         expect(testee.exists()).toBe(true);
     });

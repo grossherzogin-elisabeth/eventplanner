@@ -1,4 +1,5 @@
 import type { Event } from '@/domain';
+import { Role } from '@/domain';
 import { useEventService } from '@/domain';
 import { EventState, SlotCriticality } from '@/domain';
 import { EventService } from '@/domain/services/EventService';
@@ -247,7 +248,21 @@ describe('EventService', () => {
     });
 
     describe('duplicateSlot', () => {
+        beforeEach(() => {
+            vi.mock('uuid', () => ({
+                v4: vi.fn(() => {
+                    console.log('returning mock uuid');
+                    return MOCK_UUID;
+                }),
+            }));
+        });
+
+        afterEach(() => {
+            vi.clearAllMocks();
+        });
+
         it('should create slot with new key', () => {
+            console.log(Role.TEAM_MEMBER);
             const event = mockEvent();
             const slotToDuplicate = mockSlotDeckhand();
             const updatedEvent = testee.duplicateSlot(event, slotToDuplicate);
