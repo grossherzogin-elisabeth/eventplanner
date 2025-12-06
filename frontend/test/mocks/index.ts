@@ -2,12 +2,13 @@ export * from './http';
 
 export * from './keys';
 
-export * from './api/mockConfigRepresentation.ts';
+export * from './api/mockConfigRepresentation';
 export * from './api/mockAccountRepresentation';
 export * from './api/mockEventRepresentation';
 export * from './api/mockPositionRepresentations';
 export * from './api/mockQualificationRepresentation';
 export * from './api/mockUserRepresentation';
+export * from './api/setupMockServer';
 
 export * from './domain/mockEvent';
 export * from './domain/mockLocation';

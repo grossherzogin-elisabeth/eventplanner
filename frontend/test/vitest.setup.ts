@@ -1,6 +1,15 @@
 import { setupI18n } from '@/ui/plugins/i18n';
 import { config } from '@vue/test-utils';
-import { vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, vi } from 'vitest';
+import { server } from '~/mocks';
+
+// ---------------------------------------------------------------
+// mock http requests
+// ---------------------------------------------------------------
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 // ---------------------------------------------------------------
 // mock global vue plugins
@@ -30,3 +39,5 @@ window.ResizeObserver = ResizeObserver;
 // (VisualViewport), but these are probably not needed for testing purposes
 // https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport
 vi.stubGlobal('visualViewport', new EventTarget());
+
+vi.stubGlobal('BroadcastChannel', BroadcastChannel);
