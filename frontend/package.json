@@ -9,7 +9,7 @@
         "build": "vue-tsc --noEmit -p tsconfig.app.json --composite false && vite build",
         "lint": "npx eslint --fix src",
         "format": "./node_modules/.bin/prettier . --ignore-path .gitignore --ignore-path .prettierignore --write",
-        "test": "TZ=CET vitest",
+        "test": "TZ=CET vitest -r test",
         "test:coverage": "TZ=CET vitest run --coverage",
         "check:format": "./node_modules/.bin/prettier --ignore-path .gitignore --ignore-path .prettierignore --check .",
         "check:lint": "npx eslint src",
