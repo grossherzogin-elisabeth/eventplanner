@@ -1,5 +1,4 @@
 import type { Event } from '@/domain';
-import { Role } from '@/domain';
 import { useEventService } from '@/domain';
 import { EventState, SlotCriticality } from '@/domain';
 import { EventService } from '@/domain/services/EventService';
@@ -7,7 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     CAPTAIN,
     ENGINEER,
-    MOCK_UUID,
     REGISTRATION_CAPTAIN,
     REGISTRATION_DECKHAND,
     REGISTRATION_ENGINEER,
@@ -248,26 +246,15 @@ describe('EventService', () => {
     });
 
     describe('duplicateSlot', () => {
-        beforeEach(() => {
-            vi.mock('uuid', () => ({
-                v4: vi.fn(() => {
-                    console.log('returning mock uuid');
-                    return MOCK_UUID;
-                }),
-            }));
-        });
-
-        afterEach(() => {
-            vi.clearAllMocks();
-        });
-
         it('should create slot with new key', () => {
-            console.log(Role.TEAM_MEMBER);
             const event = mockEvent();
             const slotToDuplicate = mockSlotDeckhand();
+            const keysBeforeDuplicate = event.slots.map((s) => s.key);
+
             const updatedEvent = testee.duplicateSlot(event, slotToDuplicate);
+
             expect(updatedEvent.slots).toHaveLength(mockEvent().slots.length + 1);
-            const duplicatedSlot = updatedEvent.slots.find((s) => s.key === MOCK_UUID);
+            const duplicatedSlot = updatedEvent.slots.find((s) => !keysBeforeDuplicate.includes(s.key));
             expect(duplicatedSlot).toBeDefined();
             expect(duplicatedSlot?.positionKeys).toBe(slotToDuplicate.positionKeys);
             expect(duplicatedSlot?.criticality).toBe(slotToDuplicate.criticality);
@@ -276,9 +263,11 @@ describe('EventService', () => {
         it('should create slot without assigned registration', () => {
             const slotToDuplicate = mockSlotDeckhand({ assignedRegistrationKey: REGISTRATION_DECKHAND });
             const event = mockEvent({ slots: [slotToDuplicate] });
+            const keysBeforeDuplicate = event.slots.map((s) => s.key);
+
             const updatedEvent = testee.duplicateSlot(event, slotToDuplicate);
 
-            const duplicatedSlot = updatedEvent.slots.find((s) => s.key === MOCK_UUID);
+            const duplicatedSlot = updatedEvent.slots.find((s) => !keysBeforeDuplicate.includes(s.key));
             expect(duplicatedSlot).toBeDefined();
             expect(duplicatedSlot?.assignedRegistrationKey).toBeUndefined();
         });

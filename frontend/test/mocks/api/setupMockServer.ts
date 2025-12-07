@@ -1,4 +1,5 @@
 import type { AccountRepresentation } from '@/adapter/rest/AccountRestRepository';
+import type { EventRepresentation } from '@/adapter/rest/EventRestRepository.ts';
 import type { PositionRepresentation } from '@/adapter/rest/PositionRestRepository.ts';
 import type { QualificationRepresentation } from '@/adapter/rest/QualificationRestRepository.ts';
 import type { UiSettingsRepresentation } from '@/adapter/rest/SettingsRestRepository';
@@ -10,6 +11,7 @@ import { setupServer } from 'msw/node';
 import {
     mockAccountRepresentation,
     mockConfigRepresentation,
+    mockEventRepresentation,
     mockPositionRepresentations,
     mockQualificationRepresentations,
     mockUserRepresentations,
@@ -35,6 +37,13 @@ export function mockUsersRequest(response?: UserRepresentation[], status: number
     return http.get('/api/v1/users', () => HttpResponse.json(response ?? mockUserRepresentations(), { status }));
 }
 
+export function mockEvents(events?: EventRepresentation[], status: number = 200): RequestHandler[] {
+    const responses: EventRepresentation[] = events ?? [mockEventRepresentation()];
+    return responses.map((eventResponse) =>
+        http.get('/api/v1/events/' + eventResponse.key, () => HttpResponse.json(eventResponse, { status }))
+    );
+}
+
 export function mockEventTemplatesRequest(response?: string[], status: number = 200): RequestHandler {
     return http.get('/api/v1/events/export/templates', () => HttpResponse.json(response ?? [], { status }));
 }
@@ -46,7 +55,8 @@ export function setupDefaultMockServer(): SetupServerApi {
         mockPositionsRequest(),
         mockQualificationsRequest(),
         mockUsersRequest(),
-        mockEventTemplatesRequest()
+        mockEventTemplatesRequest(),
+        ...mockEvents()
     );
 }
 

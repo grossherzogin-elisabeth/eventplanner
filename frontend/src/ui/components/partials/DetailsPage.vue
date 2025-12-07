@@ -6,7 +6,7 @@
         <div class="bg-surface sticky top-10 z-20 hidden px-8 pt-8 pb-2 md:px-16 lg:block xl:top-0 xl:mx-4">
             <div class="flex items-center xl:max-w-5xl">
                 <div class="w-0 grow pr-4">
-                    <h1 class="hidden truncate xl:block">
+                    <h1 class="hidden truncate xl:block" data-test-id="title">
                         <slot name="header" />
                     </h1>
                 </div>

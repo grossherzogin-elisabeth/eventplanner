@@ -1,5 +1,3 @@
-export const MOCK_UUID = '12345678-1234-1234-1234-12345678';
-
 // positions
 export const CAPTAIN = 'position-captain-key';
 export const ENGINEER = 'position-engineer-key';

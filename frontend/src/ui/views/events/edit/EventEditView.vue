@@ -245,8 +245,7 @@ async function init(): Promise<void> {
         () => fetchCrew(),
         { deep: true }
     );
-    await fetchEvent();
-    await fetchExportTemplates();
+    await Promise.all([fetchEvent(), fetchExportTemplates()]);
     preventPageUnloadOnUnsavedChanges();
 }
 
