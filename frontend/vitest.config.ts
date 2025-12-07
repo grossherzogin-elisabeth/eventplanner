@@ -1,6 +1,6 @@
 import path from 'path';
 import { defineConfig, mergeConfig } from 'vitest/config';
-import viteConfig from '../vite.config';
+import viteConfig from './vite.config';
 
 export default mergeConfig(
     viteConfig({ mode: 'test', command: 'serve' }),
@@ -8,17 +8,18 @@ export default mergeConfig(
         resolve: {
             alias: {
                 // use ~ as placeholder for test dir
-                '~': path.resolve(__dirname, '.'),
+                '~': path.resolve(__dirname, 'test'),
             },
         },
         test: {
             pool: 'vmThreads',
             globals: true,
             environment: 'happy-dom',
-            setupFiles: ['vitest.setup.ts'],
+            setupFiles: ['test/vitest.setup.ts'],
             coverage: {
-                reporter: ['text', 'lcov'],
-                exclude: ['postcss.config.cjs', 'babel.config.js', 'eslint.config.mjs', 'vite.config.ts', 'dist', 'test', '*.yml'],
+                provider: 'v8',
+                reporter: ['lcov', 'text'],
+                include: ['src/**/*.{ts,vue}'],
             },
         },
     })
