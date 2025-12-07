@@ -95,6 +95,7 @@
             <li
                 v-if="event?.signupType === EventSignupType.Assignment"
                 class="permission-write-event-slots context-menu-item"
+                data-test-id="action-add-slot"
                 @click="addSlot()"
             >
                 <i class="fa-solid fa-list" />
@@ -123,6 +124,7 @@
                 <li
                     v-if="event?.state === EventState.Draft"
                     class="permission-write-event-details context-menu-item"
+                    data-test-id="action-open-for-crew-signup"
                     @click="openEventForCrewSignup()"
                 >
                     <i class="fa-solid fa-lock-open" />
@@ -131,12 +133,17 @@
                 <li
                     v-if="event?.state === EventState.OpenForSignup"
                     class="permission-write-event-details context-menu-item"
+                    data-test-id="action-publish-crew-planning"
                     @click="publishPlannedCrew()"
                 >
                     <i class="fa-solid fa-earth-europe" />
                     <span>{{ $t('views.events.edit.actions.publish-crew') }}</span>
                 </li>
-                <li class="permission-write-event-slots context-menu-item" @click="resetCrewPlanning()">
+                <li
+                    class="permission-write-event-slots context-menu-item"
+                    data-test-id="action-reset-crew-planning"
+                    @click="resetCrewPlanning()"
+                >
                     <i class="fa-solid fa-rotate" />
                     <span>{{ $t('views.events.edit.actions.reset-crew') }}</span>
                 </li>

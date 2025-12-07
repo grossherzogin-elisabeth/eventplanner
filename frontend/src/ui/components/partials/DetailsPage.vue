@@ -17,7 +17,11 @@
                     <div class="pointer-events-auto hidden items-stretch space-x-2 lg:flex">
                         <slot name="secondary-buttons" />
                     </div>
-                    <PageActionsContextMenu v-if="$slots['actions-menu'] !== undefined" class="pointer-events-auto">
+                    <PageActionsContextMenu
+                        v-if="$slots['actions-menu'] !== undefined"
+                        class="pointer-events-auto"
+                        data-test-id="actions-menu"
+                    >
                         <ul>
                             <slot name="actions-menu" />
                         </ul>
