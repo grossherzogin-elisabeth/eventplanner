@@ -43,15 +43,6 @@ describe('EventEditView', () => {
             expect(tabs.find('[data-test-id="tab-slots"]').exists()).toBe(true);
             expect(tabs.find('[data-test-id="tab-crew"]').exists()).toBe(true);
         });
-
-        it('should render slot options', async () => {
-            await awaitEventLoaded();
-            const menu = findMenu();
-            // expect(menu.find('[data-test-id="action-add-slot"]').exists()).toBe(true);
-            // expect(menu.find('[data-test-id="action-open-for-crew-signup"]').exists()).toBe(true);
-            // expect(menu.find('[data-test-id="action-publish-crew-planning"]').exists()).toBe(true);
-            // expect(menu.find('[data-test-id="action-reset-crew-planning"]').exists()).toBe(true);
-        });
     });
 
     describe('Events with open signup', () => {
@@ -71,10 +62,6 @@ describe('EventEditView', () => {
             expect(tabs.find('[data-test-id="tab-crew"]').exists()).toBe(false);
         });
     });
-
-    function findMenu(): DOMWrapper<Element> {
-        return testee.find('[data-test-id="actions-menu"]');
-    }
 
     function findTabs(): DOMWrapper<Element> {
         return testee.find('[data-test-id="tabbar"]');
