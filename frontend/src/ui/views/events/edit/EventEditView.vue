@@ -7,21 +7,27 @@
         <template #content>
             <div class="xs:px-8 flex flex-col px-4 md:px-16 xl:px-20">
                 <section class="xl:max-w-5xl">
-                    <VInfo v-if="event?.state === EventState.Draft" class="mt-4" dismissable clamp>
+                    <VInfo v-if="event?.state === EventState.Draft" class="mt-4" dismissable clamp data-test-id="info-draft-state">
                         {{ $t('views.events.edit.info-draft') }}
                     </VInfo>
-                    <VWarning v-else-if="event?.state === EventState.Canceled" class="mt-4" dismissable>
+                    <VWarning v-else-if="event?.state === EventState.Canceled" class="mt-4" dismissable data-test-id="info-canceled-state">
                         {{ $t('views.events.edit.info-canceled') }}
                     </VWarning>
                     <VInfo
                         v-else-if="event?.signupType === EventSignupType.Assignment && event?.state === EventState.OpenForSignup"
                         class="mt-4"
+                        data-test-id="info-crew-signup-state"
                         dismissable
                         clamp
                     >
                         {{ $t('views.events.edit.info-signup') }}
                     </VInfo>
-                    <VWarning v-else-if="event?.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
+                    <VWarning
+                        v-else-if="event?.state === EventState.Planned && hasEmptyRequiredSlots"
+                        class="mt-4"
+                        dismissable
+                        data-test-id="info-missing-crew"
+                    >
                         {{ $t('views.events.edit.info-missing-crew') }}
                     </VWarning>
                 </section>

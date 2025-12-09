@@ -104,7 +104,7 @@ describe('EventEditView', () => {
         }
     );
 
-    describe('Planned events', () => {
+    describe('Events in state planned', () => {
         beforeEach(async () => {
             server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(eventInStatePlanned.representation)));
             testee = mount(EventEditView, { global: { plugins: [router] } });
@@ -117,7 +117,7 @@ describe('EventEditView', () => {
             expect(tabs.find('[data-test-id="tab-crew"]').exists()).toBe(true);
         });
 
-        it('should show correct context menu actions', async () => {
+        it('should have correct context menu actions', async () => {
             await awaitEventLoaded();
             const menu = await findContextMenu();
             expect(menu.find('[data-test-id="action-add-slot"]').exists()).toBe(true);
@@ -125,6 +125,56 @@ describe('EventEditView', () => {
             expect(menu.find('[data-test-id="action-publish-crew-planning"]').exists()).toBe(false);
             expect(menu.find('[data-test-id="action-reset-crew-planning"]').exists()).toBe(true);
             expect(menu.find('[data-test-id="action-cancel"]').exists()).toBe(true);
+        });
+    });
+
+    describe('Events in state draft', () => {
+        beforeEach(async () => {
+            server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(eventInStateDraft.representation)));
+            testee = mount(EventEditView, { global: { plugins: [router] } });
+        });
+
+        it('should show draft info', async () => {
+            await awaitEventLoaded();
+            expect(testee.find('[data-test-id="info-draft-state"]').exists()).toBe(true);
+        });
+
+        it('should have open for signup action', async () => {
+            await awaitEventLoaded();
+            const menu = await findContextMenu();
+            expect(menu.find('[data-test-id="action-open-for-crew-signup"]').exists()).toBe(true);
+            expect(menu.find('[data-test-id="action-publish-crew-planning"]').exists()).toBe(false);
+        });
+    });
+
+    describe('Events in state canceled', () => {
+        beforeEach(async () => {
+            server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(eventInStateCanceled.representation)));
+            testee = mount(EventEditView, { global: { plugins: [router] } });
+        });
+
+        it('should show canceled info', async () => {
+            await awaitEventLoaded();
+            expect(testee.find('[data-test-id="info-canceled-state"]').exists()).toBe(true);
+        });
+    });
+
+    describe('Events in state crew signup', () => {
+        beforeEach(async () => {
+            server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(eventInStateCrewSignup.representation)));
+            testee = mount(EventEditView, { global: { plugins: [router] } });
+        });
+
+        it('should show crew signup info', async () => {
+            await awaitEventLoaded();
+            expect(testee.find('[data-test-id="info-crew-signup-state"]').exists()).toBe(true);
+        });
+
+        it('should have publish crew planning action', async () => {
+            await awaitEventLoaded();
+            const menu = await findContextMenu();
+            expect(menu.find('[data-test-id="action-open-for-crew-signup"]').exists()).toBe(false);
+            expect(menu.find('[data-test-id="action-publish-crew-planning"]').exists()).toBe(true);
         });
     });
 
@@ -141,7 +191,7 @@ describe('EventEditView', () => {
             expect(tabs.find('[data-test-id="tab-crew"]').exists()).toBe(false);
         });
 
-        it('should show correct context menu actions', async () => {
+        it('should have correct context menu actions', async () => {
             await awaitEventLoaded();
             const menu = await findContextMenu();
             expect(menu.find('[data-test-id="action-add-slot"]').exists()).toBe(false);
