@@ -1,22 +1,31 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class">
         <template #header>
-            {{ event?.name || $t('generic.error') }}
+            {{ event?.name || $t('generic.loading') }}
         </template>
-        <template #subheader>
-            <section>
-                <VInfo v-if="event?.state === EventState.Draft" class="mt-4" dismissable clamp>
-                    {{ $t('views.events.edit.info-draft') }}
-                </VInfo>
-                <VWarning v-if="event?.state === EventState.Canceled" class="mt-4" dismissable>
-                    {{ $t('views.events.edit.info-canceled') }}
-                </VWarning>
-                <VWarning v-else-if="event?.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
-                    {{ $t('views.events.edit.info-missing-crew') }}
-                </VWarning>
-            </section>
-        </template>
+        <template #subheader> </template>
         <template #content>
+            <div class="xs:px-8 flex flex-col px-4 md:px-16 xl:px-20">
+                <section class="xl:max-w-5xl">
+                    <VInfo v-if="event?.state === EventState.Draft" class="mt-4" dismissable clamp>
+                        {{ $t('views.events.edit.info-draft') }}
+                    </VInfo>
+                    <VWarning v-else-if="event?.state === EventState.Canceled" class="mt-4" dismissable>
+                        {{ $t('views.events.edit.info-canceled') }}
+                    </VWarning>
+                    <VInfo
+                        v-else-if="event?.signupType === EventSignupType.Assignment && event?.state === EventState.OpenForSignup"
+                        class="mt-4"
+                        dismissable
+                        clamp
+                    >
+                        {{ $t('views.events.edit.info-signup') }}
+                    </VInfo>
+                    <VWarning v-else-if="event?.state === EventState.Planned && hasEmptyRequiredSlots" class="mt-4" dismissable>
+                        {{ $t('views.events.edit.info-missing-crew') }}
+                    </VWarning>
+                </section>
+            </div>
             <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 lg:top-14 xl:top-20">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
