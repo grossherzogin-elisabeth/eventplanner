@@ -1,8 +1,8 @@
 import { nextTick } from 'vue';
+import { describe, expect, it } from 'vitest';
+import { mount } from '@vue/test-utils';
 import { wait } from '@/common';
 import { VDialog, VDropdownWrapper, VInputDate } from '@/ui/components/common';
-import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
 import { happyDOM } from '~/utils.ts';
 
 describe('VInputDate', () => {

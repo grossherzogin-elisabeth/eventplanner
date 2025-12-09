@@ -22,7 +22,7 @@
                         class="pointer-events-auto"
                         data-test-id="actions-menu"
                     >
-                        <ul>
+                        <ul data-test-id="context-menu">
                             <slot name="actions-menu" />
                         </ul>
                     </PageActionsContextMenu>

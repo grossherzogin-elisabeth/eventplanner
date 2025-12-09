@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import {
     Month,
     addToDate,
@@ -9,7 +10,6 @@ import {
     updateDate,
     updateTime,
 } from '@/common/date';
-import { describe, expect, it } from 'vitest';
 
 describe('DateUtils', () => {
     describe('addToDate', () => {

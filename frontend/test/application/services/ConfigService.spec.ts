@@ -1,5 +1,5 @@
-import { useConfigService } from '@/application/services';
 import { describe, expect, it } from 'vitest';
+import { useConfigService } from '@/application/services';
 
 describe('ConfigService', () => {
     it('should construct instance with useConfigService', () => {

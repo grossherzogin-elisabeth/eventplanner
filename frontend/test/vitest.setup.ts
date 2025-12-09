@@ -1,6 +1,6 @@
-import { setupI18n } from '@/ui/plugins/i18n';
-import { config } from '@vue/test-utils';
 import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest';
+import { config } from '@vue/test-utils';
+import { setupI18n } from '@/ui/plugins/i18n';
 import { server } from '~/mocks';
 
 // ---------------------------------------------------------------

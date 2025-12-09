@@ -1,5 +1,5 @@
 <template>
-    <div class="hidden lg:block" :class="$attrs.class">
+    <div class="hidden lg:block" :class="$attrs.class" data-test-id="menu-trigger">
         <ContextMenuButton
             class="btn-secondary h-full"
             anchor-align-y="top"
@@ -11,7 +11,7 @@
         </ContextMenuButton>
     </div>
     <teleport to="#nav-right">
-        <div class="flex items-center py-2 lg:hidden">
+        <div class="flex items-center py-2 lg:hidden" data-test-id="menu-trigger">
             <ContextMenuButton class="-mt-2 -mr-6 pt-3 pr-6">
                 <slot></slot>
             </ContextMenuButton>

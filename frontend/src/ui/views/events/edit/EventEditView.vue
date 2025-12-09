@@ -88,7 +88,7 @@
             </div>
         </template>
         <template #actions-menu>
-            <li class="permission-write-registrations context-menu-item" @click="addRegistration()">
+            <li class="permission-write-registrations context-menu-item" data-test-id="action-add-registration" @click="addRegistration()">
                 <i class="fa-solid fa-user-plus" />
                 <span>{{ $t('views.events.edit.actions.add-registration') }}</span>
             </li>
@@ -101,11 +101,11 @@
                 <i class="fa-solid fa-list" />
                 <span>{{ $t('views.events.edit.actions.add-slot') }}</span>
             </li>
-            <li class="permission-write-event-details context-menu-item" @click="addLocation()">
+            <li class="permission-write-event-details context-menu-item" data-test-id="action-add-location" @click="addLocation()">
                 <i class="fa-solid fa-route" />
                 <span>{{ $t('views.events.edit.actions.add-location') }}</span>
             </li>
-            <li class="permission-read-user-details context-menu-item" @click="contactCrew()">
+            <li class="permission-read-user-details context-menu-item" data-test-id="action-contact-crew" @click="contactCrew()">
                 <i class="fa-solid fa-envelope" />
                 <span>{{ $t('views.events.edit.actions.contact-crew') }}</span>
             </li>
@@ -114,6 +114,7 @@
                     v-for="template in exportTemplates"
                     :key="template"
                     class="permission-read-user-details context-menu-item"
+                    data-test-id="action-export"
                     @click="eventAdministrationUseCase.exportEvent(event, template)"
                 >
                     <i class="fa-solid fa-file-excel" />
@@ -148,7 +149,7 @@
                     <span>{{ $t('views.events.edit.actions.reset-crew') }}</span>
                 </li>
             </template>
-            <li class="permission-write-event-details context-menu-item text-error" @click="cancelEvent()">
+            <li class="permission-write-event-details context-menu-item text-error" data-test-id="action-cancel" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
                 <span>{{ $t('views.events.edit.actions.cancel-event') }}</span>
             </li>

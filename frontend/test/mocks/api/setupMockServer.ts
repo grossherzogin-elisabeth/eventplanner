@@ -1,13 +1,13 @@
+import type { RequestHandler } from 'msw';
+import { HttpResponse, http } from 'msw';
+import type { SetupServerApi } from 'msw/node';
+import { setupServer } from 'msw/node';
 import type { AccountRepresentation } from '@/adapter/rest/AccountRestRepository';
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository.ts';
 import type { PositionRepresentation } from '@/adapter/rest/PositionRestRepository.ts';
 import type { QualificationRepresentation } from '@/adapter/rest/QualificationRestRepository.ts';
 import type { UiSettingsRepresentation } from '@/adapter/rest/SettingsRestRepository';
 import type { UserRepresentation } from '@/adapter/rest/UserRestRepository.ts';
-import type { RequestHandler } from 'msw';
-import { HttpResponse, http } from 'msw';
-import type { SetupServerApi } from 'msw/node';
-import { setupServer } from 'msw/node';
 import {
     mockAccountRepresentation,
     mockConfigRepresentation,
@@ -45,7 +45,9 @@ export function mockEvents(events?: EventRepresentation[], status: number = 200)
 }
 
 export function mockEventTemplatesRequest(response?: string[], status: number = 200): RequestHandler {
-    return http.get('/api/v1/events/export/templates', () => HttpResponse.json(response ?? [], { status }));
+    return http.get('/api/v1/events/export/templates', () =>
+        HttpResponse.json(response ?? ['some template', 'some other template'], { status })
+    );
 }
 
 export function setupDefaultMockServer(): SetupServerApi {

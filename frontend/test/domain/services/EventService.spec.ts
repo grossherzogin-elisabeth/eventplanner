@@ -1,8 +1,8 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Event } from '@/domain';
 import { useEventService } from '@/domain';
 import { EventState, SlotCriticality } from '@/domain';
 import { EventService } from '@/domain/services/EventService';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     CAPTAIN,
     ENGINEER,
