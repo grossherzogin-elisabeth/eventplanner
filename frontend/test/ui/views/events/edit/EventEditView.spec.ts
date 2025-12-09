@@ -6,7 +6,6 @@ import type { VueWrapper } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository.ts';
 import { useAuthUseCase } from '@/application';
-import { wait } from '@/common';
 import { EventSignupType, EventState } from '@/domain';
 import { setupRouter } from '@/ui/plugins/router';
 import { Routes } from '@/ui/views/Routes';
@@ -157,7 +156,6 @@ describe('EventEditView', () => {
         expect(triggers).toHaveLength(1);
         await triggers[0].find('button').trigger('click');
         await nextTick();
-        await wait(100);
         const menus = document.querySelectorAll('[data-test-id="context-menu"]');
         expect(menus).toHaveLength(1);
         return new DOMWrapper(menus[0]);
