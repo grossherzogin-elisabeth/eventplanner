@@ -13,31 +13,41 @@ import { Routes } from '@/ui/views/Routes';
 import EventEditView from '@/ui/views/events/edit/EventEditView.vue';
 import { mockEventRepresentation, server } from '~/mocks';
 
-const eventInStateDraft = mockEventRepresentation({
-    name: 'eventInStateDraft',
-    state: EventState.Draft,
-    signupType: EventSignupType.Assignment,
-});
-const eventInStateCrewSignup = mockEventRepresentation({
-    name: 'eventInStateCrewSignup',
-    state: EventState.OpenForSignup,
-    signupType: EventSignupType.Assignment,
-});
-const eventInStatePlanned = mockEventRepresentation({
-    name: 'eventInStatePlanned',
-    state: EventState.Planned,
-    signupType: EventSignupType.Assignment,
-});
-const eventInStateCanceled = mockEventRepresentation({
-    name: 'eventInStateCanceled',
-    state: EventState.Canceled,
-    signupType: EventSignupType.Assignment,
-});
-const eventWithOpenSignup = mockEventRepresentation({
-    name: 'eventWithOpenSignup',
-    state: EventState.OpenForSignup,
-    signupType: EventSignupType.Open,
-});
+const eventInStateDraft = {
+    name: 'Events in state draft',
+    representation: mockEventRepresentation({
+        state: EventState.Draft,
+        signupType: EventSignupType.Assignment,
+    }),
+};
+const eventInStateCrewSignup = {
+    name: 'Events in state crew signup',
+    representation: mockEventRepresentation({
+        state: EventState.OpenForSignup,
+        signupType: EventSignupType.Assignment,
+    }),
+};
+const eventInStatePlanned = {
+    name: 'Events in state planned',
+    representation: mockEventRepresentation({
+        state: EventState.Planned,
+        signupType: EventSignupType.Assignment,
+    }),
+};
+const eventInStateCanceled = {
+    name: 'Events in state canceled',
+    representation: mockEventRepresentation({
+        state: EventState.Canceled,
+        signupType: EventSignupType.Assignment,
+    }),
+};
+const eventWithOpenSignup = {
+    name: 'Events with open signup',
+    representation: mockEventRepresentation({
+        state: EventState.OpenForSignup,
+        signupType: EventSignupType.Open,
+    }),
+};
 
 describe('EventEditView', () => {
     let router: Router;
@@ -53,31 +63,31 @@ describe('EventEditView', () => {
     });
 
     describe.each([eventInStateDraft, eventInStateCrewSignup, eventInStatePlanned, eventInStateCanceled, eventWithOpenSignup])(
-        '$0',
-        (event) => {
+        '$name',
+        ({ representation }) => {
             beforeEach(async () => {
-                server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(event)));
+                server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(representation)));
                 testee = mount(EventEditView, { global: { plugins: [router] } });
             });
 
             it('should render event name', async () => {
-                await awaitEventLoaded(event);
+                await awaitEventLoaded();
             });
 
             it('should render context menu', async () => {
-                await awaitEventLoaded(event);
+                await awaitEventLoaded();
                 const menu = await findContextMenu();
                 expect(menu.exists()).toBe(true);
             });
 
             it('should render all export actions', async () => {
-                await awaitEventLoaded(event);
+                await awaitEventLoaded();
                 const menu = await findContextMenu();
                 expect(menu.findAll('[data-test-id="action-export"]')).toHaveLength(2);
             });
 
             it('should render basic tabs', async () => {
-                await awaitEventLoaded(event);
+                await awaitEventLoaded();
                 const tabs = findTabs();
                 expect(tabs.find('[data-test-id="tab-data"]').exists()).toBe(true);
                 expect(tabs.find('[data-test-id="tab-locations"]').exists()).toBe(true);
@@ -85,7 +95,7 @@ describe('EventEditView', () => {
             });
 
             it('should render basic context menu actions', async () => {
-                await awaitEventLoaded(event);
+                await awaitEventLoaded();
                 const menu = await findContextMenu();
                 expect(menu.find('[data-test-id="action-add-registration"]').exists()).toBe(true);
                 expect(menu.find('[data-test-id="action-add-location"]').exists()).toBe(true);
@@ -96,22 +106,20 @@ describe('EventEditView', () => {
     );
 
     describe('Planned events', () => {
-        const event = eventInStatePlanned;
-
         beforeEach(async () => {
-            server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(event)));
+            server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(eventInStatePlanned.representation)));
             testee = mount(EventEditView, { global: { plugins: [router] } });
         });
 
         it('should render all tabs', async () => {
-            await awaitEventLoaded(event);
+            await awaitEventLoaded();
             const tabs = findTabs();
             expect(tabs.find('[data-test-id="tab-slots"]').exists()).toBe(true);
             expect(tabs.find('[data-test-id="tab-crew"]').exists()).toBe(true);
         });
 
         it('should show correct context menu actions', async () => {
-            await awaitEventLoaded(event);
+            await awaitEventLoaded();
             const menu = await findContextMenu();
             expect(menu.find('[data-test-id="action-add-slot"]').exists()).toBe(true);
             expect(menu.find('[data-test-id="action-open-for-crew-signup"]').exists()).toBe(false);
@@ -122,22 +130,20 @@ describe('EventEditView', () => {
     });
 
     describe('Events with open signup', () => {
-        const event = eventWithOpenSignup;
-
         beforeEach(async () => {
-            server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(event)));
+            server.use(http.get('/api/v1/events/example-event', () => HttpResponse.json(eventWithOpenSignup.representation)));
             testee = mount(EventEditView, { global: { plugins: [router] } });
         });
 
         it('should not render slots and crew manager tabs', async () => {
-            await awaitEventLoaded(event);
+            await awaitEventLoaded();
             const tabs = findTabs();
             expect(tabs.find('[data-test-id="tab-slots"]').exists()).toBe(false);
             expect(tabs.find('[data-test-id="tab-crew"]').exists()).toBe(false);
         });
 
         it('should show correct context menu actions', async () => {
-            await awaitEventLoaded(event);
+            await awaitEventLoaded();
             const menu = await findContextMenu();
             expect(menu.find('[data-test-id="action-add-slot"]').exists()).toBe(false);
             expect(menu.find('[data-test-id="action-open-for-crew-signup"]').exists()).toBe(false);
@@ -161,8 +167,8 @@ describe('EventEditView', () => {
         return testee.find('[data-test-id="tabbar"]');
     }
 
-    async function awaitEventLoaded(event: EventRepresentation): Promise<void> {
+    async function awaitEventLoaded(event?: EventRepresentation): Promise<void> {
         const title = testee.find('[data-test-id="title"]');
-        await expect.poll(() => title.text()).includes(event.name);
+        await expect.poll(() => title.text()).includes(event?.name ?? 'Example Event');
     }
 });
