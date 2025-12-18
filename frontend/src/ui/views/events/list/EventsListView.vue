@@ -210,8 +210,6 @@
             </VTable>
         </div>
 
-        <VConfirmationDialog ref="confirmationDialog" />
-
         <div class="flex-1"></div>
 
         <VMultiSelectActions
@@ -280,8 +278,8 @@ import { useAuthUseCase, useEventUseCase } from '@/application';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Registration, SignedInUser } from '@/domain';
 import { EventSignupType, EventState, useEventService } from '@/domain';
-import type { ConfirmationDialog, Sheet } from '@/ui/components/common';
-import { VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
+import type { Sheet } from '@/ui/components/common';
+import { VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
@@ -330,7 +328,6 @@ const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('future');
 
-const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const createRegistrationSheet = ref<Sheet<
     {
         registration?: Registration;
