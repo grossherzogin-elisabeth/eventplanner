@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { wait } from '@/common';
 import { VDialog, VDropdownWrapper, VInputDate } from '@/ui/components/common';
-import { happyDOM } from '~/utils.ts';
+import { happyDOM } from '~/utils/happyDOM.ts';
 
 describe('VInputDate', () => {
     it('should render initial value', async () => {

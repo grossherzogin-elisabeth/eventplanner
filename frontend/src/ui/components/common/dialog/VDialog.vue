@@ -3,11 +3,12 @@
         <teleport to="body">
             <div
                 v-if="renderContent"
+                class="dialog-background scrollbar-invisible pointer-events-none fixed top-0 right-0 bottom-0 left-0 z-40 flex items-center justify-center"
                 :class="`${dialogOpen ? 'open' : 'closed'} ${props.type || 'fullscreen'}`"
                 :style="{
                     '--animation-duration': `${animationDuration}ms`,
                 }"
-                class="dialog-background scrollbar-invisible pointer-events-none fixed top-0 right-0 bottom-0 left-0 z-40 flex items-center justify-center"
+                :data-test-id="props.dataTestId ?? 'dialog'"
                 @mousedown="reject()"
             >
                 <div ref="wrapper" class="dialog-wrapper xl:ml-20" @click.stop="" @mousedown.stop="">
@@ -70,6 +71,7 @@ interface Props {
     height?: string;
     // how should this dialog behave on mobile screens
     type?: 'fullscreen' | 'modal' | 'modal-danger';
+    dataTestId?: string;
 }
 
 interface Emits {
