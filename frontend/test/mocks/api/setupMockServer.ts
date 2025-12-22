@@ -7,7 +7,8 @@ import type { EventRepresentation } from '@/adapter/rest/EventRestRepository.ts'
 import type { PositionRepresentation } from '@/adapter/rest/PositionRestRepository.ts';
 import type { QualificationRepresentation } from '@/adapter/rest/QualificationRestRepository.ts';
 import type { UiSettingsRepresentation } from '@/adapter/rest/SettingsRestRepository';
-import type { UserRepresentation } from '@/adapter/rest/UserRestRepository.ts';
+import type { UserDetailsRepresentation, UserRepresentation } from '@/adapter/rest/UserRestRepository.ts';
+import type { UserDetails } from '@/domain';
 import {
     mockAccountRepresentation,
     mockConfigRepresentation,
@@ -16,9 +17,14 @@ import {
     mockQualificationRepresentations,
     mockUserRepresentations,
 } from '~/mocks';
+import { mockUserDetailsRepresentationSignedInUser, mockUserDetailsRepresentations } from '~/mocks/api/mockUserDetailsRepresentation.ts';
 
 export function mockAccountRequest(response?: AccountRepresentation, status: number = 200): RequestHandler {
     return http.get('/api/v1/account', () => HttpResponse.json(response ?? mockAccountRepresentation(), { status }));
+}
+
+export function mockOwnUserDetailsRequest(response?: UserDetails, status: number = 200): RequestHandler {
+    return http.get('/api/v1/users/self', () => HttpResponse.json(response ?? mockUserDetailsRepresentationSignedInUser(), { status }));
 }
 
 export function mockConfigRequest(response?: UiSettingsRepresentation, status: number = 200): RequestHandler {
@@ -37,11 +43,18 @@ export function mockUsersRequest(response?: UserRepresentation[], status: number
     return http.get('/api/v1/users', () => HttpResponse.json(response ?? mockUserRepresentations(), { status }));
 }
 
-export function mockEvents(events?: EventRepresentation[], status: number = 200): RequestHandler[] {
+export function mockUserDetailsRequests(userDetails?: UserDetailsRepresentation[], status: number = 200): RequestHandler[] {
+    const responses: UserDetailsRepresentation[] = userDetails ?? [...mockUserDetailsRepresentations()];
+    return responses.map((response) => http.get('/api/v1/users/' + response.key, () => HttpResponse.json(response, { status })));
+}
+
+export function mockEventRequests(events?: EventRepresentation[], status: number = 200): RequestHandler[] {
     const responses: EventRepresentation[] = events ?? [mockEventRepresentation()];
-    return responses.map((eventResponse) =>
+    const eventDetailRequests: RequestHandler[] = responses.map((eventResponse) =>
         http.get('/api/v1/events/' + eventResponse.key, () => HttpResponse.json(eventResponse, { status }))
     );
+    const eventListRequest: RequestHandler = http.get('/api/v1/events', () => HttpResponse.json(responses, { status }));
+    return [eventListRequest, ...eventDetailRequests];
 }
 
 export function mockEventTemplatesRequest(response?: string[], status: number = 200): RequestHandler {
@@ -53,12 +66,14 @@ export function mockEventTemplatesRequest(response?: string[], status: number = 
 export function setupDefaultMockServer(): SetupServerApi {
     return setupServer(
         mockAccountRequest(),
+        mockOwnUserDetailsRequest(),
         mockConfigRequest(),
         mockPositionsRequest(),
         mockQualificationsRequest(),
         mockUsersRequest(),
+        ...mockUserDetailsRequests(),
         mockEventTemplatesRequest(),
-        ...mockEvents()
+        ...mockEventRequests()
     );
 }
 
