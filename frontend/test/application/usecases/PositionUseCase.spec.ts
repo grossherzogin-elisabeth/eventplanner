@@ -1,5 +1,5 @@
-import { usePositionUseCase } from '@/application/usecases';
 import { describe, expect, it } from 'vitest';
+import { usePositionUseCase } from '@/application/usecases';
 
 describe('PositionUseCase', () => {
     it('should construct instance with usePositionUseCase', () => {

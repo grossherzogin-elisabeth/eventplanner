@@ -14,8 +14,8 @@ export default mergeConfig(
         test: {
             pool: 'vmThreads',
             globals: true,
-            environment: 'happy-dom',
-            setupFiles: ['test/vitest.setup.ts'],
+            environment: './test/environment.ts',
+            setupFiles: ['./test/vitest.setup.ts'],
             coverage: {
                 provider: 'v8',
                 reporter: ['lcov', 'text'],

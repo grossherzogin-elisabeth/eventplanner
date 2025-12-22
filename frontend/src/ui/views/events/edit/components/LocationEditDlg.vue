@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg">
+    <VDialog ref="dlg" data-test-id="edit-location-dialog">
         <template #title>
             <template v-if="location.order === 1">{{ $t('views.events.edit.actions.edit-start-location') }}</template>
             <template v-else-if="location.order === -1">{{ $t('views.events.edit.actions.add-location') }}</template>

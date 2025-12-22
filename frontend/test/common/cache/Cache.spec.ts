@@ -1,6 +1,6 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { Cache } from '@/common/cache';
 import { InMemoryCache } from '@/common/cache/memory/InMemoryCache';
-import { beforeEach, describe, expect, it } from 'vitest';
 
 interface ExampleType {
     key: string;

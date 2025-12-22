@@ -1,5 +1,5 @@
 <template>
-    <div :class="$attrs.class">
+    <div :class="$attrs.class" data-test-id="tabbar">
         <h2
             class="scrollbar-invisible border-outline-variant/50 xs:px-8 flex gap-x-4 overflow-x-auto border-b px-4 text-base font-semibold md:px-16 xl:px-20"
         >
@@ -11,7 +11,7 @@
                     class="tab"
                     :class="{ active: tab.value === props.modelValue && !showSearch }"
                 >
-                    <button class="btn-tab" @click="emit('update:modelValue', tab.value)">
+                    <button class="btn-tab" :data-test-id="`tab-${tab.value}`" @click="emit('update:modelValue', tab.value)">
                         <slot name="tab" :tab="tab.value">
                             {{ tab.label }}
                         </slot>

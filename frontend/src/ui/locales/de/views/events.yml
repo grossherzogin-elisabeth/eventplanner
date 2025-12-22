@@ -99,9 +99,12 @@ events:
       desc: 'Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Veranstaltung 
         anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden.'
     info-draft: 'Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen 
-      freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen.'
+      freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen und auch bereits eine Crew planen.'
     info-canceled: 'Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage 
       im Tab Reisedaten zurücknehmen.'
+    info-signup: 'Die Crewplanung für diese Veranstaltung wurde noch nicht freigegeben. Crew Zuweisungen sind darum nur
+      für Nutzer mit der Berechtigung zur Crewplanung sichtbar. Wenn du mit der Crewplanung fertig bist kannst du die 
+      Crewplanung veröffentlichen, um die zugewiesene Crew zu informieren.'
     info-missing-crew: 'Die Voraussetzungen für eine sichere Mindestbesatzung für diese Veranstaltung sind noch nicht 
       erfüllt!'
     unsaved-changes:
@@ -109,11 +112,11 @@ events:
       message: 'Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen
        verworfen. Möchtest du fortfahren?'
     tab:
-      crew: 'Crew'
+      registrations: 'Anmeldungen'
       data: 'Reisedaten'
-      positions: 'Crew verwalten'
+      crew: 'Crewplanung'
       locations: 'Reiseroute'
-      slots: 'Crew Slots'
+      slots: 'Slots'
     tooltip:
       positions: 'Positionen'
       information: 'Anmeldung'

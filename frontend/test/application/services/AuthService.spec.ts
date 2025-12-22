@@ -1,5 +1,5 @@
-import { useAuthService } from '@/application/services';
 import { describe, expect, it } from 'vitest';
+import { useAuthService } from '@/application/services';
 
 describe('AuthService', () => {
     it('should construct instance with useAuthService', () => {

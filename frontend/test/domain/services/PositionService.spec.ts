@@ -1,5 +1,5 @@
-import { PositionService, usePositionService } from '@/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { PositionService, usePositionService } from '@/domain';
 import { mockPositionCaptain } from '~/mocks';
 
 const ERR_REQUIRED = 'generic.validation.required';

@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg">
+    <VDialog ref="dlg" data-test-id="add-registration-dialog">
         <template #title>Anmeldung hinzufügen</template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">

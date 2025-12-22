@@ -1,5 +1,5 @@
-import { useAuthUseCase } from '@/application/usecases';
 import { describe, expect, it } from 'vitest';
+import { useAuthUseCase } from '@/application/usecases';
 
 describe('AuthUseCase', () => {
     it('should construct instance with useAuthUseCase', () => {

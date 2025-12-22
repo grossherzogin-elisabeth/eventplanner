@@ -2,7 +2,6 @@
     /* --------------------------------------------------------------- */
     /* Generic input styling */
     /* --------------------------------------------------------------- */
-
     .input-field-wrapper {
         position: relative;
         display: flex;
@@ -19,7 +18,7 @@
     }
 
     .bg-surface-container-high .input-field-wrapper {
-        @apply bg-surface-container-highest;
+        @apply sm:bg-surface-container-highest;
     }
 
     .input-field-wrapper textarea,
@@ -77,7 +76,6 @@
     /* --------------------------------------------------------------- */
     /* disabled */
     /* --------------------------------------------------------------- */
-
     .input-field-wrapper:has([disabled]) {
         border-bottom-width: 1px;
         @apply bg-onsurface/5;
@@ -96,7 +94,6 @@
     /* --------------------------------------------------------------- */
     /* hover */
     /* --------------------------------------------------------------- */
-
     @media not all and (hover: none) {
         .input-field-wrapper:not(:has([disabled])):hover {
             @apply bg-onsurface/10;
@@ -106,7 +103,6 @@
     /* --------------------------------------------------------------- */
     /* focus */
     /* --------------------------------------------------------------- */
-
     .input-field-wrapper:focus-within {
         padding-bottom: 0;
         border-bottom-width: 2px;
@@ -122,7 +118,6 @@
     /* --------------------------------------------------------------- */
     /* error */
     /* --------------------------------------------------------------- */
-
     .input-field-wrapper:has(.invalid) {
         @apply border-error bg-error/20;
     }

@@ -1,5 +1,5 @@
-import { useErrorHandlingService } from '@/application/services';
 import { describe, expect, it } from 'vitest';
+import { useErrorHandlingService } from '@/application/services';
 
 describe('ErrorHandlingService', () => {
     it('should construct instance with useErrorHandlingService', () => {

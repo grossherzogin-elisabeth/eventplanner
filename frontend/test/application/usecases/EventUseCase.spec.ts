@@ -1,5 +1,5 @@
-import { useEventUseCase } from '@/application/usecases';
 import { describe, expect, it } from 'vitest';
+import { useEventUseCase } from '@/application/usecases';
 
 describe('EventUseCase', () => {
     it('should construct instance with useEventUseCase', () => {
