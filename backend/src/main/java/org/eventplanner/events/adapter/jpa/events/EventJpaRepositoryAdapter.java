@@ -1,18 +1,18 @@
 package org.eventplanner.events.adapter.jpa.events;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -41,6 +41,22 @@ public class EventJpaRepositoryAdapter implements EventRepository {
                 .toList()
             ))
             .toList();
+    }
+
+    @Override
+    public @NonNull List<Event> findAllByUser(@NonNull UserKey userKey) {
+
+        var eventRegistrations = registrationJpaRepository.findAllByUserKey(userKey.value());
+        var eventEntities = eventJpaRepository.findAllByKeyIn(eventRegistrations.stream().map(RegistrationJpaEntity::getEventKey).toList());
+
+        return eventEntities.stream()
+                .map(entity -> entity.toDomain(eventRegistrations
+                        .stream()
+                        .filter(it -> it.eventKey.equals(entity.getKey()))
+                        .map(RegistrationJpaEntity::toDomain)
+                        .toList()
+                ))
+                .toList();
     }
 
     @Override
