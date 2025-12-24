@@ -56,6 +56,7 @@ let positionAdministrationUseCase: PositionAdministrationUseCase | undefined;
 
 export function useAuthUseCase(): AuthUseCase {
     if (!authUseCase) {
+        console.log('🚀 Initializing AuthUseCase');
         authUseCase = new AuthUseCase({
             configService: useConfigService(),
             authService: useAuthService(),
@@ -68,6 +69,7 @@ export function useAuthUseCase(): AuthUseCase {
 
 export function useEventUseCase(): EventUseCase {
     if (!eventUseCase) {
+        console.log('🚀 Initializing EventUseCase');
         eventUseCase = new EventUseCase({
             notificationService: useNotificationService(),
             errorHandlingService: useErrorHandlingService(),
@@ -87,6 +89,7 @@ export function useEventUseCase(): EventUseCase {
 
 export function useEventAdministrationUseCase(): EventAdministrationUseCase {
     if (!eventAdministrationUseCase) {
+        console.log('🚀 Initializing EventAdministrationUseCase');
         eventAdministrationUseCase = new EventAdministrationUseCase({
             authService: useAuthService(),
             errorHandlingService: useErrorHandlingService(),
@@ -102,6 +105,7 @@ export function useEventAdministrationUseCase(): EventAdministrationUseCase {
 
 export function useUsersUseCase(): UsersUseCase {
     if (!usersUseCase) {
+        console.log('🚀 Initializing UsersUseCase');
         usersUseCase = new UsersUseCase({
             authService: useAuthService(),
             configService: useConfigService(),
@@ -119,6 +123,7 @@ export function useUsersUseCase(): UsersUseCase {
 
 export function useUserAdministrationUseCase(): UserAdministrationUseCase {
     if (!userAdministrationUseCase) {
+        console.log('🚀 Initializing UserAdministrationUseCase');
         userAdministrationUseCase = new UserAdministrationUseCase({
             errorHandlingService: useErrorHandlingService(),
             notificationService: useNotificationService(),
@@ -131,6 +136,7 @@ export function useUserAdministrationUseCase(): UserAdministrationUseCase {
 
 export function useAppSettingsUseCase(): AppSettingsUseCase {
     if (!appSettingsUseCase) {
+        console.log('🚀 Initializing AppSettingsUseCase');
         appSettingsUseCase = new AppSettingsUseCase({
             errorHandlingService: useErrorHandlingService(),
             notificationService: useNotificationService(),
@@ -142,6 +148,7 @@ export function useAppSettingsUseCase(): AppSettingsUseCase {
 
 export function useQualificationsUseCase(): QualificationUseCase {
     if (!qualificationUseCase) {
+        console.log('🚀 Initializing QualificationUseCase');
         qualificationUseCase = new QualificationUseCase({
             errorHandlingService: useErrorHandlingService(),
             qualificationCachingService: useQualificationCachingService(),
@@ -152,6 +159,7 @@ export function useQualificationsUseCase(): QualificationUseCase {
 
 export function useQualificationsAdministrationUseCase(): QualificationAdministrationUseCase {
     if (!qualificationAdministrationUseCase) {
+        console.log('🚀 Initializing QualificationAdministrationUseCase');
         qualificationAdministrationUseCase = new QualificationAdministrationUseCase({
             errorHandlingService: useErrorHandlingService(),
             notificationService: useNotificationService(),
@@ -164,6 +172,7 @@ export function useQualificationsAdministrationUseCase(): QualificationAdministr
 
 export function usePositionUseCase(): PositionUseCase {
     if (!positionUseCase) {
+        console.log('🚀 Initializing PositionUseCase');
         positionUseCase = new PositionUseCase({
             errorHandlingService: useErrorHandlingService(),
             positionCachingService: usePositionCachingService(),
@@ -174,6 +183,7 @@ export function usePositionUseCase(): PositionUseCase {
 
 export function usePositionAdministrationUseCase(): PositionAdministrationUseCase {
     if (!positionAdministrationUseCase) {
+        console.log('🚀 Initializing PositionAdministrationUseCase');
         positionAdministrationUseCase = new PositionAdministrationUseCase({
             errorHandlingService: useErrorHandlingService(),
             notificationService: useNotificationService(),
