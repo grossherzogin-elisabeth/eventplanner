@@ -14,6 +14,7 @@
         </div>
         <div class="mb-4">
             <VInputText
+                data-test-id="input-name"
                 :model-value="props.event.name"
                 :label="$t('domain.event.name')"
                 :errors="validation.errors.value['name']"
@@ -114,6 +115,7 @@
     </section>
 </template>
 <script lang="ts" setup>
+import { computed } from 'vue';
 import { useAuthUseCase } from '@/application';
 import { deepCopy, updateDate, updateTime } from '@/common';
 import type { Event } from '@/domain';
@@ -141,7 +143,10 @@ const eventService = useEventService();
 const authUseCase = useAuthUseCase();
 const signedInUser = authUseCase.getSignedInUser();
 
-const validation = useValidation(props.event, (evt) => (evt === null ? {} : eventService.validate(evt)));
+const validation = useValidation(
+    computed(() => props.event), // validation is not triggered correctly when simply passing props.event
+    eventService.validate
+);
 
 function update(patch: Partial<Event>): void {
     const updatedEvent = Object.assign(deepCopy(props.event), patch);
