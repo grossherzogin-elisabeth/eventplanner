@@ -17,8 +17,8 @@
                 readonly
                 @blur="onBlur"
                 @focus="onFocus()"
-                @keydown.down.prevent="focusNextOption()"
-                @keydown.up.prevent="focusPrevOption()"
+                @keydown.down.stop.prevent="focusNextOption()"
+                @keydown.up.stop.prevent="focusPrevOption()"
                 @keydown.enter="selectFocusedOption"
                 @keydown.esc="hideDropdown(true)"
             />
