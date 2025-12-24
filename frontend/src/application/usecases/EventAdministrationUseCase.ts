@@ -67,7 +67,6 @@ export class EventAdministrationUseCase {
             delete patch.start;
             delete patch.end;
             delete patch.registrations;
-            delete patch.slots;
             delete patch.signedInUserRegistration;
             delete patch.signedInUserAssignedSlot;
             delete patch.isSignedInUserAssigned;

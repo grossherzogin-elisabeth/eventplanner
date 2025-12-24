@@ -212,4 +212,7 @@ events:
     batch-edit:
       title: 'Alle bearbeiten'
       info: 'Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle Reisen übernommen.'
+      copy-slots-from: 'Slots kopieren von'
+      copy-slots-warning: 'Bereits geplante Crews werden durch das überschreiben der Slots für alle ausgewählten Reisen zurückgesetzt. Du musst dann alle Crews händisch erneut planen.'
       not-changed: 'nicht geändert'
+      dont-change-slots: 'Slots nicht ändern'

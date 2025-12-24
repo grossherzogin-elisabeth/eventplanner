@@ -47,6 +47,29 @@
                         />
                     </div>
                     <div class="mb-4">
+                        <VInputCombobox
+                            v-model="copySlotsFrom"
+                            :label="$t('views.events.admin-list.batch-edit.copy-slots-from')"
+                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
+                            :errors="validation.errors.value['copySlotsFrom']"
+                            :errors-visible="validation.showErrors.value"
+                            :options="templates.map((it) => ({ label: it?.name ?? '', value: it }))"
+                        >
+                            <template #item="{ item }">
+                                <template v-if="item.value">
+                                    <span class="w-0 flex-grow truncate">{{ item.value?.name }}</span>
+                                    <span class="opacity-50">{{ formatDateRange(item.value?.start, item.value?.end, true) }}</span>
+                                </template>
+                                <template v-else>
+                                    {{ $t('views.events.admin-list.batch-edit.dont-change-slots') }}
+                                </template>
+                            </template>
+                        </VInputCombobox>
+                    </div>
+                    <VWarning v-if="copySlotsFrom" class="mb-4">
+                        {{ $t('views.events.admin-list.batch-edit.copy-slots-warning') }}
+                    </VWarning>
+                    <div class="mb-4">
                         <VInputTextArea
                             v-model="patch.description"
                             :label="$t('domain.event.description')"
@@ -71,11 +94,14 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useEventAdministrationUseCase } from '@/application';
+import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import type { Event } from '@/domain';
 import { useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
+import { VWarning } from '@/ui/components/common';
+import { VInputCombobox } from '@/ui/components/common';
 import { AsyncButton, VDialog, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
+import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
@@ -85,16 +111,23 @@ const eventStates = useEventStates();
 const eventTypes = useEventTypes();
 const eventSignupTypes = useEventSignupTypes();
 const eventService = useEventService();
+const eventUseCase = useEventUseCase();
 const eventAdminUseCase = useEventAdministrationUseCase();
 
 const dlg = ref<Dialog<Event[], boolean> | null>(null);
 const patch = ref<Partial<Event>>({});
+const templates = ref<(Event | null)[]>([]);
+const copySlotsFrom = ref<Event | null>(null);
 const validation = useValidation(patch, eventService.validatePartial);
 let eventsToEdit: Event[] = [];
 
 async function submit(): Promise<void> {
     if (validation.isValid.value) {
         const keys = eventsToEdit.map((it) => it.key);
+        patch.value.slots = copySlotsFrom.value?.slots.map((it) => ({
+            ...it,
+            assignedRegistrationKey: undefined,
+        }));
         await eventAdminUseCase.updateEvents(keys, patch.value);
         dlg.value?.submit(true);
     } else {
@@ -111,6 +144,8 @@ async function open(events: Event[]): Promise<boolean> {
     eventsToEdit = events;
     validation.reset();
     patch.value = {};
+    copySlotsFrom.value = null;
+    fetchTemplates();
     return (await dlg.value?.open().catch(() => false)) || false;
 }
 
@@ -120,4 +155,12 @@ defineExpose<Dialog<Event[], boolean>>({
     submit: (changed: boolean) => dlg.value?.submit(changed),
     reject: () => dlg.value?.reject(),
 });
+
+async function fetchTemplates(): Promise<void> {
+    const year = new Date().getFullYear();
+    const eventsNextYear = await eventUseCase.getEvents(year + 1);
+    const eventsCurrentYear = await eventUseCase.getEvents(year);
+    const eventsPreviousYear = await eventUseCase.getEvents(year - 1);
+    templates.value = [null, ...eventsPreviousYear, ...eventsCurrentYear, ...eventsNextYear];
+}
 </script>
