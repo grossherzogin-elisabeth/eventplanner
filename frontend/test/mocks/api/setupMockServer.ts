@@ -37,11 +37,14 @@ export function mockUsersRequest(response?: UserRepresentation[], status: number
     return http.get('/api/v1/users', () => HttpResponse.json(response ?? mockUserRepresentations(), { status }));
 }
 
-export function mockEvents(events?: EventRepresentation[], status: number = 200): RequestHandler[] {
+export function mockEventRequests(events?: EventRepresentation[], status: number = 200): RequestHandler[] {
     const responses: EventRepresentation[] = events ?? [mockEventRepresentation()];
-    return responses.map((eventResponse) =>
+    const eventDetailRequests: RequestHandler[] = responses.map((eventResponse) =>
         http.get('/api/v1/events/' + eventResponse.key, () => HttpResponse.json(eventResponse, { status }))
     );
+
+    const eventListRequest: RequestHandler = http.get('api/v1/events', () => HttpResponse.json(responses, { status }));
+    return [eventListRequest, ...eventDetailRequests];
 }
 
 export function mockEventTemplatesRequest(response?: string[], status: number = 200): RequestHandler {
@@ -58,7 +61,7 @@ export function setupDefaultMockServer(): SetupServerApi {
         mockQualificationsRequest(),
         mockUsersRequest(),
         mockEventTemplatesRequest(),
-        ...mockEvents()
+        ...mockEventRequests()
     );
 }
 

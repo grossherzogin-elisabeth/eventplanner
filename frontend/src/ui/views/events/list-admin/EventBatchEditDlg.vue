@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg">
+    <VDialog ref="dlg" data-test-id="event-batch-edit-dialog">
         <template #title>{{ $t('views.events.admin-list.batch-edit.title') }}</template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -149,13 +149,6 @@ async function open(events: Event[]): Promise<boolean> {
     return (await dlg.value?.open().catch(() => false)) || false;
 }
 
-defineExpose<Dialog<Event[], boolean>>({
-    open: (events: Event[]) => open(events),
-    close: () => dlg.value?.reject(),
-    submit: (changed: boolean) => dlg.value?.submit(changed),
-    reject: () => dlg.value?.reject(),
-});
-
 async function fetchTemplates(): Promise<void> {
     const year = new Date().getFullYear();
     const eventsNextYear = await eventUseCase.getEvents(year + 1);
@@ -163,4 +156,11 @@ async function fetchTemplates(): Promise<void> {
     const eventsPreviousYear = await eventUseCase.getEvents(year - 1);
     templates.value = [null, ...eventsPreviousYear, ...eventsCurrentYear, ...eventsNextYear];
 }
+
+defineExpose<Dialog<Event[], boolean>>({
+    open: (events: Event[]) => open(events),
+    close: () => dlg.value?.reject(),
+    submit: (changed: boolean) => dlg.value?.submit(changed),
+    reject: () => dlg.value?.reject(),
+});
 </script>
