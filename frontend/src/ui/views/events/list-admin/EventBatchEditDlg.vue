@@ -20,6 +20,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="patch.name"
+                            data-test-id="input-event-name"
                             :label="$t('domain.event.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
@@ -82,10 +83,16 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
+            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <AsyncButton class="btn-ghost" name="save" :action="submit" :disabled="validation.disableSubmit.value">
+            <AsyncButton
+                class="btn-ghost"
+                name="save"
+                :action="submit"
+                :disabled="validation.disableSubmit.value"
+                data-test-id="button-submit"
+            >
                 <template #label>{{ $t('generic.save') }}</template>
             </AsyncButton>
         </template>
@@ -122,12 +129,18 @@ const validation = useValidation(patch, eventService.validatePartial);
 let eventsToEdit: Event[] = [];
 
 async function submit(): Promise<void> {
+    if (Object.keys(patch.value).length === 0) {
+        cancel();
+        return;
+    }
     if (validation.isValid.value) {
         const keys = eventsToEdit.map((it) => it.key);
-        patch.value.slots = copySlotsFrom.value?.slots.map((it) => ({
-            ...it,
-            assignedRegistrationKey: undefined,
-        }));
+        if (copySlotsFrom.value) {
+            patch.value.slots = copySlotsFrom.value?.slots.map((it) => ({
+                ...it,
+                assignedRegistrationKey: undefined,
+            }));
+        }
         await eventAdminUseCase.updateEvents(keys, patch.value);
         dlg.value?.submit(true);
     } else {

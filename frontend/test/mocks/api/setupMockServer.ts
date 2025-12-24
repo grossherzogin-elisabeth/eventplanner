@@ -47,6 +47,13 @@ export function mockEventRequests(events?: EventRepresentation[], status: number
     return [eventListRequest, ...eventDetailRequests];
 }
 
+export function mockEventUpdate(response?: EventRepresentation, status: number = 200): RequestHandler {
+    return http.patch<{ key: string }, EventRepresentation>('/api/v1/events/:key', async ({ request }) => {
+        const patch = await request.clone().json();
+        return HttpResponse.json(response ?? mockEventRepresentation(patch), { status });
+    });
+}
+
 export function mockEventTemplatesRequest(response?: string[], status: number = 200): RequestHandler {
     return http.get('/api/v1/events/export/templates', () =>
         HttpResponse.json(response ?? ['some template', 'some other template'], { status })
@@ -61,7 +68,8 @@ export function setupDefaultMockServer(): SetupServerApi {
         mockQualificationsRequest(),
         mockUsersRequest(),
         mockEventTemplatesRequest(),
-        ...mockEventRequests()
+        ...mockEventRequests(),
+        mockEventUpdate()
     );
 }
 
