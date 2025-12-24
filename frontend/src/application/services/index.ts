@@ -51,6 +51,7 @@ let userCachingService: UserCachingService | undefined;
 
 export function useConfigService(): ConfigService {
     if (!configService) {
+        console.log('🚀 Initializing ConfigService');
         configService = new ConfigService({
             settingsRepository: useSettingsRepository(),
         });
@@ -60,6 +61,7 @@ export function useConfigService(): ConfigService {
 
 export function useErrorHandlingService(): ErrorHandlingService {
     if (!errorHandlingService) {
+        console.log('🚀 Initializing ErrorHandlingService');
         errorHandlingService = new ErrorHandlingService({
             accountRepository: useAccountRepository(),
         });
@@ -69,6 +71,7 @@ export function useErrorHandlingService(): ErrorHandlingService {
 
 export function useNotificationService(): NotificationService {
     if (!notificationService) {
+        console.log('🚀 Initializing NotificationService');
         notificationService = new NotificationService();
     }
     return notificationService;
@@ -76,6 +79,7 @@ export function useNotificationService(): NotificationService {
 
 export function useAuthService(): AuthService {
     if (!authService) {
+        console.log('🚀 Initializing AuthService');
         authService = new AuthService();
     }
     return authService;
@@ -83,6 +87,7 @@ export function useAuthService(): AuthService {
 
 export function useCalendarService(): CalendarService {
     if (!calendarService) {
+        console.log('🚀 Initializing CalendarService');
         calendarService = new CalendarService();
     }
     return calendarService;
@@ -90,6 +95,7 @@ export function useCalendarService(): CalendarService {
 
 export function useIndexedDb(): Promise<IDBDatabase> {
     if (!indexedDb) {
+        console.log('🚀 Connecting to IndexedDb');
         indexedDb = getConnection('lissi', Object.values(StoreNames), 3);
     }
     return indexedDb;
@@ -104,6 +110,7 @@ function useCache<K extends string | number, T extends CacheableEntity<K>>(name:
 
 export function useEventCachingService(): EventCachingService {
     if (!eventCachingService) {
+        console.log('🚀 Initializing EventCachingService');
         eventCachingService = new EventCachingService({
             eventRepository: useEventRepository(),
             cache: useCache(StoreNames.Events),
@@ -113,6 +120,7 @@ export function useEventCachingService(): EventCachingService {
 }
 
 export function useUserCachingService(): UserCachingService {
+    console.log('🚀 Initializing UserCachingService');
     if (!userCachingService) {
         userCachingService = new UserCachingService({
             userRepository: useUserRepository(),
@@ -124,6 +132,7 @@ export function useUserCachingService(): UserCachingService {
 
 export function usePositionCachingService(): PositionCachingService {
     if (!positionCachingService) {
+        console.log('🚀 Initializing PositionCachingService');
         positionCachingService = new PositionCachingService({
             positionRepository: usePositionRepository(),
             cache: useCache(StoreNames.Positions),
@@ -134,6 +143,7 @@ export function usePositionCachingService(): PositionCachingService {
 
 export function useQualificationCachingService(): QualificationCachingService {
     if (!qualificationCachingService) {
+        console.log('🚀 Initializing QualificationCachingService');
         qualificationCachingService = new QualificationCachingService({
             qualificationRepository: useQualificationRepository(),
             cache: useCache(StoreNames.Qualifications),

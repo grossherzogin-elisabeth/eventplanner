@@ -79,6 +79,13 @@ export class EventAdministrationUseCase {
                 return;
             }
 
+            console.log(`Applying patch for ${eventKeys.length} events`, patch);
+            for (let i = 0; i < eventKeys.length; i++) {
+                const eventKey = eventKeys[i];
+                console.log(`Updating event ${eventKey} (${i + 1}/${eventKeys.length})`);
+                await this.updateEventInternal(eventKey, patch);
+            }
+
             for (const eventKey of eventKeys) {
                 await this.updateEventInternal(eventKey, patch);
             }
