@@ -37,20 +37,29 @@ export function mockUsersRequest(response?: UserRepresentation[], status: number
     return http.get('/api/v1/users', () => HttpResponse.json(response ?? mockUserRepresentations(), { status }));
 }
 
-export function mockEventRequests(events?: EventRepresentation[], status: number = 200): RequestHandler[] {
+export function mockEventListRequest(events?: EventRepresentation[], status: number = 200): RequestHandler {
     const responses: EventRepresentation[] = events ?? [mockEventRepresentation()];
-    const eventDetailRequests: RequestHandler[] = responses.map((eventResponse) =>
-        http.get('/api/v1/events/' + eventResponse.key, () => HttpResponse.json(eventResponse, { status }))
-    );
+    return http.get('api/v1/events', () => HttpResponse.json(responses, { status }));
+}
 
-    const eventListRequest: RequestHandler = http.get('api/v1/events', () => HttpResponse.json(responses, { status }));
-    return [eventListRequest, ...eventDetailRequests];
+export function mockEventDetailsRequests(events?: EventRepresentation[], status: number = 200): RequestHandler {
+    const responses: EventRepresentation[] = events ?? [mockEventRepresentation()];
+    return http.get<{ key: string }>('/api/v1/events/:key', ({ params }) => {
+        const response = responses.find((response) => response.key === params.key);
+        if (response) {
+            return HttpResponse.json(response, { status });
+        } else {
+            return HttpResponse.json({}, { status: 404 });
+        }
+    });
 }
 
 export function mockEventUpdate(response?: EventRepresentation, status: number = 200): RequestHandler {
-    return http.patch<{ key: string }, EventRepresentation>('/api/v1/events/:key', async ({ request }) => {
+    return http.patch<{ key: string }, EventRepresentation>('/api/v1/events/:key', async ({ request, params }) => {
         const patch = await request.clone().json();
-        return HttpResponse.json(response ?? mockEventRepresentation(patch), { status });
+        const patched = response ?? mockEventRepresentation(patch);
+        patched.key = params.key;
+        return HttpResponse.json(patched, { status });
     });
 }
 
@@ -68,7 +77,8 @@ export function setupDefaultMockServer(): SetupServerApi {
         mockQualificationsRequest(),
         mockUsersRequest(),
         mockEventTemplatesRequest(),
-        ...mockEventRequests(),
+        mockEventListRequest(),
+        mockEventDetailsRequests(),
         mockEventUpdate()
     );
 }

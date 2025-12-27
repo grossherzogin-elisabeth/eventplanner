@@ -1,5 +1,5 @@
 <template>
-    <div :class="$attrs.class" class="v-input-combobox">
+    <div class="v-input-combobox" v-bind="$attrs">
         <div ref="dropdownAnchor" class="input-field-wrapper" @click="showDropdown()">
             <slot name="before" />
             <label :for="id">{{ props.label }}</label>

@@ -10,6 +10,7 @@
                     <div class="mb-4">
                         <VInputSelect
                             v-model="patch.state"
+                            data-test-id="input-event-status"
                             :label="$t('domain.event.status')"
                             :options="eventStates.options.value"
                             :errors="validation.errors.value['state']"
@@ -30,6 +31,7 @@
                     <div class="mb-4">
                         <VInputSelect
                             v-model="patch.type"
+                            data-test-id="input-event-type"
                             :label="$t('domain.event.category')"
                             :options="eventTypes.options.value"
                             :errors="validation.errors.value['type']"
@@ -40,6 +42,7 @@
                     <div class="mb-4">
                         <VInputSelect
                             v-model="patch.signupType"
+                            data-test-id="input-event-signup-type"
                             :label="$t('domain.event.signup-type')"
                             :options="eventSignupTypes.options.value"
                             :errors="validation.errors.value['signupType']"
@@ -50,6 +53,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="copySlotsFrom"
+                            data-test-id="input-event-slots"
                             :label="$t('views.events.admin-list.batch-edit.copy-slots-from')"
                             :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
                             :errors="validation.errors.value['copySlotsFrom']"
@@ -73,6 +77,7 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model="patch.description"
+                            data-test-id="input-event-description"
                             :label="$t('domain.event.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
@@ -129,7 +134,7 @@ const validation = useValidation(patch, eventService.validatePartial);
 let eventsToEdit: Event[] = [];
 
 async function submit(): Promise<void> {
-    if (Object.keys(patch.value).length === 0) {
+    if (!copySlotsFrom.value && Object.keys(patch.value).length === 0) {
         cancel();
         return;
     }
