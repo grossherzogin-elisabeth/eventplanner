@@ -119,9 +119,15 @@
             <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" data-test-id="button-submit" name="save" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>{{ $t('generic.save') }}</span>
-            </button>
+            <AsyncButton
+                class="btn-ghost"
+                data-test-id="button-submit"
+                name="save"
+                :disabled="validation.disableSubmit.value"
+                :action="submit"
+            >
+                <template #label>{{ $t('generic.save') }}</template>
+            </AsyncButton>
         </template>
     </VDialog>
 </template>
@@ -133,7 +139,16 @@ import { cropToPrecision, deepCopy, updateDate, updateTime } from '@/common';
 import type { Event } from '@/domain';
 import { EventSignupType, EventState, EventType, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
+import {
+    AsyncButton,
+    VDialog,
+    VInputCombobox,
+    VInputDate,
+    VInputSelect,
+    VInputText,
+    VInputTextArea,
+    VInputTime,
+} from '@/ui/components/common';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
@@ -204,24 +219,21 @@ async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
     end.setHours(18);
     event.value.end = end;
 
-    const result = await dlg.value?.open().catch(() => undefined);
-    if (!result) {
-        return undefined;
-    }
-    result.slots =
-        template.value?.slots.map((slot) => ({
-            key: slot.key,
-            criticality: slot.criticality,
-            positionKeys: slot.positionKeys,
-            positionName: slot.positionName,
-            order: slot.order,
-        })) || [];
-    result.locations = template.value?.locations.map(deepCopy) || [];
-    return await eventAdminUseCase.createEvent(result);
+    return await dlg.value?.open().catch(() => undefined);
 }
 
-function submit(): void {
+async function submit(): Promise<void> {
     if (validation.isValid.value) {
+        event.value.slots =
+            template.value?.slots.map((slot) => ({
+                key: slot.key,
+                criticality: slot.criticality,
+                positionKeys: slot.positionKeys,
+                positionName: slot.positionName,
+                order: slot.order,
+            })) || [];
+        event.value.locations = template.value?.locations.map(deepCopy) || [];
+        event.value = await eventAdminUseCase.createEvent(event.value);
         dlg.value?.submit(event.value);
     } else {
         validation.showErrors.value = true;
