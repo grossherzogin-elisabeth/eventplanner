@@ -3,7 +3,7 @@ import { DOMWrapper } from '@vue/test-utils';
 
 export function find<T extends Element>(selector: string): DOMWrapper<T> {
     const elements = document.querySelectorAll(selector);
-    expect(elements).toHaveLength(1);
+    expect(elements, `elements matching selector '${selector}'`).toHaveLength(1);
     return new DOMWrapper(elements[0] as T);
 }
 

@@ -121,7 +121,7 @@
     .tag.warning,
     .status-panel.warning,
     .status-badge.warning {
-        @apply bg-warning-container/25;
+        @apply bg-warning-container/50;
         @apply text-onwarning-container;
         @apply dark:bg-warning-container/15;
         @apply dark:border-warning-container/75 dark:border;

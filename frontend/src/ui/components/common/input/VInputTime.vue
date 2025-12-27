@@ -1,5 +1,5 @@
 <template>
-    <div :class="$attrs.class" class="v-input-time">
+    <div class="v-input-time" v-bind="$attrs">
         <div class="input-field-wrapper" @click="focus()">
             <slot name="before" />
             <label :for="id">{{ props.label }}</label>

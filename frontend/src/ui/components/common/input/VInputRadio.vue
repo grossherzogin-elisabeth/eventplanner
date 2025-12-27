@@ -1,5 +1,5 @@
 <template>
-    <div :class="$attrs.class" class="">
+    <div class="v-input-radio" v-bind="$attrs">
         <label v-if="props.label" class="input-label">
             {{ props.label }}
         </label>

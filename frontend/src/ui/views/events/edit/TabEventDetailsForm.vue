@@ -52,7 +52,7 @@
             <VInputTextArea
                 :model-value="props.event.description"
                 :label="$t('domain.event.description')"
-                hint="Markdown wird unterstützt"
+                :hint="$t('generic.markdown-supported')"
                 :errors="validation.errors.value['description']"
                 :errors-visible="validation.showErrors.value"
                 :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
@@ -75,7 +75,7 @@
             </div>
             <div class="w-2/5">
                 <VInputTime
-                    :label="$t('domain.event.crew-on-board')"
+                    :label="$t('domain.event.start-time')"
                     :model-value="props.event.start"
                     :errors="validation.errors.value['start']"
                     :errors-visible="validation.showErrors.value"
@@ -102,7 +102,7 @@
             </div>
             <div class="w-2/5">
                 <VInputTime
-                    :label="$t('domain.event.crew-off-board')"
+                    :label="$t('domain.event.end-time')"
                     :model-value="props.event.end"
                     :errors="validation.errors.value['end']"
                     :errors-visible="validation.showErrors.value"

@@ -29,7 +29,7 @@ describe('TabEventDetailsForm.vue', () => {
             authService.setSignedInUser(signedInUser);
         });
 
-        it('should enable all inputs ', () => {
+        it('should enable all inputs', () => {
             const inputs = testee.findAll('input');
             for (const input of inputs) {
                 expect(input.element.disabled).toBe(false);

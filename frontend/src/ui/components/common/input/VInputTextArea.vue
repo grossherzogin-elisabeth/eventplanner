@@ -1,5 +1,5 @@
 <template>
-    <div class="v-input-textarea" :class="$attrs.class">
+    <div class="v-input-textarea" v-bind="$attrs">
         <div class="input-field-wrapper" @click="focus()">
             <label :for="id">{{ props.label }}</label>
             <textarea

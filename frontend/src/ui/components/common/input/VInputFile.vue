@@ -1,5 +1,5 @@
 <template>
-    <div class="v-input-file" :class="$attrs.class">
+    <div class="v-input-file" v-bind="$attrs">
         <div class="input-field-wrapper">
             <slot name="before"></slot>
             <label :for="id">{{ props.label }}</label>
