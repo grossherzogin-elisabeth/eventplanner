@@ -63,6 +63,14 @@ export function mockEventUpdate(response?: EventRepresentation, status: number =
     });
 }
 
+export function mockEventCreate(response?: EventRepresentation, status: number = 200): RequestHandler {
+    return http.post<object, EventRepresentation>('/api/v1/events', async ({ request }) => {
+        const event: EventRepresentation = response ?? (await request.clone().json());
+        event.registrations = [];
+        return HttpResponse.json(event, { status });
+    });
+}
+
 export function mockEventTemplatesRequest(response?: string[], status: number = 200): RequestHandler {
     return http.get('/api/v1/events/export/templates', () =>
         HttpResponse.json(response ?? ['some template', 'some other template'], { status })
@@ -79,7 +87,8 @@ export function setupDefaultMockServer(): SetupServerApi {
         mockEventTemplatesRequest(),
         mockEventListRequest(),
         mockEventDetailsRequests(),
-        mockEventUpdate()
+        mockEventUpdate(),
+        mockEventCreate()
     );
 }
 

@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg">
+    <VDialog ref="dlg" data-test-id="event-create-dialog">
         <template #title>Neue Reise erstellen</template>
         <template #default>
             <div class="px-4 pt-4 sm:px-8 lg:px-10">
@@ -7,6 +7,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model.trim="event.name"
+                            data-test-id="input-event-name"
                             :label="$t('domain.event.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
@@ -27,6 +28,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="template"
+                            data-test-id="input-event-template"
                             :label="$t('domain.event.template')"
                             :errors="validation.errors.value['template']"
                             :errors-visible="validation.showErrors.value"
@@ -114,11 +116,11 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" name="save" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Speichern</span>
+            <button class="btn-ghost" data-test-id="button-submit" name="save" :disabled="validation.disableSubmit.value" @click="submit">
+                <span>{{ $t('generic.save') }}</span>
             </button>
         </template>
     </VDialog>
@@ -126,7 +128,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { useEventUseCase } from '@/application';
+import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import { cropToPrecision, deepCopy, updateDate, updateTime } from '@/common';
 import type { Event } from '@/domain';
 import { EventSignupType, EventState, EventType, useEventService } from '@/domain';
@@ -139,6 +141,7 @@ import { useValidation } from '@/ui/composables/Validation';
 
 const eventTypes = useEventTypes();
 const eventSignupTypes = useEventSignupTypes();
+const eventAdminUseCase = useEventAdministrationUseCase();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 
@@ -214,7 +217,7 @@ async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
             order: slot.order,
         })) || [];
     result.locations = template.value?.locations.map(deepCopy) || [];
-    return result;
+    return await eventAdminUseCase.createEvent(result);
 }
 
 function submit(): void {

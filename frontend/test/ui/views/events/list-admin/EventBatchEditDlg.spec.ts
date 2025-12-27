@@ -2,7 +2,6 @@ import { nextTick } from 'vue';
 import type { MockInstance } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
-import { flushPromises } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
 import { useEventAdministrationUseCase } from '@/application';
@@ -34,21 +33,18 @@ describe('EventBatchEditDlg.vue', () => {
     it('should open dialog', async () => {
         const dialog = testee.find('[data-test-id="event-batch-edit-dialog"]');
         expect(dialog.isVisible()).toBe(true);
-        await flushPromises();
     });
 
     it('should close dialog on cancel', async () => {
         await cancel();
         expect(updateFunc).not.toHaveBeenCalled();
         expect(result).toBe(false);
-        await flushPromises();
     });
 
     it('should close dialog on submit without input', async () => {
         await submit();
         expect(updateFunc).not.toHaveBeenCalled();
         expect(result).toBe(false);
-        await flushPromises();
     });
 
     it.each([EventState.Draft, EventState.OpenForSignup, EventState.Planned, EventState.Canceled])(
@@ -61,7 +57,6 @@ describe('EventBatchEditDlg.vue', () => {
             await submit();
             expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { state });
             expect(result).toBe(true);
-            await flushPromises();
         }
     );
 
@@ -71,7 +66,6 @@ describe('EventBatchEditDlg.vue', () => {
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { name: 'updated' });
         expect(result).toBe(true);
-        await flushPromises();
     });
 
     it.each([
@@ -89,7 +83,6 @@ describe('EventBatchEditDlg.vue', () => {
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { type });
         expect(result).toBe(true);
-        await flushPromises();
     });
 
     it.each([EventSignupType.Assignment, EventSignupType.Open])('should patch only event signup type to $0', async (signupType) => {
@@ -100,7 +93,6 @@ describe('EventBatchEditDlg.vue', () => {
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { signupType });
         expect(result).toBe(true);
-        await flushPromises();
     });
 
     it('should patch only event slots', async () => {
@@ -111,7 +103,6 @@ describe('EventBatchEditDlg.vue', () => {
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { slots: mockEvent().slots });
         expect(result).toBe(true);
-        await flushPromises();
     });
 
     it('should show warning when changing slots', async () => {
@@ -120,7 +111,6 @@ describe('EventBatchEditDlg.vue', () => {
         await selectOption(1);
         const warning = testee.find('[data-test-id="warning-slots-overwrite"]');
         expect(warning.isVisible()).toBe(true);
-        await flushPromises();
     });
 
     it('should patch only event description', async () => {
@@ -129,7 +119,6 @@ describe('EventBatchEditDlg.vue', () => {
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { description: 'updated' });
         expect(result).toBe(true);
-        await flushPromises();
     });
 
     it('should patch event name and description', async () => {
@@ -140,7 +129,6 @@ describe('EventBatchEditDlg.vue', () => {
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { name: 'updated', description: 'updated' });
         expect(result).toBe(true);
-        await flushPromises();
     });
 
     async function selectOption(option: string | number): Promise<void> {
