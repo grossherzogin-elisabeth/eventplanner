@@ -33,7 +33,6 @@ describe('EventBatchEditDlg.vue', () => {
 
     it('should open dialog', async () => {
         const dialog = find('[data-test-id="event-batch-edit-dialog"]');
-        expect(dialog.exists()).toBe(true);
         expect(dialog.isVisible()).toBe(true);
     });
 
@@ -105,6 +104,14 @@ describe('EventBatchEditDlg.vue', () => {
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { slots: mockEvent().slots });
         expect(result).toBe(true);
+    });
+
+    it('should show warning when changing slots', async () => {
+        const input = find('[data-test-id="input-event-slots"] input');
+        await input.trigger('click');
+        await selectOption(1);
+        const warning = find('[data-test-id="warning-slots-overwrite"]');
+        expect(warning.isVisible()).toBe(true);
     });
 
     it('should patch only event description', async () => {

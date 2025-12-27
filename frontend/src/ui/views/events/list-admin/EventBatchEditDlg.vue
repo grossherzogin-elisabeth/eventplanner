@@ -71,7 +71,7 @@
                             </template>
                         </VInputCombobox>
                     </div>
-                    <VWarning v-if="copySlotsFrom" class="mb-4">
+                    <VWarning v-if="copySlotsFrom" class="mb-4" data-test-id="warning-slots-overwrite">
                         {{ $t('views.events.admin-list.batch-edit.copy-slots-warning') }}
                     </VWarning>
                     <div class="mb-4">
