@@ -67,7 +67,6 @@ export class EventAdministrationUseCase {
             delete patch.start;
             delete patch.end;
             delete patch.registrations;
-            delete patch.slots;
             delete patch.signedInUserRegistration;
             delete patch.signedInUserAssignedSlot;
             delete patch.isSignedInUserAssigned;
@@ -153,6 +152,7 @@ export class EventAdministrationUseCase {
     }
 
     public async createEvent(event: Event): Promise<Event> {
+        console.log('Creating event');
         try {
             let savedEvent = await this.eventRepository.createEvent(event);
             savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());

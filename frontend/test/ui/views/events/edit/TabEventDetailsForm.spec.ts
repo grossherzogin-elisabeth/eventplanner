@@ -29,7 +29,7 @@ describe('TabEventDetailsForm.vue', () => {
             authService.setSignedInUser(signedInUser);
         });
 
-        it('should enable all inputs ', () => {
+        it('should enable all inputs', () => {
             const inputs = testee.findAll('input');
             for (const input of inputs) {
                 expect(input.element.disabled).toBe(false);
@@ -37,8 +37,7 @@ describe('TabEventDetailsForm.vue', () => {
         });
 
         it('should run validation and display validation errors on user input', async () => {
-            const inputWrapper = testee.find('[data-test-id="input-name"]');
-            const input = inputWrapper.find('input');
+            const input = testee.find('[data-test-id="input-name"] input');
             await input.setValue('very long text that should cause a max length validation error');
             expect(input.classes()).toContain('invalid');
         });

@@ -506,7 +506,6 @@ async function editEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
 async function createEvent(): Promise<void> {
     const event = await createEventDialog.value?.open().catch();
     if (event) {
-        await eventAdminUseCase.createEvent(event);
         await fetchEvents();
     }
 }
