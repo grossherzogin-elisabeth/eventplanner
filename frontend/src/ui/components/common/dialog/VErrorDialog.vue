@@ -1,17 +1,15 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto" type="modal-danger">
-        <template #title>{{ error.title || 'Unwerwarteter Fehler' }}</template>
+        <template #title>{{ error.title || $t('components.error-dialog.default-title') }}</template>
         <template #content>
             <div class="px-4 px-8 py-8 lg:px-10">
-                <p v-if="error.message">
-                    {{ error.message }}
-                </p>
-                <p v-else>
-                    Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut. Sollte der Fehler wiederholt auftreten, melde ihn
-                    gerne an admin@grossherzogin-elisabeth.de.
+                <p>
+                    {{ error.message || $t('components.error-dialog.default-text') }}
                 </p>
                 <div v-if="error.error" class="mt-8">
-                    <h2 class="text-error mb-4">Details</h2>
+                    <h2 class="text-error mb-4">
+                        {{ $t('components.error-dialog.details') }}
+                    </h2>
                     <p>
                         {{ details }}
                     </p>
@@ -20,10 +18,16 @@
         </template>
         <template #buttons>
             <template v-if="error.retry">
-                <button class="btn-ghost-danger" @click="submit">{{ error.cancelText || 'Schließen' }}</button>
-                <button class="btn-ghost-danger" @click="retry()">{{ error.retryText || 'Erneut versuchen' }}</button>
+                <button data-test-id="button-close" class="btn-ghost-danger" @click="submit">
+                    {{ error.cancelText || $t('generic.close') }}
+                </button>
+                <button data-test-id="button-retry" class="btn-ghost-danger" @click="retry()">
+                    {{ error.retryText || $t('components.error-dialog.retry') }}
+                </button>
             </template>
-            <button v-else class="btn-ghost-danger" @click="submit">{{ error.cancelText || 'Schließen' }}</button>
+            <button v-else data-test-id="button-close" class="btn-ghost-danger" @click="submit">
+                {{ error.cancelText || $t('generic.close') }}
+            </button>
         </template>
     </VDialog>
 </template>
