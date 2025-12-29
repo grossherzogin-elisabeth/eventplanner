@@ -72,6 +72,7 @@ interface Props {
     // how should this dialog behave on mobile screens
     type?: 'fullscreen' | 'modal' | 'modal-danger';
     dataTestId?: string;
+    animationDuration?: number;
 }
 
 interface Emits {
@@ -103,7 +104,7 @@ defineExpose<Dialog>({
     reject: (reason?: E) => reject(reason),
 });
 
-const animationDuration = 150;
+const animationDuration = props.animationDuration ?? 150;
 const dialogOpen = ref<boolean>(false);
 const scrolls = ref<boolean>(false);
 const wrapper = ref<HTMLElement | null>(null);
@@ -159,7 +160,7 @@ async function close(): Promise<void> {
         renderContent.value = false;
         emit('closed');
         enableScrolling();
-    }, animationDuration + 100);
+    }, animationDuration + 10);
 }
 </script>
 <style scoped>
