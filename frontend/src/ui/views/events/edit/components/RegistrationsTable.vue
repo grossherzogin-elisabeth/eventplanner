@@ -20,17 +20,17 @@
                 </span>
             </td>
             <template v-if="item.registration">
-                <td class="w-full lg:w-1/3">
+                <td class="w-full">
                     <VTooltip :delay="500">
                         <template #default>
                             <p class="mb-1 flex items-center gap-x-1 font-semibold">
                                 {{ item.name || $t('domain.registration.unknown-user') }}
                             </p>
-                            <p v-if="item.registration?.note" class="text-onsurface-variant mb-2 line-clamp-2 text-sm italic lg:hidden">
+                            <p v-if="item.registration?.note" class="text-onsurface-variant mb-2 line-clamp-2 text-sm italic">
                                 <i class="fa-solid fa-comment-dots" />
                                 {{ item.registration?.note.trim() }}
                             </p>
-                            <p class="mb-1 flex items-center gap-x-1 gap-y-2">
+                            <p class="-mr-4 mb-1 flex flex-wrap items-center gap-x-1 gap-y-2">
                                 <span
                                     :style="{ '--color': item.position.color }"
                                     class="tag"
@@ -72,15 +72,8 @@
                         </template>
                     </VTooltip>
                 </td>
-                <td class="hidden w-2/3 overflow-hidden lg:table-cell">
-                    <span v-if="item.registration?.note" class="text-onsurface-variant line-clamp-2 text-sm italic">
-                        <i class="fa-solid fa-comment-dots" />
-                        {{ item.registration?.note.trim() }}
-                    </span>
-                </td>
-                <td class="w-0 lg:hidden"></td>
             </template>
-            <td v-else colspan="2" class="w-full">
+            <td v-else class="w-full">
                 <p class="text-error mb-1 font-semibold italic opacity-50">
                     {{ $t('domain.event.slot.empty') }}
                 </p>
@@ -106,14 +99,21 @@
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 <span>{{ $t('views.events.edit.actions.show-user') }}</span>
             </RouterLink>
-            <li v-if="item.slot" class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('removeFromCrew', item)">
-                <i class="fa-solid fa-hourglass-half"></i>
-                <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
-            </li>
-            <li v-else class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('addToCrew', item)">
-                <i class="fa-solid fa-user-plus"></i>
-                <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
-            </li>
+            <template v-if="event.signupType === EventSignupType.Assignment">
+                <li
+                    v-if="item.slot"
+                    class="context-menu-item"
+                    :class="{ disabled: !item.registration }"
+                    @click="emit('removeFromCrew', item)"
+                >
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
+                </li>
+                <li v-else class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('addToCrew', item)">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
+                </li>
+            </template>
             <li class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('editRegistration', item)">
                 <i class="fa-solid fa-clipboard-list"></i>
                 <span>{{ $t('views.events.edit.actions.edit-registration') }}</span>
@@ -135,7 +135,7 @@
 </template>
 <script lang="ts" setup>
 import type { Event, ResolvedRegistrationSlot } from '@/domain';
-import { RegistrationSlotState } from '@/domain';
+import { EventSignupType, RegistrationSlotState } from '@/domain';
 import { VTable, VTooltip } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';

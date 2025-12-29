@@ -10,7 +10,7 @@
         >
             <slot></slot>
         </span>
-        <button v-if="props.dismissable !== false" class="btn-icon my-1 mr-1 self-start" @click="dismiss()">
+        <button v-if="props.dismissable !== false" data-test-id="button-dismiss" class="btn-icon my-1 mr-1 self-start" @click="dismiss()">
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
