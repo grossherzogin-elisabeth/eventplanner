@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg" height="max-h-screen h-auto">
+    <VDialog ref="dlg" height="max-h-screen h-auto" data-test-id="edit-slot-dialog">
         <template #title>
             <template v-if="createMode">{{ $t('views.events.edit.actions.add-slot') }}</template>
             <template v-else>{{ $t('views.events.edit.actions.edit-slot') }}</template>

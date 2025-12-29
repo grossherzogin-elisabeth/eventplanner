@@ -1,5 +1,5 @@
-import { useUsersUseCase } from '@/application/usecases';
 import { describe, expect, it } from 'vitest';
+import { useUsersUseCase } from '@/application/usecases';
 
 describe('UserUseCase', () => {
     it('should construct instance with useUsersUseCase', () => {

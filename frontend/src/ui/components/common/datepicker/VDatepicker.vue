@@ -2,24 +2,24 @@
     <div ref="datepicker" class="v-datepicker w-96 max-w-full" @click.stop="" @mouseup.stop="">
         <div class="header text-onsurface-variant px-4 pt-4 pb-3">
             <div class="flex items-stretch justify-between">
-                <button class="btn-header" :disabled="view !== 'day'" @click="previousMonth()">
+                <button data-test-id="datepicker-previous-month" class="btn-header" :disabled="view !== 'day'" @click="previousMonth()">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
                 </button>
-                <button :disabled="view === 'year'" class="btn-header" @click="toggleMonthSelection()">
+                <button data-test-id="datepicker-month" :disabled="view === 'year'" class="btn-header" @click="toggleMonthSelection()">
                     <span class="">{{ $t(`generic.month.${month}`) }}</span>
                 </button>
-                <button class="btn-header" :disabled="view !== 'day'" @click="nextMonth()">
+                <button data-test-id="datepicker-next-month" class="btn-header" :disabled="view !== 'day'" @click="nextMonth()">
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
             </div>
             <div class="flex items-stretch justify-between">
-                <button class="btn-header" :disabled="view !== 'day'" @click="year--">
+                <button data-test-id="datepicker-previous-year" class="btn-header" :disabled="view !== 'day'" @click="year--">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
                 </button>
-                <button :disabled="view === 'month'" class="btn-header" @click="toggleYearSelection()">
+                <button data-test-id="datepicker-year" :disabled="view === 'month'" class="btn-header" @click="toggleYearSelection()">
                     <span class="">{{ year }}</span>
                 </button>
-                <button class="btn-header" :disabled="view !== 'day'" @click="year++">
+                <button data-test-id="datepicker-next-year" class="btn-header" :disabled="view !== 'day'" @click="year++">
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
             </div>

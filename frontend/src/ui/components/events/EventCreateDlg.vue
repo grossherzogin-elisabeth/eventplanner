@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg">
+    <VDialog ref="dlg" data-test-id="event-create-dialog">
         <template #title>Neue Reise erstellen</template>
         <template #default>
             <div class="px-4 pt-4 sm:px-8 lg:px-10">
@@ -7,7 +7,8 @@
                     <div class="mb-4">
                         <VInputText
                             v-model.trim="event.name"
-                            label="Name"
+                            data-test-id="input-event-name"
+                            :label="$t('domain.event.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Titel der Reise"
@@ -17,7 +18,7 @@
                     <div class="mb-4">
                         <VInputSelect
                             v-model="event.type"
-                            label="Kategorie"
+                            :label="$t('domain.event.category')"
                             :errors="validation.errors.value['type']"
                             :errors-visible="validation.showErrors.value"
                             :options="eventTypes.options.value"
@@ -27,23 +28,25 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="template"
-                            label="Vorlage"
+                            data-test-id="input-event-template"
+                            :label="$t('domain.event.template')"
                             :errors="validation.errors.value['template']"
                             :errors-visible="validation.showErrors.value"
-                            :options="
-                                templates
-                                    .filter((it) => it.type === event.type)
-                                    .map((it) => ({
-                                        label: `${$d(it.start, DateTimeFormat.DD_MM_YYYY)} - ${it.name} `,
-                                        value: it,
-                                    }))
-                            "
-                        />
+                            :options="templates.map((it) => ({ label: it.name, value: it }))"
+                        >
+                            <template #item="{ item }">
+                                <template v-if="item.value">
+                                    <span class="w-0 flex-grow truncate">{{ item.value?.name }}</span>
+                                    <span class="opacity-50">{{ formatDateRange(item.value?.start, item.value?.end, true) }}</span>
+                                </template>
+                                <template v-else>-</template>
+                            </template>
+                        </VInputCombobox>
                     </div>
                     <div class="mb-4">
                         <VInputSelect
                             v-model="event.signupType"
-                            label="Anmeldetyp"
+                            :label="$t('domain.event.signup-type')"
                             :options="eventSignupTypes.options.value"
                             :errors="validation.errors.value['signupType']"
                             :errors-visible="validation.showErrors.value"
@@ -53,8 +56,8 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model.trim="event.description"
-                            label="Beschreibung"
-                            hint="Markdown wird unterstützt"
+                            :label="$t('domain.event.description')"
+                            :hint="$t('generic.markdown-supported')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Kurze Beschreibung oder Zusatzinformationen"
@@ -63,7 +66,7 @@
                     <div class="mb-4 flex space-x-4">
                         <div class="w-3/5">
                             <VInputDate
-                                label="Startdatum"
+                                :label="$t('domain.event.start-date')"
                                 :model-value="event.start"
                                 :highlight-from="event.start"
                                 :highlight-to="event.end"
@@ -75,7 +78,7 @@
                         </div>
                         <div class="w-2/5">
                             <VInputTime
-                                label="Crew an Bord"
+                                :label="$t('domain.event.start-time')"
                                 :model-value="event.start"
                                 :errors="validation.errors.value['start']"
                                 :errors-visible="validation.showErrors.value"
@@ -88,7 +91,7 @@
                     <div class="mb-4 flex space-x-4">
                         <div class="w-3/5">
                             <VInputDate
-                                label="Enddatum"
+                                :label="$t('domain.event.end-date')"
                                 :model-value="event.end"
                                 :highlight-from="event.start"
                                 :highlight-to="event.end"
@@ -100,7 +103,7 @@
                         </div>
                         <div class="w-2/5">
                             <VInputTime
-                                label="Crew von Bord"
+                                :label="$t('domain.event.end-time')"
                                 :model-value="event.end"
                                 :errors="validation.errors.value['end']"
                                 :errors-visible="validation.showErrors.value"
@@ -113,31 +116,47 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" name="save" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Speichern</span>
-            </button>
+            <AsyncButton
+                class="btn-ghost"
+                data-test-id="button-submit"
+                name="save"
+                :disabled="validation.disableSubmit.value"
+                :action="submit"
+            >
+                <template #label>{{ $t('generic.save') }}</template>
+            </AsyncButton>
         </template>
     </VDialog>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { useEventUseCase } from '@/application';
+import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import { cropToPrecision, deepCopy, updateDate, updateTime } from '@/common';
-import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
 import { EventSignupType, EventState, EventType, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
+import {
+    AsyncButton,
+    VDialog,
+    VInputCombobox,
+    VInputDate,
+    VInputSelect,
+    VInputText,
+    VInputTextArea,
+    VInputTime,
+} from '@/ui/components/common';
+import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation';
 
 const eventTypes = useEventTypes();
 const eventSignupTypes = useEventSignupTypes();
+const eventAdminUseCase = useEventAdministrationUseCase();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 
@@ -173,14 +192,15 @@ function init(): void {
             }
         }
     );
-    fetchTemplates(new Date().getFullYear());
+    fetchTemplates();
 }
 
-async function fetchTemplates(year: number): Promise<void> {
-    templates.value = await eventUseCase.getEvents(year);
-    if (templates.value.length === 0) {
-        templates.value = await eventUseCase.getEvents(year - 1);
-    }
+async function fetchTemplates(): Promise<void> {
+    const year = new Date().getFullYear();
+    const eventsNextYear = await eventUseCase.getEvents(year + 1);
+    const eventsCurrentYear = await eventUseCase.getEvents(year);
+    const eventsPreviousYear = await eventUseCase.getEvents(year - 1);
+    templates.value = [...eventsPreviousYear, ...eventsCurrentYear, ...eventsNextYear];
 }
 
 async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
@@ -199,24 +219,21 @@ async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
     end.setHours(18);
     event.value.end = end;
 
-    const result = await dlg.value?.open().catch(() => undefined);
-    if (!result) {
-        return undefined;
-    }
-    result.slots =
-        template.value?.slots.map((slot) => ({
-            key: slot.key,
-            criticality: slot.criticality,
-            positionKeys: slot.positionKeys,
-            positionName: slot.positionName,
-            order: slot.order,
-        })) || [];
-    result.locations = template.value?.locations.map(deepCopy) || [];
-    return result;
+    return await dlg.value?.open().catch(() => undefined);
 }
 
-function submit(): void {
+async function submit(): Promise<void> {
     if (validation.isValid.value) {
+        event.value.slots =
+            template.value?.slots.map((slot) => ({
+                key: slot.key,
+                criticality: slot.criticality,
+                positionKeys: slot.positionKeys,
+                positionName: slot.positionName,
+                order: slot.order,
+            })) || [];
+        event.value.locations = template.value?.locations.map(deepCopy) || [];
+        event.value = await eventAdminUseCase.createEvent(event.value);
         dlg.value?.submit(event.value);
     } else {
         validation.showErrors.value = true;

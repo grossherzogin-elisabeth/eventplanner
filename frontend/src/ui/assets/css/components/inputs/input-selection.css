@@ -21,16 +21,17 @@
         overflow-x: hidden;
     }
 
+    .input-dropdown-hint,
     .input-dropdown-option {
         width: 100%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: pointer;
-        @apply py-4 pl-4;
-    }
-
-    .input-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        @apply px-4 py-4;
     }
 
     .input-dropdown-option:hover {

@@ -17,7 +17,13 @@ export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunct
 
     function validate(): void {
         errors.value = validationFunction(toValue(t));
-        isValid.value = Object.keys(errors.value).length === 0;
+        const errorCount = Object.keys(errors.value).length;
+        isValid.value = errorCount === 0;
+        if (isValid.value) {
+            console.log('✅ All user input is valid');
+        } else {
+            console.log(`⚠️ Found ${errorCount} validation violations`);
+        }
     }
 
     function reset(): void {

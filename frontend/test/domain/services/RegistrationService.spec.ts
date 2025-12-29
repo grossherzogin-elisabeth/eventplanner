@@ -1,5 +1,5 @@
-import { RegistrationService, RegistrationSlotState, useRegistrationService } from '@/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { RegistrationService, RegistrationSlotState, useRegistrationService } from '@/domain';
 import {
     CAPTAIN,
     QUALIFICATION_CAPTAIN,

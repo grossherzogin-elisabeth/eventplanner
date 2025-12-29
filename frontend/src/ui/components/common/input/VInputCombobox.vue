@@ -1,5 +1,5 @@
 <template>
-    <div :class="$attrs.class" class="v-input-combobox">
+    <div class="v-input-combobox" v-bind="$attrs">
         <div ref="dropdownAnchor" class="input-field-wrapper" @click="showDropdown()">
             <slot name="before" />
             <label :for="id">{{ props.label }}</label>
@@ -64,8 +64,8 @@
                     @blur="onBlur"
                     @click="showDropdown()"
                     @input="filterValues($event)"
-                    @keydown.down.prevent="focusNextOption()"
-                    @keydown.up.prevent="focusPrevOption()"
+                    @keydown.down.stop.prevent="focusNextOption()"
+                    @keydown.up.stop.prevent="focusPrevOption()"
                     @keydown.enter="selectFocusedOption"
                     @keydown.esc="hideDropdown(true)"
                 />

@@ -1,5 +1,5 @@
-import { usePositionCachingService } from '@/application/services';
 import { describe, expect, it } from 'vitest';
+import { usePositionCachingService } from '@/application/services';
 
 describe('PositionCachingService', () => {
     it('should construct instance with usePositionCachingService', () => {
