@@ -1,5 +1,5 @@
 <template>
-    <div :class="$attrs.class" class="v-input-date">
+    <div class="v-input-date" v-bind="$attrs">
         <div ref="dropdownAnchor" class="input-field-wrapper" @click="focus()">
             <label :for="id">{{ props.label }}</label>
             <input

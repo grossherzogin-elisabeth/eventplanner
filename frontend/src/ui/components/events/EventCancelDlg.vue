@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg" height="max-h-screen h-auto" type="modal-danger">
+    <VDialog ref="dlg" height="max-h-screen h-auto" type="modal-danger" data-test-id="cancel-event-dialog">
         <template #title>Reise absagen</template>
         <template #default>
             <div v-if="event" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">

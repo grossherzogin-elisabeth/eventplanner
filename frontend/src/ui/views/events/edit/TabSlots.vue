@@ -6,7 +6,7 @@
         :page-size="-1"
         sortable
         @click="editSlot($event.item)"
-        @reordered="updatePrios"
+        @reordered="updateOrders"
     >
         <template #row="{ item, index }">
             <td class="w-0">
@@ -18,9 +18,11 @@
                 <p class="font-semibold whitespace-nowrap">
                     {{ item.positionName || positions.get(item.positionKeys[0]).name }}
                 </p>
-                <p class="truncate text-sm">
-                    {{ $t('views.events.edit.registration-id') }}:
-                    {{ item.assignedRegistrationKey?.substring(0, 8) || $t('views.events.edit.free') }}
+                <p v-if="item.assignedRegistrationKey" class="truncate text-sm">
+                    {{ props.registrations.find((r) => r.registration?.key === item.assignedRegistrationKey)?.name }}
+                </p>
+                <p v-else class="truncate text-sm">
+                    {{ $t('views.events.edit.free') }}
                 </p>
             </td>
             <td class="w-2/3 min-w-96">
@@ -79,8 +81,9 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { Event, Slot } from '@/domain';
-import { useEventService } from '@/domain/services.ts';
+import { deepCopy } from '@/common';
+import type { Event, ResolvedRegistrationSlot, Slot } from '@/domain';
+import { useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
@@ -88,9 +91,11 @@ import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';
 
 interface Props {
     event: Event;
+    registrations: ResolvedRegistrationSlot[];
+    loading?: boolean;
 }
 
-type Emit = (e: 'update:modelValue', event: Event) => void;
+type Emit = (e: 'update:event', event: Event) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
@@ -103,34 +108,34 @@ const editSlotDialog = ref<Dialog<Slot, Slot | undefined> | null>(null);
 async function editSlot(slot: Slot): Promise<void> {
     const editedSlot = await editSlotDialog.value?.open(slot);
     if (editedSlot) {
-        const updatedEvent = eventService.updateSlot(props.event, editedSlot);
-        emit('update:modelValue', updatedEvent);
+        const updatedEvent = eventService.updateSlot(deepCopy(props.event), editedSlot);
+        emit('update:event', updatedEvent);
     }
 }
 
-function updatePrios(): void {
-    const updatedEvent = props.event;
+function updateOrders(): void {
+    const updatedEvent = deepCopy(props.event);
     updatedEvent.slots.forEach((slot, index) => (slot.order = index));
-    emit('update:modelValue', updatedEvent);
+    emit('update:event', updatedEvent);
 }
 
 async function moveSlotUp(slot: Slot): Promise<void> {
-    const updatedEvent = eventService.moveSlot(props.event, slot, -1);
-    emit('update:modelValue', updatedEvent);
+    const updatedEvent = eventService.moveSlot(deepCopy(props.event), slot, -1);
+    emit('update:event', updatedEvent);
 }
 
 async function moveSlotDown(slot: Slot): Promise<void> {
-    const updatedEvent = eventService.moveSlot(props.event, slot, 1);
-    emit('update:modelValue', updatedEvent);
+    const updatedEvent = eventService.moveSlot(deepCopy(props.event), slot, 1);
+    emit('update:event', updatedEvent);
 }
 
 function deleteSlot(slot: Slot): void {
-    const updatedEvent = eventService.removeSlot(props.event, slot);
-    emit('update:modelValue', updatedEvent);
+    const updatedEvent = eventService.removeSlot(deepCopy(props.event), slot);
+    emit('update:event', updatedEvent);
 }
 
 function duplicateSlot(slot: Slot): void {
-    const updatedEvent = eventService.duplicateSlot(props.event, slot);
-    emit('update:modelValue', updatedEvent);
+    const updatedEvent = eventService.duplicateSlot(deepCopy(props.event), slot);
+    emit('update:event', updatedEvent);
 }
 </script>

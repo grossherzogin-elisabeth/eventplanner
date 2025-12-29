@@ -9,15 +9,8 @@ export function mockAccountRepresentation(overwrite?: Partial<AccountRepresentat
         lastName: 'Doe',
         gender: 'd',
         email: 'john.doe@email.com',
-        roles: [Role.TEAM_MEMBER],
-        permissions: [
-            Permission.READ_EVENTS,
-            Permission.READ_USERS,
-            Permission.WRITE_OWN_REGISTRATIONS,
-            Permission.READ_OWN_USER,
-            Permission.READ_QUALIFICATIONS,
-            Permission.READ_POSITIONS,
-        ],
+        roles: [Role.ADMIN],
+        permissions: Object.values(Permission),
         positions: [DECKHAND],
     };
     return overwrite ? Object.assign(account, overwrite) : account;

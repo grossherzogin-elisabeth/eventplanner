@@ -1,5 +1,5 @@
-import { useEventAdministrationUseCase } from '@/application/usecases';
 import { describe, expect, it } from 'vitest';
+import { useEventAdministrationUseCase } from '@/application/usecases';
 
 describe('EventAdministrationUseCase', () => {
     it('should construct instance with useEventAdministrationUseCase', () => {

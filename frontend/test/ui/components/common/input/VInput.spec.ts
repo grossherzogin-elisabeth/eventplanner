@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+import { mount } from '@vue/test-utils';
 import {
     VInputCheckBox,
     VInputCombobox,
@@ -10,8 +12,6 @@ import {
     VInputTextArea,
     VInputTime,
 } from '@/ui/components/common';
-import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
 
 const components = [
     { component: VInputCombobox, props: { options: [] } },

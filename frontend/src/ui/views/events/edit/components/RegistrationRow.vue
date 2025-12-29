@@ -73,12 +73,12 @@
                             v-if="props.value.slot"
                             class="context-menu-item"
                             :class="{ disabled: !props.value.registration }"
-                            @click="emit('removeFromTeam')"
+                            @click="emit('removeFromCrew')"
                         >
                             <i class="fa-solid fa-arrow-right"></i>
                             <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
                         </li>
-                        <li v-else class="context-menu-item" :class="{ disabled: !props.value.registration }" @click="emit('addToTeam')">
+                        <li v-else class="context-menu-item" :class="{ disabled: !props.value.registration }" @click="emit('addToCrew')">
                             <i class="fa-solid fa-arrow-left"></i>
                             <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
                         </li>
@@ -121,8 +121,8 @@ interface Emits {
     (e: 'dragstart'): void;
     (e: 'dragend'): void;
     (e: 'edit'): void;
-    (e: 'addToTeam'): void;
-    (e: 'removeFromTeam'): void;
+    (e: 'addToCrew'): void;
+    (e: 'removeFromCrew'): void;
     (e: 'editRegistration'): void;
     (e: 'editSlot'): void;
     (e: 'cancelRegistration'): void;

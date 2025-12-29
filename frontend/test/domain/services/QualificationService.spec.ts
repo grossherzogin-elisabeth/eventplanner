@@ -1,5 +1,5 @@
-import { QualificationService, useQualificationService } from '@/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { QualificationService, useQualificationService } from '@/domain';
 import { mockQualificationCaptain } from '~/mocks';
 
 const ERR_REQUIRED = 'generic.validation.required';

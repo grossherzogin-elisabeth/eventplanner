@@ -67,7 +67,6 @@ export class EventAdministrationUseCase {
             delete patch.start;
             delete patch.end;
             delete patch.registrations;
-            delete patch.slots;
             delete patch.signedInUserRegistration;
             delete patch.signedInUserAssignedSlot;
             delete patch.isSignedInUserAssigned;
@@ -77,6 +76,13 @@ export class EventAdministrationUseCase {
 
             if (Object.values(patch).filter(filterUndefined).length === 0) {
                 return;
+            }
+
+            console.log(`Applying patch for ${eventKeys.length} events`, patch);
+            for (let i = 0; i < eventKeys.length; i++) {
+                const eventKey = eventKeys[i];
+                console.log(`Updating event ${eventKey} (${i + 1}/${eventKeys.length})`);
+                await this.updateEventInternal(eventKey, patch);
             }
 
             for (const eventKey of eventKeys) {
@@ -146,6 +152,7 @@ export class EventAdministrationUseCase {
     }
 
     public async createEvent(event: Event): Promise<Event> {
+        console.log('Creating event');
         try {
             let savedEvent = await this.eventRepository.createEvent(event);
             savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());

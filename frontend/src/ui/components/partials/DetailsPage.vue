@@ -6,7 +6,7 @@
         <div class="bg-surface sticky top-10 z-20 hidden px-8 pt-8 pb-2 md:px-16 lg:block xl:top-0 xl:mx-4">
             <div class="flex items-center xl:max-w-5xl">
                 <div class="w-0 grow pr-4">
-                    <h1 class="hidden truncate xl:block">
+                    <h1 class="hidden truncate xl:block" data-test-id="title">
                         <slot name="header" />
                     </h1>
                 </div>
@@ -17,8 +17,12 @@
                     <div class="pointer-events-auto hidden items-stretch space-x-2 lg:flex">
                         <slot name="secondary-buttons" />
                     </div>
-                    <PageActionsContextMenu v-if="$slots['actions-menu'] !== undefined" class="pointer-events-auto">
-                        <ul>
+                    <PageActionsContextMenu
+                        v-if="$slots['actions-menu'] !== undefined"
+                        class="pointer-events-auto"
+                        data-test-id="actions-menu"
+                    >
+                        <ul data-test-id="context-menu">
                             <slot name="actions-menu" />
                         </ul>
                     </PageActionsContextMenu>
