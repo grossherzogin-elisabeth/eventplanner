@@ -4,6 +4,7 @@
             <div
                 v-if="renderContent"
                 ref="background"
+                :data-test-id="props.dataTestId ?? 'sheet'"
                 :class="`${sheetOpen ? 'open' : 'closed'}`"
                 class="sheet-background scrollbar-invisible fixed top-0 right-0 bottom-0 left-0 z-40 overflow-y-auto overscroll-contain sm:flex"
                 :style="{
@@ -74,11 +75,13 @@
 import type { Ref } from 'vue';
 import { onUnmounted } from 'vue';
 import { nextTick, ref } from 'vue';
-import { disableScrolling, enableScrolling, wait } from '@/common';
+import { disableScrolling, enableScrolling } from '@/common';
 import type { Sheet } from '@/ui/components/common';
 
 interface Props {
     showBackButton?: boolean;
+    dataTestId?: string;
+    animationDuration?: number;
 }
 
 interface Emits {
@@ -119,7 +122,7 @@ defineExpose<Sheet<void, T | undefined, E>>({
     reject: (reason?: E) => reject(reason),
 });
 
-const animationDuration = 250;
+const animationDuration = props.animationDuration ?? 250;
 
 const background: Ref<HTMLElement | null> = ref(null);
 const wrapper: Ref<HTMLElement | null> = ref(null);
@@ -146,9 +149,8 @@ async function open(): Promise<T | undefined> {
     clearTimeout(closeTimeout);
     emit('opening');
     renderContent.value = true;
-    await nextTick(() => (sheetOpen.value = true));
+    nextTick(() => (sheetOpen.value = true));
     background.value?.scrollTo({ top: 400 });
-    await wait(animationDuration);
     sheetOpening.value = false;
     emit('opened');
     window.addEventListener('cancel', close, { once: true });
@@ -190,7 +192,7 @@ async function close(): Promise<void> {
         enableScrolling();
         renderContent.value = false;
         emit('closed');
-    }, animationDuration + 100);
+    }, animationDuration + 10);
 }
 
 function onWindowResize(): void {

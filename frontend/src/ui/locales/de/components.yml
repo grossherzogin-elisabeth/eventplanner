@@ -35,3 +35,8 @@ components:
     note-assigned: 'Du bist für diese Reise als {0} eingeplant'
     note-on-waiting-list: 'Du stehst für diese Reise als {0} auf der Warteliste'
     show-details: 'Details anzeigen'
+  error-dialog:
+    retry: 'Erneut versuchen'
+    default-title: 'Unerwarteter Fehler'
+    default-text: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.'
+    details: 'Details'

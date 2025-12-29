@@ -2,71 +2,69 @@ import { nextTick } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import type { Dialog } from '@/ui/components/common';
-import { VDialog } from '@/ui/components/common';
+import type { Sheet } from '@/ui/components/common';
+import { VSheet } from '@/ui/components/common';
 
-describe('VDialog', () => {
+describe('VSheet', () => {
     let testee: VueWrapper;
-    let dialog: Dialog;
+    let sheet: Sheet;
 
     beforeEach(async () => {
         vi.useFakeTimers();
         closed = false;
-        testee = mount(VDialog, {
+        testee = mount(VSheet, {
+            props: { animationDuration: 0 },
             global: { stubs: { teleport: true } },
             slots: {
-                title: '<div data-test-id="test-title">test dialog title</div>',
-                content: '<div data-test-id="test-content">test dialog content</div>',
+                title: '<div data-test-id="test-title">test sheet title</div>',
+                content: '<div data-test-id="test-content">test sheet content</div>',
             },
         });
-        dialog = testee.getCurrentComponent().exposed as Dialog;
+        sheet = testee.getCurrentComponent().exposed as Sheet;
     });
 
     afterEach(() => {
         vi.useRealTimers();
     });
 
-    it('should open dialog on method call', async () => {
-        dialog.open();
+    it('should open sheet on method call', async () => {
+        sheet.open();
         await nextTick();
-        vi.runAllTimers();
-        expect(testee.find('[data-test-id="dialog"]').isVisible()).toBe(true);
+        expect(testee.find('[data-test-id="sheet"]').isVisible()).toBe(true);
     });
 
     it('should render title', async () => {
-        dialog.open();
+        sheet.open();
         await nextTick();
-        vi.runAllTimers();
         expect(testee.find('[data-test-id="test-title"]').isVisible()).toBe(true);
     });
 
     it('should render content', async () => {
-        dialog.open();
+        sheet.open();
         await nextTick();
-        vi.runAllTimers();
         expect(testee.find('[data-test-id="test-content"]').isVisible()).toBe(true);
     });
 
     it('should resolve promise on submit call', async () => {
         let submitted = false;
-        dialog.open().then(() => (submitted = true));
+        sheet.open().then(() => (submitted = true));
         await nextTick();
-        dialog.submit();
+        sheet.submit();
         await timeoutsAndRender();
         expect(submitted).toBe(true);
     });
 
     it('should reject promise on reject call', async () => {
         let rejected = false;
-        dialog.open().catch(() => (rejected = true));
+        sheet.open().catch(() => (rejected = true));
         await nextTick();
-        dialog.reject();
+        sheet.reject();
         await timeoutsAndRender();
         expect(rejected).toBe(true);
     });
 
     it('should emit events on open', async () => {
-        dialog.open();
+        sheet.open();
         await nextTick();
         expect(testee.emitted('opening')).toHaveLength(1);
         await timeoutsAndRender();
@@ -74,18 +72,18 @@ describe('VDialog', () => {
     });
 
     it('should emit events on close', async () => {
-        dialog.open();
+        sheet.open();
         await nextTick();
-        dialog.submit();
+        sheet.submit();
         expect(testee.emitted('closing')).toHaveLength(1);
         await timeoutsAndRender();
         expect(testee.emitted('closed')).toHaveLength(1);
     });
 
     it('should render content until fully closed', async () => {
-        dialog.open();
+        sheet.open();
         await nextTick();
-        dialog.submit();
+        sheet.submit();
         expect(testee.find('[data-test-id="test-content"]').isVisible()).toBe(true);
         await timeoutsAndRender();
         expect(testee.find('[data-test-id="test-content"]').exists()).toBe(false);
