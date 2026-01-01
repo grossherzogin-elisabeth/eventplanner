@@ -70,7 +70,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload test coverage artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: frontend-test-report
           path: frontend/coverage
@@ -109,7 +109,7 @@ jobs:
         run: ./gradlew build test jacocoTestReport
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: backend-build-output
           path: backend/build
