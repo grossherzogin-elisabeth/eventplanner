@@ -11,10 +11,10 @@
             </div>
         </template>
         <template #buttons>
-            <button :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'" @click="cancel()">
+            <button data-test-id="button-cancel" :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'" @click="cancel()">
                 <slot name="cancel">{{ content?.cancel || 'Abbrechen' }}</slot>
             </button>
-            <button :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'" @click="submit()">
+            <button data-test-id="button-confirm" :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'" @click="submit()">
                 <slot name="submit">{{ content?.submit || 'Ja' }}</slot>
             </button>
         </template>

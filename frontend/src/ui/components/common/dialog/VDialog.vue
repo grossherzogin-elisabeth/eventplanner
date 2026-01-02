@@ -118,7 +118,7 @@ async function open(): Promise<T> {
     clearTimeout(closeTimeout);
     emit('opening');
     renderContent.value = true;
-    await nextTick(() => (dialogOpen.value = true));
+    nextTick(() => (dialogOpen.value = true));
     setTimeout(() => {
         emit('opened');
         if (!isTouchDevice()) {
@@ -159,7 +159,7 @@ async function close(): Promise<void> {
         renderContent.value = false;
         emit('closed');
         enableScrolling();
-    }, animationDuration + 100);
+    }, animationDuration + 10);
 }
 </script>
 <style scoped>
