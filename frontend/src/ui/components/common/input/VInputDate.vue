@@ -46,7 +46,6 @@
             @close="showDropdown = false"
         >
             <VDatepicker
-                ref="datepicker"
                 :model-value="props.modelValue ?? new Date()"
                 :highlight-from="props.highlightFrom"
                 :highlight-to="props.highlightTo"
@@ -56,12 +55,7 @@
         <VDialog ref="dialog" type="modal" width="auto">
             <template #title>{{ props.label }}</template>
             <template #default>
-                <VDatepicker
-                    ref="datepicker"
-                    v-model="dialogValue"
-                    :highlight-from="props.highlightFrom"
-                    :highlight-to="props.highlightTo"
-                />
+                <VDatepicker v-model="dialogValue" :highlight-from="props.highlightFrom" :highlight-to="props.highlightTo" />
             </template>
             <template #buttons="{ close, submit }">
                 <button class="btn-ghost" @click="close()">
@@ -128,8 +122,6 @@ const hasErrors = computed<boolean>(() => props.errors !== undefined && props.er
 
 const inputField = ref<HTMLInputElement | null>(null);
 const dropdownAnchor = ref<HTMLElement | null>(null);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const datepicker = ref<any | null>(null);
 const dialog = ref<Dialog | null>(null);
 const showDropdown = ref<boolean>(false);
 const dialogValue = ref<Date>(new Date());
