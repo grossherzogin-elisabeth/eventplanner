@@ -13,12 +13,7 @@
                 @scroll.passive="onScroll()"
                 @click="reject()"
             >
-                <div
-                    ref="wrapper"
-                    class="sheet-wrapper overflow-clip sm:mt-0 sm:ml-auto sm:h-full sm:w-auto sm:p-4"
-                    @click.stop=""
-                    @mousedown.stop=""
-                >
+                <div class="sheet-wrapper overflow-clip sm:mt-0 sm:ml-auto sm:h-full sm:w-auto sm:p-4" @click.stop="" @mousedown.stop="">
                     <div class="h-screen w-screen sm:hidden" @click="reject()" @pointerdown="reject()"></div>
                     <div
                         class="flex max-h-screen flex-col overflow-clip rounded-t-3xl shadow-lg transition-all duration-200 sm:h-full sm:max-h-full sm:rounded-3xl sm:pt-4 sm:pb-0"
@@ -125,7 +120,6 @@ defineExpose<Sheet<void, T | undefined, E>>({
 const animationDuration = props.animationDuration ?? 250;
 
 const background: Ref<HTMLElement | null> = ref(null);
-const wrapper: Ref<HTMLElement | null> = ref(null);
 
 const sheetOpen: Ref<boolean> = ref(false);
 const sheetOpening: Ref<boolean> = ref(false);
