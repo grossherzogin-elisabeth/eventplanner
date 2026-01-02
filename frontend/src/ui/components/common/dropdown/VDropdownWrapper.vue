@@ -230,6 +230,7 @@ function moveIntoVisibleArea(): void {
 }
 
 function close(): void {
+    // make sure the close event is triggered after a click event inside the dropdown
     setTimeout(() => emit('close'), 10);
 }
 
