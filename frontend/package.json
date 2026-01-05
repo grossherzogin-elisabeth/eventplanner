@@ -58,7 +58,7 @@
         "vite": "^7.3.0",
         "vite-plugin-pwa": "^1.2.0",
         "vite-svg-loader": "^5.1.0",
-        "vitest": "^3.2.4",
+        "vitest": "^4.0.16",
         "vue": "^3.5.26",
         "vue-tsc": "^3.2.1"
     }
