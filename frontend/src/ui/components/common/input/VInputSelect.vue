@@ -110,7 +110,7 @@ const hasErrors: ComputedRef<boolean> = computed(() => props.errors !== undefine
 const list: Ref<HTMLUListElement | null> = ref(null);
 const dropdownAnchor: Ref<HTMLInputElement | null> = ref(null);
 const focusOptionIndex: Ref<number | null> = ref(null);
-const selectedOptionIndex: ComputedRef<number> = computed(() => props.options.findIndex((opt) => opt.value === props.modelValue));
+const selectedOptionIndex: ComputedRef<number> = computed(() => visibleOptions.value.findIndex((opt) => opt.value === props.modelValue));
 const displayValue: ComputedRef<string> = computed(() => props.options.find((it) => it.value === props.modelValue)?.label || '');
 const visibleOptions: ComputedRef<InputSelectOption<T>[]> = computed(() =>
     props.options.filter((it) => !it.hidden || it.value === props.modelValue)
@@ -163,7 +163,7 @@ function selectOption(option: InputSelectOption<T>): void {
 function focusNextOption(): void {
     if (focusOptionIndex.value === null) {
         showDropdown();
-    } else if (focusOptionIndex.value === props.options.length - 1) {
+    } else if (focusOptionIndex.value === visibleOptions.value.length - 1) {
         focusOptionIndex.value = 0;
         scrollFocussedOptionIntoView();
     } else {
@@ -173,13 +173,13 @@ function focusNextOption(): void {
 }
 
 function focusPrevOption(): void {
-    if (!props.options || props.options.length === 0) {
+    if (visibleOptions.value.length === 0) {
         hideDropdown(true);
     }
     if (focusOptionIndex.value === null) {
         focusOptionIndex.value = 0;
     } else if (focusOptionIndex.value === 0) {
-        focusOptionIndex.value = props.options.length - 1;
+        focusOptionIndex.value = visibleOptions.value.length - 1;
         scrollFocussedOptionIntoView();
     } else {
         focusOptionIndex.value -= 1;
@@ -189,7 +189,7 @@ function focusPrevOption(): void {
 
 function selectFocusedOption(e: KeyboardEvent): void {
     if (focusOptionIndex.value !== null) {
-        selectOption(props.options[focusOptionIndex.value]);
+        selectOption(visibleOptions.value[focusOptionIndex.value]);
         hideDropdown(true);
         e.preventDefault();
     }
