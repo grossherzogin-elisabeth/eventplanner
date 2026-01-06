@@ -1,3 +1,6 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=grossherzogin-elisabeth_eventplanner&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=grossherzogin-elisabeth_eventplanner)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=grossherzogin-elisabeth_eventplanner&metric=coverage)](https://sonarcloud.io/summary/new_code?id=grossherzogin-elisabeth_eventplanner)
+
 # Eventplanner
 
 The eventplanner is a web application for planning multi day events with a variing event team.
