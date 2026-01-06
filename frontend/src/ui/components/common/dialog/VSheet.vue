@@ -143,7 +143,7 @@ async function open(): Promise<T | undefined> {
     clearTimeout(closeTimeout);
     emit('opening');
     renderContent.value = true;
-    nextTick(() => (sheetOpen.value = true));
+    await nextTick(() => (sheetOpen.value = true));
     background.value?.scrollTo({ top: 400 });
     sheetOpening.value = false;
     emit('opened');

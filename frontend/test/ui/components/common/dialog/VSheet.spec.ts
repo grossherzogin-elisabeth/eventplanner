@@ -48,7 +48,7 @@ describe('VSheet', () => {
     it('should resolve promise on submit call', async () => {
         let submitted = false;
         sheet.open().then(() => (submitted = true));
-        await nextTick();
+        await timeoutsAndRender();
         sheet.submit();
         await timeoutsAndRender();
         expect(submitted).toBe(true);
@@ -57,7 +57,7 @@ describe('VSheet', () => {
     it('should reject promise on reject call', async () => {
         let rejected = false;
         sheet.open().catch(() => (rejected = true));
-        await nextTick();
+        await timeoutsAndRender();
         sheet.reject();
         await timeoutsAndRender();
         expect(rejected).toBe(true);
@@ -73,7 +73,7 @@ describe('VSheet', () => {
 
     it('should emit events on close', async () => {
         sheet.open();
-        await nextTick();
+        await timeoutsAndRender();
         sheet.submit();
         expect(testee.emitted('closing')).toHaveLength(1);
         await timeoutsAndRender();
@@ -82,7 +82,7 @@ describe('VSheet', () => {
 
     it('should render content until fully closed', async () => {
         sheet.open();
-        await nextTick();
+        await timeoutsAndRender();
         sheet.submit();
         expect(testee.find('[data-test-id="test-content"]').isVisible()).toBe(true);
         await timeoutsAndRender();
