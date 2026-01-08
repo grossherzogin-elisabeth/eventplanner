@@ -5,11 +5,10 @@ import type {
     ErrorHandlingService,
     NotificationService,
     PositionCachingService,
-    QualificationCachingService,
     UserCachingService,
 } from '@/application/services';
 import { diff } from '@/common';
-import type { Position, PositionKey, Qualification, QualificationKey, User, UserDetails, UserKey, UserSettings } from '@/domain';
+import type { Position, PositionKey, User, UserDetails, UserKey, UserSettings } from '@/domain';
 import { Permission, Theme } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
@@ -19,7 +18,6 @@ export class UsersUseCase {
     private readonly authService: AuthService;
     private readonly positionCachingService: PositionCachingService;
     private readonly userCachingService: UserCachingService;
-    private readonly qualificationCachingService: QualificationCachingService;
     private readonly notificationService: NotificationService;
     private readonly errorHandlingService: ErrorHandlingService;
 
@@ -30,7 +28,6 @@ export class UsersUseCase {
         registrationService: RegistrationService;
         positionCachingService: PositionCachingService;
         userCachingService: UserCachingService;
-        qualificationCachingService: QualificationCachingService;
         notificationService: NotificationService;
         errorHandlingService: ErrorHandlingService;
     }) {
@@ -39,7 +36,6 @@ export class UsersUseCase {
         this.authService = params.authService;
         this.positionCachingService = params.positionCachingService;
         this.userCachingService = params.userCachingService;
-        this.qualificationCachingService = params.qualificationCachingService;
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
 
@@ -125,13 +121,6 @@ export class UsersUseCase {
         const map = new Map<PositionKey, Position>();
         const positions = await this.positionCachingService.getPositions();
         positions.forEach((it) => map.set(it.key, it));
-        return map;
-    }
-
-    public async resolveQualifications(): Promise<Map<QualificationKey, Qualification>> {
-        const map = new Map<QualificationKey, Qualification>();
-        const qualifications = await this.qualificationCachingService.getQualifications();
-        qualifications.forEach((it) => map.set(it.key, it));
         return map;
     }
 

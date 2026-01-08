@@ -49,19 +49,18 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { useUsersUseCase } from '@/application';
 import { deepCopy } from '@/common';
 import { Validator, notEmpty } from '@/common/validation';
 import type { InputSelectOption, Qualification, QualificationKey, UserQualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputDate, VInputTextArea } from '@/ui/components/common';
-import { useValidation } from '@/ui/composables/Validation.ts';
+import { useQualifications } from '@/ui/composables/Qualifications';
+import { useValidation } from '@/ui/composables/Validation';
 
-const usersUseCase = useUsersUseCase();
+const qualifications = useQualifications();
 
 const dlg = ref<Dialog<UserQualification, UserQualification | undefined> | null>(null);
 const editing = ref<boolean>(false);
-const qualifications = ref<Map<QualificationKey, Qualification>>(new Map<QualificationKey, Qualification>());
 const userQualification = ref<UserQualification>({ qualificationKey: '', expires: false });
 
 const validation = useValidation(userQualification, (value) => {
@@ -69,22 +68,14 @@ const validation = useValidation(userQualification, (value) => {
 });
 
 const qualificationOptions = computed<InputSelectOption<QualificationKey>[]>(() => {
-    return [...qualifications.value.values()]
+    return [...qualifications.map.value.values()]
         .map((it) => ({ label: it.name, value: it.key }))
         .sort((a, b) => a.label.localeCompare(b.label));
 });
 
 const selectedQualification = computed<Qualification | undefined>(() => {
-    return qualifications.value.get(userQualification.value.qualificationKey);
+    return qualifications.map.value.get(userQualification.value.qualificationKey);
 });
-
-function init(): void {
-    fetchQualifications();
-}
-
-async function fetchQualifications(): Promise<void> {
-    qualifications.value = await usersUseCase.resolveQualifications();
-}
 
 async function open(value?: UserQualification): Promise<UserQualification | undefined> {
     if (value) {
@@ -122,6 +113,4 @@ defineExpose<Dialog<UserQualification, UserQualification | undefined>>({
     submit: (result?: UserQualification) => dlg.value?.submit(result),
     reject: () => dlg.value?.reject(),
 });
-
-init();
 </script>
