@@ -46,7 +46,11 @@ export default defineConfig(({ mode }) => {
             port: 8090,
             host: true,
             proxy: {
-                '/api/': `http://${host}:8091`,
+                // '/api/': `http://${host}:8091`,
+                '/api/': {
+                    target: `http://${host}:8091`,
+                    // timeout: 100,
+                },
                 '/auth/': `http://${host}:8091`,
                 '/login/oauth2/code/': `http://${host}:8091`,
             },

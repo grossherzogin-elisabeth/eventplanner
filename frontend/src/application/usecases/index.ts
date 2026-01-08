@@ -62,6 +62,7 @@ export function useAuthUseCase(): AuthUseCase {
             authService: useAuthService(),
             accountRepository: useAccountRepository(),
             userRepository: useUserRepository(),
+            notificationService: useNotificationService(),
         });
     }
     return authUseCase;

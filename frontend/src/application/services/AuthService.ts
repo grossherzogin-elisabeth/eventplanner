@@ -10,6 +10,11 @@ export class AuthService {
     private changeListeners: Record<string, Callback<void>> = {};
     private signedInUser: SignedInUser | undefined = undefined;
     private impersonating: UserDetails | null = null;
+    private offlineMode: boolean | undefined = undefined;
+
+    constructor() {
+        this.signedInUser = this.loadStoredSignedInUser();
+    }
 
     public getSignedInUser(): SignedInUser | undefined {
         if (this.signedInUser && this.impersonating) {
@@ -27,12 +32,22 @@ export class AuthService {
         return this.signedInUser;
     }
 
+    public isOffline(): boolean {
+        return this.offlineMode === true;
+    }
+
+    public setOffline(): void {
+        this.offlineMode = true;
+    }
+
     public setSignedInUser(signedInUser?: SignedInUser): void {
+        this.offlineMode = false;
         if (signedInUser) {
             if (signedInUser.roles.includes(Role.ADMIN)) {
                 signedInUser.permissions.push(Permission.BETA_FEATURES);
             }
             this.signedInUser = signedInUser;
+            this.storeSignedInUser(signedInUser);
             this.notifyListeners(this.loginListeners, this.signedInUser);
         } else {
             this.signedInUser = undefined;
@@ -75,5 +90,22 @@ export class AuthService {
 
     private notifyListeners<T>(listeners: Record<string, Callback<T>>, param: T): void {
         Object.values(listeners).forEach((cb: Callback<T>) => cb(param));
+    }
+
+    private storeSignedInUser(signedInUser: SignedInUser): void {
+        localStorage.setItem('user', JSON.stringify(signedInUser));
+    }
+
+    private loadStoredSignedInUser(): SignedInUser | undefined {
+        const json = localStorage.getItem('user');
+        if (!json) {
+            return undefined;
+        }
+        try {
+            return JSON.parse(json);
+        } catch (e) {
+            console.error(e);
+            return undefined;
+        }
     }
 }
