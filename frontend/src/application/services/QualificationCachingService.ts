@@ -1,6 +1,5 @@
-import type { QualificationRepository } from '@/application/ports';
+import type { Cache, QualificationRepository } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
-import type { Cache } from '@/common';
 import type { Qualification, QualificationKey } from '@/domain';
 
 export class QualificationCachingService {

@@ -1,14 +1,12 @@
 import {
     useAccountRepository,
+    useCache,
     useEventRepository,
     usePositionRepository,
     useQualificationRepository,
     useSettingsRepository,
     useUserRepository,
 } from '@/adapter';
-import type { CacheableEntity } from '@/common';
-import { type Cache, IndexedDBRepository, getConnection } from '@/common';
-import { InMemoryCache } from '@/common/cache/memory/InMemoryCache.ts';
 import { AuthService } from './AuthService';
 import { CalendarService } from './CalendarService';
 import { ConfigService } from './ConfigService';
@@ -38,7 +36,6 @@ enum StoreNames {
     Qualifications = 'qualifications',
 }
 
-let indexedDb: Promise<IDBDatabase> | undefined;
 let configService: ConfigService | undefined;
 let errorHandlingService: ErrorHandlingService | undefined;
 let notificationService: NotificationService | undefined;
@@ -91,21 +88,6 @@ export function useCalendarService(): CalendarService {
         calendarService = new CalendarService();
     }
     return calendarService;
-}
-
-export function useIndexedDb(): Promise<IDBDatabase> {
-    if (!indexedDb) {
-        console.log('🚀 Connecting to IndexedDb');
-        indexedDb = getConnection('lissi', Object.values(StoreNames), 3);
-    }
-    return indexedDb;
-}
-
-function useCache<K extends string | number, T extends CacheableEntity<K>>(name: string): Cache<K, T> {
-    if (import.meta.env.VITE_USE_INDEXED_DB === 'true') {
-        return new IndexedDBRepository(useIndexedDb(), name, { invalidateOnReload: true });
-    }
-    return new InMemoryCache();
 }
 
 export function useEventCachingService(): EventCachingService {
