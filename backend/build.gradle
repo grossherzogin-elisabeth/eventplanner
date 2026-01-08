@@ -47,7 +47,7 @@ dependencies {
 
     // tests
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    testImplementation "org.springframework.security:spring-security-test:6.5.6"
+    testImplementation "org.springframework.security:spring-security-test:7.0.2"
     testImplementation "com.tngtech.archunit:archunit:1.4.1"
 
     // silence "unknown enum constant javax.annotation.meta.When.MAYBE" warning
