@@ -22,39 +22,16 @@ export class ConfigService {
     constructor(params: { settingsRepository: SettingsRepository }) {
         this.settingsRepository = params.settingsRepository;
         this.config = defaultConfig;
-        this.loadCachedConfig();
-        this.loadServerConfig();
+        this.getCachedConfig();
+        this.fetchConfig();
     }
 
     public getConfig(): Config {
         return this.config;
     }
 
-    private loadCachedConfig(): void {
-        try {
-            const cached = JSON.parse(localStorage.getItem('config') ?? '{}');
-            if (cached.menuTitle) {
-                this.config.menuTitle = cached.menuTitle;
-            }
-            if (cached.tabTitle) {
-                this.config.tabTitle = cached.tabTitle;
-            }
-            if (cached.supportEmail) {
-                this.config.supportEmail = cached.supportEmail;
-            }
-            if (cached.technicalSupportEmail) {
-                this.config.technicalSupportEmail = cached.technicalSupportEmail;
-            }
-        } catch (e) {
-            console.error('Failed to load cached config', e);
-        }
-    }
-
-    private cacheConfig(config: Config): void {
-        localStorage.setItem('config', JSON.stringify(config));
-    }
-
-    private async loadServerConfig(): Promise<void> {
+    private async fetchConfig(): Promise<void> {
+        console.log('📡 Fetching config');
         try {
             const serverConfig = await this.settingsRepository.readConfig();
             if (serverConfig.menuTitle) {
@@ -72,6 +49,30 @@ export class ConfigService {
             this.cacheConfig(this.config);
         } catch (e) {
             console.error('Failed to load server config', e);
+        }
+    }
+
+    private cacheConfig(config: Config): void {
+        localStorage.setItem('config', JSON.stringify(config));
+    }
+
+    private getCachedConfig(): void {
+        try {
+            const cached = JSON.parse(localStorage.getItem('config') ?? '{}');
+            if (cached.menuTitle) {
+                this.config.menuTitle = cached.menuTitle;
+            }
+            if (cached.tabTitle) {
+                this.config.tabTitle = cached.tabTitle;
+            }
+            if (cached.supportEmail) {
+                this.config.supportEmail = cached.supportEmail;
+            }
+            if (cached.technicalSupportEmail) {
+                this.config.technicalSupportEmail = cached.technicalSupportEmail;
+            }
+        } catch (e) {
+            console.error('Failed to load cached config', e);
         }
     }
 }

@@ -105,7 +105,7 @@ export function useCache<K extends string | number, T extends CacheableEntity<K>
     if (!cache) {
         console.log(`🚀 Initialising ${name} cache`);
         if (import.meta.env.VITE_USE_INDEXED_DB === 'true') {
-            cache = new IndexedDBRepository(useIndexedDb(), name, { invalidateOnReload: true });
+            cache = new IndexedDBRepository(useIndexedDb(), name, { invalidateOnReload: false });
         } else {
             cache = new InMemoryCache();
         }
