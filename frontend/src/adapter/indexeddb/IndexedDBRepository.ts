@@ -1,5 +1,5 @@
 import { deepCopy } from '@/common';
-import type { Cache, CacheableEntity } from '../Cache';
+import type { Cache, CacheableEntity } from '../../application/ports/Cache.ts';
 
 export interface CacheInvalidationOptions {
     invalidateOnReload: boolean;
@@ -12,7 +12,7 @@ export interface CacheInvalidationOptions {
  * ````typescript
  * const databaseName = 'example';
  * const storeNames = ['store-a', 'store-b', 'store-c'];
- * const database = IndexedDB.getConnection(databaseName, storeNames, 1);
+ * const database = getConnection(databaseName, storeNames, 1);
  * const cacheA = new IndexedDBRepository<string, TypeA>(database, 'store-a');
  * const cacheB = new IndexedDBRepository<string, TypeA>(database, 'store-b');
  * const cacheC = new IndexedDBRepository<string, TypeA>(database, 'store-c');

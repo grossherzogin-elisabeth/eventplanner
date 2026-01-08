@@ -1,4 +1,4 @@
-import type { Cache, CacheableEntity } from '../Cache';
+import type { Cache, CacheableEntity } from '@/application';
 
 export class InMemoryCache<K extends string | number, T extends CacheableEntity<K>> implements Cache<K, T> {
     private readonly items = new Map<K, T>();
