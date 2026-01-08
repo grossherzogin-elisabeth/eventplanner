@@ -44,7 +44,7 @@ export class AuthUseCase {
     }
 
     public async firstAuthentication(redirectPath?: string): Promise<string | undefined> {
-        if (!this.authentication) {
+        if (!this.authentication && !this.authService.getSignedInUser()) {
             this.authentication = this.authenticate(redirectPath);
             return this.authentication;
         }
