@@ -112,7 +112,6 @@ export function useUsersUseCase(): UsersUseCase {
             errorHandlingService: useErrorHandlingService(),
             notificationService: useNotificationService(),
             positionCachingService: usePositionCachingService(),
-            qualificationCachingService: useQualificationCachingService(),
             registrationService: useRegistrationService(),
             userCachingService: useUserCachingService(),
             userRepository: useUserRepository(),

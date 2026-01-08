@@ -42,12 +42,12 @@
     </VTable>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useUsersUseCase } from '@/application';
+import { computed } from 'vue';
 import { DateTimeFormat } from '@/common/date';
-import type { Qualification, QualificationKey, ResolvedUserQualification, UserDetails } from '@/domain';
+import type { ResolvedUserQualification, UserDetails } from '@/domain';
 import { useUserService } from '@/domain/services.ts';
 import { VTable } from '@/ui/components/common';
+import { useQualifications } from '@/ui/composables/Qualifications.ts';
 
 interface Props {
     user: UserDetails;
@@ -55,25 +55,13 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
-
-const qualifications = ref<Map<QualificationKey, Qualification> | undefined>(undefined);
+const qualifications = useQualifications();
 
 const userQualifications = computed<ResolvedUserQualification[] | undefined>(() => {
-    if (qualifications.value === undefined) {
+    if (qualifications.map.value === undefined) {
         return undefined;
     }
-    return usersService.resolveQualifications(props.user, qualifications.value);
+    return usersService.resolveQualifications(props.user, qualifications.map.value);
 });
-
-function init(): void {
-    fetchQualifications();
-}
-
-async function fetchQualifications(): Promise<void> {
-    qualifications.value = await usersUseCase.resolveQualifications();
-}
-
-init();
 </script>
