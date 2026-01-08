@@ -67,25 +67,27 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
     router.beforeResolve(async (to, _, next) => {
         const meta = to.meta as RouteMetaData | undefined;
         // if there is a pending redirect from pre login, restore the wanted page first
-        const redirect = authUseCase.getPendingRedirect();
+        const redirect = localStorage.getItem('login-redirect');
         if (redirect && to.fullPath === '/') {
-            authUseCase.clearPendingRedirect();
+            localStorage.removeItem('login-redirect');
             next({ path: redirect });
             return;
         }
 
-        // authentication guard
+        // authentication and authorization guard
         if (meta?.authenticated) {
-            const user = await authUseCase.authenticate(to.fullPath);
-            if (!user) {
+            try {
+                const user = await authUseCase.authenticate();
+                if (meta?.permissions && !hasAnyOverlap(meta.permissions, user.permissions)) {
+                    console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
+                    next({ path: '/' });
+                    return;
+                }
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (e) {
                 console.warn(`🛤️ Login required for route '${String(to.name)}'!`);
+                localStorage.setItem('login-redirect', to.fullPath);
                 next({ path: '/login' });
-                return;
-            }
-            // permission guard
-            if (meta?.permissions && !hasAnyOverlap(meta.permissions, user.permissions)) {
-                console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
-                next({ path: '/' });
                 return;
             }
         }

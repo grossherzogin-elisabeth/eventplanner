@@ -93,7 +93,7 @@ describe('router', () => {
         it('should block access to authenticated route ', async () => {
             await router.push({ name: mockedAuthenticatedRoute.name });
             expect(router.currentRoute.value.name).toEqual(Routes.Login);
-            expect(localStorage.getItem('auth.redirect')).toEqual(mockedAuthenticatedRoute.path);
+            expect(localStorage.getItem('login-redirect')).toEqual(mockedAuthenticatedRoute.path);
         });
     });
 
@@ -119,8 +119,20 @@ describe('router', () => {
         });
 
         it('should redirect to pre login page ', async () => {
-            localStorage.setItem('auth.redirect', mockedAuthenticatedRoute.path);
+            localStorage.setItem('login-redirect', mockedAuthenticatedRoute.path);
             await router.push('/');
+            expect(router.currentRoute.value.name).toEqual(mockedAuthenticatedRoute.name);
+        });
+    });
+
+    describe('offline access', () => {
+        beforeEach(() => {
+            localStorage.setItem('user', JSON.stringify(mockSignedInUser({ permissions: [Permission.READ_EVENTS] })));
+            server.use(http.get('/api/v1/account', () => HttpResponse.error()));
+        });
+
+        it('should allow access to authenticated page ', async () => {
+            await router.push({ name: mockedAuthenticatedRoute.name });
             expect(router.currentRoute.value.name).toEqual(mockedAuthenticatedRoute.name);
         });
     });
