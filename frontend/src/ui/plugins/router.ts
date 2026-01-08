@@ -21,11 +21,11 @@ window.history.pushState = new Proxy(window.history.pushState, {
 
 export function saveScrollPosition(path: string = window.location.pathname): void {
     try {
-        const state: SavedRouteState = JSON.parse(localStorage.getItem(path) || '{}');
+        const state: SavedRouteState = JSON.parse(sessionStorage.getItem(path) || '{}');
         const routerView = document.getElementById('router-view');
         state.scrollY = routerView?.scrollTop || window.scrollY;
         state.scrollX = routerView?.scrollLeft || window.scrollX;
-        localStorage.setItem(path, JSON.stringify(state));
+        sessionStorage.setItem(path, JSON.stringify(state));
     } catch (e) {
         console.error(e);
     }
@@ -34,7 +34,7 @@ export function saveScrollPosition(path: string = window.location.pathname): voi
 export function restoreScrollPosition(path: string = window.location.pathname): void {
     if (isBackNavigation) {
         try {
-            const state = JSON.parse(localStorage.getItem(path) || '{}');
+            const state = JSON.parse(sessionStorage.getItem(path) || '{}');
             const routerView = document.getElementById('router-view');
             routerView?.scrollTo({
                 top: state.scrollY,
