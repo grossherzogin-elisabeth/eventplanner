@@ -67,7 +67,7 @@
                             label="Anreise am"
                             :errors="validation.errors.value['arrival']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="Am ersten Tag der Reise"
+                            placeholder="Am ersten Tag der Veranstaltung"
                         />
                     </div>
                     <template v-if="selectedUser !== undefined">
@@ -79,7 +79,7 @@
                             <i>{{ selectedPosition?.name }}</i>
                         </VWarning>
                         <VWarning v-if="expiredQualifications.length > 0" class="my-4">
-                            Die folgenden Qualificationen sind abgelaufen oder laufen vor Ende der Reise ab:
+                            Die folgenden Qualificationen sind abgelaufen oder laufen vor Ende der Veranstaltung ab:
                             <ul class="mt-2 ml-4 list-disc">
                                 <li v-for="quali in expiredQualifications" :key="quali">{{ quali }}</li>
                             </ul>

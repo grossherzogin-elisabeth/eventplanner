@@ -10,36 +10,36 @@ events:
   confirm-participation:
     title: 'Bitte bestätige deine Teilnahme'
     info:
-      message: 'In {days} Tagen startet die Reise {event}, bei der du als Crew eingeplant bist. Bitte bestätige deine Teilnahme bis {deadline}, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden.'
-      deadline: 'spätestens 7 Tage vor Reisebeginn'
+      message: 'In {days} Tagen startet die Veranstaltung {event}, bei der du als Crew eingeplant bist. Bitte bestätige deine Teilnahme bis {deadline}, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden.'
+      deadline: 'spätestens 7 Tage vor Veranstaltungsbeginn'
     confirm: 'Ja, ich nehme teil'
     decline: 'Ich muss leider absagen'
     not-found:
       title: 'Anmeldung nicht gefunden'
-      info: 'Wir konnten keine Anmeldung für diesen Link finden. Das kann daran liegen, dass du die Reise bereits abgesagt hast, oder dein Link ungültig ist. Falls du bereits abgesagt hast, aber doch an der Reise teilnehmen möchtest, oder du Probleme mit der Teilnahmebestätigung hast, melde dich bitte telefonisch im Büro.'
+      info: 'Wir konnten keine Anmeldung für diesen Link finden. Das kann daran liegen, dass du deine Teilnahme bereits abgesagt hast, oder dein Link ungültig ist. Falls du Probleme mit der Teilnahmebestätigung hast oder doch an der Veranstaltung teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
     canceled:
       title: 'Anmeldung wurde bereits abgesagt'
-      info: 'Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der Crew Liste. Falls du doch an der Reise teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
+      info: 'Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der Crewliste. Falls du doch an der Veranstaltung teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
     no-registration:
-      title: 'Keine Anmeldung zur Reise gefunden'
-      info: 'Leider konnten wir für dich keine Anmeldung zu dieser Reise finden. Das kann daran liegen, dass du deine Teilnahme bereits abgesagt hast, oder das du dich mit einem anderen Account angemeldet hast. Wenn du bereits abgesagt hast und doch teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
+      title: 'Anmeldung nicht gefunden'
+      info: 'Wir haben überall gesucht, konnten für dich aber keine Anmeldung zu dieser Verantstaltung finden. Das kann daran liegen, dass du deine Teilnahme abgesagt hast, oder das du dich mit einem anderen Account angemeldet hast. Wenn du bereits abgesagt hast und doch teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
     invalid-link:
       title: 'Ungültiger Link'
-      info: 'Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder gehört zu einem anderen Nutzer. Du kannst nur die Teilname an deinen eigenen Reisen bestätigen. Bitte überprüfe, ob die Email Adresse deines Accounts, mit dem du dich angemeldet hast mit der Email Adresse übereinstimmt, über die du diesen Link erhalten hast. Wenn du weiterhin Probleme bei der Bestätigung der Reise hast, melde dich gerne telefonisch im Büro.'
+      info: 'Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder gehört zu einem anderen Nutzer. Du kannst nur deine eigenen Teilnamen bestätigen. Bitte überprüfe, ob die Email Adresse des Accounts, mit dem du dich angemeldet hast mit der Email Adresse übereinstimmt, über die du diesen Link erhalten hast. Wenn du weiterhin Probleme bei der Bestätigung hast, melde dich gerne telefonisch im Büro.'
     confirmed:
       title: 'Teilnahme bestätigt'
-      info: 'Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Reise wurde als bestätigt markiert. Bitte denk daran, deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!'
+      info: 'Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Veranstaltung wurde als bestätigt markiert. Bitte denk daran, deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!'
     details:
-      title: 'Hier noch einmal die wichtigsten Details zur Reise:'
+      title: 'Hier noch einmal die wichtigsten Details zur Veranstaltung:'
     canceled-now:
-      title: 'Reise abgesagt'
-      info: 'Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Reise wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.'
-    event: 'Reise'
+      title: 'Teilnahme storniert'
+      info: 'Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Veranstaltung wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.'
+    event: 'Veranstaltung'
     route: 'Geplante Route'
     crew-on-board: 'Crew an Bord'
-    start: 'Reisebeginn'
+    start: 'Veranstaltungsbeginn'
   details:
-    info-planning: 'Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Reise! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.'
+    info-planning: 'Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Veranstaltung! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.'
     info-canceled: 'Diese Veranstaltung wurde abgesagt!'
     info-assigned: 'Du bist für diese Veranstaltung als {position} eingeplant.'
     info-confirmed: 'Du hast deine Teilnahme bestätigt.'
@@ -78,9 +78,9 @@ events:
       delete-slot: 'Crewslot löschen'
       edit-slot: 'Crewslot bearbeiten'
       duplicate-slot: 'Crewslot duplizieren'
-      add-location: 'Reiseabschnitt hinzufügen'
-      delete-location: 'Reiseabschnitt löschen'
-      edit-location: 'Reiseabschnitt bearbeiten'
+      add-location: 'Routenabschnitt hinzufügen'
+      delete-location: 'Routenabschnitt löschen'
+      edit-location: 'Routenabschnitt bearbeiten'
       edit-start-location: 'Starthafen bearbeiten'
       delete-eta: 'ETA löschen'
       delete-etd: 'ETD löschen'
@@ -101,7 +101,7 @@ events:
     info-draft: 'Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen 
       freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen und auch bereits eine Crew planen.'
     info-canceled: 'Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage 
-      im Tab Reisedaten zurücknehmen.'
+      im Tab Veranstaltungsdaten zurücknehmen, solange die Veranstaltung nicht gelöscht wird.'
     info-signup: 'Die Crewplanung für diese Veranstaltung wurde noch nicht freigegeben. Crew Zuweisungen sind darum nur
       für Nutzer mit der Berechtigung zur Crewplanung sichtbar. Wenn du mit der Crewplanung fertig bist kannst du die 
       Crewplanung veröffentlichen, um die zugewiesene Crew zu informieren.'
@@ -113,9 +113,9 @@ events:
        verworfen. Möchtest du fortfahren?'
     tab:
       registrations: 'Anmeldungen'
-      data: 'Reisedaten'
+      data: 'Veranstaltungsdaten'
       crew: 'Crewplanung'
-      locations: 'Reiseroute'
+      locations: 'Route'
       slots: 'Slots'
     tooltip:
       positions: 'Positionen'
@@ -131,7 +131,7 @@ events:
       no-qualification: '{name} hat keine Qualifikation für die Position {position}'
       guest-warning: '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft
        werden.'
-      qualifications: '{name} hat zum Zeitpunkt der Reise die folgenden Qualifikationen:'
+      qualifications: '{name} hat zum Zeitpunkt der Veranstaltung die folgenden Qualifikationen:'
       select-position: 'Bitte wähle eine Position'
       select-user: 'Bitte wähle eine Stammcrew Mitglied'
     registration-id: 'Anmeldungs ID'
@@ -140,7 +140,7 @@ events:
     tab:
       future: 'Zukünftige'
     note-no-position: 'Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht
-        selber für Reisen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.'
+        selber für Veranstaltungen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.'
     filter:
       search: 'Einträge filtern'
       all-types: 'Alle Veranstaltungen'
@@ -157,7 +157,7 @@ events:
       assigned: 'Eingeplant'
       waitinglist: 'Warteliste'
     action:
-      link-event-details: 'Reise anzeigen'
+      link-event-details: 'Veranstaltung anzeigen'
       create-calendar-entry: 'Kalendereintrag erstellen'
       signup: 'Anmelden'
       cancel: 'Teilnahme absagen'
@@ -165,7 +165,7 @@ events:
   admin-list:
     tab:
       future: 'Zukünftige'
-    tab-title: 'Reisen verwalten'
+    tab-title: 'Veranstaltungen verwalten'
     filter:
       search: 'Einträge filtern'
       all-events: 'Alle Veranstaltungen'
@@ -176,43 +176,43 @@ events:
     table:
       day-count: '{count} Tag | {count} Tage'
       team: 'Crew'
-      no-route: 'keine Reiseroute angegeben'
+      no-route: 'keine Rroute angegeben'
     state:
       missing-crew: 'Noch zu besetzende Slots'
       free-slots-for: 'Freie Plätze für'
     action:
       add-event: 'Hinzufügen'
       export: 'Export'
-      show-event: 'Reise anzeigen'
-      edit-event: 'Reise bearbeiten'
+      show-event: 'Veranstaltung anzeigen'
+      edit-event: 'Veranstaltung bearbeiten'
       exportToTemplate: '{template} exportieren'
       add-registration: 'Anmeldung hinzufügen'
       open-signup: 'Anmeldungen freischalten'
       publish-crew: 'Crew veröffentlichen'
       request-more-crew: 'Weitere Crew anfragen*'
       contact-crew: 'Crew kontaktieren ({count} Pers.)'
-      delete-event: 'Reise löschen'
-      cancel-event: 'Reise absagen'
-      create-event: 'Reise erstellen'
+      delete-event: 'Veranstaltung löschen'
+      cancel-event: 'Veranstaltung absagen'
+      create-event: 'Veranstaltung erstellen'
     dialog:
       delete:
-        title: 'Reise löschen'
-        message: 'Bist du sicher, dass du die Reise {name} löschen möchtest? Diese Aktion kann später nicht rückgängig gemacht werden.'
+        title: 'Veranstaltung löschen'
+        message: 'Bist du sicher, dass du die Veranstaltung {name} löschen möchtest? Diese Aktion kann später nicht rückgängig gemacht werden.'
         submit: 'Unwiederruflich löschen'
       open-signup:
         title: 'Anmeldungen freigeben'
-        message: 'Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status "Entwurf" ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crew Anmeldung" ändern?'
+        message: 'Unter den ausgewählten Veranstaltungen ist mindestens eine, die nicht im Status "Entwurf" ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crew Anmeldung" ändern?'
         cancel: 'Nein, nur die Entwürfe'
         submit: 'Ja, alle ändern'
       publish-crew:
         title: 'Crew veröffentlichen'
-        message: 'Unter den ausgewählten Reisen ist mindestens eine, die nicht im Status "Crew Anmeldung" ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crewplanung veröffentlicht" ändern?'
+        message: 'Unter den ausgewählten Veranstaltungen ist mindestens eine, die nicht im Status "Crew Anmeldung" ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crewplanung veröffentlicht" ändern?'
         cancel: 'Nein, nur die in Anmeldung'
         submit: 'Ja, alle ändern'
     batch-edit:
       title: 'Alle bearbeiten'
-      info: 'Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle Reisen übernommen.'
+      info: 'Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle Veranstaltungen übernommen.'
       copy-slots-from: 'Slots kopieren von'
-      copy-slots-warning: 'Bereits geplante Crews werden durch das überschreiben der Slots für alle ausgewählten Reisen zurückgesetzt. Du musst dann alle Crews händisch erneut planen.'
+      copy-slots-warning: 'Bereits geplante Crews werden durch das überschreiben der Slots für alle ausgewählten Veranstaltungen zurückgesetzt. Du musst dann alle Crews händisch erneut planen.'
       not-changed: 'nicht geändert'
       dont-change-slots: 'Slots nicht ändern'

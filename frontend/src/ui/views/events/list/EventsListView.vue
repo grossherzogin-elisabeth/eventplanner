@@ -395,7 +395,7 @@ const tabs = computed<InputSelectOption[]>(() => {
 });
 
 async function init(): Promise<void> {
-    emit('update:tab-title', 'Alle Reisen');
+    emit('update:tab-title', 'Alle Veranstaltungen');
     watch(tab, () => fetchEvents());
     await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();

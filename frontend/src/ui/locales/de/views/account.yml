@@ -9,7 +9,7 @@ account:
     settings: 'App Einstellungen'
   personal:
     title: 'Persönliche Daten'
-    passport-info: 'Bitte beachte, dass du dein eingetragenes Ausweisdokument auf allen Reisen mitführen musst!'
+    passport-info: 'Bitte beachte, dass du dein eingetragenes Ausweisdokument bei allen Reisen mitführen musst!'
     name-description: 'Dein Name, wie hier angegeben, muss genau so auch auf deinem Ausweisdokument 
         stehen, da dieser zum Erstellen der offiziellen Crew Liste verwendet wird. Solltest du mit einem anderen 
         Namen angesprochen werden wollen, kannst du einen Anzeigenamen für die App vergeben.'
@@ -42,9 +42,9 @@ account:
     title: 'Notfall Informationen'
     emergency-contact-description: 'Im Notfall zählt jede Sekunde. Hier kannst du eine Person hinterlegen, die wir im Falle eines medizinischen
         Notfalls oder einer anderen dringenden Situation kontaktieren können. Bitte gib Namen und Telefonnummer der Person an.'
-    diseases-description: 'Sollte während einer Reise etwas passieren, kann es wichtig sein, dass jemand an Bord über
+    diseases-description: 'Sollte während einer Veranstaltung etwas passieren, kann es wichtig sein, dass jemand an Bord über
         eventuelle Krankheiten informiert ist, die besondere Behandlungen erfordern.'
-    medication-description: 'Wenn auf einer Reise mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, welche Medikamente 
+    medication-description: 'Wenn auf einer Veranstaltung mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, welche Medikamente 
         du benötigst.'
     click-to-show: '[zum Ansehen klicken]'
     privacy: 'Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für

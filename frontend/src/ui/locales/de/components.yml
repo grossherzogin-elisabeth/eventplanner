@@ -10,7 +10,7 @@ components:
     waitinglist: '{count} Warteliste | {count} Warteliste'
   event-locations-card:
     title: 'Ort | Route'
-    placeholder: 'Für diese Reise wurde noch keine Reiseroute bekannt gegeben. Sobald diese Informationen verfügbar
+    placeholder: 'Für diese Veranstaltung wurde noch keine Route bekannt gegeben. Sobald diese Informationen verfügbar
         sind, kannst du sie hier sehen.'
     eta: 'Ankunft:'
     etd: 'Abfahrt:'
@@ -23,17 +23,19 @@ components:
     placeholder-title: 'Du könntest den Anfang machen!'
     placeholder-title-m: 'Du könntest der Erste sein!'
     placeholder-title-f: 'Du könntest die Erste sein!'
-    placeholder: 'Für diese Reise hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich
-        anmelden. Alle Anmeldungen werden zuerst auf der Warteliste gesammelt und anschließend wird vom Büro eine
-        Crew zusammengestellt.'
+    placeholder: 'Für diese Veranstaltung hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich
+        anmelden.'
+    placeholder-waiting-list-hint: 'Alle Anmeldungen werden zuerst auf der Warteliste gesammelt. Anschließend wird aus 
+        diesen Anmeldungen eine Crew zusammengestellt. Wenn du zur Crew hinzugefügt wirst, benachrichtigen wir dich per 
+        Email darüber.'
     unknown: 'Unbekannter Nutzer'
     empty: 'Noch nicht besetzt'
-    no-registrations: 'Für diese Reise gibt es noch keine Anmeldungen.'
-    no-waitinglist: 'Für diese Reise gibt es aktuell keine Anmeldungen auf der Warteliste.'
+    no-registrations: 'Für diese Veranstaltung gibt es noch keine Anmeldungen.'
+    no-waitinglist: 'Für diese Veranstaltung gibt es aktuell keine Warteliste.'
   event-details-sheet:
-    note-missing-crew: 'Für diese Reise wird noch Crew für die folgenden Positionen gesucht:'
-    note-assigned: 'Du bist für diese Reise als {0} eingeplant'
-    note-on-waiting-list: 'Du stehst für diese Reise als {0} auf der Warteliste'
+    note-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht:'
+    note-assigned: 'Du bist für diese Veranstaltung als {0} eingeplant'
+    note-on-waiting-list: 'Du stehst für diese Veranstaltung als {0} auf der Warteliste'
     show-details: 'Details anzeigen'
   error-dialog:
     retry: 'Erneut versuchen'

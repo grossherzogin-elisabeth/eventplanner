@@ -51,11 +51,11 @@ generic:
     '11': 'Dez'
   role:
     ROLE_ADMIN: 'Admin'
-    ROLE_EVENT_PLANNER: 'Reiseplaner:in'
-    ROLE_EVENT_LEADER: 'Reiseleiter:in'
+    ROLE_EVENT_PLANNER: 'Veranstaltungsplaner:in'
+    ROLE_EVENT_LEADER: 'Veranstaltungsleiter:in'
     ROLE_TEAM_PLANNER: 'Crewplaner:in'
     ROLE_USER_MANAGER: 'Nutzerverwalter:in'
-    ROLE_TEAM_MEMBER: 'Stammcrew Mitglied'
+    ROLE_TEAM_MEMBER: 'Stammcrewmitglied'
   event-state:
     draft: 'Entwurf'
     open-for-signup: 'Crew Anmeldung'

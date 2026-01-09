@@ -32,6 +32,9 @@
                     </h3>
                     <p class="text-sm">
                         {{ $t('components.event-participants-card.placeholder') }}
+                        <template v-if="event.signupType === EventSignupType.Assignment">
+                            {{ $t('components.event-participants-card.placeholder-waiting-list-hint') }}
+                        </template>
                     </p>
                 </div>
             </div>

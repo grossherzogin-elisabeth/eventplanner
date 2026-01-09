@@ -12,7 +12,7 @@ users:
       data: 'Stammdaten'
       contact: 'Kontakt'
       certificates: 'Qualifikationen'
-      events: 'Reisen'
+      events: 'Veranstaltungen'
       roles: 'Anwendungsrollen'
       emergency: 'Notfallinformationen'
       other: 'Sonstige Daten'

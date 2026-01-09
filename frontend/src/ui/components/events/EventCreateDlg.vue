@@ -1,6 +1,6 @@
 <template>
     <VDialog ref="dlg" data-test-id="event-create-dialog">
-        <template #title>Neue Reise erstellen</template>
+        <template #title>Neue Veranstaltung erstellen</template>
         <template #default>
             <div class="px-4 pt-4 sm:px-8 lg:px-10">
                 <section>
@@ -11,7 +11,7 @@
                             :label="$t('domain.event.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="Titel der Reise"
+                            placeholder="Titel der Veranstaltung"
                             required
                         />
                     </div>

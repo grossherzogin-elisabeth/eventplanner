@@ -51,7 +51,7 @@
                         class="context-menu-item"
                     >
                         <i class="fa-solid fa-search" />
-                        <span>Reise anzeigen</span>
+                        <span>Veranstaltung anzeigen</span>
                     </RouterLink>
                 </li>
                 <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)">
@@ -63,7 +63,7 @@
                         class="context-menu-item"
                     >
                         <i class="fa-solid fa-drafting-compass" />
-                        <span>Reise bearbeiten</span>
+                        <span>Veranstaltung bearbeiten</span>
                     </RouterLink>
                 </li>
                 <li v-if="!item.inPast && item.waitingList" class="context-menu-item" @click="addUserToCrew(item)">
@@ -202,7 +202,7 @@ async function addUserToCrew(item: EventTableViewItem): Promise<void> {
     try {
         let event = props.events?.find((it) => it.key === item.eventKey);
         if (!event) {
-            throw new Error('Reise konnte nicht gefunden werden');
+            throw new Error('Veranstaltung konnte nicht gefunden werden');
         }
         const slot = eventService.getOpenSlots(event).find((it) => it.positionKeys.includes(item.position.key));
         if (slot) {
@@ -211,7 +211,7 @@ async function addUserToCrew(item: EventTableViewItem): Promise<void> {
             item.crewCount = item.crewCount + 1;
             item.waitingListCount = item.waitingListCount - 1;
         } else {
-            throw new Error(`Die Reise hat keinen passenden freien Slot für die Position ${item.positionName}`);
+            throw new Error(`Die Veranstaltung hat keinen passenden freien Slot für die Position ${item.positionName}`);
         }
     } catch (e) {
         errorHandling.handleRawError(e);
@@ -222,7 +222,7 @@ async function deleteRegistration(item: EventTableViewItem): Promise<void> {
     try {
         let event = props.events?.find((it) => it.key === item.eventKey);
         if (!event) {
-            throw new Error('Reise konnte nicht gefunden werden');
+            throw new Error('Veranstaltung konnte nicht gefunden werden');
         }
         event = eventService.cancelUserRegistration(event, props.user.key);
         await eventAdministrationUseCase.updateEvent(event.key, event);

@@ -5,14 +5,15 @@
             <div class="px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-4 text-sm">
-                        Du hast die Qualifikation für mehrere Positionen. Mit welcher Position möchtest du dich für diese Reise anmelden?
+                        Du hast die Qualifikation für mehrere Positionen. Mit welcher Position möchtest du dich für diese Veranstaltung
+                        anmelden?
                     </p>
                     <div class="mb-8">
                         <VInputSelect v-model="position" label="Position" :options="availablePositions" required />
                     </div>
                     <p class="mb-4 text-sm">
-                        Du kannst die ausgewählte Position als Standard festlegen, um dich für weitere Reisen noch einfacher anmelden zu
-                        können.
+                        Du kannst die ausgewählte Position als Standard festlegen, um dich für weitere Veranstaltungen noch einfacher
+                        anmelden zu können.
                     </p>
                 </section>
                 <div class="mb-4">
