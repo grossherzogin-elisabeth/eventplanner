@@ -1,36 +1,38 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
-            <NavbarFilter
-                v-if="tab === Tab.QUALIFICATIONS"
-                v-model="qualificationFilter"
-                :placeholder="$t('views.basedata.tab.qualifications.search-placeholder')"
-            />
-            <NavbarFilter
-                v-else-if="tab === Tab.POSITIONS"
-                v-model="positionsFilter"
-                :placeholder="$t('views.basedata.tab.positions.search-placeholder')"
-            />
+            <div class="h-full lg:hidden">
+                <NavbarFilter
+                    v-if="tab === Tab.QUALIFICATIONS"
+                    v-model="qualificationFilter"
+                    :placeholder="$t('views.basedata.tab.qualifications.search-placeholder')"
+                />
+                <NavbarFilter
+                    v-else-if="tab === Tab.POSITIONS"
+                    v-model="positionsFilter"
+                    :placeholder="$t('views.basedata.tab.positions.search-placeholder')"
+                />
+            </div>
         </teleport>
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
-                <div v-if="tab === Tab.QUALIFICATIONS" class="flex items-stretch gap-2 pb-2">
-                    <div class="hidden 2xl:block">
-                        <button class="btn-primary" name="create" @click="createQualification()">
+                <div v-if="tab === Tab.QUALIFICATIONS" class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
+                    <div class="permission-write-qualifications hidden 2xl:block">
+                        <button class="btn-primary ml-2" name="create" @click="createQualification()">
                             <i class="fa-solid fa-file-circle-plus"></i>
                             <span>{{ $t('views.basedata.tab.qualifications.add-new') }}</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="qualificationFilter" :placeholder="$t('generic.filter-entries')" class="w-48" />
+                    <VSearchButton v-model="qualificationFilter" :placeholder="$t('generic.filter-entries')" />
                 </div>
-                <div v-else-if="tab === Tab.POSITIONS" class="flex items-stretch gap-2 pb-2">
-                    <div class="hidden 2xl:block">
-                        <button class="btn-primary" name="create" @click="createPosition()">
+                <div v-else-if="tab === Tab.POSITIONS" class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
+                    <div class="permission-write-position hidden 2xl:block">
+                        <button class="btn-primary ml-2" name="create" @click="createPosition()">
                             <i class="fa-solid fa-file-circle-plus"></i>
                             <span>{{ $t('views.basedata.tab.positions.add-new') }}</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="positionsFilter" :placeholder="$t('generic.filter-entries')" class="w-48" />
+                    <VSearchButton v-model="positionsFilter" :placeholder="$t('generic.filter-entries')" />
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
