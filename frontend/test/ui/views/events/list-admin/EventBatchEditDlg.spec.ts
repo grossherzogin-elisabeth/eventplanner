@@ -21,12 +21,15 @@ describe('EventBatchEditDlg.vue', () => {
 
     beforeEach(async () => {
         result = undefined;
-        testee = mount(EventBatchEditDlg, { global: { stubs: { teleport: true } } });
-        updateFunc = vi.spyOn(useEventAdministrationUseCase(), 'updateEvents');
         const eventA = mockEvent({ key: 'a' });
         const eventB = mockEvent({ key: 'b' });
         server.use(http.get('api/v1/events/a', () => HttpResponse.json(eventA, { status: 200 })));
         server.use(http.get('api/v1/events/b', () => HttpResponse.json(eventB, { status: 200 })));
+        server.use(http.get('api/v1/events', () => HttpResponse.json([eventA, eventB], { status: 200 })));
+        updateFunc = vi.spyOn(useEventAdministrationUseCase(), 'updateEvents');
+
+        testee = mount(EventBatchEditDlg, { global: { stubs: { teleport: true } } });
+
         await open([eventA, eventB]);
     });
 

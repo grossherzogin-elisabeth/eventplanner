@@ -5,13 +5,14 @@ import { mockRegistrations } from './mockRegistration.ts';
 import { mockSlots } from './mockSlot.ts';
 
 export function mockEvent(overwrite?: Partial<Event>): Event {
+    const year = new Date().getFullYear();
     const event: Event = {
         key: 'example-event',
         type: EventType.WeekendEvent,
         name: 'Example Event',
         description: 'This is a mocked event',
-        start: new Date('2024-07-10T09:00:00Z'),
-        end: new Date('2024-07-12T17:00:00Z'),
+        start: new Date(`${year}-07-10T09:00:00Z`),
+        end: new Date(`${year}-07-12T17:00:00Z`),
         state: EventState.Planned,
         signupType: EventSignupType.Assignment,
         registrations: mockRegistrations(),

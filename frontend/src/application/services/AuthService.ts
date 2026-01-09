@@ -7,6 +7,10 @@ export class AuthService {
     private signedInUser: SignedInUser | undefined = undefined;
     private impersonating: UserDetails | null = null;
 
+    constructor() {
+        this.signedInUser = this.loadCachedSignedInUser();
+    }
+
     public getSignedInUser(): SignedInUser | undefined {
         if (this.signedInUser && this.impersonating) {
             return {
@@ -29,6 +33,7 @@ export class AuthService {
                 signedInUser.permissions.push(Permission.BETA_FEATURES);
             }
             this.signedInUser = signedInUser;
+            this.cacheSignedInUser(signedInUser);
             this.loginListeners.forEach((cb) => cb());
         } else {
             this.signedInUser = undefined;
@@ -60,5 +65,22 @@ export class AuthService {
 
     public impersonate(user: UserDetails | null): void {
         this.impersonating = user;
+    }
+
+    private cacheSignedInUser(signedInUser: SignedInUser): void {
+        localStorage.setItem('user', JSON.stringify(signedInUser));
+    }
+
+    private loadCachedSignedInUser(): SignedInUser | undefined {
+        const json = localStorage.getItem('user');
+        if (!json) {
+            return undefined;
+        }
+        try {
+            return JSON.parse(json);
+        } catch (e) {
+            // expected
+            return undefined;
+        }
     }
 }
