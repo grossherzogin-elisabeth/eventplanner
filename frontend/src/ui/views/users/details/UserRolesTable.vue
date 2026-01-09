@@ -37,6 +37,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { UserDetails } from '@/domain';
 import { Role } from '@/domain';
 import { VTable } from '@/ui/components/common';
@@ -58,45 +59,48 @@ interface RoleTableEntry {
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
+const { t } = useI18n();
+
 const roles = ref<RoleTableEntry[]>([
     {
         role: Role.TEAM_MEMBER,
-        name: 'Stammcrewmitglied',
+        name: t('generic.role.TEAM_MEMBER'),
         icon: 'fa-sailboat',
-        description: 'Der Nutzer kann sich eigenständig zu Reisen an- und abmelden und alle Reisen sowie verknüpfte andere Nutzer sehen',
+        description:
+            'Der Nutzer kann sich eigenständig zu Veranstaltungen an- und abmelden und alle Veranstaltungen sowie verknüpfte andere Nutzer sehen',
         enabled: false,
     },
     {
         role: Role.EVENT_PLANNER,
-        name: 'Reiseplaner:in',
+        name: t('generic.role.ROLE_EVENT_PLANNER'),
         icon: 'fa-map',
-        description: 'Der Nutzer kann Reisen bearbeiten und neue Reisen erstellen.',
+        description: 'Der Nutzer kann Veranstaltungen bearbeiten und neue Veranstaltungen einstellen.',
         enabled: false,
     },
     {
         role: Role.TEAM_PLANNER,
-        name: 'Crewplaner:in',
+        name: t('generic.role.TEAM_PLANNER'),
         icon: 'fa-compass-drafting',
-        description: 'Der Nutzer kann die Crew einer Reise bearbeiten',
+        description: 'Der Nutzer kann die Crew einer Veranstaltung bearbeiten',
         enabled: false,
     },
     {
         role: Role.USER_MANAGER,
-        name: 'Nutzerverwalter:in',
+        name: t('generic.role.USER_MANAGER'),
         icon: 'fa-people-group',
         description: 'Der Nutzer kann Nutzer bearbeiten, Qualifikationen pflegen und neue Nutzer erstellen',
         enabled: false,
     },
     {
         role: Role.EVENT_LEADER,
-        name: 'Reiseleiter:in',
+        name: t('generic.role.EVENT_LEADER'),
         icon: 'fa-life-ring',
-        description: 'Der Nutzer kann die aktuelle Reise bearbeiten um Last-Minute Änderungen an der Crewliste vornehmen zu können',
+        description: 'Der Nutzer kann die aktuelle Veranstaltung bearbeiten um Last-Minute Änderungen an der Crewliste vornehmen zu können',
         enabled: false,
     },
     {
         role: Role.ADMIN,
-        name: 'Admin',
+        name: t('generic.role.ADMIN'),
         icon: 'fa-wand-magic-sparkles',
         description: 'Der Nutzer kann alle Funktionen der App vollumfänglich nutzen und darf alle Daten sehen und bearbeiten',
         enabled: false,

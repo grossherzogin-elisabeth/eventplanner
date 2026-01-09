@@ -101,7 +101,7 @@ export class EventUseCase {
             }
             this.errorHandlingService.handleError({
                 title: '404 - nicht gefunden',
-                message: 'Die angefragte Reise gibt es nicht, oder sie ist nicht sichtbar.',
+                message: 'Die angefragte Veranstaltung gibt es nicht, oder sie ist nicht sichtbar.',
             });
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
@@ -242,7 +242,7 @@ export class EventUseCase {
                 this.errorHandlingService.handleError({
                     title: 'Absage über die App nicht möglich',
                     message: `
-                            Mindestens eine Reise kann nicht mehr über die App abgesagt werden, da sie in weniger als 7
+                            Mindestens eine Veranstaltung kann nicht mehr über die App abgesagt werden, da sie in weniger als 7
                             Tagen starten wird. Bitte melde dich im Büro ab und versuche kurzfristige Absagen soweit möglich
                             zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.
                         `,
@@ -250,7 +250,7 @@ export class EventUseCase {
                 return;
             }
             await Promise.all(events.map((event) => this.leaveEventInternal(event)));
-            this.notificationService.success('Deine Teilnahme an den ausgewählten Reisen wurde storniert');
+            this.notificationService.success('Deine Teilnahme an den ausgewählten Veranstaltungen wurde storniert');
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;
@@ -265,7 +265,7 @@ export class EventUseCase {
                     .filter((event) => !event.isSignedInUserAssigned)
                     .map((event) => this.leaveEventInternal(event))
             );
-            this.notificationService.success('Du stehst für die ausgewählten Reisen nicht mehr auf der Warteliste');
+            this.notificationService.success('Du stehst für die ausgewählten Veranstaltungen nicht mehr auf der Warteliste');
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;
@@ -283,7 +283,7 @@ export class EventUseCase {
                 this.errorHandlingService.handleError({
                     title: 'Absage über die App nicht möglich',
                     message: `
-                        Du kannst diese Reise nicht mehr über die App absagen, da sie in weniger als 7 Tagen starten
+                        Du kannst diese Veranstaltung nicht mehr über die App absagen, da sie in weniger als 7 Tagen starten
                         wird. Bitte melde dich im Büro ab und versuche kurzfristige Absagen soweit möglich zu vermeiden,
                         da es dann schwierig ist noch einen Ersatz für dich zu finden.
                     `,

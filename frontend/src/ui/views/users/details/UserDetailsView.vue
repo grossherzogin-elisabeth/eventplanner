@@ -18,8 +18,8 @@
                         <div class="xl:max-w-5xl">
                             <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`">
                                 <h2 class="text-secondary mb-4 font-bold">
-                                    <template v-if="year === 0">Zukünftige Reisen</template>
-                                    <template v-else>Reisen {{ year }}</template>
+                                    <template v-if="year === 0">Zukünftige Veranstaltungen</template>
+                                    <template v-else>Veranstaltungen {{ year }}</template>
                                 </h2>
                                 <UserEventsTable
                                     v-if="user"
@@ -32,9 +32,9 @@
                                         <AsyncButton :action="fetchNextEvents" class="btn-ghost">
                                             <template #label>
                                                 <span v-if="eventsLoadedUntilYear" class="px-2">
-                                                    Reisen {{ eventsLoadedUntilYear - 1 }} anzeigen
+                                                    Veranstaltungen {{ eventsLoadedUntilYear - 1 }} anzeigen
                                                 </span>
-                                                <span v-else class="px-2"> Vergangene Reisen anzeigen </span>
+                                                <span v-else class="px-2"> Vergangene Veranstaltungen anzeigen </span>
                                             </template>
                                         </AsyncButton>
                                     </div>

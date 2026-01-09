@@ -113,7 +113,7 @@
             />
         </div>
         <VInfo class="xs:-mx-4 mt-8">
-            Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann.
+            Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn nicht garantiert werden kann.
         </VInfo>
     </div>
     <!-- overnight stay -->
@@ -137,7 +137,7 @@
             />
         </div>
         <VInfo class="xs:-mx-4 mt-8">
-            Bitte beachte, das eine Übernachtung an Bord vor Reisebeginn nicht immer garantiert werden kann.
+            Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn nicht garantiert werden kann.
         </VInfo>
     </div>
 </template>

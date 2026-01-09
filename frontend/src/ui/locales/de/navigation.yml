@@ -2,11 +2,11 @@
 # messages for the main navigation
 # -----------------------------------
 navigation:
-  myNextEvents: 'Meine nächsten Reisen'
+  myNextEvents: 'Übersicht'
   start: 'Start'
   calendar: 'Kalender'
   allEvents: 'Alle Veranstaltungen'
-  manageEvents: 'Reisen verwalten'
+  manageEvents: 'Veranstaltungen verwalten'
   manageUsers: 'Nutzer verwalten'
   manageBaseData: 'Stammdaten verwalten'
   manageSettings: 'Einstellungen'

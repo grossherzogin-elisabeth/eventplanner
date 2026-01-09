@@ -5,14 +5,14 @@
             <div v-if="registration" class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
-                        {{ registration.user.firstName }} wird zur Warteliste der ausgewählten Reise hinzugefügt. Wenn
-                        {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die Reise noch manuell
-                        bearbeiten.
+                        {{ registration.user.firstName }} wird zur Warteliste der ausgewählten Veranstaltung hinzugefügt. Wenn
+                        {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die Veranstaltung noch
+                        manuell bearbeiten.
                     </p>
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.eventKey"
-                            label="Reise"
+                            label="Veranstaltung"
                             :options="eventOptions"
                             :errors="validation.errors.value['eventKey']"
                             :errors-visible="validation.showErrors.value"

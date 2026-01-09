@@ -373,9 +373,9 @@ async function deleteUser(user: UserRegistrations): Promise<void> {
     const confirmed = await confirmationDialog.value?.open({
         title: `${user.nickName || user.firstName} ${user.lastName} löschen`,
         message: `Bist du sicher, dass du ${user.nickName || user.firstName} ${user.lastName} löschen möchtest? Wenn
-            ${user.nickName || user.firstName} sich schon zu Reisen angemeldet hat, wird dies dazu führen, das in den
-            Crew oder Wartelisten ein ungültiger Eintrag existiert. Löschen von Nutzern sollte darum nur nach
-            reichlicher Überlegung passieren.`,
+            ${user.nickName || user.firstName} sich schon zu Veranstaltungen angemeldet hat, wird dies dazu führen, das in den
+            Crew und Wartelisten ein ungültiger Eintrag existiert. Löschen von Nutzern sollte darum nur nach reichlicher
+            Überlegung passieren.`,
         submit: 'Löschen',
         danger: true,
     });

@@ -37,7 +37,7 @@ export class EventAdministrationUseCase {
         try {
             await this.eventRepository.deleteEvent(event.key);
             await this.eventCachingService.removeFromCache(event.key);
-            this.notificationService.success('Reise wurde gelöscht');
+            this.notificationService.success('Veranstaltung wurde gelöscht');
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;
@@ -52,7 +52,7 @@ export class EventAdministrationUseCase {
             });
             savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());
             savedEvent = await this.eventCachingService.updateCache(savedEvent);
-            this.notificationService.success('Reise wurde abgesagt');
+            this.notificationService.success('Veranstaltung wurde abgesagt');
             return savedEvent;
         } catch (e) {
             this.errorHandlingService.handleRawError(e);

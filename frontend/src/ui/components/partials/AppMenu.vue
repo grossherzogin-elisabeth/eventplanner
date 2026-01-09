@@ -117,7 +117,8 @@
         <VInfo class="mx-8">
             <h2 class="mb-2">Noch kein Account?</h2>
             <p class="mb-2">
-                Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Reisen einsehen und dich zu Reisen an und abmelden.
+                Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Veranstaltungen einsehen und dich zu Veranstaltungen
+                an und abmelden.
             </p>
         </VInfo>
         <ul class="menu-list my-4">
@@ -193,6 +194,8 @@ watch(route, () => {
     cursor: pointer;
     border-radius: var(--radius-2xl);
     font-weight: var(--font-weight-semibold);
+    text-overflow: ellipsis;
+    white-space: nowrap;
     @apply md:text-lg;
 }
 

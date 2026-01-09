@@ -1,12 +1,13 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto" type="modal-danger" data-test-id="cancel-event-dialog">
-        <template #title>Reise absagen</template>
+        <template #title>Veranstaltung absagen</template>
         <template #default>
             <div v-if="event" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
-                        Bist du sicher, dass du diese Reise absagen möchtest? Aktuell wird vom System noch keine automatische Mail an die
-                        Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die Reise absagst.
+                        Bist du sicher, dass du diese Veranstaltung absagen möchtest? Aktuell wird vom System noch keine automatische Mail
+                        an die Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die
+                        Veranstaltung absagst.
                     </p>
                 </section>
             </div>
@@ -16,7 +17,7 @@
                 <span>Abbrechen</span>
             </button>
             <button class="btn-ghost-danger" @click="submit">
-                <span>Reise absagen</span>
+                <span>Absagen</span>
             </button>
         </template>
     </VDialog>
@@ -41,10 +42,10 @@ async function open(evt: Event): Promise<string | undefined> {
     message.value = `
             Moin liebe Lissi Crew, \n
 
-            ihr seid für die Reise
+            ihr seid für die Veranstaltung
             vom ${i18n.d(evt.start, DateTimeFormat.DDD_DD_MM_YYYY)}
             bis zum ${i18n.d(evt.end, DateTimeFormat.DDD_DD_MM_YYYY)}
-            als Crew eingeplant. Leider müssen wir die Reise hiermit absagen. \n
+            als Crew eingeplant. Leider müssen wir die Veranstaltung hiermit absagen. \n
 
             Viele Grüße, \n
             Euer Büroteam`
