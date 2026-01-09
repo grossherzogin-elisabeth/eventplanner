@@ -1,15 +1,18 @@
 <template>
-    <ContextMenuButton anchor-align-x="left" dropdown-position-x="right" class="btn-tag" :class="{ active: modelValue }">
+    <ContextMenuButton anchor-align-x="left" dropdown-position-x="right" class="btn-toggle" :class="{ active: modelValue }">
         <template #icon>
             <span v-if="!modelValue">{{ placeholder }}</span>
             <span v-else class="block max-w-64 truncate">{{ resolve(modelValue) }}</span>
             <button
                 v-if="modelValue"
-                class="opacity-75 transition-colors duration-1000 hover:opacity-100"
+                class="text-xs opacity-75 transition-colors duration-1000 hover:opacity-100"
                 @click.stop="modelValue = undefined"
             >
-                <i class="fa-solid fa-close ml-2" />
+                <i class="fa-solid fa-close" />
             </button>
+            <span v-else class="text-xs">
+                <i class="fa-solid fa-chevron-down" />
+            </span>
         </template>
         <template #default>
             <ul>

@@ -8,7 +8,8 @@
     .btn-danger,
     .btn-floating,
     .btn-ghost,
-    .btn-ghost-danger {
+    .btn-ghost-danger,
+    .btn-toggle {
         @apply rounded-xl;
         @apply px-4 py-2;
         @apply font-bold;
@@ -25,7 +26,8 @@
     .btn-danger:hover,
     .btn-floating:hover,
     .btn-ghost:hover,
-    .btn-ghost-danger:hover {
+    .btn-ghost-danger:hover,
+    .btn-toggle:hover {
         text-decoration-line: none;
     }
 }
