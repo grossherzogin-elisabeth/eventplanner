@@ -1,0 +1,44 @@
+/* --------------------------------------------------------------- */
+/* Tag Button for filters */
+/* --------------------------------------------------------------- */
+
+@layer components {
+    .btn-toggle {
+        @apply rounded-lg;
+        @apply px-4 py-1;
+        @apply bg-surface-container;
+        @apply text-onsurface;
+    }
+
+    @media not all and (hover: none) {
+        a.btn-toggle:not(:disabled):hover,
+        .btn-toggle:not(:disabled):hover {
+            @apply bg-secondary-container;
+            @apply text-onsecondary-container;
+            @apply shadow;
+        }
+    }
+
+    .btn-toggle.disabled,
+    .btn-toggle:disabled {
+        @apply bg-onsurface/10;
+        @apply text-onsurface/40;
+    }
+
+    .btn-toggle.active {
+        @apply bg-secondary-container;
+        @apply text-onsecondary-container;
+        @apply shadow;
+    }
+
+    .btn-toggle.active .icon-inactive,
+    .btn-toggle .icon-active {
+        display: none;
+    }
+
+    .btn-toggle .icon-inactive,
+    .btn-toggle.active > .icon-active {
+        display: inline-block;
+        @apply w-4;
+    }
+}

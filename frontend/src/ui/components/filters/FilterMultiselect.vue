@@ -2,7 +2,7 @@
     <ContextMenuButton
         anchor-align-x="left"
         dropdown-position-x="right"
-        class="btn-tag flex items-center"
+        class="btn-toggle flex items-center"
         :class="{ active: modelValue.length > 0 }"
     >
         <template #icon>
@@ -11,9 +11,16 @@
             <span v-else class="block max-w-64 truncate">
                 {{ modelValue.map((it) => resolve(it)).join(', ') }}
             </span>
-            <button v-if="modelValue.length > 0" class="opacity-75 transition-colors duration-1000 hover:opacity-100" @click.stop="clear()">
-                <i class="fa-solid fa-close ml-2" />
+            <button
+                v-if="modelValue.length > 0"
+                class="text-xs opacity-75 transition-colors duration-1000 hover:opacity-100"
+                @click.stop="clear()"
+            >
+                <i class="fa-solid fa-close" />
             </button>
+            <span v-else class="text-xs">
+                <i class="fa-solid fa-chevron-down" />
+            </span>
         </template>
         <template #default>
             <ul>

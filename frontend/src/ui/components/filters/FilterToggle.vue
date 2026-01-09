@@ -1,8 +1,8 @@
 <template>
-    <button class="btn-tag" :class="{ active: modelValue }" @click="modelValue = !modelValue">
+    <button class="btn-toggle" :class="{ active: modelValue }" @click="modelValue = !modelValue">
         <span>{{ props.label }}</span>
-        <button v-if="modelValue" class="opacity-75 transition-colors duration-1000 hover:opacity-100">
-            <i class="fa-solid fa-close ml-2" />
+        <button v-if="modelValue" class="text-xs opacity-75 transition-colors duration-1000 hover:opacity-100">
+            <i class="fa-solid fa-close" />
         </button>
     </button>
 </template>
