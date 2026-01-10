@@ -1,23 +1,30 @@
 import { nextTick } from 'vue';
 import type { Router } from 'vue-router';
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { type MockInstance, afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import { useAuthUseCase } from '@/application';
+import { useAuthUseCase, useQualificationsAdministrationUseCase } from '@/application';
 import { setupRouter } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import TabQualifications from '@/ui/views/settings/TabQualifications.vue';
 import { mockQualifications } from '~/mocks';
 
 describe('TabQualifications.vue', () => {
+    let deleteFunc: MockInstance;
     let router: Router;
     let testee: VueWrapper;
 
     beforeAll(() => {
+        vi.useFakeTimers();
         router = setupRouter(useAuthUseCase());
     });
 
+    afterAll(() => {
+        vi.useRealTimers();
+    });
+
     beforeEach(async () => {
+        deleteFunc = vi.spyOn(useQualificationsAdministrationUseCase(), 'deleteQualification');
         testee = mount(TabQualifications, { global: { plugins: [router], stubs: { teleport: true } } });
         await router.push({ name: Routes.AppSettings });
     });
@@ -65,6 +72,50 @@ describe('TabQualifications.vue', () => {
         for (const row of rows) {
             expect(row.text().toLowerCase()).toContain('captain');
         }
+    });
+
+    it('should open delete confirm dialog', async () => {
+        const row = testee.findAll('table tbody tr')[2];
+        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
+        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
+        const dialog = testee.find('[data-test-id="delete-confirm-dialog"]');
+        expect(dialog.exists()).toBe(true);
+        expect(dialog.isVisible()).toBe(true);
+    });
+
+    it('should delete qualification on confirm', async () => {
+        const row = testee.findAll('table tbody tr')[2];
+        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
+        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
+        const confirmButton = testee.find('[data-test-id="button-confirm"]');
+        await confirmButton.trigger('click');
+        vi.runAllTimers();
+        await nextTick();
+        await nextTick();
+        expect(deleteFunc).toHaveBeenCalled();
+    });
+
+    it('should cancel qualification delete', async () => {
+        const row = testee.findAll('table tbody tr')[2];
+        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
+        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
+        const confirmButton = testee.find('[data-test-id="button-cancel"]');
+        await confirmButton.trigger('click');
+        vi.runAllTimers();
+        await nextTick();
+        await nextTick();
+        expect(deleteFunc).not.toHaveBeenCalled();
+    });
+
+    it('should open edit dialog for correct qualification', async () => {
+        const row = testee.findAll('table tbody tr')[2];
+        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
+        const name = row.find('[data-test-id="qualification-name"]').text();
+        await testee.find('[data-test-id="context-menu-edit"]').trigger('click');
+        const dialog = testee.find('[data-test-id="edit-dialog"]');
+        expect(dialog.exists()).toBe(true);
+        expect(dialog.isVisible()).toBe(true);
+        expect((dialog.find('[data-test-id="input-name"] input').element as HTMLInputElement).value).toEqual(name);
     });
 
     async function nextTicks(n: number): Promise<void> {

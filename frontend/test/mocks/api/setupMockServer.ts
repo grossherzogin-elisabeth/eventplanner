@@ -33,6 +33,24 @@ export function mockQualificationsRequest(response?: QualificationRepresentation
     return http.get('/api/v1/qualifications', () => HttpResponse.json(response ?? mockQualificationRepresentations(), { status }));
 }
 
+export function mockQualificationDelete(status: number = 200): RequestHandler {
+    return http.delete<{ key: string }>('/api/v1/qualifications/:key', () => HttpResponse.text('', { status }));
+}
+
+export function mockQualificationUpdate(status: number = 200): RequestHandler {
+    return http.put<{ key: string }>('/api/v1/qualifications/:key', async ({ request }) => {
+        const body = await request.clone().json();
+        return HttpResponse.json(body, { status });
+    });
+}
+
+export function mockQualificationCreate(status: number = 200): RequestHandler {
+    return http.post<{ key: string }>('/api/v1/qualifications/:key', async ({ request }) => {
+        const body = await request.clone().json();
+        return HttpResponse.json(body, { status });
+    });
+}
+
 export function mockUsersRequest(response?: UserRepresentation[], status: number = 200): RequestHandler {
     return http.get('/api/v1/users', () => HttpResponse.json(response ?? mockUserRepresentations(), { status }));
 }
@@ -83,6 +101,9 @@ export function setupDefaultMockServer(): SetupServerApi {
         mockConfigRequest(),
         mockPositionsRequest(),
         mockQualificationsRequest(),
+        mockQualificationUpdate(),
+        mockQualificationDelete(),
+        mockQualificationCreate(),
         mockUsersRequest(),
         mockEventTemplatesRequest(),
         mockEventListRequest(),

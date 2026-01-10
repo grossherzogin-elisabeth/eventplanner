@@ -25,7 +25,7 @@
                         <i class="fa-solid" :class="item.icon" />
                     </td>
                     <td class="w-full min-w-80">
-                        <p class="mb-1 line-clamp-2 font-semibold">{{ item.name }}</p>
+                        <p class="mb-1 line-clamp-2 font-semibold" data-test-id="qualification-name">{{ item.name }}</p>
                         <p class="line-clamp-2 text-sm">
                             {{ item.description }}
                         </p>
@@ -54,11 +54,11 @@
                     </td>
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="context-menu-item" @click="editQualification(item)">
+                    <li class="context-menu-item" data-test-id="context-menu-edit" @click="editQualification(item)">
                         <i class="fa-solid fa-edit" />
                         <span>{{ $t('generic.edit') }}</span>
                     </li>
-                    <li class="context-menu-item text-error" @click="deleteQualification(item)">
+                    <li class="context-menu-item text-error" data-test-id="context-menu-delete" @click="deleteQualification(item)">
                         <i class="fa-solid fa-trash-alt" />
                         <span>{{ $t('generic.delete') }}</span>
                     </li>
@@ -73,8 +73,8 @@
                 <span>{{ $t('views.settings.qualifications.add-new') }}</span>
             </button>
         </div>
-        <QualificationEditDlg ref="qualificationDetailsDialog" />
-        <VConfirmationDialog ref="deleteQualificationDialog" />
+        <QualificationEditDlg ref="qualificationDetailsDialog" data-test-id="edit-dialog" />
+        <VConfirmationDialog ref="deleteQualificationDialog" data-test-id="delete-confirm-dialog" />
     </div>
 </template>
 <script setup lang="ts">
