@@ -19,7 +19,6 @@ const mockRoute = ref<RouteLocationNormalizedLoadedGeneric>({
 
 // we mock `router.replace` to track its calls and update the `mockRoute`.
 const mockRouterReplace = vi.fn(async (to) => {
-    console.log(to);
     // simulate router navigation by updating mockRoute.value.
     // this is crucial for the `watch(() => router.currentRoute, load)` effect to work.
     const newQuery = typeof to === 'string' ? {} : to.query || {};
