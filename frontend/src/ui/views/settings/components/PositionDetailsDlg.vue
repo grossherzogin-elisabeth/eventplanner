@@ -1,19 +1,26 @@
 <template>
     <VDialog ref="dlg">
         <template #title>
-            <template v-if="position.key">{{ $t('views.basedata.tab.positions.edit') }}</template>
-            <template v-else>{{ $t('views.basedata.tab.positions.add-new') }}</template>
+            <template v-if="mode === Mode.EDIT">{{ $t('views.settings.positions.edit') }}</template>
+            <template v-else>{{ $t('views.settings.positions.add-new') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
-                    <div v-if="position.key" class="mb-4">
-                        <VInputText v-model.trim="position.key" :label="$t('views.basedata.tab.positions.id')" required disabled />
+                    <div class="mb-4">
+                        <VInputText
+                            v-model.trim="position.key"
+                            :label="$t('views.settings.positions.id')"
+                            :errors="validation.errors.value['key']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                            :disabled="mode === Mode.EDIT"
+                        />
                     </div>
                     <div class="mb-4">
                         <VInputText
                             v-model="position.name"
-                            :label="$t('views.basedata.tab.positions.name')"
+                            :label="$t('views.settings.positions.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -22,7 +29,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="position.imoListRank"
-                            :label="$t('views.basedata.tab.positions.imoListRank')"
+                            :label="$t('views.settings.positions.imo-list-rank')"
                             :errors="validation.errors.value['imoListRank']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -31,7 +38,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="position.color"
-                            :label="$t('views.basedata.tab.positions.color')"
+                            :label="$t('views.settings.positions.color')"
                             :errors="validation.errors.value['color']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -44,7 +51,7 @@
                     <div class="mb-4">
                         <VInputNumber
                             v-model="position.prio"
-                            :label="$t('views.basedata.tab.positions.prio')"
+                            :label="$t('views.settings.positions.prio')"
                             :errors="validation.errors.value['prio']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -65,38 +72,44 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { deepCopy } from '@/common';
 import type { Position } from '@/domain';
 import { usePositionService } from '@/domain/services.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VInputNumber } from '@/ui/components/common';
 import { VDialog, VInputText } from '@/ui/components/common';
+import { usePositions } from '@/ui/composables/Positions.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
+
+enum Mode {
+    CREATE = 'CREATE',
+    EDIT = 'EDIT',
+}
 
 const positionService = usePositionService();
 
 const dlg = ref<Dialog<Position | undefined, Position | undefined> | null>(null);
-const position = ref<Position>({
-    key: '',
-    name: '',
-    imoListRank: '',
-    color: '',
-    prio: 0,
+const mode = ref<Mode>(Mode.CREATE);
+const position = ref<Position>({ key: '', name: '', imoListRank: '', color: '', prio: 0 });
+const positions = usePositions();
+const others = computed(() => {
+    if (mode.value === Mode.CREATE) return positions.all.value;
+    return positions.all.value.filter((it) => it.key !== position.value.key);
 });
-const validation = useValidation(position, (position) => positionService.validate(position));
+const validation = useValidation(position, (position) => positionService.validate(position, others.value));
 
 async function open(value?: Position): Promise<Position | undefined> {
     validation.reset();
-    position.value = value
-        ? deepCopy(value)
-        : {
-              key: '',
-              name: '',
-              imoListRank: '',
-              color: '',
-              prio: 0,
-          };
+    if (value) {
+        mode.value = Mode.EDIT;
+        validation.showErrors.value = true;
+        position.value = deepCopy(value);
+    } else {
+        mode.value = Mode.CREATE;
+        validation.showErrors.value = false;
+        position.value = { key: '', name: '', imoListRank: '', color: '', prio: 0 };
+    }
     return await dlg.value?.open().catch(() => undefined);
 }
 

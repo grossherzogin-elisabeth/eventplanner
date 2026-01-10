@@ -1,0 +1,40 @@
+<template>
+    <VInteractiveListItem
+        :model-value="props.modelValue"
+        icon="fa-brands fa-microsoft"
+        :label="$t('views.settings.notifications.teams-webhook-url')"
+        @update:model-value="emit('update:modelValue', $event)"
+    >
+        <template #default>
+            <span v-if="props.modelValue.notifications.teamsWebhookUrl">Eingerichtet</span>
+            <span v-else>Nicht eingerichtet</span>
+        </template>
+        <template #edit="{ value, errors }">
+            <p class="mb-8 text-sm">
+                {{ $t('views.settings.notifications.teams-webhook-url-description') }}
+            </p>
+            <div class="mb-4">
+                <VInputTextArea
+                    v-model="value.notifications.teamsWebhookUrl"
+                    :errors="errors['teamsWebhookUrl']"
+                    :errors-visible="true"
+                    required
+                    :label="$t('views.settings.notifications.teams-webhook-url')"
+                />
+            </div>
+        </template>
+    </VInteractiveListItem>
+</template>
+<script setup lang="ts">
+import type { AppSettings } from '@/domain';
+import { VInputTextArea, VInteractiveListItem } from '@/ui/components/common';
+
+interface Props {
+    modelValue: AppSettings;
+}
+
+type Emits = (e: 'update:modelValue', user: AppSettings) => void;
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+</script>
