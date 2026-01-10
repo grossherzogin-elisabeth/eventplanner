@@ -7,10 +7,21 @@ export function useQuery<T = string | number | boolean | string[]>(name: string,
 
     const parameter = ref<T>(defaultValue);
 
-    async function updateQuery(): Promise<void> {
-        const value = parameter.value;
+    function load(): void {
+        const query = getQueryParameter() ?? defaultValue;
+        // a simple comparison query === parameter.value can produce false negatives on arrays, that can result in an
+        // endless loop, so we compare the JSON.stringify result of the two
+        if (JSON.stringify(query) !== JSON.stringify(parameter.value)) {
+            parameter.value = query;
+        }
+    }
+
+    async function setQueryParameter(value: T): Promise<void> {
         const route = router.currentRoute.value;
-        if (value !== undefined && value !== null && value !== defaultValue) {
+        if (Array.isArray(value) && value.length === 0) {
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+            delete route.query[name];
+        } else if (value !== undefined && value !== null && JSON.stringify(value) !== JSON.stringify(defaultValue)) {
             // update the query param
             if (Array.isArray(value)) {
                 route.query[name] = encodeURIComponent(value.join(','));
@@ -41,36 +52,46 @@ export function useQuery<T = string | number | boolean | string[]>(name: string,
         }
     }
 
-    function readFromQuery(): void {
+    function getQueryParameter(): T | undefined {
         const route = router.currentRoute.value;
         if (typeof defaultValue === 'number') {
             const value = Number.parseInt(route.query[name] as string, 10);
             if (!Number.isNaN(value)) {
-                parameter.value = value as T;
+                return value as T;
             }
         } else if (typeof defaultValue === 'boolean') {
             const value = route.query[name] as string;
             if (value !== undefined && value !== null) {
-                parameter.value = value === 'true';
+                return (value === 'true') as T;
             }
         } else if (Array.isArray(defaultValue)) {
             const value = route.query[name] as string;
             if (value !== undefined && value !== null) {
-                parameter.value = decodeURIComponent(value)
+                return decodeURIComponent(value)
                     .split(',')
-                    .filter((it) => it.trim().length > 0);
+                    .filter((it) => it.trim().length > 0) as T;
             }
         } else if (typeof defaultValue === 'string') {
             const value = route.query[name] as string;
             if (value !== undefined && value !== null) {
-                parameter.value = decodeURIComponent(value) as T;
+                return decodeURIComponent(value) as T;
             }
         }
+        return undefined;
     }
 
-    readFromQuery();
-    watch(() => parameter, updateQuery, { deep: true });
+    load();
+
+    const unwatchParameter = watch(parameter, () => setQueryParameter(parameter.value));
+    const unwatchRoute = watch(() => router.currentRoute, load, { deep: true });
+
+    function clearWatchers(): void {
+        unwatchParameter();
+        unwatchRoute();
+    }
+
     return {
         parameter,
+        clearWatchers,
     };
 }
