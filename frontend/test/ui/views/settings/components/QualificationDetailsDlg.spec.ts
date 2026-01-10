@@ -54,8 +54,11 @@ describe('QualificationDetailsDlg.vue', () => {
     });
 
     describe('edit mode', () => {
+        let qualification = mockQualificationCaptain();
+
         beforeEach(async () => {
-            await open(mockQualificationCaptain());
+            qualification = mockQualificationCaptain();
+            await open(qualification);
         });
 
         it('should open dialog and show correct title', async () => {
@@ -77,8 +80,28 @@ describe('QualificationDetailsDlg.vue', () => {
         });
 
         it('should disable key input', async () => {
-            const input = testee.find('[data-test-id="input-key"] input');
-            expect((input.element as HTMLInputElement).disabled).toBe(true);
+            const input = getInputElement('[data-test-id="input-key"] input');
+            expect(input.disabled).toBe(true);
+        });
+
+        it('should render key', async () => {
+            const input = getInputElement('[data-test-id="input-key"] input');
+            expect(input.value).toEqual(qualification.key);
+        });
+
+        it('should render name', async () => {
+            const input = getInputElement('[data-test-id="input-name"] input');
+            expect(input.value).toEqual(qualification.name);
+        });
+
+        it('should render description', async () => {
+            const input = getInputElement('[data-test-id="input-description"] textarea');
+            expect(input.value).toEqual(qualification.description);
+        });
+
+        it('should render icon', async () => {
+            const input = getInputElement('[data-test-id="input-icon"] input');
+            expect(input.value).toEqual(qualification.icon);
         });
 
         it('should show validation errors directly', async () => {
@@ -89,6 +112,11 @@ describe('QualificationDetailsDlg.vue', () => {
             expect(closed).toBe(false);
         });
     });
+
+    function getInputElement(selector: string): HTMLInputElement {
+        const input = testee.find(selector);
+        return input.element as HTMLInputElement;
+    }
 
     async function cancel(): Promise<void> {
         await testee.find('[data-test-id="button-cancel"]').trigger('click');
