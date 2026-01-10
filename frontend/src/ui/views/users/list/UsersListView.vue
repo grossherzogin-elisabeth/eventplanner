@@ -15,7 +15,9 @@
                             <span>Hinzufügen</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="filter" placeholder="Einträge filtern" />
+                    <div class="hidden lg:block">
+                        <VSearchButton v-model="filter" placeholder="Einträge filtern" />
+                    </div>
                 </div>
             </template>
         </VTabs>

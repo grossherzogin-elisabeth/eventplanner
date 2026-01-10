@@ -23,7 +23,9 @@
                             <span>{{ $t('views.basedata.tab.qualifications.add-new') }}</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="qualificationFilter" :placeholder="$t('generic.filter-entries')" />
+                    <div class="hidden lg:block">
+                        <VSearchButton v-model="qualificationFilter" :placeholder="$t('generic.filter-entries')" />
+                    </div>
                 </div>
                 <div v-else-if="tab === Tab.POSITIONS" class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <div class="permission-write-position hidden 2xl:block">
@@ -32,7 +34,9 @@
                             <span>{{ $t('views.basedata.tab.positions.add-new') }}</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="positionsFilter" :placeholder="$t('generic.filter-entries')" />
+                    <div class="hidden lg:block">
+                        <VSearchButton v-model="positionsFilter" :placeholder="$t('generic.filter-entries')" />
+                    </div>
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
