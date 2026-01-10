@@ -31,9 +31,7 @@ export class QualificationAdministrationUseCase {
         try {
             let qualifications = await this.qualificationCachingService.getQualifications();
             if (filters) {
-                console.log('unfiltered: ', qualifications.length);
                 qualifications = qualifications.filter((q) => this.qualificationService.doesQualificationMatchFilter(q, filters));
-                console.log('filtered: ', qualifications.length);
             }
             qualifications = qualifications.sort((a, b) => a.name.localeCompare(b.name));
             return qualifications;
