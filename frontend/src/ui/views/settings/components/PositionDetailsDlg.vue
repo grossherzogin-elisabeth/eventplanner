@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg">
+    <VDialog ref="dlg" data-test-id="position-details-dialog">
         <template #title>
             <template v-if="mode === Mode.EDIT">{{ $t('views.settings.positions.edit') }}</template>
             <template v-else>{{ $t('views.settings.positions.add-new') }}</template>
@@ -10,6 +10,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model.trim="position.key"
+                            data-test-id="input-key"
                             :label="$t('views.settings.positions.id')"
                             :errors="validation.errors.value['key']"
                             :errors-visible="validation.showErrors.value"
@@ -20,6 +21,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="position.name"
+                            data-test-id="input-name"
                             :label="$t('views.settings.positions.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
@@ -29,6 +31,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="position.imoListRank"
+                            data-test-id="input-imo-list-rank"
                             :label="$t('views.settings.positions.imo-list-rank')"
                             :errors="validation.errors.value['imoListRank']"
                             :errors-visible="validation.showErrors.value"
@@ -38,6 +41,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="position.color"
+                            data-test-id="input-color"
                             :label="$t('views.settings.positions.color')"
                             :errors="validation.errors.value['color']"
                             :errors-visible="validation.showErrors.value"
@@ -51,6 +55,7 @@
                     <div class="mb-4">
                         <VInputNumber
                             v-model="position.prio"
+                            data-test-id="input-prio"
                             :label="$t('views.settings.positions.prio')"
                             :errors="validation.errors.value['prio']"
                             :errors-visible="validation.showErrors.value"
@@ -61,10 +66,10 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
+            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel()">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" name="save" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" data-test-id="button-submit" name="save" :disabled="validation.disableSubmit.value" @click="submit()">
                 <span>{{ $t('generic.save') }}</span>
             </button>
         </template>
