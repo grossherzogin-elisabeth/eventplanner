@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg">
+    <VDialog ref="dlg" data-test-id="qualification-details-dialog">
         <template #title>
             <template v-if="mode === Mode.CREATE">{{ $t('views.settings.qualifications.add-new') }}</template>
             <template v-else>{{ $t('views.settings.qualifications.edit') }}</template>
@@ -10,6 +10,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="qualification.key"
+                            data-test-id="input-key"
                             :label="$t('views.settings.qualifications.key')"
                             :errors="validation.errors.value['key']"
                             :errors-visible="validation.showErrors.value"
@@ -20,6 +21,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="qualification.name"
+                            data-test-id="input-name"
                             :label="$t('views.settings.qualifications.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
@@ -29,6 +31,7 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="qualification.icon"
+                            data-test-id="input-icon"
                             :label="$t('views.settings.qualifications.icon')"
                             :placeholder="$t('views.settings.qualifications.icon-placeholder')"
                             :errors="validation.errors.value['icon']"
@@ -45,6 +48,7 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model="qualification.description"
+                            data-test-id="input-description"
                             :label="$t('views.settings.qualifications.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
@@ -55,7 +59,7 @@
                 <div class="mb-4">
                     <VInputCheckBox v-model="qualification.expires" :label="$t('views.settings.qualifications.expires')" />
                 </div>
-                <div class="bg-surface-container-highest xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
+                <div data-test-id="input-positions" class="bg-surface-container-highest xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold">{{ $t('views.settings.qualifications.positions') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
@@ -70,10 +74,10 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
+            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.save') }}</span>
             </button>
         </template>
