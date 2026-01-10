@@ -18,7 +18,7 @@ import {
     useQualificationCachingService,
     useUserCachingService,
 } from '@/application/services';
-import { useEventService, useRegistrationService } from '@/domain';
+import { useEventService, useQualificationService, useRegistrationService } from '@/domain';
 import { AppSettingsUseCase } from './AppSettingsUseCase';
 import { AuthUseCase } from './AuthUseCase';
 import { EventAdministrationUseCase } from './EventAdministrationUseCase';
@@ -161,6 +161,7 @@ export function useQualificationsAdministrationUseCase(): QualificationAdministr
         console.log('🚀 Initializing QualificationAdministrationUseCase');
         qualificationAdministrationUseCase = new QualificationAdministrationUseCase({
             errorHandlingService: useErrorHandlingService(),
+            qualificationService: useQualificationService(),
             notificationService: useNotificationService(),
             qualificationCachingService: useQualificationCachingService(),
             qualificationRepository: useQualificationRepository(),

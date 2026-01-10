@@ -63,18 +63,6 @@
                     <span>{{ $t('navigation.manageUsers') }}</span>
                 </RouterLink>
             </li>
-            <li
-                v-if="
-                    signedInUser.permissions.includes(Permission.WRITE_QUALIFICATIONS) ||
-                    signedInUser.permissions.includes(Permission.WRITE_POSITIONS)
-                "
-                class="menu-item"
-            >
-                <RouterLink :to="{ name: Routes.Basedata }">
-                    <i class="fa-solid fa-database"></i>
-                    <span>{{ $t('navigation.manageBaseData') }}</span>
-                </RouterLink>
-            </li>
             <li class="permission-write-application-settings menu-item">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>

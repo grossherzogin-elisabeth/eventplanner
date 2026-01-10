@@ -11,6 +11,7 @@ export interface PositionRepresentation {
 }
 
 interface CreatePositionRequest {
+    key: string;
     name: string;
     imoListRank: string;
     color: string;
@@ -47,6 +48,7 @@ export class PositionRestRepository implements PositionRepository {
 
     public async create(position: Position): Promise<Position> {
         const requestBody: CreatePositionRequest = {
+            key: position.key,
             name: position.name,
             imoListRank: position.imoListRank,
             color: position.color,

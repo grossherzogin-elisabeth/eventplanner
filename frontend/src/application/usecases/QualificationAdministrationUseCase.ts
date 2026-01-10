@@ -1,37 +1,37 @@
 import type { QualificationRepository } from '@/application/ports';
 import type { ErrorHandlingService, NotificationService, QualificationCachingService } from '@/application/services';
-import type { Qualification } from '@/domain';
+import type { PositionKey, Qualification, QualificationService } from '@/domain';
 
 export class QualificationAdministrationUseCase {
     private readonly qualificationCachingService: QualificationCachingService;
+    private readonly qualificationService: QualificationService;
     private readonly qualificationRepository: QualificationRepository;
     private readonly notificationService: NotificationService;
     private readonly errorHandlingService: ErrorHandlingService;
 
     constructor(params: {
         qualificationCachingService: QualificationCachingService;
+        qualificationService: QualificationService;
         qualificationRepository: QualificationRepository;
         notificationService: NotificationService;
         errorHandlingService: ErrorHandlingService;
     }) {
         this.qualificationCachingService = params.qualificationCachingService;
+        this.qualificationService = params.qualificationService;
         this.qualificationRepository = params.qualificationRepository;
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
     }
 
-    public async getQualifications(filter?: string): Promise<Qualification[]> {
+    public async getQualifications(filters?: {
+        text?: string;
+        expires?: boolean;
+        grantsPosition?: PositionKey[];
+    }): Promise<Qualification[]> {
         try {
             let qualifications = await this.qualificationCachingService.getQualifications();
-            const filterLc = filter?.trim().toLowerCase();
-            if (filterLc) {
-                qualifications = qualifications.filter(
-                    (q: Qualification) =>
-                        q.key.toLowerCase().includes(filterLc) ||
-                        q.icon.toLowerCase().includes(filterLc) ||
-                        q.name.toLowerCase().includes(filterLc) ||
-                        q.description.toLowerCase().includes(filterLc)
-                );
+            if (filters) {
+                qualifications = qualifications.filter((q) => this.qualificationService.doesQualificationMatchFilter(q, filters));
             }
             qualifications = qualifications.sort((a, b) => a.name.localeCompare(b.name));
             return qualifications;

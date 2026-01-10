@@ -3,6 +3,7 @@ import type { QualificationRepository } from '@/application';
 import type { Qualification, QualificationKey } from '@/domain';
 
 interface CreateQualificationRequest {
+    key: string;
     name: string;
     icon: string;
     description: string;
@@ -50,6 +51,7 @@ export class QualificationRestRepository implements QualificationRepository {
 
     public async create(qualification: Qualification): Promise<Qualification> {
         const requestBody: CreateQualificationRequest = {
+            key: qualification.key,
             name: qualification.name,
             icon: qualification.icon,
             description: qualification.description,
