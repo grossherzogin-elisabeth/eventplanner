@@ -42,7 +42,7 @@ describe('QualificationService', () => {
             });
         });
 
-        it('should return error for duplicate keys', () => {
+        it('should return error for duplicate keys and names', () => {
             const input = mockQualificationCaptain();
             expect(testee.validate(input, mockQualifications())).toEqual({
                 key: [ERR_DUPLICATE_KEY],
