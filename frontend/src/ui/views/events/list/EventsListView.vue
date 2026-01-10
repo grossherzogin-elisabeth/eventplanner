@@ -14,7 +14,7 @@
 
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
-                <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
+                <div class="-mr-4 hidden items-stretch gap-2 pb-2 lg:flex 2xl:mr-0">
                     <VSearchButton v-model="filter" :placeholder="$t('views.events.list.filter.search')" />
                 </div>
             </template>

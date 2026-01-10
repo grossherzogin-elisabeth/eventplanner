@@ -97,6 +97,8 @@ html.dark .search input::placeholder {
     transition-property: background-color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: var(--animation-duration);
+    display: flex;
+    align-items: center;
 }
 
 .search.open {

@@ -1,7 +1,7 @@
 <template>
     <div class="btn-search" :class="modelValue ? 'active' : ''" @click="input?.focus()">
         <i class="fa-solid fa-search" />
-        <div class="relative">
+        <div class="relative flex items-center">
             <input
                 ref="input"
                 :placeholder="placeholder ?? 'Einträge filtern'"
@@ -41,10 +41,9 @@ function onInput(event: Event): void {
 @reference "tailwindcss";
 
 .btn-search {
-    display: none;
     align-items: center;
     cursor: pointer;
-    @apply lg:flex;
+    display: flex;
     @apply gap-4;
     border-radius: var(--radius-xl);
     @apply px-4;

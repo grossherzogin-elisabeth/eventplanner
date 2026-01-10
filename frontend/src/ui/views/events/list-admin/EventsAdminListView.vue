@@ -21,7 +21,9 @@
                             <span>{{ $t('views.events.admin-list.action.export') }}</span>
                         </button>
                     </div>
-                    <VSearchButton v-model="filter" :placeholder="$t('views.events.admin-list.filter.search')" />
+                    <div class="hidden lg:block">
+                        <VSearchButton v-model="filter" :placeholder="$t('views.events.admin-list.filter.search')" />
+                    </div>
                 </div>
             </template>
         </VTabs>

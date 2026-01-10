@@ -24,7 +24,7 @@
         </h2>
     </div>
     <!-- tab pane -->
-    <div v-if="props.modelValue && $slots[props.modelValue]" class="xs:px-8 flex-1 px-4 py-4 md:px-16 md:py-8 xl:px-20">
+    <div v-if="props.modelValue && $slots[props.modelValue]" class="xs:px-8 flex-1 px-4 pt-4 md:px-16 md:pt-8 xl:px-20">
         <template v-for="tab in localizedTabs" :key="tab.value">
             <div v-show="tab.value === props.modelValue" class="h-full">
                 <slot :name="tab.value" :active="tab.value === props.modelValue" />
