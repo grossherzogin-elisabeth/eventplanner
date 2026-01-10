@@ -1,5 +1,6 @@
 <template>
     <ContextMenuButton
+        v-bind="$attrs"
         anchor-align-x="left"
         dropdown-position-x="right"
         class="btn-toggle flex items-center"

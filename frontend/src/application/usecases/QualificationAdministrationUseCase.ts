@@ -29,6 +29,7 @@ export class QualificationAdministrationUseCase {
         grantsPosition?: PositionKey[];
     }): Promise<Qualification[]> {
         try {
+            console.log(filters);
             let qualifications = await this.qualificationCachingService.getQualifications();
             if (filters) {
                 qualifications = qualifications.filter((q) => this.qualificationService.doesQualificationMatchFilter(q, filters));

@@ -3,10 +3,11 @@
         <div class="scrollbar-invisible mb-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
             <FilterMultiselect
                 v-model="filterPositions"
+                data-test-id="filter-position"
                 :placeholder="$t('views.settings.filter.positions')"
                 :options="positions.options.value"
             />
-            <FilterToggle v-model="filterExpires" :label="$t('views.settings.filter.expires')" />
+            <FilterToggle v-model="filterExpires" data-test-id="filter-expires" :label="$t('views.settings.filter.expires')" />
             <div class="flex-grow"></div>
             <div class="hidden lg:block">
                 <VSearchButton v-model="filter" />
