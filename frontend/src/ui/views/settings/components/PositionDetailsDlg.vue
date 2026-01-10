@@ -75,12 +75,11 @@
 import { computed, ref } from 'vue';
 import { deepCopy } from '@/common';
 import type { Position } from '@/domain';
-import { usePositionService } from '@/domain/services.ts';
+import { usePositionService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
-import { VInputNumber } from '@/ui/components/common';
-import { VDialog, VInputText } from '@/ui/components/common';
-import { usePositions } from '@/ui/composables/Positions.ts';
-import { useValidation } from '@/ui/composables/Validation.ts';
+import { VDialog, VInputNumber, VInputText } from '@/ui/components/common';
+import { usePositions } from '@/ui/composables/Positions';
+import { useValidation } from '@/ui/composables/Validation';
 
 enum Mode {
     CREATE = 'CREATE',

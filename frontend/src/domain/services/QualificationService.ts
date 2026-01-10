@@ -3,7 +3,7 @@ import { Validator, matchesPattern, notContainedIn, notEmpty } from '@/common/va
 import type { PositionKey, Qualification } from '@/domain';
 
 export class QualificationService {
-    private readonly keyPattern = new RegExp('[a-z-_0-9]*');
+    private readonly keyPattern = /^[a-z-_0-9]*$/;
     private readonly uniqueKeyErrMessage = 'views.settings.qualifications.validation.key-must-be-unique';
     private readonly uniqueNameErrMessage = 'views.settings.qualifications.validation.name-must-be-unique';
 

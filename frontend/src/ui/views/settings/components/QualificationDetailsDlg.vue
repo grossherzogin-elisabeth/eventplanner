@@ -84,13 +84,12 @@
 import { computed, ref } from 'vue';
 import { deepCopy } from '@/common';
 import type { PositionKey, Qualification } from '@/domain';
-import { useQualificationService } from '@/domain/services.ts';
+import { useQualificationService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
-import { VInputCheckBox } from '@/ui/components/common';
-import { VDialog, VInputText, VInputTextArea } from '@/ui/components/common';
-import { usePositions } from '@/ui/composables/Positions.ts';
-import { useQualifications } from '@/ui/composables/Qualifications.ts';
-import { useValidation } from '@/ui/composables/Validation.ts';
+import { VDialog, VInputCheckBox, VInputText, VInputTextArea } from '@/ui/components/common';
+import { usePositions } from '@/ui/composables/Positions';
+import { useQualifications } from '@/ui/composables/Qualifications';
+import { useValidation } from '@/ui/composables/Validation';
 
 enum Mode {
     CREATE = 'CREATE',
