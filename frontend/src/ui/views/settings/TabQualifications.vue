@@ -68,12 +68,12 @@
         <div
             class="permission-write-positions pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12"
         >
-            <button class="btn-floating pointer-events-auto" @click="createQualification()">
+            <button class="btn-floating pointer-events-auto" data-test-id="button-create" @click="createQualification()">
                 <i class="fa-solid fa-file-circle-plus"></i>
                 <span>{{ $t('views.settings.qualifications.add-new') }}</span>
             </button>
         </div>
-        <QualificationEditDlg ref="qualificationDetailsDialog" data-test-id="edit-dialog" />
+        <QualificationEditDlg ref="qualificationDetailsDialog" data-test-id="details-dialog" />
         <VConfirmationDialog ref="deleteQualificationDialog" data-test-id="delete-confirm-dialog" />
     </div>
 </template>

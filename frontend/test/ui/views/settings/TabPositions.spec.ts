@@ -4,8 +4,10 @@ import { type MockInstance, afterAll, beforeAll, beforeEach, describe, expect, i
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { usePositionAdministrationUseCase } from '@/application';
+import { VConfirmationDialog } from '@/ui/components/common';
 import { Routes } from '@/ui/views/Routes';
 import TabPositions from '@/ui/views/settings/TabPositions.vue';
+import PositionDetailsDlg from '@/ui/views/settings/components/PositionDetailsDlg.vue';
 import { mockPositions, mockRouter } from '~/mocks';
 
 const router = mockRouter();
@@ -16,6 +18,7 @@ vi.mock('vue-router', () => ({
 describe('TabPositions.vue', () => {
     let deleteFunc: MockInstance;
     let updateFunc: MockInstance;
+    let createFunc: MockInstance;
     let testee: VueWrapper;
 
     beforeAll(() => {
@@ -29,6 +32,7 @@ describe('TabPositions.vue', () => {
     beforeEach(async () => {
         deleteFunc = vi.spyOn(usePositionAdministrationUseCase(), 'deletePosition');
         updateFunc = vi.spyOn(usePositionAdministrationUseCase(), 'updatePosition');
+        createFunc = vi.spyOn(usePositionAdministrationUseCase(), 'createPosition');
         await router.push({ name: Routes.AppSettings, query: { tab: 'positions' } });
         testee = mount(TabPositions, { global: { plugins: [router], stubs: { teleport: true } } });
     });
@@ -79,6 +83,27 @@ describe('TabPositions.vue', () => {
         expect(getInputElement('[data-test-id="input-name"] input').value).toEqual(name);
     });
 
+    it('should open create dialog', async () => {
+        await loading();
+        const dialog = await openCreateDialog();
+        expect(dialog.exists()).toBe(true);
+        expect(dialog.isVisible()).toBe(true);
+        expect(getInputElement('[data-test-id="input-name"] input').value).toEqual('');
+    });
+
+    it('should create new position', async () => {
+        await loading();
+        await openCreateDialog();
+        await testee.find('[data-test-id="input-key"] input').setValue('key');
+        await testee.find('[data-test-id="input-name"] input').setValue('name');
+        await testee.find('[data-test-id="input-imo-list-rank"] input').setValue('imo');
+        await testee.find('[data-test-id="input-color"] input').setValue('#316c31');
+        await testee.find('[data-test-id="input-prio"] input').setValue('2');
+        await testee.find('[data-test-id="button-submit"]').trigger('click');
+        await nextTick();
+        expect(createFunc).toHaveBeenCalled();
+    });
+
     it('should cancel edit', async () => {
         await loading();
         const dialog = await openEditDialog(getRow(2));
@@ -105,16 +130,21 @@ describe('TabPositions.vue', () => {
         return testee.findAll('table tbody tr')[rowIndex];
     }
 
-    async function openDeleteDialog(row: DOMWrapper<Element>): Promise<DOMWrapper<Element>> {
-        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
-        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
-        return testee.find('[data-test-id="delete-confirm-dialog"]');
+    async function openCreateDialog(): Promise<VueWrapper> {
+        await testee.find('[data-test-id="button-create"]').trigger('click');
+        return testee.findComponent(PositionDetailsDlg);
     }
 
-    async function openEditDialog(row: DOMWrapper<Element>): Promise<DOMWrapper<Element>> {
+    async function openDeleteDialog(row: DOMWrapper<Element>): Promise<VueWrapper> {
+        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
+        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
+        return testee.findComponent(VConfirmationDialog);
+    }
+
+    async function openEditDialog(row: DOMWrapper<Element>): Promise<VueWrapper> {
         await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
         await testee.find('[data-test-id="context-menu-edit"]').trigger('click');
-        return testee.find('[data-test-id="edit-dialog"]');
+        return testee.findComponent(PositionDetailsDlg);
     }
 
     async function loading(): Promise<void> {

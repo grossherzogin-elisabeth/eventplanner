@@ -41,7 +41,7 @@ export function mockPutPosition(status: number = 200): RequestHandler {
 }
 
 export function mockPostPosition(status: number = 200): RequestHandler {
-    return http.post<{ key: string }>('/api/v1/positions/:key', async ({ request }) => {
+    return http.post<{ key: string }>('/api/v1/positions', async ({ request }) => {
         const body = await request.clone().json();
         return HttpResponse.json(body, { status });
     });
@@ -63,7 +63,7 @@ export function mockPutQualification(status: number = 200): RequestHandler {
 }
 
 export function mockPostQualification(status: number = 200): RequestHandler {
-    return http.post<{ key: string }>('/api/v1/qualifications/:key', async ({ request }) => {
+    return http.post<{ key: string }>('/api/v1/qualifications', async ({ request }) => {
         const body = await request.clone().json();
         return HttpResponse.json(body, { status });
     });
