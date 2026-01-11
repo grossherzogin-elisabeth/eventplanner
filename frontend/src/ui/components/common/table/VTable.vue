@@ -9,7 +9,7 @@
                 </tr>
             </thead>
             <!-- loading -->
-            <tbody v-if="loading">
+            <tbody v-if="loading" data-test-id="table-loading">
                 <slot name="loading" :colspan="columnCount">
                     <tr>
                         <td></td>
@@ -19,7 +19,7 @@
                 </slot>
             </tbody>
             <!-- no data -->
-            <tbody v-else-if="empty">
+            <tbody v-else-if="empty" data-test-id="table-no-data">
                 <tr class="no-data">
                     <td></td>
                     <slot name="no-data" :colspan="columnCount">
