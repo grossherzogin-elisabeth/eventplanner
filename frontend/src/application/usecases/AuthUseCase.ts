@@ -8,7 +8,6 @@ export class AuthUseCase {
     private readonly authService: AuthService;
     private readonly accountRepository: AccountRepository;
     private readonly userRepository: UserRepository;
-    private authentication?: Promise<string | undefined>;
 
     constructor(params: {
         configService: ConfigService;
@@ -22,33 +21,30 @@ export class AuthUseCase {
         this.userRepository = params.userRepository;
     }
 
-    public async authenticate(redirectPath?: string): Promise<string | undefined> {
+    public getPendingRedirect(): string | undefined {
+        return localStorage.getItem('auth.redirect') || undefined;
+    }
+
+    public clearPendingRedirect(): void {
+        localStorage.removeItem('auth.redirect');
+    }
+
+    public async authenticate(redirectPath?: string): Promise<SignedInUser | undefined> {
+        const user = this.authService.getSignedInUser() || (await this.accountRepository.getAccount());
+        this.authService.setSignedInUser(user);
+        if (!user && redirectPath) {
+            localStorage.setItem('auth.redirect', redirectPath);
+        }
+
         const overrideSignedInUserKey = this.configService.getConfig().overrideSignedInUserKey;
-        const user = await this.accountRepository.getAccount();
-        if (user && user.permissions.includes(Permission.READ_USER_DETAILS) && overrideSignedInUserKey) {
+        if (user && overrideSignedInUserKey && user.permissions.includes(Permission.READ_USER_DETAILS)) {
             const impersonatedUser = await this.userRepository.findByKey(overrideSignedInUserKey);
             if (impersonatedUser) {
                 this.authService.impersonate(impersonatedUser);
             }
         }
-        this.authService.setSignedInUser(user);
-        if (!user) {
-            if (redirectPath) {
-                localStorage.setItem('auth.redirect', redirectPath || window.location.pathname);
-            }
-            return undefined;
-        }
-        const redirect = localStorage.getItem('auth.redirect') || undefined;
-        localStorage.removeItem('auth.redirect');
-        return redirect;
-    }
 
-    public async firstAuthentication(redirectPath?: string): Promise<string | undefined> {
-        if (!this.authentication) {
-            this.authentication = this.authenticate(redirectPath);
-            return this.authentication;
-        }
-        return undefined;
+        return user;
     }
 
     public async login(): Promise<void> {

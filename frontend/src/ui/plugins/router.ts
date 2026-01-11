@@ -1,7 +1,7 @@
 import type { RouteRecordRaw, Router } from 'vue-router';
 import { createRouter, createWebHistory } from 'vue-router';
 import type { AuthUseCase } from '@/application';
-import type { Permission } from '@/domain';
+import { hasAnyOverlap } from '@/common';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 
 interface SavedRouteState {
@@ -62,28 +62,32 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
     });
 
     /**
-     * Add an authentication guard to the router. This guard requires the auth service of app context and therefore
-     * must be initialized here instead of within the router plugin
+     * Add an authentication guard to the router
      */
     router.beforeResolve(async (to, _, next) => {
         const meta = to.meta as RouteMetaData | undefined;
-        // authentication guard
-        const redirect = await authUseCase.firstAuthentication(to.fullPath);
-        if (to.fullPath === '/' && redirect) {
+        // if there is a pending redirect from pre login, restore the wanted page first
+        const redirect = authUseCase.getPendingRedirect();
+        if (redirect && to.fullPath === '/') {
+            authUseCase.clearPendingRedirect();
             next({ path: redirect });
             return;
         }
-        if (meta?.authenticated && !authUseCase.isLoggedIn()) {
-            console.warn(`🛤️ Login required for route '${String(to.name)}'!`);
-            next({ path: '/login' });
-            return;
-        }
-        const user = authUseCase.getSignedInUser();
-        // permission guard
-        if (meta?.permissions && meta.permissions.find((it) => !user.permissions.includes(it as Permission))) {
-            console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
-            next({ path: '/' });
-            return;
+
+        // authentication guard
+        if (meta?.authenticated) {
+            const user = await authUseCase.authenticate(to.fullPath);
+            if (!user) {
+                console.warn(`🛤️ Login required for route '${String(to.name)}'!`);
+                next({ path: '/login' });
+                return;
+            }
+            // permission guard
+            if (meta?.permissions && !hasAnyOverlap(meta.permissions, user.permissions)) {
+                console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
+                next({ path: '/' });
+                return;
+            }
         }
         console.log(`🛤️ Entering route '${String(to.name)}'`);
         next();
