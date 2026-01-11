@@ -100,8 +100,17 @@ describe('TabPositions.vue', () => {
         await testee.find('[data-test-id="input-color"] input').setValue('#316c31');
         await testee.find('[data-test-id="input-prio"] input').setValue('2');
         await testee.find('[data-test-id="button-submit"]').trigger('click');
+        vi.runAllTimers();
         await nextTick();
-        expect(createFunc).toHaveBeenCalled();
+        expect(createFunc).toHaveBeenCalledWith(
+            expect.objectContaining({
+                key: 'key',
+                name: 'name',
+                imoListRank: 'imo',
+                color: '#316c31',
+                prio: 2,
+            })
+        );
     });
 
     it('should cancel edit', async () => {
@@ -116,10 +125,15 @@ describe('TabPositions.vue', () => {
     it('should save changes', async () => {
         await loading();
         const dialog = await openEditDialog(getRow(2));
+        await testee.find('[data-test-id="input-name"] input').setValue('changed');
         await dialog.find('[data-test-id="button-submit"]').trigger('click');
         vi.runAllTimers();
         await nextTick();
-        expect(updateFunc).toHaveBeenCalled();
+        expect(updateFunc).toHaveBeenCalledWith(
+            expect.objectContaining({
+                name: 'changed',
+            })
+        );
     });
 
     function getInputElement(selector: string): HTMLInputElement {

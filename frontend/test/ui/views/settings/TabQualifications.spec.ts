@@ -124,10 +124,19 @@ describe('TabQualifications.vue', () => {
         await openCreateDialog();
         await testee.find('[data-test-id="input-key"] input').setValue('key');
         await testee.find('[data-test-id="input-name"] input').setValue('name');
+        await testee.find('[data-test-id="input-icon"] input').setValue('fa-id-card');
         await testee.find('[data-test-id="input-description"] textarea').setValue('description');
         await testee.find('[data-test-id="button-submit"]').trigger('click');
+        vi.runAllTimers();
         await nextTick();
-        expect(createFunc).toHaveBeenCalled();
+        expect(createFunc).toHaveBeenCalledWith(
+            expect.objectContaining({
+                key: 'key',
+                name: 'name',
+                description: 'description',
+                icon: 'fa-id-card',
+            })
+        );
     });
 
     it('should open edit dialog for correct qualification', async () => {
@@ -152,10 +161,15 @@ describe('TabQualifications.vue', () => {
     it('should save changes', async () => {
         await loading();
         const dialog = await openEditDialog(getRow(2));
+        await testee.find('[data-test-id="input-name"] input').setValue('changed');
         await dialog.find('[data-test-id="button-submit"]').trigger('click');
         vi.runAllTimers();
         await nextTick();
-        expect(updateFunc).toHaveBeenCalled();
+        expect(updateFunc).toHaveBeenCalledWith(
+            expect.objectContaining({
+                name: 'changed',
+            })
+        );
     });
 
     async function nextTicks(n: number): Promise<void> {
