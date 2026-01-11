@@ -1,16 +1,28 @@
 <template>
-    <VDialog ref="dlg">
+    <VDialog ref="dlg" data-test-id="qualification-details-dialog">
         <template #title>
-            <template v-if="!qualification.key">{{ $t('views.basedata.tab.qualifications.add-new') }}</template>
-            <template v-else>{{ $t('views.basedata.tab.qualifications.edit') }}</template>
+            <template v-if="mode === Mode.CREATE">{{ $t('views.settings.qualifications.add-new') }}</template>
+            <template v-else>{{ $t('views.settings.qualifications.edit') }}</template>
         </template>
         <template #default>
-            <div class="xs:px-8 px-4 pt-4 lg:px-10">
+            <div class="xs:px-8 px-4 pt-4 pb-8 lg:w-xl lg:px-10">
                 <section>
                     <div class="mb-4">
                         <VInputText
+                            v-model="qualification.key"
+                            data-test-id="input-key"
+                            :label="$t('views.settings.qualifications.key')"
+                            :errors="validation.errors.value['key']"
+                            :errors-visible="validation.showErrors.value"
+                            required
+                            :disabled="mode === Mode.EDIT"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <VInputText
                             v-model="qualification.name"
-                            :label="$t('views.basedata.tab.qualifications.name')"
+                            data-test-id="input-name"
+                            :label="$t('views.settings.qualifications.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -19,8 +31,9 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="qualification.icon"
-                            :label="$t('views.basedata.tab.qualifications.icon')"
-                            :placeholder="$t('views.basedata.tab.qualifications.icon-placeholder')"
+                            data-test-id="input-icon"
+                            :label="$t('views.settings.qualifications.icon')"
+                            :placeholder="$t('views.settings.qualifications.icon-placeholder')"
                             :errors="validation.errors.value['icon']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -35,7 +48,8 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model="qualification.description"
-                            :label="$t('views.basedata.tab.qualifications.description')"
+                            data-test-id="input-description"
+                            :label="$t('views.settings.qualifications.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -43,10 +57,10 @@
                     </div>
                 </section>
                 <div class="mb-4">
-                    <VInputCheckBox v-model="qualification.expires" :label="$t('views.basedata.tab.qualifications.expires')" />
+                    <VInputCheckBox v-model="qualification.expires" :label="$t('views.settings.qualifications.expires')" />
                 </div>
-                <div class="bg-surface-container-highest xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
-                    <h2 class="mb-4 text-xs font-bold">{{ $t('views.basedata.tab.positions.title') }}</h2>
+                <div data-test-id="input-positions" class="bg-surface-container-highest xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
+                    <h2 class="mb-4 text-xs font-bold">{{ $t('views.settings.qualifications.positions') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox
@@ -60,10 +74,10 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
+            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.save') }}</span>
             </button>
         </template>
@@ -71,42 +85,45 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { deepCopy } from '@/common';
 import type { PositionKey, Qualification } from '@/domain';
-import { useQualificationService } from '@/domain/services.ts';
+import { useQualificationService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
-import { VInputCheckBox } from '@/ui/components/common';
-import { VDialog, VInputText, VInputTextArea } from '@/ui/components/common';
-import { usePositions } from '@/ui/composables/Positions.ts';
-import { useValidation } from '@/ui/composables/Validation.ts';
+import { VDialog, VInputCheckBox, VInputText, VInputTextArea } from '@/ui/components/common';
+import { usePositions } from '@/ui/composables/Positions';
+import { useQualifications } from '@/ui/composables/Qualifications';
+import { useValidation } from '@/ui/composables/Validation';
+
+enum Mode {
+    CREATE = 'CREATE',
+    EDIT = 'EDIT',
+}
 
 const qualificationService = useQualificationService();
 const positions = usePositions();
 
 const dlg = ref<Dialog<Qualification | undefined, Qualification | undefined> | null>(null);
-const qualification = ref<Qualification>({
-    key: '',
-    icon: 'fa-id-card',
-    expires: false,
-    name: '',
-    description: '',
-    grantsPositions: [],
+const mode = ref<Mode>(Mode.CREATE);
+const qualification = ref<Qualification>({ key: '', icon: 'fa-id-card', expires: false, name: '', description: '', grantsPositions: [] });
+const qualifications = useQualifications();
+const others = computed(() => {
+    if (mode.value === Mode.CREATE) return qualifications.all.value;
+    return qualifications.all.value.filter((it) => it.key !== qualification.value.key);
 });
-const validation = useValidation(qualification, (qualification) => qualificationService.validate(qualification));
+const validation = useValidation(qualification, (qualification) => qualificationService.validate(qualification, others.value));
 
 async function open(value?: Qualification): Promise<Qualification | undefined> {
     validation.reset();
-    qualification.value = value
-        ? deepCopy(value)
-        : {
-              key: '',
-              icon: 'fa-id-card',
-              expires: false,
-              name: '',
-              description: '',
-              grantsPositions: [],
-          };
+    if (value) {
+        mode.value = Mode.EDIT;
+        validation.showErrors.value = true;
+        qualification.value = deepCopy(value);
+    } else {
+        mode.value = Mode.CREATE;
+        validation.showErrors.value = false;
+        qualification.value = { key: '', icon: 'fa-id-card', expires: false, name: '', description: '', grantsPositions: [] };
+    }
     // wait until user submits
     return await dlg.value?.open().catch(() => undefined);
 }

@@ -35,3 +35,12 @@ export function doesNotContain(forbidden: string | null | undefined, message?: s
         return message ?? 'generic.validation.forbidden';
     };
 }
+
+export function notContainedIn(blacklist: string[], message?: string): ValidateFunc<string> {
+    return (value: string | null | undefined) => {
+        if (!value || !blacklist.includes(value)) {
+            return undefined;
+        }
+        return message ?? 'generic.validation.forbidden';
+    };
+}

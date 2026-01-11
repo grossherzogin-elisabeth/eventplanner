@@ -4,7 +4,6 @@ import deUser from './de/domain/user.yml';
 import deGeneric from './de/generic.yml';
 import deNavigation from './de/navigation.yml';
 import deAccount from './de/views/account.yml';
-import deBasedata from './de/views/basedata.yml';
 import deEvents from './de/views/events.yml';
 import deHome from './de/views/home.yml';
 import deSettings from './de/views/settings.yml';
@@ -22,7 +21,6 @@ const messagesDe = {
         ...deHome,
         ...deSettings,
         ...deAccount,
-        ...deBasedata,
         ...deEvents,
         ...deUsers,
     },
