@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest';
-import { config } from '@vue/test-utils';
+import { RouterLinkStub, config } from '@vue/test-utils';
 import { setupI18n } from '@/ui/plugins/i18n';
 import { server } from '~/mocks';
 
@@ -17,6 +17,9 @@ afterAll(() => server.close());
 
 config.global.plugins = [setupI18n({ locale: 'de', fallbackLocale: 'de', availableLocales: ['de'] })];
 
+config.global.stubs = {
+    RouterLink: RouterLinkStub,
+};
 // ---------------------------------------------------------------
 // mock teleport targets
 // ---------------------------------------------------------------

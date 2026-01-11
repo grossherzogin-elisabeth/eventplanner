@@ -1,17 +1,23 @@
 import { nextTick } from 'vue';
-import type { Router } from 'vue-router';
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository.ts';
 import { useAuthUseCase } from '@/application';
 import { EventSignupType, EventState } from '@/domain';
-import { setupRouter } from '@/ui/plugins/router';
 import { Routes } from '@/ui/views/Routes';
 import EventEditView from '@/ui/views/events/edit/EventEditView.vue';
 import { mockEventRepresentation, server } from '~/mocks';
+import { mockRouter } from '~/mocks/router/mockRouter';
 import { find } from '~/utils';
+
+const router = mockRouter();
+vi.mock('vue-router', () => ({
+    useRouter: (): Partial<Router> => router,
+    useRoute: (): RouteLocationNormalizedLoadedGeneric => router.currentRoute.value,
+}));
 
 const eventInStateDraft = {
     name: 'Events in state draft',
@@ -52,16 +58,16 @@ const eventsWithCrewAssignment = [eventInStateDraft, eventInStateCrewSignup, eve
 const allEvents = [eventInStateDraft, eventInStateCrewSignup, eventInStatePlanned, eventInStateCanceled, eventWithOpenSignup];
 
 describe('EventEditView', () => {
-    let router: Router;
     let testee: VueWrapper;
 
-    beforeAll(() => {
-        router = setupRouter(useAuthUseCase());
-    });
-
     beforeEach(async () => {
+        await useAuthUseCase().authenticate();
         await router.push({ name: Routes.EventEdit, params: { year: 2025, key: 'example-event' } });
-        testee = mount(EventEditView, { global: { plugins: [router] } });
+        testee = mount(EventEditView, {
+            global: {
+                plugins: [router],
+            },
+        });
     });
 
     describe.each(allEvents)('$name', ({ representation }) => {
