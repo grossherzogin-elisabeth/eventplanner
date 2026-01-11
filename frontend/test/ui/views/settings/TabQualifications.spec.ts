@@ -6,8 +6,7 @@ import { mount } from '@vue/test-utils';
 import { useQualificationsAdministrationUseCase } from '@/application';
 import { Routes } from '@/ui/views/Routes.ts';
 import TabQualifications from '@/ui/views/settings/TabQualifications.vue';
-import { mockQualifications } from '~/mocks';
-import { mockRouter } from '~/mocks/router/mockRouter.ts';
+import { mockQualifications, mockRouter } from '~/mocks';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({

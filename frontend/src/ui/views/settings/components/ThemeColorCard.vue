@@ -13,6 +13,7 @@
             <div class="mb-4">
                 <VInputText
                     model-value="#188edc"
+                    data-test-id="input-theme-color"
                     :errors="errors['themeColor']"
                     :errors-visible="true"
                     required

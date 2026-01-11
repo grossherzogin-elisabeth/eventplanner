@@ -15,6 +15,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.ui.menuTitle"
+                    data-test-id="input-menu-title"
                     :errors="errors['menuTitle']"
                     :errors-visible="true"
                     required

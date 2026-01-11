@@ -3,11 +3,31 @@
         <div class="col-start-1">
             <h2 class="text-secondary mb-2 flex items-center justify-between font-bold">{{ $t('views.settings.ui.title') }}</h2>
             <VInteractiveList>
-                <TabTitleCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
-                <MenuTitleCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
-                <ThemeColorCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
-                <SupportEmailCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
-                <TechSupportEmailCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
+                <TabTitleCard
+                    :model-value="props.modelValue"
+                    data-test-id="tab-title"
+                    @update:model-value="emit('update:modelValue', $event)"
+                />
+                <MenuTitleCard
+                    :model-value="props.modelValue"
+                    data-test-id="menu-title"
+                    @update:model-value="emit('update:modelValue', $event)"
+                />
+                <ThemeColorCard
+                    :model-value="props.modelValue"
+                    data-test-id="theme-color"
+                    @update:model-value="emit('update:modelValue', $event)"
+                />
+                <SupportEmailCard
+                    :model-value="props.modelValue"
+                    data-test-id="support-email"
+                    @update:model-value="emit('update:modelValue', $event)"
+                />
+                <TechSupportEmailCard
+                    :model-value="props.modelValue"
+                    data-test-id="tech-support-email"
+                    @update:model-value="emit('update:modelValue', $event)"
+                />
             </VInteractiveList>
         </div>
     </div>

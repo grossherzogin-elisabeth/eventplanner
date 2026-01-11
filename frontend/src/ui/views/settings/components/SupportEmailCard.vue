@@ -15,6 +15,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.ui.supportEmail"
+                    data-test-id="input-support-email"
                     :errors="errors['supportEmail']"
                     :errors-visible="true"
                     required

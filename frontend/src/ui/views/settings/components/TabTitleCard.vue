@@ -15,6 +15,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.ui.tabTitle"
+                    data-test-id="input-tab-title"
                     :errors="errors['tabTitle']"
                     :errors-visible="true"
                     required

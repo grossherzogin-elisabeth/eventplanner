@@ -6,8 +6,12 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.notifications.teamsWebhookUrl">Eingerichtet</span>
-            <span v-else>Nicht eingerichtet</span>
+            <span v-if="props.modelValue.notifications.teamsWebhookUrl">
+                {{ $t('views.settings.notifications.teams-webhook-set-up') }}
+            </span>
+            <span v-else>
+                {{ $t('views.settings.notifications.teams-webhook-not-set-up') }}
+            </span>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">
@@ -16,6 +20,7 @@
             <div class="mb-4">
                 <VInputTextArea
                     v-model="value.notifications.teamsWebhookUrl"
+                    data-test-id="input-teams-webhook"
                     :errors="errors['teamsWebhookUrl']"
                     :errors-visible="true"
                     required

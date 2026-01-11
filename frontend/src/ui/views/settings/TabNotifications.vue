@@ -3,8 +3,12 @@
         <div class="col-start-1">
             <h2 class="text-secondary mb-2 flex items-center justify-between font-bold">{{ $t('views.settings.notifications.title') }}</h2>
             <VInteractiveList>
-                <EmailCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
-                <TeamsWebhookCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
+                <EmailCard data-test-id="email" :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
+                <TeamsWebhookCard
+                    data-test-id="teams-webhook"
+                    :model-value="props.modelValue"
+                    @update:model-value="emit('update:modelValue', $event)"
+                />
             </VInteractiveList>
         </div>
     </div>

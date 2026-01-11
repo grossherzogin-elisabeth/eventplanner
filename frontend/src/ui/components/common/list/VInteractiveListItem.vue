@@ -21,15 +21,15 @@
             </template>
             <template #buttons>
                 <div v-if="props.direct" class="flex justify-end gap-2">
-                    <button class="btn-ghost" name="save" @click="submit()">
+                    <button class="btn-ghost" name="save" data-test-id="button-cancel" @click="submit()">
                         <span>{{ $t('generic.close') }}</span>
                     </button>
                 </div>
                 <div v-else class="flex justify-end gap-2">
-                    <button class="btn-ghost" name="save" @click="cancel()">
+                    <button class="btn-ghost" name="save" data-test-id="button-cancel" @click="cancel()">
                         <span>{{ $t('generic.cancel') }}</span>
                     </button>
-                    <AsyncButton class="btn-ghost" :disabled="validation.disableSubmit.value" :action="submit">
+                    <AsyncButton class="btn-ghost" :disabled="validation.disableSubmit.value" :action="submit" data-test-id="button-submit">
                         <template #label>
                             <span>{{ $t('generic.save') }}</span>
                         </template>

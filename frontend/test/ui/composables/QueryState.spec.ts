@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import type { Router } from 'vue-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useQuery } from '@/ui/composables/QueryState';
-import { mockRouter, mockedCurrentRoute, mockedReplaceFunc } from '~/mocks/router/mockRouter';
+import { mockRouter, mockedCurrentRoute, mockedReplaceFunc } from '~/mocks';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({

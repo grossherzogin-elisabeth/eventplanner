@@ -29,6 +29,8 @@ settings:
     email-description: 'Diese Email wird verwendet um Benachrichtigungen an Nutzer zu schicken.'
     teams-webhook-url: 'MS Teams Webhook'
     teams-webhook-url-description: 'An diesen Teams Webhook werden Admin Benachrichtigungen verschickt'
+    teams-webhook-set-up: 'Eingerichtet'
+    teams-webhook-not-set-up: 'Nicht eingerichtet'
   positions:
     add-new: 'Position hinzufügen'
     edit: 'Position bearbeiten'
