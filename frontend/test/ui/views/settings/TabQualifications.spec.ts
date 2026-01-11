@@ -1,10 +1,10 @@
 import { nextTick } from 'vue';
 import type { Router } from 'vue-router';
 import { type MockInstance, afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { VueWrapper } from '@vue/test-utils';
+import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useQualificationsAdministrationUseCase } from '@/application';
-import { Routes } from '@/ui/views/Routes.ts';
+import { Routes } from '@/ui/views/Routes';
 import TabQualifications from '@/ui/views/settings/TabQualifications.vue';
 import { mockQualifications, mockRouter } from '~/mocks';
 
@@ -15,6 +15,7 @@ vi.mock('vue-router', () => ({
 
 describe('TabQualifications.vue', () => {
     let deleteFunc: MockInstance;
+    let updateFunc: MockInstance;
     let testee: VueWrapper;
 
     beforeAll(() => {
@@ -27,6 +28,7 @@ describe('TabQualifications.vue', () => {
 
     beforeEach(async () => {
         deleteFunc = vi.spyOn(useQualificationsAdministrationUseCase(), 'deleteQualification');
+        updateFunc = vi.spyOn(useQualificationsAdministrationUseCase(), 'updateQualification');
         await router.push({ name: Routes.AppSettings, query: { tab: 'qualifications' } });
         testee = mount(TabQualifications, { global: { plugins: [router], stubs: { teleport: true } } });
     });
@@ -82,56 +84,81 @@ describe('TabQualifications.vue', () => {
 
     it('should open delete confirm dialog', async () => {
         await loading();
-        const row = testee.findAll('table tbody tr')[2];
-        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
-        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
-        const dialog = testee.find('[data-test-id="delete-confirm-dialog"]');
+        const dialog = await openDeleteDialog(getRow(2));
         expect(dialog.exists()).toBe(true);
         expect(dialog.isVisible()).toBe(true);
     });
 
     it('should delete qualification on confirm', async () => {
         await loading();
-        const row = testee.findAll('table tbody tr')[2];
-        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
-        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
-        const confirmButton = testee.find('[data-test-id="button-confirm"]');
-        await confirmButton.trigger('click');
+        const dialog = await openDeleteDialog(getRow(2));
+        await dialog.find('[data-test-id="button-confirm"]').trigger('click');
         vi.runAllTimers();
-        await nextTick();
         await nextTick();
         expect(deleteFunc).toHaveBeenCalled();
     });
 
     it('should cancel qualification delete', async () => {
         await loading();
-        const row = testee.findAll('table tbody tr')[2];
-        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
-        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
-        const confirmButton = testee.find('[data-test-id="button-cancel"]');
-        await confirmButton.trigger('click');
+        const dialog = await openDeleteDialog(getRow(2));
+        await dialog.find('[data-test-id="button-cancel"]').trigger('click');
         vi.runAllTimers();
-        await nextTick();
         await nextTick();
         expect(deleteFunc).not.toHaveBeenCalled();
     });
 
     it('should open edit dialog for correct qualification', async () => {
         await loading();
-        const row = testee.findAll('table tbody tr')[2];
-        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
+        const row = getRow(2);
         const name = row.find('[data-test-id="qualification-name"]').text();
-        await testee.find('[data-test-id="context-menu-edit"]').trigger('click');
-        const dialog = testee.find('[data-test-id="edit-dialog"]');
+        const dialog = await openEditDialog(row);
         expect(dialog.exists()).toBe(true);
         expect(dialog.isVisible()).toBe(true);
-        expect((dialog.find('[data-test-id="input-name"] input').element as HTMLInputElement).value).toEqual(name);
+        expect(getInputElement('[data-test-id="input-name"] input').value).toEqual(name);
+    });
+
+    it('should cancel edit', async () => {
+        await loading();
+        const dialog = await openEditDialog(getRow(2));
+        await dialog.find('[data-test-id="button-cancel"]').trigger('click');
+        vi.runAllTimers();
+        await nextTick();
+        expect(updateFunc).not.toHaveBeenCalled();
+    });
+
+    it('should save changes', async () => {
+        await loading();
+        const dialog = await openEditDialog(getRow(2));
+        await dialog.find('[data-test-id="button-submit"]').trigger('click');
+        vi.runAllTimers();
+        await nextTick();
+        expect(updateFunc).toHaveBeenCalled();
     });
 
     async function nextTicks(n: number): Promise<void> {
         for (let i = 0; i < n; i++) {
             await nextTick();
         }
+    }
+
+    function getInputElement(selector: string): HTMLInputElement {
+        return testee.find(selector).element as HTMLInputElement;
+    }
+
+    function getRow(rowIndex: number): DOMWrapper<Element> {
+        return testee.findAll('table tbody tr')[rowIndex];
+    }
+
+    async function openDeleteDialog(row: DOMWrapper<Element>): Promise<DOMWrapper<Element>> {
+        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
+        await testee.find('[data-test-id="context-menu-delete"]').trigger('click');
+        return testee.find('[data-test-id="delete-confirm-dialog"]');
+    }
+
+    async function openEditDialog(row: DOMWrapper<Element>): Promise<DOMWrapper<Element>> {
+        await row.find('[data-test-id="table-context-menu-trigger"]').trigger('click');
+        await testee.find('[data-test-id="context-menu-edit"]').trigger('click');
+        return testee.find('[data-test-id="edit-dialog"]');
     }
 
     async function loading(): Promise<void> {
