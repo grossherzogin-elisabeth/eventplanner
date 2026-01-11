@@ -16,3 +16,6 @@ export * from './domain/mockRegistration';
 export * from './domain/mockSignedInUser';
 export * from './domain/mockSlot';
 export * from './domain/mockUsers';
+export * from './domain/mockSettings';
+
+export * from './router/mockRouter';

@@ -9,8 +9,7 @@ import { useAuthUseCase } from '@/application';
 import { EventSignupType, EventState } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
 import EventEditView from '@/ui/views/events/edit/EventEditView.vue';
-import { mockEventRepresentation, server } from '~/mocks';
-import { mockRouter } from '~/mocks/router/mockRouter';
+import { mockEventRepresentation, mockRouter, server } from '~/mocks';
 import { find } from '~/utils';
 
 const router = mockRouter();

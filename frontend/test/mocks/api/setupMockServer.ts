@@ -25,12 +25,48 @@ export function mockConfigRequest(response?: UiSettingsRepresentation, status: n
     return http.get('/api/v1/config', () => HttpResponse.json(response ?? mockConfigRepresentation(), { status }));
 }
 
-export function mockPositionsRequest(response?: PositionRepresentation[], status: number = 200): RequestHandler {
+export function mockGetPositions(response?: PositionRepresentation[], status: number = 200): RequestHandler {
     return http.get('/api/v1/positions', () => HttpResponse.json(response ?? mockPositionRepresentations(), { status }));
 }
 
-export function mockQualificationsRequest(response?: QualificationRepresentation[], status: number = 200): RequestHandler {
+export function mockDeletePosition(status: number = 200): RequestHandler {
+    return http.delete<{ key: string }>('/api/v1/positions/:key', () => HttpResponse.text('', { status }));
+}
+
+export function mockPutPosition(status: number = 200): RequestHandler {
+    return http.put<{ key: string }>('/api/v1/positions/:key', async ({ request }) => {
+        const body = await request.clone().json();
+        return HttpResponse.json(body, { status });
+    });
+}
+
+export function mockPostPosition(status: number = 200): RequestHandler {
+    return http.post<{ key: string }>('/api/v1/positions', async ({ request }) => {
+        const body = await request.clone().json();
+        return HttpResponse.json(body, { status });
+    });
+}
+
+export function mockGetQualifications(response?: QualificationRepresentation[], status: number = 200): RequestHandler {
     return http.get('/api/v1/qualifications', () => HttpResponse.json(response ?? mockQualificationRepresentations(), { status }));
+}
+
+export function mockDeleteQualification(status: number = 200): RequestHandler {
+    return http.delete<{ key: string }>('/api/v1/qualifications/:key', () => HttpResponse.text('', { status }));
+}
+
+export function mockPutQualification(status: number = 200): RequestHandler {
+    return http.put<{ key: string }>('/api/v1/qualifications/:key', async ({ request }) => {
+        const body = await request.clone().json();
+        return HttpResponse.json(body, { status });
+    });
+}
+
+export function mockPostQualification(status: number = 200): RequestHandler {
+    return http.post<{ key: string }>('/api/v1/qualifications', async ({ request }) => {
+        const body = await request.clone().json();
+        return HttpResponse.json(body, { status });
+    });
 }
 
 export function mockUsersRequest(response?: UserRepresentation[], status: number = 200): RequestHandler {
@@ -81,8 +117,14 @@ export function setupDefaultMockServer(): SetupServerApi {
     return setupServer(
         mockAccountRequest(),
         mockConfigRequest(),
-        mockPositionsRequest(),
-        mockQualificationsRequest(),
+        mockGetPositions(),
+        mockDeletePosition(),
+        mockPutPosition(),
+        mockPostPosition(),
+        mockGetQualifications(),
+        mockPutQualification(),
+        mockDeleteQualification(),
+        mockPostQualification(),
         mockUsersRequest(),
         mockEventTemplatesRequest(),
         mockEventListRequest(),

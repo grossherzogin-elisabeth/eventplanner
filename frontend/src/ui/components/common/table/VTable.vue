@@ -75,6 +75,7 @@
                     <td
                         v-if="$slots['context-menu']"
                         ref="contextColumns"
+                        data-test-id="table-context-menu-trigger"
                         class="w-0"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >

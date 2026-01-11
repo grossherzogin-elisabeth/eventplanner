@@ -1,5 +1,5 @@
 <template>
-    <button ref="button" :class="$attrs.class" class="cursor-pointer" @click.stop="open = true">
+    <button ref="button" v-bind="$attrs" class="cursor-pointer" @click.stop="open = true">
         <slot name="icon">
             <i class="fa-solid fa-ellipsis-vertical mx-1" />
         </slot>
