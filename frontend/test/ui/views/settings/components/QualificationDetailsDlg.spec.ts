@@ -2,11 +2,13 @@ import { nextTick } from 'vue';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
+import { useAuthService } from '@/application';
 import { wait } from '@/common';
 import type { Qualification } from '@/domain';
+import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import QualificationDetailsDlg from '@/ui/views/settings/components/QualificationDetailsDlg.vue';
-import { mockPositions, mockQualificationCaptain } from '~/mocks';
+import { mockPositions, mockQualificationCaptain, mockSignedInUser } from '~/mocks';
 
 describe('QualificationDetailsDlg.vue', () => {
     let testee: VueWrapper;
@@ -16,6 +18,9 @@ describe('QualificationDetailsDlg.vue', () => {
     beforeEach(async () => {
         result = undefined;
         closed = false;
+        useAuthService().setSignedInUser(
+            mockSignedInUser({ permissions: [Permission.READ_QUALIFICATIONS, Permission.WRITE_QUALIFICATIONS] })
+        );
         testee = mount(QualificationDetailsDlg, { global: { stubs: { teleport: true } } });
     });
 

@@ -2,11 +2,13 @@ import { nextTick } from 'vue';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
+import { useAuthService } from '@/application';
 import { wait } from '@/common';
 import type { Position } from '@/domain';
+import { Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import PositionDetailsDlg from '@/ui/views/settings/components/PositionDetailsDlg.vue';
-import { mockPositionMate } from '~/mocks';
+import { mockPositionMate, mockSignedInUser } from '~/mocks';
 
 describe('PositionDetailsDlg.vue', () => {
     let testee: VueWrapper;
@@ -16,6 +18,7 @@ describe('PositionDetailsDlg.vue', () => {
     beforeEach(async () => {
         result = undefined;
         closed = false;
+        useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_POSITIONS, Permission.WRITE_POSITIONS] }));
         testee = mount(PositionDetailsDlg, { global: { stubs: { teleport: true } } });
     });
 

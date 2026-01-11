@@ -15,7 +15,7 @@
                             :errors="validation.errors.value['key']"
                             :errors-visible="validation.showErrors.value"
                             required
-                            :disabled="mode === Mode.EDIT"
+                            :disabled="mode === Mode.EDIT || !hasWritePermission"
                         />
                     </div>
                     <div class="mb-4">
@@ -25,6 +25,7 @@
                             :label="$t('views.settings.positions.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
+                            :disabled="!hasWritePermission"
                             required
                         />
                     </div>
@@ -35,6 +36,7 @@
                             :label="$t('views.settings.positions.imo-list-rank')"
                             :errors="validation.errors.value['imoListRank']"
                             :errors-visible="validation.showErrors.value"
+                            :disabled="!hasWritePermission"
                             required
                         />
                     </div>
@@ -45,6 +47,7 @@
                             :label="$t('views.settings.positions.color')"
                             :errors="validation.errors.value['color']"
                             :errors-visible="validation.showErrors.value"
+                            :disabled="!hasWritePermission"
                             required
                         >
                             <template #after>
@@ -59,6 +62,7 @@
                             :label="$t('views.settings.positions.prio')"
                             :errors="validation.errors.value['prio']"
                             :errors-visible="validation.showErrors.value"
+                            :disabled="!hasWritePermission"
                             required
                         />
                     </div>
@@ -66,20 +70,29 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel()">
-                <span>{{ $t('generic.cancel') }}</span>
-            </button>
-            <button class="btn-ghost" data-test-id="button-submit" name="save" :disabled="validation.disableSubmit.value" @click="submit()">
-                <span>{{ $t('generic.save') }}</span>
-            </button>
+            <template v-if="hasWritePermission">
+                <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
+                    <span>{{ $t('generic.cancel') }}</span>
+                </button>
+                <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="submit">
+                    <span>{{ $t('generic.save') }}</span>
+                </button>
+            </template>
+            <template v-else>
+                <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="cancel">
+                    <span>{{ $t('generic.close') }}</span>
+                </button>
+            </template>
         </template>
     </VDialog>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useAuthUseCase } from '@/application';
 import { deepCopy } from '@/common';
 import type { Position } from '@/domain';
+import { Permission } from '@/domain';
 import { usePositionService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputNumber, VInputText } from '@/ui/components/common';
@@ -91,12 +104,14 @@ enum Mode {
     EDIT = 'EDIT',
 }
 
+const authUseCase = useAuthUseCase();
 const positionService = usePositionService();
 
 const dlg = ref<Dialog<Position | undefined, Position | undefined> | null>(null);
 const mode = ref<Mode>(Mode.CREATE);
 const position = ref<Position>({ key: '', name: '', imoListRank: '', color: '', prio: 0 });
 const positions = usePositions();
+const hasWritePermission = computed<boolean>(() => authUseCase.getSignedInUser().permissions.includes(Permission.WRITE_POSITIONS));
 const others = computed(() => {
     if (mode.value === Mode.CREATE) return positions.all.value;
     return positions.all.value.filter((it) => it.key !== position.value.key);

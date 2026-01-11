@@ -15,7 +15,7 @@
                             :errors="validation.errors.value['key']"
                             :errors-visible="validation.showErrors.value"
                             required
-                            :disabled="mode === Mode.EDIT"
+                            :disabled="mode === Mode.EDIT || !hasWritePermission"
                         />
                     </div>
                     <div class="mb-4">
@@ -25,6 +25,7 @@
                             :label="$t('views.settings.qualifications.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
+                            :disabled="!hasWritePermission"
                             required
                         />
                     </div>
@@ -36,6 +37,7 @@
                             :placeholder="$t('views.settings.qualifications.icon-placeholder')"
                             :errors="validation.errors.value['icon']"
                             :errors-visible="validation.showErrors.value"
+                            :disabled="!hasWritePermission"
                             required
                         >
                             <template #after>
@@ -52,12 +54,17 @@
                             :label="$t('views.settings.qualifications.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
+                            :disabled="!hasWritePermission"
                             required
                         />
                     </div>
                 </section>
                 <div class="mb-4">
-                    <VInputCheckBox v-model="qualification.expires" :label="$t('views.settings.qualifications.expires')" />
+                    <VInputCheckBox
+                        v-model="qualification.expires"
+                        :label="$t('views.settings.qualifications.expires')"
+                        :disabled="!hasWritePermission"
+                    />
                 </div>
                 <div data-test-id="input-positions" class="bg-surface-container-highest xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
                     <h2 class="mb-4 text-xs font-bold">{{ $t('views.settings.qualifications.positions') }}</h2>
@@ -66,6 +73,7 @@
                             <VInputCheckBox
                                 :model-value="qualification.grantsPositions?.includes(position.key)"
                                 :label="position.name"
+                                :disabled="!hasWritePermission"
                                 @update:model-value="togglePosition(position.key, $event)"
                             />
                         </div>
@@ -74,20 +82,29 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
-                <span>{{ $t('generic.cancel') }}</span>
-            </button>
-            <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>{{ $t('generic.save') }}</span>
-            </button>
+            <template v-if="hasWritePermission">
+                <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
+                    <span>{{ $t('generic.cancel') }}</span>
+                </button>
+                <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="submit">
+                    <span>{{ $t('generic.save') }}</span>
+                </button>
+            </template>
+            <template v-else>
+                <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="cancel">
+                    <span>{{ $t('generic.close') }}</span>
+                </button>
+            </template>
         </template>
     </VDialog>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useAuthUseCase } from '@/application';
 import { deepCopy } from '@/common';
 import type { PositionKey, Qualification } from '@/domain';
+import { Permission } from '@/domain';
 import { useQualificationService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCheckBox, VInputText, VInputTextArea } from '@/ui/components/common';
@@ -100,6 +117,7 @@ enum Mode {
     EDIT = 'EDIT',
 }
 
+const authUseCase = useAuthUseCase();
 const qualificationService = useQualificationService();
 const positions = usePositions();
 
@@ -107,6 +125,7 @@ const dlg = ref<Dialog<Qualification | undefined, Qualification | undefined> | n
 const mode = ref<Mode>(Mode.CREATE);
 const qualification = ref<Qualification>({ key: '', icon: 'fa-id-card', expires: false, name: '', description: '', grantsPositions: [] });
 const qualifications = useQualifications();
+const hasWritePermission = computed<boolean>(() => authUseCase.getSignedInUser().permissions.includes(Permission.WRITE_QUALIFICATIONS));
 const others = computed(() => {
     if (mode.value === Mode.CREATE) return qualifications.all.value;
     return qualifications.all.value.filter((it) => it.key !== qualification.value.key);
