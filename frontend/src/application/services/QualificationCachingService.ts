@@ -4,22 +4,35 @@ import type { Qualification, QualificationKey } from '@/domain';
 
 export class QualificationCachingService {
     private readonly qualificationRepository: QualificationRepository;
-    private readonly cache: Storage<QualificationKey, Qualification>;
+    private readonly storage: Storage<QualificationKey, Qualification>;
     private readonly initialized: Promise<void>;
 
     constructor(params: { qualificationRepository: QualificationRepository; cache: Storage<QualificationKey, Qualification> }) {
         this.qualificationRepository = params.qualificationRepository;
-        this.cache = params.cache;
+        this.storage = params.cache;
         this.initialized = this.initialize();
     }
 
     private async initialize(): Promise<void> {
-        await this.fetchQualifications();
+        try {
+            const qualifications = await this.fetchQualifications();
+            await this.storage.deleteAll();
+            await this.storage.saveAll(qualifications);
+        } catch (e: unknown) {
+            const response = e as { status?: number };
+            if (response.status === 401 || response.status === 403) {
+                // users session is no longer valid, clear all locally stored data
+                console.error('Failed to fetch qualifications, clearing local data');
+                await this.storage.deleteAll();
+            } else {
+                console.warn('Failed to fetch qualifications, continuing with local data');
+            }
+        }
     }
 
     public async getQualifications(): Promise<Qualification[]> {
         await this.initialized;
-        const cached = await this.cache.findAll();
+        const cached = await this.storage.findAll();
         if (cached.length > 0) {
             return cached;
         }
@@ -28,13 +41,13 @@ export class QualificationCachingService {
 
     public async removeFromCache(qualificationKey: QualificationKey): Promise<void> {
         await this.initialized;
-        return await this.cache.deleteByKey(qualificationKey);
+        return await this.storage.deleteByKey(qualificationKey);
     }
 
     public async updateCache(qualification: Qualification): Promise<Qualification> {
         await this.initialized;
-        if ((await this.cache.count()) > 0) {
-            return await this.cache.save(qualification);
+        if ((await this.storage.count()) > 0) {
+            return await this.storage.save(qualification);
         }
         return qualification;
     }
@@ -43,7 +56,7 @@ export class QualificationCachingService {
         console.log('📡 Fetching qualifications');
         return debounce('fetchQualifications', async () => {
             const qualifications = await this.qualificationRepository.findAll();
-            await this.cache.saveAll(qualifications);
+            await this.storage.saveAll(qualifications);
             return qualifications;
         });
     }

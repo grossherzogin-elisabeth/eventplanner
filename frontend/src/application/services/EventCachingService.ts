@@ -4,13 +4,13 @@ import type { Event, EventKey } from '@/domain';
 
 export class EventCachingService {
     private readonly eventRepository: EventRepository;
-    private readonly cache: Storage<EventKey, Event>;
+    private readonly storage: Storage<EventKey, Event>;
     private readonly initialized: Promise<void>;
     private fetchedYears: number[] = [];
 
     constructor(params: { eventRepository: EventRepository; cache: Storage<EventKey, Event> }) {
         this.eventRepository = params.eventRepository;
-        this.cache = params.cache;
+        this.storage = params.cache;
         this.initialized = this.initialize();
     }
 
@@ -18,21 +18,29 @@ export class EventCachingService {
         const currentYear = new Date().getFullYear();
         try {
             const events = await Promise.all([
+                this.fetchEvents(currentYear - 2),
                 this.fetchEvents(currentYear - 1),
                 this.fetchEvents(currentYear),
                 this.fetchEvents(currentYear + 1),
                 this.fetchEvents(currentYear + 2),
             ]);
-            await this.cache.deleteAll();
-            await this.cache.saveAll(events.flatMap((it) => it));
-        } catch (e) {
-            console.log('Failed to load events, continuing with cached data');
+            await this.storage.deleteAll();
+            await this.storage.saveAll(events.flatMap((it) => it));
+        } catch (e: unknown) {
+            const response = e as { status?: number };
+            if (response.status === 401 || response.status === 403) {
+                // users session is no longer valid, clear all locally stored data
+                await this.storage.deleteAll();
+                console.error('Failed to fetch events, clearing local data');
+            } else {
+                console.warn('Failed to fetch events, continuing with local data');
+            }
         }
     }
 
     public async getEvents(year: number): Promise<Event[]> {
         await this.initialized;
-        let cached = await this.cache.findAll();
+        let cached = await this.storage.findAll();
         cached = cached.filter((it) => it.start.getFullYear() === year);
         if (cached.length > 0) {
             return cached;
@@ -45,26 +53,26 @@ export class EventCachingService {
 
     public async getEventByKey(eventKey: EventKey): Promise<Event | undefined> {
         await this.initialized;
-        return await this.cache.findByKey(eventKey);
+        return await this.storage.findByKey(eventKey);
     }
 
     public async removeFromCache(eventKey: EventKey): Promise<void> {
         await this.initialized;
-        return await this.cache.deleteByKey(eventKey);
+        return await this.storage.deleteByKey(eventKey);
     }
 
     public async updateCache(event: Event): Promise<Event> {
         await this.initialized;
-        const all = await this.cache.findAll();
+        const all = await this.storage.findAll();
         if (all.find((it) => it.start.getFullYear() === event.start.getFullYear())) {
-            return await this.cache.save(event);
+            return await this.storage.save(event);
         }
         return event;
     }
 
     public async clear(): Promise<void> {
         await this.initialized;
-        await this.cache.deleteAll();
+        await this.storage.deleteAll();
         this.fetchedYears = [];
     }
 
@@ -73,7 +81,7 @@ export class EventCachingService {
         console.log(`📡 Fetching events of ${year}`);
         return debounce('fetchEvents' + year, async () => {
             const events = await this.eventRepository.findAll(year);
-            await this.cache.saveAll(events);
+            await this.storage.saveAll(events);
             return events;
         });
     }
