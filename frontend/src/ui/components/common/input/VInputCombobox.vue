@@ -1,5 +1,5 @@
 <template>
-    <div class="v-input-combobox" v-bind="$attrs">
+    <div class="v-input-combobox" v-bind="$attrs" :class="{ loading: props.loading }">
         <div ref="dropdownAnchor" class="input-field-wrapper" @click="showDropdown()">
             <slot name="before" />
             <label :for="id">{{ props.label }}</label>
@@ -21,7 +21,7 @@
                 @keydown.enter="selectFocusedOption"
                 @keydown.esc="hideDropdown(true)"
             />
-            <VLoadingSpinner v-if="loading"></VLoadingSpinner>
+            <VLoadingSpinner v-if="props.loading" />
             <button
                 v-else
                 :class="focusOptionIndex === null ? 'rotate-0' : 'rotate-180'"
@@ -78,7 +78,7 @@
             <slot name="first-option" />
             <div class="flex-1 overflow-y-auto">
                 <ul v-if="filteredOptions.length === 0" ref="list">
-                    <li v-if="loading" class="input-dropdown-hint">{{ $t('generic.loading') }}</li>
+                    <li v-if="props.loading" class="input-dropdown-hint">{{ $t('generic.loading') }}</li>
                     <li v-else-if="props.options.length === 0" class="input-dropdown-hint">
                         {{ $t('generic.no-entries') }}
                     </li>

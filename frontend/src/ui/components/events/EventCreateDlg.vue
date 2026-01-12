@@ -26,22 +26,13 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputCombobox
+                        <EventTemplateSelect
                             v-model="template"
                             data-test-id="input-event-template"
                             :label="$t('domain.event.template')"
                             :errors="validation.errors.value['template']"
                             :errors-visible="validation.showErrors.value"
-                            :options="templates.map((it) => ({ label: it.name, value: it }))"
-                        >
-                            <template #item="{ item }">
-                                <template v-if="item.value">
-                                    <span class="w-0 flex-grow truncate">{{ item.value?.name }}</span>
-                                    <span class="opacity-50">{{ formatDateRange(item.value?.start, item.value?.end, true) }}</span>
-                                </template>
-                                <template v-else>-</template>
-                            </template>
-                        </VInputCombobox>
+                        />
                     </div>
                     <div class="mb-4">
                         <VInputSelect
@@ -134,22 +125,13 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
+import { useEventAdministrationUseCase } from '@/application';
 import { cropToPrecision, deepCopy, updateDate, updateTime } from '@/common';
 import type { Event } from '@/domain';
 import { EventSignupType, EventState, EventType, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import {
-    AsyncButton,
-    VDialog,
-    VInputCombobox,
-    VInputDate,
-    VInputSelect,
-    VInputText,
-    VInputTextArea,
-    VInputTime,
-} from '@/ui/components/common';
-import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
+import { AsyncButton, VDialog, VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
+import EventTemplateSelect from '@/ui/components/events/EventTemplateSelect.vue';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation';
@@ -157,12 +139,10 @@ import { useValidation } from '@/ui/composables/Validation';
 const eventTypes = useEventTypes();
 const eventSignupTypes = useEventSignupTypes();
 const eventAdminUseCase = useEventAdministrationUseCase();
-const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 
 const dlg = ref<Dialog<Event, Event> | null>(null);
-const templates = ref<Event[]>([]);
-const template = ref<Event | null>(null);
+const template = ref<Event | undefined>(undefined);
 const event = ref<Event>({
     key: '',
     name: '',
@@ -192,15 +172,6 @@ function init(): void {
             }
         }
     );
-    fetchTemplates();
-}
-
-async function fetchTemplates(): Promise<void> {
-    const year = new Date().getFullYear();
-    const eventsNextYear = await eventUseCase.getEvents(year + 1);
-    const eventsCurrentYear = await eventUseCase.getEvents(year);
-    const eventsPreviousYear = await eventUseCase.getEvents(year - 1);
-    templates.value = [...eventsPreviousYear, ...eventsCurrentYear, ...eventsNextYear];
 }
 
 async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
