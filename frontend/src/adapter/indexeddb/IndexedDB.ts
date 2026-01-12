@@ -6,9 +6,9 @@
  * const databaseName = 'example';
  * const storeNames = ['store-a', 'store-b', 'store-c'];
  * const database = IndexedDB.getConnection(databaseName, storeNames, 1);
- * const cacheA = new IndexedDBRepository<string, TypeA>(database, 'store-a');
- * const cacheB = new IndexedDBRepository<string, TypeA>(database, 'store-b');
- * const cacheC = new IndexedDBRepository<string, TypeA>(database, 'store-c');
+ * const storeA = new IndexedDBStorage<string, TypeA>(database, 'store-a');
+ * const storeB = new IndexedDBStorage<string, TypeB>(database, 'store-b');
+ * const storeC = new IndexedDBStorage<string, TypeC>(database, 'store-c');
  * ````
  * @param databaseName
  * @param storeNames

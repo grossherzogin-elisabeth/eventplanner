@@ -1,10 +1,10 @@
 import {
     useAccountRepository,
-    useCache,
     useEventRepository,
     usePositionRepository,
     useQualificationRepository,
     useSettingsRepository,
+    useStorage,
     useUserRepository,
 } from '@/adapter';
 import { AuthService } from './AuthService';
@@ -95,7 +95,7 @@ export function useEventCachingService(): EventCachingService {
         console.log('🚀 Initializing EventCachingService');
         eventCachingService = new EventCachingService({
             eventRepository: useEventRepository(),
-            cache: useCache(StoreNames.Events),
+            cache: useStorage(StoreNames.Events),
         });
     }
     return eventCachingService;
@@ -106,7 +106,7 @@ export function useUserCachingService(): UserCachingService {
     if (!userCachingService) {
         userCachingService = new UserCachingService({
             userRepository: useUserRepository(),
-            cache: useCache(StoreNames.Users),
+            cache: useStorage(StoreNames.Users),
         });
     }
     return userCachingService;
@@ -117,7 +117,7 @@ export function usePositionCachingService(): PositionCachingService {
         console.log('🚀 Initializing PositionCachingService');
         positionCachingService = new PositionCachingService({
             positionRepository: usePositionRepository(),
-            cache: useCache(StoreNames.Positions),
+            cache: useStorage(StoreNames.Positions),
         });
     }
     return positionCachingService;
@@ -128,7 +128,7 @@ export function useQualificationCachingService(): QualificationCachingService {
         console.log('🚀 Initializing QualificationCachingService');
         qualificationCachingService = new QualificationCachingService({
             qualificationRepository: useQualificationRepository(),
-            cache: useCache(StoreNames.Qualifications),
+            cache: useStorage(StoreNames.Qualifications),
         });
     }
     return qualificationCachingService;

@@ -1,6 +1,6 @@
-import type { Cache, CacheableEntity } from '@/application';
+import type { CacheableEntity, Storage } from '@/application';
 
-export class InMemoryCache<K extends string | number, T extends CacheableEntity<K>> implements Cache<K, T> {
+export class InMemoryStorage<K extends string | number, T extends CacheableEntity<K>> implements Storage<K, T> {
     private readonly items = new Map<K, T>();
 
     public async count(): Promise<number> {

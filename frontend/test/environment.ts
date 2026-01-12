@@ -1,3 +1,4 @@
+import indexeddb from 'fake-indexeddb';
 import { type Environment, builtinEnvironments } from 'vitest/environments';
 
 class ResizeObserver {
@@ -24,6 +25,7 @@ export default {
         const w = vm.getVmContext();
         w.BroadcastChannel = BroadcastChannel;
         w.ResizeObserver = ResizeObserver;
+        w.indexedDB = indexeddb;
 
         // EventTarget is the parent of VisualViewport. Mocking visualViewport with
         // an EventTarget instance omits some properties defined in the subtype

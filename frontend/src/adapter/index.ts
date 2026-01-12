@@ -1,7 +1,7 @@
 import { getConnection } from '@/adapter/indexeddb/IndexedDB.ts';
-import { IndexedDBRepository } from '@/adapter/indexeddb/IndexedDBRepository.ts';
-import { InMemoryCache } from '@/adapter/memory/InMemoryCache.ts';
-import type { Cache, CacheableEntity } from '@/application';
+import { IndexedDBStorage } from '@/adapter/indexeddb/IndexedDBStorage.ts';
+import { InMemoryStorage } from '@/adapter/memory/InMemoryStorage.ts';
+import type { CacheableEntity, Storage } from '@/application';
 import type {
     AccountRepository,
     EventRegistrationsRepository,
@@ -27,7 +27,7 @@ let qualificationRepository: QualificationRepository | undefined;
 let settingsRepository: SettingsRepository | undefined;
 let userRepository: UserRepository | undefined;
 let indexedDb: Promise<IDBDatabase> | undefined;
-const caches = new Map<string, Cache<string | number, CacheableEntity<string | number>>>();
+const caches = new Map<string, Storage<string | number, CacheableEntity<string | number>>>();
 
 enum StoreNames {
     Events = 'events',
@@ -100,16 +100,16 @@ function useIndexedDb(): Promise<IDBDatabase> {
     return indexedDb;
 }
 
-export function useCache<K extends string | number, T extends CacheableEntity<K>>(name: string): Cache<K, T> {
+export function useStorage<K extends string | number, T extends CacheableEntity<K>>(name: string): Storage<K, T> {
     let cache = caches.get(name);
     if (!cache) {
-        console.log(`🚀 Initialising ${name} cache`);
+        console.log(`🚀 Initialising ${name} storage`);
         if (import.meta.env.VITE_USE_INDEXED_DB === 'true') {
-            cache = new IndexedDBRepository(useIndexedDb(), name, { invalidateOnReload: true });
+            cache = new IndexedDBStorage(useIndexedDb(), name);
         } else {
-            cache = new InMemoryCache();
+            cache = new InMemoryStorage();
         }
         caches.set(name, cache);
     }
-    return cache as Cache<K, T>;
+    return cache as Storage<K, T>;
 }
