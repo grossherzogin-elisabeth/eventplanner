@@ -21,13 +21,14 @@ import {
 } from '~/mocks';
 
 export function mockEventRepresentation(overwrite?: Partial<EventRepresentation>): EventRepresentation {
+    const year = new Date().getFullYear();
     const event: EventRepresentation = {
         key: 'example-event',
         type: EventType.WeekendEvent,
         name: 'Example Event',
         description: 'This is a mocked event',
-        start: '2024-07-10T09:00:00Z',
-        end: '2024-07-12T17:00:00Z',
+        start: `${year}-07-10T09:00:00Z`,
+        end: `${year}-07-12T17:00:00Z`,
         state: EventState.Planned,
         signupType: EventSignupType.Assignment,
         registrations: [

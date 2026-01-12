@@ -36,6 +36,10 @@ export class EventCachingService {
         return event;
     }
 
+    public async clear(): Promise<void> {
+        await this.cache.deleteAll();
+    }
+
     private async fetchEvents(year: number): Promise<Event[]> {
         return debounce('fetchEvents' + year, async () => {
             const events = await this.eventRepository.findAll(year);

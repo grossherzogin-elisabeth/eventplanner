@@ -75,7 +75,7 @@ export function mockUsersRequest(response?: UserRepresentation[], status: number
 
 export function mockEventListRequest(events?: EventRepresentation[], status: number = 200): RequestHandler {
     const responses: EventRepresentation[] = events ?? [mockEventRepresentation()];
-    return http.get('api/v1/events', () => HttpResponse.json(responses, { status }));
+    return http.get('/api/v1/events', () => HttpResponse.json(responses, { status }));
 }
 
 export function mockEventDetailsRequests(events?: EventRepresentation[], status: number = 200): RequestHandler {

@@ -121,6 +121,7 @@ export class EventAdministrationUseCase {
     private async updateEventInternal(eventKey: EventKey, event: Partial<Event>): Promise<Event> {
         let original = await this.eventCachingService.getEventByKey(eventKey);
         if (!original) {
+            console.log(`📡 Fetching event ${eventKey}`);
             // workaround: we don't have the original cached yet, because for example a reload on a details page happened
             original = await this.eventRepository.findByKey(eventKey);
         }
@@ -139,6 +140,7 @@ export class EventAdministrationUseCase {
             });
         }
 
+        console.log(`📡 Updating event ${eventKey}`);
         let savedEvent = await this.eventRepository.updateEvent(
             eventKey,
             event,

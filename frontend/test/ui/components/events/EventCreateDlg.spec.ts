@@ -1,13 +1,13 @@
 import { nextTick } from 'vue';
-import { type MockInstance, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type MockInstance, afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import { useEventAdministrationUseCase } from '@/application';
-import { wait } from '@/common';
+import { useEventAdministrationUseCase, useEventCachingService } from '@/application';
 import type { Event } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import { mockEvent } from '~/mocks';
+import { selectDropdownOption } from '~/utils';
 
 describe('EventCreateDlg.vue', () => {
     let testee: VueWrapper;
@@ -15,11 +15,20 @@ describe('EventCreateDlg.vue', () => {
     let closed: boolean = false;
     let createFunc: MockInstance;
 
+    beforeAll(() => {
+        vi.useFakeTimers();
+    });
+
+    afterAll(() => {
+        vi.useRealTimers();
+    });
+
     beforeEach(async () => {
         result = undefined;
         closed = false;
-        testee = mount(EventCreateDlg, { global: { stubs: { teleport: true } } });
         createFunc = vi.spyOn(useEventAdministrationUseCase(), 'createEvent');
+        useEventCachingService().clear();
+        testee = mount(EventCreateDlg, { global: { stubs: { teleport: true } } });
         await open();
     });
 
@@ -36,13 +45,13 @@ describe('EventCreateDlg.vue', () => {
     });
 
     it('should not show validation errors initially', async () => {
-        const inputName = await testee.find('[data-test-id="input-event-name"] input');
+        const inputName = testee.find('[data-test-id="input-event-name"] input');
         expect(inputName.classes()).not.toContain('invalid');
     });
 
     it('should show validation error on submit without any input', async () => {
         await submit();
-        const inputName = await testee.find('[data-test-id="input-event-name"] input');
+        const inputName = testee.find('[data-test-id="input-event-name"] input');
         expect(inputName.classes()).toContain('invalid');
         expect(closed).toBe(false);
     });
@@ -51,29 +60,25 @@ describe('EventCreateDlg.vue', () => {
         await submit(); // show the validation errors
         await cancel(); // close the dialog
         await open(); // open it again, which should have a clean state
-        const inputName = await testee.find('[data-test-id="input-event-name"] input');
+        const inputName = testee.find('[data-test-id="input-event-name"] input');
         expect(inputName.classes()).not.toContain('invalid');
     });
 
     it('should create event when validations pass', async () => {
-        const inputName = await testee.find('[data-test-id="input-event-name"] input');
-        await inputName.setValue('Valid event name');
-        await submit();
-        expect(closed).toBe(true);
+        await testee.find('[data-test-id="input-event-name"] input').setValue('Valid event name');
+        await submit(true);
         expect(createFunc).toHaveBeenCalledOnce();
         expect(result?.name).toBe('Valid event name');
     });
 
     it('should copy slots and locations from template', async () => {
-        const inputName = await testee.find('[data-test-id="input-event-name"] input');
-        await inputName.setValue('Valid event name');
-
-        const inputTemplate = testee.find('[data-test-id="input-event-template"] input');
-        await inputTemplate.trigger('click');
-        await selectOption(1);
-
-        await submit();
+        await testee.find('[data-test-id="input-event-name"] input').setValue('Valid event name');
+        await expect.poll(() => testee.find('[data-test-id="input-event-template"]').element.classList).not.toContain('loading');
+        await testee.find('[data-test-id="input-event-template"] input').trigger('click');
+        await selectDropdownOption(testee, /Example Event.*/);
+        await submit(true);
         expect(createFunc).toHaveBeenCalledOnce();
+        expect(result).toBeDefined();
         expect(result?.slots).toEqual(mockEvent().slots);
         expect(result?.locations).toEqual(mockEvent().locations);
     });
@@ -85,27 +90,21 @@ describe('EventCreateDlg.vue', () => {
             result = r;
             closed = true;
         });
-        await wait(1); // wait 1ms to make sure all network requests made after opening
+        vi.runAllTimers();
+        await nextTick();
     }
 
     async function cancel(): Promise<void> {
         await testee.find('[data-test-id="button-cancel"]').trigger('click');
-        await nextTick(); // wait for result to be passed to variable
-        await wait(1); // wait 1ms to make sure all network requests made after opening
+        vi.runAllTimers();
+        await expect.poll(() => closed).toBe(true);
     }
 
-    async function submit(): Promise<void> {
+    async function submit(awaitClosed: boolean = false): Promise<void> {
         await testee.find('[data-test-id="button-submit"]').trigger('click');
-        await nextTick(); // wait for result to be passed to variable
-        await wait(1); // wait 1ms to make sure all network requests made after opening
-    }
-
-    async function selectOption(option: string | number): Promise<void> {
-        const options = testee.findAll('.input-dropdown li');
-        if (typeof option === 'string') {
-            await options.find((it) => it.text() === option)?.trigger('click');
-        } else {
-            await options[option].trigger('click');
+        vi.runAllTimers();
+        if (awaitClosed) {
+            await expect.poll(() => closed).toBe(true);
         }
     }
 });

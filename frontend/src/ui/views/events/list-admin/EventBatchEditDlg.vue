@@ -51,25 +51,14 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputCombobox
+                        <EventTemplateSelect
                             v-model="copySlotsFrom"
                             data-test-id="input-event-slots"
                             :label="$t('views.events.admin-list.batch-edit.copy-slots-from')"
                             :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
                             :errors="validation.errors.value['copySlotsFrom']"
                             :errors-visible="validation.showErrors.value"
-                            :options="templates.map((it) => ({ label: it?.name ?? '', value: it }))"
-                        >
-                            <template #item="{ item }">
-                                <template v-if="item.value">
-                                    <span class="w-0 flex-grow truncate">{{ item.value?.name }}</span>
-                                    <span class="opacity-50">{{ formatDateRange(item.value?.start, item.value?.end, true) }}</span>
-                                </template>
-                                <template v-else>
-                                    {{ $t('views.events.admin-list.batch-edit.dont-change-slots') }}
-                                </template>
-                            </template>
-                        </VInputCombobox>
+                        />
                     </div>
                     <VWarning v-if="copySlotsFrom" class="mb-4" data-test-id="warning-slots-overwrite">
                         {{ $t('views.events.admin-list.batch-edit.copy-slots-warning') }}
@@ -106,12 +95,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
+import { useEventAdministrationUseCase } from '@/application';
 import type { Event } from '@/domain';
 import { useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { AsyncButton, VDialog, VInputCombobox, VInputSelect, VInputText, VInputTextArea, VWarning } from '@/ui/components/common';
-import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
+import { AsyncButton, VDialog, VInputSelect, VInputText, VInputTextArea, VWarning } from '@/ui/components/common';
+import EventTemplateSelect from '@/ui/components/events/EventTemplateSelect.vue';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
@@ -121,13 +110,11 @@ const eventStates = useEventStates();
 const eventTypes = useEventTypes();
 const eventSignupTypes = useEventSignupTypes();
 const eventService = useEventService();
-const eventUseCase = useEventUseCase();
 const eventAdminUseCase = useEventAdministrationUseCase();
 
 const dlg = ref<Dialog<Event[], boolean> | null>(null);
 const patch = ref<Partial<Event>>({});
-const templates = ref<(Event | null)[]>([]);
-const copySlotsFrom = ref<Event | null>(null);
+const copySlotsFrom = ref<Event | undefined>(undefined);
 const validation = useValidation(patch, eventService.validatePartial);
 let eventsToEdit: Event[] = [];
 
@@ -160,17 +147,8 @@ async function open(events: Event[]): Promise<boolean> {
     eventsToEdit = events;
     validation.reset();
     patch.value = {};
-    copySlotsFrom.value = null;
-    fetchTemplates();
+    copySlotsFrom.value = undefined;
     return (await dlg.value?.open().catch(() => false)) || false;
-}
-
-async function fetchTemplates(): Promise<void> {
-    const year = new Date().getFullYear();
-    const eventsNextYear = await eventUseCase.getEvents(year + 1);
-    const eventsCurrentYear = await eventUseCase.getEvents(year);
-    const eventsPreviousYear = await eventUseCase.getEvents(year - 1);
-    templates.value = [null, ...eventsPreviousYear, ...eventsCurrentYear, ...eventsNextYear];
 }
 
 defineExpose<Dialog<Event[], boolean>>({
