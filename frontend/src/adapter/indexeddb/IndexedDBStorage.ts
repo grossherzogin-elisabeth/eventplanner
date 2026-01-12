@@ -1,54 +1,33 @@
+import type { CacheableEntity, Storage } from '@/application/ports';
 import { deepCopy } from '@/common';
-import type { Cache, CacheableEntity } from '../../application/ports/Cache.ts';
-
-export interface CacheInvalidationOptions {
-    invalidateOnReload: boolean;
-    invalidateOnInterval: number;
-}
 
 /**
- * IndexedDB Repository for a single IndexedDB store. The stores have to be created before constructing this class or
+ * IndexedDB adapter for a single IndexedDB store. The stores have to be created before constructing this class or
  * an error will be thrown. Example Implementation:
  * ````typescript
  * const databaseName = 'example';
  * const storeNames = ['store-a', 'store-b', 'store-c'];
  * const database = getConnection(databaseName, storeNames, 1);
- * const cacheA = new IndexedDBRepository<string, TypeA>(database, 'store-a');
- * const cacheB = new IndexedDBRepository<string, TypeA>(database, 'store-b');
- * const cacheC = new IndexedDBRepository<string, TypeA>(database, 'store-c');
+ * const storeA = new IndexedDBStorage<string, TypeA>(database, 'store-a');
+ * const storeB = new IndexedDBStorage<string, TypeB>(database, 'store-b');
+ * const storeC = new IndexedDBStorage<string, TypeC>(database, 'store-c');
  * ````
  */
-export class IndexedDBRepository<K extends string | number, T extends CacheableEntity<K>> implements Cache<K, T> {
+export class IndexedDBStorage<K extends string | number, T extends CacheableEntity<K>> implements Storage<K, T> {
     private readonly database: Promise<IDBDatabase>;
     private readonly store: string;
-    private readonly defaultCacheInvalidationOptions: CacheInvalidationOptions = {
-        invalidateOnReload: true,
-        invalidateOnInterval: 1000 * 60 * 60 * 6, // invalidate cache every 6 hours
-    };
-    private readonly cacheInvalidationOptions: CacheInvalidationOptions;
 
     /**
-     * Create an IndexedDB repository for the specified store. The database passed may be still connecting. All
+     * Create an IndexedDB adapter for the specified store. The database passed may be still connecting. All
      * operations on the db will await the connection promise.
      * @param database promise of the IndexedDN connection
-     * @param store name of the IndexedDB store, store musst be created manually before connecting!
-     * @param cacheInvalidationOptions optional invalidation parameters
+     * @param store name of the IndexedDB store, store must be created manually before connecting!
      */
-    constructor(database: Promise<IDBDatabase>, store: string, cacheInvalidationOptions?: Partial<CacheInvalidationOptions>) {
+    constructor(database: Promise<IDBDatabase>, store: string) {
         this.database = database;
         this.store = store;
-        this.cacheInvalidationOptions = Object.assign(this.defaultCacheInvalidationOptions, cacheInvalidationOptions || {});
-        if (this.cacheInvalidationOptions.invalidateOnReload) {
-            this.deleteAll();
-        }
-        if (this.cacheInvalidationOptions.invalidateOnInterval > 0) {
-            setInterval(() => this.deleteAll(), this.cacheInvalidationOptions.invalidateOnInterval);
-        }
     }
 
-    /**
-     * Get the number of cached entries
-     */
     public async count(): Promise<number> {
         const database = await this.database;
         return new Promise<number>((resolve, reject) => {
@@ -60,9 +39,6 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
         });
     }
 
-    /**
-     * Return all entries saved in this store. If the store is empty, an empty array will be returned
-     */
     public async findAll(): Promise<T[]> {
         const database = await this.database;
         return new Promise<T[]>((resolve, reject) => {
@@ -74,10 +50,6 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
         });
     }
 
-    /**
-     * Find an entry by key and return it if present
-     * @param key
-     */
     public async findByKey(key: K): Promise<T | undefined> {
         if (!key) {
             return undefined;
@@ -97,10 +69,6 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
         });
     }
 
-    /**
-     * Create or update an entry. If another entry exists with the same key, that other entry will be overwritten.
-     * @param entity
-     */
     public async save(entity: T): Promise<T> {
         const clone = deepCopy(entity);
         const database = await this.database;
@@ -117,10 +85,6 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
         });
     }
 
-    /**
-     * Create or update all entries. In case of a key collision the new entry wins.
-     * @param entities
-     */
     public async saveAll(entities: T[]): Promise<T[]> {
         if (entities.length === 0) {
             return [];
@@ -141,10 +105,6 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
         });
     }
 
-    /**
-     * Delete the entry with the specified key
-     * @param key
-     */
     public async deleteByKey(key: K): Promise<void> {
         const database = await this.database;
         return new Promise<void>((resolve, reject) => {
@@ -156,17 +116,10 @@ export class IndexedDBRepository<K extends string | number, T extends CacheableE
         });
     }
 
-    /**
-     * Remove the entry
-     * @param entity
-     */
     public async delete(entity: T): Promise<void> {
         return this.deleteByKey(entity.key);
     }
 
-    /**
-     * Clear the store
-     */
     public async deleteAll(): Promise<void> {
         const database = await this.database;
         return new Promise<void>((resolve, reject) => {

@@ -1,12 +1,12 @@
-import type { Cache, QualificationRepository } from '@/application/ports';
+import type { QualificationRepository, Storage } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Qualification, QualificationKey } from '@/domain';
 
 export class QualificationCachingService {
     private readonly qualificationRepository: QualificationRepository;
-    private readonly cache: Cache<QualificationKey, Qualification>;
+    private readonly cache: Storage<QualificationKey, Qualification>;
 
-    constructor(params: { qualificationRepository: QualificationRepository; cache: Cache<QualificationKey, Qualification> }) {
+    constructor(params: { qualificationRepository: QualificationRepository; cache: Storage<QualificationKey, Qualification> }) {
         this.qualificationRepository = params.qualificationRepository;
         this.cache = params.cache;
     }

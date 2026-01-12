@@ -1,12 +1,12 @@
-import type { Cache, EventRepository } from '@/application/ports';
+import type { EventRepository, Storage } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Event, EventKey } from '@/domain';
 
 export class EventCachingService {
     private readonly eventRepository: EventRepository;
-    private readonly cache: Cache<EventKey, Event>;
+    private readonly cache: Storage<EventKey, Event>;
 
-    constructor(params: { eventRepository: EventRepository; cache: Cache<EventKey, Event> }) {
+    constructor(params: { eventRepository: EventRepository; cache: Storage<EventKey, Event> }) {
         this.eventRepository = params.eventRepository;
         this.cache = params.cache;
     }

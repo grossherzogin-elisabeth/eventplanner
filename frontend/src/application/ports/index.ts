@@ -5,4 +5,4 @@ export * from './UserRepository';
 export * from './EventRegistrationsRepository';
 export * from './QualificationRepository';
 export * from './SettingsRepository';
-export * from './Cache';
+export * from './Storage.ts';

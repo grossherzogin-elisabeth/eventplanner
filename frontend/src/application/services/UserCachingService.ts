@@ -1,12 +1,12 @@
-import type { Cache, UserRepository } from '@/application/ports';
+import type { Storage, UserRepository } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { User, UserKey } from '@/domain';
 
 export class UserCachingService {
     private readonly userRepository: UserRepository;
-    private readonly cache: Cache<UserKey, User>;
+    private readonly cache: Storage<UserKey, User>;
 
-    constructor(params: { userRepository: UserRepository; cache: Cache<UserKey, User> }) {
+    constructor(params: { userRepository: UserRepository; cache: Storage<UserKey, User> }) {
         this.userRepository = params.userRepository;
         this.cache = params.cache;
     }

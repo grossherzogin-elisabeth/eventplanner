@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { InMemoryCache } from '@/adapter/memory/InMemoryCache.ts';
-import type { Cache } from '@/application/ports';
+import { getConnection } from '@/adapter/indexeddb/IndexedDB.ts';
+import { IndexedDBStorage } from '@/adapter/indexeddb/IndexedDBStorage.ts';
+import { InMemoryStorage } from '@/adapter/memory/InMemoryStorage.ts';
+import type { Storage } from '@/application/ports';
 
 interface ExampleType {
     key: string;
@@ -13,15 +15,17 @@ const itemB: ExampleType = { key: 'b', stringAttribute: 'Test 2', numericAttribu
 const itemC: ExampleType = { key: 'c', stringAttribute: 'Test 3', numericAttribute: 123 };
 const itemD: ExampleType = { key: 'd', stringAttribute: 'Test 4', numericAttribute: 123 };
 
-const implementations: { name: string; instance: () => Cache<string, ExampleType> }[] = [
-    { name: 'InMemoryCache', instance: () => new InMemoryCache() },
+const implementations: { name: string; instance: () => Storage<string, ExampleType> }[] = [
+    { name: 'InMemoryStorage', instance: () => new InMemoryStorage() },
+    { name: 'IndexedDbStorage', instance: () => new IndexedDBStorage(getConnection('test', ['test']), 'test') },
 ];
 
 describe.each(implementations)('$name', ({ instance }) => {
-    let testee: Cache<string, ExampleType> = instance();
+    let testee: Storage<string, ExampleType> = instance();
 
     beforeEach(async () => {
         testee = instance();
+        await testee.deleteAll();
         await testee.saveAll([itemA, itemB, itemC, itemD]);
     });
 
@@ -41,7 +45,7 @@ describe.each(implementations)('$name', ({ instance }) => {
         expect(result).toEqual(item);
     });
 
-    it('should save multiple item', async () => {
+    it('should save multiple items', async () => {
         const itemE = { key: 'e', stringAttribute: 'Test 5', numericAttribute: 123 };
         const itemF = { key: 'f', stringAttribute: 'Test 6', numericAttribute: 123 };
         const countBefore = await testee.count();
