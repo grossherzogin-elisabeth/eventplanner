@@ -1,5 +1,9 @@
+![GitHub Release](https://img.shields.io/github/v/release/grossherzogin-elisabeth/eventplanner?label=latest%20release)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/grossherzogin-elisabeth/eventplanner)
+![checks](https://github.com/grossherzogin-elisabeth/eventplanner/actions/workflows/validate_code.yml/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=grossherzogin-elisabeth_eventplanner&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=grossherzogin-elisabeth_eventplanner)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=grossherzogin-elisabeth_eventplanner&metric=coverage)](https://sonarcloud.io/summary/new_code?id=grossherzogin-elisabeth_eventplanner)
+
 
 # Eventplanner
 
