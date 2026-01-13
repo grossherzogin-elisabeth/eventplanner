@@ -317,13 +317,7 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import {
-    useAuthUseCase,
-    useEventAdministrationUseCase,
-    useEventUseCase,
-    useUserAdministrationUseCase,
-    useUsersUseCase,
-} from '@/application';
+import { useEventAdministrationUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
@@ -340,6 +334,7 @@ import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQuery } from '@/ui/composables/QueryState.ts';
+import { useSession } from '@/ui/composables/Session.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
@@ -363,13 +358,12 @@ const eventAdminUseCase = useEventAdministrationUseCase();
 const userAdminUseCase = useUserAdministrationUseCase();
 const usersUseCase = useUsersUseCase();
 const eventUseCase = useEventUseCase();
-const authUseCase = useAuthUseCase();
 const eventService = useEventService();
 const positions = usePositions();
 const router = useRouter();
-const signedInUser = authUseCase.getSignedInUser();
 const eventTypes = useEventTypes();
 const eventStates = useEventStates();
+const { hasPermission } = useSession();
 
 const filter = useQuery<string>('filter', '').parameter;
 const filterWaitinglist = useQuery<boolean>('has-waitinglist', false).parameter;
@@ -403,7 +397,7 @@ const selectedEvents = computed<EventTableViewItem[] | undefined>(() => {
 
 const showBatchOpenEventForSignup = computed<boolean>(() => {
     return (
-        signedInUser.permissions.includes(Permission.WRITE_EVENTS) &&
+        hasPermission(Permission.WRITE_EVENTS) &&
         selectedEvents.value != undefined &&
         selectedEvents.value.filter((it) => it.state === EventState.Draft).length > 0
     );
@@ -411,7 +405,7 @@ const showBatchOpenEventForSignup = computed<boolean>(() => {
 
 const showBatchPublishPlannedCrew = computed<boolean>(() => {
     return (
-        signedInUser.permissions.includes(Permission.WRITE_EVENTS) &&
+        hasPermission(Permission.WRITE_EVENTS) &&
         selectedEvents.value != undefined &&
         selectedEvents.value.filter((it) => it.state === EventState.OpenForSignup).length > 0
     );
@@ -492,7 +486,7 @@ async function editEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
         name: Routes.EventDetails,
         params: { year: item.start.getFullYear(), key: item.key },
     };
-    if (signedInUser.permissions.includes(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.WRITE_EVENTS)) {
         to = {
             name: Routes.EventEdit,
             params: { year: item.start.getFullYear(), key: item.key },

@@ -28,15 +28,15 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useAuthUseCase } from '@/application';
 import { deepCopy, isSameDate } from '@/common';
 import type { Event, Registration } from '@/domain';
 import type { Sheet } from '@/ui/components/common';
 import { VSheet } from '@/ui/components/common';
 import RegistrationForm, { View } from '@/ui/components/events/RegistrationForm.vue';
+import { useSession } from '@/ui/composables/Session.ts';
 import { v4 as uuid } from 'uuid';
 
-const signedInUser = useAuthUseCase().getSignedInUser();
+const { signedInUser } = useSession();
 
 const view = ref<View>(View.OVERVIEW);
 const sheet = ref<Sheet<{ registration?: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
@@ -49,8 +49,8 @@ async function open(value: { registration?: Registration; event: Event | Event[]
         ? deepCopy(value.registration)
         : {
               key: '',
-              userKey: signedInUser.key,
-              positionKey: signedInUser.positions[0] ?? '',
+              userKey: signedInUser.value?.key,
+              positionKey: signedInUser.value?.positions[0] ?? '',
               overnightStay: !isSameDate(events.value[0].start, events.value[0].end),
           };
     view.value = View.OVERVIEW;

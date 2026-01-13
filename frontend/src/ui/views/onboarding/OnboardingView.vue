@@ -47,9 +47,10 @@
 </template>
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import { useAuthUseCase, useConfigService } from '@/application';
+import { useConfigService } from '@/application';
 import { Role } from '@/domain';
 import { VInfo } from '@/ui/components/common';
+import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -58,16 +59,15 @@ const emit = defineEmits<RouteEmits>();
 
 const router = useRouter();
 const config = useConfigService().getConfig();
-const auth = useAuthUseCase();
-const signedInUser = auth.getSignedInUser();
+const { signedInUser } = useSession();
 
 function init(): void {
     emit('update:tab-title', 'Start');
-    if (signedInUser.roles.includes(Role.TEAM_MEMBER)) {
+    if (signedInUser.value?.roles.includes(Role.TEAM_MEMBER)) {
         router.push({ name: Routes.Home });
-    } else if (signedInUser.roles.includes(Role.USER_MANAGER)) {
+    } else if (signedInUser.value?.roles.includes(Role.USER_MANAGER)) {
         router.push({ name: Routes.UsersList });
-    } else if (signedInUser.roles.includes(Role.EVENT_PLANNER)) {
+    } else if (signedInUser.value?.roles.includes(Role.EVENT_PLANNER)) {
         router.push({ name: Routes.EventsListAdmin });
     }
 }

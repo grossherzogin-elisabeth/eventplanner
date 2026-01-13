@@ -63,7 +63,7 @@
                 </div>
             </div>
         </template>
-        <template v-if="event && signedInUser.permissions.includes(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
+        <template v-if="event && hasPermission(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
             <AsyncButton
                 v-if="event.isSignedInUserAssigned"
                 class="btn-danger"
@@ -96,11 +96,7 @@
             </button>
         </template>
         <template v-if="event" #secondary-buttons>
-            <RouterLink
-                v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)"
-                :to="{ name: Routes.EventEdit }"
-                class="btn-secondary"
-            >
+            <RouterLink v-if="hasPermission(Permission.WRITE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
                 <i class="fa-solid fa-drafting-compass" />
                 <span>{{ $t('views.events.details.edit-event') }}</span>
             </RouterLink>
@@ -148,8 +144,8 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useAuthUseCase, useEventUseCase } from '@/application';
-import type { Event, Position, Registration, SignedInUser } from '@/domain';
+import { useEventUseCase } from '@/application';
+import type { Event, Position, Registration } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
 import { useEventService } from '@/domain/services.ts';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -160,6 +156,7 @@ import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import { usePositions } from '@/ui/composables/Positions.ts';
+import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -171,10 +168,9 @@ const route = useRoute();
 const router = useRouter();
 const positions = usePositions();
 const eventService = useEventService();
-const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
+const { hasPermission } = useSession();
 
-const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const event = ref<Event | null>(null);
 
 const registrationSheet = ref<Dialog<

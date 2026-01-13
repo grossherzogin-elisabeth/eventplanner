@@ -143,11 +143,12 @@
 </template>
 <script lang="ts" setup>
 import { computed, watch } from 'vue';
-import { useAuthUseCase, useUsersUseCase } from '@/application';
+import { useUsersUseCase } from '@/application';
 import { cropToPrecision, deepCopy, isSameDate, subtractFromDate } from '@/common';
 import type { Event, InputSelectOption, PositionKey, Registration } from '@/domain';
 import { VInfo, VInputCheckBox, VInputSelectionList, VInputTextArea } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions';
+import { useSession } from '@/ui/composables/Session.ts';
 
 interface Props {
     events: Event[];
@@ -162,9 +163,9 @@ interface RouteEmits {
 const props = defineProps<Props>();
 const emit = defineEmits<RouteEmits>();
 
-const signedInUser = useAuthUseCase().getSignedInUser();
 const usersUseCase = useUsersUseCase();
 const positions = usePositions();
+const { signedInUser } = useSession();
 
 const filteredEvents = computed<Event[]>(() => {
     if (!props.registration.key) {
@@ -175,7 +176,7 @@ const filteredEvents = computed<Event[]>(() => {
 });
 const hasSingleDayEvent = computed<boolean>(() => filteredEvents.value.find((it) => isSameDate(it.start, it.end)) !== undefined);
 const availablePositionsForSignedInUser = computed<InputSelectOption<string | undefined>[]>(() => {
-    const validPositionKeys: (PositionKey | undefined)[] = signedInUser.positions || [];
+    const validPositionKeys: (PositionKey | undefined)[] = signedInUser.value?.positions || [];
     if (!validPositionKeys.includes(props.registration.positionKey)) {
         validPositionKeys.push(props.registration.positionKey);
     }

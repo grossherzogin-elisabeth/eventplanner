@@ -1,5 +1,16 @@
 <template>
-    <div v-if="signedInUser.key" class="menu flex-1 overflow-y-auto">
+    <div v-if="loading || route.name === Routes.Login" class="menu animate-pulse">
+        <div class="mx-12 my-4 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-12 h-6 w-1/2 rounded-full bg-current opacity-10"></div>
+
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
+    </div>
+    <div v-else-if="signedInUser" class="menu flex-1 overflow-y-auto">
         <h1 class="mt-8 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ menuTitle }}</h1>
 
         <div v-if="signedInUser.impersonated" class="bg-error-container text-onerror-container mx-4 rounded-2xl pl-4 xl:mx-8 xl:pl-6">
@@ -14,7 +25,7 @@
         </div>
 
         <ul class="menu-list my-4">
-            <li v-if="signedInUser.permissions.includes(Permission.READ_EVENTS)" class="menu-item">
+            <li v-if="hasPermission(Permission.READ_EVENTS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.Home }">
                     <i class="fa-solid fa-home"></i>
                     <span>{{ $t('navigation.myNextEvents') }}</span>
@@ -26,7 +37,7 @@
                     <span>{{ $t('navigation.start') }}</span>
                 </RouterLink>
             </li>
-            <li :class="{ expanded: eventsExpanded }" class="permission-read-events menu-item">
+            <li v-if="hasPermission(Permission.READ_EVENTS)" :class="{ expanded: eventsExpanded }" class="menu-item">
                 <button @click="eventsExpanded = !eventsExpanded">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>{{ $t('navigation.calendar') }}</span>
@@ -45,34 +56,36 @@
                     </li>
                 </ul>
             </li>
-            <li class="permission-read-events menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }">
+            <li
+                v-if="hasPermission(Permission.READ_EVENTS)"
+                class="menu-item"
+                :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }"
+            >
                 <RouterLink :to="{ name: Routes.EventsList }">
                     <i class="fa-solid fa-compass"></i>
                     <span>{{ $t('navigation.allEvents') }}</span>
                 </RouterLink>
             </li>
-            <li class="permission-write-events menu-item" :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }">
+            <li
+                v-if="hasPermission(Permission.WRITE_EVENTS)"
+                class="menu-item"
+                :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }"
+            >
                 <RouterLink :to="{ name: Routes.EventsListAdmin }">
                     <i class="fa-solid fa-compass-drafting"></i>
                     <span>{{ $t('navigation.manageEvents') }}</span>
                 </RouterLink>
             </li>
-            <li class="permission-read-user-details menu-item">
+            <li v-if="hasPermission(Permission.READ_USER_DETAILS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
                     <span>{{ $t('navigation.manageUsers') }}</span>
                 </RouterLink>
             </li>
-            <li class="permission-write-application-settings menu-item">
+            <li v-if="hasPermission(Permission.WRITE_SETTINGS)" class="menu-item">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>
                     <span>{{ $t('navigation.manageSettings') }}</span>
-                </RouterLink>
-            </li>
-            <li class="menu-item hidden">
-                <RouterLink :to="{ name: Routes.SystemInfo }">
-                    <i class="fa-solid fa-comment"></i>
-                    <span>{{ $t('navigation.feedback') }}</span>
                 </RouterLink>
             </li>
             <li class="menu-item">
@@ -88,17 +101,6 @@
                 </a>
             </li>
         </ul>
-    </div>
-    <div v-else-if="loading || route.name === Routes.Login" class="menu animate-pulse">
-        <div class="mx-12 my-4 h-6 rounded-full bg-current opacity-10"></div>
-        <div class="mx-12 mb-12 h-6 w-1/2 rounded-full bg-current opacity-10"></div>
-
-        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
-        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
-        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
-        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
-        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
-        <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
     </div>
     <div v-else>
         <h1 class="mt-4 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ menuTitle }}</h1>
@@ -129,9 +131,9 @@
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthUseCase, useConfigService } from '@/application';
-import type { SignedInUser } from '@/domain';
 import { Permission } from '@/domain';
 import { VInfo } from '@/ui/components/common';
+import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes';
 
 const menuTitle = useConfigService().getConfig().menuTitle;
@@ -141,23 +143,26 @@ const route = useRoute();
 const eventRoute = ref<string | undefined>(undefined);
 const eventRouteActive = ref<boolean>(false);
 
-const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
+const { signedInUser, hasPermission } = useSession();
 const loading = ref<boolean>(true);
 const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1];
 const eventsExpanded = ref<boolean>(false);
 
-authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
-setTimeout(() => (loading.value = false), 1000);
-watch(route, () => {
-    eventRouteActive.value = route.matched.find((it) => it.name === 'app_event-parent') !== undefined;
-    if (route.name === Routes.EventsCalendar) {
-        eventRoute.value = Routes.EventsCalendar + ':' + route.params.year;
-    } else if (route.name === Routes.EventsListAdmin) {
-        eventRoute.value = Routes.EventsListAdmin;
-    } else if (route.name === Routes.EventsList || eventRoute.value === undefined) {
-        eventRoute.value = Routes.EventsList;
-    }
-});
+function init(): void {
+    authUseCase.onLogin().then(() => (loading.value = false));
+    watch(route, () => {
+        eventRouteActive.value = route.matched.find((it) => it.name === 'app_event-parent') !== undefined;
+        if (route.name === Routes.EventsCalendar) {
+            eventRoute.value = Routes.EventsCalendar + ':' + route.params.year;
+        } else if (route.name === Routes.EventsListAdmin) {
+            eventRoute.value = Routes.EventsListAdmin;
+        } else if (route.name === Routes.EventsList || eventRoute.value === undefined) {
+            eventRoute.value = Routes.EventsList;
+        }
+    });
+}
+
+init();
 </script>
 
 <style>

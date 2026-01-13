@@ -16,7 +16,7 @@
                     ref="calendar"
                     :style="calendarStyle"
                     class="calendar"
-                    :class="{ 'enable-create': signedInUser.permissions.includes(Permission.WRITE_EVENTS) }"
+                    :class="{ 'enable-create': hasPermission(Permission.WRITE_EVENTS) }"
                 >
                     <div v-for="m in months.entries()" :key="m[0]" class="calendar-month">
                         <div class="calendar-header">
@@ -70,12 +70,13 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useAuthUseCase, useEventAdministrationUseCase, useEventUseCase } from '@/application';
+import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import { DateTimeFormat, Month, addToDate } from '@/common/date';
 import { type Event, EventState, Permission } from '@/domain';
 import { useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import CreateEventDlg from '@/ui/components/events/EventCreateDlg.vue';
+import { useSession } from '@/ui/composables/Session.ts';
 import { isHoliday } from 'feiertagejs';
 import EventCalendarItem from './EventCalendarItem.vue';
 
@@ -107,8 +108,7 @@ const i18n = useI18n();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 const eventAdministrationService = useEventAdministrationUseCase();
-const authUseCase = useAuthUseCase();
-const signedInUser = authUseCase.getSignedInUser();
+const { hasPermission } = useSession();
 
 const createEventDialog = ref<Dialog<Partial<Event>, Event> | null>(null);
 const createEventFromDate = ref<Date | null>(null);
@@ -222,14 +222,14 @@ function updateEvent(event: Event): void {
 }
 
 function startCreateEventDrag(date: Date): void {
-    if (signedInUser.permissions.includes(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.WRITE_EVENTS)) {
         createEventFromDate.value = date;
         calendarStyle.value['--create-event-days'] = 1;
     }
 }
 
 async function stopCreateEventDrag(date: Date): Promise<void> {
-    if (signedInUser.permissions.includes(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.WRITE_EVENTS)) {
         const from = createEventFromDate.value;
         const to = date;
         if (from && to && createEventDialog.value) {
@@ -245,7 +245,7 @@ async function stopCreateEventDrag(date: Date): Promise<void> {
 }
 
 function updateCreateEventDrag(date: Date): void {
-    if (signedInUser.permissions.includes(Permission.WRITE_EVENTS) && createEventFromDate.value !== null) {
+    if (hasPermission(Permission.WRITE_EVENTS) && createEventFromDate.value !== null) {
         const durationMillis = date.getTime() - createEventFromDate.value.getTime();
         if (durationMillis >= 0) {
             calendarStyle.value['--create-event-days'] = new Date(durationMillis).getDate();
