@@ -8,7 +8,7 @@
                 :errors="validation.errors.value['state']"
                 :errors-visible="validation.showErrors.value"
                 required
-                :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                 @update:model-value="update({ state: $event })"
             />
         </div>
@@ -20,7 +20,7 @@
                 :errors="validation.errors.value['name']"
                 :errors-visible="validation.showErrors.value"
                 required
-                :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                 @update:model-value="update({ name: $event })"
             />
         </div>
@@ -32,7 +32,7 @@
                 :errors="validation.errors.value['type']"
                 :errors-visible="validation.showErrors.value"
                 required
-                :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                 @update:model-value="update({ type: $event })"
             />
         </div>
@@ -44,7 +44,7 @@
                 :errors="validation.errors.value['signupType']"
                 :errors-visible="validation.showErrors.value"
                 required
-                :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                 @update:model-value="update({ signupType: $event })"
             />
         </div>
@@ -55,7 +55,7 @@
                 :hint="$t('generic.markdown-supported')"
                 :errors="validation.errors.value['description']"
                 :errors-visible="validation.showErrors.value"
-                :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                 @update:model-value="update({ description: $event })"
             />
         </div>
@@ -69,7 +69,7 @@
                     :errors="validation.errors.value['start']"
                     :errors-visible="validation.showErrors.value"
                     required
-                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                    :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                     @update:model-value="update({ start: updateDate(event.start, $event) })"
                 />
             </div>
@@ -80,7 +80,7 @@
                     :errors="validation.errors.value['start']"
                     :errors-visible="validation.showErrors.value"
                     required
-                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                    :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                     @update:model-value="update({ start: updateTime(props.event.start, $event, 'minutes') })"
                 />
             </div>
@@ -96,7 +96,7 @@
                     :errors="validation.errors.value['end']"
                     :errors-visible="validation.showErrors.value"
                     required
-                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                    :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                     @update:model-value="update({ end: updateDate(props.event.end, $event) })"
                 />
             </div>
@@ -107,7 +107,7 @@
                     :errors="validation.errors.value['end']"
                     :errors-visible="validation.showErrors.value"
                     required
-                    :disabled="!signedInUser.permissions.includes(Permission.WRITE_EVENT_DETAILS)"
+                    :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
                     @update:model-value="update({ end: updateTime(props.event.end, $event, 'minutes') })"
                 />
             </div>
@@ -116,7 +116,6 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useAuthUseCase } from '@/application';
 import { deepCopy, updateDate, updateTime } from '@/common';
 import type { Event } from '@/domain';
 import { Permission, useEventService } from '@/domain';
@@ -124,6 +123,7 @@ import { VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
+import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 interface Props {
@@ -138,10 +138,8 @@ const emit = defineEmits<Emits>();
 const eventStates = useEventStates();
 const eventTypes = useEventTypes();
 const eventSignupTypes = useEventSignupTypes();
-
 const eventService = useEventService();
-const authUseCase = useAuthUseCase();
-const signedInUser = authUseCase.getSignedInUser();
+const { hasPermission } = useSession();
 
 const validation = useValidation(
     computed(() => props.event), // validation is not triggered correctly when simply passing props.event

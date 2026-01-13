@@ -68,7 +68,7 @@
                     </template>
                 </VTabs>
             </template>
-            <template v-if="signedInUser.permissions.includes(Permission.WRITE_USERS)" #primary-button>
+            <template v-if="hasPermission(Permission.WRITE_USERS)" #primary-button>
                 <AsyncButton :action="save" name="save" :disabled="validation.disableSubmit.value">
                     <template #icon>
                         <i class="fa-solid fa-save"></i>
@@ -134,6 +134,7 @@ import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
+import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
@@ -167,7 +168,7 @@ const userAdministrationUseCase = useUserAdministrationUseCase();
 const eventsUseCase = useEventUseCase();
 const authUseCase = useAuthUseCase();
 const errorHandlingUseCase = useErrorHandlingService();
-const signedInUser = authUseCase.getSignedInUser();
+const { hasPermission } = useSession();
 
 const tabs = [
     Tab.USER_EVENTS,

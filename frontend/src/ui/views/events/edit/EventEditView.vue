@@ -64,7 +64,7 @@
                 </template>
             </VTabs>
         </template>
-        <template v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)" #primary-button>
+        <template v-if="hasPermission(Permission.WRITE_EVENTS)" #primary-button>
             <AsyncButton :action="saveIfValid" :disabled="!validation.isValid" name="save">
                 <template #icon>
                     <i class="fa-solid fa-save" />
@@ -181,13 +181,7 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import {
-    useAuthUseCase,
-    useEventAdministrationUseCase,
-    useEventUseCase,
-    useUserAdministrationUseCase,
-    useUsersUseCase,
-} from '@/application';
+import { useEventAdministrationUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
 import { deepCopy, diff, filterUndefined } from '@/common';
 import type { Event, InputSelectOption, Location, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
@@ -197,6 +191,7 @@ import { AsyncButton, VConfirmationDialog, VInfo, VTabs } from '@/ui/components/
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
+import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import TabEventDetailsForm from '@/ui/views/events/edit/TabEventDetailsForm.vue';
@@ -226,10 +221,9 @@ const route = useRoute();
 const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
-const authUseCase = useAuthUseCase();
 const usersUseCase = useUsersUseCase();
 const usersAdminUseCase = useUserAdministrationUseCase();
-const signedInUser = authUseCase.getSignedInUser();
+const { hasPermission } = useSession();
 
 const exportTemplates = ref<string[]>([]);
 const eventOriginal = ref<Event | null>(null);
@@ -242,7 +236,7 @@ const hasChanges = ref<boolean>(false);
 const registrations = computed<ResolvedRegistrationSlot[]>(() => crew.value.concat(waitinglist.value));
 const tabs = computed<InputSelectOption<Tab>[]>(() => {
     const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
-    if (signedInUser.permissions.includes(Permission.WRITE_EVENT_SLOTS)) {
+    if (hasPermission(Permission.WRITE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_REGISTRATIONS);
         if (event.value?.signupType === EventSignupType.Assignment) {
             visibleTabs.push(Tab.EVENT_SLOTS, Tab.EVENT_CREW_EDITOR);

@@ -22,28 +22,25 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { useAuthUseCase, useConfigService } from '@/application';
-import type { SignedInUser } from '@/domain';
+import { useConfigService } from '@/application';
 import { Permission } from '@/domain';
 import { VErrorDialog } from '@/ui/components/common';
 import AppMenu from '@/ui/components/partials/AppMenu.vue';
 import AppNavbar from '@/ui/components/partials/AppNavbar.vue';
 import VNotifications from '@/ui/components/partials/VNotifications.vue';
+import { useSession } from '@/ui/composables/Session.ts';
 import { useViewportSize } from '@/ui/composables/ViewportSize';
 
 useViewportSize();
 const configService = useConfigService();
-const authUseCase = useAuthUseCase();
+const { signedInUser } = useSession();
 
-const signedInUser = ref<SignedInUser | null>(null);
 const title = ref<string>('');
 
 async function init(): Promise<void> {
     console.info('🚀 Mounting app');
     setTitle();
     watch(title, setTitle);
-    authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
-    authUseCase.onLogout().then(() => (signedInUser.value = null));
     watch(signedInUser, () => {
         Object.values(Permission).forEach((permission) => document.body.classList.remove(permission));
         signedInUser.value?.permissions.forEach((permission) => document.body.classList.add(permission));

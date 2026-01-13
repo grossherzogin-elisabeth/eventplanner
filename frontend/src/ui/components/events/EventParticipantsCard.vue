@@ -23,8 +23,8 @@
                 <div class="mr-4">
                     <h3 class="mb-4 text-base">
                         <i class="fa-solid fa-trophy opacity-75"></i>
-                        <span v-if="['m', 'f'].includes(signedInUser.gender ?? '')" class="ml-4">
-                            {{ $t(`components.event-participants-card.placeholder-title-${signedInUser.gender}`) }}
+                        <span v-if="['m', 'f'].includes(signedInUser?.gender ?? '')" class="ml-4">
+                            {{ $t(`components.event-participants-card.placeholder-title-${signedInUser?.gender}`) }}
                         </span>
                         <span v-else class="ml-4">
                             {{ $t('components.event-participants-card.placeholder-title') }}
@@ -50,7 +50,7 @@
                             <i v-if="it.name" class="fa-solid fa-user-circle text-secondary" />
                             <i v-else class="fa-solid fa-user-circle text-error" />
                             <RouterLink
-                                v-if="it.user && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)"
+                                v-if="it.user && hasPermission(Permission.READ_USER_DETAILS)"
                                 :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
                                 class="hover:text-primary truncate hover:underline"
                             >
@@ -76,7 +76,7 @@
                     <li v-for="(it, index) in waitingList" :key="index" class="flex items-center justify-between space-x-4">
                         <i class="fa-solid fa-user-circle text-secondary" />
                         <RouterLink
-                            v-if="it.user && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)"
+                            v-if="it.user && hasPermission(Permission.READ_USER_DETAILS)"
                             :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
                             class="hover:text-primary grow truncate hover:underline"
                         >
@@ -102,9 +102,10 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { useAuthUseCase, useEventUseCase } from '@/application';
-import type { Event, ResolvedRegistrationSlot, SignedInUser } from '@/domain';
+import { useEventUseCase } from '@/application';
+import type { Event, ResolvedRegistrationSlot } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
+import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
 enum Tab {
@@ -118,10 +119,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const authUseCase = useAuthUseCase();
 const eventUseCase = useEventUseCase();
+const { signedInUser, hasPermission } = useSession();
 
-const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const tab = ref<Tab>(Tab.Team);
 
 const waitingList = ref<ResolvedRegistrationSlot[]>([]);

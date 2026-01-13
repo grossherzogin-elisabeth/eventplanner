@@ -54,7 +54,7 @@
                         <span>Veranstaltung anzeigen</span>
                     </RouterLink>
                 </li>
-                <li v-if="signedInUser.permissions.includes(Permission.WRITE_EVENTS)">
+                <li v-if="hasPermission(Permission.WRITE_EVENTS)">
                     <RouterLink
                         :to="{
                             name: Routes.EventEdit,
@@ -127,7 +127,7 @@
 import { computed } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
-import { useAuthUseCase, useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
+import { useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
 import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, UserDetails } from '@/domain';
@@ -135,6 +135,7 @@ import { Permission, useEventService } from '@/domain';
 import { VTable } from '@/ui/components/common';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
+import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
 export interface EventTableViewItem {
@@ -163,11 +164,10 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const router = useRouter();
-const authUseCase = useAuthUseCase();
+const { hasPermission } = useSession();
 const eventService = useEventService();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const errorHandling = useErrorHandlingService();
-const signedInUser = authUseCase.getSignedInUser();
 const positions = usePositions();
 
 const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
@@ -240,7 +240,7 @@ async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
         name: Routes.EventDetails,
         params: { year: item.start.getFullYear(), key: item.eventKey },
     };
-    if (signedInUser.permissions.includes(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.WRITE_EVENTS)) {
         to = {
             name: Routes.EventEdit,
             params: { year: item.start.getFullYear(), key: item.eventKey },

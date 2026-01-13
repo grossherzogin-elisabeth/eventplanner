@@ -32,7 +32,7 @@
                         </span>
                     </td>
                 </template>
-                <template v-if="signedInUser.permissions.includes(Permission.WRITE_POSITIONS)" #context-menu="{ item }">
+                <template v-if="hasPermission(Permission.WRITE_POSITIONS)" #context-menu="{ item }">
                     <li class="context-menu-item" data-test-id="context-menu-edit" @click="editPosition(item)">
                         <i class="fa-solid fa-edit" />
                         <span>{{ $t('generic.edit') }}</span>
@@ -46,7 +46,7 @@
         </div>
 
         <div
-            v-if="signedInUser.permissions.includes(Permission.WRITE_POSITIONS)"
+            v-if="hasPermission(Permission.WRITE_POSITIONS)"
             class="pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12"
         >
             <button class="btn-floating pointer-events-auto" data-test-id="button-create" @click="createPosition()">
@@ -62,15 +62,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useAuthUseCase, usePositionAdministrationUseCase } from '@/application';
+import { usePositionAdministrationUseCase } from '@/application';
 import type { Position } from '@/domain';
 import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog, VTable } from '@/ui/components/common';
+import { useSession } from '@/ui/composables/Session.ts';
 import PositionDetailsDlg from './components/PositionDetailsDlg.vue';
 
-const signedInUser = useAuthUseCase().getSignedInUser();
 const positionAdministrationUseCase = usePositionAdministrationUseCase();
+const { hasPermission } = useSession();
 
 const positions = ref<Position[] | undefined>(undefined);
 

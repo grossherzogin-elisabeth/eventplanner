@@ -38,7 +38,7 @@
                     </button>
                 </div>
             </div>
-            <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED && !signedInUser.key">
+            <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED && !signedInUser?.key">
                 <div class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold">
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
@@ -113,8 +113,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAuthUseCase, useEventUseCase } from '@/application';
-import type { Event, EventKey, RegistrationKey, SignedInUser } from '@/domain';
+import { useEventUseCase } from '@/application';
+import type { Event, EventKey, RegistrationKey } from '@/domain';
+import { useSession } from '@/ui/composables/Session.ts';
 import EventDetails from '@/ui/views/events/confirm/EventDetails.vue';
 
 enum State {
@@ -132,8 +133,7 @@ const emit = defineEmits<RouteEmits>();
 
 const route = useRoute();
 const eventUseCase = useEventUseCase();
-const auth = useAuthUseCase();
-const signedInUser = ref<SignedInUser>(auth.getSignedInUser());
+const { signedInUser } = useSession();
 
 const event = ref<Event | null>(null);
 const registrationState = ref<State | null>(null);
@@ -149,7 +149,6 @@ const daysUntilStart = computed<number>(() => {
 });
 
 function init(): void {
-    auth.onLogin().then((user) => (signedInUser.value = user));
     fetchEvent();
 }
 
@@ -163,7 +162,7 @@ async function fetchEvent(): Promise<void> {
         const registration = event.value?.registrations.find((it) => it.key === route.params.registrationKey);
         if (!registration) {
             registrationState.value = State.REGISTRATION_WAS_CANCELED;
-        } else if (signedInUser.value.key && registration.userKey !== signedInUser.value.key) {
+        } else if (signedInUser.value?.key && registration.userKey !== signedInUser.value?.key) {
             registrationState.value = State.REGISTRATION_BELONGS_TO_OTHER_USER;
         } else if (registration.confirmed) {
             registrationState.value = State.REGISTRATION_WAS_CONFIRMED;

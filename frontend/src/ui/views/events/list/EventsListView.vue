@@ -6,7 +6,7 @@
             </div>
         </teleport>
 
-        <div v-if="signedInUser.positions.length === 0" class="px-4 md:px-12 xl:px-16">
+        <div v-if="signedInUser?.positions.length === 0" class="px-4 md:px-12 xl:px-16">
             <VInfo class="mt-4 xl:mt-8" clamp>
                 {{ $t('views.events.list.note-no-position') }}
             </VInfo>
@@ -224,7 +224,7 @@
                 <div class="hidden sm:inline">
                     <button
                         class="btn-ghost"
-                        :disabled="!hasAnySelectedEventInFuture || signedInUser.positions.length === 0"
+                        :disabled="!hasAnySelectedEventInFuture || signedInUser?.positions.length === 0"
                         @click="joinEvents(selectedEvents)"
                     >
                         <i class="fa-solid fa-user-plus"></i>
@@ -276,9 +276,9 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useAuthUseCase, useEventUseCase } from '@/application';
+import { useEventUseCase } from '@/application';
 import { DateTimeFormat } from '@/common/date';
-import type { Event, EventType, InputSelectOption, Registration, SignedInUser } from '@/domain';
+import type { Event, EventType, InputSelectOption, Registration } from '@/domain';
 import { EventSignupType, EventState, useEventService } from '@/domain';
 import type { Sheet } from '@/ui/components/common';
 import { VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
@@ -290,6 +290,7 @@ import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQuery } from '@/ui/composables/QueryState.ts';
+import { useSession } from '@/ui/composables/Session.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
@@ -314,11 +315,11 @@ const emit = defineEmits<RouteEmits>();
 
 const { t } = useI18n();
 const eventUseCase = useEventUseCase();
-const authUseCase = useAuthUseCase();
 const eventService = useEventService();
 const router = useRouter();
 const positions = usePositions();
 const eventTypes = useEventTypes();
+const { signedInUser } = useSession();
 
 const filter = useQuery<string>('filter', '').parameter;
 const filterAssigned = useQuery<boolean>('assigned', false).parameter;
@@ -326,7 +327,6 @@ const filterWaitingList = useQuery<boolean>('waitinglist', false).parameter;
 const filterFreeSlots = useQuery<boolean>('has-free-slots', false).parameter;
 const filterEventType = useQuery<EventType[]>('types', []).parameter;
 
-const signedInUser = ref<SignedInUser>(authUseCase.getSignedInUser());
 const events = ref<EventTableViewItem[] | null>(null);
 const tab = ref<string>('future');
 

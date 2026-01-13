@@ -87,11 +87,46 @@ export class AuthUseCase {
         );
     }
 
+    public async onAuthenticationDone(): Promise<boolean> {
+        const signedInUser = this.authService.getSignedInUser();
+        if (signedInUser) {
+            return true;
+        }
+        return new Promise((resolve) => {
+            // only use this callback once to resolve the promise
+            const removeListener = this.authService.onChange(() => {
+                console.log('hello');
+                resolve(false);
+                removeListener();
+            });
+        });
+    }
+
     public async onLogin(): Promise<SignedInUser> {
-        return this.authService.onLogin();
+        const signedInUser = this.authService.getSignedInUser();
+        if (signedInUser) {
+            return signedInUser;
+        }
+        return new Promise((resolve) => {
+            // only use this callback once to resolve the promise
+            const removeListener = this.authService.onLogin((signedInUser) => {
+                resolve(signedInUser);
+                removeListener();
+            });
+        });
     }
 
     public async onLogout(): Promise<void> {
-        return this.authService.onLogout();
+        const signedInUser = this.authService.getSignedInUser();
+        if (!signedInUser) {
+            return;
+        }
+        return new Promise((resolve) => {
+            // only use this callback once to resolve the promise
+            const removeListener = this.authService.onLogout(() => {
+                resolve();
+                removeListener();
+            });
+        });
     }
 }
