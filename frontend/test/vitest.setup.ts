@@ -10,6 +10,8 @@ import { server } from '~/mocks';
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
+    sessionStorage.clear();
     server.resetHandlers();
 });
 afterAll(() => server.close());

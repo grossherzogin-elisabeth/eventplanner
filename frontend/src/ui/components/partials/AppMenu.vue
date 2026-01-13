@@ -1,5 +1,5 @@
 <template>
-    <div v-if="loading || route.name === Routes.Login" class="menu animate-pulse">
+    <div v-if="loading || route.name === Routes.Login" class="menu animate-pulse" data-test-id="menu-loading">
         <div class="mx-12 my-4 h-6 rounded-full bg-current opacity-10"></div>
         <div class="mx-12 mb-12 h-6 w-1/2 rounded-full bg-current opacity-10"></div>
 
@@ -25,19 +25,24 @@
         </div>
 
         <ul class="menu-list my-4">
-            <li v-if="hasPermission(Permission.READ_EVENTS)" class="menu-item">
+            <li v-if="hasPermission(Permission.READ_EVENTS)" class="menu-item" data-test-id="menu-item-home">
                 <RouterLink :to="{ name: Routes.Home }">
                     <i class="fa-solid fa-home"></i>
                     <span>{{ $t('navigation.myNextEvents') }}</span>
                 </RouterLink>
             </li>
-            <li v-else class="menu-item">
+            <li v-else class="menu-item" data-test-id="menu-item-onboarding">
                 <RouterLink :to="{ name: Routes.Onboarding }">
                     <i class="fa-solid fa-home"></i>
                     <span>{{ $t('navigation.start') }}</span>
                 </RouterLink>
             </li>
-            <li v-if="hasPermission(Permission.READ_EVENTS)" :class="{ expanded: eventsExpanded }" class="menu-item">
+            <li
+                v-if="hasPermission(Permission.READ_EVENTS)"
+                :class="{ expanded: eventsExpanded }"
+                class="menu-item"
+                data-test-id="menu-item-calendar"
+            >
                 <button @click="eventsExpanded = !eventsExpanded">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>{{ $t('navigation.calendar') }}</span>
@@ -59,6 +64,7 @@
             <li
                 v-if="hasPermission(Permission.READ_EVENTS)"
                 class="menu-item"
+                data-test-id="menu-item-event-list"
                 :class="{ active: eventRouteActive && eventRoute === Routes.EventsList }"
             >
                 <RouterLink :to="{ name: Routes.EventsList }">
@@ -69,6 +75,7 @@
             <li
                 v-if="hasPermission(Permission.WRITE_EVENTS)"
                 class="menu-item"
+                data-test-id="menu-item-event-admin"
                 :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }"
             >
                 <RouterLink :to="{ name: Routes.EventsListAdmin }">
@@ -76,25 +83,25 @@
                     <span>{{ $t('navigation.manageEvents') }}</span>
                 </RouterLink>
             </li>
-            <li v-if="hasPermission(Permission.READ_USER_DETAILS)" class="menu-item">
+            <li v-if="hasPermission(Permission.READ_USER_DETAILS)" class="menu-item" data-test-id="menu-item-user-list">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
                     <span>{{ $t('navigation.manageUsers') }}</span>
                 </RouterLink>
             </li>
-            <li v-if="hasPermission(Permission.WRITE_SETTINGS)" class="menu-item">
+            <li v-if="hasPermission(Permission.WRITE_SETTINGS)" class="menu-item" data-test-id="menu-item-admin-settings">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>
                     <span>{{ $t('navigation.manageSettings') }}</span>
                 </RouterLink>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" data-test-id="menu-item-account">
                 <RouterLink :to="{ name: Routes.Account }">
                     <i class="fa-solid fa-user-circle"></i>
                     <span>{{ $t('navigation.account') }}</span>
                 </RouterLink>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" data-test-id="menu-item-logout">
                 <a type="button" @click="authUseCase.logout()">
                     <i class="fa-solid fa-sign-out"></i>
                     <span>{{ $t('navigation.signOut') }}</span>
@@ -104,7 +111,7 @@
     </div>
     <div v-else>
         <h1 class="mt-4 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ menuTitle }}</h1>
-        <VInfo class="mx-8">
+        <VInfo class="mx-8" data-test-id="create-account-hint">
             <h2 class="mb-2">Noch kein Account?</h2>
             <p class="mb-2">
                 Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Veranstaltungen einsehen und dich zu Veranstaltungen
@@ -112,13 +119,13 @@
             </p>
         </VInfo>
         <ul class="menu-list my-4">
-            <li class="menu-item">
+            <li class="menu-item" data-test-id="menu-item-login">
                 <RouterLink :to="{ name: Routes.Login }">
                     <i class="fa-solid fa-sign-in-alt"></i>
                     <span>Zum Login</span>
                 </RouterLink>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" data-test-id="menu-item-register">
                 <RouterLink :to="{ name: Routes.Login }">
                     <i class="fa-solid fa-user-circle"></i>
                     <span>Jetzt registrieren</span>
@@ -149,7 +156,8 @@ const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(),
 const eventsExpanded = ref<boolean>(false);
 
 function init(): void {
-    authUseCase.onLogin().then(() => (loading.value = false));
+    authUseCase.authenticate();
+    authUseCase.onAuthenticationDone().then(() => (loading.value = false));
     watch(route, () => {
         eventRouteActive.value = route.matched.find((it) => it.name === 'app_event-parent') !== undefined;
         if (route.name === Routes.EventsCalendar) {
