@@ -1,4 +1,4 @@
-import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest';
 import { RouterLinkStub, config } from '@vue/test-utils';
 import { setupI18n } from '@/ui/plugins/i18n';
 import { server } from '~/mocks';
@@ -8,7 +8,12 @@ import { server } from '~/mocks';
 // ---------------------------------------------------------------
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
+afterEach(() => {
+    vi.clearAllMocks();
+    localStorage.clear();
+    sessionStorage.clear();
+    server.resetHandlers();
+});
 afterAll(() => server.close());
 
 // ---------------------------------------------------------------

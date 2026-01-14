@@ -51,7 +51,7 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthUseCase } from '@/application';
-import type { SignedInUser } from '@/domain';
+import { useSession } from '@/ui/composables/Session.ts';
 import type { RouteMetaData } from '@/ui/model/RouteMetaData';
 import AppMenu from './AppMenu.vue';
 import SlideMenu from './SlideMenu.vue';
@@ -65,15 +65,9 @@ const props = defineProps<Props>();
 const route = useRoute();
 
 const authUseCase = useAuthUseCase();
+const { signedInUser } = useSession();
 
 const menuOpen = ref<boolean>(false);
-const signedInUser = ref<SignedInUser | null>(null);
 
 const meta = computed<RouteMetaData>(() => route.meta as RouteMetaData);
-
-async function init(): Promise<void> {
-    authUseCase.onLogin().then(() => (signedInUser.value = authUseCase.getSignedInUser()));
-}
-
-init();
 </script>

@@ -4,22 +4,35 @@ import type { Position, PositionKey } from '@/domain';
 
 export class PositionCachingService {
     private readonly positionRepository: PositionRepository;
-    private readonly cache: Storage<PositionKey, Position>;
+    private readonly storage: Storage<PositionKey, Position>;
     private readonly initialized: Promise<void>;
 
     constructor(params: { positionRepository: PositionRepository; cache: Storage<PositionKey, Position> }) {
         this.positionRepository = params.positionRepository;
-        this.cache = params.cache;
+        this.storage = params.cache;
         this.initialized = this.initialize();
     }
 
     private async initialize(): Promise<void> {
-        await this.fetchPositions();
+        try {
+            const positions = await this.fetchPositions();
+            await this.storage.deleteAll();
+            await this.storage.saveAll(positions);
+        } catch (e: unknown) {
+            const response = e as { status?: number };
+            if (response.status === 401 || response.status === 403) {
+                // users session is no longer valid, clear all locally stored data
+                console.error('Failed to fetch positions, clearing local data');
+                await this.storage.deleteAll();
+            } else {
+                console.warn('Failed to fetch positions, continuing with local data');
+            }
+        }
     }
 
     public async getPositions(): Promise<Position[]> {
         await this.initialized;
-        const cached = await this.cache.findAll();
+        const cached = await this.storage.findAll();
         if (cached.length > 0) {
             return cached;
         }
@@ -28,13 +41,13 @@ export class PositionCachingService {
 
     public async removeFromCache(positionkey: PositionKey): Promise<void> {
         await this.initialized;
-        return await this.cache.deleteByKey(positionkey);
+        return await this.storage.deleteByKey(positionkey);
     }
 
     public async updateCache(position: Position): Promise<Position> {
         await this.initialized;
-        if ((await this.cache.count()) > 0) {
-            return await this.cache.save(position);
+        if ((await this.storage.count()) > 0) {
+            return await this.storage.save(position);
         }
         return position;
     }
@@ -43,7 +56,7 @@ export class PositionCachingService {
         console.log('📡 Fetching positions');
         return debounce('fetchPositions', async () => {
             const positions = await this.positionRepository.findAll();
-            await this.cache.saveAll(positions);
+            await this.storage.saveAll(positions);
             return positions;
         });
     }

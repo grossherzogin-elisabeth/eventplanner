@@ -28,29 +28,20 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useUsersUseCase } from '@/application';
 import { deepCopy, isSameDate } from '@/common';
-import type { Event, Registration, UserDetails } from '@/domain';
+import type { Event, Registration } from '@/domain';
 import type { Sheet } from '@/ui/components/common';
 import { VSheet } from '@/ui/components/common';
 import RegistrationForm, { View } from '@/ui/components/events/RegistrationForm.vue';
+import { useSession } from '@/ui/composables/Session.ts';
 import { v4 as uuid } from 'uuid';
 
-const usersUseCase = useUsersUseCase();
+const { signedInUser } = useSession();
 
 const view = ref<View>(View.OVERVIEW);
 const sheet = ref<Sheet<{ registration?: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
-const signedInUserDetails = ref<UserDetails | null>(null);
 const registration = ref<Registration>({ key: uuid(), positionKey: '' });
 const events = ref<Event[]>([]);
-
-async function init(): Promise<void> {
-    await fetchSignedInUserDetails();
-}
-
-async function fetchSignedInUserDetails(): Promise<void> {
-    signedInUserDetails.value = await usersUseCase.getUserDetailsForSignedInUser();
-}
 
 async function open(value: { registration?: Registration; event: Event | Event[] }): Promise<Registration | undefined> {
     events.value = deepCopy(Array.isArray(value.event) ? value.event : [value.event]);
@@ -58,8 +49,8 @@ async function open(value: { registration?: Registration; event: Event | Event[]
         ? deepCopy(value.registration)
         : {
               key: '',
-              userKey: signedInUserDetails.value?.key,
-              positionKey: signedInUserDetails.value?.positionKeys[0] ?? '',
+              userKey: signedInUser.value?.key,
+              positionKey: signedInUser.value?.positions[0] ?? '',
               overnightStay: !isSameDate(events.value[0].start, events.value[0].end),
           };
     view.value = View.OVERVIEW;
@@ -94,6 +85,4 @@ defineExpose<Sheet<{ registration: Registration; event: Event | Event[] }, Regis
     submit: (result: Registration) => sheet.value?.submit(result),
     reject: () => sheet.value?.reject(),
 });
-
-init();
 </script>

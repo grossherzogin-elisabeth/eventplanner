@@ -142,14 +142,13 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useUsersUseCase } from '@/application';
 import { cropToPrecision, deepCopy, isSameDate, subtractFromDate } from '@/common';
-import type { Event, InputSelectOption, PositionKey, Registration, UserDetails } from '@/domain';
-import { VInfo } from '@/ui/components/common';
-import { VInputCheckBox } from '@/ui/components/common';
-import { VInputSelectionList, VInputTextArea } from '@/ui/components/common';
+import type { Event, InputSelectOption, PositionKey, Registration } from '@/domain';
+import { VInfo, VInputCheckBox, VInputSelectionList, VInputTextArea } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions';
+import { useSession } from '@/ui/composables/Session.ts';
 
 interface Props {
     events: Event[];
@@ -166,8 +165,8 @@ const emit = defineEmits<RouteEmits>();
 
 const usersUseCase = useUsersUseCase();
 const positions = usePositions();
+const { signedInUser } = useSession();
 
-const signedInUserDetails = ref<UserDetails | null>(null);
 const filteredEvents = computed<Event[]>(() => {
     if (!props.registration.key) {
         return props.events.filter((e) => e.canSignedInUserJoin);
@@ -177,7 +176,7 @@ const filteredEvents = computed<Event[]>(() => {
 });
 const hasSingleDayEvent = computed<boolean>(() => filteredEvents.value.find((it) => isSameDate(it.start, it.end)) !== undefined);
 const availablePositionsForSignedInUser = computed<InputSelectOption<string | undefined>[]>(() => {
-    const validPositionKeys: (PositionKey | undefined)[] = signedInUserDetails.value?.positionKeys || [];
+    const validPositionKeys: (PositionKey | undefined)[] = signedInUser.value?.positions || [];
     if (!validPositionKeys.includes(props.registration.positionKey)) {
         validPositionKeys.push(props.registration.positionKey);
     }
@@ -190,15 +189,10 @@ function updateRegistration(update: Partial<Registration>): void {
 }
 
 async function init(): Promise<void> {
-    await fetchSignedInUserDetails();
     watch(
         () => props.registration.positionKey,
         () => savePreferredPosition()
     );
-}
-
-async function fetchSignedInUserDetails(): Promise<void> {
-    signedInUserDetails.value = await usersUseCase.getUserDetailsForSignedInUser();
 }
 
 async function savePreferredPosition(): Promise<void> {

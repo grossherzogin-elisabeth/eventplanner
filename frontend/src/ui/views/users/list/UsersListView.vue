@@ -224,6 +224,7 @@ import { FilterMultiselect, FilterSelect, FilterToggle } from '@/ui/components/f
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQuery } from '@/ui/composables/QueryState.ts';
+import { useSession } from '@/ui/composables/Session.ts';
 import type { Selectable } from '@/ui/model/Selectable.ts';
 import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
@@ -260,8 +261,8 @@ const usersService = useUserService();
 const authUseCase = useAuthUseCase();
 const userAdministrationUseCase = useUserAdministrationUseCase();
 const router = useRouter();
-const signedInUser = authUseCase.getSignedInUser();
 const positions = usePositions();
+const { hasPermission } = useSession();
 
 const filter = useQuery<string>('filter', '').parameter;
 const filterOnlyActive = useQuery<boolean>('active', false).parameter;
@@ -348,7 +349,7 @@ function createUser(): void {
 }
 
 async function editUser(user: UserRegistrations, evt: MouseEvent): Promise<void> {
-    if (!signedInUser.permissions.includes(Permission.WRITE_USERS)) {
+    if (!hasPermission(Permission.WRITE_USERS)) {
         console.error('User has no permission to edit users.');
         return;
     }

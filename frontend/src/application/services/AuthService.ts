@@ -1,9 +1,13 @@
 import type { SignedInUser, UserDetails } from '@/domain';
 import { Permission, Role } from '@/domain';
+import { v4 as randomUUID } from 'uuid';
+
+type Callback<T> = (t: T) => void;
 
 export class AuthService {
-    private loginListeners: (() => void)[] = [];
-    private logoutListeners: (() => void)[] = [];
+    private loginListeners: Record<string, Callback<SignedInUser>> = {};
+    private logoutListeners: Record<string, Callback<void>> = {};
+    private changeListeners: Record<string, Callback<void>> = {};
     private signedInUser: SignedInUser | undefined = undefined;
     private impersonating: UserDetails | null = null;
 
@@ -29,36 +33,47 @@ export class AuthService {
                 signedInUser.permissions.push(Permission.BETA_FEATURES);
             }
             this.signedInUser = signedInUser;
-            this.loginListeners.forEach((cb) => cb());
+            this.notifyListeners(this.loginListeners, this.signedInUser);
         } else {
             this.signedInUser = undefined;
-            this.logoutListeners.forEach((cb) => cb());
+            this.notifyListeners(this.logoutListeners, undefined);
         }
+        this.notifyListeners(this.changeListeners, undefined);
     }
 
-    public async onLogin(): Promise<SignedInUser> {
-        if (this.signedInUser !== undefined) {
-            return this.signedInUser;
-        }
-        return new Promise((resolve) => {
-            this.loginListeners.push(() => {
-                if (this.signedInUser != undefined) {
-                    resolve(this.signedInUser);
-                }
-            });
-        });
+    public onLogin(cb: (signedInUser: SignedInUser) => void): () => void {
+        const id = randomUUID();
+        this.loginListeners[id] = cb;
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        return () => delete this.loginListeners[id];
     }
 
-    public async onLogout(): Promise<void> {
-        if (!this.signedInUser) {
-            return Promise.resolve();
-        }
-        return new Promise((resolve) => {
-            this.logoutListeners.push(() => resolve());
-        });
+    public onLogout(cb: () => void): () => void {
+        const id = randomUUID();
+        this.logoutListeners[id] = cb;
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        return () => delete this.logoutListeners[id];
     }
 
-    public impersonate(user: UserDetails | null): void {
+    public onChange(cb: () => void): () => void {
+        const id = randomUUID();
+        this.changeListeners[id] = cb;
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        return () => delete this.changeListeners[id];
+    }
+
+    public impersonate(user: UserDetails | null): SignedInUser {
+        console.log(`👮 Impersonating ${user?.firstName} ${user?.lastName}`);
         this.impersonating = user;
+        this.notifyListeners(this.changeListeners, undefined);
+        const impersonatedUser = this.getSignedInUser();
+        if (!impersonatedUser) {
+            throw new Error('Failed to impersonate user');
+        }
+        return impersonatedUser;
+    }
+
+    private notifyListeners<T>(listeners: Record<string, Callback<T>>, param: T): void {
+        Object.values(listeners).forEach((cb: Callback<T>) => cb(param));
     }
 }

@@ -26,7 +26,6 @@ export class ErrorHandlingService {
     }
 
     public handleError(error: ErrorDetails): void {
-        console.error(error.error || error);
         if (this.errorHandler) {
             this.errorHandler(error);
         }
@@ -41,9 +40,22 @@ export class ErrorHandlingService {
             const response = e as Response;
             if (response.status === 401) {
                 this.accountRepository.login(location.pathname);
+            } else if (response.status === 502 || response.status === 503) {
+                this.handleError({
+                    title: 'Server nicht erreichbar',
+                    message: 'Der Server ist aktuell nicht erreichbar. Bitte versuche es später erneut.',
+                    error: e,
+                });
             } else {
                 this.handleError({ error: e });
             }
+        } else if (e instanceof Error && e.message === 'Failed to fetch') {
+            this.handleError({
+                title: 'Funktion nicht verfügbar',
+                message:
+                    'Du scheinst gerade offline zu sein. Diese Funktion ist im offline Modus nicht verfügbar. Bitte prüfe deine Internet Verbindung und versuche es erneut.',
+                error: e,
+            });
         } else {
             this.handleError({ error: e });
         }

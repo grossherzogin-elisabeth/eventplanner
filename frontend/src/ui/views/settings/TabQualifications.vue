@@ -53,7 +53,7 @@
                         </div>
                     </td>
                 </template>
-                <template v-if="signedInUser.permissions.includes(Permission.WRITE_QUALIFICATIONS)" #context-menu="{ item }">
+                <template v-if="hasPermission(Permission.WRITE_QUALIFICATIONS)" #context-menu="{ item }">
                     <li class="context-menu-item" data-test-id="context-menu-edit" @click="editQualification(item)">
                         <i class="fa-solid fa-edit" />
                         <span>{{ $t('generic.edit') }}</span>
@@ -66,7 +66,7 @@
             </VTable>
         </div>
         <div
-            v-if="signedInUser.permissions.includes(Permission.WRITE_QUALIFICATIONS)"
+            v-if="hasPermission(Permission.WRITE_QUALIFICATIONS)"
             class="pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12"
         >
             <button class="btn-floating pointer-events-auto" data-test-id="button-create" @click="createQualification()">
@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useAuthUseCase, useQualificationsAdministrationUseCase } from '@/application';
+import { useQualificationsAdministrationUseCase } from '@/application';
 import type { Qualification } from '@/domain';
 import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -89,11 +89,12 @@ import { VConfirmationDialog, VSearchButton, VTable } from '@/ui/components/comm
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import { usePositions } from '@/ui/composables/Positions';
 import { useQuery } from '@/ui/composables/QueryState';
+import { useSession } from '@/ui/composables/Session.ts';
 import QualificationEditDlg from './components/QualificationDetailsDlg.vue';
 
-const signedInUser = useAuthUseCase().getSignedInUser();
 const positions = usePositions();
 const qualificationAdministrationUseCase = useQualificationsAdministrationUseCase();
+const { hasPermission } = useSession();
 
 const qualifications = ref<Qualification[] | undefined>(undefined);
 const filter = useQuery('filter', '').parameter;

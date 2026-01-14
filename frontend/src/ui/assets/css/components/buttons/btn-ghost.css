@@ -7,8 +7,16 @@
         @apply text-primary;
     }
 
+    .btn-ghost-danger {
+        @apply text-error;
+    }
+
     .btn-ghost:not(:disabled):hover {
         @apply bg-primary/10;
+    }
+
+    .btn-ghost-danger:not(:disabled):hover {
+        @apply bg-error/10;
     }
 
     .btn-ghost:disabled,

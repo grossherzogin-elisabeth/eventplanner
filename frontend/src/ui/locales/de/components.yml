@@ -41,4 +41,4 @@ components:
     retry: 'Erneut versuchen'
     default-title: 'Unerwarteter Fehler'
     default-text: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.'
-    details: 'Details'
+    show-details: 'Details anzeigen'

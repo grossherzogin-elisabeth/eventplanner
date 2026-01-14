@@ -3,6 +3,7 @@ import type { Router } from 'vue-router';
 import { type MockInstance, afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
+import type { AuthService } from '@/application';
 import { useAuthService, usePositionAdministrationUseCase } from '@/application';
 import { Permission } from '@/domain';
 import { VConfirmationDialog } from '@/ui/components/common';
@@ -17,6 +18,7 @@ vi.mock('vue-router', () => ({
 }));
 
 describe('TabPositions.vue', () => {
+    const authService: AuthService = useAuthService();
     let deleteFunc: MockInstance;
     let updateFunc: MockInstance;
     let createFunc: MockInstance;
@@ -35,12 +37,11 @@ describe('TabPositions.vue', () => {
         updateFunc = vi.spyOn(usePositionAdministrationUseCase(), 'updatePosition');
         createFunc = vi.spyOn(usePositionAdministrationUseCase(), 'createPosition');
         await router.push({ name: Routes.AppSettings, query: { tab: 'positions' } });
-        testee = mount(TabPositions, { global: { plugins: [router], stubs: { teleport: true } } });
     });
 
     describe('users with permission positions:read', () => {
         beforeEach(async () => {
-            useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_POSITIONS] }));
+            authService.setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_POSITIONS] }));
             testee = mount(TabPositions, { global: { plugins: [router], stubs: { teleport: true } } });
         });
 
@@ -69,7 +70,7 @@ describe('TabPositions.vue', () => {
     describe('users with permission positions:write', () => {
         beforeEach(async () => {
             const signedInUser = mockSignedInUser({ permissions: [Permission.READ_POSITIONS, Permission.WRITE_POSITIONS] });
-            useAuthService().setSignedInUser(signedInUser);
+            authService.setSignedInUser(signedInUser);
             testee = mount(TabPositions, { global: { plugins: [router], stubs: { teleport: true } } });
         });
 
