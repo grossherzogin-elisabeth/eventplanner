@@ -64,7 +64,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
         Integer emailPort = null;
         try {
             emailPort = Integer.parseInt(settingsMap.get(EMAIL_PORT));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             // ignore
         }
 

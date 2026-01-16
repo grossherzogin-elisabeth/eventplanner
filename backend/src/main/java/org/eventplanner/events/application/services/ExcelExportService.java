@@ -171,7 +171,7 @@ public class ExcelExportService {
             try {
                 var dbl = Double.parseDouble(rendered);
                 cell.setCellValue(dbl);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException _) {
                 cell.setCellValue(rendered);
             }
         }

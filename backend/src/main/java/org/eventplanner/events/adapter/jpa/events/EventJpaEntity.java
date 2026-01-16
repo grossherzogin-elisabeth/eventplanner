@@ -103,7 +103,7 @@ public class EventJpaEntity {
                 }
             );
             return entities.stream().map(LocationJsonEntity::toDomain).toList();
-        } catch (IOException e) {
+        } catch (IOException _) {
             return Collections.emptyList();
         }
     }
@@ -112,7 +112,7 @@ public class EventJpaEntity {
         try {
             var entities = locations.stream().map(LocationJsonEntity::fromDomain).toList();
             return objectMapper.writeValueAsString(entities);
-        } catch (IOException e) {
+        } catch (IOException _) {
             return "[]";
         }
     }
@@ -124,7 +124,7 @@ public class EventJpaEntity {
                 }
             );
             return entities.stream().map(SlotJsonEntity::toDomain).toList();
-        } catch (IOException e) {
+        } catch (IOException _) {
             return Collections.emptyList();
         }
     }
@@ -133,7 +133,7 @@ public class EventJpaEntity {
         try {
             var entities = slots.stream().map(SlotJsonEntity::fromDomain).toList();
             return objectMapper.writeValueAsString(entities);
-        } catch (IOException e) {
+        } catch (IOException _) {
             return "[]";
         }
     }
