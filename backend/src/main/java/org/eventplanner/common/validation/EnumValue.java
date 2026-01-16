@@ -68,7 +68,7 @@ public @interface EnumValue {
             if (creatorMethod != null) {
                 try {
                     return creatorMethod.invoke(null, value) != null;
-                } catch (Exception e) {
+                } catch (Exception _) {
                     return false;
                 }
             }
@@ -76,7 +76,7 @@ public @interface EnumValue {
             if (valueOfMethod != null) {
                 try {
                     return valueOfMethod.invoke(null, value) != null;
-                } catch (Exception e) {
+                } catch (Exception _) {
                     return false;
                 }
             }

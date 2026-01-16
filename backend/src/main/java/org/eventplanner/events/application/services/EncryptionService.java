@@ -112,7 +112,7 @@ public class EncryptionService {
         var plain = decryptWithSecretKey(encrypted.value(), secretKey);
         try {
             return objectMapper.readValue(plain, type);
-        } catch (Exception e) {
+        } catch (Exception _) {
             return objectMapper.convertValue(plain, type);
         }
     }

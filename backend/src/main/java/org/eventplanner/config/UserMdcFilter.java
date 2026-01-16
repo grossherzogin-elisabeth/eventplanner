@@ -35,7 +35,7 @@ public class UserMdcFilter extends OncePerRequestFilter {
         try {
             var user = userUseCase.getSignedInUser(authentication);
             MDC.put(MDC_KEY, user.key().value());
-        } catch (Exception e) {
+        } catch (Exception _) {
             MDC.put(MDC_KEY, "unknown");
         }
         try {

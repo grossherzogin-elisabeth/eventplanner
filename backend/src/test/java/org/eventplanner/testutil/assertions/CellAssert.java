@@ -60,7 +60,7 @@ public class CellAssert extends AbstractAssert<CellAssert, Cell> {
             if (!is.equals(expected)) {
                 failWithMessage("Expecting actual to have value " + expected + " but was " + is);
             }
-        } catch (Exception e) {
+        } catch (Exception _) {
             failWithMessage("Expecting actual to have value " + expected + " but has no string value");
         }
         return this;
@@ -77,7 +77,7 @@ public class CellAssert extends AbstractAssert<CellAssert, Cell> {
             if (is != expected) {
                 failWithMessage("Expecting actual to have value " + expected + " but was " + is);
             }
-        } catch (Exception e) {
+        } catch (Exception _) {
             failWithMessage("Expecting actual to have value " + expected + " but has no numeric value");
         }
         return this;
