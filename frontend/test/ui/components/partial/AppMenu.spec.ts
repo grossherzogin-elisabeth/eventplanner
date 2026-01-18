@@ -1,5 +1,5 @@
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
