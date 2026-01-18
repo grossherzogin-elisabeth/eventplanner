@@ -42,7 +42,6 @@ beforeEach(() => {
 afterEach(() => (document.body.innerHTML = ''));
 
 process.on('unhandledRejection', (reason) => {
-    console.error('Got an unhandled promise rejection');
-    console.error(reason);
+    console.error('Uncaught promise rejection:', reason);
     throw reason;
 });
