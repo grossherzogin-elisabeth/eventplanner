@@ -1,10 +1,24 @@
-import { EventService, PositionService, QualificationService, RegistrationService, UserService } from '@/domain/index.ts';
+import { EventService } from './EventService';
+import { PositionService } from './PositionService';
+import { QualificationService } from './QualificationService';
+import { RegistrationService } from './RegistrationService';
+import { UserService } from './UserService';
+
+export { EventService, PositionService, QualificationService, RegistrationService, UserService };
 
 let userService: UserService | undefined;
 let eventService: EventService | undefined;
 let registrationService: RegistrationService | undefined;
 let qualificationService: QualificationService | undefined;
 let positionService: PositionService | undefined;
+
+export function resetDomainServices(): void {
+    userService = undefined;
+    eventService = undefined;
+    registrationService = undefined;
+    qualificationService = undefined;
+    positionService = undefined;
+}
 
 export function useUserService(): UserService {
     if (!userService) {

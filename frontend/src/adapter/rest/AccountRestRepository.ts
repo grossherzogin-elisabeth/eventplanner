@@ -14,18 +14,13 @@ export interface AccountRepresentation {
 }
 
 export class AccountRestRepository implements AccountRepository {
-    public async getAccount(): Promise<SignedInUser | undefined> {
-        try {
-            const response = await fetch('/api/v1/account', { credentials: 'include' });
-            if (!response.ok) {
-                return undefined;
-            }
-            const account = (await response.clone().json()) as AccountRepresentation;
-            return this.mapAccountToSignedInUser(account);
-        } catch (e) {
-            console.error(e);
-            return undefined;
+    public async getAccount(): Promise<SignedInUser> {
+        const response = await fetch('/api/v1/account', { credentials: 'include' });
+        if (!response.ok) {
+            throw response;
         }
+        const account = (await response.clone().json()) as AccountRepresentation;
+        return this.mapAccountToSignedInUser(account);
     }
 
     public async login(redirectTo?: string): Promise<void> {
