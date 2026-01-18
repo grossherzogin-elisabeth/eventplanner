@@ -44,7 +44,7 @@ import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Event, Position } from '@/domain';
 import { EventState } from '@/domain';
-import { useEventService } from '@/domain/services.ts';
+import { useEventService } from '@/domain/services';
 import type { Sheet } from '@/ui/components/common';
 import { VWarning } from '@/ui/components/common';
 import { VInfo, VSheet, VSuccess } from '@/ui/components/common';

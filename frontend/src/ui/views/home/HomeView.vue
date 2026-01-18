@@ -57,7 +57,7 @@ import { useAuthUseCase, useEventUseCase } from '@/application';
 import { DateTimeFormat, Month } from '@/common/date';
 import type { Event } from '@/domain';
 import { Permission } from '@/domain';
-import { useEventService } from '@/domain/services.ts';
+import { useEventService } from '@/domain/services';
 import { Routes } from '@/ui/views/Routes';
 import EventCard from '@/ui/views/home/EventCard.vue';
 

@@ -72,7 +72,7 @@ import { deepCopy } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, Location } from '@/domain';
 import { Permission } from '@/domain';
-import { useEventService } from '@/domain/services.ts';
+import { useEventService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
 import { useSession } from '@/ui/composables/Session.ts';

@@ -125,7 +125,7 @@ import { useUsersUseCase } from '@/application';
 import { deepCopy, filterUndefined } from '@/common';
 import { Validator, notEmpty } from '@/common/validation';
 import type { Event, Position, QualificationKey, Registration, User } from '@/domain';
-import { useUserService } from '@/domain/services.ts';
+import { useUserService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
 import { VInputSelect } from '@/ui/components/common';
 import { VInputDate } from '@/ui/components/common';

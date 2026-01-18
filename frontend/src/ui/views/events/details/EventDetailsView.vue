@@ -147,7 +147,7 @@ import { useI18n } from 'vue-i18n';
 import { useEventUseCase } from '@/application';
 import type { Event, Position, Registration } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
-import { useEventService } from '@/domain/services.ts';
+import { useEventService } from '@/domain/services';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VInfo, VSuccess, VWarning } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';

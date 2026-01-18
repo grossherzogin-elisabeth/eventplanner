@@ -19,7 +19,7 @@ describe('AppMenu.vue', () => {
     let authService: AuthService;
     let testee: VueWrapper;
 
-    beforeAll(() => {
+    beforeEach(() => {
         authService = useAuthService();
     });
 

@@ -1,5 +1,8 @@
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest';
 import { RouterLinkStub, config } from '@vue/test-utils';
+import { resetAdapters } from '@/adapter';
+import { resetApplicationServices, resetUseCases } from '@/application';
+import { resetDomainServices } from '@/domain';
 import { setupI18n } from '@/ui/plugins/i18n';
 import { server } from '~/mocks';
 
@@ -9,6 +12,10 @@ import { server } from '~/mocks';
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
+    resetAdapters();
+    resetApplicationServices();
+    resetUseCases();
+    resetDomainServices();
     vi.clearAllMocks();
     localStorage.clear();
     sessionStorage.clear();
