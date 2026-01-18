@@ -50,7 +50,7 @@ public record UserKey(
                 hexString.append(hex);
             }
             return new UserKey(hexString.substring(0, 16));
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException _) {
             throw new RuntimeException();
         }
     }

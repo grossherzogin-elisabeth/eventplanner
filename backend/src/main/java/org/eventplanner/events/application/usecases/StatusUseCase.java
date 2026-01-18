@@ -26,7 +26,7 @@ public class StatusUseCase {
         Instant t;
         try {
             t = Instant.parse(buildTime);
-        } catch (Exception e) {
+        } catch (Exception _) {
             t = Instant.now();
         }
         this.buildTime = t;
