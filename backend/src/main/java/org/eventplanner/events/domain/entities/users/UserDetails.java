@@ -194,10 +194,10 @@ public class UserDetails {
             requireNonNull(encryptFunc.apply(getLastName())),
             roles.stream().map(encryptFunc::apply).toList(),
             qualifications.stream()
-                .map(qualification -> qualification.encrypt(encryptFunc))
+                .map(q -> q.encrypt(encryptFunc))
                 .toList(),
             ofNullable(address)
-                .map(address -> address.encrypt(encryptFunc))
+                .map(a -> a.encrypt(encryptFunc))
                 .orElse(null),
             encryptFunc.apply(email),
             encryptFunc.apply(phone),
@@ -209,7 +209,7 @@ public class UserDetails {
             encryptFunc.apply(comment),
             encryptFunc.apply(nationality),
             ofNullable(emergencyContact)
-                .map(emergencyContact -> emergencyContact.encrypt(encryptFunc))
+                .map(e -> e.encrypt(encryptFunc))
                 .orElse(null),
             encryptFunc.apply(diseases),
             encryptFunc.apply(intolerances),
