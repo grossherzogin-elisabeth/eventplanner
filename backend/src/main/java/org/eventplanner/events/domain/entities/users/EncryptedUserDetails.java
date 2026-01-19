@@ -81,10 +81,10 @@ public class EncryptedUserDetails implements Serializable {
                 .map(r -> decryptFunc.apply(r, Role.class))
                 .toList(),
             qualifications.stream()
-                .map(qualifications -> qualifications.decrypt(decryptFunc))
+                .map(q -> q.decrypt(decryptFunc))
                 .toList(),
             ofNullable(address)
-                .map(address -> address.decrypt(decryptFunc))
+                .map(a -> a.decrypt(decryptFunc))
                 .orElse(null),
             decryptFunc.apply(email, String.class),
             decryptFunc.apply(phone, String.class),
@@ -96,7 +96,7 @@ public class EncryptedUserDetails implements Serializable {
             decryptFunc.apply(comment, String.class),
             decryptFunc.apply(nationality, String.class),
             ofNullable(emergencyContact)
-                .map(emergencyContact -> emergencyContact.decrypt(decryptFunc))
+                .map(e -> e.decrypt(decryptFunc))
                 .orElse(null),
             decryptFunc.apply(diseases, String.class),
             decryptFunc.apply(intolerances, String.class),
