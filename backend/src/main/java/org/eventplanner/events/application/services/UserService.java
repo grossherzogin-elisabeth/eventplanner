@@ -113,7 +113,7 @@ public class UserService {
     public @NonNull List<UserDetails> getUsersByRole(@NonNull Role role) {
         return getDetailedUsers().stream()
             .filter(user -> user.getRoles().contains(role))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private @NonNull UserDetails resolvePositionsAndQualificationExpires(@NonNull UserDetails userDetails) {
