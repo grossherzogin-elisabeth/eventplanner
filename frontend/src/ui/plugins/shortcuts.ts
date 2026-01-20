@@ -1,4 +1,5 @@
 function save(evt: KeyboardEvent): void {
+    if (evt.defaultPrevented) return;
     evt.preventDefault();
     globalThis.dispatchEvent(new CustomEvent('save'));
     const button = document.querySelector('button[name="save"]');
@@ -51,6 +52,7 @@ function up(): void {
 }
 
 function focusSearch(evt: KeyboardEvent): void {
+    if (evt.defaultPrevented) return;
     const input = document.querySelector('input[name="search"]');
     if (input) {
         evt.preventDefault();
@@ -58,8 +60,11 @@ function focusSearch(evt: KeyboardEvent): void {
     }
 }
 
+let handler: ((evt: KeyboardEvent) => void) | null = null;
+
 function registerKeyboardShortcuts(): void {
-    globalThis.addEventListener('keydown', (evt) => {
+    if (handler) return; // Prevent multiple registrations
+    handler = (evt: KeyboardEvent): void => {
         if (evt.metaKey || evt.ctrlKey) {
             switch (evt.code) {
                 case 'KeyF':
@@ -71,7 +76,6 @@ function registerKeyboardShortcuts(): void {
                 default:
             }
         }
-        // console.log(evt.code);
         switch (evt.code) {
             case 'Escape':
                 cancel(evt);
@@ -89,7 +93,15 @@ function registerKeyboardShortcuts(): void {
                 up();
                 break;
         }
-    });
+    };
+    globalThis.addEventListener('keydown', handler);
 }
 
-registerKeyboardShortcuts();
+function unregisterKeyboardShortcuts(): void {
+    if (handler) {
+        globalThis.removeEventListener('keydown', handler);
+        handler = null;
+    }
+}
+
+export { registerKeyboardShortcuts, unregisterKeyboardShortcuts };
