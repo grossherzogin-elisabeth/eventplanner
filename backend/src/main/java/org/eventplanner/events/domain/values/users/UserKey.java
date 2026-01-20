@@ -24,8 +24,7 @@ public record UserKey(
     }
 
     @Override
-    @NonNull
-    public String toString() {
+    public @NonNull String toString() {
         return value;
     }
 }

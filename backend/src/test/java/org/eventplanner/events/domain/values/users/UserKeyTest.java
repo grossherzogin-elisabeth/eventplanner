@@ -1,6 +1,8 @@
 package org.eventplanner.events.domain.values.users;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,20 +24,11 @@ class UserKeyTest {
         assertTrue(userKey.value().matches("[a-z0-9\\-]+"));
     }
 
-    @Test
-    void constructorWithValidValueAcceptsIt() {
-        String validValue = "abc-123-def";
+    @ParameterizedTest
+    @ValueSource(strings = { "abc-123-def", "550e8400-e29b-41d4-a716-446655440000" })
+    void constructorWithValidValueAcceptsIt(String validValue) {
         UserKey userKey = new UserKey(validValue);
-
         assertEquals(validValue, userKey.value());
-    }
-
-    @Test
-    void constructorWithUUIDValueAcceptsIt() {
-        String uuidValue = "550e8400-e29b-41d4-a716-446655440000";
-        UserKey userKey = new UserKey(uuidValue);
-
-        assertEquals(uuidValue, userKey.value());
     }
 
     @Test
@@ -44,6 +37,7 @@ class UserKeyTest {
         assertThrows(IllegalArgumentException.class, () -> new UserKey("with spaces"));
         assertThrows(IllegalArgumentException.class, () -> new UserKey("special@chars"));
         assertThrows(IllegalArgumentException.class, () -> new UserKey("under_score"));
+        assertThrows(IllegalArgumentException.class, () -> new UserKey(" "));
     }
 
     @Test
