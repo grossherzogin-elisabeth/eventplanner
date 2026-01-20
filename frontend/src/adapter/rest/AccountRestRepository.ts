@@ -27,12 +27,12 @@ export class AccountRestRepository implements AccountRepository {
         if (redirectTo) {
             localStorage.setItem('auth.redirect', redirectTo);
         }
-        window.location.href = `/auth/login/default`;
+        globalThis.location.href = `/auth/login/default`;
         await wait(500);
     }
 
     public async logout(): Promise<void> {
-        window.location.href = `/auth/logout`;
+        globalThis.location.href = `/auth/logout`;
         await wait(500);
     }
 

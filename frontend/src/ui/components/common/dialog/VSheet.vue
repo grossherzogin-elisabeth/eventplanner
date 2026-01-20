@@ -147,7 +147,7 @@ async function open(): Promise<T | undefined> {
     background.value?.scrollTo({ top: 400 });
     sheetOpening.value = false;
     emit('opened');
-    window.addEventListener('cancel', close, { once: true });
+    globalThis.addEventListener('cancel', close, { once: true });
 
     // this promise is resolved, when the dialog is closed
     return new Promise<T | undefined>((resolve, reject) => {

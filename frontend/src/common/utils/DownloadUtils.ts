@@ -4,11 +4,11 @@ export function saveBlobToFile(fileName: string, data: Blob): void {
         downloadElement.setAttribute('download', fileName);
         document.body.appendChild(downloadElement);
         downloadElement.style.display = 'none';
-        const url = window.URL.createObjectURL(data);
+        const url = globalThis.URL.createObjectURL(data);
         downloadElement.href = url;
         downloadElement.download = fileName;
         downloadElement.click();
-        window.URL.revokeObjectURL(url);
+        globalThis.URL.revokeObjectURL(url);
     } catch (e) {
         console.error(e);
     }

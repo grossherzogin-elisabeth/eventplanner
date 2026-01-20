@@ -1,6 +1,6 @@
 function save(evt: KeyboardEvent): void {
     evt.preventDefault();
-    window.dispatchEvent(new CustomEvent('save'));
+    globalThis.dispatchEvent(new CustomEvent('save'));
     const button = document.querySelector('button[name="save"]');
     if (button) {
         (button as HTMLButtonElement).click();
@@ -9,11 +9,11 @@ function save(evt: KeyboardEvent): void {
 
 function cancel(evt: KeyboardEvent): void {
     evt.preventDefault();
-    window.dispatchEvent(new CustomEvent('cancel'));
+    globalThis.dispatchEvent(new CustomEvent('cancel'));
 }
 
 function left(): void {
-    window.dispatchEvent(new CustomEvent('left'));
+    globalThis.dispatchEvent(new CustomEvent('left'));
     const button = document.querySelector('button[name="previous"]');
     if (button) {
         (button as HTMLButtonElement).click();
@@ -21,7 +21,7 @@ function left(): void {
 }
 
 function right(): void {
-    window.dispatchEvent(new CustomEvent('right'));
+    globalThis.dispatchEvent(new CustomEvent('right'));
     const button = document.querySelector('button[name="next"]');
     if (button) {
         (button as HTMLButtonElement).click();
@@ -29,7 +29,7 @@ function right(): void {
 }
 
 function down(): void {
-    window.dispatchEvent(new CustomEvent('down'));
+    globalThis.dispatchEvent(new CustomEvent('down'));
     const routerView = document.getElementById('router-view');
     if (routerView) {
         routerView.scroll({
@@ -40,7 +40,7 @@ function down(): void {
 }
 
 function up(): void {
-    window.dispatchEvent(new CustomEvent('up'));
+    globalThis.dispatchEvent(new CustomEvent('up'));
     const routerView = document.getElementById('router-view');
     if (routerView) {
         routerView.scroll({
@@ -59,7 +59,7 @@ function focusSearch(evt: KeyboardEvent): void {
 }
 
 function registerKeyboardShortcuts(): void {
-    window.addEventListener('keydown', (evt) => {
+    globalThis.addEventListener('keydown', (evt) => {
         if (evt.metaKey || evt.ctrlKey) {
             switch (evt.code) {
                 case 'KeyF':

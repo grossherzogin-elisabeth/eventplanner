@@ -36,7 +36,7 @@ export class CalendarService {
 
     private createEventDescription(event: Event): string {
         const description = event.description;
-        const link = `${window.location.origin}/events/${event.start.getFullYear()}/details/${event.key}`;
+        const link = `${globalThis.location.origin}/events/${event.start.getFullYear()}/details/${event.key}`;
         return description + '\\n' + link;
     }
 
