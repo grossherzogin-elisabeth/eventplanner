@@ -1,6 +1,6 @@
 export const PHONE_REGEX = new RegExp(String.raw`^[0-9+\- ]+$`);
 export const NAME_REGEX = new RegExp(
-    '^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.\'-]+$'
+    "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžæÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$"
 );
 export const EMAIL_REGEX = new RegExp(String.raw`^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,8}$`);
 export const PASS_NR_REGEX = new RegExp('^[0-9A-Z ]+$');
@@ -15,4 +15,3 @@ export const DATE_DD_MM_YYYY_REGEX = new RegExp(`^${DD}${DELIMITER}${MM}${DELIMI
 export const DATE_DD_MM_YY_REGEX = new RegExp(`^${DD}${DELIMITER}${MM}${DELIMITER}${YY}$`);
 export const DATE_MM_DD_YYYY_REGEX = new RegExp(`^${MM}${DELIMITER}${DD}${DELIMITER}${YYYY}$`);
 export const DATE_YYYY_MM_DD_REGEX = new RegExp(`^${YYYY}${DELIMITER}${MM}${DELIMITER}${DD}$`);
-
