@@ -127,7 +127,7 @@ async function open(): Promise<T> {
         }
         scrolls.value = content.value !== null && content.value.scrollHeight > content.value.offsetHeight;
     }, animationDuration);
-    window.addEventListener('cancel', close, { once: true });
+    globalThis.addEventListener('cancel', close, { once: true });
 
     // this promise is resolved, when the dialog is closed
     return new Promise<T>((resolve, reject) => {

@@ -1,6 +1,7 @@
 function save(evt: KeyboardEvent): void {
+    if (evt.defaultPrevented) return;
     evt.preventDefault();
-    window.dispatchEvent(new CustomEvent('save'));
+    globalThis.dispatchEvent(new CustomEvent('save'));
     const button = document.querySelector('button[name="save"]');
     if (button) {
         (button as HTMLButtonElement).click();
@@ -9,11 +10,11 @@ function save(evt: KeyboardEvent): void {
 
 function cancel(evt: KeyboardEvent): void {
     evt.preventDefault();
-    window.dispatchEvent(new CustomEvent('cancel'));
+    globalThis.dispatchEvent(new CustomEvent('cancel'));
 }
 
 function left(): void {
-    window.dispatchEvent(new CustomEvent('left'));
+    globalThis.dispatchEvent(new CustomEvent('left'));
     const button = document.querySelector('button[name="previous"]');
     if (button) {
         (button as HTMLButtonElement).click();
@@ -21,7 +22,7 @@ function left(): void {
 }
 
 function right(): void {
-    window.dispatchEvent(new CustomEvent('right'));
+    globalThis.dispatchEvent(new CustomEvent('right'));
     const button = document.querySelector('button[name="next"]');
     if (button) {
         (button as HTMLButtonElement).click();
@@ -29,7 +30,7 @@ function right(): void {
 }
 
 function down(): void {
-    window.dispatchEvent(new CustomEvent('down'));
+    globalThis.dispatchEvent(new CustomEvent('down'));
     const routerView = document.getElementById('router-view');
     if (routerView) {
         routerView.scroll({
@@ -40,7 +41,7 @@ function down(): void {
 }
 
 function up(): void {
-    window.dispatchEvent(new CustomEvent('up'));
+    globalThis.dispatchEvent(new CustomEvent('up'));
     const routerView = document.getElementById('router-view');
     if (routerView) {
         routerView.scroll({
@@ -51,6 +52,7 @@ function up(): void {
 }
 
 function focusSearch(evt: KeyboardEvent): void {
+    if (evt.defaultPrevented) return;
     const input = document.querySelector('input[name="search"]');
     if (input) {
         evt.preventDefault();
@@ -58,8 +60,11 @@ function focusSearch(evt: KeyboardEvent): void {
     }
 }
 
+let handler: ((evt: KeyboardEvent) => void) | null = null;
+
 function registerKeyboardShortcuts(): void {
-    window.addEventListener('keydown', (evt) => {
+    if (handler) return; // Prevent multiple registrations
+    handler = (evt: KeyboardEvent): void => {
         if (evt.metaKey || evt.ctrlKey) {
             switch (evt.code) {
                 case 'KeyF':
@@ -71,7 +76,6 @@ function registerKeyboardShortcuts(): void {
                 default:
             }
         }
-        // console.log(evt.code);
         switch (evt.code) {
             case 'Escape':
                 cancel(evt);
@@ -89,7 +93,15 @@ function registerKeyboardShortcuts(): void {
                 up();
                 break;
         }
-    });
+    };
+    globalThis.addEventListener('keydown', handler);
 }
 
-registerKeyboardShortcuts();
+function unregisterKeyboardShortcuts(): void {
+    if (handler) {
+        globalThis.removeEventListener('keydown', handler);
+        handler = null;
+    }
+}
+
+export { registerKeyboardShortcuts, unregisterKeyboardShortcuts };

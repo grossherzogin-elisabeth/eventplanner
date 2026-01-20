@@ -11,15 +11,15 @@ interface SavedRouteState {
 }
 
 let isBackNavigation = false;
-window.addEventListener('popstate', () => (isBackNavigation = true));
-window.history.pushState = new Proxy(window.history.pushState, {
+globalThis.addEventListener('popstate', () => (isBackNavigation = true));
+globalThis.history.pushState = new Proxy(globalThis.history.pushState, {
     apply: (target, thisArg, argArray: never): unknown => {
         isBackNavigation = false;
         return target.apply(thisArg, argArray);
     },
 });
 
-export function saveScrollPosition(path: string = window.location.pathname): void {
+export function saveScrollPosition(path: string = globalThis.location.pathname): void {
     try {
         const state: SavedRouteState = JSON.parse(sessionStorage.getItem(path) || '{}');
         const routerView = document.getElementById('router-view');
@@ -31,7 +31,7 @@ export function saveScrollPosition(path: string = window.location.pathname): voi
     }
 }
 
-export function restoreScrollPosition(path: string = window.location.pathname): void {
+export function restoreScrollPosition(path: string = globalThis.location.pathname): void {
     if (isBackNavigation) {
         try {
             const state = JSON.parse(sessionStorage.getItem(path) || '{}');
@@ -102,7 +102,7 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
         ) {
             // load the target page with a page reload
             // this error occurs when we redeploy and a page hash changes while a user is on the page
-            window.location.href = to.fullPath;
+            globalThis.location.href = to.fullPath;
         }
     });
 

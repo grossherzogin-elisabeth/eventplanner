@@ -17,7 +17,7 @@
 export async function getConnection(databaseName: string, storeNames: string[], version = 1): Promise<IDBDatabase> {
     // console.log(`🗄️ Connecting to IndexedDB ${databaseName}`);
     return new Promise<IDBDatabase>((resolve, reject) => {
-        const request = window.indexedDB.open(databaseName, version);
+        const request = globalThis.indexedDB.open(databaseName, version);
         request.onsuccess = (): void => {
             const db = request.result;
             const missingStores = storeNames.filter((store) => !db.objectStoreNames.contains(store));
@@ -55,7 +55,7 @@ export async function getConnection(databaseName: string, storeNames: string[], 
 export async function deleteDatabase(databaseName: string): Promise<void> {
     // console.log(`🗄️ Deleting IndexedDB ${databaseName}`);
     return new Promise((resolve, reject) => {
-        const deleteRequest = window.indexedDB.deleteDatabase(databaseName);
+        const deleteRequest = globalThis.indexedDB.deleteDatabase(databaseName);
         deleteRequest.onsuccess = (): void => resolve();
         deleteRequest.onerror = (): void => reject();
     });

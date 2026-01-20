@@ -94,7 +94,7 @@ export class AuthUseCase {
         } else {
             localStorage.removeItem('eventplanner.overrideSignedInUserKey');
         }
-        window.location.reload();
+        globalThis.location.reload();
     }
 
     public getSignedInUser(): SignedInUser {
