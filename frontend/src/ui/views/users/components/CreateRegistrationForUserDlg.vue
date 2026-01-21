@@ -57,8 +57,7 @@ import { DateTimeFormat } from '@/common/date';
 import { Validator, notEmpty } from '@/common/validation';
 import type { Event, EventKey, InputSelectOption, PositionKey, User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { AsyncButton } from '@/ui/components/common';
-import { VDialog, VInputCombobox, VInputTextArea } from '@/ui/components/common';
+import { AsyncButton, VDialog, VInputCombobox, VInputTextArea } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
