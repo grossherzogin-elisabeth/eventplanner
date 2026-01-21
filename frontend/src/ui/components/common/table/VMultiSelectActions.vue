@@ -10,10 +10,12 @@
                 <slot name="action" />
                 <ContextMenuButton v-if="$slots.menu" class="btn-ghost">
                     <template #default>
-                        <li class="context-menu-item" @click="emit('selectAll')">
-                            <i class="fa-solid fa-list-check" />
-                            <span>Alle auswählen</span>
-                        </li>
+                        <ul>
+                            <li class="context-menu-item" @click="emit('selectAll')">
+                                <i class="fa-solid fa-list-check" />
+                                <span>Alle auswählen</span>
+                            </li>
+                        </ul>
                         <slot name="menu" />
                     </template>
                 </ContextMenuButton>

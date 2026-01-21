@@ -24,14 +24,16 @@
             </td>
         </template>
         <template #context-menu="{ item }">
-            <li v-if="!item.enabled" class="context-menu-item" @click="toggleRole(item.role)">
-                <i class="fa-solid fa-plus" />
-                <span>Rolle hinzufügen</span>
-            </li>
-            <li v-else class="context-menu-item text-error" @click="toggleRole(item.role)">
-                <i class="fa-solid fa-xmark" />
-                <span>Rolle entfernen</span>
-            </li>
+            <ul>
+                <li v-if="!item.enabled" class="context-menu-item" @click="toggleRole(item.role)">
+                    <i class="fa-solid fa-plus" />
+                    <span>Rolle hinzufügen</span>
+                </li>
+                <li v-else class="context-menu-item text-error" @click="toggleRole(item.role)">
+                    <i class="fa-solid fa-xmark" />
+                    <span>Rolle entfernen</span>
+                </li>
+            </ul>
         </template>
     </VTable>
 </template>

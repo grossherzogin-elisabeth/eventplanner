@@ -162,50 +162,52 @@
                     </tr>
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="permission-read-events">
-                        <RouterLink
-                            :to="{
-                                name: Routes.EventDetails,
-                                params: { year: item.start.getFullYear(), key: item.key },
-                            }"
-                            class="context-menu-item"
-                        >
-                            <i class="fa-solid fa-search" />
-                            <span>{{ $t('views.events.list.action.link-event-details') }}</span>
-                        </RouterLink>
-                    </li>
-                    <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(item)">
-                        <i class="fa-solid fa-calendar-alt" />
-                        <span>{{ $t('views.events.list.action.create-calendar-entry') }}</span>
-                    </li>
-                    <template v-if="!item.signedInUserRegistration">
-                        <li
-                            class="permission-write-own-registrations context-menu-item"
-                            :class="{ disabled: !item.canSignedInUserJoin }"
-                            @click="joinEvents([item])"
-                        >
-                            <i class="fa-solid fa-user-plus" />
-                            <span>{{ $t('views.events.list.action.signup') }}</span>
+                    <ul>
+                        <li class="permission-read-events">
+                            <RouterLink
+                                :to="{
+                                    name: Routes.EventDetails,
+                                    params: { year: item.start.getFullYear(), key: item.key },
+                                }"
+                                class="context-menu-item"
+                            >
+                                <i class="fa-solid fa-search" />
+                                <span>{{ $t('views.events.list.action.link-event-details') }}</span>
+                            </RouterLink>
                         </li>
-                    </template>
-                    <li
-                        v-if="item.isSignedInUserAssigned"
-                        class="permission-write-own-registrations context-menu-item text-error"
-                        :class="{ disabled: item.isPastEvent }"
-                        @click="leaveEvents([item])"
-                    >
-                        <i class="fa-solid fa-ban" />
-                        <span>{{ $t('views.events.list.action.cancel') }}</span>
-                    </li>
-                    <li
-                        v-else-if="item.signedInUserRegistration"
-                        class="permission-write-own-registrations context-menu-item"
-                        :class="{ disabled: item.isPastEvent }"
-                        @click="leaveEvents([item])"
-                    >
-                        <i class="fa-solid fa-user-minus" />
-                        <span>{{ $t('views.events.list.action.leave-waitinglist') }}</span>
-                    </li>
+                        <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(item)">
+                            <i class="fa-solid fa-calendar-alt" />
+                            <span>{{ $t('views.events.list.action.create-calendar-entry') }}</span>
+                        </li>
+                        <template v-if="!item.signedInUserRegistration">
+                            <li
+                                class="permission-write-own-registrations context-menu-item"
+                                :class="{ disabled: !item.canSignedInUserJoin }"
+                                @click="joinEvents([item])"
+                            >
+                                <i class="fa-solid fa-user-plus" />
+                                <span>{{ $t('views.events.list.action.signup') }}</span>
+                            </li>
+                        </template>
+                        <li
+                            v-if="item.isSignedInUserAssigned"
+                            class="permission-write-own-registrations context-menu-item text-error"
+                            :class="{ disabled: item.isPastEvent }"
+                            @click="leaveEvents([item])"
+                        >
+                            <i class="fa-solid fa-ban" />
+                            <span>{{ $t('views.events.list.action.cancel') }}</span>
+                        </li>
+                        <li
+                            v-else-if="item.signedInUserRegistration"
+                            class="permission-write-own-registrations context-menu-item"
+                            :class="{ disabled: item.isPastEvent }"
+                            @click="leaveEvents([item])"
+                        >
+                            <i class="fa-solid fa-user-minus" />
+                            <span>{{ $t('views.events.list.action.leave-waitinglist') }}</span>
+                        </li>
+                    </ul>
                 </template>
             </VTable>
         </div>
@@ -233,37 +235,39 @@
                 </div>
             </template>
             <template #menu>
-                <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
-                    <i class="fa-solid fa-calendar-alt" />
-                    <span>{{ $t('views.events.list.action.create-calendar-entry') }}</span>
-                </li>
-                <li
-                    v-if="hasAnySelectedEventWhichSignedInUserCanJoin"
-                    class="permission-write-own-registrations context-menu-item"
-                    :class="{ disabled: !hasAnySelectedEventInFuture }"
-                    @click="joinEvents(selectedEvents)"
-                >
-                    <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('views.events.list.action.signup') }}</span>
-                </li>
-                <li
-                    v-if="hasAnySelectedEventWithSignedInUserOnWaitingList"
-                    class="permission-write-own-registrations context-menu-item"
-                    :class="{ disabled: !hasAnySelectedEventInFuture }"
-                    @click="leaveEventsWaitingListOnly(selectedEvents)"
-                >
-                    <i class="fa-solid fa-user-minus" />
-                    <span>{{ $t('views.events.list.action.leave-waitinglist') }}</span>
-                </li>
-                <li
-                    v-if="hasAnySelectedEventWithSignedInUserInTeam"
-                    class="permission-write-own-registrations context-menu-item text-error"
-                    :class="{ disabled: !hasAnySelectedEventInFuture }"
-                    @click="leaveEvents(selectedEvents)"
-                >
-                    <i class="fa-solid fa-ban" />
-                    <span>{{ $t('views.events.list.action.cancel') }}</span>
-                </li>
+                <ul>
+                    <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
+                        <i class="fa-solid fa-calendar-alt" />
+                        <span>{{ $t('views.events.list.action.create-calendar-entry') }}</span>
+                    </li>
+                    <li
+                        v-if="hasAnySelectedEventWhichSignedInUserCanJoin"
+                        class="permission-write-own-registrations context-menu-item"
+                        :class="{ disabled: !hasAnySelectedEventInFuture }"
+                        @click="joinEvents(selectedEvents)"
+                    >
+                        <i class="fa-solid fa-user-plus" />
+                        <span>{{ $t('views.events.list.action.signup') }}</span>
+                    </li>
+                    <li
+                        v-if="hasAnySelectedEventWithSignedInUserOnWaitingList"
+                        class="permission-write-own-registrations context-menu-item"
+                        :class="{ disabled: !hasAnySelectedEventInFuture }"
+                        @click="leaveEventsWaitingListOnly(selectedEvents)"
+                    >
+                        <i class="fa-solid fa-user-minus" />
+                        <span>{{ $t('views.events.list.action.leave-waitinglist') }}</span>
+                    </li>
+                    <li
+                        v-if="hasAnySelectedEventWithSignedInUserInTeam"
+                        class="permission-write-own-registrations context-menu-item text-error"
+                        :class="{ disabled: !hasAnySelectedEventInFuture }"
+                        @click="leaveEvents(selectedEvents)"
+                    >
+                        <i class="fa-solid fa-ban" />
+                        <span>{{ $t('views.events.list.action.cancel') }}</span>
+                    </li>
+                </ul>
             </template>
         </VMultiSelectActions>
 

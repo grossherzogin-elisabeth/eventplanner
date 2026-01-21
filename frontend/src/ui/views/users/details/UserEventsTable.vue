@@ -42,38 +42,40 @@
                 </td>
             </template>
             <template #context-menu="{ item }">
-                <li>
-                    <RouterLink
-                        :to="{
-                            name: Routes.EventDetails,
-                            params: { year: item.start.getFullYear(), key: item.eventKey },
-                        }"
-                        class="context-menu-item"
-                    >
-                        <i class="fa-solid fa-search" />
-                        <span>Veranstaltung anzeigen</span>
-                    </RouterLink>
-                </li>
-                <li v-if="hasPermission(Permission.WRITE_EVENTS)">
-                    <RouterLink
-                        :to="{
-                            name: Routes.EventEdit,
-                            params: { year: item.start.getFullYear(), key: item.eventKey },
-                        }"
-                        class="context-menu-item"
-                    >
-                        <i class="fa-solid fa-drafting-compass" />
-                        <span>Veranstaltung bearbeiten</span>
-                    </RouterLink>
-                </li>
-                <li v-if="!item.inPast && item.waitingList" class="context-menu-item" @click="addUserToCrew(item)">
-                    <i class="fa-solid fa-user-plus" />
-                    <span>Zur Crew hinzufügen</span>
-                </li>
-                <li class="context-menu-item text-error" :class="{ disabled: item.inPast }" @click="deleteRegistration(item)">
-                    <i class="fa-solid fa-trash-alt" />
-                    <span>Anmeldung löschen</span>
-                </li>
+                <ul>
+                    <li>
+                        <RouterLink
+                            :to="{
+                                name: Routes.EventDetails,
+                                params: { year: item.start.getFullYear(), key: item.eventKey },
+                            }"
+                            class="context-menu-item"
+                        >
+                            <i class="fa-solid fa-search" />
+                            <span>Veranstaltung anzeigen</span>
+                        </RouterLink>
+                    </li>
+                    <li v-if="hasPermission(Permission.WRITE_EVENTS)">
+                        <RouterLink
+                            :to="{
+                                name: Routes.EventEdit,
+                                params: { year: item.start.getFullYear(), key: item.eventKey },
+                            }"
+                            class="context-menu-item"
+                        >
+                            <i class="fa-solid fa-drafting-compass" />
+                            <span>Veranstaltung bearbeiten</span>
+                        </RouterLink>
+                    </li>
+                    <li v-if="!item.inPast && item.waitingList" class="context-menu-item" @click="addUserToCrew(item)">
+                        <i class="fa-solid fa-user-plus" />
+                        <span>Zur Crew hinzufügen</span>
+                    </li>
+                    <li class="context-menu-item text-error" :class="{ disabled: item.inPast }" @click="deleteRegistration(item)">
+                        <i class="fa-solid fa-trash-alt" />
+                        <span>Anmeldung löschen</span>
+                    </li>
+                </ul>
             </template>
             <template #loading>
                 <tr v-for="i in 5" :key="i" class="animate-pulse">

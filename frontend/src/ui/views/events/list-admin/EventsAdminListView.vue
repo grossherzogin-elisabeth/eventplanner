@@ -141,83 +141,85 @@
                     </tr>
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="permission-read-events">
-                        <RouterLink
-                            :to="{
-                                name: Routes.EventDetails,
-                                params: { year: item.start.getFullYear(), key: item.key },
-                            }"
-                            class="context-menu-item"
+                    <ul>
+                        <li class="permission-read-events">
+                            <RouterLink
+                                :to="{
+                                    name: Routes.EventDetails,
+                                    params: { year: item.start.getFullYear(), key: item.key },
+                                }"
+                                class="context-menu-item"
+                            >
+                                <i class="fa-solid fa-search" />
+                                <span>{{ $t('views.events.admin-list.action.show-event') }}</span>
+                            </RouterLink>
+                        </li>
+                        <li class="permission-write-event-details">
+                            <RouterLink
+                                :to="{
+                                    name: Routes.EventEdit,
+                                    params: { year: item.start.getFullYear(), key: item.key },
+                                }"
+                                class="context-menu-item"
+                            >
+                                <i class="fa-solid fa-drafting-compass" />
+                                <span>{{ $t('views.events.admin-list.action.edit-event') }}</span>
+                            </RouterLink>
+                        </li>
+                        <li
+                            v-for="template in exportTemplates"
+                            :key="template"
+                            class="permission-read-user-details context-menu-item"
+                            @click="eventAdminUseCase.exportEvent(item, template)"
                         >
-                            <i class="fa-solid fa-search" />
-                            <span>{{ $t('views.events.admin-list.action.show-event') }}</span>
-                        </RouterLink>
-                    </li>
-                    <li class="permission-write-event-details">
-                        <RouterLink
-                            :to="{
-                                name: Routes.EventEdit,
-                                params: { year: item.start.getFullYear(), key: item.key },
-                            }"
-                            class="context-menu-item"
+                            <i class="fa-solid fa-file-excel" />
+                            <span>{{ $t('views.events.admin-list.action.exportToTemplate', { template }) }}</span>
+                        </li>
+                        <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
+                            <i class="fa-solid fa-user-plus" />
+                            <span>{{ $t('views.events.admin-list.action.add-registration') }}</span>
+                        </li>
+                        <li
+                            v-if="item.state === EventState.Draft"
+                            class="permission-write-event-details context-menu-item"
+                            @click="openEventsForSignup([item])"
                         >
-                            <i class="fa-solid fa-drafting-compass" />
-                            <span>{{ $t('views.events.admin-list.action.edit-event') }}</span>
-                        </RouterLink>
-                    </li>
-                    <li
-                        v-for="template in exportTemplates"
-                        :key="template"
-                        class="permission-read-user-details context-menu-item"
-                        @click="eventAdminUseCase.exportEvent(item, template)"
-                    >
-                        <i class="fa-solid fa-file-excel" />
-                        <span>{{ $t('views.events.admin-list.action.exportToTemplate', { template }) }}</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
-                        <i class="fa-solid fa-user-plus" />
-                        <span>{{ $t('views.events.admin-list.action.add-registration') }}</span>
-                    </li>
-                    <li
-                        v-if="item.state === EventState.Draft"
-                        class="permission-write-event-details context-menu-item"
-                        @click="openEventsForSignup([item])"
-                    >
-                        <i class="fa-solid fa-people-group" />
-                        <span>{{ $t('views.events.admin-list.action.open-signup') }}</span>
-                    </li>
-                    <li
-                        v-else-if="item.state === EventState.OpenForSignup"
-                        class="permission-write-event-details context-menu-item"
-                        @click="publishCrewPlanning([item])"
-                    >
-                        <i class="fa-solid fa-earth-europe" />
-                        <span>{{ $t('views.events.admin-list.action.publish-crew') }}</span>
-                    </li>
-                    <li class="permission-read-user-details context-menu-item disabled">
-                        <i class="fa-solid fa-users" />
-                        <span>{{ $t('views.events.admin-list.action.request-more-crew') }}</span>
-                    </li>
-                    <li
-                        class="permission-read-user-details context-menu-item"
-                        :class="{ disabled: item.assignedUserCount === 0 }"
-                        @click="contactCrew([item])"
-                    >
-                        <i class="fa-solid fa-envelope" />
-                        <span>{{ $t('views.events.admin-list.action.contact-crew', { count: item.assignedUserCount }) }}</span>
-                    </li>
-                    <li
-                        v-if="item.state === EventState.Canceled"
-                        class="permission-delete-events context-menu-item text-error"
-                        @click="deleteEvent(item)"
-                    >
-                        <i class="fa-solid fa-trash-alt" />
-                        <span>{{ $t('views.events.admin-list.action.delete-event') }}</span>
-                    </li>
-                    <li v-else class="permission-delete-events context-menu-item text-error" @click="cancelEvent(item)">
-                        <i class="fa-solid fa-ban" />
-                        <span>{{ $t('views.events.admin-list.action.cancel-event') }}</span>
-                    </li>
+                            <i class="fa-solid fa-people-group" />
+                            <span>{{ $t('views.events.admin-list.action.open-signup') }}</span>
+                        </li>
+                        <li
+                            v-else-if="item.state === EventState.OpenForSignup"
+                            class="permission-write-event-details context-menu-item"
+                            @click="publishCrewPlanning([item])"
+                        >
+                            <i class="fa-solid fa-earth-europe" />
+                            <span>{{ $t('views.events.admin-list.action.publish-crew') }}</span>
+                        </li>
+                        <li class="permission-read-user-details context-menu-item disabled">
+                            <i class="fa-solid fa-users" />
+                            <span>{{ $t('views.events.admin-list.action.request-more-crew') }}</span>
+                        </li>
+                        <li
+                            class="permission-read-user-details context-menu-item"
+                            :class="{ disabled: item.assignedUserCount === 0 }"
+                            @click="contactCrew([item])"
+                        >
+                            <i class="fa-solid fa-envelope" />
+                            <span>{{ $t('views.events.admin-list.action.contact-crew', { count: item.assignedUserCount }) }}</span>
+                        </li>
+                        <li
+                            v-if="item.state === EventState.Canceled"
+                            class="permission-delete-events context-menu-item text-error"
+                            @click="deleteEvent(item)"
+                        >
+                            <i class="fa-solid fa-trash-alt" />
+                            <span>{{ $t('views.events.admin-list.action.delete-event') }}</span>
+                        </li>
+                        <li v-else class="permission-delete-events context-menu-item text-error" @click="cancelEvent(item)">
+                            <i class="fa-solid fa-ban" />
+                            <span>{{ $t('views.events.admin-list.action.cancel-event') }}</span>
+                        </li>
+                    </ul>
                 </template>
             </VTable>
         </div>
@@ -261,42 +263,44 @@
                 </div>
             </template>
             <template #menu>
-                <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
-                    <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('views.events.admin-list.action.add-registration') }}</span>
-                </li>
-                <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
-                    <i class="fa-solid fa-edit" />
-                    <span>{{ $t('views.events.admin-list.batch-edit.title') }}</span>
-                </li>
-                <li
-                    v-if="showBatchOpenEventForSignup"
-                    class="permission-write-event-details context-menu-item"
-                    @click="openEventsForSignup(selectedEvents)"
-                >
-                    <i class="fa-solid fa-people-group" />
-                    <span>{{ $t('views.events.admin-list.action.open-signup') }}</span>
-                </li>
-                <li
-                    v-if="showBatchPublishPlannedCrew"
-                    class="permission-write-event-details context-menu-item"
-                    @click="publishCrewPlanning(selectedEvents)"
-                >
-                    <i class="fa-solid fa-earth-europe" />
-                    <span>{{ $t('views.events.admin-list.action.publish-crew') }}</span>
-                </li>
-                <li class="permission-read-user-details permission-write-events context-menu-item disabled">
-                    <i class="fa-solid fa-users" />
-                    <span>{{ $t('views.events.admin-list.action.request-more-crew') }}</span>
-                </li>
-                <li class="permission-read-user-details context-menu-item disabled">
-                    <i class="fa-solid fa-envelope" />
-                    <span>{{ $t('views.events.admin-list.action.contact-crew', { count: '*' }) }}</span>
-                </li>
-                <li class="permission-delete-events context-menu-item disabled text-error">
-                    <i class="fa-solid fa-ban" />
-                    <span>{{ $t('views.events.admin-list.action.cancel-event') }}*</span>
-                </li>
+                <ul>
+                    <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
+                        <i class="fa-solid fa-user-plus" />
+                        <span>{{ $t('views.events.admin-list.action.add-registration') }}</span>
+                    </li>
+                    <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
+                        <i class="fa-solid fa-edit" />
+                        <span>{{ $t('views.events.admin-list.batch-edit.title') }}</span>
+                    </li>
+                    <li
+                        v-if="showBatchOpenEventForSignup"
+                        class="permission-write-event-details context-menu-item"
+                        @click="openEventsForSignup(selectedEvents)"
+                    >
+                        <i class="fa-solid fa-people-group" />
+                        <span>{{ $t('views.events.admin-list.action.open-signup') }}</span>
+                    </li>
+                    <li
+                        v-if="showBatchPublishPlannedCrew"
+                        class="permission-write-event-details context-menu-item"
+                        @click="publishCrewPlanning(selectedEvents)"
+                    >
+                        <i class="fa-solid fa-earth-europe" />
+                        <span>{{ $t('views.events.admin-list.action.publish-crew') }}</span>
+                    </li>
+                    <li class="permission-read-user-details permission-write-events context-menu-item disabled">
+                        <i class="fa-solid fa-users" />
+                        <span>{{ $t('views.events.admin-list.action.request-more-crew') }}</span>
+                    </li>
+                    <li class="permission-read-user-details context-menu-item disabled">
+                        <i class="fa-solid fa-envelope" />
+                        <span>{{ $t('views.events.admin-list.action.contact-crew', { count: '*' }) }}</span>
+                    </li>
+                    <li class="permission-delete-events context-menu-item disabled text-error">
+                        <i class="fa-solid fa-ban" />
+                        <span>{{ $t('views.events.admin-list.action.cancel-event') }}*</span>
+                    </li>
+                </ul>
             </template>
         </VMultiSelectActions>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->

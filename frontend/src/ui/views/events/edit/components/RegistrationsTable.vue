@@ -90,46 +90,50 @@
             </td>
         </template>
         <template #context-menu="{ item }">
-            <RouterLink
-                :to="{ name: Routes.UserDetails, params: { key: item.user?.key } }"
-                target="_blank"
-                class="context-menu-item"
-                :class="{ disabled: !item.user }"
-            >
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                <span>{{ $t('views.events.edit.actions.show-user') }}</span>
-            </RouterLink>
-            <template v-if="event.signupType === EventSignupType.Assignment">
-                <li
-                    v-if="item.slot"
-                    class="context-menu-item"
-                    :class="{ disabled: !item.registration }"
-                    @click="emit('removeFromCrew', item)"
-                >
-                    <i class="fa-solid fa-hourglass-half"></i>
-                    <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
+            <ul>
+                <li>
+                    <RouterLink
+                        :to="{ name: Routes.UserDetails, params: { key: item.user?.key } }"
+                        target="_blank"
+                        class="context-menu-item"
+                        :class="{ disabled: !item.user }"
+                    >
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        <span>{{ $t('views.events.edit.actions.show-user') }}</span>
+                    </RouterLink>
                 </li>
-                <li v-else class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('addToCrew', item)">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
+                <template v-if="event.signupType === EventSignupType.Assignment">
+                    <li
+                        v-if="item.slot"
+                        class="context-menu-item"
+                        :class="{ disabled: !item.registration }"
+                        @click="emit('removeFromCrew', item)"
+                    >
+                        <i class="fa-solid fa-hourglass-half"></i>
+                        <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
+                    </li>
+                    <li v-else class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('addToCrew', item)">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
+                    </li>
+                </template>
+                <li class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('editRegistration', item)">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <span>{{ $t('views.events.edit.actions.edit-registration') }}</span>
                 </li>
-            </template>
-            <li class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('editRegistration', item)">
-                <i class="fa-solid fa-clipboard-list"></i>
-                <span>{{ $t('views.events.edit.actions.edit-registration') }}</span>
-            </li>
-            <li v-if="item.slot" class="context-menu-item" @click="emit('editSlot', item)">
-                <i class="fa-solid fa-edit"></i>
-                <span>{{ $t('views.events.edit.actions.edit-slot') }}</span>
-            </li>
-            <li v-if="item.registration" class="context-menu-item text-error" @click="emit('deleteRegistration', item)">
-                <i class="fa-solid fa-trash-alt"></i>
-                <span>{{ $t('views.events.edit.actions.delete-registration') }}</span>
-            </li>
-            <li v-else class="context-menu-item text-error" @click="emit('deleteSlot', item)">
-                <i class="fa-solid fa-trash-alt"></i>
-                <span>{{ $t('views.events.edit.actions.delete-slot') }}</span>
-            </li>
+                <li v-if="item.slot" class="context-menu-item" @click="emit('editSlot', item)">
+                    <i class="fa-solid fa-edit"></i>
+                    <span>{{ $t('views.events.edit.actions.edit-slot') }}</span>
+                </li>
+                <li v-if="item.registration" class="context-menu-item text-error" @click="emit('deleteRegistration', item)">
+                    <i class="fa-solid fa-trash-alt"></i>
+                    <span>{{ $t('views.events.edit.actions.delete-registration') }}</span>
+                </li>
+                <li v-else class="context-menu-item text-error" @click="emit('deleteSlot', item)">
+                    <i class="fa-solid fa-trash-alt"></i>
+                    <span>{{ $t('views.events.edit.actions.delete-slot') }}</span>
+                </li>
+            </ul>
         </template>
     </VTable>
 </template>

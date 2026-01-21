@@ -106,34 +106,36 @@
             </button>
         </template>
         <template v-if="event" #actions-menu>
-            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
-                <i class="fa-solid fa-calendar-alt" />
-                <span>{{ $t('views.events.details.create-calendar-entry') }}</span>
-            </li>
-            <template v-if="event.signedInUserRegistration">
-                <li
-                    class="context-menu-item"
-                    :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
-                    @click="editUserRegistration()"
-                >
-                    <i class="fa-solid fa-edit" />
-                    <span>{{ $t('views.events.details.edit-registration') }}</span>
+            <ul>
+                <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
+                    <i class="fa-solid fa-calendar-alt" />
+                    <span>{{ $t('views.events.details.create-calendar-entry') }}</span>
                 </li>
-                <li
-                    class="context-menu-item"
-                    :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
-                    @click="editUserRegistration()"
-                >
-                    <i class="fa-solid fa-note-sticky" />
-                    <span>{{ $t('views.events.details.add-note') }}</span>
+                <template v-if="event.signedInUserRegistration">
+                    <li
+                        class="context-menu-item"
+                        :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
+                        @click="editUserRegistration()"
+                    >
+                        <i class="fa-solid fa-edit" />
+                        <span>{{ $t('views.events.details.edit-registration') }}</span>
+                    </li>
+                    <li
+                        class="context-menu-item"
+                        :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
+                        @click="editUserRegistration()"
+                    >
+                        <i class="fa-solid fa-note-sticky" />
+                        <span>{{ $t('views.events.details.add-note') }}</span>
+                    </li>
+                </template>
+                <li class="permission-write-events">
+                    <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
+                        <i class="fa-solid fa-drafting-compass" />
+                        <span>{{ $t('views.events.details.edit-event') }}</span>
+                    </RouterLink>
                 </li>
-            </template>
-            <li class="permission-write-events">
-                <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
-                    <i class="fa-solid fa-drafting-compass" />
-                    <span>{{ $t('views.events.details.edit-event') }}</span>
-                </RouterLink>
-            </li>
+            </ul>
         </template>
     </DetailsPage>
     <VConfirmationDialog ref="confirmationDialog" />

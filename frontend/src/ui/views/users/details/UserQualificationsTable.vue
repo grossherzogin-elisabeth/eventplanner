@@ -58,14 +58,16 @@
             </td>
         </template>
         <template #context-menu="{ item }">
-            <li class="context-menu-item" @click="editUserQualification(item)">
-                <i class="fa-solid fa-edit" />
-                <span>Qualification bearbeiten</span>
-            </li>
-            <li class="context-menu-item text-error" @click="deleteUserQualification(item)">
-                <i class="fa-solid fa-trash-alt" />
-                <span>Qualifikation entfernen</span>
-            </li>
+            <ul>
+                <li class="context-menu-item" @click="editUserQualification(item)">
+                    <i class="fa-solid fa-edit" />
+                    <span>Qualification bearbeiten</span>
+                </li>
+                <li class="context-menu-item text-error" @click="deleteUserQualification(item)">
+                    <i class="fa-solid fa-trash-alt" />
+                    <span>Qualifikation entfernen</span>
+                </li>
+            </ul>
         </template>
     </VTable>
     <UserQualificationDetailsDlg ref="editUserQualificationDialog" />

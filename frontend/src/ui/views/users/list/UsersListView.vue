@@ -129,30 +129,32 @@
                     </td>
                 </template>
                 <template #context-menu="{ item }">
-                    <li
-                        class="permission-read-user-details context-menu-item"
-                        :class="{ disabled: !item.email }"
-                        @click="contactUsers([item])"
-                    >
-                        <i class="fa-solid fa-envelope" />
-                        <span>Email schreiben</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="impersonateUser(item)">
-                        <i class="fa-solid fa-user-secret" />
-                        <span>Impersonate</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="createRegistration(item)">
-                        <i class="fa-solid fa-calendar-plus" />
-                        <span>Anmeldung hinzufügen</span>
-                    </li>
-                    <li class="permission-write-users context-menu-item" @click="editUser(item, $event)">
-                        <i class="fa-solid fa-edit" />
-                        <span>Nutzer bearbeiten</span>
-                    </li>
-                    <li class="permission-delete-users context-menu-item text-error" @click="deleteUser(item)">
-                        <i class="fa-solid fa-trash-alt" />
-                        <span>Nutzer löschen</span>
-                    </li>
+                    <ul>
+                        <li
+                            class="permission-read-user-details context-menu-item"
+                            :class="{ disabled: !item.email }"
+                            @click="contactUsers([item])"
+                        >
+                            <i class="fa-solid fa-envelope" />
+                            <span>Email schreiben</span>
+                        </li>
+                        <li class="permission-write-registrations context-menu-item" @click="impersonateUser(item)">
+                            <i class="fa-solid fa-user-secret" />
+                            <span>Impersonate</span>
+                        </li>
+                        <li class="permission-write-registrations context-menu-item" @click="createRegistration(item)">
+                            <i class="fa-solid fa-calendar-plus" />
+                            <span>Anmeldung hinzufügen</span>
+                        </li>
+                        <li class="permission-write-users context-menu-item" @click="editUser(item, $event)">
+                            <i class="fa-solid fa-edit" />
+                            <span>Nutzer bearbeiten</span>
+                        </li>
+                        <li class="permission-delete-users context-menu-item text-error" @click="deleteUser(item)">
+                            <i class="fa-solid fa-trash-alt" />
+                            <span>Nutzer löschen</span>
+                        </li>
+                    </ul>
                 </template>
                 <template #loading>
                     <UsersListSkeletonLoader :count="20" />
@@ -181,18 +183,20 @@
                 </div>
             </template>
             <template #menu>
-                <li class="permission-read-user-details context-menu-item" @click="contactUsers(selectedUsers)">
-                    <i class="fa-solid fa-envelope" />
-                    <span>Email schreiben</span>
-                </li>
-                <li class="permission-write-users context-menu-item disabled">
-                    <i class="fa-solid fa-screwdriver-wrench" />
-                    <span>Arbeitsdienst eintragen*</span>
-                </li>
-                <li class="permission-delete-users context-menu-item disabled text-error">
-                    <i class="fa-solid fa-trash-alt" />
-                    <span>Nutzer löschen*</span>
-                </li>
+                <ul>
+                    <li class="permission-read-user-details context-menu-item" @click="contactUsers(selectedUsers)">
+                        <i class="fa-solid fa-envelope" />
+                        <span>Email schreiben</span>
+                    </li>
+                    <li class="permission-write-users context-menu-item disabled">
+                        <i class="fa-solid fa-screwdriver-wrench" />
+                        <span>Arbeitsdienst eintragen*</span>
+                    </li>
+                    <li class="permission-delete-users context-menu-item disabled text-error">
+                        <i class="fa-solid fa-trash-alt" />
+                        <span>Nutzer löschen*</span>
+                    </li>
+                </ul>
             </template>
         </VMultiSelectActions>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
