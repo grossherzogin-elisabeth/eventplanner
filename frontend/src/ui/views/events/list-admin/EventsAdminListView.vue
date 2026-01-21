@@ -467,7 +467,7 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
         const tableItem: EventTableViewItem = {
             ...evt,
             selected: false,
-            isPastEvent: evt.start.getTime() < new Date().getTime(),
+            isPastEvent: evt.start.getTime() < Date.now(),
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
             hasOpenSlots: openOptionalSlots.length > 0,
             hasOpenRequiredSlots: openRequiredSlots.length > 0,
