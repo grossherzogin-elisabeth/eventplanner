@@ -94,7 +94,7 @@ export class EventAdministrationUseCase {
                 title: 'Speichern fehlgeschlagen',
                 message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
                 wiederholt auftreten, melde ihn gerne.`,
-                error: e,
+                error: e instanceof Error || e instanceof Response ? e : undefined,
                 retry: () => this.updateEvents(eventKeys, patch),
             });
             throw e;
@@ -111,7 +111,7 @@ export class EventAdministrationUseCase {
                 title: 'Speichern fehlgeschlagen',
                 message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
                 wiederholt auftreten, melde ihn gerne.`,
-                error: e,
+                error: e instanceof Error || e instanceof Response ? e : undefined,
                 retry: () => this.updateEvent(eventKey, event),
             });
             throw e;
