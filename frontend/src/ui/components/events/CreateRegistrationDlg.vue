@@ -111,7 +111,7 @@ import { Validator, notEmpty } from '@/common/validation';
 import type { Event, InputSelectOption, Position, Registration, User } from '@/domain';
 import { useUserService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
-import { VInputCheckBox, VInputDate, VWarning, VDialog, VInputCombobox, VInputText, VInputTextArea } from '@/ui/components/common';
+import { VDialog, VInputCheckBox, VInputCombobox, VInputDate, VInputText, VInputTextArea, VWarning } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
