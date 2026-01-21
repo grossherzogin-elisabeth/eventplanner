@@ -47,9 +47,7 @@ export function useLongTouch(longTouchDelay: number = 500) {
         touchStartEvent = undefined;
         touchMoveEvent = undefined;
         clearTimeout(longTouchTimeout);
-        if (longTouchFired === undefined) {
-            longTouchFired = false;
-        }
+        longTouchFired ??= false;
         setTimeout(() => {
             longTouchFired = undefined;
         }, 50);
