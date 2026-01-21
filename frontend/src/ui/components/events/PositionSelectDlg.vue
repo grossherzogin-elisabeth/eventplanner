@@ -36,7 +36,7 @@ import { computed, ref } from 'vue';
 import { useUsersUseCase } from '@/application';
 import type { InputSelectOption, PositionKey, UserDetails } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VInputSelect, VInputCheckBox, VDialog } from '@/ui/components/common';
+import { VDialog, VInputCheckBox, VInputSelect } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions';
 
 const positions = usePositions();
