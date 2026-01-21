@@ -1,6 +1,5 @@
 import type { Ref } from 'vue';
-import { onBeforeUnmount } from 'vue';
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { useAuthService } from '@/application';
 import type { Permission, SignedInUser } from '@/domain';
 

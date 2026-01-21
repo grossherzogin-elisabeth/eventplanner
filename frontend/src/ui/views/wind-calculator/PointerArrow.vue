@@ -18,8 +18,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import type { Point, Pointer } from '@/ui/views/wind-calculator/Pointer.ts';
-import { calculatePointerDirection } from '@/ui/views/wind-calculator/Pointer.ts';
-import { calculatePointer } from '@/ui/views/wind-calculator/Pointer.ts';
+import { calculatePointer, calculatePointerDirection } from '@/ui/views/wind-calculator/Pointer.ts';
 
 interface Props {
     pointer: Pointer;
