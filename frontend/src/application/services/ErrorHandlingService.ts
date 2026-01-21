@@ -37,7 +37,7 @@ export class ErrorHandlingService {
 
     public handleRawError(e: unknown | Error | Response): void {
         if (e instanceof Response) {
-            const response = e as Response;
+            const response = e;
             if (response.status === 401) {
                 this.accountRepository.login(location.pathname);
             } else if (response.status === 502 || response.status === 503) {
