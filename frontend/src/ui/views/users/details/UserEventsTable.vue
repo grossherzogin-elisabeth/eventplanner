@@ -188,7 +188,7 @@ const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
                     waitingList: slot === undefined,
                     locations: evt.locations.map((it) => it.name).join(' - '),
                     crewCount: evt.assignedUserCount,
-                    inPast: evt.start.getTime() < new Date().getTime(),
+                    inPast: evt.start.getTime() < Date.now(),
                     waitingListCount: evt.registrations.length - evt.assignedUserCount,
                 };
             }

@@ -142,7 +142,7 @@ const daysUntilStart = computed<number>(() => {
     if (!event.value) {
         return 0;
     }
-    const nowSec = new Date().getTime() / 1000;
+    const nowSec = Date.now() / 1000;
     const startSec = event.value.start.getTime() / 1000;
     const diffSec = startSec - nowSec;
     return Math.floor(diffSec / 60 / 60 / 24);

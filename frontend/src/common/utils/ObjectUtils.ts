@@ -21,7 +21,7 @@ export function deepCopy<T>(value: T): T {
     }
     // clone date
     if (value instanceof Date) {
-        return new Date(value.getTime()) as unknown as T;
+        return new Date(value) as unknown as T;
     }
     // recursively clone object
     if (typeof value === 'object') {
