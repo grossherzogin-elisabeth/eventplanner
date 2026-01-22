@@ -60,15 +60,15 @@ export function resetApplicationServices(): void {
 
 export function useConfigService(): ConfigService {
     configService ??= new ConfigService({
-            settingsRepository: useSettingsRepository(),
-        });
+        settingsRepository: useSettingsRepository(),
+    });
     return configService;
 }
 
 export function useErrorHandlingService(): ErrorHandlingService {
     errorHandlingService ??= new ErrorHandlingService({
-            accountRepository: useAccountRepository(),
-        });
+        accountRepository: useAccountRepository(),
+    });
     return errorHandlingService;
 }
 
@@ -89,32 +89,32 @@ export function useCalendarService(): CalendarService {
 
 export function useEventCachingService(): EventCachingService {
     eventCachingService ??= new EventCachingService({
-            eventRepository: useEventRepository(),
-            cache: useStorage(StoreNames.Events),
-        });
+        eventRepository: useEventRepository(),
+        cache: useStorage(StoreNames.Events),
+    });
     return eventCachingService;
 }
 
 export function useUserCachingService(): UserCachingService {
     userCachingService ??= new UserCachingService({
-            userRepository: useUserRepository(),
-            cache: useStorage(StoreNames.Users),
-        });
+        userRepository: useUserRepository(),
+        cache: useStorage(StoreNames.Users),
+    });
     return userCachingService;
 }
 
 export function usePositionCachingService(): PositionCachingService {
     positionCachingService ??= new PositionCachingService({
-            positionRepository: usePositionRepository(),
-            cache: useStorage(StoreNames.Positions),
-        });
+        positionRepository: usePositionRepository(),
+        cache: useStorage(StoreNames.Positions),
+    });
     return positionCachingService;
 }
 
 export function useQualificationCachingService(): QualificationCachingService {
     qualificationCachingService ??= new QualificationCachingService({
-            qualificationRepository: useQualificationRepository(),
-            cache: useStorage(StoreNames.Qualifications),
-        });
+        qualificationRepository: useQualificationRepository(),
+        cache: useStorage(StoreNames.Qualifications),
+    });
     return qualificationCachingService;
 }
