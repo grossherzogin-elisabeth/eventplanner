@@ -58,7 +58,7 @@ export class EventService {
         if (!registration) {
             return false;
         }
-        return slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey)) !== undefined;
+        return slot.positionKeys.some((positionkey) => user.positionKeys?.includes(positionkey));
     }
 
     public getOpenSlots(event: Event): Slot[] {
@@ -192,7 +192,7 @@ export class EventService {
     }
 
     public getRegistrationsOnWaitinglist(event: Event): Registration[] {
-        return event.registrations.filter((reg) => !event.slots.find((slt) => slt.assignedRegistrationKey === reg.key));
+        return event.registrations.filter((reg) => !event.slots.some((slt) => slt.assignedRegistrationKey === reg.key));
     }
 
     public validate(event: Event): Record<string, string[]> {

@@ -307,7 +307,7 @@ function participatesInEvent(user: UserRegistrations): boolean {
     if (!userRegistration) {
         return false;
     }
-    return filterEvent.value.slots.find((it) => it.assignedRegistrationKey === userRegistration.key) !== undefined;
+    return filterEvent.value.slots.some((it) => it.assignedRegistrationKey === userRegistration.key);
 }
 
 const selectedUsers = computed<UserRegistrations[] | undefined>(() => {

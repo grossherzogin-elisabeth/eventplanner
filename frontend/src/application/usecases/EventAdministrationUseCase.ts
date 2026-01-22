@@ -187,9 +187,9 @@ export class EventAdministrationUseCase {
         try {
             let eventsToUpdate = events;
             if (registration.userKey) {
-                eventsToUpdate = eventsToUpdate.filter((it) => !it.registrations.find((it) => it.userKey === registration.userKey));
+                eventsToUpdate = eventsToUpdate.filter((it) => !it.registrations.some((it) => it.userKey === registration.userKey));
             } else if (registration.name) {
-                eventsToUpdate = eventsToUpdate.filter((it) => it.registrations.find((it) => it.name === registration.name));
+                eventsToUpdate = eventsToUpdate.filter((it) => it.registrations.some((it) => it.name === registration.name));
             }
             if (eventsToUpdate.length === 0) {
                 this.notificationService.warning('Keine neue Anmeldung hinzugefügt');
@@ -224,7 +224,7 @@ export class EventAdministrationUseCase {
         if (!slot) {
             throw new Error('Failed to resolve slot');
         }
-        if (!slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey))) {
+        if (!slot.positionKeys.some((positionkey) => user.positionKeys?.includes(positionkey))) {
             console.warn(`Assigning ${user.firstName} ${user.lastName} to slot with mismatching positions!`);
             // throw new Error('User does not have the required position');
         }

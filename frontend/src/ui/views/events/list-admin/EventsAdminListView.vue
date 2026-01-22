@@ -554,7 +554,7 @@ async function addRegistration(events: Event[]): Promise<void> {
 async function openEventsForSignup(events: Event[]): Promise<void> {
     // filter out those events that already have the desired state
     let eventsToEdit = events.filter((it) => it.state !== EventState.OpenForSignup);
-    if (eventsToEdit.find((event) => event.state !== EventState.Draft)) {
+    if (eventsToEdit.some((event) => event.state !== EventState.Draft)) {
         const confirmed = await confirmationDialog.value?.open({
             title: t('views.events.admin-list.dialog.open-signup.title'),
             message: t('views.events.admin-list.dialog.open-signup.message'),
@@ -576,7 +576,7 @@ async function openEventsForSignup(events: Event[]): Promise<void> {
 async function publishCrewPlanning(events: Event[]): Promise<void> {
     // filter out those events that already have the desired state
     let eventsToEdit = events.filter((it) => it.state !== EventState.Planned);
-    if (eventsToEdit.find((event) => event.state !== EventState.OpenForSignup)) {
+    if (eventsToEdit.some((event) => event.state !== EventState.OpenForSignup)) {
         const confirmed = await confirmationDialog.value?.open({
             title: t('views.events.admin-list.dialog.publish-crew.title'),
             message: t('views.events.admin-list.dialog.publish-crew.message'),
