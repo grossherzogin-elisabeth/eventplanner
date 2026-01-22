@@ -339,7 +339,7 @@ const createRegistrationSheet = ref<Sheet<
 > | null>(null);
 
 const hasAnySelectedEventInFuture = computed<boolean>(() => {
-    const now = new Date().getTime();
+    const now = Date.now();
     return selectedEvents.value?.find((it) => it.start.getTime() > now) !== undefined;
 });
 
@@ -430,7 +430,7 @@ async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
         const tableItem: EventTableViewItem = {
             ...evt,
             selected: false,
-            isPastEvent: evt.start.getTime() < new Date().getTime(),
+            isPastEvent: evt.start.getTime() < Date.now(),
             waitingListCount: evt.registrations.length - evt.assignedUserCount,
             hasOpenSlots: eventService.hasOpenSlots(evt),
             hasOpenImportantSlots: eventService.hasOpenImportantSlots(evt),
