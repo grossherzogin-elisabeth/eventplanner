@@ -14,6 +14,7 @@ export class ErrorHandlingService {
 
     public constructor(params: { accountRepository: AccountRepository }) {
         this.accountRepository = params.accountRepository;
+        console.log('🚀 Initializing ErrorHandlingService');
     }
 
     private errorHandler: (error: ErrorDetails) => void = (error: ErrorDetails) => {

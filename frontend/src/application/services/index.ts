@@ -59,89 +59,62 @@ export function resetApplicationServices(): void {
 }
 
 export function useConfigService(): ConfigService {
-    if (!configService) {
-        console.log('🚀 Initializing ConfigService');
-        configService = new ConfigService({
+    configService ??= new ConfigService({
             settingsRepository: useSettingsRepository(),
         });
-    }
     return configService;
 }
 
 export function useErrorHandlingService(): ErrorHandlingService {
-    if (!errorHandlingService) {
-        console.log('🚀 Initializing ErrorHandlingService');
-        errorHandlingService = new ErrorHandlingService({
+    errorHandlingService ??= new ErrorHandlingService({
             accountRepository: useAccountRepository(),
         });
-    }
     return errorHandlingService;
 }
 
 export function useNotificationService(): NotificationService {
-    if (!notificationService) {
-        console.log('🚀 Initializing NotificationService');
-        notificationService = new NotificationService();
-    }
+    notificationService ??= new NotificationService();
     return notificationService;
 }
 
 export function useAuthService(): AuthService {
-    if (!authService) {
-        console.log('🚀 Initializing AuthService');
-        authService = new AuthService();
-    }
+    authService ??= new AuthService();
     return authService;
 }
 
 export function useCalendarService(): CalendarService {
-    if (!calendarService) {
-        console.log('🚀 Initializing CalendarService');
-        calendarService = new CalendarService();
-    }
+    calendarService ??= new CalendarService();
     return calendarService;
 }
 
 export function useEventCachingService(): EventCachingService {
-    if (!eventCachingService) {
-        console.log('🚀 Initializing EventCachingService');
-        eventCachingService = new EventCachingService({
+    eventCachingService ??= new EventCachingService({
             eventRepository: useEventRepository(),
             cache: useStorage(StoreNames.Events),
         });
-    }
     return eventCachingService;
 }
 
 export function useUserCachingService(): UserCachingService {
-    console.log('🚀 Initializing UserCachingService');
-    if (!userCachingService) {
-        userCachingService = new UserCachingService({
+    userCachingService ??= new UserCachingService({
             userRepository: useUserRepository(),
             cache: useStorage(StoreNames.Users),
         });
-    }
     return userCachingService;
 }
 
 export function usePositionCachingService(): PositionCachingService {
-    if (!positionCachingService) {
-        console.log('🚀 Initializing PositionCachingService');
-        positionCachingService = new PositionCachingService({
+    positionCachingService ??= new PositionCachingService({
             positionRepository: usePositionRepository(),
             cache: useStorage(StoreNames.Positions),
         });
-    }
     return positionCachingService;
 }
 
 export function useQualificationCachingService(): QualificationCachingService {
-    if (!qualificationCachingService) {
-        console.log('🚀 Initializing QualificationCachingService');
-        qualificationCachingService = new QualificationCachingService({
+    qualificationCachingService ??= new QualificationCachingService({
             qualificationRepository: useQualificationRepository(),
             cache: useStorage(StoreNames.Qualifications),
         });
-    }
     return qualificationCachingService;
 }

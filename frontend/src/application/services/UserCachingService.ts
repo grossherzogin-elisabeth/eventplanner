@@ -10,6 +10,7 @@ export class UserCachingService {
     constructor(params: { userRepository: UserRepository; cache: Storage<UserKey, User> }) {
         this.userRepository = params.userRepository;
         this.storage = params.cache;
+        console.log('🚀 Initializing UserCachingService');
         this.initialized = this.initialize();
     }
 

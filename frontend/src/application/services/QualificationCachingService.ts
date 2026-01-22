@@ -10,6 +10,7 @@ export class QualificationCachingService {
     constructor(params: { qualificationRepository: QualificationRepository; cache: Storage<QualificationKey, Qualification> }) {
         this.qualificationRepository = params.qualificationRepository;
         this.storage = params.cache;
+        console.log('🚀 Initializing QualificationCachingService');
         this.initialized = this.initialize();
     }
 

@@ -11,6 +11,7 @@ export class EventCachingService {
     constructor(params: { eventRepository: EventRepository; cache: Storage<EventKey, Event> }) {
         this.eventRepository = params.eventRepository;
         this.storage = params.cache;
+        console.log('🚀 Initializing EventCachingService');
         this.initialized = this.initialize();
     }
 

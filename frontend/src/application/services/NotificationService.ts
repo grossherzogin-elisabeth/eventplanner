@@ -1,4 +1,8 @@
 export class NotificationService {
+    constructor() {
+        console.log('🚀 Initializing NotificationService');
+    }
+
     private notificationHandler: (message: string, type: 'success' | 'warning' | 'error' | 'info') => void = (message) => {
         alert(message);
     };

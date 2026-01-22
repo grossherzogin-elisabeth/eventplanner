@@ -10,6 +10,7 @@ export class PositionCachingService {
     constructor(params: { positionRepository: PositionRepository; cache: Storage<PositionKey, Position> }) {
         this.positionRepository = params.positionRepository;
         this.storage = params.cache;
+        console.log('🚀 Initializing PositionCachingService');
         this.initialized = this.initialize();
     }
 

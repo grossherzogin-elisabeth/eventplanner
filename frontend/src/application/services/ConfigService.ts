@@ -22,6 +22,7 @@ export class ConfigService {
     constructor(params: { settingsRepository: SettingsRepository }) {
         this.settingsRepository = params.settingsRepository;
         this.config = defaultConfig;
+        console.log('🚀 Initializing ConfigService');
         this.initialize();
     }
 
