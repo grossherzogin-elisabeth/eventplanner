@@ -3,7 +3,7 @@ import type { AccountRepository } from '@/application/ports';
 export interface ErrorDetails {
     title?: string;
     message?: string;
-    error?: unknown | Error | Response;
+    error?: Error | Response;
     retryText?: string;
     retry?: () => unknown;
     cancelText?: string;
@@ -57,7 +57,7 @@ export class ErrorHandlingService {
                 error: e,
             });
         } else {
-            this.handleError({ error: e });
+            this.handleError({ error: e instanceof Error || e instanceof Response ? e : undefined });
         }
 
         // throw again for the async button to handle error state

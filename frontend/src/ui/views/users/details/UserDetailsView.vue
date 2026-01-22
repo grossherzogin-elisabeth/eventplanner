@@ -279,7 +279,7 @@ async function save(): Promise<void> {
                 title: 'Speichern fehlgeschlagen',
                 message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
                     wiederholt auftreten, melde ihn gerne.`,
-                error: e,
+                error: e instanceof Error || e instanceof Response ? e : undefined,
                 retry: () => save(),
             });
             throw e;
