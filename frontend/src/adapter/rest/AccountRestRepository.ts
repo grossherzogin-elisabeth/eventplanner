@@ -1,6 +1,6 @@
 import type { AccountRepository } from '@/application';
 import { wait } from '@/common';
-import type { Permission, PositionKey, Role, SignedInUser } from '@/domain';
+import type { Permission, Role, SignedInUser } from '@/domain';
 
 export interface AccountRepresentation {
     key: string;
@@ -45,7 +45,7 @@ export class AccountRestRepository implements AccountRepository {
             email: user.email,
             roles: user.roles as Role[],
             permissions: user.permissions as Permission[],
-            positions: user.positions as PositionKey[],
+            positions: user.positions,
             impersonated: false,
         };
     }

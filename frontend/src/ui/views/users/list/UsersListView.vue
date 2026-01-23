@@ -217,8 +217,7 @@ import { filterUndefined, hasAnyOverlap } from '@/common';
 import type { Event, EventKey, Position, PositionKey, QualificationKey, User } from '@/domain';
 import { EventType, Permission, Role, useEventService, useUserService } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { VMultiSelectActions } from '@/ui/components/common';
-import { VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
+import { VConfirmationDialog, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import { FilterMultiselect, FilterSelect, FilterToggle } from '@/ui/components/filters';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
@@ -307,7 +306,7 @@ function participatesInEvent(user: UserRegistrations): boolean {
     if (!userRegistration) {
         return false;
     }
-    return filterEvent.value.slots.find((it) => it.assignedRegistrationKey === userRegistration.key) !== undefined;
+    return filterEvent.value.slots.some((it) => it.assignedRegistrationKey === userRegistration.key);
 }
 
 const selectedUsers = computed<UserRegistrations[] | undefined>(() => {

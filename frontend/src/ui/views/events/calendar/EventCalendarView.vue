@@ -301,7 +301,7 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
         if (event.signedInUserRegistration) {
             calendarDayEvent.class += event.isSignedInUserAssigned ? ' assigned' : ' waiting-list';
         }
-        if (event.end.getTime() < new Date().getTime()) {
+        if (event.end.getTime() < Date.now()) {
             calendarDayEvent.class += ' in-past';
         }
         if (calendarDayEvent.durationInMonth < 1) {

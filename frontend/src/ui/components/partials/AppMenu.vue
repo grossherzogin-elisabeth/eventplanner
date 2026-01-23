@@ -161,7 +161,7 @@ function init(): void {
         .then(() => (loading.value = false))
         .catch(() => (loading.value = false));
     watch(route, () => {
-        eventRouteActive.value = route.matched.find((it) => it.name === 'app_event-parent') !== undefined;
+        eventRouteActive.value = route.matched.some((it) => it.name === 'app_event-parent');
         if (route.name === Routes.EventsCalendar) {
             eventRoute.value = Routes.EventsCalendar + ':' + route.params.year;
         } else if (route.name === Routes.EventsListAdmin) {

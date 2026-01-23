@@ -58,8 +58,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { Event, Position, Slot } from '@/domain';
-import { SlotCriticality } from '@/domain';
-import { EventState } from '@/domain';
+import { EventState, SlotCriticality } from '@/domain';
 import { useEventService } from '@/domain/services';
 import { VTooltip } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
