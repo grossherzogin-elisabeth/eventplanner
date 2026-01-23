@@ -26,6 +26,7 @@ Primary reference: Use the repository root file `../.github/copilot-instructions
 
 ## Assistant automation
 - After each backend edit, run: `./gradlew test --tests org.eventplanner.architecture.ArchUnitRulesTest` from `backend/` and fix violations.
+- Assistant behavior is documented in `backend/.github/skills/archUnitTest/SKILL.md`: it will iterate up to three focused fixes, re-running the test each time, and summarize failures with fix options if blocked.
 - CI enforces this in `.github/workflows/validate_code.yml` with a dedicated step “Run ArchUnit rules”.
 
 ## When opened outside the repo root
