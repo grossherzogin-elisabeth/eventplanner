@@ -103,6 +103,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
+      - name: Run ArchUnit rules
+        shell: bash
+        working-directory: backend
+        run: ./gradlew test --tests org.eventplanner.architecture.ArchUnitRulesTest
+
       - name: Run tests
         shell: bash
         working-directory: backend

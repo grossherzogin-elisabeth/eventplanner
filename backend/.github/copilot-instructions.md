@@ -3,6 +3,7 @@
 ## Quick links
 - [Backend-specific quick pointers](#backend-specific-quick-pointers)
 - [Architecture rules](#architecture-rules)
+- [Assistant automation](#assistant-automation)
 - [When opened outside the repo root](#when-opened-outside-the-repo-root)
 - [Where to find details (avoid duplication)](#where-to-find-details-avoid-duplication)
 - [Back to root instructions](#back-to-root-instructions)
@@ -22,6 +23,10 @@ Primary reference: Use the repository root file `../.github/copilot-instructions
 - Application/domain must not depend on: `software.amazon.awssdk..`, `jakarta.persistence..`, `org.springframework.data.jpa..`, `io.swagger..`.
 - Controllers must return `ResponseEntity` or `RedirectView`.
 - Nullability: Outside `org.eventplanner..rest..`, annotate non-primitive return types and all parameters/ctor params with `@NonNull` or `@Nullable` (exceptions: `@Value`, `@Autowired`, primitives, generated Lombok/record/enum functions).
+
+## Assistant automation
+- After each backend edit, run: `./gradlew test --tests org.eventplanner.architecture.ArchUnitRulesTest` from `backend/` and fix violations.
+- CI enforces this in `.github/workflows/validate_code.yml` with a dedicated step “Run ArchUnit rules”.
 
 ## When opened outside the repo root
 - If relative paths (data/logs) fail, set IntelliJ run configuration working directory to the repo root or adjust paths.
