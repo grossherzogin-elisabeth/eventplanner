@@ -2,22 +2,33 @@
 
 ## Quick links
 - [Frontend-specific quick pointers](#frontend-specific-quick-pointers)
-- [When opened outside the repo root](#when-opened-outside-the-repo-root)
-- [Where to find details (avoid duplication)](#where-to-find-details-avoid-duplication)
+- [Build, lint, and test](#build-lint-and-test)
+- [Local dev](#local-dev)
+- [Coding guidelines](#coding-guidelines)
+- [Back to root instructions](#back-to-root-instructions)
+- [Root instructions (overview)](../.github/copilot-instructions.md)
 
-Primary reference: Use the repository root file `../.github/copilot-instructions.md` for full guidance (tech stack, commands, CI/Docker, coding rules). This file only contains minimal, frontend-specific pointers for standalone use.
+Primary reference: Use the repository root file `../.github/copilot-instructions.md` for cross-cutting guidance (env, Docker, CI). This file keeps frontend-only guidance concise.
 
 ## Frontend-specific quick pointers
-- Dev server runs on http://localhost:8090 (Vite).
-- Vite proxies `/api/`, `/auth/`, and `/login/oauth2/code/` to the backend at `http://<host>:8091`. If your backend runs on a different host/port, set `VITE_HOST` accordingly (see `vite.config.ts`).
+- Dev server: http://localhost:8090 (Vite). Proxies `/api/`, `/auth/`, `/login/oauth2/code/` to backend at http://localhost:8091. Override host with `VITE_HOST`.
+- Node: 24.x. Install deps and run dev: `npm install` then `npm run dev`.
+- Aliases: `@` → `frontend/src`.
+- PWA: `vite-plugin-pwa` enabled; ensure denylist avoids caching API/auth routes.
 
-## When opened outside the repo root
-- CI, Docker, and repo-wide practices live at the root; refer to the root instructions.
-- For full-stack development, start the backend as described in `../.github/copilot-instructions.md` (Local development workflow → Backend).
+## Build, lint, and test
+- Format/lint/typecheck: `npm run check:format` ; `npm run check:lint`
+- Build: `npm run build`
+- Tests: `npm run test:coverage` (CET timezone). Uses Vitest + happy-dom + MSW.
 
-## Where to find details (avoid duplication)
-- Commands (install/build/lint/test): See root → "Build, lint, and test commands".
-- Coding guidelines (TS strictness, ESLint/Prettier, aliases, i18n import, PWA denylist): See root → "Coding guidelines and conventions → Frontend".
-- Troubleshooting (Windows PowerShell tips): See root → "Common tips to avoid command failures on Windows (PowerShell)".
+## Local dev
+- Start backend first (8091) for proxied API and OAuth flows to work.
+- On Windows PowerShell, chain commands with `;` when combining steps.
 
+## Coding guidelines
+- TypeScript strict.
+- ESLint + Prettier (import-sorted). Keep imports ordered.
+- i18n: import from `vue-i18n/dist/vue-i18n.cjs.js` when needed.
 
+## Back to root instructions
+- See `../.github/copilot-instructions.md` for repository-wide guidance, environment variables, and Docker.
