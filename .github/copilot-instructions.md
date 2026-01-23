@@ -58,12 +58,8 @@
 - General: Keep CI Node/Java versions stable with workflows; update Sonar settings in `backend/build.gradle` if paths move.
 
 ## Architecture rules (backend)
-- Enforced by ArchUnit (`backend/src/test/java/org/eventplanner/architecture/ArchUnitRulesTest.java`).
-- Layering: Domain → no deps on application/rest/adapter. Application → no deps on rest/adapter. Adapters (incl. rest) isolated; no adapter-to-adapter deps.
-- Adapters/rest must not depend on internal application layers: `application.services`, `application.usecases`, `application.scheduled`, `application.ports`.
-- Application/domain must not depend on: `software.amazon.awssdk..`, `jakarta.persistence..`, `org.springframework.data.jpa..`, `io.swagger..`.
-- Controllers must return `ResponseEntity` or `RedirectView`.
-- Nullability: Outside `org.eventplanner..rest..`, annotate non-primitive return types and all parameters/ctor params with `@NonNull` or `@Nullable` (exceptions: `@Value`, `@Autowired`, primitives, generated Lombok/record/enum functions).
+- Details live in `backend/.github/copilot-instructions.md` (section "Architecture rules").
+- Source of truth: `backend/src/test/java/org/eventplanner/architecture/ArchUnitRulesTest.java` (rules must pass; follow when adding/modifying code).
 
 ## Tools and CI
 - Workflows: `.github/workflows/*` (validate code, docker build, release).
