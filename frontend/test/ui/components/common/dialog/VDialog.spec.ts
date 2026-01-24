@@ -11,7 +11,6 @@ describe('VDialog', () => {
 
     beforeEach(async () => {
         vi.useFakeTimers();
-        closed = false;
         testee = mount(VDialog, {
             global: { stubs: { teleport: true } },
             slots: {

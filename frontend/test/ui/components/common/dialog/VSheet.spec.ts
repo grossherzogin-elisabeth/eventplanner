@@ -11,7 +11,6 @@ describe('VSheet', () => {
 
     beforeEach(async () => {
         vi.useFakeTimers();
-        closed = false;
         testee = mount(VSheet, {
             props: { animationDuration: 0 },
             global: { stubs: { teleport: true } },

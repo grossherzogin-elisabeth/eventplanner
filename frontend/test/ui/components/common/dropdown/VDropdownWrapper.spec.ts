@@ -8,7 +8,6 @@ describe('VDropdownWrapper.vue', () => {
 
     beforeEach(async () => {
         vi.useFakeTimers();
-        closed = false;
         testee = mount(VDropdownWrapper, {
             global: { stubs: { teleport: true } },
             slots: {
