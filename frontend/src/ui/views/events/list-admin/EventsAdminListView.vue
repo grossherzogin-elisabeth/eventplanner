@@ -9,20 +9,27 @@
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
+                    <div class="hidden lg:block">
+                        <VSearchButton v-model="filter" :placeholder="$t('views.events.admin-list.filter.search')" />
+                    </div>
+                    <div
+                        v-if="hasPermission(Permission.WRITE_USERS) && !Number.isNaN(Number.parseInt(tab, 10))"
+                        class="z-10 hidden lg:block"
+                    >
+                        <AsyncButton class="btn-ghost" name="export" :action="() => eventUseCase.exportEvents(Number.parseInt(tab, 10))">
+                            <template #icon>
+                                <i class="fa-solid fa-download"></i>
+                            </template>
+                            <template #label>
+                                <span>{{ $t('views.events.admin-list.action.export') }}</span>
+                            </template>
+                        </AsyncButton>
+                    </div>
                     <div class="permission-create-events hidden 2xl:block">
                         <button class="btn-primary ml-2" name="create" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
-                            <span>{{ $t('views.events.admin-list.action.add-event') }}</span>
+                            <span>{{ $t('generic.add') }}</span>
                         </button>
-                    </div>
-                    <div v-if="!Number.isNaN(Number.parseInt(tab, 10))" class="permission-read-events hidden lg:block">
-                        <button class="btn-ghost ml-2" name="export" @click="eventUseCase.exportEvents(Number.parseInt(tab, 10))">
-                            <i class="fa-solid fa-download"></i>
-                            <span>{{ $t('views.events.admin-list.action.export') }}</span>
-                        </button>
-                    </div>
-                    <div class="hidden lg:block">
-                        <VSearchButton v-model="filter" :placeholder="$t('views.events.admin-list.filter.search')" />
                     </div>
                 </div>
             </template>
@@ -323,6 +330,7 @@ import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
 import { EventState, Permission, SlotCriticality, useEventService } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import { AsyncButton } from '@/ui/components/common';
 import { VConfirmationDialog, VMultiSelectActions, VSearchButton, VTable, VTabs, VTooltip } from '@/ui/components/common';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
