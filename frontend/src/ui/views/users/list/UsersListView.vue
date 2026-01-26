@@ -9,14 +9,14 @@
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
-                    <div class="permission-write-users hidden 2xl:block">
-                        <button class="btn-primary" name="create" @click="createUser()">
-                            <i class="fa-solid fa-user-plus"></i>
-                            <span>Hinzufügen</span>
-                        </button>
-                    </div>
                     <div class="hidden lg:block">
                         <VSearchButton v-model="filter" placeholder="Einträge filtern" />
+                    </div>
+                    <div v-if="hasPermission(Permission.WRITE_USERS)" class="z-10 hidden 2xl:block">
+                        <button class="btn-primary" name="create" @click="createUser()">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>{{ $t('generic.add') }}</span>
+                        </button>
                     </div>
                 </div>
             </template>
