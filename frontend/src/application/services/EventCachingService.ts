@@ -2,6 +2,11 @@ import type { EventRepository, Storage } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Event, EventKey } from '@/domain';
 
+
+
+
+
+
 export class EventCachingService {
     private readonly eventRepository: EventRepository;
     private readonly storage: Storage<EventKey, Event>;
@@ -9,9 +14,9 @@ export class EventCachingService {
     private fetchedYears: number[] = [];
 
     constructor(params: { eventRepository: EventRepository; cache: Storage<EventKey, Event> }) {
+        console.log('🚀 Initializing EventCachingService');
         this.eventRepository = params.eventRepository;
         this.storage = params.cache;
-        console.log('🚀 Initializing EventCachingService');
         this.initialized = this.initialize();
     }
 

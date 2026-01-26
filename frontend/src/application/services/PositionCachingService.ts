@@ -2,15 +2,20 @@ import type { PositionRepository, Storage } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Position, PositionKey } from '@/domain';
 
+
+
+
+
+
 export class PositionCachingService {
     private readonly positionRepository: PositionRepository;
     private readonly storage: Storage<PositionKey, Position>;
     private readonly initialized: Promise<void>;
 
     constructor(params: { positionRepository: PositionRepository; cache: Storage<PositionKey, Position> }) {
+        console.log('🚀 Initializing PositionCachingService');
         this.positionRepository = params.positionRepository;
         this.storage = params.cache;
-        console.log('🚀 Initializing PositionCachingService');
         this.initialized = this.initialize();
     }
 

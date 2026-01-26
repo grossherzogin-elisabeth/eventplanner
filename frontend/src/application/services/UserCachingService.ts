@@ -2,15 +2,20 @@ import type { Storage, UserRepository } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { User, UserKey } from '@/domain';
 
+
+
+
+
+
 export class UserCachingService {
     private readonly userRepository: UserRepository;
     private readonly storage: Storage<UserKey, User>;
     private readonly initialized: Promise<void>;
 
     constructor(params: { userRepository: UserRepository; cache: Storage<UserKey, User> }) {
+        console.log('🚀 Initializing UserCachingService');
         this.userRepository = params.userRepository;
         this.storage = params.cache;
-        console.log('🚀 Initializing UserCachingService');
         this.initialized = this.initialize();
     }
 

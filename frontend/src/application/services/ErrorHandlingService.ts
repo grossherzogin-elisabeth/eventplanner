@@ -1,5 +1,11 @@
 import type { AccountRepository } from '@/application/ports';
 
+
+
+
+
+
+
 export interface ErrorDetails {
     title?: string;
     message?: string;
@@ -13,8 +19,8 @@ export class ErrorHandlingService {
     private readonly accountRepository: AccountRepository;
 
     public constructor(params: { accountRepository: AccountRepository }) {
-        this.accountRepository = params.accountRepository;
         console.log('🚀 Initializing ErrorHandlingService');
+        this.accountRepository = params.accountRepository;
     }
 
     private errorHandler: (error: ErrorDetails) => void = (error: ErrorDetails) => {
