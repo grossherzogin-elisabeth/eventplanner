@@ -2,11 +2,6 @@ import type { EventRepository, Storage } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Event, EventKey } from '@/domain';
 
-
-
-
-
-
 export class EventCachingService {
     private readonly eventRepository: EventRepository;
     private readonly storage: Storage<EventKey, Event>;

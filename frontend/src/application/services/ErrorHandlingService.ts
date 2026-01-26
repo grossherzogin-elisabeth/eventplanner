@@ -1,11 +1,5 @@
 import type { AccountRepository } from '@/application/ports';
 
-
-
-
-
-
-
 export interface ErrorDetails {
     title?: string;
     message?: string;

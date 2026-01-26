@@ -2,11 +2,6 @@ import type { PositionRepository, Storage } from '@/application/ports';
 import { debounce } from '@/application/utils/AsyncDebouncer';
 import type { Position, PositionKey } from '@/domain';
 
-
-
-
-
-
 export class PositionCachingService {
     private readonly positionRepository: PositionRepository;
     private readonly storage: Storage<PositionKey, Position>;
