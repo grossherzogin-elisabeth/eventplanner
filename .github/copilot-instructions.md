@@ -31,7 +31,6 @@
 - Root: Dockerfile, Dockerfile-local, build_docker.sh, README.md, .tool-versions, `.github/` (workflows, CODEOWNERS, dependabot, this file).
 - `backend/`: Spring Boot app (gradle wrapper, build.gradle, settings.gradle, `src/main`, `src/test`).
 - `frontend/`: Vite app (`package.json`, `vite.config.ts`, `src/`, `tests/`).
-- `data/`: SQLite DB files for local dev. `logs/`: Rolling Spring logs. `src/`: extra non-Java resources packaged for Docker.
 
 ## Configuration (env)
 - OIDC: `OAUTH_ISSUER_URI`, `OAUTH_CLIENT_ID`, `OAUTH_CLIENT_SECRET` (required for login).
@@ -46,7 +45,7 @@
   - Provide OIDC via env or `application-secrets.yml`.
 - Frontend (Vite on 8090, proxy to backend 8091):
   - In `frontend/`: `npm install`; `npm run dev`
-  - Proxy for `/api/`, `/auth/`, `/login/oauth2/code/` targets `http://<host>:8091` (override host with `VITE_HOST`).
+  - Proxy for `/api/`, `/auth/`, `/login/oauth2/code/` targets `http://localhost:8091` (override host with `VITE_HOST`).
 - Docker: `docker build .` then run with the env vars above; container serves on port 80 by default.
 
 ## Build, lint, and test
