@@ -9,6 +9,7 @@ export class EventCachingService {
     private fetchedYears: number[] = [];
 
     constructor(params: { eventRepository: EventRepository; cache: Storage<EventKey, Event> }) {
+        console.log('🚀 Initializing EventCachingService');
         this.eventRepository = params.eventRepository;
         this.storage = params.cache;
         this.initialized = this.initialize();
