@@ -8,7 +8,9 @@
         <template #default> #188edc </template>
         <template #edit="{ errors }">
             <p class="mb-8 text-sm">
-                {{ $t('views.settings.ui.theme-color-description') }}
+                <p class="truncate">
+                    {{ $t('views.settings.ui.theme-color-description') }}
+                </p>
             </p>
             <div class="mb-4">
                 <VInputText

@@ -6,12 +6,12 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.notifications.teamsWebhookUrl">
+            <p v-if="props.modelValue.notifications.teamsWebhookUrl" class="truncate">
                 {{ $t('views.settings.notifications.teams-webhook-set-up') }}
-            </span>
-            <span v-else>
+            </p>
+            <p v-else class="truncate">
                 {{ $t('views.settings.notifications.teams-webhook-not-set-up') }}
-            </span>
+            </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">
