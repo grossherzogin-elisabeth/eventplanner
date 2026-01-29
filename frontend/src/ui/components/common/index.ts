@@ -37,3 +37,4 @@ export { default as VTooltip } from './tooltip/VTooltip.vue';
 export { default as VMarkdown } from './markdown/VMarkdown.vue';
 export { default as VInteractiveList } from './list/VInteractiveList.vue';
 export { default as VInteractiveListItem } from './list/VInteractiveListItem.vue';
+export { default as VListItem } from './list/VListItem.vue';

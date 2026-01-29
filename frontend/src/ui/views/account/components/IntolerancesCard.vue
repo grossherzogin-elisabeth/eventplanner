@@ -7,10 +7,12 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.intolerances" class="line-clamp-3">
+            <p v-if="props.modelValue.intolerances" class="line-clamp-3 truncate">
                 {{ props.modelValue.intolerances }}
-            </span>
-            <span v-else>{{ $t('generic.no-information') }}</span>
+            </p>
+            <p v-else class="truncate italic">
+                {{ $t('generic.no-information') }}
+            </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">{{ $t('views.account.diet.intolerances-description') }}</p>

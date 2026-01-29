@@ -5,7 +5,7 @@
             <div class="w-0 grow">
                 <h4 class="text-onsurface/50 mb-1 text-xs font-bold">{{ props.label }}</h4>
                 <slot name="default">
-                    {{ props.content }}
+                    <p class="line-clamp-3">{{ props.content }}</p>
                 </slot>
             </div>
             <button v-if="!props.disabled" class="btn-icon hidden group-hover:inline">

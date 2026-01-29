@@ -6,10 +6,12 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.diet">
+            <p v-if="props.modelValue.diet" class="truncate">
                 {{ diet.getName(props.modelValue.diet) }}
-            </span>
-            <span v-else>{{ $t('generic.no-information') }}</span>
+            </p>
+            <p v-else class="truncate italic">
+                {{ $t('generic.no-information') }}
+            </p>
         </template>
         <template #edit="{ value }">
             <p class="mb-8 text-sm">

@@ -7,13 +7,13 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p v-if="props.modelValue.address.addressLine1">{{ props.modelValue.address.addressLine1 }}</p>
-            <p v-if="props.modelValue.address.addressLine2">{{ props.modelValue.address.addressLine2 }}</p>
-            <p v-if="props.modelValue.address.zipcode || props.modelValue.address.town">
+            <p v-if="props.modelValue.address.addressLine1" class="truncate">{{ props.modelValue.address.addressLine1 }}</p>
+            <p v-if="props.modelValue.address.addressLine2" class="truncate">{{ props.modelValue.address.addressLine2 }}</p>
+            <p v-if="props.modelValue.address.zipcode || props.modelValue.address.town" class="truncate">
                 {{ props.modelValue.address.zipcode }}
                 {{ props.modelValue.address.town }}
             </p>
-            <p v-if="props.modelValue.address.country">
+            <p v-if="props.modelValue.address.country" class="truncate">
                 {{ countries.getName(props.modelValue.address.country) }}
             </p>
             <p
@@ -24,7 +24,7 @@
                     !props.modelValue.address.town &&
                     !props.modelValue.address.country
                 "
-                class="italic"
+                class="truncate italic"
             >
                 {{ $t('generic.no-information') }}
             </p>

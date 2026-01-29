@@ -7,12 +7,12 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p v-if="props.modelValue.nickName">
+            <p v-if="props.modelValue.nickName" class="truncate">
                 {{ props.modelValue.title }}
                 {{ props.modelValue.nickName }}
                 {{ props.modelValue.lastName }}
             </p>
-            <p v-else>
+            <p v-else class="truncate">
                 {{ props.modelValue.title }}
                 {{ props.modelValue.firstName }}
                 {{ props.modelValue.secondName }}

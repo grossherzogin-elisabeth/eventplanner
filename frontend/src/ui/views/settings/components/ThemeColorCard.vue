@@ -5,7 +5,9 @@
         :label="$t('views.settings.ui.theme-color')"
         @update:model-value="emit('update:modelValue', $event)"
     >
-        <template #default> #188edc </template>
+        <template #default>
+            <p class="truncate">#188edc</p>
+        </template>
         <template #edit="{ errors }">
             <p class="mb-8 text-sm">
                 {{ $t('views.settings.ui.theme-color-description') }}
