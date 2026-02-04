@@ -2,6 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-anchor"
+        dialog-type="modal"
         :label="$t('views.account.app-settings.preferred-position')"
         :disabled="availablePositions.length < 2"
         @update:model-value="emit('update:modelValue', $event)"

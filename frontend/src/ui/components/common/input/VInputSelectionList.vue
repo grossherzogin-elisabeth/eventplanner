@@ -4,7 +4,7 @@
             <li
                 v-for="option in props.options"
                 :key="String(option.value)"
-                class="-mx-3 flex cursor-pointer items-center gap-2 py-1"
+                class="-mx-2 flex cursor-pointer items-center gap-2 py-1"
                 @click="emit('update:modelValue', option.value)"
             >
                 <button v-if="props.modelValue === option.value" class="btn-icon">
