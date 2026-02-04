@@ -12,7 +12,7 @@
                 <i class="fa-solid fa-pen" />
             </button>
         </div>
-        <VDialog v-if="!props.disabled" ref="editSheet">
+        <VDialog v-if="!props.disabled" ref="editSheet" :type="props.dialogType ?? 'fullscreen'">
             <template #title> {{ props.label }} </template>
             <template #content>
                 <div class="xs:px-8 px-4 py-4 lg:px-10">
@@ -53,6 +53,7 @@ interface Props {
     content?: string;
     disabled?: boolean;
     direct?: boolean;
+    dialogType?: 'fullscreen' | 'modal';
     validate?: (t: T) => Record<string, string[]>;
 }
 
