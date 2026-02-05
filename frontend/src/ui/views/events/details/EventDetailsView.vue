@@ -58,6 +58,13 @@
                     </section>
 
                     <EventDetailsCard :event="event" class="col-span-2 pt-4 md:col-start-4 2xl:col-span-3" />
+                    <EventRegistrationDetailsCard
+                        v-if="event.signedInUserRegistration"
+                        v-model:event="event"
+                        :registration="event.signedInUserRegistration"
+                        class="col-span-2 pt-4 md:col-start-4 2xl:col-span-3"
+                        @edit="editUserRegistration()"
+                    />
                     <EventLocationsCard :event="event" class="col-span-2 pt-4 md:col-start-4 2xl:col-span-3" />
                     <EventParticipantsCard :event="event" class="col-span-3 col-start-1 row-span-6 pt-4 md:row-start-1 md:pt-0" />
                 </div>
@@ -153,6 +160,7 @@ import { AsyncButton, VConfirmationDialog, VInfo, VSuccess, VWarning } from '@/u
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
 import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
 import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.vue';
+import EventRegistrationDetailsCard from '@/ui/components/events/EventRegistrationDetailsCard.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import { usePositions } from '@/ui/composables/Positions.ts';
