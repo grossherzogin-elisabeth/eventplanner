@@ -1,6 +1,6 @@
 <template>
-    <div ref="datepicker" class="v-datepicker w-96 max-w-full" @click.stop="" @mouseup.stop="">
-        <div class="header text-onsurface-variant px-4 pt-4 pb-3">
+    <div ref="datepicker" class="v-datepicker max-w-full" @click.stop="" @mouseup.stop="">
+        <div v-if="!props.readonly" class="header text-onsurface-variant px-4 pt-4 pb-3">
             <div class="flex items-stretch justify-between">
                 <button data-test-id="datepicker-previous-month" class="btn-header" :disabled="view !== 'day'" @click="previousMonth()">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
@@ -24,6 +24,7 @@
                 </button>
             </div>
         </div>
+        <div v-else class="header text-onsurface-variant px-4 pt-4 pb-3">{{ $t(`generic.month.${month}`) }} {{ year }}</div>
         <div class="content pt-3 pb-4">
             <div class="day-selection grid grid-cols-7 gap-y-2 px-4">
                 <span class="label">Mo</span>
@@ -108,6 +109,7 @@ interface DateItem {
 }
 
 interface Props {
+    readonly?: boolean;
     modelValue?: Date;
     highlightFrom?: Date;
     highlightTo?: Date;
