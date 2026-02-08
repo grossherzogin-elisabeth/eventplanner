@@ -4,7 +4,7 @@
             <li
                 v-for="option in props.options"
                 :key="String(option.value)"
-                class="-mx-2 flex cursor-pointer items-center gap-2 py-1"
+                class="flex cursor-pointer items-center gap-2 py-1"
                 @click="emit('update:modelValue', option.value)"
             >
                 <button v-if="props.modelValue === option.value" class="btn-icon">
@@ -14,7 +14,7 @@
                 <button v-else class="btn-icon">
                     <i class="fa-regular fa-circle text-onsurface-variant text-xl" />
                 </button>
-                <span>{{ option.label }}</span>
+                <span class="w-0 grow">{{ option.label }}</span>
             </li>
         </ul>
         <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />
