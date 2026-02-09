@@ -3,23 +3,23 @@
         <h2 class="text-secondary mb-2 font-bold">
             {{ $t('components.event-locations-card.title', { count: props.event.locations.length }) }}
         </h2>
-        <div class="bg-surface-container/50 xs:-mx-4 space-y-1 rounded-2xl p-4 pb-0 shadow-sm">
+        <div class="bg-surface-container/50 xs:-mx-4 -mx-2 space-y-1 rounded-2xl p-4 pb-0">
             <p v-if="props.event.locations.length === 0" class="pb-4 text-sm">
                 {{ $t('components.event-locations-card.placeholder') }}
             </p>
 
-            <div v-else class="relative -ml-4">
+            <div v-else class="relative mt-2 -ml-4">
                 <div v-for="(location, index) in props.event.locations" :key="index" class="relative flex items-center">
-                    <div class="flex w-12 flex-col items-center self-stretch">
-                        <div class="my-1 flex h-7 w-7 items-center justify-center border-current">
-                            <i class="fa-solid text-sm" :class="location.icon"></i>
+                    <div class="flex w-16 flex-col items-center self-stretch">
+                        <div class="mt-1 flex h-7 w-7 items-center justify-center border-current">
+                            <i class="fa-solid sm:text-xl" :class="location.icon"></i>
                         </div>
                         <div
-                            class="my-1 h-full"
+                            class="my-3 h-full"
                             :class="{ 'border-r-2 border-dashed border-current': index < props.event.locations.length - 1 }"
                         ></div>
                     </div>
-                    <div class="mb-4 w-0 grow">
+                    <div class="mb-6 w-0 grow">
                         <h3 class="mb-1 flex items-center justify-between space-x-2">
                             <span>{{ location.name }}</span>
                             <ContextMenuButton v-if="location.information">

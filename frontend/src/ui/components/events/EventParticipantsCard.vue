@@ -1,94 +1,60 @@
 <template>
-    <section>
-        <h2 v-if="hasHiddenCrewAssignments" class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
-            <span>{{ $t('components.event-participants-card.registrations') }}</span>
-        </h2>
-        <h2 v-else class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
-            <button class="hover:text-primary" :class="{ 'text-primary underline': tab === Tab.Team }" @click="tab = Tab.Team">
-                {{ $t('components.event-participants-card.assigned', { count: props.event.assignedUserCount }) }}
-            </button>
-            <button
-                class="hover:text-primary"
-                :class="{ 'text-primary underline': tab === Tab.WaitingList }"
-                @click="tab = Tab.WaitingList"
-            >
-                {{ $t('components.event-participants-card.waitinglist', { count: waitingList.length }) }}
-            </button>
-        </h2>
-        <div
-            v-if="props.event.assignedUserCount === 0 && waitingList.length === 0"
-            class="bg-surface-container/50 xs:-mx-4 rounded-2xl px-4 shadow-sm md:-mx-4 md:-mt-4 md:bg-transparent md:shadow-none"
-        >
-            <div class="flex items-center py-4">
-                <div class="mr-4">
-                    <h3 class="mb-4 text-base">
-                        <i class="fa-solid fa-trophy opacity-75"></i>
-                        <span v-if="['m', 'f'].includes(signedInUser?.gender ?? '')" class="ml-4">
-                            {{ $t(`components.event-participants-card.placeholder-title-${signedInUser?.gender}`) }}
-                        </span>
-                        <span v-else class="ml-4">
-                            {{ $t('components.event-participants-card.placeholder-title') }}
-                        </span>
-                    </h3>
-                    <p class="text-sm">
-                        {{ $t('components.event-participants-card.placeholder') }}
-                        <template v-if="event.signupType === EventSignupType.Assignment">
-                            {{ $t('components.event-participants-card.placeholder-waiting-list-hint') }}
-                        </template>
-                    </p>
-                </div>
+    <div
+        v-if="props.event.assignedUserCount === 0 && waitingList.length === 0"
+        class="bg-surface-container/50 xs:-mx-4 -mx-2 rounded-2xl px-4 md:-mx-4 md:-mt-4 md:bg-transparent"
+    >
+        <div class="flex items-center py-4">
+            <div class="mr-4">
+                <h3 class="mb-4 text-base">
+                    <i class="fa-solid fa-trophy opacity-75"></i>
+                    <span v-if="['m', 'f'].includes(signedInUser?.gender ?? '')" class="ml-4">
+                        {{ $t(`components.event-participants-card.placeholder-title-${signedInUser?.gender}`) }}
+                    </span>
+                    <span v-else class="ml-4">
+                        {{ $t('components.event-participants-card.placeholder-title') }}
+                    </span>
+                </h3>
+                <p class="text-sm">
+                    {{ $t('components.event-participants-card.placeholder') }}
+                    <template v-if="event.signupType === EventSignupType.Assignment">
+                        {{ $t('components.event-participants-card.placeholder-waiting-list-hint') }}
+                    </template>
+                </p>
             </div>
         </div>
-        <div
-            v-else
-            class="bg-surface-container/50 xs:-mx-4 rounded-2xl p-4 shadow-sm md:mx-0 md:rounded-none md:bg-transparent md:p-0 md:shadow-none"
-        >
-            <template v-if="tab === Tab.Team">
+    </div>
+    <div v-else-if="hasHiddenCrewAssignments">
+        <section>
+            <h2 class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
+                {{ $t('components.event-participants-card.registrations', { count: waitingList.length }) }}
+            </h2>
+            <div class="bg-surface-container/50 xs:-mx-4 -mx-2 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
                 <ul class="space-y-2">
-                    <template v-for="it in team" :key="it.slot?.key || ''">
-                        <li class="flex items-center space-x-4">
-                            <i v-if="it.name" class="fa-solid fa-user-circle text-secondary" />
-                            <i v-else class="fa-solid fa-user-circle text-error" />
-                            <RouterLink
-                                v-if="it.user && hasPermission(Permission.READ_USER_DETAILS)"
-                                :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
-                                class="hover:text-primary truncate hover:underline"
-                            >
-                                {{ it.name }}
-                            </RouterLink>
-                            <span v-else-if="it.name" class="truncate">{{ it.name }}</span>
-                            <span v-else-if="it.user?.key" class="text-error italic">
-                                {{ $t('components.event-participants-card.unknown') }}
-                            </span>
-                            <span v-else class="text-error/60 truncate italic">
-                                {{ $t('components.event-participants-card.empty') }}
-                            </span>
-                            <span class="grow"></span>
-                            <span :style="{ '--color': it.position.color }" class="tag custom" :class="{ 'opacity-50': !it.registration }">
-                                {{ it.position.name }}
-                            </span>
-                        </li>
-                    </template>
+                    <RegistrationRow v-for="it in waitingList" :key="it.slot?.key || ''" :registration="it" />
                 </ul>
-            </template>
-            <template v-else-if="tab === Tab.WaitingList">
+            </div>
+        </section>
+    </div>
+    <div v-else>
+        <section>
+            <h2 class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
+                {{ $t('components.event-participants-card.assigned', { count: team.length }) }}
+            </h2>
+            <div class="bg-surface-container/50 xs:-mx-4 -mx-2 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
                 <ul class="space-y-2">
-                    <li v-for="(it, index) in waitingList" :key="index" class="flex items-center justify-between space-x-4">
-                        <i class="fa-solid fa-user-circle text-secondary" />
-                        <RouterLink
-                            v-if="it.user && hasPermission(Permission.READ_USER_DETAILS)"
-                            :to="{ name: Routes.UserDetails, params: { key: it.user.key } }"
-                            class="hover:text-primary grow truncate hover:underline"
-                        >
-                            {{ it.name }}
-                        </RouterLink>
-                        <span v-else-if="it.name" class="grow truncate">{{ it.name }}</span>
-                        <span :style="{ '--color': it.position.color }" class="tag custom">
-                            {{ it.position.name }}
-                        </span>
-                    </li>
+                    <RegistrationRow v-for="it in team" :key="it.slot?.key || ''" :registration="it" />
                 </ul>
-                <div v-if="waitingList.length === 0" class="bg-surface-container/50 -mx-4 -mt-4 rounded-xl p-4 text-sm shadow-sm">
+            </div>
+        </section>
+        <section>
+            <h2 class="text-secondary mt-8 mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
+                {{ $t('components.event-participants-card.waitinglist', { count: waitingList.length }) }}
+            </h2>
+            <div class="bg-surface-container/50 xs:-mx-4 -mx-2 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
+                <ul class="space-y-2">
+                    <RegistrationRow v-for="(it, index) in waitingList" :key="index" :registration="it" />
+                </ul>
+                <div v-if="waitingList.length === 0" class="text-sm">
                     <p v-if="hasHiddenCrewAssignments">
                         {{ $t('components.event-participants-card.no-registrations') }}
                     </p>
@@ -96,22 +62,17 @@
                         {{ $t('components.event-participants-card.no-waitinglist') }}
                     </p>
                 </div>
-            </template>
-        </div>
-    </section>
+            </div>
+        </section>
+    </div>
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useEventUseCase } from '@/application';
 import type { Event, ResolvedRegistrationSlot } from '@/domain';
-import { EventSignupType, EventState, Permission } from '@/domain';
+import { EventSignupType, EventState } from '@/domain';
+import RegistrationRow from '@/ui/components/events/RegistrationRow.vue';
 import { useSession } from '@/ui/composables/Session.ts';
-import { Routes } from '@/ui/views/Routes.ts';
-
-enum Tab {
-    Team = 'team',
-    WaitingList = 'waitinglist',
-}
 
 interface Props {
     event: Event;
@@ -120,9 +81,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const eventUseCase = useEventUseCase();
-const { signedInUser, hasPermission } = useSession();
-
-const tab = ref<Tab>(Tab.Team);
+const { signedInUser } = useSession();
 
 const waitingList = ref<ResolvedRegistrationSlot[]>([]);
 const team = ref<ResolvedRegistrationSlot[]>([]);
@@ -134,9 +93,7 @@ const hasHiddenCrewAssignments = computed<boolean>(() => {
 });
 
 function init(): void {
-    fetchTeam(props.event).then(() => {
-        tab.value = team.value.length > 0 ? Tab.Team : Tab.WaitingList;
-    });
+    fetchTeam(props.event);
     watch(() => props.event, fetchTeam, { deep: true });
 }
 
