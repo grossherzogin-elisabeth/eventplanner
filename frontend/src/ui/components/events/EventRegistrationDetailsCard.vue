@@ -7,7 +7,7 @@
             <RegistrationPositionCard :model-value="props.registration" @update:model-value="saveRegistration($event)" />
             <RegistrationNoteCard :model-value="props.registration" @update:model-value="saveRegistration($event)" />
             <RegistrationOvernightStayCard
-                v-if="props.event.days > 1"
+                v-if="props.event.days <= 1"
                 :model-value="props.registration"
                 @update:model-value="saveRegistration($event)"
             />

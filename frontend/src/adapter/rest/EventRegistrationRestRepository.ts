@@ -33,7 +33,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             name: registration.name,
             note: registration.note,
             overnightStay: registration.overnightStay,
-            arrival: registration.arrival?.toISOString().substring(0, 10),
+            arrival: this.toIsoDateString(registration.arrival),
         };
         const response = await fetch(`/api/v1/events/${eventKey}/registrations`, {
             method: 'POST',
@@ -59,7 +59,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             name: registration.name,
             note: registration.note,
             overnightStay: registration.overnightStay,
-            arrival: registration.arrival?.toISOString().substring(0, 10),
+            arrival: this.toIsoDateString(registration.arrival),
         };
         const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
             method: 'PUT',
@@ -110,5 +110,15 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
         if (!response.ok) {
             throw response;
         }
+    }
+
+    private toIsoDateString(date?: Date): string | undefined {
+        if (!date) {
+            return undefined;
+        }
+        const year = date.getFullYear();
+        const month = date.getMonth() < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+        const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+        return `${year}-${month}-${day}`;
     }
 }

@@ -70,10 +70,19 @@ export function cropToPrecision(date: Date, precision: 'years' | 'months' | 'day
 
 export function deserializeDate(date: string): Date {
     // js cannot parse an ISO date time like 2024-06-25T00:00+02:00[Europe/Berlin]
-    if (date.includes('[')) {
-        return new Date(date.substring(0, date.indexOf('[')));
+    try {
+        if (date.length === 10) {
+            const [year, month, day] = date.split('-').map((it) => parseInt(it, 10));
+            return new Date(year, month - 1, day);
+        }
+        if (date.includes('[')) {
+            return new Date(date.substring(0, date.indexOf('[')));
+        }
+        return new Date(date);
+    } catch (e) {
+        console.error('Failed to deserialize date', e);
+        throw e;
     }
-    return new Date(date);
 }
 
 export function isSameDate(a?: Date, b?: Date): boolean {

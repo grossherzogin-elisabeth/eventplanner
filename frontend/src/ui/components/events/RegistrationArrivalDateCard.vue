@@ -15,11 +15,12 @@
                 {{ $t('components.event-registration-details-card.arrival-description') }}
             </p>
             <VInputSelectionList
-                v-model="value.arrival"
+                :model-value="value.arrival !== undefined"
                 :options="[
-                    { label: 'Ja, ich möchte wenn möglich am Vortag anreisen', value: previousDay },
-                    { label: 'Nein, ich reise am Tag der Veranstaltung an', value: undefined },
+                    { label: 'Ja, ich möchte wenn möglich am Vortag anreisen', value: true },
+                    { label: 'Nein, ich reise am Tag der Veranstaltung an', value: false },
                 ]"
+                @update:model-value="update(value, $event)"
             />
             <VInfo class="mt-4">
                 {{ $t('components.event-registration-details-card.arrival-note') }}
@@ -28,7 +29,6 @@
     </VInteractiveListItem>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
 import { cropToPrecision, subtractFromDate } from '@/common';
 import type { Event, Registration } from '@/domain';
 import { VInfo, VInputSelectionList, VInteractiveListItem } from '@/ui/components/common';
@@ -38,10 +38,16 @@ interface Props {
     modelValue: Registration;
 }
 
-type Emits = (e: 'update:modelValue', user: Registration) => void;
+type Emits = (e: 'update:modelValue', registration: Registration) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const previousDay = computed<Date>(() => cropToPrecision(subtractFromDate(props.event.start, { days: 1 }), 'days'));
+function update(registration: Registration, dayBeforeArrival: boolean): void {
+    if (dayBeforeArrival) {
+        registration.arrival = cropToPrecision(subtractFromDate(props.event.start, { days: 1 }), 'days');
+    } else {
+        registration.arrival = undefined;
+    }
+}
 </script>
