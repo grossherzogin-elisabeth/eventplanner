@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
@@ -7,14 +7,6 @@ import { mockEvent } from '~/mocks';
 describe('EventLocationsCard.vue', () => {
     let testee: VueWrapper;
     let event = mockEvent();
-
-    beforeAll(() => {
-        vi.useFakeTimers();
-    });
-
-    afterAll(() => {
-        vi.useRealTimers();
-    });
 
     beforeEach(async () => {
         event = mockEvent({
@@ -79,6 +71,13 @@ describe('EventLocationsCard.vue', () => {
     it('should render info icon when location has information set', async () => {
         const location = testee.find('[data-test-id="location-1"]');
         expect(location.find('[data-test-id="context-menu"]').exists()).toBe(true);
+    });
+
+    it('should render information when clicking on info icon', async () => {
+        const location = testee.find('[data-test-id="location-1"]');
+        const btn = location.find('[data-test-id="context-menu"]');
+        await btn.trigger('click');
+        expect(testee.html()).toContain('<h1>information</h1>');
     });
 
     it('should render etd date and time', async () => {

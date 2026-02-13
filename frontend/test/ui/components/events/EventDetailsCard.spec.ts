@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { EventType } from '@/domain';
@@ -8,14 +8,6 @@ import { mockEvent } from '~/mocks';
 describe('EventDetailsCard.vue', () => {
     let testee: VueWrapper;
     let event = mockEvent();
-
-    beforeAll(() => {
-        vi.useFakeTimers();
-    });
-
-    afterAll(() => {
-        vi.useRealTimers();
-    });
 
     beforeEach(async () => {
         event = mockEvent({

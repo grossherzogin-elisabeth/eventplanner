@@ -51,7 +51,7 @@ const content = computed<StateBannerContent | undefined>(() => {
     }
     // event was canceled
     if (props.event.state === EventState.Canceled) {
-        return { type: VInfo, message: 'views.events.details.info-canceled' };
+        return { type: VWarning, message: 'views.events.details.info-canceled' };
     }
     // user is assigned
     if (props.event.signedInUserRegistration && props.event.isSignedInUserAssigned) {
