@@ -39,7 +39,9 @@
                                 </div>
                                 <div class="flex h-16 w-0 grow items-center overflow-hidden font-bold">
                                     <div class="truncate">
-                                        <slot name="title" />
+                                        <slot name="title">
+                                            {{ props.title }}
+                                        </slot>
                                     </div>
                                 </div>
                                 <div class="-mr-4 hidden sm:block">
@@ -73,6 +75,7 @@ import { disableScrolling, enableScrolling } from '@/common';
 import type { Sheet } from '@/ui/components/common';
 
 interface Props {
+    title?: string;
     showBackButton?: boolean;
     dataTestId?: string;
     animationDuration?: number;

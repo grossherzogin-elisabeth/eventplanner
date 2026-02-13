@@ -2,6 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-paint-brush"
+        dialog-type="modal"
         :label="$t('views.account.app-settings.theme')"
         direct
         @update:model-value="emit('update:modelValue', $event)"

@@ -2,6 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-venus-mars"
+        dialog-type="modal"
         :label="$t('domain.user.gender')"
         @update:model-value="emit('update:modelValue', $event)"
     >

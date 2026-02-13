@@ -2,6 +2,7 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-utensils"
+        dialog-type="modal"
         :label="$t('domain.user.diet')"
         @update:model-value="emit('update:modelValue', $event)"
     >

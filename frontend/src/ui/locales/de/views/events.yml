@@ -41,10 +41,10 @@ events:
   details:
     info-planning: 'Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Veranstaltung! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.'
     info-canceled: 'Diese Veranstaltung wurde abgesagt!'
-    info-assigned: 'Du bist für diese Veranstaltung als {position} eingeplant.'
+    info-assigned: 'Du bist für diese Veranstaltung als {signedInUserPosition} eingeplant.'
     info-confirmed: 'Du hast deine Teilnahme bestätigt.'
-    info-waitinglist: 'Du stehst für diese Veranstaltung als {position} auf der Warteliste'
-    info-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht: {positions}'
+    info-waitinglist: 'Du stehst für diese Veranstaltung als {signedInUserPosition} auf der Warteliste'
+    info-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht: {openPositions}'
     leave-crew: 'Teilnahme absagen'
     leave-waitinglist: 'Warteliste verlassen'
     sign-up: 'Anmelden'
