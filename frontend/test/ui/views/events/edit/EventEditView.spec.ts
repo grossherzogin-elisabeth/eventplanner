@@ -56,11 +56,11 @@ const eventWithOpenSignup = {
 const eventsWithCrewAssignment = [eventInStateDraft, eventInStateCrewSignup, eventInStatePlanned];
 const allEvents = [eventInStateDraft, eventInStateCrewSignup, eventInStatePlanned, eventInStateCanceled, eventWithOpenSignup];
 
-describe('EventEditView', () => {
+describe('EventEditView.vue', () => {
     let testee: VueWrapper;
 
     beforeEach(async () => {
-        await useAuthUseCase().authenticate();
+        await useAuthUseCase().authenticate(); // uses the default mocked http requests for authentication
         await router.push({ name: Routes.EventEdit, params: { year: 2025, key: 'example-event' } });
         testee = mount(EventEditView, {
             global: {

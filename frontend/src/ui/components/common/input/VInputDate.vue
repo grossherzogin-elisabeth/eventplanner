@@ -46,6 +46,7 @@
             @close="showDropdown = false"
         >
             <VDatepicker
+                class="w-96"
                 :model-value="props.modelValue ?? new Date()"
                 :highlight-from="props.highlightFrom"
                 :highlight-to="props.highlightTo"

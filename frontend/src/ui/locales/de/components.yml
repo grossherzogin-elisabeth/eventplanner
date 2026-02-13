@@ -2,6 +2,24 @@
 # messages used in shared components
 # -----------------------------------
 components:
+  event-registration-details-card:
+    title: 'Meine Anmeldung'
+    overnight-stay: 'Übernachtung an Bord gewünscht'
+    overnight-stay-description: 'Möchtest du an Bord übernachten? Bei mehrtägigen Veranstaltungen wird immer von einer 
+        Übernachtung an Bord ausgegangen.'
+    overnight-stay-note: 'Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn nicht garantiert werden 
+        kann.'
+    arrival: 'Anreise am Vortag gewünscht'
+    arrival-description: 'Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen. Bitte gib hier an, 
+        falls du bereits vorher anreisen möchtest, damit das Büro entsprechend planen kann.'
+    arrival-note: 'Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn nicht garantiert werden kann.'
+    position: 'Meine Position'
+    position-description: 'Du hast die Qualifikation für mehrere Positionen. Mit welcher Position möchtest du dich 
+        anmelden?'
+    note: 'Notiz fürs Büro'
+    note-none: 'Du hast keine Notiz hinterlegt'
+    note-description: 'Hier kannst du zusätzliche Informationen für deine Anmeldung hinterlegen, die für das Büro bei 
+        der Planung relevant sein könnten.'
   event-details-card:
     title: 'Details'
     days: '{count} Tag|{count} Tage'
@@ -17,7 +35,7 @@ components:
     address-link: 'Anreiseinformationen'
     learn-more: 'Weitere Informationen'
   event-participants-card:
-    registrations: 'Anmeldungen'
+    registrations: 'Anmeldungen ({count})'
     assigned: 'Crew ({count})'
     waitinglist: 'Warteliste ({count})'
     placeholder-title: 'Du könntest den Anfang machen!'
