@@ -72,7 +72,7 @@ export function deserializeDate(date: string): Date {
     // js cannot parse an ISO date time like 2024-06-25T00:00+02:00[Europe/Berlin]
     try {
         if (date.length === 10) {
-            const [year, month, day] = date.split('-').map((it) => parseInt(it, 10));
+            const [year, month, day] = date.split('-').map((it) => Number.parseInt(it, 10));
             return new Date(year, month - 1, day);
         }
         if (date.includes('[')) {

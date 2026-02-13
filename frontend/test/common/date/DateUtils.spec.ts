@@ -254,5 +254,11 @@ describe('DateUtils', () => {
             const result = deserializeDate('2024-06-25T08:15Z');
             expect(result).toEqual(expected);
         });
+
+        it('should deserialize date without time correctly', () => {
+            const expected = new Date(2024, 5, 25);
+            const result = deserializeDate('2024-06-25');
+            expect(result).toEqual(expected);
+        });
     });
 });
