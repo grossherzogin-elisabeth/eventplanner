@@ -264,9 +264,7 @@ export class EventAdministrationUseCase {
     }
 
     public async getExportTemplates(): Promise<string[]> {
-        if (!this.exportTemplates) {
-            this.exportTemplates = await this.eventRepository.getExportTemplates();
-        }
+        this.exportTemplates ??= await this.eventRepository.getExportTemplates();
         return this.exportTemplates;
     }
 

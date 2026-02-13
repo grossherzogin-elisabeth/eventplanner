@@ -20,6 +20,7 @@ export class ConfigService {
     private readonly config: Config;
 
     constructor(params: { settingsRepository: SettingsRepository }) {
+        console.log('🚀 Initializing ConfigService');
         this.settingsRepository = params.settingsRepository;
         this.config = defaultConfig;
         this.initialize();

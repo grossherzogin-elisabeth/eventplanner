@@ -13,6 +13,7 @@ export class AuthService {
     private offlineMode: boolean | undefined = undefined;
 
     constructor() {
+        console.log('🚀 Initializing AuthService');
         this.signedInUser = this.loadStoredSignedInUser();
     }
 

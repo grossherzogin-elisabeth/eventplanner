@@ -8,6 +8,7 @@ export class PositionCachingService {
     private readonly initialized: Promise<void>;
 
     constructor(params: { positionRepository: PositionRepository; cache: Storage<PositionKey, Position> }) {
+        console.log('🚀 Initializing PositionCachingService');
         this.positionRepository = params.positionRepository;
         this.storage = params.cache;
         this.initialized = this.initialize();

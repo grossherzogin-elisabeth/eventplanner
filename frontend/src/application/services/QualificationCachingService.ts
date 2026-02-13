@@ -8,6 +8,7 @@ export class QualificationCachingService {
     private readonly initialized: Promise<void>;
 
     constructor(params: { qualificationRepository: QualificationRepository; cache: Storage<QualificationKey, Qualification> }) {
+        console.log('🚀 Initializing QualificationCachingService');
         this.qualificationRepository = params.qualificationRepository;
         this.storage = params.cache;
         this.initialized = this.initialize();

@@ -13,6 +13,7 @@ export class ErrorHandlingService {
     private readonly accountRepository: AccountRepository;
 
     public constructor(params: { accountRepository: AccountRepository }) {
+        console.log('🚀 Initializing ErrorHandlingService');
         this.accountRepository = params.accountRepository;
     }
 

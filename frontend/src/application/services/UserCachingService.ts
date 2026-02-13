@@ -8,6 +8,7 @@ export class UserCachingService {
     private readonly initialized: Promise<void>;
 
     constructor(params: { userRepository: UserRepository; cache: Storage<UserKey, User> }) {
+        console.log('🚀 Initializing UserCachingService');
         this.userRepository = params.userRepository;
         this.storage = params.cache;
         this.initialized = this.initialize();
