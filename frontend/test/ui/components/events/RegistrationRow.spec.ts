@@ -10,11 +10,11 @@ import { mockEvent, mockPositionCaptain, mockRegistrationCaptain, mockSignedInUs
 
 describe('RegistrationRow.vue', () => {
     const authService = useAuthService();
+    let testee: VueWrapper;
     let signedInUser = mockSignedInUser();
     let event: Event;
     let registration: ResolvedRegistrationSlot;
     let position: Position;
-    let testee: VueWrapper;
 
     beforeEach(async () => {
         authService.setSignedInUser(signedInUser);

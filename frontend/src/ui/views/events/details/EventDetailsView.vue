@@ -66,12 +66,13 @@
             </button>
         </template>
         <template v-if="event" #actions-menu>
-            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
+            <li class="context-menu-item" data-test-id="action-create-calendar-entry" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
                 <span>{{ $t('views.events.details.create-calendar-entry') }}</span>
             </li>
             <template v-if="event.signedInUserRegistration">
                 <li
+                    data-test-id="action-edit-registration"
                     class="context-menu-item"
                     :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
                     @click="editUserRegistration()"
@@ -88,7 +89,7 @@
                     <span>{{ $t('views.events.details.add-note') }}</span>
                 </li>
             </template>
-            <li class="permission-write-events">
+            <li class="permission-write-events" data-test-id="action-edit-event">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-drafting-compass" />
                     <span>{{ $t('views.events.details.edit-event') }}</span>
