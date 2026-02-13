@@ -20,7 +20,7 @@
         "feiertagejs": "^1.5.0",
         "i18n-iso-countries": "^7.14.0",
         "i18n-nationality": "^1.4.0",
-        "markdown-it": "^14.1.0",
+        "markdown-it": "^14.1.1",
         "svg-country-flags": "^1.2.10",
         "uuid": "^13.0.0",
         "vue-draggable-next": "^2.3.0",
