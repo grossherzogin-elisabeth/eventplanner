@@ -23,7 +23,6 @@ describe('EventRegistrationDetailsCard.vue', () => {
         });
         testee = mount(EventRegistrationDetailsCard, {
             props: { event, registration },
-            global: { stubs: { teleport: true } },
         });
         await usePositions().loading;
     });

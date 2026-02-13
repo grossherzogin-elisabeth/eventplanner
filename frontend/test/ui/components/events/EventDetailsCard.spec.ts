@@ -18,7 +18,6 @@ describe('EventDetailsCard.vue', () => {
         });
         testee = mount(EventDetailsCard, {
             props: { event },
-            global: { stubs: { teleport: true } },
         });
     });
 

@@ -32,7 +32,6 @@ describe('RegistrationRow.vue', () => {
         };
         testee = mount(RegistrationRow, {
             props: { event, registration },
-            global: { stubs: { teleport: true } },
         });
         await usePositions().loading;
     });

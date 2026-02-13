@@ -14,7 +14,6 @@ describe('EventStateBanner.vue', () => {
         event = mockEvent();
         testee = mount(EventStateBanner, {
             props: { event },
-            global: { stubs: { teleport: true } },
         });
         await usePositions().loading;
     });
