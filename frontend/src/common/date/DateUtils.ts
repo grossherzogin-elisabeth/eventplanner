@@ -92,3 +92,13 @@ export function isSameDate(a?: Date, b?: Date): boolean {
 export function getDaysOfMonth(date: Date): number {
     return new Date(date.getFullYear(), date.getMonth() + 1, -1).getDate() + 1;
 }
+
+export function toIsoDateString(date?: Date): string | undefined {
+    if (!date) {
+        return undefined;
+    }
+    const year = date.getFullYear();
+    const month = date.getMonth() < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+    const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+    return `${year}-${month}-${day}`;
+}

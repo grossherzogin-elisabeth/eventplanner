@@ -7,6 +7,7 @@ import {
     getDaysOfMonth,
     isSameDate,
     subtractFromDate,
+    toIsoDateString,
     updateDate,
     updateTime,
 } from '@/common/date';
@@ -255,9 +256,23 @@ describe('DateUtils', () => {
             expect(result).toEqual(expected);
         });
 
-        it('should deserialize date without time correctly', () => {
+        it('should deserialize date', () => {
             const expected = new Date(2024, 5, 25);
             const result = deserializeDate('2024-06-25');
+            expect(result).toEqual(expected);
+        });
+    });
+
+    describe('toIsoDateString', () => {
+        it('should serialize date', () => {
+            const expected = '2024-06-25';
+            const result = toIsoDateString(new Date(2024, 5, 25, 10, 15));
+            expect(result).toEqual(expected);
+        });
+
+        it('should serialize date without time', () => {
+            const expected = '2024-06-25';
+            const result = toIsoDateString(new Date(2024, 5, 25));
             expect(result).toEqual(expected);
         });
     });

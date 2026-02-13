@@ -2,6 +2,7 @@ import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventRestRepository } from '@/adapter/rest/EventRestRepository';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRegistrationsRepository } from '@/application';
+import { toIsoDateString } from '@/common';
 import type { Event, EventKey, Registration, RegistrationKey } from '@/domain';
 
 export interface RegistrationCreateRequest {
@@ -33,7 +34,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             name: registration.name,
             note: registration.note,
             overnightStay: registration.overnightStay,
-            arrival: this.toIsoDateString(registration.arrival),
+            arrival: toIsoDateString(registration.arrival),
         };
         const response = await fetch(`/api/v1/events/${eventKey}/registrations`, {
             method: 'POST',
@@ -59,7 +60,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             name: registration.name,
             note: registration.note,
             overnightStay: registration.overnightStay,
-            arrival: this.toIsoDateString(registration.arrival),
+            arrival: toIsoDateString(registration.arrival),
         };
         const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
             method: 'PUT',
@@ -110,15 +111,5 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
         if (!response.ok) {
             throw response;
         }
-    }
-
-    private toIsoDateString(date?: Date): string | undefined {
-        if (!date) {
-            return undefined;
-        }
-        const year = date.getFullYear();
-        const month = date.getMonth() < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-        const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-        return `${year}-${month}-${day}`;
     }
 }
