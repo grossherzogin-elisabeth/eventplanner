@@ -4,6 +4,7 @@
         <h2 class="text-secondary col-span-full font-bold">App</h2>
         <VInputText
             v-model.trim="user.authKey"
+            data-test-id="auth-key"
             class="col-span-full"
             label="OpenID Connect Subject ID"
             placeholder="Nicht verknüpft"
@@ -13,6 +14,7 @@
         />
         <VInputText
             v-model.trim="user.nickName"
+            data-test-id="nick-name"
             class="col-span-full"
             label="Anzeigename"
             :placeholder="user.firstName"
@@ -22,6 +24,7 @@
         />
         <VInputDate
             v-model.trim="user.createdAt"
+            data-test-id="created-at"
             class="col-span-full"
             label="Erstellt am"
             disabled
@@ -30,6 +33,7 @@
         />
         <VInputDate
             v-model.trim="user.updatedAt"
+            data-test-id="updated-at"
             class="col-span-full"
             label="Letzte Änderung am"
             disabled
@@ -38,6 +42,7 @@
         />
         <VInputDate
             v-model.trim="user.lastLoginAt"
+            data-test-id="last-login-at"
             class="col-span-full"
             label="Letzter Login am"
             disabled
@@ -46,6 +51,7 @@
         />
         <VInputDate
             v-model.trim="user.verifiedAt"
+            data-test-id="verified-at"
             class="col-span-full"
             label="Daten verifiziert am"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
@@ -60,6 +66,7 @@
         <h2 class="text-secondary col-span-full font-bold">Persönliche Daten</h2>
         <VInputSelect
             v-model="user.gender"
+            data-test-id="gender"
             class="col-span-full sm:col-span-3"
             label="Geschlecht"
             :options="genderOptions"
@@ -70,6 +77,7 @@
         />
         <VInputText
             v-model.trim="user.title"
+            data-test-id="title"
             class="col-span-full sm:col-span-3"
             label="Titel"
             placeholder="keine Angabe"
@@ -79,6 +87,7 @@
         />
         <VInputText
             v-model.trim="user.firstName"
+            data-test-id="first-name"
             class="col-span-full"
             label="Vorname"
             required
@@ -88,6 +97,7 @@
         />
         <VInputText
             v-model.trim="user.secondName"
+            data-test-id="second-name"
             class="col-span-full"
             label="Zweiter Vorname"
             placeholder="keine Angabe"
@@ -97,6 +107,7 @@
         />
         <VInputText
             v-model.trim="user.lastName"
+            data-test-id="last-name"
             class="col-span-full"
             label="Nachname"
             required
@@ -107,6 +118,7 @@
         />
         <VInputDate
             v-model="user.dateOfBirth"
+            data-test-id="date-of-birth"
             class="col-span-full sm:col-span-2"
             label="Geboren am"
             required
@@ -117,6 +129,7 @@
         />
         <VInputText
             v-model.trim="user.placeOfBirth"
+            data-test-id="place-of-birth"
             class="col-span-full sm:col-span-4"
             label="Geburtsort"
             required
@@ -127,6 +140,7 @@
         />
         <VInputText
             v-model.trim="user.passNr"
+            data-test-id="pass-number"
             class="col-span-full sm:col-span-2"
             label="Pass Nummer"
             required
@@ -137,6 +151,7 @@
         />
         <VInputCombobox
             v-model="user.nationality"
+            data-test-id="nationality"
             class="col-span-full sm:col-span-4"
             label="Nationalität"
             :options="nationalities.options"

@@ -4,6 +4,7 @@
         <h2 class="text-secondary col-span-full font-bold">Ernährung</h2>
         <VInputSelect
             v-model="user.diet"
+            data-test-id="diet"
             class="col-span-full"
             label="Ernährungsweise"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
@@ -15,6 +16,7 @@
         />
         <VInputTextArea
             v-model.trim="user.intolerances"
+            data-test-id="intolerances"
             class="col-span-full"
             label="Unverträglichkeiten"
             placeholder="Keine Angabe"
@@ -26,6 +28,7 @@
         <h2 class="text-secondary col-span-full font-bold">Sonstiges</h2>
         <VInputTextArea
             v-model.trim="user.comment"
+            data-test-id="comment"
             class="col-span-full"
             label="Kommentar (nicht für den Nutzer einsehbar)"
             placeholder="Keine Angabe"
