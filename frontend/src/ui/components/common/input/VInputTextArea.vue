@@ -17,7 +17,7 @@
                     readonly: props.readonly,
                     disabled: props.disabled,
                 }"
-                class="input-field h-full"
+                class="input-field"
                 aria-multiline="true"
                 @input="onInput"
                 @blur="visited = true"

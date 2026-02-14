@@ -1,106 +1,98 @@
 <template>
-    <section v-if="user">
-        <h2 class="text-secondary mb-4 font-bold">Email & Telefon</h2>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.email"
-                label="Email"
-                required
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['email']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.phone"
-                label="Telefon"
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['phone']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.phoneWork"
-                label="Telefon (dienstlich)"
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['phoneWork']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.mobile"
-                label="Mobil"
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['mobile']"
-                :errors-visible="true"
-            />
-        </div>
-
-        <h2 class="text-secondary mt-8 mb-4 font-bold">Addresse</h2>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.address.addressLine1"
-                label="Straße, Hausnr"
-                required
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['address.addressLine1']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.address.addressLine2"
-                label="Adresszusatz"
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['address.addressLine2']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="flex flex-col sm:flex-row sm:space-x-4">
-            <div class="mb-4 sm:w-36">
-                <VInputText
-                    v-model.trim="user.address.zipcode"
-                    label="Postleitzahl"
-                    required
-                    placeholder="keine Angabe"
-                    :disabled="!hasPermission(Permission.WRITE_USERS)"
-                    :errors="props.errors['address.zipcode']"
-                    :errors-visible="true"
-                />
-            </div>
-            <div class="mb-4 sm:grow">
-                <VInputText
-                    v-model.trim="user.address.town"
-                    label="Ort"
-                    required
-                    placeholder="keine Angabe"
-                    :disabled="!hasPermission(Permission.WRITE_USERS)"
-                    :errors="props.errors['address.town']"
-                    :errors-visible="true"
-                />
-            </div>
-        </div>
-        <div class="mb-4">
-            <VInputCombobox
-                v-model="user.address.country"
-                label="Land"
-                :options="countries.options"
-                required
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['address.country']"
-                :errors-visible="true"
-            />
-        </div>
+    <section class="relative mb-16 grid gap-4">
+        <span id="contact-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Email & Telefon</span>
+        <h2 class="text-secondary col-span-full font-bold">Email & Telefon</h2>
+        <VInputText
+            v-model.trim="user.email"
+            class="col-span-full"
+            label="Email"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['email']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.phone"
+            class="col-span-full"
+            label="Telefon"
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['phone']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.phoneWork"
+            class="col-span-full"
+            label="Telefon (dienstlich)"
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['phoneWork']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.mobile"
+            class="col-span-full"
+            label="Mobil"
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['mobile']"
+            :errors-visible="true"
+        />
+    </section>
+    <section class="relative mb-16 grid gap-4 sm:grid-cols-4">
+        <span id="address-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Addresse</span>
+        <h2 class="text-secondary col-span-full font-bold">Addresse</h2>
+        <VInputText
+            v-model.trim="user.address.addressLine1"
+            class="col-span-full"
+            label="Straße, Hausnr"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['address.addressLine1']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.address.addressLine2"
+            class="col-span-full"
+            label="Adresszusatz"
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['address.addressLine2']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.address.zipcode"
+            class="col-span-full sm:col-span-1"
+            label="Postleitzahl"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['address.zipcode']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.address.town"
+            class="col-span-full sm:col-span-3"
+            label="Ort"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['address.town']"
+            :errors-visible="true"
+        />
+        <VInputCombobox
+            v-model="user.address.country"
+            class="col-span-full"
+            label="Land"
+            :options="countries.options"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['address.country']"
+            :errors-visible="true"
+        />
     </section>
 </template>
 <script lang="ts" setup>
