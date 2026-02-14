@@ -41,7 +41,7 @@
                     </span>
                 </td>
             </template>
-            <template #context-menu="{ item }">
+            <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
                 <li>
                     <RouterLink
                         :to="{

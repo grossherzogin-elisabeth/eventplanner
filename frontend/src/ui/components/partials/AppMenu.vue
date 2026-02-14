@@ -86,7 +86,8 @@
             <li v-if="hasPermission(Permission.READ_USER_DETAILS)" class="menu-item" data-test-id="menu-item-user-list">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
-                    <span>{{ $t('navigation.manageUsers') }}</span>
+                    <span v-if="hasPermission(Permission.WRITE_USERS)">{{ $t('navigation.manageUsers') }}</span>
+                    <span v-else>{{ $t('navigation.listUsers') }}</span>
                 </RouterLink>
             </li>
             <li v-if="hasPermission(Permission.WRITE_SETTINGS)" class="menu-item" data-test-id="menu-item-admin-settings">

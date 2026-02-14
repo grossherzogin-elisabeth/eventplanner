@@ -141,4 +141,47 @@ describe('AppMenu.vue', () => {
             });
         });
     });
+
+    describe('users with role EVENT_LEADER', () => {
+        const signedInUser = mockSignedInUser({
+            permissions: [
+                Permission.READ_EVENTS,
+                Permission.READ_USERS,
+                Permission.READ_USER_DETAILS,
+                Permission.READ_QUALIFICATIONS,
+                Permission.READ_POSITIONS,
+                Permission.READ_OWN_USER,
+                Permission.WRITE_OWN_USER,
+                Permission.WRITE_OWN_REGISTRATIONS,
+            ],
+            roles: [Role.EVENT_LEADER],
+        });
+
+        beforeEach(() => {
+            server.use(http.get('/api/v1/account', () => HttpResponse.json(signedInUser, { status: 200 })));
+            authService.setSignedInUser(undefined);
+            testee = mount(AppMenu, {});
+        });
+
+        it('should show correct menu items', async () => {
+            const expected = new Map<string, boolean>();
+            expected.set('[data-test-id="menu-item-home"]', true);
+            expected.set('[data-test-id="menu-item-onboarding"]', false);
+            expected.set('[data-test-id="menu-item-calendar"]', true);
+            expected.set('[data-test-id="menu-item-event-list"]', true);
+            expected.set('[data-test-id="menu-item-event-admin"]', false);
+            expected.set('[data-test-id="menu-item-user-list"]', true);
+            expected.set('[data-test-id="menu-item-admin-settings"]', false);
+            expected.set('[data-test-id="menu-item-account"]', true);
+            expected.set('[data-test-id="menu-item-logout"]', true);
+            expected.set('[data-test-id="menu-item-login"]', false);
+            expected.set('[data-test-id="menu-item-register"]', false);
+
+            await expect.poll(() => testee.find('[data-test-id="menu-loading"]').exists()).toBe(false);
+            expected.forEach((expected, selector) => {
+                console.log(`Testing ${selector}`);
+                expect(testee.find(selector).exists()).toBe(expected);
+            });
+        });
+    });
 });

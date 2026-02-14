@@ -9,13 +9,31 @@
                     :available-positions="user.positionKeys"
                     @update:model-value="emit('update:modelValue', $event)"
                 />
+                <VListItem icon="fa-user-tie" :label="$t('views.account.app-settings.roles')">
+                    <template #default>
+                        <p>
+                            {{ signedInUser?.roles.map((r) => $t(`generic.role.${r}`)).join(', ') }}
+                        </p>
+                    </template>
+                </VListItem>
+                <VListItem icon="fa-list-check" :label="$t('views.account.app-settings.permissions')">
+                    <template #default>
+                        <ul class="font-mono">
+                            <li v-for="permission in signedInUser?.permissions.sort()" :key="permission">
+                                {{ permission }}
+                            </li>
+                        </ul>
+                    </template>
+                </VListItem>
             </VInteractiveList>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
 import type { UserDetails, UserSettings } from '@/domain';
+import { VListItem } from '@/ui/components/common';
 import VInteractiveList from '@/ui/components/common/list/VInteractiveList.vue';
+import { useSession } from '@/ui/composables/Session.ts';
 import PreferredPositionCard from '@/ui/views/account/components/PreferredPositionCard.vue';
 import ThemeCard from '@/ui/views/account/components/ThemeCard.vue';
 
@@ -28,4 +46,6 @@ type Emits = (e: 'update:modelValue', user: UserSettings) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+
+const { signedInUser } = useSession();
 </script>

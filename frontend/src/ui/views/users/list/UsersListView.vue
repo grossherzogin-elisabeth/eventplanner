@@ -348,7 +348,7 @@ function createUser(): void {
 }
 
 async function editUser(user: UserRegistrations, evt: MouseEvent): Promise<void> {
-    if (!hasPermission(Permission.WRITE_USERS)) {
+    if (!hasPermission(Permission.READ_USER_DETAILS)) {
         console.error('User has no permission to edit users.');
         return;
     }
