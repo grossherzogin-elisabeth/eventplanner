@@ -79,25 +79,28 @@
                 </AsyncButton>
             </template>
             <template #secondary-buttons>
-                <button v-if="tab === Tab.USER_EVENTS" class="btn-secondary" @click="createRegistration()">
+                <button
+                    v-if="tab === Tab.USER_EVENTS && hasPermission(Permission.WRITE_USERS)"
+                    class="btn-secondary"
+                    @click="createRegistration()"
+                >
                     <i class="fa-solid fa-user-plus"></i>
                     <span>Anmeldung hinzufügen</span>
                 </button>
-                <button v-else-if="tab === Tab.USER_CERTIFICATES" class="btn-secondary" @click="addUserQualification()">
+                <button
+                    v-else-if="tab === Tab.USER_CERTIFICATES && hasPermission(Permission.WRITE_USERS)"
+                    class="btn-secondary"
+                    @click="addUserQualification()"
+                >
                     <i class="fa-solid fa-file-circle-plus"></i>
                     <span>Qualifikation hinzufügen</span>
                 </button>
-                <a
-                    v-else-if="tab === Tab.USER_CONTACT_DATA && user?.email"
-                    class="btn-secondary"
-                    :href="`mailto:${user.email}`"
-                    target="_blank"
-                >
+                <a v-else-if="user?.email" class="btn-secondary" :href="`mailto:${user.email}`" target="_blank">
                     <i class="fa-solid fa-envelope"></i>
                     <span>Email schreiben</span>
                 </a>
             </template>
-            <template #actions-menu>
+            <template v-if="hasPermission(Permission.WRITE_USERS)" #actions-menu>
                 <li class="context-menu-item" @click="impersonateUser()">
                     <i class="fa-solid fa-user-secret" />
                     <span>Impersonate</span>
@@ -118,9 +121,9 @@
                 </li>
             </template>
         </DetailsPage>
-        <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
-        <UserQualificationDetailsDlg ref="addUserQualificationDialog" />
-        <VConfirmationDialog ref="confirmDialog" />
+        <CreateRegistrationForUserDlg v-if="hasPermission(Permission.WRITE_USERS)" ref="createRegistrationForUserDialog" />
+        <UserQualificationDetailsDlg v-if="hasPermission(Permission.WRITE_USERS)" ref="addUserQualificationDialog" />
+        <VConfirmationDialog v-if="hasPermission(Permission.WRITE_USERS)" ref="confirmDialog" />
     </div>
 </template>
 <script lang="ts" setup>
@@ -138,14 +141,14 @@ import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
-import UserEmergencyForm from '@/ui/views/users/details/UserEmergencyForm.vue';
-import UserOtherForm from '@/ui/views/users/details/UserOtherForm.vue';
-import UserContactForm from './UserContactForm.vue';
-import UserDataForm from './UserDataForm.vue';
-import UserEventsTable from './UserEventsTable.vue';
-import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';
-import UserQualificationsTable from './UserQualificationsTable.vue';
-import UserRolesTable from './UserRolesTable.vue';
+import UserEmergencyForm from '@/ui/views/users/details/tabs/UserEmergencyForm.vue';
+import UserOtherForm from '@/ui/views/users/details/tabs/UserOtherForm.vue';
+import UserQualificationDetailsDlg from './components/UserQualificationDetailsDlg.vue';
+import UserContactForm from './tabs/UserContactForm.vue';
+import UserDataForm from './tabs/UserDataForm.vue';
+import UserEventsTable from './tabs/UserEventsTable.vue';
+import UserQualificationsTable from './tabs/UserQualificationsTable.vue';
+import UserRolesTable from './tabs/UserRolesTable.vue';
 
 enum Tab {
     USER_DATA = 'data',
@@ -170,18 +173,6 @@ const authUseCase = useAuthUseCase();
 const errorHandlingUseCase = useErrorHandlingService();
 const { hasPermission } = useSession();
 
-const tabs = [
-    Tab.USER_EVENTS,
-    Tab.USER_CERTIFICATES,
-    Tab.USER_DATA,
-    Tab.USER_CONTACT_DATA,
-    Tab.USER_EMERGENCY,
-    Tab.USER_OTHER,
-    Tab.USER_ROLES,
-].map((it) => ({
-    value: it,
-    label: t(`views.users.details.tab.${it}`),
-}));
 const tab = ref<Tab>(Tab.USER_EVENTS);
 const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);
@@ -195,6 +186,17 @@ const addUserQualificationDialog = ref<Dialog<void, UserQualification | undefine
 const confirmDialog = ref<ConfirmationDialog | null>(null);
 
 const userKey = computed<string>(() => (route.params.key as string) || '');
+
+const tabs = computed<{ value: Tab; label: string }[]>(() => {
+    const result = [Tab.USER_EVENTS, Tab.USER_CERTIFICATES, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_EMERGENCY, Tab.USER_OTHER];
+    if (hasPermission(Permission.WRITE_USERS)) {
+        result.push(Tab.USER_ROLES);
+    }
+    return result.map((it) => ({
+        value: it,
+        label: t(`views.users.details.tab.${it}`),
+    }));
+});
 
 function init(): void {
     fetchUser();

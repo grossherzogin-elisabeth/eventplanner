@@ -54,8 +54,8 @@ import { Validator, notEmpty } from '@/common/validation';
 import type { InputSelectOption, Qualification, QualificationKey, UserQualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputDate, VInputTextArea } from '@/ui/components/common';
-import { useQualifications } from '@/ui/composables/Qualifications';
-import { useValidation } from '@/ui/composables/Validation';
+import { useQualifications } from '@/ui/composables/Qualifications.ts';
+import { useValidation } from '@/ui/composables/Validation.ts';
 
 const qualifications = useQualifications();
 
