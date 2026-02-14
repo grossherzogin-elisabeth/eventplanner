@@ -1,17 +1,24 @@
 <template>
     <div class="xl:overflow-x-hidden xl:overflow-y-auto">
         <DetailsPage :back-to="{ name: Routes.UsersList }">
-            <template #header> {{ user?.firstName }} {{ user?.lastName }} bearbeiten </template>
+            <template #header>
+                <template v-if="!user">{{ $t('generic.loading') }}</template>
+                <template v-else-if="hasPermission(Permission.WRITE_USERS)"> {{ user.firstName }} {{ user.lastName }} bearbeiten </template>
+                <template v-else>Nutzerdetails {{ user.firstName }} {{ user.lastName }} </template>
+            </template>
             <template #content>
                 <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-20 xl:pt-8">
                     <template #[Tab.USER_DATA]>
-                        <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />
-                        </div>
-                    </template>
-                    <template #[Tab.USER_CONTACT_DATA]>
-                        <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserContactForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                        <div class="flex flex-col-reverse justify-between gap-8 lg:flex-row xl:max-w-5xl">
+                            <div class="w-full max-w-2xl">
+                                <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                                <UserContactForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                                <UserEmergencyForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                                <UserOtherForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                            </div>
+                            <div class="relative hidden lg:block">
+                                <SiteNavigation v-if="user" class="sticky top-48 w-64" />
+                            </div>
                         </div>
                     </template>
                     <template #[Tab.USER_EVENTS]>
@@ -54,16 +61,6 @@
                             <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
                                 <UserRolesTable v-if="user" v-model="user" />
                             </div>
-                        </div>
-                    </template>
-                    <template #[Tab.USER_EMERGENCY]>
-                        <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserEmergencyForm v-if="user" v-model="user" :errors="validation.errors.value" />
-                        </div>
-                    </template>
-                    <template #[Tab.USER_OTHER]>
-                        <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserOtherForm v-if="user" v-model="user" :errors="validation.errors.value" />
                         </div>
                     </template>
                 </VTabs>
@@ -137,6 +134,7 @@ import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
+import SiteNavigation from '@/ui/components/partials/SiteNavigation.vue';
 import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
@@ -173,7 +171,7 @@ const authUseCase = useAuthUseCase();
 const errorHandlingUseCase = useErrorHandlingService();
 const { hasPermission } = useSession();
 
-const tab = ref<Tab>(Tab.USER_EVENTS);
+const tab = ref<Tab>(Tab.USER_DATA);
 const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);
 const hasChanges = ref<boolean>(false);
@@ -188,7 +186,7 @@ const confirmDialog = ref<ConfirmationDialog | null>(null);
 const userKey = computed<string>(() => (route.params.key as string) || '');
 
 const tabs = computed<{ value: Tab; label: string }[]>(() => {
-    const result = [Tab.USER_EVENTS, Tab.USER_CERTIFICATES, Tab.USER_DATA, Tab.USER_CONTACT_DATA, Tab.USER_EMERGENCY, Tab.USER_OTHER];
+    const result = [Tab.USER_DATA, Tab.USER_EVENTS, Tab.USER_CERTIFICATES];
     if (hasPermission(Permission.WRITE_USERS)) {
         result.push(Tab.USER_ROLES);
     }

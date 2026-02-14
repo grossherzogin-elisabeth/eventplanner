@@ -1,164 +1,150 @@
 <template>
-    <section v-if="user">
-        <h2 class="text-secondary mb-4 font-bold">App</h2>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.authKey"
-                label="OpenID Connect Subject ID"
-                placeholder="Nicht verknüpft"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['authKey']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.nickName"
-                label="Anzeigename"
-                :placeholder="user.firstName"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['nickName']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputDate
-                v-model.trim="user.createdAt"
-                label="Erstellt am"
-                disabled
-                :errors="props.errors['createdAt']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputDate
-                v-model.trim="user.updatedAt"
-                label="Letzte Änderung am"
-                disabled
-                :errors="props.errors['updatedAt']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputDate
-                v-model.trim="user.lastLoginAt"
-                label="Letzter Login am"
-                disabled
-                :errors="props.errors['lastLoginAt']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputDate
-                v-model.trim="user.verifiedAt"
-                label="Daten verifiziert am"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['verifiedAt']"
-                :errors-visible="true"
-            />
-        </div>
-
-        <h2 class="text-secondary mt-8 mb-4 font-bold">Persönliche Daten</h2>
-        <div class="mb-4 sm:w-64">
-            <VInputSelect
-                v-model="user.gender"
-                label="Geschlecht"
-                :options="genderOptions"
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['gender']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4 sm:w-64">
-            <VInputText
-                v-model.trim="user.title"
-                label="Titel"
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['title']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.firstName"
-                label="Vorname"
-                required
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['firstName']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.secondName"
-                label="Zweiter Vorname"
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['secondName']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputText
-                v-model.trim="user.lastName"
-                label="Nachname"
-                required
-                placeholder="keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :errors="props.errors['lastName']"
-                :errors-visible="true"
-            />
-        </div>
-        <div class="flex flex-col sm:flex-row sm:space-x-4">
-            <div class="mb-4 sm:w-64">
-                <VInputDate
-                    v-model="user.dateOfBirth"
-                    label="Geboren am"
-                    required
-                    placeholder="keine Angabe"
-                    :disabled="!hasPermission(Permission.WRITE_USERS)"
-                    :errors="props.errors['dateOfBirth']"
-                    :errors-visible="true"
-                />
-            </div>
-            <div class="mb-4 sm:grow">
-                <VInputText
-                    v-model.trim="user.placeOfBirth"
-                    label="Geburtsort"
-                    required
-                    placeholder="keine Angabe"
-                    :disabled="!hasPermission(Permission.WRITE_USERS)"
-                    :errors="props.errors['placeOfBirth']"
-                    :errors-visible="true"
-                />
-            </div>
-        </div>
-        <div class="flex flex-col sm:flex-row sm:space-x-4">
-            <div class="mb-4 sm:w-64">
-                <VInputText
-                    v-model.trim="user.passNr"
-                    label="Pass Nummer"
-                    required
-                    placeholder="keine Angabe"
-                    :disabled="!hasPermission(Permission.WRITE_USERS)"
-                    :errors="props.errors['passNr']"
-                    :errors-visible="true"
-                />
-            </div>
-            <div class="mb-4 sm:grow">
-                <VInputCombobox
-                    v-model="user.nationality"
-                    label="Nationalität"
-                    :options="nationalities.options"
-                    required
-                    :disabled="!hasPermission(Permission.WRITE_USERS)"
-                    :errors="props.errors['nationality']"
-                    :errors-visible="true"
-                />
-            </div>
-        </div>
+    <section v-if="hasPermission(Permission.WRITE_USERS)" class="relative mb-16 grid gap-4">
+        <span id="app-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">App</span>
+        <h2 class="text-secondary col-span-full font-bold">App</h2>
+        <VInputText
+            v-model.trim="user.authKey"
+            class="col-span-full"
+            label="OpenID Connect Subject ID"
+            placeholder="Nicht verknüpft"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['authKey']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.nickName"
+            class="col-span-full"
+            label="Anzeigename"
+            :placeholder="user.firstName"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['nickName']"
+            :errors-visible="true"
+        />
+        <VInputDate
+            v-model.trim="user.createdAt"
+            class="col-span-full"
+            label="Erstellt am"
+            disabled
+            :errors="props.errors['createdAt']"
+            :errors-visible="true"
+        />
+        <VInputDate
+            v-model.trim="user.updatedAt"
+            class="col-span-full"
+            label="Letzte Änderung am"
+            disabled
+            :errors="props.errors['updatedAt']"
+            :errors-visible="true"
+        />
+        <VInputDate
+            v-model.trim="user.lastLoginAt"
+            class="col-span-full"
+            label="Letzter Login am"
+            disabled
+            :errors="props.errors['lastLoginAt']"
+            :errors-visible="true"
+        />
+        <VInputDate
+            v-model.trim="user.verifiedAt"
+            class="col-span-full"
+            label="Daten verifiziert am"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['verifiedAt']"
+            :errors-visible="true"
+        />
+    </section>
+    <section class="relative mb-16 grid gap-4 sm:grid-cols-6">
+        <span id="personal-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
+            Persönliche Daten
+        </span>
+        <h2 class="text-secondary col-span-full font-bold">Persönliche Daten</h2>
+        <VInputSelect
+            v-model="user.gender"
+            class="col-span-full sm:col-span-3"
+            label="Geschlecht"
+            :options="genderOptions"
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['gender']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.title"
+            class="col-span-full sm:col-span-3"
+            label="Titel"
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['title']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.firstName"
+            class="col-span-full"
+            label="Vorname"
+            required
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['firstName']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.secondName"
+            class="col-span-full"
+            label="Zweiter Vorname"
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['secondName']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.lastName"
+            class="col-span-full"
+            label="Nachname"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['lastName']"
+            :errors-visible="true"
+        />
+        <VInputDate
+            v-model="user.dateOfBirth"
+            class="col-span-full sm:col-span-2"
+            label="Geboren am"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['dateOfBirth']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.placeOfBirth"
+            class="col-span-full sm:col-span-4"
+            label="Geburtsort"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['placeOfBirth']"
+            :errors-visible="true"
+        />
+        <VInputText
+            v-model.trim="user.passNr"
+            class="col-span-full sm:col-span-2"
+            label="Pass Nummer"
+            required
+            placeholder="keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['passNr']"
+            :errors-visible="true"
+        />
+        <VInputCombobox
+            v-model="user.nationality"
+            class="col-span-full sm:col-span-4"
+            label="Nationalität"
+            :options="nationalities.options"
+            required
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :errors="props.errors['nationality']"
+            :errors-visible="true"
+        />
     </section>
 </template>
 <script lang="ts" setup>

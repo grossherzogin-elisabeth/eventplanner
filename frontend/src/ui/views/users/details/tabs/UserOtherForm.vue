@@ -1,35 +1,36 @@
 <template>
-    <section v-if="user">
-        <h2 class="text-secondary mb-4 font-bold">Ernährung</h2>
-        <div class="mb-4">
-            <VInputSelect
-                v-model="user.diet"
-                label="Ernährungsweise"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-                :options="[
-                    { value: 'omnivore', label: 'Fleisch' },
-                    { value: 'vegetarian', label: 'Vegetarisch' },
-                    { value: 'vegan', label: 'Vegan' },
-                ]"
-            />
-        </div>
-        <div class="mb-4">
-            <VInputTextArea
-                v-model.trim="user.intolerances"
-                label="Unverträglichkeiten"
-                placeholder="Keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-            />
-        </div>
-        <h2 class="text-secondary mt-8 mb-4 font-bold">Sonstiges</h2>
-        <div class="mb-4">
-            <VInputTextArea
-                v-model.trim="user.comment"
-                label="Kommentar (nicht für den Nutzer einsehbar)"
-                placeholder="Keine Angabe"
-                :disabled="!hasPermission(Permission.WRITE_USERS)"
-            />
-        </div>
+    <section class="relative mb-16 grid gap-4">
+        <span id="other-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Ernährung</span>
+        <h2 class="text-secondary col-span-full font-bold">Ernährung</h2>
+        <VInputSelect
+            v-model="user.diet"
+            class="col-span-full"
+            label="Ernährungsweise"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :options="[
+                { value: 'omnivore', label: 'Fleisch' },
+                { value: 'vegetarian', label: 'Vegetarisch' },
+                { value: 'vegan', label: 'Vegan' },
+            ]"
+        />
+        <VInputTextArea
+            v-model.trim="user.intolerances"
+            class="col-span-full"
+            label="Unverträglichkeiten"
+            placeholder="Keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+        />
+    </section>
+    <section class="relative mb-16 grid gap-4">
+        <span id="other-other" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Sonstiges</span>
+        <h2 class="text-secondary col-span-full font-bold">Sonstiges</h2>
+        <VInputTextArea
+            v-model.trim="user.comment"
+            class="col-span-full"
+            label="Kommentar (nicht für den Nutzer einsehbar)"
+            placeholder="Keine Angabe"
+            :disabled="!hasPermission(Permission.WRITE_USERS)"
+        />
     </section>
 </template>
 <script lang="ts" setup>
