@@ -57,6 +57,8 @@ account:
         Du kannst deine Position für jede Anmeldung individuall anpassen.'
     notifications: 'Benachrichtigungen'
     language: 'Sprache'
+    roles: 'Meine Anwendungsrollen'
+    permissions: 'Meine Berechtigungen'
   qualifications:
     status-expires-on: 'Gültig bis'
     status-no-expires: 'Ohne Ablaufdatum'
