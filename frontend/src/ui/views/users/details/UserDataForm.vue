@@ -6,6 +6,7 @@
                 v-model.trim="user.authKey"
                 label="OpenID Connect Subject ID"
                 placeholder="Nicht verknüpft"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['authKey']"
                 :errors-visible="true"
             />
@@ -15,6 +16,7 @@
                 v-model.trim="user.nickName"
                 label="Anzeigename"
                 :placeholder="user.firstName"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['nickName']"
                 :errors-visible="true"
             />
@@ -50,6 +52,7 @@
             <VInputDate
                 v-model.trim="user.verifiedAt"
                 label="Daten verifiziert am"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['verifiedAt']"
                 :errors-visible="true"
             />
@@ -62,6 +65,7 @@
                 label="Geschlecht"
                 :options="genderOptions"
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['gender']"
                 :errors-visible="true"
             />
@@ -71,18 +75,27 @@
                 v-model.trim="user.title"
                 label="Titel"
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['title']"
                 :errors-visible="true"
             />
         </div>
         <div class="mb-4">
-            <VInputText v-model.trim="user.firstName" label="Vorname" required :errors="props.errors['firstName']" :errors-visible="true" />
+            <VInputText
+                v-model.trim="user.firstName"
+                label="Vorname"
+                required
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
+                :errors="props.errors['firstName']"
+                :errors-visible="true"
+            />
         </div>
         <div class="mb-4">
             <VInputText
                 v-model.trim="user.secondName"
                 label="Zweiter Vorname"
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['secondName']"
                 :errors-visible="true"
             />
@@ -93,6 +106,7 @@
                 label="Nachname"
                 required
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['lastName']"
                 :errors-visible="true"
             />
@@ -104,6 +118,7 @@
                     label="Geboren am"
                     required
                     placeholder="keine Angabe"
+                    :disabled="!hasPermission(Permission.WRITE_USERS)"
                     :errors="props.errors['dateOfBirth']"
                     :errors-visible="true"
                 />
@@ -114,6 +129,7 @@
                     label="Geburtsort"
                     required
                     placeholder="keine Angabe"
+                    :disabled="!hasPermission(Permission.WRITE_USERS)"
                     :errors="props.errors['placeOfBirth']"
                     :errors-visible="true"
                 />
@@ -126,6 +142,7 @@
                     label="Pass Nummer"
                     required
                     placeholder="keine Angabe"
+                    :disabled="!hasPermission(Permission.WRITE_USERS)"
                     :errors="props.errors['passNr']"
                     :errors-visible="true"
                 />
@@ -136,6 +153,7 @@
                     label="Nationalität"
                     :options="nationalities.options"
                     required
+                    :disabled="!hasPermission(Permission.WRITE_USERS)"
                     :errors="props.errors['nationality']"
                     :errors-visible="true"
                 />
@@ -146,8 +164,10 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { InputSelectOption, UserDetails } from '@/domain';
+import { Permission } from '@/domain';
 import { VInputCombobox, VInputDate, VInputSelect, VInputText } from '@/ui/components/common';
 import { useNationalities } from '@/ui/composables/Nationalities.ts';
+import { useSession } from '@/ui/composables/Session.ts';
 
 interface Props {
     modelValue: UserDetails;
@@ -160,6 +180,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const nationalities = useNationalities();
+const { hasPermission } = useSession();
 
 const user = ref<UserDetails>(props.modelValue);
 const genderOptions: InputSelectOption[] = [
