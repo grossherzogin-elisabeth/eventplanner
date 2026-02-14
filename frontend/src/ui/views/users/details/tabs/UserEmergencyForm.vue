@@ -54,7 +54,7 @@
 import { ref, watch } from 'vue';
 import type { UserDetails } from '@/domain';
 import { Permission } from '@/domain';
-import { VInfo, VInputDate, VInputText, VInputTextArea } from '@/ui/components/common';
+import { VInfo, VInputText, VInputTextArea } from '@/ui/components/common';
 import { useSession } from '@/ui/composables/Session.ts';
 
 interface Props {
