@@ -6,6 +6,7 @@
                 v-model.trim="user.emergencyContact.name"
                 label="Name des Notfallkontakts"
                 placeholder="Keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['emergencyContact.name']"
                 :errors-visible="true"
             />
@@ -15,6 +16,7 @@
                 v-model.trim="user.emergencyContact.phone"
                 label="Telefonnummer des Notfallkontakts"
                 placeholder="Keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['emergencyContact.phone']"
                 :errors-visible="true"
             />
@@ -29,6 +31,7 @@
                 v-model.trim="user.diseases"
                 label="Krankheiten"
                 placeholder="Keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['diseases']"
                 :errors-visible="true"
             />
@@ -38,6 +41,7 @@
                 v-model.trim="user.medication"
                 label="Medikamente"
                 placeholder="Keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['medication']"
                 :errors-visible="true"
             />
@@ -47,7 +51,9 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { UserDetails } from '@/domain';
-import { VInfo, VInputText, VInputTextArea } from '@/ui/components/common';
+import { Permission } from '@/domain';
+import { VInfo, VInputSelect, VInputText, VInputTextArea } from '@/ui/components/common';
+import { useSession } from '@/ui/composables/Session.ts';
 
 interface Props {
     modelValue: UserDetails;
@@ -58,6 +64,8 @@ type Emits = (e: 'update:modelValue', user: UserDetails) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+
+const { hasPermission } = useSession();
 
 const user = ref<UserDetails>(props.modelValue);
 

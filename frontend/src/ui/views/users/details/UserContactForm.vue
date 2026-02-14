@@ -7,6 +7,7 @@
                 label="Email"
                 required
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['email']"
                 :errors-visible="true"
             />
@@ -16,6 +17,7 @@
                 v-model.trim="user.phone"
                 label="Telefon"
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['phone']"
                 :errors-visible="true"
             />
@@ -25,6 +27,7 @@
                 v-model.trim="user.phoneWork"
                 label="Telefon (dienstlich)"
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['phoneWork']"
                 :errors-visible="true"
             />
@@ -34,6 +37,7 @@
                 v-model.trim="user.mobile"
                 label="Mobil"
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['mobile']"
                 :errors-visible="true"
             />
@@ -46,6 +50,7 @@
                 label="Straße, Hausnr"
                 required
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['address.addressLine1']"
                 :errors-visible="true"
             />
@@ -55,6 +60,7 @@
                 v-model.trim="user.address.addressLine2"
                 label="Adresszusatz"
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['address.addressLine2']"
                 :errors-visible="true"
             />
@@ -66,6 +72,7 @@
                     label="Postleitzahl"
                     required
                     placeholder="keine Angabe"
+                    :disabled="!hasPermission(Permission.WRITE_USERS)"
                     :errors="props.errors['address.zipcode']"
                     :errors-visible="true"
                 />
@@ -76,6 +83,7 @@
                     label="Ort"
                     required
                     placeholder="keine Angabe"
+                    :disabled="!hasPermission(Permission.WRITE_USERS)"
                     :errors="props.errors['address.town']"
                     :errors-visible="true"
                 />
@@ -88,6 +96,7 @@
                 :options="countries.options"
                 required
                 placeholder="keine Angabe"
+                :disabled="!hasPermission(Permission.WRITE_USERS)"
                 :errors="props.errors['address.country']"
                 :errors-visible="true"
             />
@@ -97,8 +106,10 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { UserDetails } from '@/domain';
+import { Permission } from '@/domain';
 import { VInputCombobox, VInputText } from '@/ui/components/common';
 import { useCountries } from '@/ui/composables/Countries.ts';
+import { useSession } from '@/ui/composables/Session.ts';
 
 interface Props {
     modelValue: UserDetails;
@@ -110,6 +121,7 @@ type Emits = (e: 'update:modelValue', user: UserDetails) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
+const { hasPermission } = useSession();
 const countries = useCountries();
 const user = ref<UserDetails>(props.modelValue);
 
