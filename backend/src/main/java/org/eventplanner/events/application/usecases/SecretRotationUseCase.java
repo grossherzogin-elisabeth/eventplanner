@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Service

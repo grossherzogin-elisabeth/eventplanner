@@ -15,8 +15,6 @@ import org.eventplanner.events.domain.values.users.EncryptedAddress;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -26,6 +24,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Entity
@@ -130,14 +130,14 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         String roles = "[]";
         try {
             roles = objectMapper.writeValueAsString(domain.getRoles());
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("Failed to serialize roles for user {}", domain.getKey(), e);
         }
 
         String qualifications = "[]";
         try {
             qualifications = objectMapper.writeValueAsString(domain.getQualifications());
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("Failed to serialize qualifications for user {}", domain.getKey(), e);
         }
 
@@ -145,7 +145,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         if (domain.getEmergencyContact() != null) {
             try {
                 emergencyContact = objectMapper.writeValueAsString(domain.getEmergencyContact());
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 log.error("Failed to serialize emergency contact for user {}", domain.getKey(), e);
             }
         }
@@ -154,7 +154,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         if (domain.getAddress() != null) {
             try {
                 address = objectMapper.writeValueAsString(domain.getAddress());
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 log.error("Failed to serialize address for user {}", domain.getKey(), e);
             }
         }
@@ -197,7 +197,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         if (rolesRaw != null && rolesRaw.startsWith("[") && rolesRaw.endsWith("]")) {
             try {
                 roles = objectMapper.readValue(rolesRaw, Encrypted[].class);
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 log.error("Failed to deserialize roles for user {}", key, e);
             }
         }
@@ -206,7 +206,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         if (qualificationsRaw != null && qualificationsRaw.startsWith("[") && qualificationsRaw.endsWith("]")) {
             try {
                 qualifications = objectMapper.readValue(qualificationsRaw, EncryptedUserQualification[].class);
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 log.error("Failed to deserialize qualifications for user {}", key, e);
             }
         }
@@ -215,7 +215,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         if (emergencyContactRaw != null && emergencyContactRaw.startsWith("{") && emergencyContactRaw.endsWith("}")) {
             try {
                 emergencyContact = objectMapper.readValue(emergencyContactRaw, EncryptedEmergencyContact.class);
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 log.error("Failed to deserialize emergency contact for user {}", key, e);
             }
         }
@@ -224,7 +224,7 @@ public class EncryptedUserDetailsJpaEntity implements Serializable {
         if (addressRaw != null && addressRaw.startsWith("{") && addressRaw.endsWith("}")) {
             try {
                 address = objectMapper.readValue(addressRaw, EncryptedAddress.class);
-            } catch (JsonProcessingException e) {
+            } catch (JacksonException e) {
                 log.error("Failed to deserialize address for user {}", key, e);
             }
         }

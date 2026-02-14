@@ -3,26 +3,38 @@ package org.eventplanner.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.lang.NonNull;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.util.StdDateFormat;
 
 public class ObjectMapperFactory {
 
+    private ObjectMapper objectMapper;
+
     @Bean
     public @NonNull ObjectMapper objectMapper() {
-        return defaultObjectMapper();
+        if (objectMapper == null) {
+            objectMapper = defaultObjectMapper();
+        }
+        return objectMapper;
     }
 
     public static @NonNull ObjectMapper defaultObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // Use ISO 8601 date format when serializing date types
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.setDateFormat(new StdDateFormat());
-        return objectMapper;
+        return JsonMapper.builder()
+            .findAndAddModules()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            // .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            // .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .defaultDateFormat(new StdDateFormat())
+            .build();
+
+        // ObjectMapper objectMapper = new ObjectMapper();
+        // objectMapper.findAndRegisterModules();
+        // objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // // Use ISO 8601 date format when serializing date types
+        // objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        // objectMapper.setDateFormat(new StdDateFormat());
+        // return objectMapper;
     }
 }

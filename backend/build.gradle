@@ -1,7 +1,7 @@
 plugins {
     id "java"
     id "jacoco"
-    id "org.springframework.boot" version "3.5.7"
+    id "org.springframework.boot" version "4.0.2"
     id "io.spring.dependency-management" version "1.1.7"
     id "io.freefair.lombok" version "9.2.0"
     id "org.sonarqube" version "7.1.0.6387"
@@ -15,8 +15,8 @@ java {
 }
 
 ext {
-    springBootVersion = "3.5.7"
-    hibernateVersion = "6.6.13.Final"
+    springBootVersion = "4.0.2"
+    hibernateVersion = "7.2.4.Final"
     apachePoiVersion = "5.5.1"
 }
 
@@ -35,10 +35,15 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
 
+    // Adds support for java.time.LocalDate and java.time.Instant parsing
+    implementation "com.fasterxml.jackson.module:jackson-modules-java8:2.15.2"
+
     // sqlite
     implementation "org.xerial:sqlite-jdbc:3.51.2.0"
     implementation "org.hibernate.orm:hibernate-core:${hibernateVersion}"
     implementation "org.hibernate.orm:hibernate-community-dialects:${hibernateVersion}"
+
+    // database migrations
     implementation "org.flywaydb:flyway-core:11.20.1"
 
     // excel
@@ -47,6 +52,7 @@ dependencies {
 
     // tests
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-webmvc-test:${springBootVersion}"
     testImplementation "org.springframework.security:spring-security-test:7.0.3"
     testImplementation "com.tngtech.archunit:archunit:1.4.1"
 

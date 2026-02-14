@@ -1,6 +1,5 @@
 package org.eventplanner.events.adapter.jpa.events;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -18,8 +17,6 @@ import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.springframework.lang.NonNull;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -28,6 +25,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "events")
@@ -103,7 +103,7 @@ public class EventJpaEntity {
                 }
             );
             return entities.stream().map(LocationJsonEntity::toDomain).toList();
-        } catch (IOException _) {
+        } catch (JacksonException _) {
             return Collections.emptyList();
         }
     }
@@ -112,7 +112,7 @@ public class EventJpaEntity {
         try {
             var entities = locations.stream().map(LocationJsonEntity::fromDomain).toList();
             return objectMapper.writeValueAsString(entities);
-        } catch (IOException _) {
+        } catch (JacksonException _) {
             return "[]";
         }
     }
@@ -124,7 +124,7 @@ public class EventJpaEntity {
                 }
             );
             return entities.stream().map(SlotJsonEntity::toDomain).toList();
-        } catch (IOException _) {
+        } catch (JacksonException _) {
             return Collections.emptyList();
         }
     }
@@ -133,7 +133,7 @@ public class EventJpaEntity {
         try {
             var entities = slots.stream().map(SlotJsonEntity::fromDomain).toList();
             return objectMapper.writeValueAsString(entities);
-        } catch (IOException _) {
+        } catch (JacksonException _) {
             return "[]";
         }
     }

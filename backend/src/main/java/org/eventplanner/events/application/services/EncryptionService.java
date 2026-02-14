@@ -19,8 +19,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class EncryptionService {
@@ -117,7 +117,7 @@ public class EncryptionService {
         }
     }
 
-    protected @NonNull <T extends Serializable> String toJson(@NonNull T value) throws JsonProcessingException {
+    protected @NonNull <T extends Serializable> String toJson(@NonNull T value) throws JacksonException {
         if (value.getClass().isEnum()
             || value instanceof Short
             || value instanceof Integer
