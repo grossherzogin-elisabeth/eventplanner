@@ -4,6 +4,7 @@
         <h2 class="text-secondary col-span-full font-bold">Email & Telefon</h2>
         <VInputText
             v-model.trim="user.email"
+            data-test-id="email"
             class="col-span-full"
             label="Email"
             required
@@ -14,6 +15,7 @@
         />
         <VInputText
             v-model.trim="user.phone"
+            data-test-id="phone"
             class="col-span-full"
             label="Telefon"
             placeholder="keine Angabe"
@@ -23,6 +25,7 @@
         />
         <VInputText
             v-model.trim="user.phoneWork"
+            data-test-id="phone-work"
             class="col-span-full"
             label="Telefon (dienstlich)"
             placeholder="keine Angabe"
@@ -32,6 +35,7 @@
         />
         <VInputText
             v-model.trim="user.mobile"
+            data-test-id="mobile"
             class="col-span-full"
             label="Mobil"
             placeholder="keine Angabe"
@@ -45,6 +49,7 @@
         <h2 class="text-secondary col-span-full font-bold">Addresse</h2>
         <VInputText
             v-model.trim="user.address.addressLine1"
+            data-test-id="address-line-1"
             class="col-span-full"
             label="Straße, Hausnr"
             required
@@ -55,6 +60,7 @@
         />
         <VInputText
             v-model.trim="user.address.addressLine2"
+            data-test-id="address-line-2"
             class="col-span-full"
             label="Adresszusatz"
             placeholder="keine Angabe"
@@ -64,6 +70,7 @@
         />
         <VInputText
             v-model.trim="user.address.zipcode"
+            data-test-id="address-zipcode"
             class="col-span-full sm:col-span-1"
             label="Postleitzahl"
             required
@@ -74,6 +81,7 @@
         />
         <VInputText
             v-model.trim="user.address.town"
+            data-test-id="address-town"
             class="col-span-full sm:col-span-3"
             label="Ort"
             required
@@ -84,6 +92,7 @@
         />
         <VInputCombobox
             v-model="user.address.country"
+            data-test-id="address-country"
             class="col-span-full"
             label="Land"
             :options="countries.options"

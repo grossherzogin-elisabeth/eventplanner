@@ -6,6 +6,7 @@
         <h2 class="text-secondary col-span-full font-bold">Notfallkontakt</h2>
         <VInputText
             v-model.trim="user.emergencyContact.name"
+            data-test-id="emergency-contact-name"
             class="col-span-full"
             label="Name des Notfallkontakts"
             placeholder="Keine Angabe"
@@ -15,6 +16,7 @@
         />
         <VInputText
             v-model.trim="user.emergencyContact.phone"
+            data-test-id="emergency-contact-phone"
             class="col-span-full"
             label="Telefonnummer des Notfallkontakts"
             placeholder="Keine Angabe"
@@ -32,6 +34,7 @@
         </VInfo>
         <VInputTextArea
             v-model.trim="user.diseases"
+            data-test-id="diseases"
             class="col-span-full"
             label="Krankheiten"
             placeholder="Keine Angabe"
@@ -41,6 +44,7 @@
         />
         <VInputTextArea
             v-model.trim="user.medication"
+            data-test-id="medication"
             class="col-span-full"
             label="Medikamente"
             placeholder="Keine Angabe"
