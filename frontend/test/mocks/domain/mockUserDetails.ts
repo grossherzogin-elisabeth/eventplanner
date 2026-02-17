@@ -13,7 +13,7 @@ export function mockUserDetails(user: User): UserDetails {
         email: user.email ?? 'mocked@email.com',
         positionKeys: user.positionKeys ?? [],
         roles: user.roles ?? [],
-        qualifications: [],
+        qualifications: user.qualifications ?? [],
 
         createdAt: new Date(2026, 1, 14),
         updatedAt: new Date(2024, 11, 1),
