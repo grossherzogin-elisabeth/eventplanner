@@ -31,10 +31,7 @@ describe('EventDetailsSheet.vue', () => {
 
     beforeEach(async () => {
         event = mockEvent();
-        testee = mount(EventDetailsSheet, {
-            props: {},
-            global: { stubs: { teleport: true } },
-        });
+        testee = mount(EventDetailsSheet, { props: {} });
         await usePositions().loading;
     });
 

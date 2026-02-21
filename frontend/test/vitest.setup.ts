@@ -31,6 +31,7 @@ config.global.plugins = [setupI18n({ locale: 'de', fallbackLocale: 'de', availab
 
 config.global.stubs = {
     RouterLink: RouterLinkStub,
+    teleport: true,
 };
 // ---------------------------------------------------------------
 // mock teleport targets

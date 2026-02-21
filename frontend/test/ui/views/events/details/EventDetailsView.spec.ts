@@ -1,8 +1,7 @@
-import { nextTick } from 'vue';
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
+import type { VueWrapper } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
 import type { EventRepresentation, RegistrationRepresentation } from '@/adapter/rest/EventRestRepository';
 import { useAuthUseCase } from '@/application';
@@ -15,7 +14,7 @@ import EventRegistrationDetailsCard from '@/ui/components/events/EventRegistrati
 import { Routes } from '@/ui/views/Routes';
 import EventDetailsView from '@/ui/views/events/details/EventDetailsView.vue';
 import { DECKHAND, mockEventRepresentation, mockRouter, server } from '~/mocks';
-import { find } from '~/utils';
+import { awaitPageContentLoaded, openPageContextMenu } from '~/utils';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({
@@ -43,26 +42,26 @@ describe('EventDetailsView.vue', () => {
         });
 
         it('should render signup button', async () => {
-            await awaitEventLoaded();
+            await awaitPageContentLoaded(testee);
             const primaryBtn = testee.find('.btn-primary');
             expect(primaryBtn.exists()).toBe(true);
             expect(primaryBtn.text()).toContain(testee.vm.$t('views.events.details.sign-up'));
         });
 
         it('should render event details card', async () => {
-            await awaitEventLoaded();
+            await awaitPageContentLoaded(testee);
             const card = testee.findComponent(EventDetailsCard);
             expect(card.exists()).toBe(true);
         });
 
         it('should render event locations card', async () => {
-            await awaitEventLoaded();
+            await awaitPageContentLoaded(testee);
             const card = testee.findComponent(EventLocationsCard);
             expect(card.exists()).toBe(true);
         });
 
         it('should render event participants card', async () => {
-            await awaitEventLoaded();
+            await awaitPageContentLoaded(testee);
             const card = testee.findComponent(EventParticipantsCard);
             expect(card.exists()).toBe(true);
         });
@@ -81,30 +80,30 @@ describe('EventDetailsView.vue', () => {
         });
 
         it('should render leave waiting list button', async () => {
-            await awaitEventLoaded();
+            await awaitPageContentLoaded(testee);
             const primaryBtn = testee.find('.btn-danger');
             expect(primaryBtn.exists()).toBe(true);
             expect(primaryBtn.text()).toContain(testee.vm.$t('views.events.details.leave-waitinglist'));
         });
 
         it('should have calendar entry action', async () => {
-            await awaitEventLoaded();
-            const menu = await findContextMenu();
+            await awaitPageContentLoaded(testee);
+            const menu = await openPageContextMenu(testee);
             const action = menu.find('[data-test-id="action-create-calendar-entry"]');
             expect(action.exists()).toBe(true);
             expect(action.classes()).not.toContain('disabled');
         });
 
         it('should have edit registration action', async () => {
-            await awaitEventLoaded();
-            const menu = await findContextMenu();
+            await awaitPageContentLoaded(testee);
+            const menu = await openPageContextMenu(testee);
             const action = menu.find('[data-test-id="action-edit-registration"]');
             expect(action.exists()).toBe(true);
             expect(action.classes()).not.toContain('disabled');
         });
 
         it('should render registration card', async () => {
-            await awaitEventLoaded();
+            await awaitPageContentLoaded(testee);
             const card = testee.findComponent(EventRegistrationDetailsCard);
             expect(card.exists()).toBe(true);
         });
@@ -131,24 +130,10 @@ describe('EventDetailsView.vue', () => {
         });
 
         it('should render leave crew button', async () => {
-            await awaitEventLoaded();
+            await awaitPageContentLoaded(testee);
             const primaryBtn = testee.find('.btn-danger');
             expect(primaryBtn.exists()).toBe(true);
             expect(primaryBtn.text()).toContain(testee.vm.$t('views.events.details.leave-crew'));
         });
     });
-
-    async function findContextMenu(): Promise<DOMWrapper<Element>> {
-        const triggers = testee.findAll('[data-test-id="menu-trigger"]').filter((trigger) => trigger.isVisible());
-        expect(triggers).toHaveLength(1);
-        await triggers[0].find('button').trigger('click');
-        await nextTick();
-        return find('[data-test-id="context-menu"]');
-    }
-
-    async function awaitEventLoaded(event?: EventRepresentation): Promise<void> {
-        const title = testee.find('[data-test-id="title"]');
-        await expect.poll(() => title.text()).includes(event?.name ?? 'Example Event');
-        await nextTick();
-    }
 });

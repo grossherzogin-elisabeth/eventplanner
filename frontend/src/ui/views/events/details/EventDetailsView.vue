@@ -1,5 +1,5 @@
 <template>
-    <DetailsPage :back-to="{ name: Routes.EventsCalendar }" :class="$attrs.class">
+    <DetailsPage :back-to="{ name: Routes.EventsCalendar }" :class="$attrs.class" :loading="!event">
         <template #header>
             {{ event?.name }}
         </template>

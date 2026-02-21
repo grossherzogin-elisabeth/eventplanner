@@ -1,5 +1,5 @@
 <template>
-    <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class">
+    <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class" :loading="!event">
         <template #header>
             {{ event?.name || $t('generic.loading') }}
         </template>

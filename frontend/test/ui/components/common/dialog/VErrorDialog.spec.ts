@@ -12,9 +12,7 @@ describe('VErrorDialog.vue', () => {
 
     beforeEach(async () => {
         vi.useFakeTimers();
-        testee = mount(VErrorDialog, {
-            global: { stubs: { teleport: true } },
-        });
+        testee = mount(VErrorDialog);
         dialog = testee.getCurrentComponent().exposed as Dialog<ErrorDialogMessage>;
     });
 
