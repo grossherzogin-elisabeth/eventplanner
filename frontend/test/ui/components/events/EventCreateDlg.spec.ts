@@ -28,7 +28,7 @@ describe('EventCreateDlg.vue', () => {
         closed = false;
         createFunc = vi.spyOn(useEventAdministrationUseCase(), 'createEvent');
         useEventCachingService().clear();
-        testee = mount(EventCreateDlg, { global: { stubs: { teleport: true } } });
+        testee = mount(EventCreateDlg);
         await open();
     });
 

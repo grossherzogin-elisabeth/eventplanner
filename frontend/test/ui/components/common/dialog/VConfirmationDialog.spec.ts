@@ -11,9 +11,7 @@ describe('VConfirmationDialog.vue', () => {
 
     beforeEach(async () => {
         vi.useFakeTimers();
-        testee = mount(VConfirmationDialog, {
-            global: { stubs: { teleport: true } },
-        });
+        testee = mount(VConfirmationDialog);
         dialog = testee.getCurrentComponent().exposed as ConfirmationDialog;
     });
 

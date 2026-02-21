@@ -42,10 +42,7 @@ describe('EventLocationsCard.vue', () => {
                 },
             ],
         });
-        testee = mount(EventLocationsCard, {
-            props: { event },
-            global: { stubs: { teleport: true } },
-        });
+        testee = mount(EventLocationsCard, { props: { event } });
     });
 
     it('should render all locations', async () => {

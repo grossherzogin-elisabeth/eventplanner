@@ -42,7 +42,7 @@ describe('EventBatchEditDlg.vue', () => {
         updateFunc = vi.spyOn(useEventAdministrationUseCase(), 'updateEvents');
         eventA = mockEvent({ key: 'a' });
         eventB = mockEvent({ key: 'b' });
-        testee = mount(EventBatchEditDlg, { global: { stubs: { teleport: true } } });
+        testee = mount(EventBatchEditDlg);
         await open([eventA, eventB]);
     });
 
