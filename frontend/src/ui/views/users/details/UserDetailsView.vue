@@ -1,6 +1,6 @@
 <template>
     <div class="xl:overflow-x-hidden xl:overflow-y-auto">
-        <DetailsPage :back-to="{ name: Routes.UsersList }">
+        <DetailsPage :back-to="{ name: Routes.UsersList }" :loading="!user">
             <template #header>
                 <template v-if="!user">{{ $t('generic.loading') }}</template>
                 <template v-else-if="hasPermission(Permission.WRITE_USERS)"> {{ user.firstName }} {{ user.lastName }} bearbeiten </template>
@@ -78,6 +78,7 @@
             <template #secondary-buttons>
                 <button
                     v-if="tab === Tab.USER_EVENTS && hasPermission(Permission.WRITE_USERS)"
+                    data-test-id="button-add-registration"
                     class="btn-secondary"
                     @click="createRegistration()"
                 >
@@ -86,33 +87,46 @@
                 </button>
                 <button
                     v-else-if="tab === Tab.USER_CERTIFICATES && hasPermission(Permission.WRITE_USERS)"
+                    data-test-id="button-add-qualification"
                     class="btn-secondary"
                     @click="addUserQualification()"
                 >
                     <i class="fa-solid fa-file-circle-plus"></i>
                     <span>Qualifikation hinzufügen</span>
                 </button>
-                <a v-else-if="user?.email" class="btn-secondary" :href="`mailto:${user.email}`" target="_blank">
+                <a
+                    v-else-if="user?.email"
+                    data-test-id="button-contact"
+                    class="btn-secondary"
+                    :href="`mailto:${user.email}`"
+                    target="_blank"
+                >
                     <i class="fa-solid fa-envelope"></i>
                     <span>Email schreiben</span>
                 </a>
             </template>
             <template v-if="hasPermission(Permission.WRITE_USERS)" #actions-menu>
-                <li class="context-menu-item" @click="impersonateUser()">
+                <li data-test-id="action-impersonate" class="context-menu-item" @click="impersonateUser()">
                     <i class="fa-solid fa-user-secret" />
                     <span>Impersonate</span>
                 </li>
                 <li>
-                    <a v-if="user?.email" class="context-menu-item" :href="`mailto:${user.email}`" target="_blank">
+                    <a
+                        v-if="user?.email"
+                        data-test-id="action-contact"
+                        class="context-menu-item"
+                        :href="`mailto:${user.email}`"
+                        target="_blank"
+                    >
                         <i class="fa-solid fa-envelope"></i>
                         <span>Email schreiben</span>
                     </a>
                 </li>
-                <li class="context-menu-item" @click="createRegistration()">
+                <li data-test-id="action-add-registration" class="context-menu-item" @click="createRegistration()">
                     <i class="fa-solid fa-user-plus" />
                     <span>Anmeldung hinzufügen</span>
                 </li>
-                <li class="context-menu-item" @click="addUserQualification()">
+                <li data-test-id="action-add-qualification" class="context-menu-item" @click="addUserQualification()">
                     <i class="fa-solid fa-file-circle-plus" />
                     <span>Qualifikation hinzufügen</span>
                 </li>

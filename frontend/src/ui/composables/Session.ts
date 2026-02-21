@@ -7,6 +7,7 @@ export function useSession(): {
     signedInUser: Ref<SignedInUser | undefined>;
     hasPermission(permission: Permission): boolean;
 } {
+    console.log('init useSession');
     const authService = useAuthService();
 
     const signedInUser = ref<SignedInUser | undefined>(authService.getSignedInUser());
