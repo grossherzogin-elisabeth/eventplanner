@@ -94,6 +94,12 @@ describe('UserEventsTable.vue', () => {
         expect(tableRow.html()).toContain('fa-hourglass');
     });
 
+    it('should open event on row click', async () => {
+        const row = testee.findAll('tbody tr')[0];
+        await row.trigger('click');
+        expect(router.push).toHaveBeenCalled();
+    });
+
     describe('Users with permission users:read-details', () => {
         beforeEach(() => {
             setupUserPermissions([Permission.READ_USER_DETAILS]);
@@ -137,6 +143,15 @@ describe('UserEventsTable.vue', () => {
             expect(row.find('[data-test-id="crew-count"]').text()).toContain(1);
             expect(events[1].slots[0].assignedRegistrationKey).toEqual(events[1].registrations[0].key);
             expect(events[1].assignedUserCount).toBe(1);
+        });
+
+        it('should remove user registration', async () => {
+            const row = testee.findAll('tbody tr')[0];
+            const menu = await openTableContextMenu(testee, row);
+            const action = menu.find('[data-test-id="action-delete-registration"]');
+            await action.trigger('click');
+            await wait(1); // ugly (but working) way to make sure all requests are finished before the tests exits
+            expect(testee.findAll('tbody tr').length).toBe(2);
         });
     });
 });
