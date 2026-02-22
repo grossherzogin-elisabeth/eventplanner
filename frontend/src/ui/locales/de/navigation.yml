@@ -8,6 +8,7 @@ navigation:
   allEvents: 'Alle Veranstaltungen'
   manageEvents: 'Veranstaltungen verwalten'
   manageUsers: 'Nutzer verwalten'
+  listUsers: 'Nutzerliste'
   manageSettings: 'Einstellungen'
   account: 'Mein Profil'
   feedback: 'Feedback'

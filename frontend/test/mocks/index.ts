@@ -6,6 +6,7 @@ export * from './api/mockEventRepresentation';
 export * from './api/mockPositionRepresentations';
 export * from './api/mockQualificationRepresentation';
 export * from './api/mockUserRepresentation';
+export * from './api/mockUserDetailsRepresentation';
 export * from './api/setupMockServer';
 
 export * from './domain/mockEvent';

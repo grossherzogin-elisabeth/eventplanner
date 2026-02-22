@@ -9,9 +9,9 @@ export function useQualifications() {
     const qualificationsUseCase = useQualificationsUseCase();
 
     async function update(): Promise<void> {
-        const pos = await qualificationsUseCase.getQualifications();
+        const qualifications = await qualificationsUseCase.getQualifications();
         map.value.clear();
-        pos.forEach((p) => map.value.set(p.key, p));
+        qualifications.forEach((p) => map.value.set(p.key, p));
     }
 
     const options = computed<InputSelectOption<string | undefined>[]>(() => {
@@ -45,7 +45,7 @@ export function useQualifications() {
         );
     }
 
-    update();
+    const loading = update();
 
-    return { map, options, optionsIncludingNone, get, update, all };
+    return { map, options, optionsIncludingNone, get, update, all, loading };
 }

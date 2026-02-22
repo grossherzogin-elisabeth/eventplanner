@@ -12,23 +12,23 @@
             </td>
             <td class="w-1/3 min-w-48">
                 <div class="flex items-center justify-end" @click="toggleRole(item.role)">
-                    <div v-if="item.enabled" class="status-badge success">
+                    <div v-if="item.enabled" class="status-badge success" data-test-id="status-assigned">
                         <i class="fa-solid fa-check-circle"></i>
                         <span>zugewiesen</span>
                     </div>
-                    <div v-else class="status-badge neutral">
+                    <div v-else class="status-badge neutral" data-test-id="status-not-assigned">
                         <i class="fa-solid fa-xmark-circle"></i>
                         <span>nicht zugewiesen</span>
                     </div>
                 </div>
             </td>
         </template>
-        <template #context-menu="{ item }">
-            <li v-if="!item.enabled" class="context-menu-item" @click="toggleRole(item.role)">
+        <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
+            <li v-if="!item.enabled" class="context-menu-item" data-test-id="action-add-role" @click="toggleRole(item.role)">
                 <i class="fa-solid fa-plus" />
                 <span>Rolle hinzufügen</span>
             </li>
-            <li v-else class="context-menu-item text-error" @click="toggleRole(item.role)">
+            <li v-else class="context-menu-item text-error" data-test-id="action-remove-role" @click="toggleRole(item.role)">
                 <i class="fa-solid fa-xmark" />
                 <span>Rolle entfernen</span>
             </li>
@@ -39,8 +39,9 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { UserDetails } from '@/domain';
-import { Role } from '@/domain';
+import { Permission, Role } from '@/domain';
 import { VTable } from '@/ui/components/common';
+import { useSession } from '@/ui/composables/Session.ts';
 
 interface Props {
     modelValue: UserDetails;
@@ -60,6 +61,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
 const { t } = useI18n();
+const { hasPermission } = useSession();
 
 const roles = ref<RoleTableEntry[]>([
     {
