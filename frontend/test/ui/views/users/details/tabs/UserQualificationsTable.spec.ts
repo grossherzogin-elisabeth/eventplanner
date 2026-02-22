@@ -1,6 +1,5 @@
-import { nextTick } from 'vue';
 import type { Router } from 'vue-router';
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { UserDetails } from '@/domain';
@@ -8,7 +7,7 @@ import { Permission } from '@/domain';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import UserQualificationsTable from '@/ui/views/users/details/tabs/UserQualificationsTable.vue';
 import { mockRouter, mockUserCaptain, mockUserDetails } from '~/mocks';
-import { setupUserPermissions } from '~/utils';
+import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({
@@ -21,10 +20,10 @@ describe('UserQualificationsTable.vue', () => {
 
     beforeEach(async () => {
         user = mockUserDetails(mockUserCaptain());
+        await useQualifications().loading;
         testee = mount(UserQualificationsTable, {
             props: { modelValue: user },
         });
-        await nextTick();
     });
 
     it('should render all qualifications', async () => {
@@ -69,12 +68,38 @@ describe('UserQualificationsTable.vue', () => {
     });
 
     describe('users with permission users:write', () => {
-        beforeAll(() => {
+        beforeEach(() => {
             setupUserPermissions([Permission.READ_USER_DETAILS, Permission.WRITE_USERS]);
         });
 
         it('should render context menu', async () => {
             expect(testee.find('[data-test-id="table-context-menu-trigger"]').exists()).toBe(true);
+        });
+
+        it('should render context menu actions', async () => {
+            const menu = await openTableContextMenu(testee, 0);
+            expect(menu.find('[data-test-id="action-edit-qualification"]').exists()).toBe(true);
+            expect(menu.find('[data-test-id="action-delete-qualification"]').exists()).toBe(true);
+        });
+
+        it('should remove qualification', async () => {
+            const qualificationCount = testee.findAll('tbody tr').length;
+            const menu = await openTableContextMenu(testee, 0);
+            const action = menu.find('[data-test-id="action-delete-qualification"]');
+            await action.trigger('click');
+            expect(testee.findAll('tbody tr').length).toBe(qualificationCount - 1);
+        });
+
+        it('should open edit dialog', async () => {
+            const menu = await openTableContextMenu(testee, 0);
+            const action = menu.find('[data-test-id="action-edit-qualification"]');
+            await action.trigger('click');
+            const dialog = testee.find('[data-test-id="user-qualification-dialog"]');
+            expect(dialog.exists()).toBe(true);
+            expect(dialog.isVisible()).toBe(true);
+            // error-prone, as this relies on the first input to contain the qualification name
+            // better way would be to select the specific input element by data-test-id
+            expect(dialog.find('input').element.value).toEqual('Captain');
         });
     });
 });

@@ -57,11 +57,12 @@ describe('UserEventsTable.vue', () => {
         for (const event of events) {
             await eventCachingService.updateCache(event);
         }
-        await usePositions().loading;
 
         testee = mount(UserEventsTable, {
             props: { user, events },
         });
+
+        await usePositions().loading;
     });
 
     it('should render all events', async () => {
@@ -148,12 +149,12 @@ describe('UserEventsTable.vue', () => {
         });
 
         it('should remove user registration', async () => {
-            const row = testee.findAll('tbody tr')[0];
-            const menu = await openTableContextMenu(testee, row);
+            const eventCount = testee.findAll('tbody tr').length;
+            const menu = await openTableContextMenu(testee, 0);
             const action = menu.find('[data-test-id="action-delete-registration"]');
             await action.trigger('click');
             await wait(1); // ugly (but working) way to make sure all requests are finished before the test exits
-            expect(testee.findAll('tbody tr').length).toBe(2);
+            expect(testee.findAll('tbody tr').length).toBe(eventCount - 1);
         });
     });
 });

@@ -59,11 +59,11 @@
             </td>
         </template>
         <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
-            <li class="context-menu-item" @click="editUserQualification(item)">
+            <li class="context-menu-item" data-test-id="action-edit-qualification" @click="editUserQualification(item)">
                 <i class="fa-solid fa-edit" />
                 <span>Qualification bearbeiten</span>
             </li>
-            <li class="context-menu-item text-error" @click="deleteUserQualification(item)">
+            <li class="context-menu-item text-error" data-test-id="action-delete-qualification" @click="deleteUserQualification(item)">
                 <i class="fa-solid fa-trash-alt" />
                 <span>Qualifikation entfernen</span>
             </li>
