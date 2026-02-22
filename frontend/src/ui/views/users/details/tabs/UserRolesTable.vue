@@ -39,8 +39,7 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { UserDetails } from '@/domain';
-import { Permission } from '@/domain';
-import { Role } from '@/domain';
+import { Permission, Role } from '@/domain';
 import { VTable } from '@/ui/components/common';
 import { useSession } from '@/ui/composables/Session.ts';
 
