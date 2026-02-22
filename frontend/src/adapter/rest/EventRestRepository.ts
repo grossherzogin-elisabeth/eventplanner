@@ -77,7 +77,7 @@ interface EventUpdateRequest {
     registrationsToUpdate?: RegistrationUpdateRequest[];
 }
 
-interface OptimizeEventSlotsRequest {
+export interface OptimizeEventSlotsRequest {
     slots: SlotRepresentation[];
     registrations: RegistrationRepresentation[];
 }

@@ -98,7 +98,7 @@
             max-width="20rem"
             @close="dropdownAnchor = null"
         >
-            <div class="bg-surface-container-high mt-2 rounded-xl p-4 shadow-xl">
+            <div class="bg-surface-container-high mt-2 rounded-xl p-4 shadow-xl" data-test-id="table-context-menu">
                 <ul>
                     <template v-if="props.multiselection">
                         <li v-if="dropdownItem.selected" class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
