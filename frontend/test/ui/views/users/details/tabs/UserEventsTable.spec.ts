@@ -52,14 +52,16 @@ describe('UserEventsTable.vue', () => {
                 locations: mockLocations(),
             }),
         ];
+        // make sure our cache is up to date
         const eventCachingService = useEventCachingService();
         for (const event of events) {
             await eventCachingService.updateCache(event);
         }
+        await usePositions().loading;
+
         testee = mount(UserEventsTable, {
             props: { user, events },
         });
-        await usePositions().loading;
     });
 
     it('should render all events', async () => {
@@ -139,7 +141,7 @@ describe('UserEventsTable.vue', () => {
             const menu = await openTableContextMenu(testee, row);
             const action = menu.find('[data-test-id="action-add-to-crew"]');
             await action.trigger('click');
-            await wait(1); // ugly (but working) way to make sure all requests are finished before the tests exits
+            await wait(1); // ugly (but working) way to make sure all requests are finished before the test exits
             expect(row.find('[data-test-id="crew-count"]').text()).toContain(1);
             expect(events[1].slots[0].assignedRegistrationKey).toEqual(events[1].registrations[0].key);
             expect(events[1].assignedUserCount).toBe(1);
@@ -150,7 +152,7 @@ describe('UserEventsTable.vue', () => {
             const menu = await openTableContextMenu(testee, row);
             const action = menu.find('[data-test-id="action-delete-registration"]');
             await action.trigger('click');
-            await wait(1); // ugly (but working) way to make sure all requests are finished before the tests exits
+            await wait(1); // ugly (but working) way to make sure all requests are finished before the test exits
             expect(testee.findAll('tbody tr').length).toBe(2);
         });
     });
