@@ -5,13 +5,11 @@ import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
 import type { UserDetailsRepresentation } from '@/adapter/rest/UserRestRepository.ts';
-import type { AuthService } from '@/application';
-import { useAuthService } from '@/application';
 import { Permission } from '@/domain';
 import { Routes } from '@/ui/views/Routes.ts';
 import UserDetailsView from '@/ui/views/users/details/UserDetailsView.vue';
-import { mockRouter, mockSignedInUser, mockUserDetailsRepresentation, server } from '~/mocks';
-import { awaitPageContentLoaded, getTabs, openPageContextMenu } from '~/utils';
+import { mockRouter, mockUserDetailsRepresentation, server } from '~/mocks';
+import { awaitPageContentLoaded, getTabs, openPageContextMenu, setupUserPermissions } from '~/utils';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({
@@ -21,12 +19,9 @@ vi.mock('vue-router', () => ({
 
 describe('UserDetailsView.vue', () => {
     let testee: VueWrapper;
-    let authService: AuthService;
     let user: UserDetailsRepresentation;
 
     beforeEach(async () => {
-        authService = useAuthService();
-        authService.setSignedInUser(mockSignedInUser());
         user = mockUserDetailsRepresentation();
         await router.push({ name: Routes.UserDetails, params: { key: user.key } });
         server.use(http.get(`/api/v1/users/${user.key}`, () => HttpResponse.json(user)));
@@ -42,9 +37,7 @@ describe('UserDetailsView.vue', () => {
 
     describe('users with permission users:read-details', () => {
         beforeEach(() => {
-            const signedInUser = mockSignedInUser();
-            signedInUser.permissions.push(Permission.READ_USER_DETAILS);
-            authService.setSignedInUser(signedInUser);
+            setupUserPermissions([Permission.READ_USER_DETAILS]);
         });
 
         it('should not render user roles tab', async () => {
@@ -76,9 +69,7 @@ describe('UserDetailsView.vue', () => {
 
     describe('users with permission users:write', () => {
         beforeEach(() => {
-            const signedInUser = mockSignedInUser();
-            signedInUser.permissions.push(Permission.READ_USER_DETAILS, Permission.WRITE_USERS);
-            authService.setSignedInUser(signedInUser);
+            setupUserPermissions([Permission.READ_USER_DETAILS, Permission.WRITE_USERS]);
         });
 
         it('should render user roles tab', async () => {

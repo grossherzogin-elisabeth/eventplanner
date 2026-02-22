@@ -3,13 +3,12 @@ import type { Router } from 'vue-router';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import type { AuthService } from '@/application';
-import { useAuthService } from '@/application';
-import type { SignedInUser, UserDetails } from '@/domain';
+import type { UserDetails } from '@/domain';
 import { Permission } from '@/domain';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import UserQualificationsTable from '@/ui/views/users/details/tabs/UserQualificationsTable.vue';
-import { mockRouter, mockSignedInUser, mockUserCaptain, mockUserDetails } from '~/mocks';
+import { mockRouter, mockUserCaptain, mockUserDetails } from '~/mocks';
+import { setupUserPermissions } from '~/utils';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({
@@ -17,13 +16,10 @@ vi.mock('vue-router', () => ({
 }));
 
 describe('UserQualificationsTable.vue', () => {
-    const authService: AuthService = useAuthService();
     let testee: VueWrapper;
-    let signedInUser: SignedInUser;
     let user: UserDetails;
 
     beforeEach(async () => {
-        authService.setSignedInUser(signedInUser);
         user = mockUserDetails(mockUserCaptain());
         testee = mount(UserQualificationsTable, {
             props: { modelValue: user },
@@ -63,10 +59,8 @@ describe('UserQualificationsTable.vue', () => {
     });
 
     describe('users with permission users:read-details', () => {
-        beforeAll(() => {
-            signedInUser = mockSignedInUser();
-            signedInUser.permissions.push(Permission.READ_USER_DETAILS);
-            authService.setSignedInUser(signedInUser);
+        beforeEach(() => {
+            setupUserPermissions([Permission.READ_USER_DETAILS]);
         });
 
         it('should not render context menu', async () => {
@@ -76,9 +70,7 @@ describe('UserQualificationsTable.vue', () => {
 
     describe('users with permission users:write', () => {
         beforeAll(() => {
-            signedInUser = mockSignedInUser();
-            signedInUser.permissions.push(Permission.WRITE_USERS);
-            authService.setSignedInUser(signedInUser);
+            setupUserPermissions([Permission.READ_USER_DETAILS, Permission.WRITE_USERS]);
         });
 
         it('should render context menu', async () => {
