@@ -23,6 +23,7 @@ describe('UserQualificationsTable.vue', () => {
         await useQualifications().loading;
         testee = mount(UserQualificationsTable, {
             props: { modelValue: user },
+            global: { plugins: [router] },
         });
     });
 
