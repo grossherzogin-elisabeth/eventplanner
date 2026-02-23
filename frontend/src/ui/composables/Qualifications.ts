@@ -1,9 +1,18 @@
-import { computed, ref } from 'vue';
+import { type ComputedRef, type Ref, computed, ref } from 'vue';
 import { useQualificationsUseCase } from '@/application';
 import type { InputSelectOption, Qualification, QualificationKey } from '@/domain';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useQualifications() {
+export interface UseQualifications {
+    map: Ref<Map<QualificationKey, Qualification>>;
+    options: ComputedRef<InputSelectOption<QualificationKey | undefined>[]>;
+    optionsIncludingNone: ComputedRef<InputSelectOption<QualificationKey | undefined>[]>;
+    get(qualificationKey: QualificationKey): Qualification;
+    update(): Promise<void>;
+    all: ComputedRef<Qualification[]>;
+    loading: Promise<void>;
+}
+
+export function useQualifications(): UseQualifications {
     const map = ref<Map<QualificationKey, Qualification>>(new Map<QualificationKey, Qualification>());
 
     const qualificationsUseCase = useQualificationsUseCase();
