@@ -32,9 +32,9 @@ import { useI18n } from 'vue-i18n';
 import { useUsersUseCase } from '@/application';
 import type { InputSelectOption, UserDetails, UserSettings } from '@/domain';
 import { VTabs } from '@/ui/components/common';
-import AccountDataTab from '@/ui/views/account/AccountDataTab.vue';
-import UserSettingsTab from '@/ui/views/account/UserSettingsTab.vue';
-import UserQualificationsTab from './UserQualificationsTab.vue';
+import AccountDataTab from '@/ui/views/account/tabs/AccountDataTab.vue';
+import UserSettingsTab from '@/ui/views/account/tabs/UserSettingsTab.vue';
+import UserQualificationsTab from './tabs/UserQualificationsTab.vue';
 
 enum Tab {
     PERSONAL_DATA = 'data',
