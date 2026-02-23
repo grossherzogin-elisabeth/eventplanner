@@ -2,7 +2,7 @@ import type { User, UserDetails } from '@/domain';
 
 export function mockUserDetails(user: User): UserDetails {
     return {
-        gender: undefined,
+        gender: 'd',
         key: user.key,
         authKey: user.key, // keep them equal for easier debugging
         title: 'Dr',
@@ -33,12 +33,12 @@ export function mockUserDetails(user: User): UserDetails {
             country: 'DE',
         },
         mobile: '+49 123 12345',
-        phone: '+49 123 12345',
-        phoneWork: '+49 123 12345',
+        phone: '+49 123 12346',
+        phoneWork: '+49 123 12347',
 
         emergencyContact: {
-            phone: '',
-            name: '',
+            phone: '+49 123 12348',
+            name: 'Emilia Emergency',
         },
         diseases: 'mock disease',
         medication: 'mock meds',
