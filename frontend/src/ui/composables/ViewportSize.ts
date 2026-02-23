@@ -1,7 +1,12 @@
+import type { Ref } from 'vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useViewportSize() {
+export interface UseViewportSize {
+    width: Ref<number>;
+    height: Ref<number>;
+}
+
+export function useViewportSize(): UseViewportSize {
     const width = ref<number>(0);
     const height = ref<number>(0);
 

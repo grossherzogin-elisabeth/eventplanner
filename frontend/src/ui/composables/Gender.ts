@@ -1,8 +1,12 @@
 import { useI18n } from 'vue-i18n';
 import type { InputSelectOption } from '@/domain';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useGender() {
+export interface UseGender {
+    options: InputSelectOption<string>[];
+    getName(locale: string): string;
+}
+
+export function useGender(): UseGender {
     const { t } = useI18n();
 
     const options: InputSelectOption<string>[] = ['m', 'f', 'd'].map((it) => ({
