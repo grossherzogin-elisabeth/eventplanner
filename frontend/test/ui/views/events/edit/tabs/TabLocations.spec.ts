@@ -31,7 +31,7 @@ describe('TabLocations.vue', () => {
             props: {
                 event,
                 // simulate a reactive prop passed as v-model:event
-                'onUpdate:event': (e) => testee.setProps({ event: e }),
+                'onUpdate:event': (e: Event) => testee.setProps({ event: e }),
             },
             global: { plugins: [router] },
         });
