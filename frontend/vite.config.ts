@@ -34,19 +34,14 @@ const pwa = VitePWA({
     },
 });
 
+// Be really careful adjusting manual chunking, as this can break a production build while still working fine in the
+// dev preview. Always build a local docker image and run the container locally when doing changes here.
 const chunks = {
-    'src/ui/components': 'components',
-    'src/ui/views': 'views',
-    'src/application': 'app',
-    'src/domain': 'app',
-    'src/common': 'app',
-    'src/adapter': 'app',
-    '@fortawesome/fontawesome-free/js/brands': 'icons-brands',
-    '@fortawesome/fontawesome-free/js/regular': 'icons-regular',
-    '@fortawesome/fontawesome-free/js/solid': 'icons-solid',
-    '@fortawesome': 'icons',
-    'vue': 'framework',
-    'node_modules': 'vendor', // should stay last in the list
+    'src/': 'app', // put all app code in a single chunk, so the full app is loaded initially
+    '@fortawesome/fontawesome-free/js/brands': 'fontawesome-brands',
+    '@fortawesome/fontawesome-free/js/regular': 'fontawesome-regular',
+    '@fortawesome/fontawesome-free/js/solid': 'fontawesome-solid',
+    'node_modules': 'vendor',
 };
 
 // https://vitejs.dev/config/
