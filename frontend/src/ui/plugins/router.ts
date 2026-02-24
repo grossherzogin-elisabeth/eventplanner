@@ -77,7 +77,7 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
         // authentication and authorization guard
         if (meta?.authenticated) {
             try {
-                const user = await authUseCase.authenticate();
+                const user = await authUseCase.authenticate(true);
                 if (meta?.permissions && !hasAnyOverlap(meta.permissions, user.permissions)) {
                     console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
                     next({ path: '/' });
