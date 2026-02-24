@@ -93,35 +93,41 @@ const { hasPermission } = useSession();
 const editLocationDialog = ref<Dialog<Location, Location | undefined> | null>(null);
 
 async function editLocation(location: Location): Promise<void> {
-    if (!hasPermission(Permission.WRITE_EVENT_DETAILS)) {
-        console.warn('User has no permission to edit event details');
-        return;
-    }
-    const editedLocation = await editLocationDialog.value?.open(location);
-    if (editedLocation) {
-        const updatedEvent = eventService.updateLocation(deepCopy(props.event), editedLocation);
-        emit('update:event', updatedEvent);
+    if (hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+        const editedLocation = await editLocationDialog.value?.open(location);
+        if (editedLocation) {
+            const updatedEvent = eventService.updateLocation(deepCopy(props.event), editedLocation);
+            emit('update:event', updatedEvent);
+        }
     }
 }
 
 async function moveLocationUp(location: Location): Promise<void> {
-    const updatedEvent = eventService.moveLocation(deepCopy(props.event), location, -1);
-    emit('update:event', updatedEvent);
+    if (hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+        const updatedEvent = eventService.moveLocation(deepCopy(props.event), location, -1);
+        emit('update:event', updatedEvent);
+    }
 }
 
 async function moveLocationDown(location: Location): Promise<void> {
-    const updatedEvent = eventService.moveLocation(deepCopy(props.event), location, 1);
-    emit('update:event', updatedEvent);
+    if (hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+        const updatedEvent = eventService.moveLocation(deepCopy(props.event), location, 1);
+        emit('update:event', updatedEvent);
+    }
 }
 
 async function updateOrders(): Promise<void> {
-    const updatedEvent = deepCopy(props.event);
-    updatedEvent.locations.forEach((location, index) => (location.order = index + 1));
-    emit('update:event', updatedEvent);
+    if (hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+        const updatedEvent = deepCopy(props.event);
+        updatedEvent.locations.forEach((location, index) => (location.order = index + 1));
+        emit('update:event', updatedEvent);
+    }
 }
 
 function deleteLocation(location: Location): void {
-    const updatedEvent = eventService.removeLocation(deepCopy(props.event), location);
-    emit('update:event', updatedEvent);
+    if (hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+        const updatedEvent = eventService.removeLocation(deepCopy(props.event), location);
+        emit('update:event', updatedEvent);
+    }
 }
 </script>

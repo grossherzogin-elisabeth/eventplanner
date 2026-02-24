@@ -35,17 +35,17 @@
 <script lang="ts" setup>
 import type { AppSettings } from '@/domain';
 import { VInteractiveList } from '@/ui/components/common';
-import MenuTitleCard from './components/MenuTitleCard.vue';
-import SupportEmailCard from './components/SupportEmailCard.vue';
-import TabTitleCard from './components/TabTitleCard.vue';
-import TechSupportEmailCard from './components/TechSupportEmailCard.vue';
-import ThemeColorCard from './components/ThemeColorCard.vue';
+import MenuTitleCard from '../components/MenuTitleCard.vue';
+import SupportEmailCard from '../components/SupportEmailCard.vue';
+import TabTitleCard from '../components/TabTitleCard.vue';
+import TechSupportEmailCard from '../components/TechSupportEmailCard.vue';
+import ThemeColorCard from '../components/ThemeColorCard.vue';
 
 interface Props {
     modelValue: AppSettings;
 }
 
-type Emits = (e: 'update:modelValue', user: AppSettings) => void;
+type Emits = (e: 'update:modelValue', settings: AppSettings) => void;
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();

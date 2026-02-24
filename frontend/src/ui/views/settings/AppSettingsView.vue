@@ -38,10 +38,10 @@ import type { AppSettings } from '@/domain';
 import { VTabs } from '@/ui/components/common';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useQuery } from '@/ui/composables/QueryState.ts';
-import TabNotifications from './TabNotifications.vue';
-import TabPositions from './TabPositions.vue';
-import TabQualifications from './TabQualifications.vue';
-import TabUi from './TabUi.vue';
+import TabNotifications from './tabs/TabNotifications.vue';
+import TabPositions from './tabs/TabPositions.vue';
+import TabQualifications from './tabs/TabQualifications.vue';
+import TabUi from './tabs/TabUi.vue';
 
 enum Tab {
     GENERAL_SETTINGS = 'general',

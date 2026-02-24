@@ -61,8 +61,8 @@ import type { Event, PositionKey, Registration, ResolvedRegistrationSlot, Slot }
 import { EventSignupType, RegistrationSlotState, SlotCriticality, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
-import { usePositions } from '@/ui/composables/Positions';
-import { useQuery } from '@/ui/composables/QueryState';
+import { usePositions } from '@/ui/composables/Positions.ts';
+import { useQuery } from '@/ui/composables/QueryState.ts';
 import RegistrationEditDlg from '@/ui/views/events/edit/components/RegistrationEditDlg.vue';
 import RegistrationsTable from '@/ui/views/events/edit/components/RegistrationsTable.vue';
 import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';

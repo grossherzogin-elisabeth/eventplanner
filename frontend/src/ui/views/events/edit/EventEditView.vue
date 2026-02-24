@@ -194,14 +194,14 @@ import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
-import TabEventDetailsForm from '@/ui/views/events/edit/TabEventDetailsForm.vue';
-import TabRegistrations from '@/ui/views/events/edit/TabRegistrations.vue';
+import TabEventDetailsForm from '@/ui/views/events/edit/tabs/TabEventDetailsForm.vue';
+import TabRegistrations from '@/ui/views/events/edit/tabs/TabRegistrations.vue';
 import VWarning from '../../../components/common/alerts/VWarning.vue';
-import TabCrewEditor from './TabCrewEditor.vue';
-import TabLocations from './TabLocations.vue';
-import TabSlots from './TabSlots.vue';
 import LocationEditDlg from './components/LocationEditDlg.vue';
 import SlotEditDlg from './components/SlotEditDlg.vue';
+import TabCrewEditor from './tabs/TabCrewEditor.vue';
+import TabLocations from './tabs/TabLocations.vue';
+import TabSlots from './tabs/TabSlots.vue';
 
 enum Tab {
     EVENT_DATA = 'data',

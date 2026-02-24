@@ -7,9 +7,9 @@ import type { AuthService } from '@/application';
 import { useAuthService, usePositionAdministrationUseCase } from '@/application';
 import { Permission } from '@/domain';
 import { VConfirmationDialog } from '@/ui/components/common';
-import { Routes } from '@/ui/views/Routes';
-import TabPositions from '@/ui/views/settings/TabPositions.vue';
+import { Routes } from '@/ui/views/Routes.ts';
 import PositionDetailsDlg from '@/ui/views/settings/components/PositionDetailsDlg.vue';
+import TabPositions from '@/ui/views/settings/tabs/TabPositions.vue';
 import { mockPositions, mockRouter, mockSignedInUser } from '~/mocks';
 
 const router = mockRouter();
