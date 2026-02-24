@@ -42,7 +42,7 @@ describe('TabPositions.vue', () => {
     describe('users with permission positions:read', () => {
         beforeEach(async () => {
             authService.setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_POSITIONS] }));
-            testee = mount(TabPositions, { global: { plugins: [router], stubs: { teleport: true } } });
+            testee = mount(TabPositions, { global: { plugins: [router] } });
         });
 
         it('should show all positions', async () => {
@@ -71,7 +71,7 @@ describe('TabPositions.vue', () => {
         beforeEach(async () => {
             const signedInUser = mockSignedInUser({ permissions: [Permission.READ_POSITIONS, Permission.WRITE_POSITIONS] });
             authService.setSignedInUser(signedInUser);
-            testee = mount(TabPositions, { global: { plugins: [router], stubs: { teleport: true } } });
+            testee = mount(TabPositions, { global: { plugins: [router] } });
         });
 
         it('should open delete confirm dialog', async () => {

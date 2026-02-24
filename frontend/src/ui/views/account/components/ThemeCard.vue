@@ -2,15 +2,18 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-paint-brush"
+        dialog-type="modal"
         :label="$t('views.account.app-settings.theme')"
         direct
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.theme">
+            <p v-if="props.modelValue.theme" class="truncate">
                 {{ $t(`generic.theme.${props.modelValue.theme}`) }}
-            </span>
-            <span v-else> {{ $t('generic.theme.system') }} </span>
+            </p>
+            <p v-else class="truncate">
+                {{ $t('generic.theme.system') }}
+            </p>
         </template>
         <template #edit="{ value }">
             <VInputSelectionList v-model="value.theme" :options="options" />

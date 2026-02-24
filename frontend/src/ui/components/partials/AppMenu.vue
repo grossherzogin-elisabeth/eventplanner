@@ -86,7 +86,8 @@
             <li v-if="hasPermission(Permission.READ_USER_DETAILS)" class="menu-item" data-test-id="menu-item-user-list">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
-                    <span>{{ $t('navigation.manageUsers') }}</span>
+                    <span v-if="hasPermission(Permission.WRITE_USERS)">{{ $t('navigation.manageUsers') }}</span>
+                    <span v-else>{{ $t('navigation.listUsers') }}</span>
                 </RouterLink>
             </li>
             <li v-if="hasPermission(Permission.WRITE_SETTINGS)" class="menu-item" data-test-id="menu-item-admin-settings">
@@ -156,10 +157,12 @@ const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(),
 const eventsExpanded = ref<boolean>(false);
 
 function init(): void {
-    authUseCase.authenticate();
-    authUseCase.onAuthenticationDone().then(() => (loading.value = false));
+    authUseCase
+        .authenticate()
+        .then(() => (loading.value = false))
+        .catch(() => (loading.value = false));
     watch(route, () => {
-        eventRouteActive.value = route.matched.find((it) => it.name === 'app_event-parent') !== undefined;
+        eventRouteActive.value = route.matched.some((it) => it.name === 'app_event-parent');
         if (route.name === Routes.EventsCalendar) {
             eventRoute.value = Routes.EventsCalendar + ':' + route.params.year;
         } else if (route.name === Routes.EventsListAdmin) {

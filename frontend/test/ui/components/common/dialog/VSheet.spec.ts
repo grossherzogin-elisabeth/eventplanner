@@ -11,10 +11,8 @@ describe('VSheet', () => {
 
     beforeEach(async () => {
         vi.useFakeTimers();
-        closed = false;
         testee = mount(VSheet, {
             props: { animationDuration: 0 },
-            global: { stubs: { teleport: true } },
             slots: {
                 title: '<div data-test-id="test-title">test sheet title</div>',
                 content: '<div data-test-id="test-content">test sheet content</div>',

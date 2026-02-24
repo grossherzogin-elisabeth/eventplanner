@@ -1,5 +1,8 @@
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest';
 import { RouterLinkStub, config } from '@vue/test-utils';
+import { resetAdapters } from '@/adapter';
+import { resetApplicationServices, resetUseCases } from '@/application';
+import { resetDomainServices } from '@/domain';
 import { setupI18n } from '@/ui/plugins/i18n';
 import { server } from '~/mocks';
 
@@ -9,6 +12,10 @@ import { server } from '~/mocks';
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
+    resetAdapters();
+    resetApplicationServices();
+    resetUseCases();
+    resetDomainServices();
     vi.clearAllMocks();
     localStorage.clear();
     sessionStorage.clear();
@@ -24,6 +31,7 @@ config.global.plugins = [setupI18n({ locale: 'de', fallbackLocale: 'de', availab
 
 config.global.stubs = {
     RouterLink: RouterLinkStub,
+    teleport: true,
 };
 // ---------------------------------------------------------------
 // mock teleport targets
@@ -42,7 +50,6 @@ beforeEach(() => {
 afterEach(() => (document.body.innerHTML = ''));
 
 process.on('unhandledRejection', (reason) => {
-    console.error('Got an unhandled promise rejection');
-    console.error(reason);
+    console.error('Uncaught promise rejection:', reason);
     throw reason;
 });

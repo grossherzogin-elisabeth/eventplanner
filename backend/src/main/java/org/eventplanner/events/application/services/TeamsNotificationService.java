@@ -37,10 +37,13 @@ public class TeamsNotificationService implements NotificationDispatcher {
             try {
                 var uri = URI.create(teamsUrl);
                 switch (notification.type()) {
-                    case NotificationType.USER_DATA_CHANGED -> createTeamsAlert(uri, notification);
-                    case NotificationType.CREW_REGISTRATION_CANCELED -> createTeamsAlert(uri, notification);
-                    case NotificationType.CREW_REGISTRATION_ADDED -> createTeamsAlert(uri, notification);
+                    case NotificationType.USER_DATA_CHANGED, NotificationType.CREW_REGISTRATION_CANCELED,
+                         NotificationType.CREW_REGISTRATION_ADDED -> createTeamsAlert(uri, notification);
+                    default -> log.debug("Skipping teams notification for {} notification", notification.type());
                 }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("Thread was interrupted while creating MS Teams alert for {} notification", notification.type(), e);
             } catch (Exception e) {
                 log.error("Failed to create MS Teams alert for {} notification", notification.type(), e);
             }

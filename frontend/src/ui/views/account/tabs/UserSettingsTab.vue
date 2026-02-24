@@ -15,9 +15,9 @@
 </template>
 <script lang="ts" setup>
 import type { UserDetails, UserSettings } from '@/domain';
-import VInteractiveList from '@/ui/components/common/list/VInteractiveList.vue';
 import PreferredPositionCard from '@/ui/views/account/components/PreferredPositionCard.vue';
 import ThemeCard from '@/ui/views/account/components/ThemeCard.vue';
+import VInteractiveList from '../../../components/common/list/VInteractiveList.vue';
 
 interface Props {
     modelValue: UserSettings;

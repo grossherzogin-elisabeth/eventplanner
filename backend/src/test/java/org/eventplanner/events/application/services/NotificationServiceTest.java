@@ -57,7 +57,7 @@ class NotificationServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionOnMissingProps() throws Exception {
+    void shouldThrowExceptionOnMissingProps() {
         assertThrows(
             TemplateException.class,
             () -> testee.renderContent(NotificationType.ADDED_TO_WAITING_LIST, new HashMap<>())

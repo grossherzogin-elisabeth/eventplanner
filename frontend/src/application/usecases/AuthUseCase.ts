@@ -1,5 +1,5 @@
 import type { AccountRepository, UserRepository } from '@/application/ports';
-import type { AuthService, ConfigService } from '@/application/services';
+import type { AuthService, ConfigService, NotificationService } from '@/application/services';
 import type { SignedInUser, UserKey } from '@/domain';
 import { Permission } from '@/domain';
 
@@ -8,43 +8,73 @@ export class AuthUseCase {
     private readonly authService: AuthService;
     private readonly accountRepository: AccountRepository;
     private readonly userRepository: UserRepository;
+    private readonly notificationService: NotificationService;
+    private authorizedAt: Date | undefined;
 
     constructor(params: {
         configService: ConfigService;
         authService: AuthService;
         accountRepository: AccountRepository;
         userRepository: UserRepository;
+        notificationService: NotificationService;
     }) {
         this.configService = params.configService;
         this.authService = params.authService;
         this.accountRepository = params.accountRepository;
         this.userRepository = params.userRepository;
+        this.notificationService = params.notificationService;
     }
 
-    public getPendingRedirect(): string | undefined {
-        return localStorage.getItem('auth.redirect') || undefined;
-    }
-
-    public clearPendingRedirect(): void {
-        localStorage.removeItem('auth.redirect');
-    }
-
-    public async authenticate(redirectPath?: string): Promise<SignedInUser | undefined> {
-        const user = this.authService.getSignedInUser() || (await this.accountRepository.getAccount());
-        this.authService.setSignedInUser(user);
-        if (!user && redirectPath) {
-            localStorage.setItem('auth.redirect', redirectPath);
+    public async authenticate(): Promise<SignedInUser> {
+        let signedInUser = this.authService.getSignedInUser();
+        if (signedInUser) {
+            // do this only once, or depending on time since last auth?
+            if (!this.authorizedAt) {
+                this.authorizedAt = new Date();
+                // lazy refresh asynchronously in background
+                this.fetchSignedInUser();
+            }
+            return this.impersonate(signedInUser);
         }
 
+        signedInUser = await this.fetchSignedInUser();
+        if (!signedInUser) {
+            throw new Error('Unable to authenticate user');
+        }
+        return this.impersonate(signedInUser);
+    }
+
+    private async impersonate(signedInUser: SignedInUser): Promise<SignedInUser> {
         const overrideSignedInUserKey = this.configService.getConfig().overrideSignedInUserKey;
-        if (user && overrideSignedInUserKey && user.permissions.includes(Permission.READ_USER_DETAILS)) {
+        if (signedInUser && overrideSignedInUserKey && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)) {
             const impersonatedUser = await this.userRepository.findByKey(overrideSignedInUserKey);
             if (impersonatedUser) {
                 this.authService.impersonate(impersonatedUser);
             }
         }
+        return signedInUser;
+    }
 
-        return user;
+    private async fetchSignedInUser(): Promise<SignedInUser | undefined> {
+        try {
+            const signedInUser: SignedInUser = await this.accountRepository.getAccount();
+            this.authService.setSignedInUser(signedInUser);
+            console.log(`👋 Hello ${signedInUser.firstName}`);
+            return signedInUser;
+        } catch (e: unknown) {
+            const status = (e as { status?: number }).status;
+            if (status === undefined || status === 502 || status === 503 || status === 500) {
+                this.authService.setOffline();
+                console.warn('App is running in offline mode');
+                this.notificationService.warning('Du bis offline. Manche Funktionen sind nicht verfügbar.');
+                // user is probably offline, or server is not available
+                // continue with stored session when possible
+                return undefined;
+            } else {
+                this.authService.setSignedInUser(undefined);
+            }
+            throw e;
+        }
     }
 
     public async login(): Promise<void> {
@@ -64,27 +94,15 @@ export class AuthUseCase {
         } else {
             localStorage.removeItem('eventplanner.overrideSignedInUserKey');
         }
-        window.location.reload();
-    }
-
-    public isLoggedIn(): boolean | null {
-        return this.authService.getSignedInUser() !== undefined;
+        globalThis.location.reload();
     }
 
     public getSignedInUser(): SignedInUser {
-        return (
-            this.authService.getSignedInUser() || {
-                key: '',
-                gender: '',
-                lastName: '',
-                firstName: '',
-                email: '',
-                roles: [],
-                permissions: [],
-                impersonated: false,
-                positions: [],
-            }
-        );
+        const signedInUser = this.authService.getSignedInUser();
+        if (!signedInUser) {
+            throw new Error('authentication required');
+        }
+        return signedInUser;
     }
 
     public async onAuthenticationDone(): Promise<boolean> {
@@ -95,7 +113,6 @@ export class AuthUseCase {
         return new Promise((resolve) => {
             // only use this callback once to resolve the promise
             const removeListener = this.authService.onChange(() => {
-                console.log('hello');
                 resolve(false);
                 removeListener();
             });

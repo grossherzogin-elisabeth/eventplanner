@@ -9,6 +9,7 @@ generic:
   optional: 'optional'
   please-select: 'Bitte auswählen'
   filter-entries: 'Einträge filtern'
+  add: 'Hinzufügen'
   cancel: 'Abbrechen'
   save: 'Speichern'
   edit: 'Bearbeiten'

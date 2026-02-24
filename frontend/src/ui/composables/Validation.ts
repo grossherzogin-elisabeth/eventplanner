@@ -1,10 +1,16 @@
 import type { ComputedRef, Ref } from 'vue';
-import { watchEffect } from 'vue';
-import { toValue } from 'vue';
-import { computed, ref } from 'vue';
+import { computed, ref, toValue, watchEffect } from 'vue';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunction: (t: T) => Record<string, string[]>) {
+export interface UseValidation {
+    errors: Ref<Record<string, string[]>>;
+    isValid: Ref<boolean>;
+    showErrors: Ref<boolean>;
+    disableSubmit: ComputedRef<boolean>;
+    validate(): void;
+    reset(): void;
+}
+
+export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunction: (t: T) => Record<string, string[]>): UseValidation {
     const showErrors = ref<boolean>(false);
     const errors = ref<Record<string, string[]>>({});
     const isValid = ref<boolean>(true);

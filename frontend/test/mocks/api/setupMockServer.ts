@@ -3,7 +3,7 @@ import { HttpResponse, http } from 'msw';
 import type { SetupServerApi } from 'msw/node';
 import { setupServer } from 'msw/node';
 import type { AccountRepresentation } from '@/adapter/rest/AccountRestRepository';
-import type { EventRepresentation } from '@/adapter/rest/EventRestRepository.ts';
+import type { EventRepresentation, OptimizeEventSlotsRequest, SlotRepresentation } from '@/adapter/rest/EventRestRepository.ts';
 import type { PositionRepresentation } from '@/adapter/rest/PositionRestRepository.ts';
 import type { QualificationRepresentation } from '@/adapter/rest/QualificationRestRepository.ts';
 import type { UiSettingsRepresentation } from '@/adapter/rest/SettingsRestRepository';
@@ -91,11 +91,19 @@ export function mockEventDetailsRequests(events?: EventRepresentation[], status:
 }
 
 export function mockEventUpdate(response?: EventRepresentation, status: number = 200): RequestHandler {
-    return http.patch<{ key: string }, EventRepresentation>('/api/v1/events/:key', async ({ request, params }) => {
+    return http.patch<{ key: string }, Partial<EventRepresentation>>('/api/v1/events/:key', async ({ request, params }) => {
         const patch = await request.clone().json();
+        // the update is simplified a lot, as the actual update requests does not look exactly like the response
         const patched = response ?? mockEventRepresentation(patch);
         patched.key = params.key;
         return HttpResponse.json(patched, { status });
+    });
+}
+
+export function mockSlotOptimization(response?: SlotRepresentation[], status: number = 200): RequestHandler {
+    return http.post<{ key: string }, OptimizeEventSlotsRequest>('/api/v1/events/:key/optimized-slots', async ({ request }) => {
+        const body = await request.clone().json();
+        return HttpResponse.json(response ?? body.slots, { status });
     });
 }
 
@@ -129,8 +137,9 @@ export function setupDefaultMockServer(): SetupServerApi {
         mockEventTemplatesRequest(),
         mockEventListRequest(),
         mockEventDetailsRequests(),
-        mockEventUpdate(),
-        mockEventCreate()
+        mockEventCreate(),
+        mockSlotOptimization(),
+        mockEventUpdate()
     );
 }
 

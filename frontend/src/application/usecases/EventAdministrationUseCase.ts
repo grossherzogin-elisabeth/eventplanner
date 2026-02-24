@@ -94,7 +94,7 @@ export class EventAdministrationUseCase {
                 title: 'Speichern fehlgeschlagen',
                 message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
                 wiederholt auftreten, melde ihn gerne.`,
-                error: e,
+                error: e instanceof Error || e instanceof Response ? e : undefined,
                 retry: () => this.updateEvents(eventKeys, patch),
             });
             throw e;
@@ -111,7 +111,7 @@ export class EventAdministrationUseCase {
                 title: 'Speichern fehlgeschlagen',
                 message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
                 wiederholt auftreten, melde ihn gerne.`,
-                error: e,
+                error: e instanceof Error || e instanceof Response ? e : undefined,
                 retry: () => this.updateEvent(eventKey, event),
             });
             throw e;
@@ -154,7 +154,7 @@ export class EventAdministrationUseCase {
     }
 
     public async createEvent(event: Event): Promise<Event> {
-        console.log('Creating event');
+        console.log('📡 Creating event');
         try {
             let savedEvent = await this.eventRepository.createEvent(event);
             savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());
@@ -187,9 +187,9 @@ export class EventAdministrationUseCase {
         try {
             let eventsToUpdate = events;
             if (registration.userKey) {
-                eventsToUpdate = eventsToUpdate.filter((it) => !it.registrations.find((it) => it.userKey === registration.userKey));
+                eventsToUpdate = eventsToUpdate.filter((it) => !it.registrations.some((it) => it.userKey === registration.userKey));
             } else if (registration.name) {
-                eventsToUpdate = eventsToUpdate.filter((it) => it.registrations.find((it) => it.name === registration.name));
+                eventsToUpdate = eventsToUpdate.filter((it) => it.registrations.some((it) => it.name === registration.name));
             }
             if (eventsToUpdate.length === 0) {
                 this.notificationService.warning('Keine neue Anmeldung hinzugefügt');
@@ -224,7 +224,7 @@ export class EventAdministrationUseCase {
         if (!slot) {
             throw new Error('Failed to resolve slot');
         }
-        if (!slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey))) {
+        if (!slot.positionKeys.some((positionkey) => user.positionKeys?.includes(positionkey))) {
             console.warn(`Assigning ${user.firstName} ${user.lastName} to slot with mismatching positions!`);
             // throw new Error('User does not have the required position');
         }

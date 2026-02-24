@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuthService } from '@/application';
+import { resetApplicationServices } from '@/application';
 import { useAuthService } from '@/application';
 import { mockSignedInUser, mockUserDetails, mockUserMate } from '~/mocks';
 
@@ -17,6 +18,14 @@ describe('AuthService', () => {
     it('should return the signed in user', () => {
         const user = mockSignedInUser();
         testee.setSignedInUser(user);
+        expect(testee.getSignedInUser()).toEqual(user);
+    });
+
+    it('should load signed in user from local storage', () => {
+        const user = mockSignedInUser();
+        localStorage.setItem('user', JSON.stringify(user));
+        resetApplicationServices();
+        const testee = useAuthService();
         expect(testee.getSignedInUser()).toEqual(user);
     });
 

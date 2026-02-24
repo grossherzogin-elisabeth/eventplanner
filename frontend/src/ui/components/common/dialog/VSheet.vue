@@ -39,7 +39,9 @@
                                 </div>
                                 <div class="flex h-16 w-0 grow items-center overflow-hidden font-bold">
                                     <div class="truncate">
-                                        <slot name="title" />
+                                        <slot name="title">
+                                            {{ props.title }}
+                                        </slot>
                                     </div>
                                 </div>
                                 <div class="-mr-4 hidden sm:block">
@@ -68,12 +70,12 @@
 
 <script lang="ts" setup generic="T, E">
 import type { Ref } from 'vue';
-import { onUnmounted } from 'vue';
-import { nextTick, ref } from 'vue';
+import { nextTick, onUnmounted, ref } from 'vue';
 import { disableScrolling, enableScrolling } from '@/common';
 import type { Sheet } from '@/ui/components/common';
 
 interface Props {
+    title?: string;
     showBackButton?: boolean;
     dataTestId?: string;
     animationDuration?: number;
@@ -147,7 +149,7 @@ async function open(): Promise<T | undefined> {
     background.value?.scrollTo({ top: 400 });
     sheetOpening.value = false;
     emit('opened');
-    window.addEventListener('cancel', close, { once: true });
+    globalThis.addEventListener('cancel', close, { once: true });
 
     // this promise is resolved, when the dialog is closed
     return new Promise<T | undefined>((resolve, reject) => {

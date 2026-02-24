@@ -11,15 +11,15 @@ interface SavedRouteState {
 }
 
 let isBackNavigation = false;
-window.addEventListener('popstate', () => (isBackNavigation = true));
-window.history.pushState = new Proxy(window.history.pushState, {
+globalThis.addEventListener('popstate', () => (isBackNavigation = true));
+globalThis.history.pushState = new Proxy(globalThis.history.pushState, {
     apply: (target, thisArg, argArray: never): unknown => {
         isBackNavigation = false;
         return target.apply(thisArg, argArray);
     },
 });
 
-export function saveScrollPosition(path: string = window.location.pathname): void {
+export function saveScrollPosition(path: string = globalThis.location.pathname): void {
     try {
         const state: SavedRouteState = JSON.parse(sessionStorage.getItem(path) || '{}');
         const routerView = document.getElementById('router-view');
@@ -31,7 +31,7 @@ export function saveScrollPosition(path: string = window.location.pathname): voi
     }
 }
 
-export function restoreScrollPosition(path: string = window.location.pathname): void {
+export function restoreScrollPosition(path: string = globalThis.location.pathname): void {
     if (isBackNavigation) {
         try {
             const state = JSON.parse(sessionStorage.getItem(path) || '{}');
@@ -67,25 +67,27 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
     router.beforeResolve(async (to, _, next) => {
         const meta = to.meta as RouteMetaData | undefined;
         // if there is a pending redirect from pre login, restore the wanted page first
-        const redirect = authUseCase.getPendingRedirect();
+        const redirect = localStorage.getItem('login-redirect');
         if (redirect && to.fullPath === '/') {
-            authUseCase.clearPendingRedirect();
+            localStorage.removeItem('login-redirect');
             next({ path: redirect });
             return;
         }
 
-        // authentication guard
+        // authentication and authorization guard
         if (meta?.authenticated) {
-            const user = await authUseCase.authenticate(to.fullPath);
-            if (!user) {
+            try {
+                const user = await authUseCase.authenticate();
+                if (meta?.permissions && !hasAnyOverlap(meta.permissions, user.permissions)) {
+                    console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
+                    next({ path: '/' });
+                    return;
+                }
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (e) {
                 console.warn(`🛤️ Login required for route '${String(to.name)}'!`);
+                localStorage.setItem('login-redirect', to.fullPath);
                 next({ path: '/login' });
-                return;
-            }
-            // permission guard
-            if (meta?.permissions && !hasAnyOverlap(meta.permissions, user.permissions)) {
-                console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
-                next({ path: '/' });
                 return;
             }
         }
@@ -100,7 +102,7 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
         ) {
             // load the target page with a page reload
             // this error occurs when we redeploy and a page hash changes while a user is on the page
-            window.location.href = to.fullPath;
+            globalThis.location.href = to.fullPath;
         }
     });
 

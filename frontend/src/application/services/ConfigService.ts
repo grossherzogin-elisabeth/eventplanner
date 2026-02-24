@@ -22,8 +22,17 @@ export class ConfigService {
     constructor(params: { settingsRepository: SettingsRepository }) {
         this.settingsRepository = params.settingsRepository;
         this.config = defaultConfig;
-        this.getCachedConfig();
-        this.fetchConfig();
+        this.initialize();
+    }
+
+    private async initialize(): Promise<void> {
+        this.loadStoredConfig();
+        try {
+            await this.fetchConfig();
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
+            console.warn('Failed to fetch config, continuing with local data');
+        }
     }
 
     public getConfig(): Config {
@@ -32,31 +41,27 @@ export class ConfigService {
 
     private async fetchConfig(): Promise<void> {
         console.log('📡 Fetching config');
-        try {
-            const serverConfig = await this.settingsRepository.readConfig();
-            if (serverConfig.menuTitle) {
-                this.config.menuTitle = serverConfig.menuTitle;
-            }
-            if (serverConfig.tabTitle) {
-                this.config.tabTitle = serverConfig.tabTitle;
-            }
-            if (serverConfig.supportEmail) {
-                this.config.supportEmail = serverConfig.supportEmail;
-            }
-            if (serverConfig.technicalSupportEmail) {
-                this.config.technicalSupportEmail = serverConfig.technicalSupportEmail;
-            }
-            this.cacheConfig(this.config);
-        } catch (e) {
-            console.error('Failed to load server config', e);
+        const serverConfig = await this.settingsRepository.readConfig();
+        if (serverConfig.menuTitle) {
+            this.config.menuTitle = serverConfig.menuTitle;
         }
+        if (serverConfig.tabTitle) {
+            this.config.tabTitle = serverConfig.tabTitle;
+        }
+        if (serverConfig.supportEmail) {
+            this.config.supportEmail = serverConfig.supportEmail;
+        }
+        if (serverConfig.technicalSupportEmail) {
+            this.config.technicalSupportEmail = serverConfig.technicalSupportEmail;
+        }
+        this.storeConfig(this.config);
     }
 
-    private cacheConfig(config: Config): void {
+    private storeConfig(config: Config): void {
         localStorage.setItem('config', JSON.stringify(config));
     }
 
-    private getCachedConfig(): void {
+    private loadStoredConfig(): void {
         try {
             const cached = JSON.parse(localStorage.getItem('config') ?? '{}');
             if (cached.menuTitle) {
@@ -72,7 +77,7 @@ export class ConfigService {
                 this.config.technicalSupportEmail = cached.technicalSupportEmail;
             }
         } catch (e) {
-            console.error('Failed to load cached config', e);
+            console.error('Failed to load stored config', e);
         }
     }
 }

@@ -25,6 +25,9 @@ describe('EventBatchEditDlg.vue', () => {
 
     beforeAll(() => {
         vi.useFakeTimers();
+    });
+
+    beforeEach(() => {
         server.use(http.get('/api/v1/events', () => HttpResponse.json([eventA, eventB], { status: 200 })));
         server.use(http.get('/api/v1/events/a', () => HttpResponse.json(eventA, { status: 200 })));
         server.use(http.get('/api/v1/events/b', () => HttpResponse.json(eventB, { status: 200 })));
@@ -39,7 +42,7 @@ describe('EventBatchEditDlg.vue', () => {
         updateFunc = vi.spyOn(useEventAdministrationUseCase(), 'updateEvents');
         eventA = mockEvent({ key: 'a' });
         eventB = mockEvent({ key: 'b' });
-        testee = mount(EventBatchEditDlg, { global: { stubs: { teleport: true } } });
+        testee = mount(EventBatchEditDlg);
         await open([eventA, eventB]);
     });
 

@@ -1,6 +1,6 @@
 import type { AccountRepository } from '@/application';
 import { wait } from '@/common';
-import type { Permission, PositionKey, Role, SignedInUser } from '@/domain';
+import type { Permission, Role, SignedInUser } from '@/domain';
 
 export interface AccountRepresentation {
     key: string;
@@ -14,30 +14,25 @@ export interface AccountRepresentation {
 }
 
 export class AccountRestRepository implements AccountRepository {
-    public async getAccount(): Promise<SignedInUser | undefined> {
-        try {
-            const response = await fetch('/api/v1/account', { credentials: 'include' });
-            if (!response.ok) {
-                return undefined;
-            }
-            const account = (await response.clone().json()) as AccountRepresentation;
-            return this.mapAccountToSignedInUser(account);
-        } catch (e) {
-            console.error(e);
-            return undefined;
+    public async getAccount(): Promise<SignedInUser> {
+        const response = await fetch('/api/v1/account', { credentials: 'include' });
+        if (!response.ok) {
+            throw response;
         }
+        const account = (await response.clone().json()) as AccountRepresentation;
+        return this.mapAccountToSignedInUser(account);
     }
 
     public async login(redirectTo?: string): Promise<void> {
         if (redirectTo) {
             localStorage.setItem('auth.redirect', redirectTo);
         }
-        window.location.href = `/auth/login/default`;
+        globalThis.location.href = `/auth/login/default`;
         await wait(500);
     }
 
     public async logout(): Promise<void> {
-        window.location.href = `/auth/logout`;
+        globalThis.location.href = `/auth/logout`;
         await wait(500);
     }
 
@@ -50,7 +45,7 @@ export class AccountRestRepository implements AccountRepository {
             email: user.email,
             roles: user.roles as Role[],
             permissions: user.permissions as Permission[],
-            positions: user.positions as PositionKey[],
+            positions: user.positions,
             impersonated: false,
         };
     }

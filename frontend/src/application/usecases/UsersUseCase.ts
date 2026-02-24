@@ -39,7 +39,7 @@ export class UsersUseCase {
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
 
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.applyUserSettings());
+        globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.applyUserSettings());
     }
 
     public async getUserDetailsForSignedInUser(): Promise<UserDetails> {
@@ -153,7 +153,7 @@ export class UsersUseCase {
 
     public async applyUserSettings(settings?: UserSettings): Promise<void> {
         const loadedSettings = settings ?? (await this.getUserSettings());
-        const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const prefersDarkMode = globalThis.matchMedia && globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
         if (loadedSettings.theme === Theme.Dark || (loadedSettings.theme === Theme.System && prefersDarkMode)) {
             document.querySelector('html')?.classList.add('dark');
         } else if (loadedSettings.theme === Theme.Light || (loadedSettings.theme === Theme.System && !prefersDarkMode)) {

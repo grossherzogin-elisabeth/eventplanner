@@ -183,10 +183,10 @@ async function open(partialEvent?: Partial<Event>): Promise<Event | undefined> {
     event.value.state = partialEvent?.state || EventState.Draft;
     event.value.type = partialEvent?.type || event.value.type || EventType.WeekendEvent;
 
-    const start = cropToPrecision(new Date(partialEvent?.start?.getTime() || new Date().getTime()), 'days');
+    const start = cropToPrecision(new Date(partialEvent?.start?.getTime() || Date.now()), 'days');
     start.setHours(16);
     event.value.start = start;
-    const end = cropToPrecision(new Date(partialEvent?.end?.getTime() || new Date().getTime()), 'days');
+    const end = cropToPrecision(new Date(partialEvent?.end?.getTime() || Date.now()), 'days');
     end.setHours(18);
     event.value.end = end;
 

@@ -26,7 +26,7 @@ describe('TabUi.vue', () => {
                 'modelValue': settings,
                 'onUpdate:modelValue': (e) => (emitted = e),
             },
-            global: { plugins: [router], stubs: { teleport: true } },
+            global: { plugins: [router] },
         });
     });
 

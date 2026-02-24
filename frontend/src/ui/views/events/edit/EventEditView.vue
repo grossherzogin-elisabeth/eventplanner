@@ -1,5 +1,5 @@
 <template>
-    <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class">
+    <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class" :loading="!event">
         <template #header>
             {{ event?.name || $t('generic.loading') }}
         </template>
@@ -185,7 +185,7 @@ import { useEventAdministrationUseCase, useEventUseCase, useUserAdministrationUs
 import { deepCopy, diff, filterUndefined } from '@/common';
 import type { Event, InputSelectOption, Location, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
 import { EventSignupType, EventState, Permission } from '@/domain';
-import { useEventService } from '@/domain/services.ts';
+import { useEventService } from '@/domain/services';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VInfo, VTabs } from '@/ui/components/common';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';

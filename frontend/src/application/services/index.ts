@@ -46,6 +46,18 @@ let positionCachingService: PositionCachingService | undefined;
 let qualificationCachingService: QualificationCachingService | undefined;
 let userCachingService: UserCachingService | undefined;
 
+export function resetApplicationServices(): void {
+    configService = undefined;
+    errorHandlingService = undefined;
+    notificationService = undefined;
+    authService = undefined;
+    calendarService = undefined;
+    eventCachingService = undefined;
+    positionCachingService = undefined;
+    qualificationCachingService = undefined;
+    userCachingService = undefined;
+}
+
 export function useConfigService(): ConfigService {
     if (!configService) {
         console.log('🚀 Initializing ConfigService');

@@ -54,6 +54,19 @@ let qualificationAdministrationUseCase: QualificationAdministrationUseCase | und
 let positionUseCase: PositionUseCase | undefined;
 let positionAdministrationUseCase: PositionAdministrationUseCase | undefined;
 
+export function resetUseCases(): void {
+    authUseCase = undefined;
+    eventUseCase = undefined;
+    eventAdministrationUseCase = undefined;
+    usersUseCase = undefined;
+    userAdministrationUseCase = undefined;
+    appSettingsUseCase = undefined;
+    qualificationUseCase = undefined;
+    qualificationAdministrationUseCase = undefined;
+    positionUseCase = undefined;
+    positionAdministrationUseCase = undefined;
+}
+
 export function useAuthUseCase(): AuthUseCase {
     if (!authUseCase) {
         console.log('🚀 Initializing AuthUseCase');
@@ -62,6 +75,7 @@ export function useAuthUseCase(): AuthUseCase {
             authService: useAuthService(),
             accountRepository: useAccountRepository(),
             userRepository: useUserRepository(),
+            notificationService: useNotificationService(),
         });
     }
     return authUseCase;

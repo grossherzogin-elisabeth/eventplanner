@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -67,6 +68,16 @@ public class GlobalExceptionHandlingController {
             request.getRequestURI(),
             exception.getMessage()
         );
+        var body = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
+        body.setInstance(URI.create(request.getRequestURI()));
+        return ResponseEntity.status(body.getStatus()).body(body);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public @NonNull ResponseEntity<ProblemDetail> handleRequestMethodNotSupportedException(
+        @NonNull final HttpRequestMethodNotSupportedException exception,
+        @NonNull final HttpServletRequest request
+    ) {
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
         body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(body.getStatus()).body(body);

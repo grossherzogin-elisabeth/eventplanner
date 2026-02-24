@@ -1,17 +1,24 @@
 <template>
     <div class="xl:overflow-x-hidden xl:overflow-y-auto">
-        <DetailsPage :back-to="{ name: Routes.UsersList }">
-            <template #header> {{ user?.firstName }} {{ user?.lastName }} bearbeiten </template>
+        <DetailsPage :back-to="{ name: Routes.UsersList }" :loading="!user">
+            <template #header>
+                <template v-if="!user">{{ $t('generic.loading') }}</template>
+                <template v-else-if="hasPermission(Permission.WRITE_USERS)"> {{ user.firstName }} {{ user.lastName }} bearbeiten </template>
+                <template v-else>Nutzerdetails {{ user.firstName }} {{ user.lastName }} </template>
+            </template>
             <template #content>
                 <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-20 xl:pt-8">
                     <template #[Tab.USER_DATA]>
-                        <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />
-                        </div>
-                    </template>
-                    <template #[Tab.USER_CONTACT_DATA]>
-                        <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserContactForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                        <div class="flex flex-col-reverse justify-between gap-8 lg:flex-row xl:max-w-5xl">
+                            <div class="w-full max-w-2xl">
+                                <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                                <UserContactForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                                <UserEmergencyForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                                <UserOtherForm v-if="user" v-model="user" :errors="validation.errors.value" />
+                            </div>
+                            <div class="relative hidden lg:block">
+                                <SiteNavigation v-if="user" class="sticky top-48 w-64" />
+                            </div>
                         </div>
                     </template>
                     <template #[Tab.USER_EVENTS]>
@@ -56,16 +63,6 @@
                             </div>
                         </div>
                     </template>
-                    <template #[Tab.USER_EMERGENCY]>
-                        <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserEmergencyForm v-if="user" v-model="user" :errors="validation.errors.value" />
-                        </div>
-                    </template>
-                    <template #[Tab.USER_OTHER]>
-                        <div class="max-w-2xl space-y-8 xl:space-y-16">
-                            <UserOtherForm v-if="user" v-model="user" :errors="validation.errors.value" />
-                        </div>
-                    </template>
                 </VTabs>
             </template>
             <template v-if="hasPermission(Permission.WRITE_USERS)" #primary-button>
@@ -79,16 +76,27 @@
                 </AsyncButton>
             </template>
             <template #secondary-buttons>
-                <button v-if="tab === Tab.USER_EVENTS" class="btn-secondary" @click="createRegistration()">
+                <button
+                    v-if="tab === Tab.USER_EVENTS && hasPermission(Permission.WRITE_USERS)"
+                    data-test-id="button-add-registration"
+                    class="btn-secondary"
+                    @click="createRegistration()"
+                >
                     <i class="fa-solid fa-user-plus"></i>
                     <span>Anmeldung hinzufügen</span>
                 </button>
-                <button v-else-if="tab === Tab.USER_CERTIFICATES" class="btn-secondary" @click="addUserQualification()">
+                <button
+                    v-else-if="tab === Tab.USER_CERTIFICATES && hasPermission(Permission.WRITE_USERS)"
+                    data-test-id="button-add-qualification"
+                    class="btn-secondary"
+                    @click="addUserQualification()"
+                >
                     <i class="fa-solid fa-file-circle-plus"></i>
                     <span>Qualifikation hinzufügen</span>
                 </button>
                 <a
-                    v-else-if="tab === Tab.USER_CONTACT_DATA && user?.email"
+                    v-else-if="user?.email"
+                    data-test-id="button-contact"
                     class="btn-secondary"
                     :href="`mailto:${user.email}`"
                     target="_blank"
@@ -97,30 +105,36 @@
                     <span>Email schreiben</span>
                 </a>
             </template>
-            <template #actions-menu>
-                <li class="context-menu-item" @click="impersonateUser()">
+            <template v-if="hasPermission(Permission.WRITE_USERS)" #actions-menu>
+                <li data-test-id="action-impersonate" class="context-menu-item" @click="impersonateUser()">
                     <i class="fa-solid fa-user-secret" />
                     <span>Impersonate</span>
                 </li>
                 <li>
-                    <a v-if="user?.email" class="context-menu-item" :href="`mailto:${user.email}`" target="_blank">
+                    <a
+                        v-if="user?.email"
+                        data-test-id="action-contact"
+                        class="context-menu-item"
+                        :href="`mailto:${user.email}`"
+                        target="_blank"
+                    >
                         <i class="fa-solid fa-envelope"></i>
                         <span>Email schreiben</span>
                     </a>
                 </li>
-                <li class="context-menu-item" @click="createRegistration()">
+                <li data-test-id="action-add-registration" class="context-menu-item" @click="createRegistration()">
                     <i class="fa-solid fa-user-plus" />
                     <span>Anmeldung hinzufügen</span>
                 </li>
-                <li class="context-menu-item" @click="addUserQualification()">
+                <li data-test-id="action-add-qualification" class="context-menu-item" @click="addUserQualification()">
                     <i class="fa-solid fa-file-circle-plus" />
                     <span>Qualifikation hinzufügen</span>
                 </li>
             </template>
         </DetailsPage>
-        <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
-        <UserQualificationDetailsDlg ref="addUserQualificationDialog" />
-        <VConfirmationDialog ref="confirmDialog" />
+        <CreateRegistrationForUserDlg v-if="hasPermission(Permission.WRITE_USERS)" ref="createRegistrationForUserDialog" />
+        <UserQualificationDetailsDlg v-if="hasPermission(Permission.WRITE_USERS)" ref="addUserQualificationDialog" />
+        <VConfirmationDialog v-if="hasPermission(Permission.WRITE_USERS)" ref="confirmDialog" />
     </div>
 </template>
 <script lang="ts" setup>
@@ -134,18 +148,19 @@ import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VTabs } from '@/ui/components/common';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
+import SiteNavigation from '@/ui/components/partials/SiteNavigation.vue';
 import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
-import UserEmergencyForm from '@/ui/views/users/details/UserEmergencyForm.vue';
-import UserOtherForm from '@/ui/views/users/details/UserOtherForm.vue';
-import UserContactForm from './UserContactForm.vue';
-import UserDataForm from './UserDataForm.vue';
-import UserEventsTable from './UserEventsTable.vue';
-import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';
-import UserQualificationsTable from './UserQualificationsTable.vue';
-import UserRolesTable from './UserRolesTable.vue';
+import UserEmergencyForm from '@/ui/views/users/details/tabs/UserEmergencyForm.vue';
+import UserOtherForm from '@/ui/views/users/details/tabs/UserOtherForm.vue';
+import UserQualificationDetailsDlg from './components/UserQualificationDetailsDlg.vue';
+import UserContactForm from './tabs/UserContactForm.vue';
+import UserDataForm from './tabs/UserDataForm.vue';
+import UserEventsTable from './tabs/UserEventsTable.vue';
+import UserQualificationsTable from './tabs/UserQualificationsTable.vue';
+import UserRolesTable from './tabs/UserRolesTable.vue';
 
 enum Tab {
     USER_DATA = 'data',
@@ -170,19 +185,7 @@ const authUseCase = useAuthUseCase();
 const errorHandlingUseCase = useErrorHandlingService();
 const { hasPermission } = useSession();
 
-const tabs = [
-    Tab.USER_EVENTS,
-    Tab.USER_CERTIFICATES,
-    Tab.USER_DATA,
-    Tab.USER_CONTACT_DATA,
-    Tab.USER_EMERGENCY,
-    Tab.USER_OTHER,
-    Tab.USER_ROLES,
-].map((it) => ({
-    value: it,
-    label: t(`views.users.details.tab.${it}`),
-}));
-const tab = ref<Tab>(Tab.USER_EVENTS);
+const tab = ref<Tab>(Tab.USER_DATA);
 const userOriginal = ref<UserDetails | null>(null);
 const user = ref<UserDetails | null>(null);
 const hasChanges = ref<boolean>(false);
@@ -195,6 +198,17 @@ const addUserQualificationDialog = ref<Dialog<void, UserQualification | undefine
 const confirmDialog = ref<ConfirmationDialog | null>(null);
 
 const userKey = computed<string>(() => (route.params.key as string) || '');
+
+const tabs = computed<{ value: Tab; label: string }[]>(() => {
+    const result = [Tab.USER_DATA, Tab.USER_EVENTS, Tab.USER_CERTIFICATES];
+    if (hasPermission(Permission.WRITE_USERS)) {
+        result.push(Tab.USER_ROLES);
+    }
+    return result.map((it) => ({
+        value: it,
+        label: t(`views.users.details.tab.${it}`),
+    }));
+});
 
 function init(): void {
     fetchUser();
@@ -279,7 +293,7 @@ async function save(): Promise<void> {
                 title: 'Speichern fehlgeschlagen',
                 message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
                     wiederholt auftreten, melde ihn gerne.`,
-                error: e,
+                error: e instanceof Error || e instanceof Response ? e : undefined,
                 retry: () => save(),
             });
             throw e;

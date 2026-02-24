@@ -59,7 +59,7 @@ class SecretRotationUseCaseTest {
 
         new SecretRotationUseCase(userRepository, defaultObjectMapper(), "true", "old", "new");
         verify(userRepository).findAll();
-        verify(userRepository).update(argThat((updated) ->
+        verify(userRepository).update(argThat(updated ->
             updated.getKey().equals(user.getKey()) && !updated.equals(user)));
     }
 

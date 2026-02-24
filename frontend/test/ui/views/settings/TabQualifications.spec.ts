@@ -40,7 +40,7 @@ describe('TabQualifications.vue', () => {
     describe('users with permission qualifications:read', () => {
         beforeEach(async () => {
             useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_QUALIFICATIONS] }));
-            testee = mount(TabQualifications, { global: { plugins: [router], stubs: { teleport: true } } });
+            testee = mount(TabQualifications, { global: { plugins: [router] } });
         });
 
         it('should show all qualifications', async () => {
@@ -108,7 +108,7 @@ describe('TabQualifications.vue', () => {
             useAuthService().setSignedInUser(
                 mockSignedInUser({ permissions: [Permission.READ_QUALIFICATIONS, Permission.WRITE_QUALIFICATIONS] })
             );
-            testee = mount(TabQualifications, { global: { plugins: [router], stubs: { teleport: true } } });
+            testee = mount(TabQualifications, { global: { plugins: [router] } });
         });
 
         it('should open delete confirm dialog', async () => {

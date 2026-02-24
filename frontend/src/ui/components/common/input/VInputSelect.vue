@@ -119,8 +119,8 @@ const visibleOptions: ComputedRef<InputSelectOption<T>[]> = computed(() =>
 function onFocus(): void {
     // clear the text selection on this input on focus
     // default behavior is to select all text when navigating with tab
-    if (window.getSelection) {
-        const selection = window.getSelection();
+    if (globalThis.getSelection) {
+        const selection = globalThis.getSelection();
         if (selection && selection.empty) {
             // Chrome
             selection.empty();

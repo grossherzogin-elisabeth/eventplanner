@@ -45,7 +45,7 @@
 import { computed } from 'vue';
 import { DateTimeFormat } from '@/common/date';
 import type { ResolvedUserQualification, UserDetails } from '@/domain';
-import { useUserService } from '@/domain/services.ts';
+import { useUserService } from '@/domain/services';
 import { VTable } from '@/ui/components/common';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 

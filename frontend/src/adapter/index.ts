@@ -36,6 +36,18 @@ enum StoreNames {
     Qualifications = 'qualifications',
 }
 
+export function resetAdapters(): void {
+    accountRepository = undefined;
+    eventRegistrationsRepository = undefined;
+    eventRepository = undefined;
+    positionRepository = undefined;
+    qualificationRepository = undefined;
+    settingsRepository = undefined;
+    userRepository = undefined;
+    indexedDb = undefined;
+    caches.clear();
+}
+
 export function useAccountRepository(): AccountRepository {
     if (!accountRepository) {
         console.log('🚀 Initializing AccountRestRepository');

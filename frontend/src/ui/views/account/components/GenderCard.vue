@@ -2,14 +2,17 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-venus-mars"
+        dialog-type="modal"
         :label="$t('domain.user.gender')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.gender">
+            <p v-if="props.modelValue.gender" class="truncate">
                 {{ gender.getName(props.modelValue.gender) }}
-            </span>
-            <span v-else> {{ $t('generic.no-information') }} </span>
+            </p>
+            <p v-else class="truncate italic">
+                {{ $t('generic.no-information') }}
+            </p>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">{{ $t('views.account.personal.gender-description') }}</p>

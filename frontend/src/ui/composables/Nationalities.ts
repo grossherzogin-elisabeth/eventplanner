@@ -2,11 +2,15 @@ import type { InputSelectOption } from '@/domain';
 import nationalities from 'i18n-nationality';
 import de from 'i18n-nationality/langs/de.json';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useNationalities(favorites: string[] = []) {
+export interface UseNationalities {
+    options: InputSelectOption<string>[];
+    getName(locale: string): string;
+}
+
+export function useNationalities(favorites: string[] = []): UseNationalities {
     nationalities.registerLocale(de);
 
-    const options: InputSelectOption[] = Object.keys(nationalities.getAlpha2Codes())
+    const options: InputSelectOption<string>[] = Object.keys(nationalities.getAlpha2Codes())
         .map((alpha2) => {
             const name = nationalities.getName(alpha2, 'de');
             return {
