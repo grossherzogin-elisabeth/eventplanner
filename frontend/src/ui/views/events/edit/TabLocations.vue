@@ -46,19 +46,19 @@
             </td>
         </template>
         <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
-            <li class="context-menu-item" @click="editLocation(item)">
+            <li class="context-menu-item" data-test-id="action-edit" @click="editLocation(item)">
                 <i class="fa-solid fa-edit" />
                 <span>{{ $t('views.events.edit.actions.edit-location') }}</span>
             </li>
-            <li class="context-menu-item" @click="moveLocationUp(item)">
+            <li class="context-menu-item" data-test-id="action-move-up" @click="moveLocationUp(item)">
                 <i class="fa-solid fa-arrow-up" />
                 <span>{{ $t('generic.move-up') }}</span>
             </li>
-            <li class="context-menu-item" @click="moveLocationDown(item)">
+            <li class="context-menu-item" data-test-id="action-move-down" @click="moveLocationDown(item)">
                 <i class="fa-solid fa-arrow-down" />
                 <span>{{ $t('generic.move-down') }}</span>
             </li>
-            <li class="context-menu-item text-error" @click="deleteLocation(item)">
+            <li class="context-menu-item text-error" data-test-id="action-delete" @click="deleteLocation(item)">
                 <i class="fa-solid fa-trash-alt" />
                 <span>{{ $t('views.events.edit.actions.delete-location') }}</span>
             </li>
