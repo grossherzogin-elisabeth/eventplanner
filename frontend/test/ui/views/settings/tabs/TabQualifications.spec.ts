@@ -6,9 +6,9 @@ import { mount } from '@vue/test-utils';
 import { useAuthService, useQualificationsAdministrationUseCase } from '@/application';
 import { Permission } from '@/domain';
 import { VConfirmationDialog } from '@/ui/components/common';
-import { Routes } from '@/ui/views/Routes';
-import TabQualifications from '@/ui/views/settings/TabQualifications.vue';
+import { Routes } from '@/ui/views/Routes.ts';
 import QualificationDetailsDlg from '@/ui/views/settings/components/QualificationDetailsDlg.vue';
+import TabQualifications from '@/ui/views/settings/tabs/TabQualifications.vue';
 import { mockQualifications, mockRouter, mockSignedInUser } from '~/mocks';
 
 const router = mockRouter();

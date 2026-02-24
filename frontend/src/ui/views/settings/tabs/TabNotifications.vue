@@ -16,8 +16,8 @@
 <script lang="ts" setup>
 import type { AppSettings } from '@/domain';
 import { VInteractiveList } from '@/ui/components/common';
-import EmailCard from './components/EmailCard.vue';
-import TeamsWebhookCard from './components/TeamsWebhookCard.vue';
+import EmailCard from '../components/EmailCard.vue';
+import TeamsWebhookCard from '../components/TeamsWebhookCard.vue';
 
 interface Props {
     modelValue: AppSettings;

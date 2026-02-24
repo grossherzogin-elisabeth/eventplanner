@@ -3,7 +3,7 @@ import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useAuthService } from '@/application';
 import { Permission } from '@/domain';
-import TabEventDetailsForm from '@/ui/views/events/edit/TabEventDetailsForm.vue';
+import TabEventDetailsForm from '@/ui/views/events/edit/tabs/TabEventDetailsForm.vue';
 import { mockEvent, mockSignedInUser } from '~/mocks';
 
 describe('TabEventDetailsForm.vue', () => {

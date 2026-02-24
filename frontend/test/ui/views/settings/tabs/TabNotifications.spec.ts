@@ -4,7 +4,7 @@ import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { AppSettings } from '@/domain';
 import { Routes } from '@/ui/views/Routes.ts';
-import TabNotifications from '@/ui/views/settings/TabNotifications.vue';
+import TabNotifications from '@/ui/views/settings/tabs/TabNotifications.vue';
 import { mockRouter, mockSettings } from '~/mocks';
 
 const router = mockRouter();

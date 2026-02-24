@@ -4,7 +4,7 @@ import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { AppSettings } from '@/domain';
 import { Routes } from '@/ui/views/Routes.ts';
-import TabUi from '@/ui/views/settings/TabUi.vue';
+import TabUi from '@/ui/views/settings/tabs/TabUi.vue';
 import { mockRouter, mockSettings } from '~/mocks';
 
 const router = mockRouter();
