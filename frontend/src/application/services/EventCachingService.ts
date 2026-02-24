@@ -25,7 +25,7 @@ export class EventCachingService {
                 this.fetchEvents(currentYear + 2),
             ]);
             await this.storage.deleteAll();
-            await this.storage.saveAll(events.flatMap((it) => it));
+            await this.storage.saveAll(events.flat());
         } catch (e: unknown) {
             const response = e as { status?: number };
             if (response.status === 401 || response.status === 403) {
