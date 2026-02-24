@@ -4,7 +4,7 @@ import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { Event } from '@/domain';
 import { Permission } from '@/domain';
-import TabLocations from '@/ui/views/events/edit/TabLocations.vue';
+import TabLocations from '@/ui/views/events/edit/tabs/TabLocations.vue';
 import { mockEvent, mockRouter } from '~/mocks';
 import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
