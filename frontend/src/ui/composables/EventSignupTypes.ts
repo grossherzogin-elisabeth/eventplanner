@@ -1,10 +1,16 @@
+import type { ComputedRef } from 'vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { InputSelectOption } from '@/domain';
 import { EventSignupType } from '@/domain';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useEventSignupTypes() {
+export interface UseEventSignupTypes {
+    options: ComputedRef<InputSelectOption<EventSignupType>[]>;
+    optionsIncludingNone: ComputedRef<InputSelectOption<EventSignupType | undefined>[]>;
+    getName(locale: string): string;
+}
+
+export function useEventSignupTypes(): UseEventSignupTypes {
     const { t } = useI18n();
 
     const options = computed<InputSelectOption<EventSignupType>[]>(() => {

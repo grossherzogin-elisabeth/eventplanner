@@ -1,17 +1,26 @@
-import { computed, ref } from 'vue';
+import { type ComputedRef, type Ref, computed, ref } from 'vue';
 import { useQualificationsUseCase } from '@/application';
 import type { InputSelectOption, Qualification, QualificationKey } from '@/domain';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useQualifications() {
+export interface UseQualifications {
+    map: Ref<Map<QualificationKey, Qualification>>;
+    options: ComputedRef<InputSelectOption<QualificationKey | undefined>[]>;
+    optionsIncludingNone: ComputedRef<InputSelectOption<QualificationKey | undefined>[]>;
+    get(qualificationKey: QualificationKey): Qualification;
+    update(): Promise<void>;
+    all: ComputedRef<Qualification[]>;
+    loading: Promise<void>;
+}
+
+export function useQualifications(): UseQualifications {
     const map = ref<Map<QualificationKey, Qualification>>(new Map<QualificationKey, Qualification>());
 
     const qualificationsUseCase = useQualificationsUseCase();
 
     async function update(): Promise<void> {
-        const pos = await qualificationsUseCase.getQualifications();
+        const qualifications = await qualificationsUseCase.getQualifications();
         map.value.clear();
-        pos.forEach((p) => map.value.set(p.key, p));
+        qualifications.forEach((p) => map.value.set(p.key, p));
     }
 
     const options = computed<InputSelectOption<string | undefined>[]>(() => {
@@ -45,7 +54,7 @@ export function useQualifications() {
         );
     }
 
-    update();
+    const loading = update();
 
-    return { map, options, optionsIncludingNone, get, update, all };
+    return { map, options, optionsIncludingNone, get, update, all, loading };
 }

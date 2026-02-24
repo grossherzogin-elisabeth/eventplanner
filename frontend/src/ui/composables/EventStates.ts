@@ -1,10 +1,15 @@
-import { computed } from 'vue';
+import { type ComputedRef, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { InputSelectOption } from '@/domain';
 import { EventState } from '@/domain';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useEventStates() {
+export interface UseEventStates {
+    options: ComputedRef<InputSelectOption<EventState>[]>;
+    optionsIncludingNone: ComputedRef<InputSelectOption<EventState | undefined>[]>;
+    getName(locale: string): string;
+}
+
+export function useEventStates(): UseEventStates {
     const { t } = useI18n();
 
     const options = computed<InputSelectOption<EventState>[]>(() => {

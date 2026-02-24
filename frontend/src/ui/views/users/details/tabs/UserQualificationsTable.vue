@@ -1,7 +1,8 @@
 <template>
     <VTable
         :items="userQualifications"
-        class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+        class="scrollbar-invisible no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+        :class="{ 'interactive-table': hasPermission(Permission.WRITE_USERS) }"
         @click="editUserQualification($event.item)"
     >
         <template #row="{ item }">
@@ -57,12 +58,12 @@
                 </div>
             </td>
         </template>
-        <template #context-menu="{ item }">
-            <li class="context-menu-item" @click="editUserQualification(item)">
+        <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
+            <li class="context-menu-item" data-test-id="action-edit-qualification" @click="editUserQualification(item)">
                 <i class="fa-solid fa-edit" />
                 <span>Qualification bearbeiten</span>
             </li>
-            <li class="context-menu-item text-error" @click="deleteUserQualification(item)">
+            <li class="context-menu-item text-error" data-test-id="action-delete-qualification" @click="deleteUserQualification(item)">
                 <i class="fa-solid fa-trash-alt" />
                 <span>Qualifikation entfernen</span>
             </li>
@@ -74,12 +75,14 @@
 import { computed, ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
 import type { ResolvedUserQualification, UserDetails, UserQualification } from '@/domain';
+import { Permission } from '@/domain';
 import { useUserService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
-import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';
+import { useSession } from '@/ui/composables/Session.ts';
+import UserQualificationDetailsDlg from '../components/UserQualificationDetailsDlg.vue';
 
 interface Props {
     modelValue: UserDetails;
@@ -90,6 +93,7 @@ type Emit = (e: 'update:modelValue', user: UserDetails) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
+const { hasPermission } = useSession();
 const usersService = useUserService();
 const positions = usePositions();
 const qualifications = useQualifications();
@@ -107,6 +111,9 @@ function deleteUserQualification(userQualification: ResolvedUserQualification): 
 }
 
 async function editUserQualification(userQualification: ResolvedUserQualification): Promise<void> {
+    if (!hasPermission(Permission.WRITE_USERS)) {
+        return;
+    }
     const user = props.modelValue;
     const editedQualification = await editUserQualificationDialog.value?.open({
         qualificationKey: userQualification.key,

@@ -34,6 +34,21 @@ const pwa = VitePWA({
     },
 });
 
+const chunks = {
+    'src/ui/components': 'components',
+    'src/ui/views': 'views',
+    'src/application': 'app',
+    'src/domain': 'app',
+    'src/common': 'app',
+    'src/adapter': 'app',
+    '@fortawesome/fontawesome-free/js/brands': 'icons-brands',
+    '@fortawesome/fontawesome-free/js/regular': 'icons-regular',
+    '@fortawesome/fontawesome-free/js/solid': 'icons-solid',
+    '@fortawesome': 'icons',
+    'vue': 'framework',
+    'node_modules': 'vendor', // should stay last in the list
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
@@ -41,6 +56,20 @@ export default defineConfig(({ mode }) => {
 
     return {
         plugins: [vue(), svgLoader(), pwa, ViteYaml()],
+        build: {
+            rollupOptions: {
+                output: {
+                    manualChunks: (id): string | null => {
+                        for (const [key, value] of Object.entries(chunks)) {
+                            if (id.includes(key)) {
+                                return value;
+                            }
+                        }
+                        return null;
+                    },
+                },
+            },
+        },
         assetsInclude: ['**/*.csv'],
         server: {
             port: 8090,

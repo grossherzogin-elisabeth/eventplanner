@@ -1,5 +1,5 @@
 <template>
-    <VDialog ref="dlg" height="max-h-screen h-auto">
+    <VDialog ref="dlg" height="max-h-screen h-auto" data-test-id="user-qualification-dialog">
         <template #title>
             <template v-if="editing">Qualifikation bearbeiten</template>
             <template v-else>Qualifikation hinzufügen</template>
@@ -10,6 +10,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="userQualification.qualificationKey"
+                            data-test-id="input-qualification"
                             label="Qualifikation"
                             :options="qualificationOptions"
                             :disabled="editing"
@@ -20,6 +21,7 @@
                     <div v-if="selectedQualification?.expires" class="mb-4">
                         <VInputDate
                             v-model="userQualification.expiresAt"
+                            data-test-id="input-expires-at"
                             label="Gültig bis"
                             :errors="validation.errors.value['expiresAt']"
                             :errors-visible="validation.showErrors.value"
@@ -28,6 +30,7 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model="userQualification.note"
+                            data-test-id="input-note"
                             label="Bemerkung"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
@@ -54,8 +57,8 @@ import { Validator, notEmpty } from '@/common/validation';
 import type { InputSelectOption, Qualification, QualificationKey, UserQualification } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputCombobox, VInputDate, VInputTextArea } from '@/ui/components/common';
-import { useQualifications } from '@/ui/composables/Qualifications';
-import { useValidation } from '@/ui/composables/Validation';
+import { useQualifications } from '@/ui/composables/Qualifications.ts';
+import { useValidation } from '@/ui/composables/Validation.ts';
 
 const qualifications = useQualifications();
 

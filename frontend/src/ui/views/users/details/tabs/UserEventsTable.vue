@@ -23,8 +23,10 @@
                 </td>
                 <td class="text-center whitespace-nowrap">
                     <p class="mb-1 w-12 font-semibold">
-                        {{ item.crewCount }}
-                        <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
+                        <span data-test-id="crew-count">{{ item.crewCount }}</span>
+                        <span v-if="item.waitingListCount" data-test-id="waiting-list-count" class="opacity-40">
+                            +{{ item.waitingListCount }}
+                        </span>
                     </p>
                     <p class="text-sm">Crew</p>
                 </td>
@@ -41,13 +43,14 @@
                     </span>
                 </td>
             </template>
-            <template #context-menu="{ item }">
+            <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
                 <li>
                     <RouterLink
                         :to="{
                             name: Routes.EventDetails,
                             params: { year: item.start.getFullYear(), key: item.eventKey },
                         }"
+                        data-test-id="action-view-event"
                         class="context-menu-item"
                     >
                         <i class="fa-solid fa-search" />
@@ -60,17 +63,29 @@
                             name: Routes.EventEdit,
                             params: { year: item.start.getFullYear(), key: item.eventKey },
                         }"
+                        data-test-id="action-edit-event"
                         class="context-menu-item"
                     >
                         <i class="fa-solid fa-drafting-compass" />
                         <span>Veranstaltung bearbeiten</span>
                     </RouterLink>
                 </li>
-                <li v-if="!item.inPast && item.waitingList" class="context-menu-item" @click="addUserToCrew(item)">
+                <li
+                    v-if="item.waitingList"
+                    data-test-id="action-add-to-crew"
+                    class="context-menu-item"
+                    :class="{ disabled: item.inPast }"
+                    @click="addUserToCrew(item)"
+                >
                     <i class="fa-solid fa-user-plus" />
                     <span>Zur Crew hinzufügen</span>
                 </li>
-                <li class="context-menu-item text-error" :class="{ disabled: item.inPast }" @click="deleteRegistration(item)">
+                <li
+                    class="context-menu-item text-error"
+                    data-test-id="action-delete-registration"
+                    :class="{ disabled: item.inPast }"
+                    @click="deleteRegistration(item)"
+                >
                     <i class="fa-solid fa-trash-alt" />
                     <span>Anmeldung löschen</span>
                 </li>

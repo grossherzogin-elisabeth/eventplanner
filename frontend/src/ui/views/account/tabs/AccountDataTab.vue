@@ -41,7 +41,6 @@
 </template>
 <script lang="ts" setup>
 import type { UserDetails } from '@/domain';
-import VInteractiveList from '@/ui/components/common/list/VInteractiveList.vue';
 import AddressCard from '@/ui/views/account/components/AddressCard.vue';
 import DateAndPlaceOfBirthCard from '@/ui/views/account/components/DateAndPlaceOfBirthCard.vue';
 import DietCard from '@/ui/views/account/components/DietCard.vue';
@@ -57,6 +56,7 @@ import PassNumberCard from '@/ui/views/account/components/PassNumberCard.vue';
 import PhoneCard from '@/ui/views/account/components/PhoneCard.vue';
 import PhoneMobileCard from '@/ui/views/account/components/PhoneMobileCard.vue';
 import PhoneWorkCard from '@/ui/views/account/components/PhoneWorkCard.vue';
+import VInteractiveList from '../../../components/common/list/VInteractiveList.vue';
 
 interface Props {
     modelValue: UserDetails;
