@@ -9,6 +9,7 @@ import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +40,7 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
     }
 
     @Override
+    @Transactional
     public @NonNull EncryptedUserDetails create(@NonNull final EncryptedUserDetails user) {
         var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
         entity = encrypedUserDetailsJpaRepository.save(entity);
