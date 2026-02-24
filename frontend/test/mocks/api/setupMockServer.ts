@@ -6,7 +6,7 @@ import type { AccountRepresentation } from '@/adapter/rest/AccountRestRepository
 import type { EventRepresentation, OptimizeEventSlotsRequest, SlotRepresentation } from '@/adapter/rest/EventRestRepository.ts';
 import type { PositionRepresentation } from '@/adapter/rest/PositionRestRepository.ts';
 import type { QualificationRepresentation } from '@/adapter/rest/QualificationRestRepository.ts';
-import type { UiSettingsRepresentation } from '@/adapter/rest/SettingsRestRepository';
+import type { SettingsRepresentation, UiSettingsRepresentation } from '@/adapter/rest/SettingsRestRepository';
 import type { UserRepresentation } from '@/adapter/rest/UserRestRepository.ts';
 import {
     mockAccountRepresentation,
@@ -16,13 +16,22 @@ import {
     mockQualificationRepresentations,
     mockUserRepresentations,
 } from '~/mocks';
+import { mockSettingsRepresentation } from '~/mocks/api/mockSettingsRepresentation.ts';
 
-export function mockAccountRequest(response?: AccountRepresentation, status: number = 200): RequestHandler {
+export function mockGetAccount(response?: AccountRepresentation, status: number = 200): RequestHandler {
     return http.get('/api/v1/account', () => HttpResponse.json(response ?? mockAccountRepresentation(), { status }));
 }
 
-export function mockConfigRequest(response?: UiSettingsRepresentation, status: number = 200): RequestHandler {
+export function mockGetConfig(response?: UiSettingsRepresentation, status: number = 200): RequestHandler {
     return http.get('/api/v1/config', () => HttpResponse.json(response ?? mockConfigRepresentation(), { status }));
+}
+
+export function mockGetSettings(response?: SettingsRepresentation, status: number = 200): RequestHandler {
+    return http.get('/api/v1/settings', () => HttpResponse.json(response ?? mockSettingsRepresentation(), { status }));
+}
+
+export function mockPutSettings(response?: SettingsRepresentation, status: number = 200): RequestHandler {
+    return http.put('/api/v1/settings', () => HttpResponse.json(response ?? mockSettingsRepresentation(), { status }));
 }
 
 export function mockGetPositions(response?: PositionRepresentation[], status: number = 200): RequestHandler {
@@ -123,8 +132,10 @@ export function mockEventTemplatesRequest(response?: string[], status: number = 
 
 export function setupDefaultMockServer(): SetupServerApi {
     return setupServer(
-        mockAccountRequest(),
-        mockConfigRequest(),
+        mockGetAccount(),
+        mockGetConfig(),
+        mockGetSettings(),
+        mockPutSettings(),
         mockGetPositions(),
         mockDeletePosition(),
         mockPutPosition(),

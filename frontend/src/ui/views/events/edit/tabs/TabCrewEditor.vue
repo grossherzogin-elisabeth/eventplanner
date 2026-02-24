@@ -154,14 +154,14 @@ import { useErrorHandlingService, useEventAdministrationUseCase } from '@/applic
 import { deepCopy } from '@/common';
 import type { Event, PositionKey, Registration, Slot } from '@/domain';
 import { SlotCriticality, useEventService } from '@/domain';
-import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
+import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VDropzone } from '@/ui/components/common';
-import { usePositions } from '@/ui/composables/Positions';
+import { usePositions } from '@/ui/composables/Positions.ts';
 import RegistrationRow from '@/ui/views/events/edit/components/RegistrationRow.vue';
 import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';
 import { v4 as uuid } from 'uuid';
-import RegistrationEditDlg from './components/RegistrationEditDlg.vue';
+import RegistrationEditDlg from '../components/RegistrationEditDlg.vue';
 
 enum DragSource {
     FROM_CREW = 'crew',

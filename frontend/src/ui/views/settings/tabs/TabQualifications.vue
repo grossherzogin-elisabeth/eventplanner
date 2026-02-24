@@ -87,10 +87,10 @@ import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog, VSearchButton, VTable } from '@/ui/components/common';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
-import { usePositions } from '@/ui/composables/Positions';
-import { useQuery } from '@/ui/composables/QueryState';
+import { usePositions } from '@/ui/composables/Positions.ts';
+import { useQuery } from '@/ui/composables/QueryState.ts';
 import { useSession } from '@/ui/composables/Session.ts';
-import QualificationEditDlg from './components/QualificationDetailsDlg.vue';
+import QualificationEditDlg from '../components/QualificationDetailsDlg.vue';
 
 const positions = usePositions();
 const qualificationAdministrationUseCase = useQualificationsAdministrationUseCase();

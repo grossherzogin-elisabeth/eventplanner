@@ -68,7 +68,7 @@ import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog, VTable } from '@/ui/components/common';
 import { useSession } from '@/ui/composables/Session.ts';
-import PositionDetailsDlg from './components/PositionDetailsDlg.vue';
+import PositionDetailsDlg from '../components/PositionDetailsDlg.vue';
 
 const positionAdministrationUseCase = usePositionAdministrationUseCase();
 const { hasPermission } = useSession();
