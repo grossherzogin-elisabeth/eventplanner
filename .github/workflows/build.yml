@@ -7,6 +7,10 @@ on:
         default: 1.0.0
         description: Version of this build
         type: string
+      latest:
+        default: false
+        description: Tag this image as latest
+        type: boolean
 
 jobs:
   build-and-push-container:
@@ -44,9 +48,9 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date '+%Y-%m-%d %H:%M:%S')"
 
-      - name: Build and push Docker image (main)
-        if: ${{ github.ref == 'refs/heads/main' }}
-        id: build-and-push-main
+      - name: Build and push Docker image
+        if: ${{ github.ref == 'refs/heads/main' && inputs.latest }}
+        id: build-and-push-latest
         uses: docker/build-push-action@v6.18.0
         with:
           context: .
@@ -61,9 +65,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build and push Docker image (dev)
-        if: ${{ github.ref != 'refs/heads/main' }}
-        id: build-and-push-dev
+      - name: Build and push Docker image (main)
+        if: ${{ github.ref != 'refs/heads/main' || !inputs.latest }}
+        id: build-and-push
         uses: docker/build-push-action@v6.18.0
         with:
           context: .
@@ -72,7 +76,6 @@ jobs:
             BRANCH=${{ github.head_ref || github.ref_name }} 
             TIME=${{ steps.date.outputs.date }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ghcr.io/grossherzogin-elisabeth/eventplanner:${{ github.head_ref || github.ref_name }}
+          tags: ghcr.io/grossherzogin-elisabeth/eventplanner:${{ inputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
