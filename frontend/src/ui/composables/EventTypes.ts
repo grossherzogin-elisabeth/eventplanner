@@ -22,7 +22,7 @@ export function useEventTypes(): UseEventTypes {
             EventType.Other,
         ].map((it) => ({
             value: it,
-            label: t(`generic.event-type.${it}`),
+            label: t(`domain.event-type.${it}`),
         }));
     });
 

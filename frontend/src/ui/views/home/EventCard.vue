@@ -25,9 +25,10 @@
                             {{ formatDateRange(props.event.start, props.event.end) }}
                         </span>
                         <span v-if="props.event.signupType === EventSignupType.Open || props.event.state !== EventState.Planned">
-                            {{ props.event.registrations.length }} Anmeldungen
+                            {{ props.event.registrations.length }}
                         </span>
-                        <span v-else>{{ props.event.assignedUserCount }} Crew</span>
+                        <span v-else>{{ props.event.assignedUserCount }}</span>
+                        <i class="fa-solid fa-users ml-2" />
                     </p>
                     <div class="flex flex-col items-stretch gap-6">
                         <div class="flex grow flex-col flex-wrap gap-2 sm:flex-row">
@@ -43,7 +44,7 @@
                         >
                             <p class="flex items-center gap-2">
                                 <i class="fa-solid fa-hourglass-half w-4" />
-                                <span class="text-sm font-bold">{{ $t('views.home.event-card.state.waitinglist') }}</span>
+                                <span class="text-sm font-bold">{{ $t('views.home.waitinglist') }}</span>
                             </p>
                         </div>
                     </div>

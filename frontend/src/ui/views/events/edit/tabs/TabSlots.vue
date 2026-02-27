@@ -22,7 +22,7 @@
                     {{ props.registrations.find((r) => r.registration?.key === item.assignedRegistrationKey)?.name }}
                 </p>
                 <p v-else class="truncate text-sm">
-                    {{ $t('views.events.edit.free') }}
+                    {{ $t('views.event-edit.free') }}
                 </p>
             </td>
             <td class="w-2/3 min-w-96">
@@ -57,11 +57,11 @@
         <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
             <li class="context-menu-item" data-test-id="action-edit" @click="editSlot(item)">
                 <i class="fa-solid fa-edit" />
-                <span>{{ $t('views.events.edit.actions.edit-slot') }}</span>
+                <span>{{ $t('views.event-edit.actions.edit-slot') }}</span>
             </li>
             <li class="context-menu-item" data-test-id="action-duplicate" @click="duplicateSlot(item)">
                 <i class="fa-solid fa-clone" />
-                <span>{{ $t('views.events.edit.actions.duplicate-slot') }}</span>
+                <span>{{ $t('views.event-edit.actions.duplicate-slot') }}</span>
             </li>
             <li class="context-menu-item" data-test-id="action-move-up" @click="moveSlotUp(item)">
                 <i class="fa-solid fa-arrow-up" />
@@ -73,7 +73,7 @@
             </li>
             <li class="context-menu-item text-error" data-test-id="action-delete" @click="deleteSlot(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>{{ $t('views.events.edit.actions.delete-slot') }}</span>
+                <span>{{ $t('views.event-edit.actions.delete-slot') }}</span>
             </li>
         </template>
     </VTable>

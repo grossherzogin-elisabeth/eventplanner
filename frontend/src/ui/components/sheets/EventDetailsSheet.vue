@@ -11,9 +11,8 @@
         <template #bottom>
             <div class="lg:px-10-lg flex justify-end gap-2 px-8 py-4">
                 <RouterLink
-                    :to="{ name: Routes.EventDetails, params: { key: event.key } }"
-                    class="btn-primary"
-                    :title="$t('components.event-details-sheet.show-details')"
+                    :to="{ name: Routes.EventDetails, params: { year: event.start.getFullYear(), key: event.key } }"
+                    class="btn-ghost"
                 >
                     <span>{{ $t('components.event-details-sheet.show-details') }}</span>
                 </RouterLink>

@@ -21,19 +21,19 @@ describe('EventStateBanner.vue', () => {
     it('should show planning banner as info', async () => {
         const event = mockEvent({ state: EventState.OpenForSignup });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.events.details.info-planning'));
+        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-planning'));
     });
 
     it('should show canceled banner as warning', async () => {
         const event = mockEvent({ state: EventState.Canceled });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.events.details.info-canceled'));
+        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-canceled'));
     });
 
     it('should show waiting list banner as info', async () => {
         const event = mockEvent({ state: EventState.Planned, signedInUserRegistration: mockRegistrationCaptain() });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.events.details.info-waitinglist', { signedInUserPosition: 'Captain' }));
+        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-waitinglist', { signedInUserPosition: 'Captain' }));
     });
 
     it('should show assigned banner as success', async () => {
@@ -44,12 +44,14 @@ describe('EventStateBanner.vue', () => {
             isSignedInUserAssigned: true,
         });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.events.details.info-assigned', { signedInUserPosition: 'Captain' }));
+        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-assigned', { signedInUserPosition: 'Captain' }));
     });
 
     it('should show missing crew banner as warning', async () => {
         const event = mockEvent({ state: EventState.Planned });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.events.details.info-missing-crew'));
+        expect(testee.text()).toContain(
+            testee.vm.$t('views.event-details.info-missing-crew', { openPositions: 'Deckhand, Mate, Engineer, Captain' })
+        );
     });
 });

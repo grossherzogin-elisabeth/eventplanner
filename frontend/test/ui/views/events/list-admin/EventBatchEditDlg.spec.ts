@@ -67,7 +67,7 @@ describe('EventBatchEditDlg.vue', () => {
         'should patch only event status to $0',
         async (state) => {
             await testee.find('[data-test-id="input-event-status"] input').trigger('click');
-            await selectDropdownOption(testee, testee.vm.$t(`generic.event-state.${state}`));
+            await selectDropdownOption(testee, testee.vm.$t(`domain.event-state.${state}`));
 
             await submit();
             expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { state });
@@ -91,7 +91,7 @@ describe('EventBatchEditDlg.vue', () => {
         EventType.Other,
     ])('should patch only event type to $0', async (type) => {
         await testee.find('[data-test-id="input-event-type"] input').trigger('click');
-        await selectDropdownOption(testee, testee.vm.$t(`generic.event-type.${type}`));
+        await selectDropdownOption(testee, testee.vm.$t(`domain.event-type.${type}`));
 
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { type });
@@ -100,7 +100,7 @@ describe('EventBatchEditDlg.vue', () => {
 
     it.each([EventSignupType.Assignment, EventSignupType.Open])('should patch only event signup type to $0', async (signupType) => {
         await testee.find('[data-test-id="input-event-signup-type"] input').trigger('click');
-        await selectDropdownOption(testee, testee.vm.$t(`generic.event-signup-type.${signupType}`));
+        await selectDropdownOption(testee, testee.vm.$t(`domain.event-signup-type.${signupType}`));
 
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { signupType });

@@ -66,7 +66,7 @@ const { hasPermission } = useSession();
 const roles = ref<RoleTableEntry[]>([
     {
         role: Role.TEAM_MEMBER,
-        name: t('generic.role.ROLE_TEAM_MEMBER'),
+        name: t('domain.role.ROLE_TEAM_MEMBER'),
         icon: 'fa-sailboat',
         description:
             'Der Nutzer kann sich eigenständig zu Veranstaltungen an- und abmelden und alle Veranstaltungen sowie verknüpfte andere Nutzer sehen',
@@ -74,35 +74,35 @@ const roles = ref<RoleTableEntry[]>([
     },
     {
         role: Role.EVENT_PLANNER,
-        name: t('generic.role.ROLE_EVENT_PLANNER'),
+        name: t('domain.role.ROLE_EVENT_PLANNER'),
         icon: 'fa-map',
         description: 'Der Nutzer kann Veranstaltungen bearbeiten und neue Veranstaltungen einstellen.',
         enabled: false,
     },
     {
         role: Role.TEAM_PLANNER,
-        name: t('generic.role.ROLE_TEAM_PLANNER'),
+        name: t('domain.role.ROLE_TEAM_PLANNER'),
         icon: 'fa-compass-drafting',
         description: 'Der Nutzer kann die Crew einer Veranstaltung bearbeiten',
         enabled: false,
     },
     {
         role: Role.USER_MANAGER,
-        name: t('generic.role.ROLE_USER_MANAGER'),
+        name: t('domain.role.ROLE_USER_MANAGER'),
         icon: 'fa-people-group',
         description: 'Der Nutzer kann Nutzer bearbeiten, Qualifikationen pflegen und neue Nutzer erstellen',
         enabled: false,
     },
     {
         role: Role.EVENT_LEADER,
-        name: t('generic.role.ROLE_EVENT_LEADER'),
+        name: t('domain.role.ROLE_EVENT_LEADER'),
         icon: 'fa-life-ring',
         description: 'Der Nutzer kann die aktuelle Veranstaltung bearbeiten um Last-Minute Änderungen an der Crewliste vornehmen zu können',
         enabled: false,
     },
     {
         role: Role.ADMIN,
-        name: t('generic.role.ROLE_ADMIN'),
+        name: t('domain.role.ROLE_ADMIN'),
         icon: 'fa-wand-magic-sparkles',
         description: 'Der Nutzer kann alle Funktionen der App vollumfänglich nutzen und darf alle Daten sehen und bearbeiten',
         enabled: false,

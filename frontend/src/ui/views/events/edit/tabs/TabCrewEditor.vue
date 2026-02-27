@@ -8,7 +8,7 @@
                     <span>({{ props.event?.assignedUserCount }})</span>
                 </div>
                 <div class="tag flex items-center space-x-1" :class="secureMinimumCrewMembers >= 8 ? 'info' : 'error'">
-                    <span>{{ $t('views.events.edit.secure-crew') }}</span>
+                    <span>{{ $t('views.event-edit.secure-crew') }}</span>
                     <span>({{ secureMinimumCrewMembers }})</span>
                 </div>
                 <div
@@ -31,7 +31,7 @@
                         <VDropzone class="h-96" @drop="addToCrew($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-add">
                                 <i class="fa-regular fa-calendar-plus text-3xl opacity-75"></i>
-                                <span>{{ $t('views.events.edit.actions.add-to-crew') }}</span>
+                                <span>{{ $t('views.event-edit.actions.add-to-crew') }}</span>
                             </div>
                         </VDropzone>
                     </div>
@@ -43,10 +43,10 @@
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
                                     <i class="fa-solid fa-list-check opacity-75"></i>
-                                    {{ $t('views.events.edit.empty-crew.title') }}
+                                    {{ $t('views.event-edit.empty-crew.title') }}
                                 </h3>
                                 <p class="text-sm">
-                                    {{ $t('views.events.edit.empty-crew.desc') }}
+                                    {{ $t('views.event-edit.empty-crew.desc') }}
                                 </p>
                             </div>
                             <div></div>
@@ -88,13 +88,13 @@
                         <VDropzone class="h-44" @drop="removeFromCrew($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-remove">
                                 <i class="fa-regular fa-calendar-minus text-3xl opacity-75"></i>
-                                <span>{{ $t('views.events.edit.actions.move-to-waiting-list') }}</span>
+                                <span>{{ $t('views.event-edit.actions.move-to-waiting-list') }}</span>
                             </div>
                         </VDropzone>
                         <VDropzone class="h-44" @drop="cancelRegistration($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-delete">
                                 <i class="fa-regular fa-calendar-xmark text-3xl opacity-75"></i>
-                                <span>{{ $t('views.events.edit.actions.delete-registration') }}</span>
+                                <span>{{ $t('views.event-edit.actions.delete-registration') }}</span>
                             </div>
                         </VDropzone>
                     </div>
@@ -106,10 +106,10 @@
                             <div class="mr-4">
                                 <h3 class="mb-4 text-base">
                                     <i class="fa-solid fa-list-check opacity-75"></i>
-                                    {{ $t('views.events.edit.empty-waitinglist.title') }}
+                                    {{ $t('views.event-edit.empty-waitinglist.title') }}
                                 </h3>
                                 <p class="text-sm">
-                                    {{ $t('views.events.edit.empty-waitinglist.desc') }}
+                                    {{ $t('views.event-edit.empty-waitinglist.desc') }}
                                 </p>
                             </div>
                             <div></div>
