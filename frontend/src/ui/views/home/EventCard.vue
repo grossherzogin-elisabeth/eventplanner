@@ -1,9 +1,5 @@
 <template>
-    <RouterLink
-        v-if="props.event"
-        :to="{ name: Routes.EventDetails, params: { year: props.event.start.getFullYear(), key: props.event.key } }"
-        class="block hover:no-underline"
-    >
+    <div v-if="props.event" class="" @click="showDetails()">
         <div
             class="event-card"
             :class="{
@@ -30,12 +26,23 @@
                         <span v-else>{{ props.event.assignedUserCount }}</span>
                         <i class="fa-solid fa-users ml-2" />
                     </p>
+                    <VMarkdown
+                        v-if="props.event.description"
+                        class="mb-4 line-clamp-4 text-sm opacity-75"
+                        :value="props.event.description"
+                    />
+                    <p v-else class="mb-4 line-clamp-3 text-sm opacity-75">{{}}</p>
                     <div class="flex flex-col items-stretch gap-6">
-                        <div class="flex grow flex-col flex-wrap gap-2 sm:flex-row">
-                            <div v-for="(location, index) in props.event.locations" :key="index" class="flex items-center gap-2">
+                        <div class="flex grow flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row">
+                            <span
+                                v-for="(location, index) in props.event.locations.slice(0, 3)"
+                                :key="index"
+                                class="flex items-center gap-2"
+                            >
                                 <i :class="location.icon" class="fa-solid w-4" />
                                 <span class="grow">{{ location.name }}</span>
-                            </div>
+                            </span>
+                            <span v-if="props.event.locations.length > 3">+ {{ props.event.locations.length - 3 }} weitere</span>
                         </div>
 
                         <div
@@ -51,7 +58,8 @@
                 </div>
             </div>
         </div>
-    </RouterLink>
+        <EventDetailsSheet ref="eventPreviewSheet" />
+    </div>
     <div v-else class="event-card loading animate-pulse">
         <div class="flex">
             <div class="border-event-card -my-2 -ml-2 hidden w-32 flex-col items-center justify-center border-r sm:flex">
@@ -78,17 +86,25 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
 import { EventSignupType, EventState } from '@/domain';
+import type { Sheet } from '@/ui/components/common';
+import { VMarkdown } from '@/ui/components/common';
+import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
-import { Routes } from '@/ui/views/Routes';
 
 interface Props {
     event?: Event;
 }
 
 const props = defineProps<Props>();
+const eventPreviewSheet = ref<Sheet<Event, Event> | null>(null);
+
+async function showDetails(): Promise<void> {
+    await eventPreviewSheet.value?.open(props.event);
+}
 </script>
 <style>
 @reference "tailwindcss";
@@ -139,7 +155,7 @@ const props = defineProps<Props>();
 }
 
 .event-card.assigned .border-event-card {
-    border-color: --alpha(var(--color-onprimary-container) / 20%);
+    border-color: --alpha(var(--color-onprimary-container) / 5%);
 }
 
 .event-card.assigned > * {
