@@ -3,13 +3,13 @@
         <template #title>
             <template v-if="selectedUser">
                 {{
-                    $t('views.events.edit.edit-registration.title', {
+                    $t('views.event-edit.edit-registration.title', {
                         name: selectedUser.nickName || selectedUser.firstName,
                         lastName: selectedUser.lastName,
                     })
                 }}
             </template>
-            <template v-else>{{ $t('views.events.edit.edit-registration.guest-title') }}</template>
+            <template v-else>{{ $t('views.event-edit.edit-registration.guest-title') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -66,7 +66,7 @@
                     <template v-if="selectedUser !== undefined">
                         <VWarning v-if="!selectedUser?.positionKeys?.includes(registration.positionKey)" class="my-4">
                             {{
-                                $t('views.events.edit.edit-registration.no-qualification', {
+                                $t('views.event-edit.edit-registration.no-qualification', {
                                     name: selectedUser?.nickName || selectedUser?.firstName,
                                     position: selectedPosition?.name,
                                 })
@@ -74,13 +74,13 @@
                         </VWarning>
                     </template>
                     <VWarning v-else-if="registration.name" class="my-4">
-                        {{ $t('views.events.edit.edit-registration.guest-warning', { name: registration.name }) }}
+                        {{ $t('views.event-edit.edit-registration.guest-warning', { name: registration.name }) }}
                     </VWarning>
                 </section>
                 <template v-if="selectedUser">
                     <p class="mb-2">
                         {{
-                            $t('views.events.edit.edit-registration.qualifications', {
+                            $t('views.event-edit.edit-registration.qualifications', {
                                 name: selectedUser.nickName || selectedUser.firstName,
                             })
                         }}
@@ -154,7 +154,7 @@ const validation = useValidation(registration, (value) => {
     const errors = Validator.validate('positionKey', value.positionKey, notEmpty()).getErrors();
     if (!value.name && !value.userKey) {
         errors.userKey = errors.userKey || [];
-        errors.userKey.push('views.events.edit.edit-registration.select-user');
+        errors.userKey.push('views.event-edit.edit-registration.select-user');
     }
     return errors;
 });

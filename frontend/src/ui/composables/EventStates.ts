@@ -15,7 +15,7 @@ export function useEventStates(): UseEventStates {
     const options = computed<InputSelectOption<EventState>[]>(() => {
         return [EventState.Draft, EventState.OpenForSignup, EventState.Planned, EventState.Canceled].map((it) => ({
             value: it,
-            label: t(`generic.event-state.${it}`),
+            label: t(`domain.event-state.${it}`),
         }));
     });
 

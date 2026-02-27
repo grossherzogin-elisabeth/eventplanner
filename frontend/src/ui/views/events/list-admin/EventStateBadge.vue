@@ -10,7 +10,7 @@
             <template #tooltip>
                 <div class="bg-surface-container-high text-onsurface flex flex-col gap-8 rounded-xl p-4 text-sm shadow-xl">
                     <div v-if="unassignedRequiredPositions.length > 0">
-                        <h4 class="mb-2 font-bold">{{ $t('views.events.admin-list.state.missing-crew') }}</h4>
+                        <h4 class="mb-2 font-bold">{{ $t('views.event-admin-list.state.missing-crew') }}</h4>
                         <div class="flex flex-wrap gap-2">
                             <span
                                 v-for="position in unassignedRequiredPositions"
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div v-if="unassignedOptionalPositions.length > 0">
-                        <h4 class="mb-2 font-bold">{{ $t('views.events.admin-list.state.free-slots-for') }}</h4>
+                        <h4 class="mb-2 font-bold">{{ $t('views.event-admin-list.state.free-slots-for') }}</h4>
                         <div class="flex flex-wrap gap-2">
                             <span
                                 v-for="position in unassignedOptionalPositions"
@@ -101,25 +101,25 @@ const unassignedOptionalPositions = computed<OpenPositionsCounter[]>(() =>
 const state = computed<StateDetails>(() => {
     switch (props.event.state) {
         case EventState.Draft:
-            return { name: t('generic.event-state.draft'), icon: 'fa-compass-drafting', color: 'neutral' };
+            return { name: t('domain.event-state.draft'), icon: 'fa-compass-drafting', color: 'neutral' };
         case EventState.OpenForSignup:
-            return { name: t('generic.event-state.open-for-signup'), icon: 'fa-people-group', color: 'neutral' };
+            return { name: t('domain.event-state.open-for-signup'), icon: 'fa-people-group', color: 'neutral' };
         case EventState.Canceled:
-            return { name: t('generic.event-state.canceled'), icon: 'fa-ban', color: 'error' };
+            return { name: t('domain.event-state.canceled'), icon: 'fa-ban', color: 'error' };
     }
     if (openRequiredSlots.value.length > 0) {
-        return { name: t('views.events.admin-list.state.missing-crew'), icon: 'fa-warning', color: 'warning' };
+        return { name: t('views.event-admin-list.state.missing-crew'), icon: 'fa-warning', color: 'warning' };
     }
     if (openSlots.value.length > 0) {
         return {
-            name: t('generic.event-state.open-slots'),
+            name: t('domain.event-state.open-slots'),
             icon: 'fa-info-circle',
             iconMobile: 'fa-info',
             color: 'info',
         };
     }
     return {
-        name: t('generic.event-state.full'),
+        name: t('domain.event-state.full'),
         icon: 'fa-check-circle',
         iconMobile: 'fa-check',
         color: 'success',

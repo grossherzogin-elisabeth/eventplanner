@@ -4,16 +4,16 @@
     >
         <FilterMultiselect
             v-model="filterPositions"
-            :placeholder="$t('views.events.edit.filter.all-positions')"
+            :placeholder="$t('views.event-edit.filter.all-positions')"
             :options="positions.options.value"
         />
         <FilterToggle
             v-if="props.event.signupType === EventSignupType.Assignment"
             v-model="filterFreeSlots"
-            :label="$t('views.events.edit.filter.free-slots')"
+            :label="$t('views.event-edit.filter.free-slots')"
         />
-        <FilterToggle v-model="filterValidQualifications" :label="$t('views.events.edit.filter.valid-qualifications')" />
-        <FilterToggle v-model="filterUnconfirmed" :label="$t('views.events.edit.filter.pending-confirmation')" />
+        <FilterToggle v-model="filterValidQualifications" :label="$t('views.event-edit.filter.valid-qualifications')" />
+        <FilterToggle v-model="filterUnconfirmed" :label="$t('views.event-edit.filter.pending-confirmation')" />
     </div>
     <template v-if="props.event.signupType === EventSignupType.Assignment">
         <h2 class="text-secondary mb-4 font-bold">

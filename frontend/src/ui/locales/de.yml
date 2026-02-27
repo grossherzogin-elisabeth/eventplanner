@@ -1,0 +1,675 @@
+generic:
+  add: 'Hinzufügen'
+  apply: 'Übernehmen'
+  cancel: 'Abbrechen'
+  close: 'Schließen'
+  delete: 'Löschen'
+  discard-changes: 'Änderungen verwerfen'
+  edit: 'Bearbeiten'
+  error: 'Fehler'
+  filter-entries: 'Einträge filtern'
+  loading: 'Wird geladen...'
+  markdown-supported: 'Markdown wird unterstützt'
+  move-down: 'Nach unten verschieben'
+  move-up: 'Nach oben verschieben'
+  no-entries: 'Keine Einträge'
+  no-information: 'Keine Angabe'
+  no-matches: 'Keine Treffer'
+  no: 'Nein'
+  ok: 'OK'
+  optional: 'optional'
+  please-select: 'Bitte auswählen'
+  save: 'Speichern'
+  yes: 'Ja'
+  month:
+    '0': 'Januar'
+    '1': 'Februar'
+    '2': 'März'
+    '3': 'April'
+    '4': 'Mai'
+    '5': 'Juni'
+    '6': 'Juli'
+    '7': 'August'
+    '8': 'September'
+    '9': 'Oktober'
+    '10': 'November'
+    '11': 'Dezember'
+  month-short:
+    '0': 'Jan'
+    '1': 'Feb'
+    '2': 'Mär'
+    '3': 'Apr'
+    '4': 'Mai'
+    '5': 'Jun'
+    '6': 'Jul'
+    '7': 'Aug'
+    '8': 'Sep'
+    '9': 'Okt'
+    '10': 'Nov'
+    '11': 'Dez'
+  weekday-short:
+    '0': 'Mo'
+    '1': 'Di'
+    '2': 'Mi'
+    '3': 'Do'
+    '4': 'Fr'
+    '5': 'Sa'
+    '6': 'So'
+  gender:
+    m: 'Männlich'
+    f: 'Weiblich'
+    d: 'Divers'
+  diet:
+    omnivore: 'Fleisch'
+    vegetarian: 'Vegetarisch'
+    vegan: 'Vegan'
+  theme:
+    system: 'Automatisch'
+    dark: 'Dunkel'
+    light: 'Hell'
+  language:
+    de: 'Deutsch'
+    en: 'Englisch'
+  validation:
+    required: 'Eingabe ist erforderlich'
+    invalid: 'Eingabe enthält ungültige Zeichen'
+    max-length: 'Eingabe darf maximal {0} Zeichen lang sein'
+    min-length: 'Eingabe muss mindestens {0} Zeichen lang sein'
+    invalid-phone-number: 'Eingabe ist keine gültige Telefon Nummer'
+    invalid-email: 'Eingabe ist keine gültige Email Addresse'
+    invalid-name: 'Namen dürfen keine Zahlen oder Sonderzeichen enthalten'
+    invalid-date: 'Eingabe ist kein valides Datum'
+    must-not-include-lastname: 'Anzeigenamen dürfen nicht den Nachnamen enthalten'
+    before: 'Datum muss vor dem {} liegen'
+    after: 'Datum muss nach dem {} liegen'
+components:
+  menu:
+    home: 'Übersicht'
+    start: 'Start'
+    calendar: 'Kalender'
+    events: 'Alle Veranstaltungen'
+    events-admin: 'Veranstaltungen verwalten'
+    users-admin: 'Nutzer verwalten'
+    users: 'Nutzerliste'
+    settings: 'Einstellungen'
+    account: 'Mein Profil'
+    feedback: 'Feedback'
+    sign-out: 'Abmelden'
+    impersonate: 'Du siehst die Anwendung aus Sicht von {0}'
+    no-account:
+      header: 'Noch kein Account?'
+      message: 'Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Veranstaltungen einsehen und dich 
+        zu Veranstaltungen an und abmelden.'
+      login: 'Zum Login'
+      register: 'Jetzt registrieren'
+  event-registration-details-card:
+    title: 'Meine Anmeldung'
+    overnight-stay: 'Übernachtung an Bord gewünscht'
+    overnight-stay-description: 'Möchtest du an Bord übernachten? Bei mehrtägigen Veranstaltungen wird immer von einer 
+        Übernachtung an Bord ausgegangen.'
+    overnight-stay-note: 'Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn nicht garantiert werden 
+        kann.'
+    arrival: 'Anreise am Vortag gewünscht'
+    arrival-description: 'Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen. Bitte gib hier an, 
+        falls du bereits vorher anreisen möchtest, damit das Büro entsprechend planen kann.'
+    arrival-note: 'Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn nicht garantiert werden kann.'
+    position: 'Meine Position'
+    position-description: 'Du hast die Qualifikation für mehrere Positionen. Mit welcher Position möchtest du dich 
+        anmelden?'
+    note: 'Notiz fürs Büro'
+    note-none: 'Du hast keine Notiz hinterlegt'
+    note-description: 'Hier kannst du zusätzliche Informationen für deine Anmeldung hinterlegen, die für das Büro bei 
+        der Planung relevant sein könnten.'
+  event-details-card:
+    title: 'Details'
+    days: '{count} Tag|{count} Tage'
+    registrations: '{count} Anmeldung | {count} Anmeldungen'
+    assigned: '{count} Crew | {count} Crew'
+    waitinglist: '{count} Warteliste | {count} Warteliste'
+  event-locations-card:
+    title: 'Ort | Route'
+    placeholder: 'Für diese Veranstaltung wurde noch keine Route bekannt gegeben. Sobald diese Informationen verfügbar
+      sind, kannst du sie hier sehen.'
+    eta: 'Ankunft:'
+    etd: 'Abfahrt:'
+    address-link: 'Anreiseinformationen'
+    learn-more: 'Weitere Informationen'
+  event-participants-card:
+    registrations: 'Anmeldungen ({count})'
+    assigned: 'Crew ({count})'
+    waitinglist: 'Warteliste ({count})'
+    placeholder-title: 'Du könntest den Anfang machen!'
+    placeholder-title-m: 'Du könntest der Erste sein!'
+    placeholder-title-f: 'Du könntest die Erste sein!'
+    placeholder: 'Für diese Veranstaltung hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich
+      anmelden.'
+    placeholder-waiting-list-hint: 'Alle Anmeldungen werden zuerst auf der Warteliste gesammelt. Anschließend wird aus 
+      diesen Anmeldungen eine Crew zusammengestellt. Wenn du zur Crew hinzugefügt wirst, benachrichtigen wir dich per 
+      Email darüber.'
+    unknown: 'Unbekannter Nutzer'
+    empty: 'Noch nicht besetzt'
+    no-registrations: 'Für diese Veranstaltung gibt es noch keine Anmeldungen.'
+    no-waitinglist: 'Für diese Veranstaltung gibt es aktuell keine Warteliste.'
+  event-details-sheet:
+    note-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht:'
+    note-assigned: 'Du bist für diese Veranstaltung als {0} eingeplant'
+    note-on-waiting-list: 'Du stehst für diese Veranstaltung als {0} auf der Warteliste'
+    show-details: 'Details anzeigen'
+  error-dialog:
+    retry: 'Erneut versuchen'
+    default-title: 'Unerwarteter Fehler'
+    default-text: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.'
+    show-details: 'Details anzeigen'
+domain:
+  types:
+    event: 'Veranstaltung|Veranstaltungen'
+    user: 'Nutzer:in|Nutzer:innen'
+    registration: 'Anmeldung|Anmeldungen'
+  role:
+    ROLE_ADMIN: 'Admin'
+    ROLE_EVENT_PLANNER: 'Veranstaltungsplaner:in'
+    ROLE_EVENT_LEADER: 'Veranstaltungsleiter:in'
+    ROLE_TEAM_PLANNER: 'Crewplaner:in'
+    ROLE_USER_MANAGER: 'Nutzerverwalter:in'
+    ROLE_TEAM_MEMBER: 'Stammcrewmitglied'
+  event-state:
+    draft: 'Entwurf'
+    open-for-signup: 'Crew Anmeldung'
+    planned: 'Veröffentlicht'
+    canceled: 'Abgesagt'
+    crew-wanted: 'Crew gesucht'
+    open-slots: 'Freie Plätze'
+    full: 'Voll belegt'
+  event-type:
+    single-day-event: 'Tagesfahrt'
+    weekend-event: 'Wochenendreise'
+    multi-day-event: 'Mehrtagesfahrt'
+    work-event: 'Arbeitsdienst'
+    training-event: 'Ausbildung'
+    other: 'Sonstige'
+  event-signup-type:
+    open: 'Offene Teilnahme'
+    assignment: 'Offene Anmeldung mit manueller Einteilung'
+  event:
+    crew: 'Crew'
+    waiting-list: 'Warteliste'
+    crew-count: 'Crew ({count})'
+    registration-count: 'Anmeldungen ({count})'
+    actions:
+      add-to-crew: 'Zur Crew hinzufügen'
+      remove-from-crew: 'Auf die Warteliste'
+    no-slot-for-position-error:
+      title: 'Zuweisung nicht möglich'
+      message: '{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die Position {position}
+        gibt. Du kannst entweder einen passenden Slot freigeben, indem du jemand anderes aus der Crew entfernst oder
+        einen neuen Slot für diese Veranstaltung hinzufügen.'
+      retry: 'Slot hinzufügen'
+    slot:
+      empty: 'noch nicht besetzt'
+    status: 'Status'
+    name: 'Veranstaltungsname'
+    template: 'Vorlage'
+    type: 'Kategorie'
+    signup-type: 'Anmeldetyp'
+    category: 'Kategorie'
+    end: 'Veranstaltungsende'
+    end-date: 'Enddatum'
+    end-time: 'Crew von Bord'
+    description: 'Beschreibung'
+    start: 'Veranstaltungsbeginn'
+    start-date: 'Startdatum'
+    start-time: 'Crew an Bord'
+    time: 'Veranstaltungszeit'
+    duration: 'Veranstaltungsdauer'
+    route: 'Geplante Route'
+  registration:
+    unknown-user: 'Unbekannter Nutzer'
+    guest: 'Gastcrew'
+    overnight-stay: 'Übernachtung an Bord'
+    arrival-on-day-before: 'Anreise am Vortag'
+    arrival: 'Anreise am'
+    name: 'Name'
+    position: 'Position'
+    note: 'Notiz'
+    confirmed: 'Teilnahme bestätigt'
+    confirmation-pending: 'Bestätigung austehend'
+  location:
+    eta: 'ETA'
+    etd: 'ETD'
+    eda: 'EDA'
+    edd: 'EDD'
+    name: 'Name'
+    icon: 'Icon'
+    address: 'Liegeplatz'
+    address-link: 'Liegeplatz Link'
+    information: 'Weitere Informationen'
+    information-link: 'Weitere Informationen Link'
+  event-slot:
+    position: 'Position'
+    display-name: 'Anzeigename'
+    criticality: 'Kritikalität'
+    required: 'Notwendig'
+    important: 'Wichtig'
+    optional: 'Optional'
+    alternative-positions: 'Alternative Positionen'
+  user:
+    title: 'Titel'
+    name: 'Name'
+    first-name: 'Vorname'
+    middle-name: 'Zweiter Vorname'
+    last-name: 'Nachname'
+    nick-name: 'Anzeigename'
+    date-of-birth: 'Geburtstag'
+    place-of-birth: 'Geburtsort'
+    date-and-place-of-birth: 'Geburtsdatum und -ort'
+    gender: 'Geschlecht'
+    pass-nr: 'Personalausweis- oder Passnummer'
+    nationality: 'Nationalität'
+    email: 'Email'
+    phone: 'Telefon Festnetz'
+    phone-work: 'Telefon dienstlich'
+    mobile: 'Telefon Mobil'
+    address: 'Adresse'
+    emergency-contact: 'Notfallkontakt'
+    diseases: 'Krankheiten'
+    medication: 'Medikamente'
+    diet: 'Ernährungsweise'
+    intolerances: 'Unverträglichkeiten'
+    qualification:
+      all-valid: 'Alle gültig'
+      expired-count: '{count} abgelaufene'
+  emergency-contact:
+    name: 'Name des Notfallkontakts'
+    phone: 'Telefonnummer des Notfallkontakts'
+  address:
+    address-line-1: 'Straße, Hausnr.'
+    address-line-2: 'Adresszusatz'
+    zipcode: 'Postleitzahl'
+    town: 'Ort'
+    country: 'Land'
+views:
+  account:
+    title: 'Profil'
+    tab:
+      data: 'Meine Daten'
+      qualifications: 'Meine Qualifikationen'
+      settings: 'App Einstellungen'
+    personal:
+      title: 'Persönliche Daten'
+      passport-info: 'Bitte beachte, dass du dein eingetragenes Ausweisdokument bei allen Reisen mitführen musst!'
+      name-description: 'Dein Name, wie hier angegeben, muss genau so auch auf deinem Ausweisdokument stehen, da dieser
+        zum Erstellen der offiziellen Crew Liste verwendet wird. Solltest du mit einem anderen Namen angesprochen werden
+        wollen, kannst du einen Anzeigenamen für die App vergeben.'
+      nick-name-hint: 'Wie möchtest du angesprochen werden?'
+      official-name-hint: 'Name wie im Ausweisdokument'
+      gender-description: 'Mit welchem Geschlecht identifizierst du dich?'
+      passport-description: 'Bitte gib die Nummer eines offiziellen Ausweisdokuments an. Dies kann entweder dein 
+        Personalausweis oder alternativ auch dein Reisepass sein.'
+      passport-link: 'So findest du deine Personalausweis Nummer'
+      nationality-description: 'Deine Nationalität wird für das Erstellen der offiziellen Crewliste benötigt. Solltest 
+        du mehrere Nationalitäten haben, gib hier bitte diejenige an, die auch auf deinem Ausweisdokumentes steht.'
+      date-and-place-of-birth-description: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem 
+        Ausweisdokument stehen, da diese zum Erstellen der offiziellen Crew Liste verwendet werden.'
+      hint: 'Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum 
+        Erstellen der offiziellen Crew Liste verwendet werden.'
+    diet:
+      title: 'Ernährung'
+      diet-description: 'Bitte gib an, falls du dich vegetarisch oder vegan ernährst. Diese Information ist wichtig, 
+        damit die Kombüse ausreichend planen kann.'
+      intolerances-description: 'Hier kannst du Unverträglichkeiten und Allergien angeben, die der Kombüse bekannt sein 
+        sollten.'
+      kitchen-info: 'Informationen für die Kombüse'
+    contact:
+      title: 'Kontakt Daten'
+      email-description: 'Deine Email Adresse wird sowohl als Kontakt Email für Benachrichtigungen, als auch für deinen
+        Login verwendet. Wenn du sie ändern möchtest, schreib uns bitte eine Email, damit wir auch den Login für dich 
+        anpassen können.'
+      address-description: 'Bitte gib deine primäre Wohnanschrift an.'
+      phone-description: 'Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer an: Festnetz, mobil 
+        oder dienstlich.'
+    emergency:
+      title: 'Notfall Informationen'
+      emergency-contact-description: 'Im Notfall zählt jede Sekunde. Hier kannst du eine Person hinterlegen, die wir im 
+        Falle eines medizinischen Notfalls oder einer anderen dringenden Situation kontaktieren können. Bitte gib Namen
+        und Telefonnummer der Person an.'
+      diseases-description: 'Sollte während einer Veranstaltung etwas passieren, kann es wichtig sein, dass jemand an 
+        Bord über eventuelle Krankheiten informiert ist, die besondere Behandlungen erfordern.'
+      medication-description: 'Wenn auf einer Veranstaltung mal etwas passiert, ist es wichtig, dass jemand an Bord 
+        weiß, welche Medikamente du benötigst.'
+      click-to-show: '[zum Ansehen klicken]'
+      privacy: 'Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für autorisierte
+        Personen einsehbar!'
+    app-settings:
+      title: 'App'
+      theme: 'Design'
+      preferred-position: 'Standard Position'
+      preferred-position-description: 'Mit welcher Position möchtest du dich standardmäßg bei Veranstaltungen anmelden? 
+        Du kannst deine Position für jede Anmeldung individuall anpassen.'
+      notifications: 'Benachrichtigungen'
+      language: 'Sprache'
+      roles: 'Meine Anwendungsrollen'
+      permissions: 'Meine Berechtigungen'
+    qualifications:
+      status-expires-on: 'Gültig bis'
+      status-no-expires: 'Ohne Ablaufdatum'
+      status-expired: 'Abgelaufen'
+      status-expiring-soon: 'Läuft bald ab'
+      status-valid: 'Gültig'
+  calendar:
+    title: 'Alle Veranstaltungen'
+    create-event: 'Neue Veranstaltung'
+    days: '{count} Tag|{count} Tage'
+  event-confirm-participation:
+    title: 'Bitte bestätige deine Teilnahme'
+    info:
+      message: 'In {days} Tagen startet die Veranstaltung {event}, bei der du als Crew eingeplant bist. Bitte 
+          bestätige deine Teilnahme bis {deadline}, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen 
+          Ersatz für dich zu finden.'
+      deadline: 'spätestens 7 Tage vor Veranstaltungsbeginn'
+    confirm: 'Ja, ich nehme teil'
+    decline: 'Ich muss leider absagen'
+    not-found:
+      title: 'Anmeldung nicht gefunden'
+      info: 'Wir konnten keine Anmeldung für diesen Link finden. Das kann daran liegen, dass du deine Teilnahme 
+          bereits abgesagt hast, oder dein Link ungültig ist. Falls du Probleme mit der Teilnahmebestätigung hast oder 
+          doch an der Veranstaltung teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
+    canceled:
+      title: 'Anmeldung wurde bereits abgesagt'
+      info: 'Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der Crewliste. Falls du doch an der
+          Veranstaltung teilnehmen möchtest, melde dich bitte telefonisch im Büro.'
+    no-registration:
+      title: 'Anmeldung nicht gefunden'
+      info: 'Wir haben überall gesucht, konnten für dich aber keine Anmeldung zu dieser Verantstaltung finden. Das 
+          kann daran liegen, dass du deine Teilnahme abgesagt hast, oder das du dich mit einem anderen Account 
+          angemeldet hast. Wenn du bereits abgesagt hast und doch teilnehmen möchtest, melde dich bitte telefonisch im
+          Büro.'
+    invalid-link:
+      title: 'Ungültiger Link'
+      info: 'Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder gehört zu einem anderen Nutzer. Du
+          kannst nur deine eigenen Teilnamen bestätigen. Bitte überprüfe, ob die Email Adresse des Accounts, mit dem du
+          dich angemeldet hast mit der Email Adresse übereinstimmt, über die du diesen Link erhalten hast. Wenn du
+          weiterhin Probleme bei der Bestätigung hast, melde dich gerne telefonisch im Büro.'
+    confirmed:
+      title: 'Teilnahme bestätigt'
+      info: 'Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Veranstaltung wurde als bestätigt markiert.
+          Bitte denk daran, deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen
+          dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!'
+    details:
+      title: 'Hier noch einmal die wichtigsten Details zur Veranstaltung:'
+    canceled-now:
+      title: 'Teilnahme storniert'
+      info: 'Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der
+          Veranstaltung wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann
+          schwierig ist noch einen Ersatz für dich zu finden.'
+  event-details:
+    info-planning: 'Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme
+        an der Veranstaltung! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.'
+    info-canceled: 'Diese Veranstaltung wurde abgesagt!'
+    info-assigned: 'Du bist für diese Veranstaltung als {signedInUserPosition} eingeplant.'
+    info-confirmed: 'Du hast deine Teilnahme bestätigt.'
+    info-waitinglist: 'Du stehst für diese Veranstaltung als {signedInUserPosition} auf der Warteliste.'
+    info-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht: {openPositions}.'
+    leave-crew: 'Teilnahme absagen'
+    leave-waitinglist: 'Warteliste verlassen'
+    sign-up: 'Anmelden'
+    edit-event: 'Veranstaltung bearbeiten'
+    save-calendar: 'In Kalender speichern'
+    create-calendar-entry: 'Kalendereintrag erstellen'
+    edit-registration: 'Anmeldung bearbeiten'
+    add-note: 'Notiz fürs Büro hinzufügen'
+    leave-crew-dialog:
+      title: 'Teilnahme absagen?'
+      message: 'Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event} absagen möchtest? Du hast dann
+          keinen Anspruch mehr auf eine Teilnahme an der Veranstaltung und dein Platz wird an eine andere Person
+          vergeben.'
+      submit: 'Teilnahme absagen'
+  event-edit:
+    edit:
+      filter:
+        all-positions: 'Alle Positionen'
+        free-slots: 'Freie Slots'
+        valid-qualifications: 'Gültige Qualifikationen'
+        pending-confirmation: 'Teilnahmebestätigung ausstehend'
+      actions:
+        show-user: 'Nutzer anzeigen'
+        contact-crew: 'Crew kontaktieren'
+        move-to-waiting-list: 'Auf Warteliste setzen'
+        add-to-crew: 'Zur Crew hinzufügen'
+        add-registration: 'Anmeldung hinzufügen'
+        delete-registration: 'Anmeldung löschen'
+        edit-registration: 'Anmeldung bearbeiten'
+        add-slot: 'Crewslot hinzufügen'
+        delete-slot: 'Crewslot löschen'
+        edit-slot: 'Crewslot bearbeiten'
+        duplicate-slot: 'Crewslot duplizieren'
+        add-location: 'Routenabschnitt hinzufügen'
+        delete-location: 'Routenabschnitt löschen'
+        edit-location: 'Routenabschnitt bearbeiten'
+        edit-start-location: 'Starthafen bearbeiten'
+        delete-eta: 'ETA löschen'
+        delete-etd: 'ETD löschen'
+        exportToTemplate: '{template} exportieren'
+        open-signup: 'Anmeldungen freischalten'
+        publish-crew: 'Crew veröffentlichen'
+        reset-crew: 'Crew zurücksetzen'
+        cancel-event: 'Veranstaltung absagen'
+      secure-crew: 'Sichere Besatzung'
+      empty-crew:
+        title: 'Hier ist noch nichts...'
+        desc: 'Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese 
+          Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.'
+      empty-waitinglist:
+        title: 'Die Warteliste ist leer...'
+        desc: 'Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Veranstaltung 
+          anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden.'
+      info-draft: 'Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen 
+        freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen und auch bereits eine Crew planen.'
+      info-canceled: 'Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage 
+        im Tab Veranstaltungsdaten zurücknehmen, solange die Veranstaltung nicht gelöscht wird.'
+      info-signup: 'Die Crewplanung für diese Veranstaltung wurde noch nicht freigegeben. Crew Zuweisungen sind darum
+        nur für Nutzer mit der Berechtigung zur Crewplanung sichtbar. Wenn du mit der Crewplanung fertig bist kannst du 
+        die Crewplanung veröffentlichen, um die zugewiesene Crew zu informieren.'
+      info-missing-crew: 'Die Voraussetzungen für eine sichere Mindestbesatzung für diese Veranstaltung sind noch nicht 
+        erfüllt!'
+      unsaved-changes:
+        title: 'Änderungen verwerfen?'
+        message: 'Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen
+         verworfen. Möchtest du fortfahren?'
+      tab:
+        registrations: 'Anmeldungen'
+        data: 'Veranstaltungsdaten'
+        crew: 'Crewplanung'
+        locations: 'Route'
+        slots: 'Slots'
+      tooltip:
+        positions: 'Positionen'
+        information: 'Anmeldung'
+        qualifications: 'Qualifikationen'
+        guest-info: '{name} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.'
+      validation:
+        missing-location-name: 'Bitte gib einen Namen an'
+        missing-location-icon: 'Bitte wähle ein Icon'
+      edit-registration:
+        title: 'Anmeldung von {name} {lastName}'
+        guest-title: 'Gastcrewanmeldung'
+        no-qualification: '{name} hat keine Qualifikation für die Position {position}'
+        guest-warning: '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft
+         werden.'
+        qualifications: '{name} hat zum Zeitpunkt der Veranstaltung die folgenden Qualifikationen:'
+        select-position: 'Bitte wähle eine Position'
+        select-user: 'Bitte wähle eine Stammcrew Mitglied'
+      registration-id: 'Anmeldungs ID'
+      free: 'frei'
+  event-admin-list:
+    tab:
+      future: 'Zukünftige'
+    tab-title: 'Veranstaltungen verwalten'
+    filter:
+      search: 'Einträge filtern'
+      all-events: 'Alle Veranstaltungen'
+      all-status: 'Alle Status'
+      status: 'Status'
+      free-slots: 'Freie Plätze'
+      waitinglist: 'Warteliste'
+    table:
+      day-count: '{count} Tag | {count} Tage'
+      team: 'Crew'
+      no-route: 'keine Rroute angegeben'
+    state:
+      missing-crew: 'Noch zu besetzende Slots'
+      free-slots-for: 'Freie Plätze für'
+    action:
+      add-event: 'Hinzufügen'
+      export: 'Export'
+      show-event: 'Veranstaltung anzeigen'
+      edit-event: 'Veranstaltung bearbeiten'
+      exportToTemplate: '{template} exportieren'
+      add-registration: 'Anmeldung hinzufügen'
+      open-signup: 'Anmeldungen freischalten'
+      publish-crew: 'Crew veröffentlichen'
+      request-more-crew: 'Weitere Crew anfragen*'
+      contact-crew: 'Crew kontaktieren ({count} Pers.)'
+      delete-event: 'Veranstaltung löschen'
+      cancel-event: 'Veranstaltung absagen'
+      create-event: 'Veranstaltung erstellen'
+    dialog:
+      delete:
+        title: 'Veranstaltung löschen'
+        message: 'Bist du sicher, dass du die Veranstaltung {name} löschen möchtest? Diese Aktion kann später nicht 
+          rückgängig gemacht werden.'
+        submit: 'Unwiederruflich löschen'
+      open-signup:
+        title: 'Anmeldungen freigeben'
+        message: 'Unter den ausgewählten Veranstaltungen ist mindestens eine, die nicht im Status "Entwurf" ist. 
+          Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crew Anmeldung" ändern?'
+        cancel: 'Nein, nur die Entwürfe'
+        submit: 'Ja, alle ändern'
+      publish-crew:
+        title: 'Crew veröffentlichen'
+        message: 'Unter den ausgewählten Veranstaltungen ist mindestens eine, die nicht im Status "Crew Anmeldung"
+          ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crewplanung veröffentlicht" ändern?'
+        cancel: 'Nein, nur die in Anmeldung'
+        submit: 'Ja, alle ändern'
+    batch-edit:
+      title: 'Alle bearbeiten'
+      info: 'Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle
+        Veranstaltungen übernommen.'
+      copy-slots-from: 'Slots kopieren von'
+      copy-slots-warning: 'Bereits geplante Crews werden durch das überschreiben der Slots für alle ausgewählten
+        Veranstaltungen zurückgesetzt. Du musst dann alle Crews händisch erneut planen.'
+      not-changed: 'nicht geändert'
+      dont-change-slots: 'Slots nicht ändern'
+  event-list:
+    tab:
+      future: 'Zukünftige'
+    note-no-position: 'Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht
+        selber für Veranstaltungen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.'
+    filter:
+      search: 'Einträge filtern'
+      all-types: 'Alle Veranstaltungen'
+      assigned: 'Eingeplant'
+      waitinglist: 'Warteliste'
+      free-slots: 'Freie Plätze'
+    table:
+      team-count: 'Crew'
+      registration-count: 'Anmeldung | Anmeldungen'
+      day-count: '{count} Tag | {count} Tage'
+      assigned-as: 'Du bist als {0} eingeplant.'
+      on-waiting-list-as: 'Du stehst als {0} auf der Warteliste.'
+    state:
+      assigned: 'Eingeplant'
+      waitinglist: 'Warteliste'
+    action:
+      link-event-details: 'Veranstaltung anzeigen'
+      create-calendar-entry: 'Kalendereintrag erstellen'
+      signup: 'Anmelden'
+      cancel: 'Teilnahme absagen'
+      leave-waitinglist: 'Warteliste verlassen'
+  home:
+    waitinglist: 'Du stehst auf der Warteliste'
+    loading-events: 'Veranstaltungen werden geladen...'
+    no-upcoming-events-title: 'Keine zukünftigen Veranstaltungen'
+    no-upcoming-events-description: 'Du hast aktuell keine anstehenden Veranstaltungen. Du kannst im Kalender oder der 
+        Veranstaltungsliste nach Veranstaltungen suchen und dich für Veranstaltungen anmelden, an denen du gerne 
+        teilnehmen möchtest. Je nach Veranstaltungsart wirst du dann zuerst auf die Warteliste gesetzt und per Email
+        benachrichtigt, wenn du für die Crew eingeplant wirst.'
+    find-next-event: 'Veranstaltung anzeigen'
+    tab-title: 'Übersicht'
+    this-month: 'Diesen Monat'
+    next-month: 'Nächsten Monat'
+  settings:
+    tab:
+      general: 'Allgemein'
+      email: 'Email'
+      notifications: 'Benachrichtigungen'
+      positions: 'Positionen'
+      qualifications: 'Qualifikationen'
+    filter:
+      expires: 'Mit Ablaufdatum'
+      positions: 'Alle Positionen'
+    ui:
+      title: 'Oberfläche'
+      tab-title: 'Tab Titel'
+      tab-title-description: 'Prefix, der im Tab Titel angezeigt wird'
+      menu-title: 'Menü Titel'
+      menu-title-description: 'Titel, der im Navigationsmenü angezeigt wird'
+      theme-color: 'Theme Color'
+      theme-color-description: 'Primärfarbe, die im Design für alle Nutzer verwendet wird'
+      support-email: 'Support Email'
+      support-email-description: 'Email, die Nutzern für Support angezeigt wird'
+      tech-support-email: 'Technical Support Email'
+      tech-support-email-description: 'Email, die Nutzern für technischen Support angezeigt wird'
+    notifications:
+      title: 'Benachrichtigungen'
+      email: 'Emails'
+      email-description: 'Diese Email wird verwendet um Benachrichtigungen an Nutzer zu schicken.'
+      teams-webhook-url: 'MS Teams Webhook'
+      teams-webhook-url-description: 'An diesen Teams Webhook werden Admin Benachrichtigungen verschickt'
+      teams-webhook-set-up: 'Eingerichtet'
+      teams-webhook-not-set-up: 'Nicht eingerichtet'
+    positions:
+      add-new: 'Position hinzufügen'
+      edit: 'Position bearbeiten'
+      id: 'ID'
+      name: 'Name'
+      imo-list-rank: 'Anzeigename IMO Liste'
+      color: 'Farbe'
+      prio: 'Priorität'
+      delete-title: 'Position löschen'
+      delete-message: 'Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei
+        denen sie assoziiert ist, entfernt.'
+      validation:
+        name-must-be-unique: 'Eine Position mit diesem Namen existiert bereits'
+        key-must-be-unique: 'Eine Position mit dieser ID existiert bereits'
+    qualifications:
+      add-new: 'Qualifikation hinzufügen'
+      edit: 'Qualifikation bearbeiten'
+      key: 'ID'
+      name: 'Name'
+      icon: 'Icon'
+      icon-placeholder: 'fa-id-card'
+      description: 'Beschreibung'
+      expires: 'Gültigkeit der Qualifikation ist zeitlich begrenzt'
+      status-expires: 'Mit Ablaufdatum'
+      status-no-expires: 'Ohne Ablaufdatum'
+      delete-title: 'Qualifikation löschen'
+      delete-message: 'Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen
+        Nutzern, bei denen sie assoziiert ist, entfernt.'
+      positions: 'Positionen'
+      validation:
+        name-must-be-unique: 'Eine Qualifikation mit diesem Namen existiert bereits'
+        key-must-be-unique: 'Eine Qualifikation mit dieser ID existiert bereits'
+  user-list:
+    tab:
+      members: 'Stammcrew'
+      admins: 'Verwalter'
+      unknown: 'Nutzer ohne Rolle'
+  user-details:
+      tab:
+        data: 'Stammdaten'
+        contact: 'Kontakt'
+        certificates: 'Qualifikationen'
+        events: 'Veranstaltungen'
+        roles: 'Anwendungsrollen'
+        emergency: 'Notfallinformationen'
+        other: 'Sonstige Daten'

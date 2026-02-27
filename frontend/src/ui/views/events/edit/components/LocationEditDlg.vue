@@ -1,9 +1,9 @@
 <template>
     <VDialog ref="dlg" data-test-id="edit-location-dialog">
         <template #title>
-            <template v-if="location.order === 1">{{ $t('views.events.edit.actions.edit-start-location') }}</template>
-            <template v-else-if="location.order === -1">{{ $t('views.events.edit.actions.add-location') }}</template>
-            <template v-else>{{ $t('views.events.edit.actions.edit-location') }}</template>
+            <template v-if="location.order === 1">{{ $t('views.event-edit.actions.edit-start-location') }}</template>
+            <template v-else-if="location.order === -1">{{ $t('views.event-edit.actions.add-location') }}</template>
+            <template v-else>{{ $t('views.event-edit.actions.edit-location') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -67,7 +67,7 @@
                     </div>
                     <div class="mb-4 flex justify-end">
                         <button class="link text-sm" @click="location.eta = undefined">
-                            {{ $t('views.events.edit.actions.delete-eta') }}
+                            {{ $t('views.event-edit.actions.delete-eta') }}
                         </button>
                     </div>
                     <div class="mb-2 flex space-x-4">
@@ -92,7 +92,7 @@
                     </div>
                     <div class="mb-4 flex justify-end">
                         <button class="link text-sm" @click="location.etd = undefined">
-                            {{ $t('views.events.edit.actions.delete-etd') }}
+                            {{ $t('views.event-edit.actions.delete-etd') }}
                         </button>
                     </div>
                     <div class="mb-4">

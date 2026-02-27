@@ -206,7 +206,7 @@ const tabs = computed<{ value: Tab; label: string }[]>(() => {
     }
     return result.map((it) => ({
         value: it,
-        label: t(`views.users.details.tab.${it}`),
+        label: t(`views.user-details.tab.${it}`),
     }));
 });
 

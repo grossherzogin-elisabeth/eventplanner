@@ -47,23 +47,23 @@ const openPositions = computed<Position[]>(() => {
 const content = computed<StateBannerContent | undefined>(() => {
     // event is still in planning state
     if (props.event.state === EventState.OpenForSignup && props.event.signupType === EventSignupType.Assignment) {
-        return { type: VInfo, message: 'views.events.details.info-planning' };
+        return { type: VInfo, message: 'views.event-details.info-planning' };
     }
     // event was canceled
     if (props.event.state === EventState.Canceled) {
-        return { type: VWarning, message: 'views.events.details.info-canceled' };
+        return { type: VWarning, message: 'views.event-details.info-canceled' };
     }
     // user is assigned
     if (props.event.signedInUserRegistration && props.event.isSignedInUserAssigned) {
-        return { type: VSuccess, message: 'views.events.details.info-assigned' };
+        return { type: VSuccess, message: 'views.event-details.info-assigned' };
     }
     // user is on waiting list
     if (props.event.signedInUserRegistration) {
-        return { type: VInfo, message: 'views.events.details.info-waitinglist' };
+        return { type: VInfo, message: 'views.event-details.info-waitinglist' };
     }
     // user has no registration on this event, but crew members are missing
     if (openPositions.value.length > 0) {
-        return { type: VWarning, message: 'views.events.details.info-missing-crew' };
+        return { type: VWarning, message: 'views.event-details.info-missing-crew' };
     }
     // no banner
     return undefined;

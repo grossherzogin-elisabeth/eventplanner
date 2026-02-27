@@ -15,7 +15,7 @@
 
         <div v-if="signedInUser.impersonated" class="bg-error-container text-onerror-container mx-4 rounded-2xl pl-4 xl:mx-8 xl:pl-6">
             <div class="flex items-center">
-                <i18n-t tag="p" keypath="navigation.impersonate" class="mr-2 w-0 grow py-4 text-sm font-bold">
+                <i18n-t tag="p" keypath="components.menu.impersonate" class="mr-2 w-0 grow py-4 text-sm font-bold">
                     <span class="italic">{{ signedInUser.firstName }} {{ signedInUser.lastName }}</span>
                 </i18n-t>
                 <button class="btn-icon mr-2" title="Impersonate Modus beenden" @click="authUseCase.impersonateUser(null)">
@@ -28,13 +28,13 @@
             <li v-if="hasPermission(Permission.READ_EVENTS)" class="menu-item" data-test-id="menu-item-home">
                 <RouterLink :to="{ name: Routes.Home }">
                     <i class="fa-solid fa-home"></i>
-                    <span>{{ $t('navigation.myNextEvents') }}</span>
+                    <span>{{ $t('components.menu.home') }}</span>
                 </RouterLink>
             </li>
             <li v-else class="menu-item" data-test-id="menu-item-onboarding">
                 <RouterLink :to="{ name: Routes.Onboarding }">
                     <i class="fa-solid fa-home"></i>
-                    <span>{{ $t('navigation.start') }}</span>
+                    <span>{{ $t('components.menu.start') }}</span>
                 </RouterLink>
             </li>
             <li
@@ -45,7 +45,7 @@
             >
                 <button @click="eventsExpanded = !eventsExpanded">
                     <i class="fa-solid fa-calendar-days"></i>
-                    <span>{{ $t('navigation.calendar') }}</span>
+                    <span>{{ $t('components.menu.calendar') }}</span>
                     <i class="menu-chevron fa-solid fa-chevron-right"></i>
                 </button>
                 <ul v-if="eventsExpanded" class="space-y-1 pb-4">
@@ -69,7 +69,7 @@
             >
                 <RouterLink :to="{ name: Routes.EventsList }">
                     <i class="fa-solid fa-compass"></i>
-                    <span>{{ $t('navigation.allEvents') }}</span>
+                    <span>{{ $t('components.menu.events') }}</span>
                 </RouterLink>
             </li>
             <li
@@ -80,32 +80,32 @@
             >
                 <RouterLink :to="{ name: Routes.EventsListAdmin }">
                     <i class="fa-solid fa-compass-drafting"></i>
-                    <span>{{ $t('navigation.manageEvents') }}</span>
+                    <span>{{ $t('components.menu.events-admin') }}</span>
                 </RouterLink>
             </li>
             <li v-if="hasPermission(Permission.READ_USER_DETAILS)" class="menu-item" data-test-id="menu-item-user-list">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
-                    <span v-if="hasPermission(Permission.WRITE_USERS)">{{ $t('navigation.manageUsers') }}</span>
-                    <span v-else>{{ $t('navigation.listUsers') }}</span>
+                    <span v-if="hasPermission(Permission.WRITE_USERS)">{{ $t('components.menu.users-admin') }}</span>
+                    <span v-else>{{ $t('components.menu.users') }}</span>
                 </RouterLink>
             </li>
             <li v-if="hasPermission(Permission.WRITE_SETTINGS)" class="menu-item" data-test-id="menu-item-admin-settings">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>
-                    <span>{{ $t('navigation.manageSettings') }}</span>
+                    <span>{{ $t('components.menu.settings') }}</span>
                 </RouterLink>
             </li>
             <li class="menu-item" data-test-id="menu-item-account">
                 <RouterLink :to="{ name: Routes.Account }">
                     <i class="fa-solid fa-user-circle"></i>
-                    <span>{{ $t('navigation.account') }}</span>
+                    <span>{{ $t('components.menu.account') }}</span>
                 </RouterLink>
             </li>
             <li class="menu-item" data-test-id="menu-item-logout">
                 <a type="button" @click="authUseCase.logout()">
                     <i class="fa-solid fa-sign-out"></i>
-                    <span>{{ $t('navigation.signOut') }}</span>
+                    <span>{{ $t('components.menu.sign-out') }}</span>
                 </a>
             </li>
         </ul>
@@ -113,23 +113,20 @@
     <div v-else>
         <h1 class="mt-4 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ menuTitle }}</h1>
         <VInfo class="mx-8" data-test-id="create-account-hint">
-            <h2 class="mb-2">Noch kein Account?</h2>
-            <p class="mb-2">
-                Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Veranstaltungen einsehen und dich zu Veranstaltungen
-                an und abmelden.
-            </p>
+            <h2 class="mb-2">{{ $t('components.menu.no-account.header') }}</h2>
+            <p class="mb-2">{{ $t('components.menu.no-account.message') }}</p>
         </VInfo>
         <ul class="menu-list my-4">
             <li class="menu-item" data-test-id="menu-item-login">
                 <RouterLink :to="{ name: Routes.Login }">
                     <i class="fa-solid fa-sign-in-alt"></i>
-                    <span>Zum Login</span>
+                    <span>{{ $t('components.menu.no-account.login') }}</span>
                 </RouterLink>
             </li>
             <li class="menu-item" data-test-id="menu-item-register">
                 <RouterLink :to="{ name: Routes.Login }">
                     <i class="fa-solid fa-user-circle"></i>
-                    <span>Jetzt registrieren</span>
+                    <span>{{ $t('components.menu.no-account.register') }}</span>
                 </RouterLink>
             </li>
         </ul>

@@ -272,7 +272,7 @@ const filterPositions = useQuery<PositionKey[]>('positions', []).parameter;
 
 const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS].map((it) => ({
     value: it,
-    label: t(`views.users.list.tab.${it}`),
+    label: t(`views.user-list.tab.${it}`),
 }));
 const tab = ref<string>(tabs[0].value);
 
@@ -430,7 +430,7 @@ async function fetchUsers(): Promise<void> {
     users.value = userlist.map((user: User) => {
         return {
             ...user,
-            rolesStr: user.roles?.map((k) => t(`generic.role.${k}`)).join(', ') || '',
+            rolesStr: user.roles?.map((k) => t(`domain.role.${k}`)).join(', ') || '',
             waitingListCount: registrationsWaitinglist.filter((it) => it.userKey === user.key).length,
             multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,

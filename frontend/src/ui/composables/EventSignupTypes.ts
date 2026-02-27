@@ -16,7 +16,7 @@ export function useEventSignupTypes(): UseEventSignupTypes {
     const options = computed<InputSelectOption<EventSignupType>[]>(() => {
         return [EventSignupType.Assignment, EventSignupType.Open].map((it) => ({
             value: it,
-            label: t(`generic.event-signup-type.${it}`),
+            label: t(`domain.event-signup-type.${it}`),
         }));
     });
 

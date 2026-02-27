@@ -50,9 +50,9 @@
                                     />
                                 </template>
                                 <div v-else-if="createEventFromDate === d.date" class="create-event-overlay">
-                                    <span>{{ $t('views.events.calendar.create-event') }}</span>
+                                    <span>{{ $t('views.calendar.create-event') }}</span>
                                     <span v-if="calendarStyle['--create-event-days'] > 1" class="text-xs">
-                                        {{ calendarStyle['--create-event-days'] }} {{ $t('views.events.calendar.days') }}
+                                        {{ calendarStyle['--create-event-days'] }} {{ $t('views.calendar.days') }}
                                     </span>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@ const calendarStyle = ref({
 });
 
 function init(): void {
-    emit('update:tab-title', `${i18n.t('views.events.calendar.title')} ${route.params.year}`);
+    emit('update:tab-title', `${i18n.t('views.calendar.title')} ${route.params.year}`);
     watch(route, () => fetchEvents());
     watch(
         () => events.value,

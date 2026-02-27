@@ -48,7 +48,7 @@
         <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
             <li class="context-menu-item" data-test-id="action-edit" @click="editLocation(item)">
                 <i class="fa-solid fa-edit" />
-                <span>{{ $t('views.events.edit.actions.edit-location') }}</span>
+                <span>{{ $t('views.event-edit.actions.edit-location') }}</span>
             </li>
             <li class="context-menu-item" data-test-id="action-move-up" @click="moveLocationUp(item)">
                 <i class="fa-solid fa-arrow-up" />
@@ -60,7 +60,7 @@
             </li>
             <li class="context-menu-item text-error" data-test-id="action-delete" @click="deleteLocation(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>{{ $t('views.events.edit.actions.delete-location') }}</span>
+                <span>{{ $t('views.event-edit.actions.delete-location') }}</span>
             </li>
         </template>
     </VTable>

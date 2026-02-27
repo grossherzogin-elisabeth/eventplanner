@@ -22,7 +22,7 @@ describe('EventDetailsCard.vue', () => {
     });
 
     it('should render event category', async () => {
-        expect(testee.text()).toContain(testee.vm.$t(`generic.event-type.${event.type}`));
+        expect(testee.text()).toContain(testee.vm.$t(`domain.event-type.${event.type}`));
     });
 
     it('should render crew count', async () => {

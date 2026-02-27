@@ -63,7 +63,7 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
     /**
      * Add an authentication guard to the router
      */
-    router.beforeResolve(async (to, _) => {
+    router.beforeResolve(async (to) => {
         const meta = to.meta as RouteMetaData | undefined;
         // if there is a pending redirect from pre login, restore the wanted page first
         const redirect = localStorage.getItem('login-redirect');
