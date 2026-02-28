@@ -144,7 +144,7 @@
                     @click="openEventForCrewSignup()"
                 >
                     <i class="fa-solid fa-lock-open" />
-                    <span>{{ $t('views.event-edit.open-signup') }}</span>
+                    <span>{{ $t('views.event-edit.actions.open-signup') }}</span>
                 </li>
                 <li
                     v-if="event?.state === EventState.OpenForSignup"

@@ -1,8 +1,11 @@
 import type { ComputedRef, Ref } from 'vue';
 import { computed, ref, toValue, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+export type AttributeKey = string;
 
 export interface UseValidation {
-    errors: Ref<Record<string, string[]>>;
+    errors: Ref<Record<AttributeKey, string[]>>;
     isValid: Ref<boolean>;
     showErrors: Ref<boolean>;
     disableSubmit: ComputedRef<boolean>;
@@ -11,8 +14,10 @@ export interface UseValidation {
 }
 
 export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunction: (t: T) => Record<string, string[]>): UseValidation {
+    const i18n = useI18n();
+
     const showErrors = ref<boolean>(false);
-    const errors = ref<Record<string, string[]>>({});
+    const errors = ref<Record<AttributeKey, string[]>>({});
     const isValid = ref<boolean>(true);
 
     watchEffect(() => validate());
@@ -22,7 +27,23 @@ export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunct
     });
 
     function validate(): void {
-        errors.value = validationFunction(toValue(t));
+        const translatedErrors: Record<AttributeKey, string[]> = {};
+        Object.entries(validationFunction(toValue(t))).forEach(([key, value]) => {
+            translatedErrors[key] = value.map((rawError) => {
+                const parts = rawError.split(':');
+                const i18nKey = parts[0];
+                const i18nParams = parts[1]?.split(',') ?? [];
+                try {
+                    return i18n.t(i18nKey, i18nParams);
+                } catch (e) {
+                    console.warn(e);
+                    // test configuration will throw errors if i18n keys cannot be found
+                    // use the raw error in that case, as some validators are not yet translated
+                    return rawError;
+                }
+            });
+        });
+        errors.value = translatedErrors;
         const errorCount = Object.keys(errors.value).length;
         isValid.value = errorCount === 0;
         if (isValid.value) {

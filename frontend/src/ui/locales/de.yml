@@ -424,82 +424,81 @@ views:
           vergeben.'
       submit: 'Teilnahme absagen'
   event-edit:
-    edit:
-      filter:
-        all-positions: 'Alle Positionen'
-        free-slots: 'Freie Slots'
-        valid-qualifications: 'Gültige Qualifikationen'
-        pending-confirmation: 'Teilnahmebestätigung ausstehend'
-      actions:
-        show-user: 'Nutzer anzeigen'
-        contact-crew: 'Crew kontaktieren'
-        move-to-waiting-list: 'Auf Warteliste setzen'
-        add-to-crew: 'Zur Crew hinzufügen'
-        add-registration: 'Anmeldung hinzufügen'
-        delete-registration: 'Anmeldung löschen'
-        edit-registration: 'Anmeldung bearbeiten'
-        add-slot: 'Crewslot hinzufügen'
-        delete-slot: 'Crewslot löschen'
-        edit-slot: 'Crewslot bearbeiten'
-        duplicate-slot: 'Crewslot duplizieren'
-        add-location: 'Routenabschnitt hinzufügen'
-        delete-location: 'Routenabschnitt löschen'
-        edit-location: 'Routenabschnitt bearbeiten'
-        edit-start-location: 'Starthafen bearbeiten'
-        delete-eta: 'ETA löschen'
-        delete-etd: 'ETD löschen'
-        exportToTemplate: '{template} exportieren'
-        open-signup: 'Anmeldungen freischalten'
-        publish-crew: 'Crew veröffentlichen'
-        reset-crew: 'Crew zurücksetzen'
-        cancel-event: 'Veranstaltung absagen'
-      secure-crew: 'Sichere Besatzung'
-      empty-crew:
-        title: 'Hier ist noch nichts...'
-        desc: 'Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese 
-          Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.'
-      empty-waitinglist:
-        title: 'Die Warteliste ist leer...'
-        desc: 'Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Veranstaltung 
-          anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden.'
-      info-draft: 'Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen 
-        freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen und auch bereits eine Crew planen.'
-      info-canceled: 'Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage 
-        im Tab Veranstaltungsdaten zurücknehmen, solange die Veranstaltung nicht gelöscht wird.'
-      info-signup: 'Die Crewplanung für diese Veranstaltung wurde noch nicht freigegeben. Crew Zuweisungen sind darum
-        nur für Nutzer mit der Berechtigung zur Crewplanung sichtbar. Wenn du mit der Crewplanung fertig bist kannst du 
-        die Crewplanung veröffentlichen, um die zugewiesene Crew zu informieren.'
-      info-missing-crew: 'Die Voraussetzungen für eine sichere Mindestbesatzung für diese Veranstaltung sind noch nicht 
-        erfüllt!'
-      unsaved-changes:
-        title: 'Änderungen verwerfen?'
-        message: 'Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen
-         verworfen. Möchtest du fortfahren?'
-      tab:
-        registrations: 'Anmeldungen'
-        data: 'Veranstaltungsdaten'
-        crew: 'Crewplanung'
-        locations: 'Route'
-        slots: 'Slots'
-      tooltip:
-        positions: 'Positionen'
-        information: 'Anmeldung'
-        qualifications: 'Qualifikationen'
-        guest-info: '{name} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.'
-      validation:
-        missing-location-name: 'Bitte gib einen Namen an'
-        missing-location-icon: 'Bitte wähle ein Icon'
-      edit-registration:
-        title: 'Anmeldung von {name} {lastName}'
-        guest-title: 'Gastcrewanmeldung'
-        no-qualification: '{name} hat keine Qualifikation für die Position {position}'
-        guest-warning: '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft
-         werden.'
-        qualifications: '{name} hat zum Zeitpunkt der Veranstaltung die folgenden Qualifikationen:'
-        select-position: 'Bitte wähle eine Position'
-        select-user: 'Bitte wähle eine Stammcrew Mitglied'
-      registration-id: 'Anmeldungs ID'
-      free: 'frei'
+    filter:
+      all-positions: 'Alle Positionen'
+      free-slots: 'Freie Slots'
+      valid-qualifications: 'Gültige Qualifikationen'
+      pending-confirmation: 'Teilnahmebestätigung ausstehend'
+    actions:
+      show-user: 'Nutzer anzeigen'
+      contact-crew: 'Crew kontaktieren'
+      move-to-waiting-list: 'Auf Warteliste setzen'
+      add-to-crew: 'Zur Crew hinzufügen'
+      add-registration: 'Anmeldung hinzufügen'
+      delete-registration: 'Anmeldung löschen'
+      edit-registration: 'Anmeldung bearbeiten'
+      add-slot: 'Crewslot hinzufügen'
+      delete-slot: 'Crewslot löschen'
+      edit-slot: 'Crewslot bearbeiten'
+      duplicate-slot: 'Crewslot duplizieren'
+      add-location: 'Routenabschnitt hinzufügen'
+      delete-location: 'Routenabschnitt löschen'
+      edit-location: 'Routenabschnitt bearbeiten'
+      edit-start-location: 'Starthafen bearbeiten'
+      delete-eta: 'ETA löschen'
+      delete-etd: 'ETD löschen'
+      exportToTemplate: '{template} exportieren'
+      open-signup: 'Anmeldungen freischalten'
+      publish-crew: 'Crew veröffentlichen'
+      reset-crew: 'Crew zurücksetzen'
+      cancel-event: 'Veranstaltung absagen'
+    secure-crew: 'Sichere Besatzung'
+    empty-crew:
+      title: 'Hier ist noch nichts...'
+      desc: 'Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese 
+        Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.'
+    empty-waitinglist:
+      title: 'Die Warteliste ist leer...'
+      desc: 'Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Veranstaltung 
+        anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden.'
+    info-draft: 'Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen 
+      freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen und auch bereits eine Crew planen.'
+    info-canceled: 'Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage 
+      im Tab Veranstaltungsdaten zurücknehmen, solange die Veranstaltung nicht gelöscht wird.'
+    info-signup: 'Die Crewplanung für diese Veranstaltung wurde noch nicht freigegeben. Crew Zuweisungen sind darum
+      nur für Nutzer mit der Berechtigung zur Crewplanung sichtbar. Wenn du mit der Crewplanung fertig bist kannst du 
+      die Crewplanung veröffentlichen, um die zugewiesene Crew zu informieren.'
+    info-missing-crew: 'Die Voraussetzungen für eine sichere Mindestbesatzung für diese Veranstaltung sind noch nicht 
+      erfüllt!'
+    unsaved-changes:
+      title: 'Änderungen verwerfen?'
+      message: 'Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen
+       verworfen. Möchtest du fortfahren?'
+    tab:
+      registrations: 'Anmeldungen'
+      data: 'Veranstaltungsdaten'
+      crew: 'Crewplanung'
+      locations: 'Route'
+      slots: 'Slots'
+    tooltip:
+      positions: 'Positionen'
+      information: 'Anmeldung'
+      qualifications: 'Qualifikationen'
+      guest-info: '{name} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.'
+    validation:
+      missing-location-name: 'Bitte gib einen Namen an'
+      missing-location-icon: 'Bitte wähle ein Icon'
+    edit-registration:
+      title: 'Anmeldung von {name} {lastName}'
+      guest-title: 'Gastcrewanmeldung'
+      no-qualification: '{name} hat keine Qualifikation für die Position {position}'
+      guest-warning: '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft
+       werden.'
+      qualifications: '{name} hat zum Zeitpunkt der Veranstaltung die folgenden Qualifikationen:'
+      select-position: 'Bitte wähle eine Position'
+      select-user: 'Bitte wähle eine Stammcrew Mitglied'
+    registration-id: 'Anmeldungs ID'
+    free: 'frei'
   event-admin-list:
     tab:
       future: 'Zukünftige'
