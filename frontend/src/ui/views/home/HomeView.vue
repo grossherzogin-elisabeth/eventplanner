@@ -3,7 +3,7 @@
         <div class="xs:px-8 flex px-4 pb-8 md:px-16 xl:px-20">
             <div class="w-full xl:max-w-2xl">
                 <div class="bg-surface sticky top-12 z-10 -mx-6 flex h-14 justify-end pt-4 pb-2 xl:top-0 xl:h-16 xl:pt-8"></div>
-                <div v-if="loading" class="-mt-10">
+                <div v-if="loading" class="-mt-10" data-test-id="loading">
                     <div class="pb-8">
                         <div class="pointer-events-none sticky top-16 z-10 flex pt-2 pb-1 xl:top-8">
                             <h2 class="text-secondary inline-block font-bold">{{ $t('views.home.loading-events') }}</h2>
@@ -15,7 +15,11 @@
                         </ul>
                     </div>
                 </div>
-                <div v-else-if="events.length === 0" class="bg-surface-container xs:-mx-4 relative z-10 -mt-10 rounded-2xl p-4">
+                <div
+                    v-else-if="events.length === 0"
+                    class="bg-surface-container xs:-mx-4 relative z-10 -mt-10 rounded-2xl p-4"
+                    data-test-id="no-events"
+                >
                     <h3 class="text-secondary mb-2 font-bold">{{ $t('views.home.no-upcoming-events-title') }}</h3>
                     <p class="mb-4">
                         {{ $t('views.home.no-upcoming-events-description') }}
@@ -27,7 +31,7 @@
                         </RouterLink>
                     </div>
                 </div>
-                <div v-else class="-mt-10">
+                <div v-else class="-mt-10" data-test-id="events">
                     <div v-for="entry in eventsByMonth.entries()" :key="entry[0]" class="pb-8">
                         <div class="pointer-events-none sticky top-16 z-10 flex pt-2 pb-1 xl:top-8">
                             <h2 class="text-secondary inline-block">
