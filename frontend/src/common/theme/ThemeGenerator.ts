@@ -5,20 +5,21 @@ import {
     blueFromArgb,
     customColor,
     greenFromArgb,
+    hexFromArgb,
     redFromArgb,
 } from '@material/material-color-utilities';
 
-function generateColorSchemeCss(baseColor: string, darkMode: boolean): string[] {
+export function generateColorSchemeCssVariables(baseColor: string, darkMode: boolean, contrast: 0 | 1 | 2): string[] {
     const argb = argbFromHex(baseColor);
-    const scheme = new SchemeTonalSpot(Hct.fromInt(argb), darkMode, darkMode ? 1 : 0);
+    const scheme = new SchemeTonalSpot(Hct.fromInt(argb), darkMode, contrast);
+
+    console.log(`
+    primary: '${hexFromArgb(scheme.primaryContainer)}',
+    secondary: '${hexFromArgb(scheme.secondaryContainer)}',
+    tertiary: '${hexFromArgb(scheme.tertiaryContainer)}',
+    `);
 
     const colors = [
-        `--color-transparent: transparent;`,
-        `--color-current: currentColor;`,
-        `--color-inherit: inherit;`,
-        `--color-black: ${renderColor('#000000')};`,
-        `--color-white: ${renderColor('#ffffff')};`,
-
         `--color-primary: ${renderColor(scheme.primary)};`,
         `--color-primary-container: ${renderColor(scheme.primaryContainer)};`,
         `--color-primary-fixed: ${renderColor(scheme.primaryFixed)};`,
@@ -69,10 +70,10 @@ function generateColorSchemeCss(baseColor: string, darkMode: boolean): string[] 
         // `--color-onerror-container: ${renderColor(scheme.onErrorContainer)};`,
     ];
 
-    generateCustomColor(argb, 'success', argbFromHex('#3f6212'), darkMode).forEach((c) => colors.push(c));
-    generateCustomColor(argb, 'warning', argbFromHex('#eab308'), darkMode).forEach((c) => colors.push(c));
-    generateCustomColor(argb, 'info', argbFromHex('#188edc'), darkMode).forEach((c) => colors.push(c));
-    generateCustomColor(argb, 'error', argbFromHex('#b91c1c'), darkMode).forEach((c) => colors.push(c));
+    generateCustomColor(argb, 'success', argbFromHex('#3f6212'), darkMode, true).forEach((c) => colors.push(c));
+    generateCustomColor(argb, 'warning', argbFromHex('#eab308'), darkMode, true).forEach((c) => colors.push(c));
+    generateCustomColor(argb, 'info', argbFromHex('#188edc'), darkMode, true).forEach((c) => colors.push(c));
+    generateCustomColor(argb, 'error', argbFromHex('#b91c1c'), darkMode, true).forEach((c) => colors.push(c));
 
     return colors;
 }
@@ -84,11 +85,11 @@ function renderColor(color: number | string): string {
     } else if (typeof color === 'number') {
         argb = color;
     }
-    return `${redFromArgb(argb)} ${greenFromArgb(argb)} ${blueFromArgb(argb)}`;
+    return `rgb(${redFromArgb(argb)} ${greenFromArgb(argb)} ${blueFromArgb(argb)})`;
 }
 
-function generateCustomColor(themeColor: number, name: string, color: number, darkMode: boolean): string[] {
-    const customColorGroup = customColor(themeColor, { value: color, name: name, blend: false });
+function generateCustomColor(themeColor: number, name: string, color: number, darkMode: boolean, blend: boolean): string[] {
+    const customColorGroup = customColor(themeColor, { value: color, name: name, blend: blend });
     const c = darkMode ? customColorGroup.dark : customColorGroup.light;
     return [
         `--color-${name}: ${renderColor(c.color)};`,
@@ -97,23 +98,3 @@ function generateCustomColor(themeColor: number, name: string, color: number, da
         `--color-on${name}-container: ${renderColor(c.onColorContainer)};`,
     ];
 }
-
-const lightColors = generateColorSchemeCss('#188edc', false);
-const darkColors = generateColorSchemeCss('#188edc', true);
-
-const tailwindCss = `
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-    html {
-        ${lightColors.join('\n        ')}
-    }
-
-    html.dark {
-        ${darkColors.join('\n        ')}
-    }
-}`;
-
-console.log(tailwindCss);
