@@ -12,7 +12,6 @@
     </div>
     <div v-else-if="signedInUser" class="menu flex-1 overflow-y-auto">
         <h1 class="mt-8 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ menuTitle }}</h1>
-
         <div v-if="signedInUser.impersonated" class="bg-error-container text-onerror-container mx-4 rounded-2xl pl-4 xl:mx-8 xl:pl-6">
             <div class="flex items-center">
                 <i18n-t tag="p" keypath="components.menu.impersonate" class="mr-2 w-0 grow py-4 text-sm font-bold">

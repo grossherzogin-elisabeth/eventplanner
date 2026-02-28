@@ -46,7 +46,7 @@ datetimeFormatsDe[DateTimeFormat.DDD_DD_MM_hh_mm] = {
     minute: '2-digit',
 };
 
-export function setupI18n(config: { locale: string; fallbackLocale: string; availableLocales: string[] }): I18n {
+export function setupI18n(config: { locale: string; fallbackLocale: string; availableLocales: string[]; throwOnMissing?: boolean }): I18n {
     return createI18n({
         legacy: false, // required to enable useI18n in Vue setup script
         locale: config.locale,
@@ -55,7 +55,15 @@ export function setupI18n(config: { locale: string; fallbackLocale: string; avai
         availableLocales: config.availableLocales,
         silentFallbackWarn: true,
         silentTranslationWarn: true,
-        missingWarn: false,
+        missingWarn: true,
+        missing: (locale, key) => {
+            if (config.throwOnMissing) {
+                // mainly for testing: prevent usage of non-existing i18n keys by letting tests fail
+                const message = `Localization key '${key}' is missing for locale ${locale}`;
+                console.error(message);
+                throw new Error(message);
+            }
+        },
         fallbackWarn: false,
         datetimeFormats: {
             de: datetimeFormatsDe,
