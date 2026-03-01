@@ -1,6 +1,10 @@
 import type { Event } from '@/domain';
 
 export class CalendarService {
+    constructor() {
+        console.log('🚀 Initializing CalendarService');
+    }
+
     public createCalendarEntries(events: Event[]): string {
         return `
             BEGIN:VCALENDAR

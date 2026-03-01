@@ -179,10 +179,9 @@ export class EventUseCase {
                     if (!isSameDate(event.start, event.end)) {
                         eventRegistration.overnightStay = true;
                     }
-                    if (!eventRegistration.arrival) {
-                        // we only support setting arrival on the day before the event start for now
-                        eventRegistration.arrival = subtractFromDate(event.start, { days: 1 });
-                    }
+                    // we only support setting arrival on the day before the event start for now
+                    eventRegistration.arrival ??= subtractFromDate(event.start, { days: 1 });
+
                     return this.joinEventInternal(event, eventRegistration);
                 })
             );
