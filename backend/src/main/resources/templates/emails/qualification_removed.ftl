@@ -1,8 +1,5 @@
 <p>
     Die Qualifikation <b>${qualification.name}</b> ist dir jetzt nicht mehr zugewiesen.
-    <#if granted_positions??>
-        Du kannst dich von nun an nicht mehr an als <b>${granted_positions}</b> zu Reisen anmelden.
-    </#if>
 </p>
 <p>
     Du kannst die dir zugewiesenen Qualifikationen jederzeit in der Crew App unter
