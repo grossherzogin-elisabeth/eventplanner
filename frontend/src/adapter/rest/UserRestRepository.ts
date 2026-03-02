@@ -1,5 +1,6 @@
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { UserRepository } from '@/application';
+import { toIsoDateString } from '@/common';
 import type { PositionKey, Role, User, UserDetails, UserKey } from '@/domain';
 
 export interface UserRepresentation {
@@ -209,7 +210,7 @@ export class UserRestRepository implements UserRepository {
             phone: user.phone,
             phoneWork: user.phoneWork,
             mobile: user.mobile,
-            dateOfBirth: user.dateOfBirth?.toISOString().substring(0, 10),
+            dateOfBirth: toIsoDateString(user.dateOfBirth),
             placeOfBirth: user.placeOfBirth,
             passNr: user.passNr,
             nationality: user.nationality,
@@ -307,7 +308,7 @@ export class UserRestRepository implements UserRepository {
                       phone: user.emergencyContact?.phone,
                   }
                 : undefined,
-            dateOfBirth: user.dateOfBirth?.toISOString().substring(0, 10),
+            dateOfBirth: toIsoDateString(user.dateOfBirth),
             placeOfBirth: user.placeOfBirth,
         };
         const response = await fetch(`/api/v1/users/self`, {
