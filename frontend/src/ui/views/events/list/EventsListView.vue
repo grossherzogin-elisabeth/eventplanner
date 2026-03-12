@@ -23,12 +23,17 @@
         <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
             <FilterMultiselect
                 v-model="filterEventType"
+                data-test-id="filter-event-type"
                 :placeholder="$t('views.event-list.filter.all-types')"
                 :options="eventTypes.options.value"
             />
-            <FilterToggle v-model="filterAssigned" :label="$t('views.event-list.filter.assigned')" />
-            <FilterToggle v-model="filterWaitingList" :label="$t('views.event-list.filter.waitinglist')" />
-            <FilterToggle v-model="filterFreeSlots" :label="$t('views.event-list.filter.free-slots')" />
+            <FilterToggle v-model="filterAssigned" data-test-id="filter-assigned" :label="$t('views.event-list.filter.assigned')" />
+            <FilterToggle
+                v-model="filterWaitingList"
+                data-test-id="filter-waiting-list"
+                :label="$t('views.event-list.filter.waitinglist')"
+            />
+            <FilterToggle v-model="filterFreeSlots" data-test-id="filter-free-slots" :label="$t('views.event-list.filter.free-slots')" />
         </div>
 
         <div class="w-full">
