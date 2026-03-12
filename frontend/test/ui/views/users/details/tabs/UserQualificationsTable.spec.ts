@@ -4,6 +4,7 @@ import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { UserDetails } from '@/domain';
 import { Permission } from '@/domain';
+import type { UseQualifications } from '@/ui/composables/Qualifications.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import UserQualificationsTable from '@/ui/views/users/details/tabs/UserQualificationsTable.vue';
 import { mockRouter, mockUserCaptain, mockUserDetails } from '~/mocks';
@@ -17,10 +18,12 @@ vi.mock('vue-router', () => ({
 describe('UserQualificationsTable.vue', () => {
     let testee: VueWrapper;
     let user: UserDetails;
+    let qualifications: UseQualifications;
 
     beforeEach(async () => {
         user = mockUserDetails(mockUserCaptain());
-        await useQualifications().loading;
+        qualifications = useQualifications();
+        await qualifications.loading;
         testee = mount(UserQualificationsTable, {
             props: { modelValue: user },
             global: { plugins: [router] },
@@ -34,7 +37,6 @@ describe('UserQualificationsTable.vue', () => {
     });
 
     it('should render qualification names', async () => {
-        const qualifications = useQualifications();
         const table = testee.find('tbody');
         expect(user.qualifications.length).toBeGreaterThan(0);
         user.qualifications.forEach((userQualification) => {
