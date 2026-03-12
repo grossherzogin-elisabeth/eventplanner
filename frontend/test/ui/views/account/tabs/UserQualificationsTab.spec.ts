@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { UserDetails } from '@/domain';
+import type { UseQualifications } from '@/ui/composables/Qualifications.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import UserQualificationsTab from '@/ui/views/account/tabs/UserQualificationsTab.vue';
 import { mockRouter, mockUserCaptain, mockUserDetails } from '~/mocks';
@@ -15,10 +16,12 @@ vi.mock('vue-router', () => ({
 describe('UserQualificationsTab.vue', () => {
     let testee: VueWrapper;
     let user: UserDetails;
+    let qualifications: UseQualifications;
 
     beforeEach(async () => {
         user = mockUserDetails(mockUserCaptain());
-        await useQualifications().loading;
+        qualifications = useQualifications();
+        await qualifications.loading;
         testee = mount(UserQualificationsTab, {
             props: { user },
             global: { plugins: [router] },
@@ -32,7 +35,6 @@ describe('UserQualificationsTab.vue', () => {
     });
 
     it('should render qualification names', async () => {
-        const qualifications = useQualifications();
         const table = testee.find('tbody');
         expect(user.qualifications.length).toBeGreaterThan(0);
         user.qualifications.forEach((userQualification) => {
