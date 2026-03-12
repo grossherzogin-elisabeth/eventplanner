@@ -9,3 +9,10 @@ export function setupUserPermissions(permissions: Permission[]): SignedInUser {
     authService.setSignedInUser(signedInUser);
     return signedInUser;
 }
+
+export function setupSignedInUser(overwrite?: Partial<SignedInUser>): SignedInUser {
+    const authService = useAuthService();
+    const signedInUser = mockSignedInUser(overwrite);
+    authService.setSignedInUser(signedInUser);
+    return signedInUser;
+}

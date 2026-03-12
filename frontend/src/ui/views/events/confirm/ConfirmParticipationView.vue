@@ -1,7 +1,8 @@
 <template>
     <div class="xs:px-8 h-full overflow-y-auto px-4 pt-8 pb-8 md:px-16 xl:px-20">
         <div class="w-full max-w-2xl">
-            <div v-if="registrationState === State.REGISTRATION_UNCONFIRMED">
+            <div v-if="!registrationState" data-test-id="loading"></div>
+            <div v-else-if="registrationState === State.REGISTRATION_UNCONFIRMED">
                 <div class="mb-8 rounded-2xl">
                     <h1 class="mb-4 text-lg">{{ $t('views.event-confirm-participation.title') }}</h1>
                     <p class="mb-4">
@@ -17,29 +18,32 @@
                 <EventDetails v-if="event" :event="event" class="mb-8" />
 
                 <div class="hidden items-center gap-4 sm:flex">
-                    <button class="btn-primary" @click="confirm()">
+                    <button class="btn-primary" data-test-id="button-confirm" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
                         <span class="py-2 sm:py-0">{{ $t('views.event-confirm-participation.confirm') }}</span>
                     </button>
-                    <button class="btn-danger" @click="decline()">
+                    <button class="btn-danger" data-test-id="button-decline" @click="decline()">
                         <i class="fa-solid fa-xmark"></i>
                         <span class="py-2 sm:py-0">{{ $t('views.event-confirm-participation.decline') }}</span>
                     </button>
                 </div>
                 <div class="h-20 sm:hidden"></div>
                 <div class="bg-surface fixed right-0 bottom-0 left-0 flex flex-col items-stretch gap-4 px-4 py-2 sm:hidden">
-                    <button class="btn-primary" @click="confirm()">
+                    <button class="btn-primary" data-test-id="button-confirm" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
                         <span class="py-2 text-sm whitespace-normal">{{ $t('views.event-confirm-participation.confirm') }}</span>
                     </button>
-                    <button class="btn-danger" @click="decline()">
+                    <button class="btn-danger" data-test-id="button-decline" @click="decline()">
                         <i class="fa-solid fa-xmark"></i>
                         <span class="py-2 text-sm whitespace-normal">{{ $t('views.event-confirm-participation.decline') }}</span>
                     </button>
                 </div>
             </div>
             <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED && !signedInUser?.key">
-                <div class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold">
+                <div
+                    class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold"
+                    data-test-id="registration-not-found"
+                >
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">{{ $t('views.event-confirm-participation.not-found.title') }}</span>
@@ -50,7 +54,10 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.REGISTRATION_WAS_CANCELED">
-                <div class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8">
+                <div
+                    class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8"
+                    data-test-id="registration-canceled"
+                >
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">{{ $t('views.event-confirm-participation.canceled.title') }}</span>
@@ -61,7 +68,10 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.SIGNED_IN_USER_HAS_NO_REGISTRATION">
-                <div class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8">
+                <div
+                    class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8"
+                    data-test-id="no-registration-for-user"
+                >
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">{{ $t('views.event-confirm-participation.no-registration.title') }}</span>
@@ -72,7 +82,10 @@
                 </div>
             </div>
             <div v-else-if="registrationState === State.REGISTRATION_BELONGS_TO_OTHER_USER">
-                <div class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8">
+                <div
+                    class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8"
+                    data-test-id="registration-belongs-to-other-user"
+                >
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-warning"></i>
                         <span class="ml-4">{{ $t('views.event-confirm-participation.invalid-link.title') }}</span>
@@ -83,7 +96,10 @@
                 </div>
             </div>
             <template v-else-if="registrationState === State.REGISTRATION_WAS_CONFIRMED">
-                <div class="bg-success-container/50 text-onsuccess-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8">
+                <div
+                    class="bg-success-container/50 text-onsuccess-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8"
+                    data-test-id="registration-confirmed"
+                >
                     <p class="mb-4 text-lg">
                         <i class="fa-solid fa-check"></i>
                         <span class="ml-4">{{ $t('views.event-confirm-participation.confirmed.title') }}</span>
@@ -98,6 +114,7 @@
             <div
                 v-else-if="registrationState === State.REGISTRATION_WAS_JUST_CANCELED"
                 class="bg-error-container text-onerror-container xs:-mx-4 mb-8 rounded-2xl p-4 font-bold md:p-8"
+                data-test-id="registration-just-canceled"
             >
                 <p class="mb-4 text-lg">
                     <i class="fa-solid fa-xmark"></i>

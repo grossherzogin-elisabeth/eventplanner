@@ -19,6 +19,8 @@ afterEach(() => {
     resetUseCases();
     resetDomainServices();
     vi.clearAllMocks();
+    vi.useRealTimers();
+    vi.setSystemTime(vi.getRealSystemTime());
     localStorage.clear();
     sessionStorage.clear();
     server.resetHandlers();

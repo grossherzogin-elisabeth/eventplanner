@@ -1,5 +1,5 @@
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import type { VueWrapper } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
@@ -66,10 +66,6 @@ describe('HomeView.vue', () => {
         server.use(http.get('/api/v1/events', () => HttpResponse.json(events)));
         await router.push({ name: Routes.Home });
         testee = mount(HomeView, { global: { plugins: [router] } });
-    });
-
-    afterEach(async () => {
-        vi.setSystemTime(vi.getRealSystemTime());
     });
 
     it('should render loading skeleton initially', async () => {
