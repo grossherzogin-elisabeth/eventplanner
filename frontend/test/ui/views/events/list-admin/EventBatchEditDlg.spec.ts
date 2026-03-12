@@ -1,7 +1,5 @@
 import { nextTick } from 'vue';
 import type { MockInstance } from 'vitest';
-import { afterAll } from 'vitest';
-import { beforeAll } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
@@ -23,18 +21,11 @@ describe('EventBatchEditDlg.vue', () => {
     let eventA = mockEvent({ key: 'a' });
     let eventB = mockEvent({ key: 'b' });
 
-    beforeAll(() => {
-        vi.useFakeTimers();
-    });
-
     beforeEach(() => {
+        vi.useFakeTimers();
         server.use(http.get('/api/v1/events', () => HttpResponse.json([eventA, eventB], { status: 200 })));
         server.use(http.get('/api/v1/events/a', () => HttpResponse.json(eventA, { status: 200 })));
         server.use(http.get('/api/v1/events/b', () => HttpResponse.json(eventB, { status: 200 })));
-    });
-
-    afterAll(() => {
-        vi.useRealTimers();
     });
 
     beforeEach(async () => {

@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import type { Router } from 'vue-router';
-import { type MockInstance, afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type MockInstance, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useAuthService, useQualificationsAdministrationUseCase } from '@/application';
@@ -22,15 +22,8 @@ describe('TabQualifications.vue', () => {
     let createFunc: MockInstance;
     let testee: VueWrapper;
 
-    beforeAll(() => {
-        vi.useFakeTimers();
-    });
-
-    afterAll(() => {
-        vi.useRealTimers();
-    });
-
     beforeEach(async () => {
+        vi.useFakeTimers();
         deleteFunc = vi.spyOn(useQualificationsAdministrationUseCase(), 'deleteQualification');
         updateFunc = vi.spyOn(useQualificationsAdministrationUseCase(), 'updateQualification');
         createFunc = vi.spyOn(useQualificationsAdministrationUseCase(), 'createQualification');

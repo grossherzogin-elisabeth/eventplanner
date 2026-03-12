@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import type { RouteLocationNormalizedLoadedGeneric } from 'vue-router';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { Event } from '@/domain';
@@ -21,15 +21,8 @@ describe('EventDetailsSheet.vue', () => {
     let testee: VueWrapper;
     let event = mockEvent();
 
-    beforeAll(() => {
-        vi.useFakeTimers();
-    });
-
-    afterAll(() => {
-        vi.useRealTimers();
-    });
-
     beforeEach(async () => {
+        vi.useFakeTimers();
         event = mockEvent();
         testee = mount(EventDetailsSheet, { props: {} });
         await usePositions().loading;
