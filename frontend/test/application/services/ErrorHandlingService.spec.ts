@@ -1,7 +1,9 @@
 import type { MockInstance } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HttpResponse, http } from 'msw';
+import type { AccountRepository } from '@/application/ports';
 import type { ErrorHandlingService } from '@/application/services';
+import { ErrorHandlingService as ErrorHandlingServiceImpl } from '@/application/services';
 import { useErrorHandlingService } from '@/application/services';
 import type { ErrorDetails } from '@/application/services/ErrorHandlingService';
 import { server } from '~/mocks';
@@ -72,5 +74,42 @@ describe('ErrorHandlingService', () => {
                 message: 'Der Server ist aktuell nicht erreichbar. Bitte versuche es später erneut.',
             })
         );
+    });
+
+    it('triggers login for unauthorized responses', () => {
+        const accountRepository: AccountRepository = {
+            getAccount: vi.fn(),
+            login: vi.fn(async () => undefined),
+            logout: vi.fn(async () => undefined),
+        };
+        const service = new ErrorHandlingServiceImpl({ accountRepository });
+
+        try {
+            service.handleRawError(new Response('', { status: 401 }));
+        } catch {
+            // ignore rethrow
+        }
+
+        expect(accountRepository.login).toHaveBeenCalledWith(location.pathname);
+    });
+
+    it('forwards unknown response errors to the registered handler', () => {
+        const accountRepository: AccountRepository = {
+            getAccount: vi.fn(),
+            login: vi.fn(async () => undefined),
+            logout: vi.fn(async () => undefined),
+        };
+        const service = new ErrorHandlingServiceImpl({ accountRepository });
+        const handler = vi.fn();
+        service.registerErrorHandler(handler);
+
+        const response = new Response('', { status: 418 });
+        try {
+            service.handleRawError(response);
+        } catch {
+            // ignore rethrow
+        }
+
+        expect(handler).toHaveBeenCalledWith(expect.objectContaining({ error: response }));
     });
 });
