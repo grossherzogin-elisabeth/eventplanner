@@ -679,9 +679,9 @@ describe('EventService', () => {
         });
 
         it('should update flags of soon event for signed in user with assigned registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...soonEvent }, userWithRegistration);
+            const updatedEvent = testee.updateComputedValues({ ...soonEvent }, userWithAssignment);
             expect(updatedEvent.canSignedInUserJoin).toBe(false);
-            expect(updatedEvent.canSignedInUserLeave).toBe(true); // FIXME should be false?
+            expect(updatedEvent.canSignedInUserLeave).toBe(false);
             expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
         });
 

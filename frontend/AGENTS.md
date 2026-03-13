@@ -53,6 +53,9 @@
 - Test environment: custom happy-dom VM + `fake-indexeddb` (`test/environment.ts`).
 - API mocking: MSW server with `onUnhandledRequest: 'error'` (`test/vitest.setup.ts`), so every network call in tests must be mocked.
 - Use test alias `~` for helpers/mocks (`vitest.config.ts`).
+- Prefer shared fixtures from `~/mocks` (see `test/mocks/index.ts`) instead of ad-hoc inline entity factories in specs.
+- Use test names in the `it('should ...')` style for consistency across specs.
+- Name the tested unit `testee`; for specs with repeated dependency wiring, define reusable DI requirements in `beforeEach()` (see `test/application/services/EventCachingService.spec.ts`).
 - i18n in tests is strict (`throwOnMissing: true`), so missing locale keys will fail tests.
 
 ## Project-specific style constraints
