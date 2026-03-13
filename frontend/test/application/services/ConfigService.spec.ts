@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SettingsRepository } from '@/application/ports';
 import { ConfigService } from '@/application/services';
 
@@ -7,6 +7,15 @@ async function flushPromises(): Promise<void> {
 }
 
 describe('ConfigService', () => {
+    let testee: ConfigService;
+    let settingsRepository: SettingsRepository;
+
+    beforeEach(() => {
+        settingsRepository = {
+            readConfig: vi.fn(async () => ({})),
+        } as unknown as SettingsRepository;
+    });
+
     it('should load cached config and then apply server overrides', async () => {
         localStorage.setItem(
             'config',
@@ -17,14 +26,12 @@ describe('ConfigService', () => {
                 technicalSupportEmail: 'cached-tech@example.com',
             })
         );
-        const settingsRepository: SettingsRepository = {
-            readConfig: vi.fn(async () => ({
-                menuTitle: 'Server Menu',
-                supportEmail: 'server@example.com',
-            })),
-        } as unknown as SettingsRepository;
+        settingsRepository.readConfig = vi.fn(async () => ({
+            menuTitle: 'Server Menu',
+            supportEmail: 'server@example.com',
+        }));
 
-        const testee = new ConfigService({ settingsRepository });
+        testee = new ConfigService({ settingsRepository });
         await flushPromises();
 
         const config = testee.getConfig();
@@ -40,13 +47,11 @@ describe('ConfigService', () => {
 
     it('should keep local/default values when fetching server config fails', async () => {
         localStorage.setItem('config', JSON.stringify({ menuTitle: 'Cached Title' }));
-        const settingsRepository: SettingsRepository = {
-            readConfig: vi.fn(async () => {
-                throw new Error('offline');
-            }),
-        } as unknown as SettingsRepository;
+        settingsRepository.readConfig = vi.fn(async () => {
+            throw new Error('offline');
+        });
 
-        const testee = new ConfigService({ settingsRepository });
+        testee = new ConfigService({ settingsRepository });
         await flushPromises();
 
         expect(testee.getConfig().menuTitle).toBe('Cached Title');
@@ -55,11 +60,7 @@ describe('ConfigService', () => {
 
     it('should ignore broken cached json and still initialize config', async () => {
         localStorage.setItem('config', '{not-json');
-        const settingsRepository: SettingsRepository = {
-            readConfig: vi.fn(async () => ({})),
-        } as unknown as SettingsRepository;
-
-        const testee = new ConfigService({ settingsRepository });
+        testee = new ConfigService({ settingsRepository });
         await flushPromises();
 
         expect(testee.getConfig().menuTitle).toBeDefined();
