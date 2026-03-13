@@ -34,6 +34,8 @@ npm run build
 npm run test
 ```
 
+For test coverage reporting, run `npm run test:coverage`. Aim for about 80% coverage on new code, but treat this as a target rather than a strict gate.
+
 ## Local development details
 
 - Dev server proxies these paths to backend on port `8091`:

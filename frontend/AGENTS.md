@@ -2,7 +2,7 @@
 
 ## Agent quick start (60 seconds)
 - Use Node 24.x assumptions; start with `npm install` then `npm run dev` (Vite on `http://localhost:8090`, proxies to backend `:8091`).
-- Before handing off changes, run: `npm run format`, `npm run lint`, `npm run build`, `npm run test`.
+- Before handing off changes, run: `npm run format`, `npm run lint`, `npm run build`, `npm run test:coverage`.
 - Domain is the core business layer (`src/domain`); UI consumes application use cases and selected domain types; adapter integration stays behind application ports.
 - Keep auth/fetch/cookie details in REST adapters (for example `src/adapter/rest/*.ts`, CSRF via `src/adapter/util/Csrf.ts`).
 - Add new dependencies through `useX()` factories and `reset...()` hooks in layer `index.ts` files (`src/adapter`, `src/application/services`, `src/application/usecases`, `src/domain/services`).
@@ -17,7 +17,7 @@
 
 ## Fast start (verified from repo config)
 - Install and run: `npm install`, `npm run dev`.
-- Recommended pre-PR checks: `npm run format`, `npm run lint`, `npm run build`, `npm run test`.
+- Recommended pre-PR checks: `npm run format`, `npm run lint`, `npm run build`, `npm run test:coverage`.
 - Tests run with `TZ=CET` and Vitest (`package.json`).
 
 ## Architecture map (follow this layering)
