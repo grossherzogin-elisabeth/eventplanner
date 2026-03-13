@@ -2,8 +2,8 @@
 
 ## Agent quick start (60 seconds)
 - Use Node 24.x assumptions; start with `npm install` then `npm run dev` (Vite on `http://localhost:8090`, proxies to backend `:8091`).
-- Before handing off changes, run: `npm run check:format`, `npm run check:lint`, `npm run build`, `npm run test:coverage`.
-- Follow layer direction strictly: `src/ui` -> `src/application` (use cases/services/ports) -> `src/domain`; transport/storage code stays in `src/adapter`.
+- Before handing off changes, run: `npm run format`, `npm run lint`, `npm run build`, `npm run test`.
+- Domain is the core business layer (`src/domain`); UI consumes application use cases and selected domain types; adapter integration stays behind application ports.
 - Keep auth/fetch/cookie details in REST adapters (for example `src/adapter/rest/*.ts`, CSRF via `src/adapter/util/Csrf.ts`).
 - Add new dependencies through `useX()` factories and `reset...()` hooks in layer `index.ts` files (`src/adapter`, `src/application/services`, `src/application/usecases`, `src/domain/services`).
 - Routes are discovered from `src/ui/views/**/Route.ts`; each route module exports one default `RouteRecordRaw`.
@@ -14,17 +14,19 @@
 ## Scope and precedence
 - This file applies to `frontend/` only.
 - Prefer `frontend/.github/copilot-instructions.md` and active config files over `README.md` when they disagree.
-- Known drift: `README.md` still mentions Node 22 / ports 8080+8081, while current config uses Node 24.x and Vite on 8090 proxied to 8091 (`vite.config.ts`).
 
 ## Fast start (verified from repo config)
 - Install and run: `npm install`, `npm run dev`.
-- Quality gates used in CI-like flow: `npm run check:format`, `npm run check:lint`, `npm run build`, `npm run test:coverage`.
+- Recommended pre-PR checks: `npm run format`, `npm run lint`, `npm run build`, `npm run test`.
 - Tests run with `TZ=CET` and Vitest (`package.json`).
 
 ## Architecture map (follow this layering)
-- UI (`src/ui`) calls application use cases/services (`src/application`).
-- Application depends on ports (`src/application/ports`) and domain services/entities (`src/domain`).
-- Adapters (`src/adapter`) implement ports (REST + storage) and are the only place for transport/storage details.
+- Domain (`src/domain`) contains core entities, value objects, and business logic independent of transport/infrastructure.
+- Application (`src/application`) orchestrates workflows via use cases/services and defines ports for external dependencies.
+- Adapters (`src/adapter`) implement application ports (REST + storage) and own transport/storage details.
+- UI (`src/ui`) handles rendering/routing and uses application use cases plus selected domain types.
+- Common (`src/common`) contains domain-agnostic shared utilities reusable across layers.
+- UI should not call adapter implementations directly; adapter usage is wired through application ports/factories.
 - Keep fetch/auth/cookie handling in adapters (example: `src/adapter/rest/EventRestRepository.ts`, `src/adapter/util/Csrf.ts`).
 
 ## Dependency wiring pattern (important)
