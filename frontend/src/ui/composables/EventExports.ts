@@ -6,6 +6,7 @@ import type { Event } from '@/domain';
 export interface UseEventExports {
     templates: Ref<string[]>;
     loading: Promise<void>;
+    exportEvents(year: number): Promise<void>;
     exportEvent(event: Event, templateName: string): Promise<void>;
 }
 
@@ -17,10 +18,14 @@ export function useEventExports(): UseEventExports {
         await eventExportUseCase.exportEvent(event, templateName);
     }
 
+    async function exportEvents(year: number): Promise<void> {
+        await eventExportUseCase.exportEvents(year);
+    }
+
     async function update(): Promise<void> {
         templates.value = await eventExportUseCase.getExportTemplates();
     }
     const loading = update();
 
-    return { templates, loading, exportEvent };
+    return { templates, loading, exportEvents, exportEvent };
 }

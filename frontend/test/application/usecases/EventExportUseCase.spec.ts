@@ -20,6 +20,7 @@ describe('EventExportUseCase', () => {
         errorHandlingService = { handleRawError: vi.fn() } as unknown as ErrorHandlingService;
         eventRepository = {
             getExportTemplates: vi.fn(async () => ['default-template']),
+            export: vi.fn(async () => new Blob(['xlsx'], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })),
             exportEvent: vi.fn(async () => new Blob(['dummy'], { type: 'application/octet-stream' })),
         } as unknown as EventRepository;
 
@@ -74,5 +75,30 @@ describe('EventExportUseCase', () => {
         await testee.exportEvent(event, 'crew-plan');
 
         expect(errorHandlingService.handleRawError).toHaveBeenCalledWith(error);
+    });
+
+    it('should export events by year and save xlsx file', async () => {
+        const file = new Blob(['xlsx'], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        eventRepository.export = vi.fn(async () => file);
+
+        await testee.exportEvents(2026);
+
+        expect(eventRepository.export).toHaveBeenCalledWith(2026);
+        expect(saveBlobToFileSpy).toHaveBeenCalledWith('Einsatzmatrix 2026.xlsx', file);
+    });
+
+    it('should handle year export errors and rethrow', async () => {
+        const error = new Error('year export failed');
+        eventRepository.export = vi.fn(async () => {
+            throw error;
+        });
+
+        try {
+            await testee.exportEvents(2026);
+            expect(true).toBe(false); // fail test when promise was not rejected
+        } catch (e) {
+            expect(e).toBe(error);
+            expect(errorHandlingService.handleRawError).toHaveBeenCalledWith(error);
+        }
     });
 });
