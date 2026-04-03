@@ -187,6 +187,7 @@
                         v-for="template in eventExports.templates.value"
                         :key="template"
                         class="permission-export-events context-menu-item"
+                        data-test-id="action-export"
                         @click="eventExports.exportEvent(item, template)"
                     >
                         <i class="fa-solid fa-file-excel" />

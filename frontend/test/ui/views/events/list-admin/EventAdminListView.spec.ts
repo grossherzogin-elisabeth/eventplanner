@@ -9,7 +9,7 @@ import { EventState } from '@/domain';
 import { Routes } from '@/ui/views/Routes.ts';
 import EventsAdminListView from '@/ui/views/events/list-admin/EventsAdminListView.vue';
 import { mockEventRepresentation, mockRouter, server } from '~/mocks';
-import { setupUserPermissions } from '~/utils';
+import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({
@@ -22,7 +22,13 @@ describe('EventsAdminListView.vue', () => {
     let events: EventRepresentation[];
 
     beforeEach(async () => {
-        setupUserPermissions([Permission.WRITE_EVENTS, Permission.WRITE_EVENT_DETAILS, Permission.WRITE_EVENT_SLOTS]);
+        setupUserPermissions([
+            Permission.WRITE_EVENTS,
+            Permission.WRITE_EVENT_DETAILS,
+            Permission.WRITE_EVENT_SLOTS,
+            Permission.WRITE_USERS,
+            Permission.EXPORT_EVENTS,
+        ]);
         vi.setSystemTime(new Date(2024, 3, 1).getTime());
 
         events = [
@@ -84,6 +90,26 @@ describe('EventsAdminListView.vue', () => {
         expect(table.text()).toContain(events[2].name);
         expect(table.text()).toContain(events[3].name);
         expect(table.text()).toContain(events[4].name);
+    });
+
+    it('should not render matrix export button on future tab', async () => {
+        await loading();
+        expect(testee.find('button[name="export"]').exists()).toBe(false);
+    });
+
+    it('should render matrix export button when year tab is active', async () => {
+        await testee.find('[data-test-id="tab-2024"]').trigger('click');
+        await loading();
+        expect(testee.find('button[name="export"]').exists()).toBe(true);
+    });
+
+    it('should render export actions in row context menu', async () => {
+        await loading();
+        const menu = await openTableContextMenu(testee, 0);
+        const exports = menu.findAll('[data-test-id="action-export"]');
+        expect(exports).toHaveLength(2);
+        expect(exports[0].text()).toContain('some template');
+        expect(exports[1].text()).toContain('some other template');
     });
 
     async function loading(): Promise<void> {

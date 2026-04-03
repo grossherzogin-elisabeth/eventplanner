@@ -102,6 +102,15 @@ describe('EventDetailsView.vue', () => {
             expect(action.classes()).not.toContain('disabled');
         });
 
+        it('should render all export actions in context menu', async () => {
+            await awaitPageContentLoaded(testee);
+            const menu = await openPageContextMenu(testee);
+            const exports = menu.findAll('[data-test-id="action-export"]');
+            expect(exports).toHaveLength(2);
+            expect(exports[0].text()).toContain('some template');
+            expect(exports[1].text()).toContain('some other template');
+        });
+
         it('should render registration card', async () => {
             await awaitPageContentLoaded(testee);
             const card = testee.findComponent(EventRegistrationDetailsCard);
