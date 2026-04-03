@@ -8,7 +8,7 @@
             <template v-else>Anmeldung erstellen</template>
         </template>
         <template #content>
-            <div class="xs:px-8 h-100 px-4 sm:w-120 lg:px-10">
+            <div class="xs:px-8 px-4 sm:w-120 lg:px-10">
                 <RegistrationForm v-if="registration" v-model:registration="registration" v-model:view="view" :events="events" />
             </div>
         </template>
