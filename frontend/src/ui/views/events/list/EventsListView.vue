@@ -183,6 +183,15 @@
                         <i class="fa-solid fa-calendar-alt" />
                         <span>{{ $t('views.event-list.action.create-calendar-entry') }}</span>
                     </li>
+                    <li
+                        v-for="template in eventExports.templates.value"
+                        :key="template"
+                        class="permission-export-events context-menu-item"
+                        @click="eventExports.exportEvent(item, template)"
+                    >
+                        <i class="fa-solid fa-file-excel" />
+                        <span>{{ $t('views.event-admin-list.action.exportToTemplate', { template }) }}</span>
+                    </li>
                     <template v-if="!item.signedInUserRegistration">
                         <li
                             class="permission-write-own-registrations context-menu-item"
@@ -292,6 +301,7 @@ import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
+import { useEventExports } from '@/ui/composables/EventExports.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQuery } from '@/ui/composables/QueryState.ts';
@@ -325,6 +335,7 @@ const router = useRouter();
 const positions = usePositions();
 const eventTypes = useEventTypes();
 const { signedInUser } = useSession();
+const eventExports = useEventExports();
 
 const filter = useQuery<string>('filter', '').parameter;
 const filterAssigned = useQuery<boolean>('assigned', false).parameter;

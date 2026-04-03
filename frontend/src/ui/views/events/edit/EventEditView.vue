@@ -126,11 +126,11 @@
             </li>
             <template v-if="event">
                 <li
-                    v-for="template in exportTemplates"
+                    v-for="template in eventExports.templates.value"
                     :key="template"
                     class="permission-read-user-details context-menu-item"
                     data-test-id="action-export"
-                    @click="eventAdministrationUseCase.exportEvent(event, template)"
+                    @click="eventExports.exportEvent(event, template)"
                 >
                     <i class="fa-solid fa-file-excel" />
                     <span>{{ $t('views.event-admin-list.action.exportToTemplate', { template }) }}</span>
@@ -191,6 +191,7 @@ import { AsyncButton, VConfirmationDialog, VInfo, VTabs } from '@/ui/components/
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
+import { useEventExports } from '@/ui/composables/EventExports.ts';
 import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
@@ -223,9 +224,9 @@ const eventUseCase = useEventUseCase();
 const eventAdministrationUseCase = useEventAdministrationUseCase();
 const usersUseCase = useUsersUseCase();
 const usersAdminUseCase = useUserAdministrationUseCase();
+const eventExports = useEventExports();
 const { hasPermission } = useSession();
 
-const exportTemplates = ref<string[]>([]);
 const eventOriginal = ref<Event | null>(null);
 const event = ref<Event | null>(null);
 const waitinglist = ref<ResolvedRegistrationSlot[]>([]);
@@ -262,7 +263,7 @@ async function init(): Promise<void> {
         () => fetchCrew(),
         { deep: true }
     );
-    await Promise.all([fetchEvent(), fetchExportTemplates()]);
+    await Promise.all([fetchEvent()]);
     preventPageUnloadOnUnsavedChanges();
 }
 
@@ -289,10 +290,6 @@ async function fetchCrew(): Promise<void> {
         crew.value = eventAdministrationUseCase.filterForCrew(all);
         waitinglist.value = eventAdministrationUseCase.filterForWaitingList(all);
     }
-}
-
-async function fetchExportTemplates(): Promise<void> {
-    exportTemplates.value = await eventAdministrationUseCase.getExportTemplates();
 }
 
 function preventPageUnloadOnUnsavedChanges(): void {

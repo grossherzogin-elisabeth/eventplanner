@@ -1,7 +1,6 @@
 import type { EventRegistrationsRepository, EventRepository } from '@/application/ports';
 import type { AuthService, ErrorHandlingService, EventCachingService, NotificationService } from '@/application/services';
 import { filterUndefined } from '@/common';
-import { saveBlobToFile } from '@/common/utils/DownloadUtils';
 import type { Event, EventKey, EventService, Registration, ResolvedRegistrationSlot, SlotKey, User } from '@/domain';
 import { EventState } from '@/domain';
 
@@ -13,7 +12,6 @@ export class EventAdministrationUseCase {
     private readonly eventRegistrationsRepository: EventRegistrationsRepository;
     private readonly notificationService: NotificationService;
     private readonly errorHandlingService: ErrorHandlingService;
-    private exportTemplates: string[] | undefined = undefined;
 
     constructor(params: {
         eventCachingService: EventCachingService;
@@ -261,24 +259,5 @@ export class EventAdministrationUseCase {
         slot.assignedRegistrationKey = undefined;
         event.slots = await this.eventRepository.optimizeSlots(event);
         return event;
-    }
-
-    public async getExportTemplates(): Promise<string[]> {
-        if (!this.exportTemplates) {
-            this.exportTemplates = await this.eventRepository.getExportTemplates();
-        }
-        return this.exportTemplates;
-    }
-
-    public async exportEvent(event: Event, template: string): Promise<void> {
-        const file = await this.eventRepository.exportEvent(event, template);
-        saveBlobToFile(`${template}_${this.formatDate(event.start)}.xlsx`, file);
-    }
-
-    private formatDate(date: Date | string | number): string {
-        const d = new Date(date);
-        const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate().toString();
-        const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : (d.getMonth() + 1).toString();
-        return `${d.getFullYear()}-${month}-${day}`;
     }
 }

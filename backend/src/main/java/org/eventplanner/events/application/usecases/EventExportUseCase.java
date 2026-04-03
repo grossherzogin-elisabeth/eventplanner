@@ -54,6 +54,8 @@ public class EventExportUseCase {
     private String templatesDirectory;
 
     public @NonNull List<String> getAvailableTemplates(@NonNull final SignedInUser signedInUser) {
+        signedInUser.assertHasPermission(Permission.EXPORT_EVENTS);
+
         var dir = new File(templatesDirectory);
         if (!dir.exists()) {
             log.warn("Template directory {} does not exist", templatesDirectory);
@@ -77,8 +79,7 @@ public class EventExportUseCase {
         @NonNull final EventKey eventKey,
         @NonNull final String templateName
     ) {
-        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
-        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+        signedInUser.assertHasPermission(Permission.EXPORT_EVENTS);
 
         var event = eventService.getEvent(signedInUser, eventKey);
         var model = getEventExportModel(event);
@@ -94,8 +95,7 @@ public class EventExportUseCase {
         @NonNull final SignedInUser signedInUser,
         final int year
     ) {
-        signedInUser.assertHasPermission(Permission.READ_USERS);
-        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+        signedInUser.assertHasPermission(Permission.EXPORT_EVENTS);
 
         var events = eventService.getEvents(signedInUser, year);
         log.info("Generating event matric for {} events of year {}", events.size(), year);

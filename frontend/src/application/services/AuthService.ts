@@ -88,6 +88,10 @@ export class AuthService {
         return impersonatedUser;
     }
 
+    public hasPermission(permission: Permission): boolean {
+        return this.signedInUser !== undefined && this.signedInUser.permissions.includes(permission);
+    }
+
     private notifyListeners<T>(listeners: Record<string, Callback<T>>, param: T): void {
         Object.values(listeners).forEach((cb: Callback<T>) => cb(param));
     }
