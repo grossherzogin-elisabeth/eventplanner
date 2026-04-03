@@ -128,12 +128,12 @@
                 <li
                     v-for="template in eventExports.templates.value"
                     :key="template"
-                    class="permission-read-user-details context-menu-item"
+                    class="permission-export-events context-menu-item"
                     data-test-id="action-export"
                     @click="eventExports.exportEvent(event, template)"
                 >
                     <i class="fa-solid fa-file-excel" />
-                    <span>{{ $t('views.event-admin-list.action.exportToTemplate', { template }) }}</span>
+                    <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
                 </li>
             </template>
             <template v-if="event?.signupType === EventSignupType.Assignment">

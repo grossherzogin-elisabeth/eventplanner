@@ -179,7 +179,7 @@
                         @click="eventExports.exportEvent(item, template)"
                     >
                         <i class="fa-solid fa-file-excel" />
-                        <span>{{ $t('views.event-admin-list.action.exportToTemplate', { template }) }}</span>
+                        <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
                     </li>
                     <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
                         <i class="fa-solid fa-user-plus" />

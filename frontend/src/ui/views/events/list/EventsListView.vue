@@ -190,7 +190,7 @@
                         @click="eventExports.exportEvent(item, template)"
                     >
                         <i class="fa-solid fa-file-excel" />
-                        <span>{{ $t('views.event-admin-list.action.exportToTemplate', { template }) }}</span>
+                        <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
                     </li>
                     <template v-if="!item.signedInUserRegistration">
                         <li

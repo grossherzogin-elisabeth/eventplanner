@@ -198,6 +198,7 @@ domain:
     actions:
       add-to-crew: 'Zur Crew hinzufügen'
       remove-from-crew: 'Auf die Warteliste'
+      export-to-template: '{template} exportieren'
     no-slot-for-position-error:
       title: 'Zuweisung nicht möglich'
       message: '{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die Position {position}
@@ -447,7 +448,6 @@ views:
       edit-start-location: 'Starthafen bearbeiten'
       delete-eta: 'ETA löschen'
       delete-etd: 'ETD löschen'
-      exportToTemplate: '{template} exportieren'
       open-signup: 'Anmeldungen freischalten'
       publish-crew: 'Crew veröffentlichen'
       reset-crew: 'Crew zurücksetzen'
@@ -522,7 +522,6 @@ views:
       export: 'Export'
       show-event: 'Veranstaltung anzeigen'
       edit-event: 'Veranstaltung bearbeiten'
-      exportToTemplate: '{template} exportieren'
       add-registration: 'Anmeldung hinzufügen'
       open-signup: 'Anmeldungen freischalten'
       publish-crew: 'Crew veröffentlichen'
