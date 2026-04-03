@@ -3,13 +3,13 @@ import type { Ref } from 'vue';
 import { useEventExportUseCase } from '@/application';
 import type { Event } from '@/domain';
 
-export interface UseEventTemplates {
+export interface UseEventExports {
     templates: Ref<string[]>;
     loading: Promise<void>;
     exportEvent(event: Event, templateName: string): Promise<void>;
 }
 
-export function useEventExports(): UseEventTemplates {
+export function useEventExports(): UseEventExports {
     const eventExportUseCase = useEventExportUseCase();
     const templates = ref<string[]>([]);
 
