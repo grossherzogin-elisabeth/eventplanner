@@ -2,14 +2,21 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-anchor"
+        dialog-type="modal"
         :label="$t('views.account.app-settings.preferred-position')"
         :disabled="availablePositions.length < 2"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.preferredPosition"> {{ positions.get(props.modelValue.preferredPosition).name }} </span>
-            <span v-else-if="availablePositions.length > 0"> {{ positions.get(availablePositions[0]).name }} </span>
-            <span v-else> {{ $t('generic.no-information') }} </span>
+            <p v-if="props.modelValue.preferredPosition" class="truncate">
+                {{ positions.get(props.modelValue.preferredPosition).name }}
+            </p>
+            <p v-else-if="availablePositions.length > 0" class="truncate">
+                {{ positions.get(availablePositions[0]).name }}
+            </p>
+            <p v-else class="truncate italic">
+                {{ $t('generic.no-information') }}
+            </p>
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">

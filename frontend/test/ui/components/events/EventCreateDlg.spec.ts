@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { type MockInstance, afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type MockInstance, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useEventAdministrationUseCase, useEventCachingService } from '@/application';
@@ -15,20 +15,13 @@ describe('EventCreateDlg.vue', () => {
     let closed: boolean = false;
     let createFunc: MockInstance;
 
-    beforeAll(() => {
-        vi.useFakeTimers();
-    });
-
-    afterAll(() => {
-        vi.useRealTimers();
-    });
-
     beforeEach(async () => {
+        vi.useFakeTimers();
         result = undefined;
         closed = false;
         createFunc = vi.spyOn(useEventAdministrationUseCase(), 'createEvent');
         useEventCachingService().clear();
-        testee = mount(EventCreateDlg, { global: { stubs: { teleport: true } } });
+        testee = mount(EventCreateDlg);
         await open();
     });
 

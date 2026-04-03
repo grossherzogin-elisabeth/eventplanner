@@ -34,6 +34,16 @@ const pwa = VitePWA({
     },
 });
 
+// Be really careful adjusting manual chunking, as this can break a production build while still working fine in the
+// dev preview. Always build a local docker image and run the container locally when doing changes here.
+const chunks = {
+    'src/': 'app', // put all app code in a single chunk, so the full app is loaded initially
+    '@fortawesome/fontawesome-free/js/brands': 'fontawesome-brands',
+    '@fortawesome/fontawesome-free/js/regular': 'fontawesome-regular',
+    '@fortawesome/fontawesome-free/js/solid': 'fontawesome-solid',
+    'node_modules': 'vendor',
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
@@ -41,6 +51,20 @@ export default defineConfig(({ mode }) => {
 
     return {
         plugins: [vue(), svgLoader(), pwa, ViteYaml()],
+        build: {
+            rollupOptions: {
+                output: {
+                    manualChunks: (id): string | null => {
+                        for (const [key, value] of Object.entries(chunks)) {
+                            if (id.includes(key)) {
+                                return value;
+                            }
+                        }
+                        return null;
+                    },
+                },
+            },
+        },
         assetsInclude: ['**/*.csv'],
         server: {
             port: 8090,

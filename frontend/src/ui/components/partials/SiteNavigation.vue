@@ -1,23 +1,26 @@
 <template>
-    <div class="flex flex-col border-l">
+    <div class="flex flex-col">
         <RouterLink
-            v-for="siteLink in siteLinks"
-            :key="siteLink.hash"
-            :to="siteLink.hash"
-            class="-ml-px border-l-2 py-4 pl-4"
-            :class="currentHash === siteLink.hash ? 'border-primary text-primary' : 'border-transparent'"
+            v-for="link in links"
+            :key="link.hash"
+            :to="link.to ?? route"
+            class="hover:text-onsurface hover:bg-surface-container truncate rounded-xl px-8 py-2"
+            :class="currentHash === link.hash ? 'text-onsurface' : 'text-onsurface/50'"
+            @click="scrollToId(link.id)"
         >
-            {{ siteLink.name }}
+            {{ link.name }}
         </RouterLink>
     </div>
 </template>
 <script lang="ts" setup>
-import { nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
+import type { RouteLocationRaw } from 'vue-router';
 import { useRoute } from 'vue-router';
 
 interface SiteLink {
     id: string;
     hash: string;
+    to?: RouteLocationRaw;
     name: string;
 }
 
@@ -30,28 +33,41 @@ defineExpose({
 
 const route = useRoute();
 
-const siteLinks = ref<SiteLink[]>([]);
+const menuItems = ref<SiteLink[]>([]);
 const visibleAnchors = ref<HTMLElement[]>([]);
 const currentHash = ref<string>(route.hash);
 const blockScrollObserver = ref<boolean>(false);
-const scrollObserver = new IntersectionObserver(updateHash, {
+const scrollObserver = new IntersectionObserver(updateSelectedFromScroll, {
     root: null,
     threshold: 1,
     rootMargin: '50px 0px -200px 0px',
 });
 
+const links = computed<SiteLink[]>(() => {
+    return menuItems.value.map((siteLink) => ({
+        ...siteLink,
+        to: {
+            name: route.name,
+            query: route.query,
+            hash: siteLink.hash,
+            params: route.params,
+            replace: true,
+        },
+    }));
+});
+
 function updateSiteLinks(): void {
-    siteLinks.value = [];
+    menuItems.value = [];
     scrollObserver.takeRecords().forEach((it) => scrollObserver.unobserve(it.target));
     const elements = document.querySelectorAll('.site-link');
     let anySiteLinkFound = false;
     elements.forEach((element) => {
         if (element.textContent) {
             scrollObserver.observe(element);
-            siteLinks.value.push({
+            menuItems.value.push({
                 id: element.id,
-                hash: `#${element.id}`,
                 name: element.textContent,
+                hash: `#${element.id}`,
             });
             anySiteLinkFound = true;
         }
@@ -59,7 +75,7 @@ function updateSiteLinks(): void {
     emit('update:hasItems', anySiteLinkFound);
 }
 
-function updateHash(entries: IntersectionObserverEntry[]): void {
+function updateSelectedFromScroll(entries: IntersectionObserverEntry[]): void {
     entries
         .filter((it) => it.target.id)
         .forEach((entry) => {
@@ -79,10 +95,19 @@ function updateHash(entries: IntersectionObserverEntry[]): void {
         });
 }
 
-function updateHashFromRouteChange(): void {
+function updateSelectedFromRouteChange(): void {
     blockScrollObserver.value = true;
     currentHash.value = route.hash;
     setTimeout(() => (blockScrollObserver.value = false), 1500);
+}
+
+function scrollToId(id: string): void {
+    const element = document.getElementById(id);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        console.error(`Element with id ${id} does not exist`);
+    }
 }
 
 function init(): void {
@@ -93,7 +118,7 @@ function init(): void {
     );
     watch(
         () => route.hash,
-        () => updateHashFromRouteChange()
+        () => updateSelectedFromRouteChange()
     );
 }
 

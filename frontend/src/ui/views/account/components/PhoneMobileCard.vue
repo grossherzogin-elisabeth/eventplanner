@@ -7,8 +7,12 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.mobile">{{ props.modelValue.mobile }}</span>
-            <span v-else class="italic">{{ $t('generic.no-information') }}</span>
+            <p v-if="props.modelValue.mobile" class="truncate">
+                {{ props.modelValue.mobile }}
+            </p>
+            <p v-else class="truncate italic">
+                {{ $t('generic.no-information') }}
+            </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">

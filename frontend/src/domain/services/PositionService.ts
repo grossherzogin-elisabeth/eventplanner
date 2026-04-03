@@ -3,7 +3,7 @@ import type { Position } from '@/domain';
 
 export class PositionService {
     private readonly keyPattern = /^[a-z-_0-9]*$/;
-    private readonly colorPattern = /^#[a-fA-F  0-9]{3,6}$/;
+    private readonly colorPattern = /^#[a-fA-F 0-9]{3,6}$/;
     private readonly uniqueKeyErrMessage = 'views.settings.positions.validation.key-must-be-unique';
     private readonly uniqueNameErrMessage = 'views.settings.positions.validation.name-must-be-unique';
 

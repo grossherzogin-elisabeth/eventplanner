@@ -1,7 +1,5 @@
 import { nextTick } from 'vue';
 import type { MockInstance } from 'vitest';
-import { afterAll } from 'vitest';
-import { beforeAll } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
@@ -23,18 +21,11 @@ describe('EventBatchEditDlg.vue', () => {
     let eventA = mockEvent({ key: 'a' });
     let eventB = mockEvent({ key: 'b' });
 
-    beforeAll(() => {
-        vi.useFakeTimers();
-    });
-
     beforeEach(() => {
+        vi.useFakeTimers();
         server.use(http.get('/api/v1/events', () => HttpResponse.json([eventA, eventB], { status: 200 })));
         server.use(http.get('/api/v1/events/a', () => HttpResponse.json(eventA, { status: 200 })));
         server.use(http.get('/api/v1/events/b', () => HttpResponse.json(eventB, { status: 200 })));
-    });
-
-    afterAll(() => {
-        vi.useRealTimers();
     });
 
     beforeEach(async () => {
@@ -42,7 +33,7 @@ describe('EventBatchEditDlg.vue', () => {
         updateFunc = vi.spyOn(useEventAdministrationUseCase(), 'updateEvents');
         eventA = mockEvent({ key: 'a' });
         eventB = mockEvent({ key: 'b' });
-        testee = mount(EventBatchEditDlg, { global: { stubs: { teleport: true } } });
+        testee = mount(EventBatchEditDlg);
         await open([eventA, eventB]);
     });
 
@@ -67,7 +58,7 @@ describe('EventBatchEditDlg.vue', () => {
         'should patch only event status to $0',
         async (state) => {
             await testee.find('[data-test-id="input-event-status"] input').trigger('click');
-            await selectDropdownOption(testee, testee.vm.$t(`generic.event-state.${state}`));
+            await selectDropdownOption(testee, testee.vm.$t(`domain.event-state.${state}`));
 
             await submit();
             expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { state });
@@ -91,7 +82,7 @@ describe('EventBatchEditDlg.vue', () => {
         EventType.Other,
     ])('should patch only event type to $0', async (type) => {
         await testee.find('[data-test-id="input-event-type"] input').trigger('click');
-        await selectDropdownOption(testee, testee.vm.$t(`generic.event-type.${type}`));
+        await selectDropdownOption(testee, testee.vm.$t(`domain.event-type.${type}`));
 
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { type });
@@ -100,7 +91,7 @@ describe('EventBatchEditDlg.vue', () => {
 
     it.each([EventSignupType.Assignment, EventSignupType.Open])('should patch only event signup type to $0', async (signupType) => {
         await testee.find('[data-test-id="input-event-signup-type"] input').trigger('click');
-        await selectDropdownOption(testee, testee.vm.$t(`generic.event-signup-type.${signupType}`));
+        await selectDropdownOption(testee, testee.vm.$t(`domain.event-signup-type.${signupType}`));
 
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { signupType });

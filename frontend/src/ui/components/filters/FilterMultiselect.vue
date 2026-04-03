@@ -34,11 +34,16 @@
                     <span>{{ placeholder }}</span>
                 </li>
                 <template v-for="option in props.options" :key="String(option.value)">
-                    <li v-if="modelValue.includes(option.value)" class="context-menu-item" @click="remove(option.value)">
+                    <li
+                        v-if="modelValue.includes(option.value)"
+                        class="context-menu-item"
+                        :data-test-id="`filter-${option.value}`"
+                        @click="remove(option.value)"
+                    >
                         <i class="fa-solid fa-check w-4"></i>
                         <span class="w-0 grow truncate">{{ option.label }}</span>
                     </li>
-                    <li v-else class="context-menu-item" @click="add(option.value)">
+                    <li v-else class="context-menu-item" :data-test-id="`filter-${option.value}`" @click="add(option.value)">
                         <i class="w-4"></i>
                         <span class="w-0 grow truncate">{{ option.label }}</span>
                     </li>

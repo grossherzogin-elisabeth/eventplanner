@@ -1,65 +1,25 @@
 <template>
-    <DetailsPage :back-to="{ name: Routes.EventsCalendar }" :class="$attrs.class">
+    <DetailsPage :back-to="{ name: Routes.EventsCalendar }" :class="$attrs.class" :loading="!event">
         <template #header>
             {{ event?.name }}
         </template>
         <template #content>
             <div v-if="event" class="xs:px-8 px-4 pt-6 pb-8 md:px-16 xl:px-20">
-                <div class="space-y-4 md:grid md:grid-cols-5 md:space-y-0 md:gap-x-20 md:gap-y-4 md:pr-4 xl:max-w-5xl 2xl:grid-cols-6">
-                    <!-- state info banner -->
-                    <section
-                        v-if="event.state === EventState.OpenForSignup && event.signupType === EventSignupType.Assignment"
-                        class="xs:-mx-4 col-span-2 col-start-4 2xl:col-span-3"
-                    >
-                        <VInfo clamp>
-                            {{ $t('views.events.details.info-planning') }}
-                        </VInfo>
-                    </section>
-                    <section
-                        v-else-if="event.state === EventState.Canceled"
-                        class="xs:-mx-4 sticky top-14 right-4 left-4 z-10 col-span-2 col-start-4 md:static 2xl:col-span-3"
-                    >
-                        <VWarning> {{ $t('views.events.details.info-canceled') }} </VWarning>
-                    </section>
-                    <section
-                        v-else-if="event.signedInUserRegistration && event.isSignedInUserAssigned"
-                        class="xs:-mx-4 sticky top-14 right-4 left-4 z-10 col-span-2 col-start-4 md:static 2xl:col-span-3"
-                    >
-                        <VSuccess icon="fa-check">
-                            <i18n-t tag="span" keypath="views.events.details.info-assigned">
-                                <template #position>
-                                    <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
-                                </template>
-                                <template v-if="event.signedInUserRegistration.confirmed">
-                                    {{ $t('views.events.details.info-confirmed') }}
-                                </template>
-                            </i18n-t>
-                        </VSuccess>
-                    </section>
-                    <section
-                        v-else-if="event.signedInUserRegistration"
-                        class="xs:-mx-4 sticky top-14 right-4 left-4 z-10 col-span-2 col-start-4 md:static 2xl:col-span-3"
-                    >
-                        <VInfo icon="fa-hourglass-half">
-                            <i18n-t tag="span" keypath="views.events.details.info-waitinglist">
-                                <template #position>
-                                    <b>{{ positions.get(event.signedInUserRegistration.positionKey).name }}</b>
-                                </template>
-                            </i18n-t>
-                        </VInfo>
-                    </section>
-                    <section
-                        v-else-if="openPositions.length > 0"
-                        class="xs:-mx-4 sticky top-14 right-4 left-4 z-10 col-span-2 col-start-4 md:static 2xl:col-span-3"
-                    >
-                        <VWarning>
-                            {{ $t('views.events.details.info-missing-crew', { positions: openPositions.map((it) => it.name).join(', ') }) }}
-                        </VWarning>
-                    </section>
-
-                    <EventDetailsCard :event="event" class="col-span-2 pt-4 md:col-start-4 2xl:col-span-3" />
-                    <EventLocationsCard :event="event" class="col-span-2 pt-4 md:col-start-4 2xl:col-span-3" />
-                    <EventParticipantsCard :event="event" class="col-span-3 col-start-1 row-span-6 pt-4 md:row-start-1 md:pt-0" />
+                <div class="flex flex-col gap-x-20 gap-y-8 md:flex-row-reverse md:gap-y-4 md:pr-4 xl:max-w-5xl">
+                    <div class="flex w-full flex-col gap-8 md:w-96">
+                        <EventStateBanner :event="event" sticky />
+                        <EventRegistrationDetailsCard
+                            v-if="event.signedInUserRegistration"
+                            v-model:event="event"
+                            :registration="event.signedInUserRegistration"
+                            @edit="editUserRegistration()"
+                        />
+                        <EventDetailsCard :event="event" />
+                        <EventLocationsCard :event="event" />
+                    </div>
+                    <div class="w-full md:w-1/2 md:grow">
+                        <EventParticipantsCard :event="event" />
+                    </div>
                 </div>
             </div>
         </template>
@@ -74,7 +34,7 @@
                     <i class="fa-solid fa-cancel" />
                 </template>
                 <template #label>
-                    {{ $t('views.events.details.leave-crew') }}
+                    {{ $t('views.event-details.leave-crew') }}
                 </template>
             </AsyncButton>
             <AsyncButton
@@ -87,37 +47,38 @@
                     <i class="fa-solid fa-user-minus" />
                 </template>
                 <template #label>
-                    {{ $t('views.events.details.leave-waitinglist') }}
+                    {{ $t('views.event-details.leave-waitinglist') }}
                 </template>
             </AsyncButton>
             <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
                 <i class="fa-solid fa-user-plus" />
-                <span class="truncate text-left"> {{ $t('views.events.details.sign-up') }} </span>
+                <span class="truncate text-left"> {{ $t('views.event-details.sign-up') }} </span>
             </button>
         </template>
         <template v-if="event" #secondary-buttons>
             <RouterLink v-if="hasPermission(Permission.WRITE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
                 <i class="fa-solid fa-drafting-compass" />
-                <span>{{ $t('views.events.details.edit-event') }}</span>
+                <span>{{ $t('views.event-details.edit-event') }}</span>
             </RouterLink>
             <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
-                <span>{{ $t('views.events.details.save-calendar') }}</span>
+                <span>{{ $t('views.event-details.save-calendar') }}</span>
             </button>
         </template>
         <template v-if="event" #actions-menu>
-            <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntry(event)">
+            <li class="context-menu-item" data-test-id="action-create-calendar-entry" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
-                <span>{{ $t('views.events.details.create-calendar-entry') }}</span>
+                <span>{{ $t('views.event-details.create-calendar-entry') }}</span>
             </li>
             <template v-if="event.signedInUserRegistration">
                 <li
+                    data-test-id="action-edit-registration"
                     class="context-menu-item"
                     :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
                     @click="editUserRegistration()"
                 >
                     <i class="fa-solid fa-edit" />
-                    <span>{{ $t('views.events.details.edit-registration') }}</span>
+                    <span>{{ $t('views.event-details.edit-registration') }}</span>
                 </li>
                 <li
                     class="context-menu-item"
@@ -125,13 +86,13 @@
                     @click="editUserRegistration()"
                 >
                     <i class="fa-solid fa-note-sticky" />
-                    <span>{{ $t('views.events.details.add-note') }}</span>
+                    <span>{{ $t('views.event-details.add-note') }}</span>
                 </li>
             </template>
-            <li class="permission-write-events">
+            <li class="permission-write-events" data-test-id="action-edit-event">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-drafting-compass" />
-                    <span>{{ $t('views.events.details.edit-event') }}</span>
+                    <span>{{ $t('views.event-details.edit-event') }}</span>
                 </RouterLink>
             </li>
         </template>
@@ -141,21 +102,21 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEventUseCase } from '@/application';
-import type { Event, Position, Registration } from '@/domain';
-import { EventSignupType, EventState, Permission } from '@/domain';
-import { useEventService } from '@/domain/services';
+import type { Event, Registration } from '@/domain';
+import { Permission } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { AsyncButton, VConfirmationDialog, VInfo, VSuccess, VWarning } from '@/ui/components/common';
+import { AsyncButton, VConfirmationDialog } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
 import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
 import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.vue';
+import EventRegistrationDetailsCard from '@/ui/components/events/EventRegistrationDetailsCard.vue';
+import EventStateBanner from '@/ui/components/events/EventStateBanner.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
-import { usePositions } from '@/ui/composables/Positions.ts';
 import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
@@ -166,8 +127,6 @@ const emit = defineEmits<RouteEmits>();
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const positions = usePositions();
-const eventService = useEventService();
 const eventUseCase = useEventUseCase();
 const { hasPermission } = useSession();
 
@@ -181,20 +140,6 @@ const registrationSheet = ref<Dialog<
     Registration | undefined
 > | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
-
-const openPositions = computed<Position[]>(() => {
-    if (!event.value) {
-        return [];
-    }
-    const openRequiredSlots = eventService.getOpenSlots(event.value);
-    return positions.all.value
-        .map((position) => ({
-            position: position,
-            count: openRequiredSlots.filter((slot) => slot.positionKeys[0] === position.key).length,
-        }))
-        .filter((pos) => pos.count > 0)
-        .map((it) => it.position);
-});
 
 function init(): void {
     fetchEvent();
@@ -236,9 +181,9 @@ async function leaveEvent(): Promise<void> {
     if (event.value) {
         if (event.value.signedInUserAssignedSlot) {
             const confirmed = await confirmationDialog.value?.open({
-                title: t('views.events.details.leave-crew-dialog.title'),
-                message: t('views.events.details.leave-crew-dialog.message', { event: event.value.name }),
-                submit: t('views.events.details.leave-crew-dialog.submit'),
+                title: t('views.event-details.leave-crew-dialog.title'),
+                message: t('views.event-details.leave-crew-dialog.message', { event: event.value.name }),
+                submit: t('views.event-details.leave-crew-dialog.submit'),
                 danger: true,
             });
             if (!confirmed) {

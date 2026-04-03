@@ -19,3 +19,24 @@ export function formatDateRange(from?: Date, to?: Date, short?: boolean): string
     }
     return `${i18n.d(from, formatWithoutYear)} - ${i18n.d(to, formatFullDate)}`;
 }
+
+export function formatTimeRange(from?: Date, to?: Date): string {
+    const i18n = useI18n();
+    const fromDateFull = from ? i18n.d(from, DateTimeFormat.DD_MM_YYYY) : '';
+    const fromDateShort = from ? i18n.d(from, DateTimeFormat.DD_MM) : '';
+    const fromTime = from ? i18n.d(from, DateTimeFormat.hh_mm) : '';
+    const toDateFull = to ? i18n.d(to, DateTimeFormat.DD_MM_YYYY) : '';
+    const toDateShort = to ? i18n.d(to, DateTimeFormat.DD_MM) : '';
+    const toTime = to ? i18n.d(to, DateTimeFormat.hh_mm) : '';
+
+    if (from && !to) {
+        return `${fromDateFull} ${fromTime}`;
+    }
+    if (!from && to) {
+        return `${toDateFull} ${toTime}`;
+    }
+    if (fromDateFull === toDateFull) {
+        return `${fromDateFull} ${fromTime} - ${toTime}`;
+    }
+    return `${fromDateShort} ${fromTime} - ${toDateShort} ${toTime}`;
+}

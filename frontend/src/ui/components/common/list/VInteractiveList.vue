@@ -12,7 +12,7 @@
 }
 
 .interactive-list > * {
-    background-color: var(--color-surface-container-low);
+    background-color: --alpha(var(--color-surface-container) / 50%);
     border-radius: var(--radius-md);
     @apply p-4;
 }

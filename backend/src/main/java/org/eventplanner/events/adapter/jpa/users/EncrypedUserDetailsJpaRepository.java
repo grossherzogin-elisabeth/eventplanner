@@ -12,4 +12,6 @@ public interface EncrypedUserDetailsJpaRepository extends JpaRepository<Encrypte
 
     @NonNull
     Optional<EncryptedUserDetailsJpaEntity> findByAuthKey(@NonNull String authKey);
+
+    boolean existsByAuthKey(@NonNull String authKey);
 }

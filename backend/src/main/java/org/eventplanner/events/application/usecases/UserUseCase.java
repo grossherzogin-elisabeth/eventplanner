@@ -18,6 +18,7 @@ import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.User;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
+import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
 import org.eventplanner.events.domain.specs.CreateUserSpec;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
 import org.eventplanner.events.domain.values.auth.Permission;
@@ -83,19 +84,24 @@ public class UserUseCase {
             var firstName = oidcUser.getAttributes().get("given_name").toString();
             var lastName = oidcUser.getAttributes().get("family_name").toString();
             if (firstName != null && lastName != null) {
-                var newUser = new UserDetails(new UserKey(), Instant.now(), Instant.now(), firstName, lastName);
-                log.warn(
-                    "Cannot find match for oidc user {}, creating new user with key {}",
-                    authkey,
-                    newUser.getKey()
-                );
-                newUser.setEmail(oidcUser.getEmail());
-                newUser.setAuthKey(authkey);
-                newUser.setLastLoginAt(Instant.now());
-                newUser = userService.createUser(newUser);
-                return SignedInUser
-                    .fromUser(newUser)
-                    .withPermissionsFromAuthentication(authentication);
+                try {
+                    var newUser = new UserDetails(new UserKey(), Instant.now(), Instant.now(), firstName, lastName);
+                    newUser.setEmail(oidcUser.getEmail());
+                    newUser.setAuthKey(authkey);
+                    newUser.setLastLoginAt(Instant.now());
+                    newUser = userService.createUser(newUser);
+                    log.info("Created new user with key {}", newUser.getKey());
+                    return SignedInUser
+                        .fromUser(newUser)
+                        .withPermissionsFromAuthentication(authentication);
+                } catch (UserAlreadyExistsException e) {
+                    // can happen
+                    var user = userService.getUserByAuthKey(authkey)
+                        .orElseThrow(UnauthorizedException::new);
+                    return SignedInUser
+                        .fromUser(user)
+                        .withPermissionsFromAuthentication(authentication);
+                }
             }
 
             log.error("Oidc user {} cannot be linked to an existing user and has no name information", authkey);

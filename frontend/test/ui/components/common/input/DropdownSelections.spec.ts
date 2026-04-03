@@ -22,7 +22,6 @@ describe.each(components)('$component.__name', ({ component }) => {
                     { value: 'd', label: 'D' },
                 ],
             },
-            global: { stubs: { teleport: true } },
         });
     });
 

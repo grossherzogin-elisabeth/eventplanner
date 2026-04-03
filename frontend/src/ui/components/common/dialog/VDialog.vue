@@ -14,7 +14,7 @@
                 <div ref="wrapper" class="dialog-wrapper xl:ml-20" @click.stop="" @mousedown.stop="">
                     <slot name="dialog">
                         <div
-                            class="dialog bg-surface-container-high flex flex-col overflow-hidden sm:rounded-3xl sm:shadow-lg"
+                            class="dialog bg-surface-container-low flex flex-col overflow-hidden sm:rounded-3xl sm:shadow-lg"
                             :class="`${scrolls ? 'scrolls' : ''} ${props.width || 'w-screen max-w-xl'} ${props.height || 'h-auto max-h-[95vh]'} ${$attrs.class} `"
                         >
                             <div

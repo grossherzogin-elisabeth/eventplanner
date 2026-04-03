@@ -21,7 +21,7 @@ describe('QualificationDetailsDlg.vue', () => {
         useAuthService().setSignedInUser(
             mockSignedInUser({ permissions: [Permission.READ_QUALIFICATIONS, Permission.WRITE_QUALIFICATIONS] })
         );
-        testee = mount(QualificationDetailsDlg, { global: { stubs: { teleport: true } } });
+        testee = mount(QualificationDetailsDlg);
     });
 
     describe('create mode', () => {

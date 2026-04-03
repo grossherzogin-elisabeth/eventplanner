@@ -10,6 +10,8 @@ import { server } from '~/mocks';
 // mock http requests
 // ---------------------------------------------------------------
 
+const i18n = setupI18n({ locale: 'de', fallbackLocale: 'de', availableLocales: ['de'], throwOnMissing: true });
+
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
     resetAdapters();
@@ -17,6 +19,8 @@ afterEach(() => {
     resetUseCases();
     resetDomainServices();
     vi.clearAllMocks();
+    vi.useRealTimers();
+    vi.setSystemTime(vi.getRealSystemTime());
     localStorage.clear();
     sessionStorage.clear();
     server.resetHandlers();
@@ -27,10 +31,11 @@ afterAll(() => server.close());
 // mock global vue plugins
 // ---------------------------------------------------------------
 
-config.global.plugins = [setupI18n({ locale: 'de', fallbackLocale: 'de', availableLocales: ['de'] })];
+config.global.plugins = [i18n];
 
 config.global.stubs = {
     RouterLink: RouterLinkStub,
+    teleport: true,
 };
 // ---------------------------------------------------------------
 // mock teleport targets

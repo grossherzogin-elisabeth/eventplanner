@@ -7,10 +7,12 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <span v-if="props.modelValue.dateOfBirth"> {{ $d(props.modelValue.dateOfBirth, DateTimeFormat.DD_MM_YYYY) }} </span>
-            <span v-else> {{ $t('generic.no-information') }} </span>
-            <span v-if="props.modelValue.placeOfBirth"> in {{ props.modelValue.placeOfBirth }} </span>
-            <span v-else> in {{ $t('generic.no-information') }} </span>
+            <p class="truncate">
+                <span v-if="props.modelValue.dateOfBirth"> {{ $d(props.modelValue.dateOfBirth, DateTimeFormat.DD_MM_YYYY) }} </span>
+                <span v-else> {{ $t('generic.no-information') }} </span>
+                <span v-if="props.modelValue.placeOfBirth"> in {{ props.modelValue.placeOfBirth }} </span>
+                <span v-else> in {{ $t('generic.no-information') }} </span>
+            </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-4 text-sm">

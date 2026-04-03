@@ -25,14 +25,18 @@ export class AuthUseCase {
         this.notificationService = params.notificationService;
     }
 
-    public async authenticate(): Promise<SignedInUser> {
+    public async authenticate(loginOnFailure = false): Promise<SignedInUser> {
         let signedInUser = this.authService.getSignedInUser();
         if (signedInUser) {
             // do this only once, or depending on time since last auth?
             if (!this.authorizedAt) {
                 this.authorizedAt = new Date();
                 // lazy refresh asynchronously in background
-                this.fetchSignedInUser();
+                this.fetchSignedInUser().catch(() => {
+                    if (loginOnFailure) {
+                        this.accountRepository.login(location.href);
+                    }
+                });
             }
             return this.impersonate(signedInUser);
         }

@@ -52,9 +52,7 @@ import { useRouter } from 'vue-router';
 import { useUserAdministrationUseCase } from '@/application';
 import type { User } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
-import { VInfo } from '@/ui/components/common';
-import { VInputText } from '@/ui/components/common';
-import { AsyncButton, VDialog } from '@/ui/components/common';
+import { AsyncButton, VDialog, VInfo, VInputText } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 

@@ -54,45 +54,40 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
         routes,
     });
 
-    router.beforeEach((to, from, next) => {
+    router.beforeEach((to, from) => {
         if (to.name !== from.name) {
             saveScrollPosition(from.path);
         }
-        next();
     });
 
     /**
      * Add an authentication guard to the router
      */
-    router.beforeResolve(async (to, _, next) => {
+    router.beforeResolve(async (to) => {
         const meta = to.meta as RouteMetaData | undefined;
         // if there is a pending redirect from pre login, restore the wanted page first
         const redirect = localStorage.getItem('login-redirect');
         if (redirect && to.fullPath === '/') {
             localStorage.removeItem('login-redirect');
-            next({ path: redirect });
-            return;
+            return { path: redirect };
         }
 
         // authentication and authorization guard
         if (meta?.authenticated) {
             try {
-                const user = await authUseCase.authenticate();
+                const user = await authUseCase.authenticate(true);
                 if (meta?.permissions && !hasAnyOverlap(meta.permissions, user.permissions)) {
                     console.warn(`🛤️ Missing permission for route '${String(to.name)}'!`);
-                    next({ path: '/' });
-                    return;
+                    return { path: '/' };
                 }
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (e) {
                 console.warn(`🛤️ Login required for route '${String(to.name)}'!`);
                 localStorage.setItem('login-redirect', to.fullPath);
-                next({ path: '/login' });
-                return;
+                return { path: '/login' };
             }
         }
         console.log(`🛤️ Entering route '${String(to.name)}'`);
-        next();
     });
 
     router.onError((error, to) => {

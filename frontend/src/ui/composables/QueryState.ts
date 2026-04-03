@@ -1,9 +1,14 @@
+import type { Ref, UnwrapRef } from 'vue';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { deepCopy } from '@/common';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useQuery<T = string | number | boolean | string[]>(name: string, defaultValue: T) {
+export interface UseQueryState<T> {
+    parameter: Ref<T> | Ref<UnwrapRef<T>>;
+    clearWatchers(): void;
+}
+
+export function useQuery<T = string | number | boolean | string[]>(name: string, defaultValue: T): UseQueryState<T> {
     const router = useRouter();
 
     const parameter = ref<T>(deepCopy(defaultValue));

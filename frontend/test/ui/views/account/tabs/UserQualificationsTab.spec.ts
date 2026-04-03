@@ -1,0 +1,64 @@
+import type { Router } from 'vue-router';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { VueWrapper } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
+import type { UserDetails } from '@/domain';
+import type { UseQualifications } from '@/ui/composables/Qualifications.ts';
+import { useQualifications } from '@/ui/composables/Qualifications.ts';
+import UserQualificationsTab from '@/ui/views/account/tabs/UserQualificationsTab.vue';
+import { mockRouter, mockUserCaptain, mockUserDetails } from '~/mocks';
+
+const router = mockRouter();
+vi.mock('vue-router', () => ({
+    useRouter: (): Partial<Router> => router,
+}));
+
+describe('UserQualificationsTab.vue', () => {
+    let testee: VueWrapper;
+    let user: UserDetails;
+    let qualifications: UseQualifications;
+
+    beforeEach(async () => {
+        user = mockUserDetails(mockUserCaptain());
+        qualifications = useQualifications();
+        await qualifications.loading;
+        testee = mount(UserQualificationsTab, {
+            props: { user },
+            global: { plugins: [router] },
+        });
+    });
+
+    it('should render all qualifications', async () => {
+        const tableRows = testee.findAll('tbody tr');
+        expect(user.qualifications.length).toBeGreaterThan(0);
+        expect(tableRows.length).toBe(user.qualifications.length);
+    });
+
+    it('should render qualification names', async () => {
+        const table = testee.find('tbody');
+        expect(user.qualifications.length).toBeGreaterThan(0);
+        user.qualifications.forEach((userQualification) => {
+            const qualification = qualifications.get(userQualification.qualificationKey);
+            expect(table.text()).toContain(qualification.name);
+        });
+    });
+
+    it('should render expired qualification status', async () => {
+        const row = testee.findAll('tbody tr')[0];
+        expect(row.text()).toContain('Abgelaufen');
+    });
+
+    it('should render expiration date', async () => {
+        const row = testee.findAll('tbody tr')[0];
+        expect(row.text()).toContain('10.07.2024');
+    });
+
+    it('should render valid qualification status', async () => {
+        const row = testee.findAll('tbody tr')[1];
+        expect(row.text()).toContain('Gültig');
+    });
+
+    it('should not render context menu', async () => {
+        expect(testee.find('[data-test-id="table-context-menu-trigger"]').exists()).toBe(false);
+    });
+});

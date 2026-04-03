@@ -1,11 +1,11 @@
 <template>
     <VDialog ref="dlg" data-test-id="event-batch-edit-dialog">
-        <template #title>{{ $t('views.events.admin-list.batch-edit.title') }}</template>
+        <template #title>{{ $t('views.event-admin-list.batch-edit.title') }}</template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8">
-                        {{ $t('views.events.admin-list.batch-edit.info') }}
+                        {{ $t('views.event-admin-list.batch-edit.info') }}
                     </p>
                     <div class="mb-4">
                         <VInputSelect
@@ -15,7 +15,7 @@
                             :options="eventStates.options.value"
                             :errors="validation.errors.value['state']"
                             :errors-visible="validation.showErrors.value"
-                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
+                            :placeholder="$t('views.event-admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
@@ -25,7 +25,7 @@
                             :label="$t('domain.event.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
-                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
+                            :placeholder="$t('views.event-admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
@@ -36,7 +36,7 @@
                             :options="eventTypes.options.value"
                             :errors="validation.errors.value['type']"
                             :errors-visible="validation.showErrors.value"
-                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
+                            :placeholder="$t('views.event-admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
@@ -47,21 +47,21 @@
                             :options="eventSignupTypes.options.value"
                             :errors="validation.errors.value['signupType']"
                             :errors-visible="validation.showErrors.value"
-                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
+                            :placeholder="$t('views.event-admin-list.batch-edit.not-changed')"
                         />
                     </div>
                     <div class="mb-4">
                         <EventTemplateSelect
                             v-model="copySlotsFrom"
                             data-test-id="input-event-slots"
-                            :label="$t('views.events.admin-list.batch-edit.copy-slots-from')"
-                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
+                            :label="$t('views.event-admin-list.batch-edit.copy-slots-from')"
+                            :placeholder="$t('views.event-admin-list.batch-edit.not-changed')"
                             :errors="validation.errors.value['copySlotsFrom']"
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
                     <VWarning v-if="copySlotsFrom" class="mb-4" data-test-id="warning-slots-overwrite">
-                        {{ $t('views.events.admin-list.batch-edit.copy-slots-warning') }}
+                        {{ $t('views.event-admin-list.batch-edit.copy-slots-warning') }}
                     </VWarning>
                     <div class="mb-4">
                         <VInputTextArea
@@ -70,7 +70,7 @@
                             :label="$t('domain.event.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
-                            :placeholder="$t('views.events.admin-list.batch-edit.not-changed')"
+                            :placeholder="$t('views.event-admin-list.batch-edit.not-changed')"
                         />
                     </div>
                 </section>
