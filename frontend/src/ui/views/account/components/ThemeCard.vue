@@ -1,7 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
-        icon="fa-paint-brush"
+        icon="fa-moon"
         dialog-type="modal"
         :label="$t('views.account.app-settings.theme')"
         direct
