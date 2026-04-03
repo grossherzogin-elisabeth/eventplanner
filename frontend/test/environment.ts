@@ -1,5 +1,5 @@
 import indexeddb from 'fake-indexeddb';
-import { type Environment, builtinEnvironments } from 'vitest/environments';
+import { type Environment, builtinEnvironments } from 'vitest/runtime';
 
 class ResizeObserver {
     public observe(): void {

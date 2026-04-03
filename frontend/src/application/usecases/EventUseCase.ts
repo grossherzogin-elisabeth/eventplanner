@@ -9,7 +9,7 @@ import type {
     UserCachingService,
 } from '@/application/services';
 import { isSameDate, subtractFromDate } from '@/common';
-import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils';
+import { saveStringToFile } from '@/common/utils/DownloadUtils';
 import type {
     Event,
     EventKey,
@@ -67,16 +67,6 @@ export class EventUseCase {
             return events
                 .map((event) => this.eventService.updateComputedValues(event, this.authService.getSignedInUser()))
                 .sort((a, b) => a.start.getTime() - b.start.getTime());
-        } catch (e) {
-            this.errorHandlingService.handleRawError(e);
-            throw e;
-        }
-    }
-
-    public async exportEvents(year: number): Promise<void> {
-        try {
-            const blob = await this.eventRepository.export(year);
-            saveBlobToFile(`Einsatzmatrix ${year}.xlsx`, blob);
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;
