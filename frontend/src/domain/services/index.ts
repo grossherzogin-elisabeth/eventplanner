@@ -21,36 +21,26 @@ export function resetDomainServices(): void {
 }
 
 export function useUserService(): UserService {
-    if (!userService) {
-        userService = new UserService();
-    }
+    userService ??= new UserService();
     return userService;
 }
 
 export function useEventService(): EventService {
-    if (!eventService) {
-        eventService = new EventService();
-    }
+    eventService ??= new EventService();
     return eventService;
 }
 
 export function useRegistrationService(): RegistrationService {
-    if (!registrationService) {
-        registrationService = new RegistrationService();
-    }
+    registrationService ??= new RegistrationService();
     return registrationService;
 }
 
 export function useQualificationService(): QualificationService {
-    if (!qualificationService) {
-        qualificationService = new QualificationService();
-    }
+    qualificationService ??= new QualificationService();
     return qualificationService;
 }
 
 export function usePositionService(): PositionService {
-    if (!positionService) {
-        positionService = new PositionService();
-    }
+    positionService ??= new PositionService();
     return positionService;
 }
