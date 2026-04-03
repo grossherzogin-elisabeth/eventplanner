@@ -263,7 +263,7 @@ async function init(): Promise<void> {
         () => fetchCrew(),
         { deep: true }
     );
-    await Promise.all([fetchEvent()]);
+    await fetchEvent();
     preventPageUnloadOnUnsavedChanges();
 }
 

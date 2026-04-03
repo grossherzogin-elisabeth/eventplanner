@@ -89,7 +89,7 @@ export class AuthService {
     }
 
     public hasPermission(permission: Permission): boolean {
-        return this.signedInUser !== undefined && this.signedInUser.permissions.includes(permission);
+        return this.signedInUser?.permissions.includes(permission) === true;
     }
 
     private notifyListeners<T>(listeners: Record<string, Callback<T>>, param: T): void {
