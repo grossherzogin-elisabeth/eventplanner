@@ -37,7 +37,7 @@ export class CalendarService {
     private createEventDescription(event: Event): string {
         const description = event.description;
         const link = `${globalThis.location.origin}/events/${event.start.getFullYear()}/details/${event.key}`;
-        return description + '\\n' + link;
+        return description + String.raw`\n` + link;
     }
 
     private createIcsReminder(t: string = '1W'): string {
