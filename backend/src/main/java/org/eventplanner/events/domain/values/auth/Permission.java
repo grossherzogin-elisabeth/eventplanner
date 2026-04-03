@@ -14,6 +14,7 @@ public enum Permission {
     WRITE_EVENTS("events:write"),
     DELETE_EVENTS("events:delete"),
     CREATE_EVENTS("events:create"),
+    EXPORT_EVENTS("events:export"),
     WRITE_EVENT_DETAILS("events:write-details"),
     WRITE_EVENT_SLOTS("events:write-slots"),
 

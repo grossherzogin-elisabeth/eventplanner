@@ -16,7 +16,7 @@
                             </VInputSlider>
                         </div>
                         <div class="mb-8">
-                            <VInputNumber v-modael="sog" label="Speed over ground (SOG)">
+                            <VInputNumber v-model="sog" label="Speed over ground (SOG)">
                                 <template #after><span class="text-onsurface-variant/50 pr-4">kn</span></template>
                             </VInputNumber>
                         </div>
@@ -119,8 +119,7 @@
 import { computed, ref, watch } from 'vue';
 import { VInputNumber, VInputSlider } from '@/ui/components/common';
 import type { Pointer } from '@/ui/views/wind-calculator/Pointer.ts';
-import { calculatePointerDirection } from '@/ui/views/wind-calculator/Pointer.ts';
-import { calculatePointer } from '@/ui/views/wind-calculator/Pointer.ts';
+import { calculatePointer, calculatePointerDirection } from '@/ui/views/wind-calculator/Pointer.ts';
 import PointerArrow from '@/ui/views/wind-calculator/PointerArrow.vue';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;

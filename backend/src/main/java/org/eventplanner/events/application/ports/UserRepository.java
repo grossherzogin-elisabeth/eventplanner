@@ -1,9 +1,11 @@
 package org.eventplanner.events.application.ports;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
+import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.springframework.lang.NonNull;
@@ -19,10 +21,10 @@ public interface UserRepository {
     Optional<EncryptedUserDetails> findByAuthKey(@NonNull AuthKey key);
 
     @NonNull
-    EncryptedUserDetails create(@NonNull EncryptedUserDetails user);
+    EncryptedUserDetails create(@NonNull EncryptedUserDetails user) throws UserAlreadyExistsException;
 
     @NonNull
-    EncryptedUserDetails update(@NonNull EncryptedUserDetails user);
+    EncryptedUserDetails update(@NonNull EncryptedUserDetails user) throws NoSuchElementException;
 
     void deleteAll();
 

@@ -19,7 +19,7 @@ describe('PositionDetailsDlg.vue', () => {
         result = undefined;
         closed = false;
         useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_POSITIONS, Permission.WRITE_POSITIONS] }));
-        testee = mount(PositionDetailsDlg, { global: { stubs: { teleport: true } } });
+        testee = mount(PositionDetailsDlg);
     });
 
     describe('create mode', () => {

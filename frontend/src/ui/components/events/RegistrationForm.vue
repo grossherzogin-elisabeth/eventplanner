@@ -174,7 +174,7 @@ const filteredEvents = computed<Event[]>(() => {
         return props.events.filter((e) => e.canSignedInUserUpdateRegistration);
     }
 });
-const hasSingleDayEvent = computed<boolean>(() => filteredEvents.value.find((it) => isSameDate(it.start, it.end)) !== undefined);
+const hasSingleDayEvent = computed<boolean>(() => filteredEvents.value.some((it) => isSameDate(it.start, it.end)));
 const availablePositionsForSignedInUser = computed<InputSelectOption<string | undefined>[]>(() => {
     const validPositionKeys: (PositionKey | undefined)[] = signedInUser.value?.positions || [];
     if (!validPositionKeys.includes(props.registration.positionKey)) {

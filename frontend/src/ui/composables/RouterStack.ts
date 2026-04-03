@@ -2,8 +2,13 @@ import type { RouteLocationNamedRaw, RouteLocationNormalized, RouteLocationPathR
 
 const stack: (RouteLocationNamedRaw | RouteLocationPathRaw)[] = [];
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useRouterStack() {
+export interface UseRouterStack {
+    push(route: RouteLocationNormalized): void;
+    getLastOfKind(filterRouteNames: RouteRecordName[]): RouteLocationRaw | undefined;
+    getLastOther(): RouteLocationRaw | undefined;
+}
+
+export function useRouterStack(): UseRouterStack {
     function push(route: RouteLocationNormalized): void {
         if (stack.length > 0) {
             const lastRoute = stack[stack.length - 1];

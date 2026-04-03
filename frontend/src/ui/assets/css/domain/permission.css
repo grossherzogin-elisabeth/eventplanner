@@ -5,6 +5,7 @@
     body:not(.events\:delete) .permission-delete-events,
     body:not(.events\:write-details) .permission-write-event-details,
     body:not(.events\:write-slots) .permission-write-event-slots,
+    body:not(.events\:export) .permission-export-events,
     body:not(.users\:read) .permission-read-users,
     body:not(.users\:read-details-self) .permission-read-own-user-details,
     body:not(.users\:write-self) .permission-write-own-user-details,

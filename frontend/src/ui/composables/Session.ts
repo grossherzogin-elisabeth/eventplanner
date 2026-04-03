@@ -1,13 +1,14 @@
 import type { Ref } from 'vue';
-import { onBeforeUnmount } from 'vue';
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { useAuthService } from '@/application';
 import type { Permission, SignedInUser } from '@/domain';
 
-export function useSession(): {
+export interface UseSession {
     signedInUser: Ref<SignedInUser | undefined>;
     hasPermission(permission: Permission): boolean;
-} {
+}
+
+export function useSession(): UseSession {
     const authService = useAuthService();
 
     const signedInUser = ref<SignedInUser | undefined>(authService.getSignedInUser());

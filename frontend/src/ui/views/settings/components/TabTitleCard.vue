@@ -6,7 +6,9 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            {{ props.modelValue.ui.tabTitle }}
+            <p class="truncate">
+                {{ props.modelValue.ui.tabTitle }}
+            </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">

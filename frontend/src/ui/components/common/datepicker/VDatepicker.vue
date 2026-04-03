@@ -1,6 +1,6 @@
 <template>
-    <div ref="datepicker" class="v-datepicker w-96 max-w-full" @click.stop="" @mouseup.stop="">
-        <div class="header text-onsurface-variant px-4 pt-4 pb-3">
+    <div ref="datepicker" class="v-datepicker max-w-full" @click.stop="" @mouseup.stop="">
+        <div v-if="!props.readonly" class="header text-onsurface-variant px-4 pt-4 pb-3">
             <div class="flex items-stretch justify-between">
                 <button data-test-id="datepicker-previous-month" class="btn-header" :disabled="view !== 'day'" @click="previousMonth()">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
@@ -24,15 +24,16 @@
                 </button>
             </div>
         </div>
+        <div v-else class="header text-onsurface-variant px-4 pt-4 pb-3">{{ $t(`generic.month.${month}`) }} {{ year }}</div>
         <div class="content pt-3 pb-4">
             <div class="day-selection grid grid-cols-7 gap-y-2 px-4">
-                <span class="label">Mo</span>
-                <span class="label">Di</span>
-                <span class="label">Mi</span>
-                <span class="label">Do</span>
-                <span class="label">Fr</span>
-                <span class="label">Sa</span>
-                <span class="label">So</span>
+                <span class="label">{{ $t('generic.weekday-short.0') }}</span>
+                <span class="label">{{ $t('generic.weekday-short.1') }}</span>
+                <span class="label">{{ $t('generic.weekday-short.2') }}</span>
+                <span class="label">{{ $t('generic.weekday-short.3') }}</span>
+                <span class="label">{{ $t('generic.weekday-short.4') }}</span>
+                <span class="label">{{ $t('generic.weekday-short.5') }}</span>
+                <span class="label">{{ $t('generic.weekday-short.6') }}</span>
                 <div
                     v-for="day in days"
                     :key="day.date.getTime()"
@@ -108,6 +109,7 @@ interface DateItem {
 }
 
 interface Props {
+    readonly?: boolean;
     modelValue?: Date;
     highlightFrom?: Date;
     highlightTo?: Date;

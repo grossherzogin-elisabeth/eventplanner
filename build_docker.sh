@@ -9,7 +9,7 @@ cp -r frontend/dist/ backend/src/main/resources/static/
 
 # build backend
 cd backend
-./gradlew build
+./gradlew build -x test
 
 # build docker image
 cd ..

@@ -7,6 +7,10 @@ on:
         default: 1.0.0
         description: Version of this build
         type: string
+      latest:
+        default: false
+        description: Tag this image as latest
+        type: boolean
 
 jobs:
   build-and-push-container:
@@ -26,13 +30,13 @@ jobs:
       # multi-platform images and export cache
       # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.12.0
+        uses: docker/setup-buildx-action@v4.0.0
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into ghcr registry
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3.6.0
+        uses: docker/login-action@v4.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -44,10 +48,10 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date '+%Y-%m-%d %H:%M:%S')"
 
-      - name: Build and push Docker image (main)
-        if: ${{ github.ref == 'refs/heads/main' }}
-        id: build-and-push-main
-        uses: docker/build-push-action@v6.18.0
+      - name: Build and push Docker image
+        if: ${{ github.ref == 'refs/heads/main' && inputs.latest }}
+        id: build-and-push-latest
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           build-args: |
@@ -61,10 +65,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build and push Docker image (dev)
-        if: ${{ github.ref != 'refs/heads/main' }}
-        id: build-and-push-dev
-        uses: docker/build-push-action@v6.18.0
+      - name: Build and push Docker image (main)
+        if: ${{ github.ref != 'refs/heads/main' || !inputs.latest }}
+        id: build-and-push
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           build-args: |
@@ -72,7 +76,6 @@ jobs:
             BRANCH=${{ github.head_ref || github.ref_name }} 
             TIME=${{ steps.date.outputs.date }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ghcr.io/grossherzogin-elisabeth/eventplanner:${{ github.head_ref || github.ref_name }}
+          tags: ghcr.io/grossherzogin-elisabeth/eventplanner:${{ inputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

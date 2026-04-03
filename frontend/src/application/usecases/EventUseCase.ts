@@ -195,7 +195,7 @@ export class EventUseCase {
 
     private async joinEventInternal(event: Event, registration: Registration): Promise<Event> {
         const signedInUser = this.authService.getSignedInUser();
-        if (event.registrations.find((it) => it.userKey === signedInUser?.key)) {
+        if (event.registrations.some((it) => it.userKey === signedInUser?.key)) {
             // There already is a registration for this user. Nothing to do here to get required state.
             return this.eventService.updateComputedValues(event, signedInUser);
         }
@@ -237,7 +237,7 @@ export class EventUseCase {
 
     public async leaveEvents(events: Event[]): Promise<void> {
         try {
-            const canLeaveAllEvents = !events.find((it) => !it.canSignedInUserLeave);
+            const canLeaveAllEvents = !events.some((it) => !it.canSignedInUserLeave);
             if (!canLeaveAllEvents) {
                 this.errorHandlingService.handleError({
                     title: 'Absage über die App nicht möglich',

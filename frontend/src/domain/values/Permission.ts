@@ -5,6 +5,7 @@ export enum Permission {
     DELETE_EVENTS = 'events:delete',
     WRITE_EVENT_DETAILS = 'events:write-details',
     WRITE_EVENT_SLOTS = 'events:write-slots',
+    EXPORT_EVENTS = 'events:export',
 
     READ_USERS = 'users:read',
     READ_OWN_USER = 'users:read-details-self',

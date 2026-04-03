@@ -5,14 +5,14 @@
             <div class="w-0 grow">
                 <h4 class="text-onsurface/50 mb-1 text-xs font-bold">{{ props.label }}</h4>
                 <slot name="default">
-                    {{ props.content }}
+                    <p class="line-clamp-3">{{ props.content }}</p>
                 </slot>
             </div>
             <button v-if="!props.disabled" class="btn-icon hidden group-hover:inline">
                 <i class="fa-solid fa-pen" />
             </button>
         </div>
-        <VDialog v-if="!props.disabled" ref="editSheet">
+        <VDialog v-if="!props.disabled" ref="editSheet" :type="props.dialogType ?? 'fullscreen'">
             <template #title> {{ props.label }} </template>
             <template #content>
                 <div class="xs:px-8 px-4 py-4 lg:px-10">
@@ -41,8 +41,7 @@
 </template>
 <script lang="ts" setup generic="T">
 import type { Ref } from 'vue';
-import { watch } from 'vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { deepCopy, wait } from '@/common';
 import { AsyncButton, type Sheet, VDialog } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation';
@@ -54,6 +53,7 @@ interface Props {
     content?: string;
     disabled?: boolean;
     direct?: boolean;
+    dialogType?: 'fullscreen' | 'modal';
     validate?: (t: T) => Record<string, string[]>;
 }
 

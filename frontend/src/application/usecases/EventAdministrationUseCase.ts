@@ -1,7 +1,6 @@
 import type { EventRegistrationsRepository, EventRepository } from '@/application/ports';
 import type { AuthService, ErrorHandlingService, EventCachingService, NotificationService } from '@/application/services';
 import { filterUndefined } from '@/common';
-import { saveBlobToFile } from '@/common/utils/DownloadUtils';
 import type { Event, EventKey, EventService, Registration, ResolvedRegistrationSlot, SlotKey, User } from '@/domain';
 import { EventState } from '@/domain';
 
@@ -13,7 +12,6 @@ export class EventAdministrationUseCase {
     private readonly eventRegistrationsRepository: EventRegistrationsRepository;
     private readonly notificationService: NotificationService;
     private readonly errorHandlingService: ErrorHandlingService;
-    private exportTemplates: string[] | undefined = undefined;
 
     constructor(params: {
         eventCachingService: EventCachingService;
@@ -94,7 +92,7 @@ export class EventAdministrationUseCase {
                 title: 'Speichern fehlgeschlagen',
                 message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
                 wiederholt auftreten, melde ihn gerne.`,
-                error: e,
+                error: e instanceof Error || e instanceof Response ? e : undefined,
                 retry: () => this.updateEvents(eventKeys, patch),
             });
             throw e;
@@ -111,7 +109,7 @@ export class EventAdministrationUseCase {
                 title: 'Speichern fehlgeschlagen',
                 message: `Deine Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut. Sollte der Fehler
                 wiederholt auftreten, melde ihn gerne.`,
-                error: e,
+                error: e instanceof Error || e instanceof Response ? e : undefined,
                 retry: () => this.updateEvent(eventKey, event),
             });
             throw e;
@@ -154,7 +152,7 @@ export class EventAdministrationUseCase {
     }
 
     public async createEvent(event: Event): Promise<Event> {
-        console.log('Creating event');
+        console.log('📡 Creating event');
         try {
             let savedEvent = await this.eventRepository.createEvent(event);
             savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());
@@ -187,9 +185,9 @@ export class EventAdministrationUseCase {
         try {
             let eventsToUpdate = events;
             if (registration.userKey) {
-                eventsToUpdate = eventsToUpdate.filter((it) => !it.registrations.find((it) => it.userKey === registration.userKey));
+                eventsToUpdate = eventsToUpdate.filter((it) => !it.registrations.some((it) => it.userKey === registration.userKey));
             } else if (registration.name) {
-                eventsToUpdate = eventsToUpdate.filter((it) => it.registrations.find((it) => it.name === registration.name));
+                eventsToUpdate = eventsToUpdate.filter((it) => it.registrations.some((it) => it.name === registration.name));
             }
             if (eventsToUpdate.length === 0) {
                 this.notificationService.warning('Keine neue Anmeldung hinzugefügt');
@@ -224,7 +222,7 @@ export class EventAdministrationUseCase {
         if (!slot) {
             throw new Error('Failed to resolve slot');
         }
-        if (!slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey))) {
+        if (!slot.positionKeys.some((positionkey) => user.positionKeys?.includes(positionkey))) {
             console.warn(`Assigning ${user.firstName} ${user.lastName} to slot with mismatching positions!`);
             // throw new Error('User does not have the required position');
         }
@@ -261,24 +259,5 @@ export class EventAdministrationUseCase {
         slot.assignedRegistrationKey = undefined;
         event.slots = await this.eventRepository.optimizeSlots(event);
         return event;
-    }
-
-    public async getExportTemplates(): Promise<string[]> {
-        if (!this.exportTemplates) {
-            this.exportTemplates = await this.eventRepository.getExportTemplates();
-        }
-        return this.exportTemplates;
-    }
-
-    public async exportEvent(event: Event, template: string): Promise<void> {
-        const file = await this.eventRepository.exportEvent(event, template);
-        saveBlobToFile(`${template}_${this.formatDate(event.start)}.xlsx`, file);
-    }
-
-    private formatDate(date: Date | string | number): string {
-        const d = new Date(date);
-        const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate().toString();
-        const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : (d.getMonth() + 1).toString();
-        return `${d.getFullYear()}-${month}-${day}`;
     }
 }

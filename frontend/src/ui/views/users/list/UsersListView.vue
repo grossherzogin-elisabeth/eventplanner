@@ -9,14 +9,14 @@
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
-                    <div class="permission-write-users hidden 2xl:block">
-                        <button class="btn-primary" name="create" @click="createUser()">
-                            <i class="fa-solid fa-user-plus"></i>
-                            <span>Hinzufügen</span>
-                        </button>
-                    </div>
                     <div class="hidden lg:block">
                         <VSearchButton v-model="filter" placeholder="Einträge filtern" />
+                    </div>
+                    <div v-if="hasPermission(Permission.WRITE_USERS)" class="z-10 hidden 2xl:block">
+                        <button class="btn-primary" name="create" @click="createUser()">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>{{ $t('generic.add') }}</span>
+                        </button>
                     </div>
                 </div>
             </template>
@@ -217,8 +217,7 @@ import { filterUndefined, hasAnyOverlap } from '@/common';
 import type { Event, EventKey, Position, PositionKey, QualificationKey, User } from '@/domain';
 import { EventType, Permission, Role, useEventService, useUserService } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
-import { VMultiSelectActions } from '@/ui/components/common';
-import { VConfirmationDialog, VTable, VTabs } from '@/ui/components/common';
+import { VConfirmationDialog, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import { FilterMultiselect, FilterSelect, FilterToggle } from '@/ui/components/filters';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
@@ -273,7 +272,7 @@ const filterPositions = useQuery<PositionKey[]>('positions', []).parameter;
 
 const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS].map((it) => ({
     value: it,
-    label: t(`views.users.list.tab.${it}`),
+    label: t(`views.user-list.tab.${it}`),
 }));
 const tab = ref<string>(tabs[0].value);
 
@@ -307,7 +306,7 @@ function participatesInEvent(user: UserRegistrations): boolean {
     if (!userRegistration) {
         return false;
     }
-    return filterEvent.value.slots.find((it) => it.assignedRegistrationKey === userRegistration.key) !== undefined;
+    return filterEvent.value.slots.some((it) => it.assignedRegistrationKey === userRegistration.key);
 }
 
 const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
@@ -349,7 +348,7 @@ function createUser(): void {
 }
 
 async function editUser(user: UserRegistrations, evt: MouseEvent): Promise<void> {
-    if (!hasPermission(Permission.WRITE_USERS)) {
+    if (!hasPermission(Permission.READ_USER_DETAILS)) {
         console.error('User has no permission to edit users.');
         return;
     }
@@ -431,7 +430,7 @@ async function fetchUsers(): Promise<void> {
     users.value = userlist.map((user: User) => {
         return {
             ...user,
-            rolesStr: user.roles?.map((k) => t(`generic.role.${k}`)).join(', ') || '',
+            rolesStr: user.roles?.map((k) => t(`domain.role.${k}`)).join(', ') || '',
             waitingListCount: registrationsWaitinglist.filter((it) => it.userKey === user.key).length,
             multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,

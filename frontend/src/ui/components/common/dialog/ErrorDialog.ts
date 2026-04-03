@@ -1,7 +1,7 @@
 export interface ErrorDialogMessage {
     title?: string;
     message?: string;
-    error?: unknown | Error | Response;
+    error?: Error | Response;
     retry?: () => void;
     retryText?: string;
     cancelText?: string;

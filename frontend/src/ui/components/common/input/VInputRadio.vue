@@ -26,7 +26,7 @@
                     <i class="fa-solid fa-circle text-surface-container-high w-5 text-xl sm:text-2xl"></i>
                 </span>
                 <span :class="{ invalid: showErrors && hasErrors }" class="ml-4 cursor-pointer">
-                    {{ $t(option.label) }}
+                    {{ option.label }}
                 </span>
             </label>
             <VInputHint :hint="props.hint" :errors="props.errors" :show-errors="showErrors" />

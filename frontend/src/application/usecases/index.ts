@@ -22,6 +22,7 @@ import { useEventService, useQualificationService, useRegistrationService } from
 import { AppSettingsUseCase } from './AppSettingsUseCase';
 import { AuthUseCase } from './AuthUseCase';
 import { EventAdministrationUseCase } from './EventAdministrationUseCase';
+import { EventExportUseCase } from './EventExportUseCase';
 import { EventUseCase } from './EventUseCase';
 import { PositionAdministrationUseCase } from './PositionAdministrationUseCase';
 import { PositionUseCase } from './PositionUseCase';
@@ -46,6 +47,7 @@ export {
 let authUseCase: AuthUseCase | undefined;
 let eventUseCase: EventUseCase | undefined;
 let eventAdministrationUseCase: EventAdministrationUseCase | undefined;
+let eventExportUseCase: EventExportUseCase | undefined;
 let usersUseCase: UsersUseCase | undefined;
 let userAdministrationUseCase: UserAdministrationUseCase | undefined;
 let appSettingsUseCase: AppSettingsUseCase | undefined;
@@ -58,6 +60,7 @@ export function resetUseCases(): void {
     authUseCase = undefined;
     eventUseCase = undefined;
     eventAdministrationUseCase = undefined;
+    eventExportUseCase = undefined;
     usersUseCase = undefined;
     userAdministrationUseCase = undefined;
     appSettingsUseCase = undefined;
@@ -115,6 +118,18 @@ export function useEventAdministrationUseCase(): EventAdministrationUseCase {
         });
     }
     return eventAdministrationUseCase;
+}
+
+export function useEventExportUseCase(): EventExportUseCase {
+    if (!eventExportUseCase) {
+        console.log('🚀 Initializing EventExportUseCase');
+        eventExportUseCase = new EventExportUseCase({
+            errorHandlingService: useErrorHandlingService(),
+            authService: useAuthService(),
+            eventRepository: useEventRepository(),
+        });
+    }
+    return eventExportUseCase;
 }
 
 export function useUsersUseCase(): UsersUseCase {

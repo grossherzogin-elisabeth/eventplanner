@@ -20,7 +20,7 @@
             </span>
             <slot :invalid="showErrors && hasErrors" name="label">
                 <span v-if="props.label" :class="{ invalid: showErrors && hasErrors }" class="check-box-label">
-                    {{ $t(props.label) }}
+                    {{ props.label }}
                 </span>
             </slot>
         </label>

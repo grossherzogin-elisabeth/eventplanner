@@ -1,9 +1,19 @@
+import type { ComputedRef, Ref } from 'vue';
 import { computed, ref } from 'vue';
 import { usePositionUseCase } from '@/application';
 import type { InputSelectOption, Position, PositionKey } from '@/domain';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function usePositions() {
+export interface UsePositions {
+    positions: Ref<Map<PositionKey, Position>>;
+    options: ComputedRef<InputSelectOption<PositionKey | undefined>[]>;
+    optionsIncludingNone: ComputedRef<InputSelectOption<PositionKey | undefined>[]>;
+    get(positionKey?: PositionKey): Position;
+    update(): Promise<void>;
+    all: ComputedRef<Position[]>;
+    loading: Promise<void>;
+}
+
+export function usePositions(): UsePositions {
     const positions = ref<Map<PositionKey, Position>>(new Map<PositionKey, Position>());
 
     const positionUseCase = usePositionUseCase();

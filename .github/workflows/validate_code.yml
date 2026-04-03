@@ -70,7 +70,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload test coverage artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-test-report
           path: frontend/coverage
@@ -103,13 +103,18 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
+      - name: Run ArchUnit rules
+        shell: bash
+        working-directory: backend
+        run: ./gradlew test --tests org.eventplanner.architecture.ArchUnitRulesTest
+
       - name: Run tests
         shell: bash
         working-directory: backend
         run: ./gradlew build test jacocoTestReport
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: backend-build-output
           path: backend/build
@@ -153,13 +158,13 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Download frontend test coverage artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: frontend-test-report
           path: frontend/coverage
 
       - name: Download backend build artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: backend-build-output
           path: backend/build

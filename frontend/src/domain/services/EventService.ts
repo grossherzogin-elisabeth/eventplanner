@@ -58,7 +58,7 @@ export class EventService {
         if (!registration) {
             return false;
         }
-        return slot.positionKeys.find((positionkey) => user.positionKeys?.includes(positionkey)) !== undefined;
+        return slot.positionKeys.some((positionkey) => user.positionKeys?.includes(positionkey));
     }
 
     public getOpenSlots(event: Event): Slot[] {
@@ -192,7 +192,7 @@ export class EventService {
     }
 
     public getRegistrationsOnWaitinglist(event: Event): Registration[] {
-        return event.registrations.filter((reg) => !event.slots.find((slt) => slt.assignedRegistrationKey === reg.key));
+        return event.registrations.filter((reg) => !event.slots.some((slt) => slt.assignedRegistrationKey === reg.key));
     }
 
     public validate(event: Event): Record<string, string[]> {
@@ -209,14 +209,14 @@ export class EventService {
     }
 
     public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {
-        event.isInPast = event.start.getTime() < new Date().getTime();
+        event.isInPast = event.start.getTime() < Date.now();
         event.signedInUserRegistration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
         if (event.signedInUserRegistration !== undefined) {
             // singed in user has a registration
             event.canSignedInUserJoin = false;
             event.signedInUserAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === event.signedInUserRegistration?.key);
             event.isSignedInUserAssigned = event.signupType !== EventSignupType.Assignment || event.signedInUserAssignedSlot !== undefined;
-            const isInPast = event.start.getTime() < new Date().getTime();
+            const isInPast = event.start.getTime() < Date.now();
             const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
             if (event.isSignedInUserAssigned) {
                 event.canSignedInUserUpdateRegistration = !isInPast;
@@ -231,7 +231,7 @@ export class EventService {
             event.canSignedInUserLeave = false;
             event.canSignedInUserJoin =
                 (signedInUser?.positions || []).length > 0 &&
-                event.start.getTime() > new Date().getTime() &&
+                event.start.getTime() > Date.now() &&
                 ![EventState.Canceled].includes(event.state);
         }
 
