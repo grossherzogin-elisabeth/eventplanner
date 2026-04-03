@@ -4,92 +4,145 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=grossherzogin-elisabeth_eventplanner&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=grossherzogin-elisabeth_eventplanner)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=grossherzogin-elisabeth_eventplanner&metric=coverage)](https://sonarcloud.io/summary/new_code?id=grossherzogin-elisabeth_eventplanner)
 
-
 # Eventplanner
 
-The eventplanner is a web application for planning multi day events with a variing event team.
+Eventplanner is a web application for planning multi-day events with scheduling, crew management, notifications, and exports.
 
+## Tech stack
 
-## Configuration
+- Backend: Java 25, Spring Boot, SQLite, Flyway
+- Frontend: Vue 3 + TypeScript + Vite
+- Packaging: single Docker image serving backend and built frontend
 
-The following settings can be changed via environment variables:
+## Repository layout
 
-| Variable                 | Description                                                                       | Default value                 | Optional |
-|--------------------------|-----------------------------------------------------------------------------------|-------------------------------|----------| 
-| OAUTH_ISSUER_URI         | OIDC issuer uri                                                                   | -                             |          |
-| OAUTH_CLIENT_ID          | OIDC client id                                                                    | -                             |          |
-| OAUTH_CLIENT_SECRET      | OIDC client secret                                                                | -                             |          |
-| PORT                     | port this service will run on                                                     | 80                            | x        |
-| PROTOCOL                 | http or https                                                                     | https                         | x        |
-| HOST                     | Domain the service runs on                                                        | localhost                     | x        |
-| HOST_URL                 | Full publicly reachable url, usefull when PORT is not the publicly reachable port | ${PROTOCOL}://${HOST}/${PORT} | x        |
-| DATA_ENCRYPTION_PASSWORD | Password to use for PII data encryption                                           | default-encryption-password   | x        |
-| EMAIL_WHITELIST          | Send email notifications only to whitelisted emails                               | -                             | x        |
-| ADMIN_EMAILS             | Make all users with on of these emails to admins                                  | -                             | x        |
+- `backend/` Spring Boot application
+- `frontend/` Vue application
+- `data/` local database and runtime data (for local/dev usage)
 
+## Quick start (Docker)
 
-## Auth
-
-This app does not provide a custom auth management. Instead, we rely on external OIDC providers for the login. 
-For just testing things out this can be an [AWS cognito](https://aws.amazon.com/de/cognito/), which has a very
-generous free tier of 10k users. If you prefer a self-hosted alternative you can use a local
-[Keycloak](https://www.keycloak.org/). In every case you need the Authorization Code Flow enabled and the 
-`client id` and `client secret` set as environment variables. 
-
-
-## Running via Docker
-
-The docker image runs the app on port 80 by default. You can run the service on another port using the `PORT`
-environment variable. If public and internal port are not the same, make sure to also pass the `HOST_URL` variable,
-so that the backend knows how it is accessible in the browser, e.g. for OAuth redirects. 
+The published image exposes port `80` inside the container.
 
 ```bash
 docker run \
-    -e ADMIN_EMAILS=your@email.de \
-    -e OAUTH_ISSUER_URI=xxx \
-    -e OAUTH_CLIENT_ID=xxx \
-    -e OAUTH_CLIENT_SECRET=xxx \
-    -e PROTOCOL=http \
-    -e HOST_URL=http://localhost:8080 \
-    -p 8080:80 ghcr.io/grossherzogin-elisabeth/eventplanner:latest
+  -e OAUTH_ISSUER_URI="https://your-issuer" \
+  -e OAUTH_CLIENT_ID="your-client-id" \
+  -e OAUTH_CLIENT_SECRET="your-client-secret" \
+  -e DATA_ENCRYPTION_PASSWORD="change-me" \
+  -e PROTOCOL="http" \
+  -e HOST_URL="http://localhost:8080" \
+  -e ADMIN_EMAILS="admin@example.com" \
+  -p 8080:80 \
+  ghcr.io/grossherzogin-elisabeth/eventplanner:latest
 ```
 
-## Running from source
+Open `http://localhost:8080` afterwards.
 
-You can also clone this repository and run everything from source directly. For this we are using the `local` profile
-in Spring, which has some slightly different default values than the ones mentioned above.
+## Sample docker-compose
 
-### Prerequisites 
+Use this as a starting point and move sensitive values to a local `.env` file before sharing.
 
-In order to run the application locally, you need Java 21 and Node 22 installed. You also need an OIDC provider
-for the login.
+```yaml
+services:
+  eventplanner:
+    image: ghcr.io/grossherzogin-elisabeth/eventplanner:latest
+    container_name: eventplanner
+    ports:
+      - "8080:80"
+    environment:
+      OAUTH_ISSUER_URI: "https://your-issuer"
+      OAUTH_CLIENT_ID: "your-client-id"
+      OAUTH_CLIENT_SECRET: "your-client-secret"
+      DATA_ENCRYPTION_PASSWORD: "change-me"
+      PROTOCOL: "http"
+      HOST: "localhost"
+      HOST_URL: "http://localhost:8080"
+      EMAIL_WHITELIST: ""
+      ADMIN_EMAILS: "admin@example.com"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+```
 
-### Starting the backend
+## Run from source
 
-Before starting the backend locally, you have to set a few environment variables. The easiest way to do this is 
-to create an `application-secrets.yml`, but you can also set the variables individually. The following environment
-variables are required:
+### Prerequisites
+
+- Java 25 (Temurin recommended)
+- Node.js 24
+- An OIDC provider (for login)
+
+### 1) Start backend
+
+Set OIDC values either as environment variables or in `backend/bin/main/application-secrets.yml`.
+
+Required values:
 
 ```yaml
 OAUTH_ISSUER_URI: <oidc-issuer-uri>
 OAUTH_CLIENT_ID: <oidc-client-id>
 OAUTH_CLIENT_SECRET: <oidc-client-secret>
-EMAIL_WHITELIST: <your-email-address>
-ADMIN_EMAILS: <your-email-address>
 ```
 
-Then use the following commands to start the backend on port 8091 with a SQLite database.
+Run backend:
+
 ```bash
 cd backend
 ./gradlew bootRun --args='--spring.profiles.active=local,secrets'
 ```
 
-### Starting the frontend
+### 2) Start frontend
 
-Run the following commands to start the frontend on port 8090.
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
+Frontend runs on `http://localhost:8090` and proxies API/auth traffic to backend on `http://localhost:8091`.
+
+## Build, lint, and test
+
+### Frontend
+
+```bash
+cd frontend
+npm run check:format
+npm run check:lint
+npm run check:typescript
+npm run build
+npm run test:coverage
+```
+
+### Backend
+
+```bash
+cd backend
+./gradlew build test jacocoTestReport
+```
+
+## Environment variables
+
+| Variable | Description | Default | Required |
+|---|---|---|---|
+| `OAUTH_ISSUER_URI` | OIDC issuer URI | - | yes |
+| `OAUTH_CLIENT_ID` | OIDC client ID | - | yes |
+| `OAUTH_CLIENT_SECRET` | OIDC client secret | - | yes |
+| `PORT` | HTTP port used by backend service | `80` | no |
+| `PROTOCOL` | Public protocol (`http` or `https`) | `https` | no |
+| `HOST` | Public host name | `localhost` | no |
+| `HOST_URL` | Full public URL (important when exposed port differs from app port) | `${PROTOCOL}://${HOST}/${PORT}` | no |
+| `DATA_ENCRYPTION_PASSWORD` | Password used to encrypt PII data | `default-encryption-password` | strongly recommended |
+| `EMAIL_WHITELIST` | Restrict outgoing email notifications to listed addresses | empty | no |
+| `ADMIN_EMAILS` | Comma-separated emails automatically granted admin role | empty | no |
+
+## Authentication notes
+
+Eventplanner relies on external OIDC providers and does not manage local user passwords.
+For local testing, Keycloak is a common self-hosted option.
+
+## Additional docs
+
+- `frontend/README.md`
+- `backend/src/main/resources/application.yml`
