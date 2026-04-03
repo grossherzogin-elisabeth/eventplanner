@@ -173,13 +173,14 @@
                         </RouterLink>
                     </li>
                     <li
-                        v-for="template in exportTemplates"
+                        v-for="template in eventExports.templates.value"
                         :key="template"
-                        class="permission-read-user-details context-menu-item"
-                        @click="eventAdminUseCase.exportEvent(item, template)"
+                        class="permission-export-events context-menu-item"
+                        data-test-id="action-export"
+                        @click="eventExports.exportEvent(item, template)"
                     >
                         <i class="fa-solid fa-file-excel" />
-                        <span>{{ $t('views.event-admin-list.action.exportToTemplate', { template }) }}</span>
+                        <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
                     </li>
                     <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
                         <i class="fa-solid fa-user-plus" />
@@ -337,6 +338,7 @@ import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
+import { useEventExports } from '@/ui/composables/EventExports.ts';
 import { useEventStates } from '@/ui/composables/EventStates';
 import { useEventTypes } from '@/ui/composables/EventTypes';
 import { usePositions } from '@/ui/composables/Positions';
@@ -379,7 +381,7 @@ const filterEventStates = useQuery<EventState[]>('states', []).parameter;
 const filterEventType = useQuery<EventType[]>('types', []).parameter;
 
 const events = ref<EventTableViewItem[] | null>(null);
-const exportTemplates = ref<string[]>([]);
+const eventExports = useEventExports();
 const tab = ref<string>('future');
 
 const createEventDialog = ref<Dialog<Event> | null>(null);
@@ -434,7 +436,6 @@ async function init(): Promise<void> {
     await positions.loading;
     await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();
-    await fetchExportTemplates();
     restoreScrollPosition();
 }
 
@@ -458,10 +459,6 @@ async function fetchEvents(): Promise<void> {
             events.value = await fetchEventsByYear(year);
         }
     }
-}
-
-async function fetchExportTemplates(): Promise<void> {
-    exportTemplates.value = await eventAdminUseCase.getExportTemplates();
 }
 
 async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {

@@ -32,6 +32,16 @@ class EventExportIntegrationTest {
     private EventExportUseCase testee;
 
     @Test
+    void shouldReturnAvailableExcelTemplates() {
+        var templates = testee.getAvailableTemplates(
+            createSignedInUser().withRole(Role.ADMIN)
+        );
+
+        assertThat(templates)
+            .containsExactlyInAnyOrder("consumption-list", "imo-crew-list", "sample");
+    }
+
+    @Test
     void shouldGenerateConsumptionList() throws Exception {
         var file = generateExcelExport("consumption-list");
 

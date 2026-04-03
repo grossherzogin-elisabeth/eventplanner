@@ -70,6 +70,16 @@
                 <i class="fa-solid fa-calendar-alt" />
                 <span>{{ $t('views.event-details.create-calendar-entry') }}</span>
             </li>
+            <li
+                v-for="template in eventExports.templates.value"
+                :key="template"
+                class="permission-export-events context-menu-item"
+                data-test-id="action-export"
+                @click="eventExports.exportEvent(event, template)"
+            >
+                <i class="fa-solid fa-file-excel" />
+                <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
+            </li>
             <template v-if="event.signedInUserRegistration">
                 <li
                     data-test-id="action-edit-registration"
@@ -117,6 +127,7 @@ import EventRegistrationDetailsCard from '@/ui/components/events/EventRegistrati
 import EventStateBanner from '@/ui/components/events/EventStateBanner.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
 import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
+import { useEventExports } from '@/ui/composables/EventExports.ts';
 import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 
@@ -128,6 +139,7 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const eventUseCase = useEventUseCase();
+const eventExports = useEventExports();
 const { hasPermission } = useSession();
 
 const event = ref<Event | null>(null);

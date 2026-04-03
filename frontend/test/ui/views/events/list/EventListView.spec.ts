@@ -8,7 +8,7 @@ import { EventType, Permission, SlotCriticality } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
 import EventsListView from '@/ui/views/events/list/EventsListView.vue';
 import { DECKHAND, mockEventRepresentation, mockRouter, server } from '~/mocks';
-import { setupUserPermissions } from '~/utils';
+import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({
@@ -22,7 +22,7 @@ describe('EventsListView.vue', () => {
 
     beforeEach(async () => {
         vi.setSystemTime(new Date(2024, 3, 1).getTime());
-        const signedInUser = setupUserPermissions([Permission.READ_EVENTS]);
+        const signedInUser = setupUserPermissions([Permission.READ_EVENTS, Permission.EXPORT_EVENTS]);
         events = [
             mockEventRepresentation({
                 name: 'event in past year',
@@ -146,6 +146,15 @@ describe('EventsListView.vue', () => {
         expect(table.text()).not.toContain('event in past year');
         expect(table.text()).toContain('future event in current year');
         expect(table.text()).not.toContain('event in next year');
+    });
+
+    it('should render export actions in row context menu', async () => {
+        await loading();
+        const menu = await openTableContextMenu(testee, 0);
+        const exports = menu.findAll('[data-test-id="action-export"]');
+        expect(exports).toHaveLength(2);
+        expect(exports[0].text()).toContain('some template');
+        expect(exports[1].text()).toContain('some other template');
     });
 
     async function loading(): Promise<void> {

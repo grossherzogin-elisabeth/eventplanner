@@ -10,6 +10,7 @@
     "events:write",
     "events:delete",
     "events:create",
+    "events:export",
     "events:write-details",
     "events:write-slots",
     "registrations:write",

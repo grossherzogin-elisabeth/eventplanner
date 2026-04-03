@@ -62,7 +62,12 @@ describe('EventEditView.vue', () => {
     beforeEach(async () => {
         authService = useAuthService();
         const signedInUser = mockSignedInUser();
-        signedInUser.permissions.push(Permission.WRITE_EVENTS, Permission.WRITE_EVENT_DETAILS, Permission.WRITE_EVENT_SLOTS);
+        signedInUser.permissions.push(
+            Permission.WRITE_EVENTS,
+            Permission.WRITE_EVENT_DETAILS,
+            Permission.WRITE_EVENT_SLOTS,
+            Permission.EXPORT_EVENTS
+        );
         authService.setSignedInUser(signedInUser);
 
         await router.push({ name: Routes.EventEdit, params: { year: 2025, key: 'example-event' } });
