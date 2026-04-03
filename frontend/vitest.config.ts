@@ -12,6 +12,7 @@ export default mergeConfig(
             },
         },
         test: {
+            silent: 'passed-only',
             pool: 'vmThreads',
             globals: true,
             environment: './test/environment.ts',
