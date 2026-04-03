@@ -1,5 +1,5 @@
-import type { AuthService, ErrorHandlingService } from '@/application';
 import type { EventRepository } from '@/application/ports';
+import type { AuthService, ErrorHandlingService } from '@/application/services';
 import { saveBlobToFile } from '@/common/utils/DownloadUtils';
 import type { Event } from '@/domain';
 import { Permission } from '@/domain';
