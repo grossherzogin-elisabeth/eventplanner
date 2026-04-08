@@ -15,6 +15,7 @@ import org.eventplanner.events.domain.values.config.EmailConfig;
 import org.eventplanner.events.domain.values.config.FrontendConfig;
 import org.eventplanner.events.domain.values.config.NotificationConfig;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -50,11 +51,12 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     @Override
     public @NonNull ApplicationConfig getConfig(@NonNull final DecryptFunc decryptFunc) {
         var settingsMap = configurationJpaRepository.findAll().stream()
-            .filter(configurationJpaEntity -> configurationJpaEntity.getValue() != null)
-            .collect(Collectors.toMap(
-                ConfigurationJpaEntity::getKey,
-                ConfigurationJpaEntity::getValue
-            ));
+                                                    .filter(configurationJpaEntity -> configurationJpaEntity.getValue()
+                                                            != null)
+                                                    .collect(Collectors.toMap(
+                                                            ConfigurationJpaEntity::getKey,
+                                                            ConfigurationJpaEntity::getValue
+                                                    ));
 
         var emailPassword = settingsMap.get(EMAIL_PASSWORD);
         if (emailPassword != null) {
@@ -73,46 +75,46 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
             teamsWebhookUrl = decryptFunc.apply(new Encrypted<>(teamsWebhookUrl), String.class);
         }
         var notificationSettings = new NotificationConfig(
-            teamsWebhookUrl,
-            null
+                teamsWebhookUrl,
+                null
         );
 
         var emailSettings = new EmailConfig(
-            null,
-            null,
-            null,
-            settingsMap.get(EMAIL_FROM),
-            settingsMap.get(EMAIL_FROM_DISPLAY_NAME),
-            settingsMap.get(EMAIL_REPLY_TO),
-            settingsMap.get(EMAIL_REPLY_TO_DISPLAY_NAME),
-            settingsMap.get(EMAIL_HOST),
-            emailPort,
-            Boolean.valueOf(settingsMap.get(EMAIL_ENABLE_SSL)),
-            Boolean.valueOf(settingsMap.get(EMAIL_ENABLE_TLS)),
-            settingsMap.get(EMAIL_USERNAME),
-            emailPassword
+                null,
+                null,
+                null,
+                settingsMap.get(EMAIL_FROM),
+                settingsMap.get(EMAIL_FROM_DISPLAY_NAME),
+                settingsMap.get(EMAIL_REPLY_TO),
+                settingsMap.get(EMAIL_REPLY_TO_DISPLAY_NAME),
+                settingsMap.get(EMAIL_HOST),
+                emailPort,
+                Boolean.valueOf(settingsMap.get(EMAIL_ENABLE_SSL)),
+                Boolean.valueOf(settingsMap.get(EMAIL_ENABLE_TLS)),
+                settingsMap.get(EMAIL_USERNAME),
+                emailPassword
         );
 
         var uiSettings = new FrontendConfig(
-            settingsMap.get(UI_MENU_TITLE),
-            settingsMap.get(UI_TAB_TITLE),
-            settingsMap.get(UI_TEC_SUPPORT_EMAIL),
-            settingsMap.get(UI_SUPPORT_EMAIL),
-            settingsMap.get(UI_URL)
+                settingsMap.get(UI_MENU_TITLE),
+                settingsMap.get(UI_TAB_TITLE),
+                settingsMap.get(UI_TEC_SUPPORT_EMAIL),
+                settingsMap.get(UI_SUPPORT_EMAIL),
+                settingsMap.get(UI_URL)
         );
 
         return new ApplicationConfig(
-            notificationSettings,
-            emailSettings,
-            uiSettings,
-            new AuthConfig()
+                notificationSettings,
+                emailSettings,
+                uiSettings,
+                new AuthConfig()
         );
     }
 
     @Override
     public void updateConfig(
-        @NonNull final ApplicationConfig.UpdateSpec spec,
-        @NonNull final EncryptFunc encryptFunc
+            @NonNull final ApplicationConfig.UpdateSpec spec,
+            @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
         entities.addAll(mapEmailSettings(spec.email(), encryptFunc));
@@ -122,84 +124,89 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapFrontendSettings(
-        @NonNull final FrontendConfig.UpdateSpec spec
+            @NonNull final FrontendConfig.UpdateSpec spec
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
-        if (spec.getMenuTitle() != null) {
-            entities.add(new ConfigurationJpaEntity(UI_MENU_TITLE, spec.getMenuTitle()));
-        }
-        if (spec.getTabTitle() != null) {
-            entities.add(new ConfigurationJpaEntity(UI_TAB_TITLE, spec.getTabTitle()));
-        }
-        if (spec.getTechnicalSupportEmail() != null) {
-            entities.add(new ConfigurationJpaEntity(UI_TEC_SUPPORT_EMAIL, spec.getTechnicalSupportEmail()));
-        }
-        if (spec.getSupportEmail() != null) {
-            entities.add(new ConfigurationJpaEntity(UI_SUPPORT_EMAIL, spec.getSupportEmail()));
-        }
+        addIfNotNull(entities, UI_MENU_TITLE, spec.getMenuTitle());
+        addIfNotNull(entities, UI_TAB_TITLE, spec.getTabTitle());
+        addIfNotNull(entities, UI_TEC_SUPPORT_EMAIL, spec.getTechnicalSupportEmail());
+        addIfNotNull(entities, UI_SUPPORT_EMAIL, spec.getSupportEmail());
         return entities;
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapNotificationSettings(
-        @NonNull final NotificationConfig.UpdateSpec spec,
-        @NonNull final EncryptFunc encryptFunc
+            @NonNull final NotificationConfig.UpdateSpec spec,
+            @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
-        if (spec.getTeamsWebhookUrl() != null) {
-            if (spec.getTeamsWebhookUrl().isBlank()) {
-                entities.add(new ConfigurationJpaEntity(TEAMS_WEBHOOK_URL, null));
-            } else {
-                var encryptedWebhookUrl = encryptFunc.apply(spec.getTeamsWebhookUrl());
-                if (encryptedWebhookUrl != null) {
-                    entities.add(new ConfigurationJpaEntity(TEAMS_WEBHOOK_URL, encryptedWebhookUrl.value()));
-                }
-            }
-        }
+        addEncryptedNullable(entities, TEAMS_WEBHOOK_URL, spec.getTeamsWebhookUrl(), encryptFunc);
         return entities;
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapEmailSettings(
-        @NonNull final EmailConfig.UpdateSpec spec,
-        @NonNull final EncryptFunc encryptFunc
+            @NonNull final EmailConfig.UpdateSpec spec,
+            @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
-        if (spec.getFrom() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_FROM, spec.getFrom()));
-        }
-        if (spec.getFromDisplayName() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_FROM_DISPLAY_NAME, spec.getFromDisplayName()));
-        }
-        if (spec.getReplyTo() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_REPLY_TO, spec.getReplyTo()));
-        }
-        if (spec.getReplyToDisplayName() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_REPLY_TO_DISPLAY_NAME, spec.getReplyToDisplayName()));
-        }
-        if (spec.getHost() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_HOST, spec.getHost()));
-        }
-        if (spec.getPort() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_PORT, String.valueOf(spec.getPort())));
-        }
-        if (spec.getEnableSSL() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_ENABLE_SSL, String.valueOf(spec.getEnableSSL())));
-        }
-        if (spec.getEnableStartTls() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_ENABLE_TLS, String.valueOf(spec.getEnableStartTls())));
-        }
-        if (spec.getUsername() != null) {
-            entities.add(new ConfigurationJpaEntity(EMAIL_USERNAME, spec.getUsername()));
-        }
-        if (spec.getPassword() != null) {
-            if (spec.getPassword().isBlank()) {
-                entities.add(new ConfigurationJpaEntity(EMAIL_PASSWORD, null));
-            } else {
-                var encryptedPassword = encryptFunc.apply(spec.getPassword());
-                if (encryptedPassword != null) {
-                    entities.add(new ConfigurationJpaEntity(EMAIL_PASSWORD, encryptedPassword.value()));
-                }
-            }
-        }
+        addIfNotNull(entities, EMAIL_FROM, spec.getFrom());
+        addIfNotNull(entities, EMAIL_FROM_DISPLAY_NAME, spec.getFromDisplayName());
+        addIfNotNull(entities, EMAIL_REPLY_TO, spec.getReplyTo());
+        addIfNotNull(entities, EMAIL_REPLY_TO_DISPLAY_NAME, spec.getReplyToDisplayName());
+        addIfNotNull(entities, EMAIL_HOST, spec.getHost());
+        addIfNotNull(entities, EMAIL_PORT, spec.getPort());
+        addIfNotNull(entities, EMAIL_ENABLE_SSL, spec.getEnableSSL());
+        addIfNotNull(entities, EMAIL_ENABLE_TLS, spec.getEnableStartTls());
+        addIfNotNull(entities, EMAIL_USERNAME, spec.getUsername());
+        addEncryptedNullable(entities, EMAIL_PASSWORD, spec.getPassword(), encryptFunc);
         return entities;
+    }
+
+    private void addIfNotNull(
+            @NonNull final List<ConfigurationJpaEntity> entities,
+            @NonNull final String key,
+            @Nullable final String value
+    ) {
+        if (value != null) {
+            entities.add(new ConfigurationJpaEntity(key, value));
+        }
+    }
+
+    private void addIfNotNull(
+            @NonNull final List<ConfigurationJpaEntity> entities,
+            @NonNull final String key,
+            @Nullable final Integer value
+    ) {
+        if (value != null) {
+            entities.add(new ConfigurationJpaEntity(key, String.valueOf(value)));
+        }
+    }
+
+    private void addIfNotNull(
+            @NonNull final List<ConfigurationJpaEntity> entities,
+            @NonNull final String key,
+            @Nullable final Boolean value
+    ) {
+        if (value != null) {
+            entities.add(new ConfigurationJpaEntity(key, String.valueOf(value)));
+        }
+    }
+
+    private void addEncryptedNullable(
+            @NonNull final List<ConfigurationJpaEntity> entities,
+            @NonNull final String key,
+            @Nullable final String rawValue,
+            @NonNull final EncryptFunc encryptFunc
+    ) {
+        if (rawValue == null) {
+            return;
+        }
+        if (rawValue.isBlank()) {
+            entities.add(new ConfigurationJpaEntity(key, null));
+            return;
+        }
+        var encrypted = encryptFunc.apply(rawValue);
+        if (encrypted != null) {
+            entities.add(new ConfigurationJpaEntity(key, encrypted.value()));
+        }
     }
 }
