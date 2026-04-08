@@ -6,6 +6,11 @@
 version: 2
 updates:
   - package-ecosystem: "gradle"
+    cooldown:
+      default-days: 5
+      semver-major-days: 14
+      semver-minor-days: 5
+      semver-patch-days: 5
     target-branch: "main"
     directory: "/backend"
     labels:
@@ -21,6 +26,11 @@ updates:
           - "patch"
 
   - package-ecosystem: "npm"
+    cooldown:
+      default-days: 5
+      semver-major-days: 14
+      semver-minor-days: 5
+      semver-patch-days: 5
     directory: "/frontend"
     labels:
       - "dependabot"
@@ -35,6 +45,11 @@ updates:
           - "patch"
 
   - package-ecosystem: "github-actions"
+    cooldown:
+      default-days: 5
+      semver-major-days: 14
+      semver-minor-days: 5
+      semver-patch-days: 5
     directory: "/"
     labels:
       - "dependabot"
@@ -42,6 +57,11 @@ updates:
       interval: "monthly"
 
   - package-ecosystem: "docker"
+    cooldown:
+      default-days: 5
+      semver-major-days: 14
+      semver-minor-days: 5
+      semver-patch-days: 5
     directory: "/"
     labels:
       - "dependabot"
