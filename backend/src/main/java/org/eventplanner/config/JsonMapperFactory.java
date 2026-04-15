@@ -31,4 +31,14 @@ public class JsonMapperFactory {
             .defaultDateFormat(new StdDateFormat())
             .build();
     }
+
+    // public static @NonNull ObjectMapper defaultObjectMapper() {
+    //     ObjectMapper objectMapper = new ObjectMapper();
+    //     objectMapper.registerModule(new JavaTimeModule());
+    //     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    //     // Use ISO 8601 date format when serializing date types
+    //     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    //     objectMapper.setDateFormat(new StdDateFormat());
+    //     return objectMapper;
+    // }
 }
