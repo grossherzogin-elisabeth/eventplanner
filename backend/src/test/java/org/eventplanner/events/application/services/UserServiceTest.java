@@ -1,7 +1,7 @@
 package org.eventplanner.events.application.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
+import static org.eventplanner.config.JsonMapperFactory.defaultJsonMapper;
 import static org.eventplanner.testdata.UserFactory.createUser;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -37,7 +37,7 @@ class UserServiceTest {
             qualificationWithPosition()
         ));
         userRepository = mock();
-        encryptionService = new EncryptionService(defaultObjectMapper(), "password");
+        encryptionService = new EncryptionService(defaultJsonMapper(), "password");
 
         testee = new UserService(
             userRepository,

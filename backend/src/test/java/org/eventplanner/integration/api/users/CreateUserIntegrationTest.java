@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.eventplanner.config.ObjectMapperFactory;
+import org.eventplanner.config.JsonMapperFactory;
 import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
 import org.eventplanner.events.rest.users.dto.CreateUserRequest;
 import org.eventplanner.events.rest.users.dto.UserDetailsRepresentation;
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -90,10 +90,10 @@ class CreateUserIntegrationTest {
 
     @Test
     void shouldCreateNewUser() throws Exception {
-        ObjectMapper objectMapper = ObjectMapperFactory.defaultObjectMapper();
+        JsonMapper jsonMapper = JsonMapperFactory.defaultJsonMapper();
 
         var requestBody = TestResources.getString("/integration/api/users/create-user-request.json");
-        var request = objectMapper.readValue(requestBody, CreateUserRequest.class);
+        var request = jsonMapper.readValue(requestBody, CreateUserRequest.class);
         var createUserResponse = webMvc.perform(post("/api/v1/users")
                 .with(withAuthentication(TestUser.ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -106,7 +106,7 @@ class CreateUserIntegrationTest {
             .andReturn().getResponse().getContentAsString();
 
         // verify user exist in database
-        var createdUser = objectMapper.readValue(createUserResponse, UserDetailsRepresentation.class);
+        var createdUser = jsonMapper.readValue(createUserResponse, UserDetailsRepresentation.class);
         assertThat(encrypedUserDetailsJpaRepository.existsById(createdUser.key())).isTrue();
 
         // verify create user returns same response as the user details request

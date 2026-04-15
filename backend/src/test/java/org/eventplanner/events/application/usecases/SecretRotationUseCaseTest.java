@@ -2,7 +2,7 @@ package org.eventplanner.events.application.usecases;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
+import static org.eventplanner.config.JsonMapperFactory.defaultJsonMapper;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -30,7 +30,7 @@ class SecretRotationUseCaseTest {
         .withBean(
             SecretRotationUseCase.class, () -> new SecretRotationUseCase(
                 mock(),
-                defaultObjectMapper(),
+                defaultJsonMapper(),
                 "true",
                 "old",
                 "new"
@@ -57,7 +57,7 @@ class SecretRotationUseCaseTest {
         var user = createEncryptedUser("old");
         when(userRepository.findAll()).thenReturn(List.of(user));
 
-        new SecretRotationUseCase(userRepository, defaultObjectMapper(), "true", "old", "new");
+        new SecretRotationUseCase(userRepository, defaultJsonMapper(), "true", "old", "new");
         verify(userRepository).findAll();
         verify(userRepository).update(argThat(updated ->
             updated.getKey().equals(user.getKey()) && !updated.equals(user)));
@@ -69,13 +69,13 @@ class SecretRotationUseCaseTest {
         var user = createEncryptedUser("something-else");
         when(userRepository.findAll()).thenReturn(List.of(user));
 
-        new SecretRotationUseCase(userRepository, defaultObjectMapper(), "true", "old", "new");
+        new SecretRotationUseCase(userRepository, defaultJsonMapper(), "true", "old", "new");
         verify(userRepository).findAll();
         verifyNoMoreInteractions(userRepository);
     }
 
     private EncryptedUserDetails createEncryptedUser(String encryptedWith) {
-        var encryptionService = new EncryptionService(defaultObjectMapper(), encryptedWith);
+        var encryptionService = new EncryptionService(defaultJsonMapper(), encryptedWith);
         return new EncryptedUserDetails(
             new UserKey(),
             new AuthKey(UUID.randomUUID().toString()),

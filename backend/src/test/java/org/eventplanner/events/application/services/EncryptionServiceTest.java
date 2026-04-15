@@ -1,7 +1,7 @@
 package org.eventplanner.events.application.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.config.ObjectMapperFactory.defaultObjectMapper;
+import static org.eventplanner.config.JsonMapperFactory.defaultJsonMapper;
 import static org.eventplanner.testdata.UserFactory.createUser;
 
 import java.io.Serializable;
@@ -29,7 +29,7 @@ class EncryptionServiceTest {
 
     @BeforeEach
     void setup() {
-        testee = new EncryptionService(defaultObjectMapper(), "secret");
+        testee = new EncryptionService(defaultJsonMapper(), "secret");
     }
 
     @ParameterizedTest

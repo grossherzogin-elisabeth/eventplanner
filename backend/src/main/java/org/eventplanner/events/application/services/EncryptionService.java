@@ -20,7 +20,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 @Service
 public class EncryptionService {
@@ -28,14 +28,14 @@ public class EncryptionService {
     private static final int ITERATION_COUNT = 512;
     private static final int KEY_LENGTH = 256;
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
     private final SecretKeySpec secretKey;
 
     public EncryptionService(
-        @NonNull final ObjectMapper objectMapper,
+        @NonNull final JsonMapper jsonMapper,
         @Value("${data.encryption-password}") final String password
     ) {
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
         this.secretKey = deriveSecretKey("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password);
     }
 
@@ -111,9 +111,9 @@ public class EncryptionService {
         }
         var plain = decryptWithSecretKey(encrypted.value(), secretKey);
         try {
-            return objectMapper.readValue(plain, type);
+            return jsonMapper.readValue(plain, type);
         } catch (Exception _) {
-            return objectMapper.convertValue(plain, type);
+            return jsonMapper.convertValue(plain, type);
         }
     }
 
@@ -125,9 +125,9 @@ public class EncryptionService {
             || value instanceof Float
             || value instanceof Double
             || value instanceof String) {
-            return objectMapper.convertValue(value, String.class);
+            return jsonMapper.convertValue(value, String.class);
         } else {
-            return objectMapper.writeValueAsString(value);
+            return jsonMapper.writeValueAsString(value);
         }
     }
 }
