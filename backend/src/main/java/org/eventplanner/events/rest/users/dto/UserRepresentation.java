@@ -5,8 +5,8 @@ import static org.eventplanner.common.StringUtils.trimToNull;
 import java.io.Serializable;
 
 import org.eventplanner.events.domain.entities.users.User;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record UserRepresentation(
     @NonNull String key,

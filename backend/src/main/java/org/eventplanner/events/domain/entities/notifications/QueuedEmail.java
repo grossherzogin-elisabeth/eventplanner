@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

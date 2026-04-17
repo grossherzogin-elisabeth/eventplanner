@@ -6,8 +6,8 @@ import java.io.Serializable;
 
 import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.domain.functions.DecryptFunc;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record EncryptedAddress(
     @NonNull Encrypted<String> addressLine1,

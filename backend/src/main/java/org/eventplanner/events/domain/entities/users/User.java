@@ -5,8 +5,8 @@ import java.util.stream.Stream;
 
 import org.eventplanner.common.StringUtils;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import freemarker.ext.beans.TemplateAccessible;
 import lombok.AllArgsConstructor;

@@ -2,7 +2,7 @@ package org.eventplanner.events.domain.values.config;
 
 import java.time.Instant;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import lombok.Getter;
 import lombok.Setter;

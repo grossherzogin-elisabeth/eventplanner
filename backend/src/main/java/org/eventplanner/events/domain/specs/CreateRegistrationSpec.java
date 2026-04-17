@@ -7,8 +7,8 @@ import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record CreateRegistrationSpec(
     @NonNull RegistrationKey registrationKey,

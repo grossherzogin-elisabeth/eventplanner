@@ -11,8 +11,8 @@ import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.eventplanner.events.domain.values.users.Address;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.Diet;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import lombok.Builder;
 

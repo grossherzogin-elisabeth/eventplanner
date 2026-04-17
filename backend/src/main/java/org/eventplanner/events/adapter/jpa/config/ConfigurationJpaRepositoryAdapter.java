@@ -8,13 +8,17 @@ import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.application.ports.ConfigurationRepository;
 import org.eventplanner.events.application.ports.ConfigurationSource;
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
+import org.eventplanner.events.domain.aggregates.ApplicationConfig.ApplicationConfigUpdateSpec;
 import org.eventplanner.events.domain.functions.DecryptFunc;
 import org.eventplanner.events.domain.functions.EncryptFunc;
 import org.eventplanner.events.domain.values.config.AuthConfig;
 import org.eventplanner.events.domain.values.config.EmailConfig;
+import org.eventplanner.events.domain.values.config.EmailConfig.EmailConfigUpdateSpec;
 import org.eventplanner.events.domain.values.config.FrontendConfig;
+import org.eventplanner.events.domain.values.config.FrontendConfig.FrontendConfigUpdateSpec;
 import org.eventplanner.events.domain.values.config.NotificationConfig;
-import org.springframework.lang.NonNull;
+import org.eventplanner.events.domain.values.config.NotificationConfig.NotificationConfigUpdateSpec;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -111,7 +115,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
 
     @Override
     public void updateConfig(
-        @NonNull final ApplicationConfig.UpdateSpec spec,
+        @NonNull final ApplicationConfigUpdateSpec spec,
         @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
@@ -122,7 +126,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapFrontendSettings(
-        @NonNull final FrontendConfig.UpdateSpec spec
+        @NonNull final FrontendConfigUpdateSpec spec
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
         if (spec.getMenuTitle() != null) {
@@ -141,7 +145,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapNotificationSettings(
-        @NonNull final NotificationConfig.UpdateSpec spec,
+        @NonNull final NotificationConfigUpdateSpec spec,
         @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();
@@ -159,7 +163,7 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     }
 
     private @NonNull List<ConfigurationJpaEntity> mapEmailSettings(
-        @NonNull final EmailConfig.UpdateSpec spec,
+        @NonNull final EmailConfigUpdateSpec spec,
         @NonNull final EncryptFunc encryptFunc
     ) {
         var entities = new ArrayList<ConfigurationJpaEntity>();

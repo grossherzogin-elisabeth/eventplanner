@@ -6,8 +6,8 @@ import org.eventplanner.events.domain.aggregates.ApplicationConfig;
 import org.eventplanner.events.domain.values.config.EmailConfig;
 import org.eventplanner.events.domain.values.config.FrontendConfig;
 import org.eventplanner.events.domain.values.config.NotificationConfig;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record SettingsRepresentation(
     @NonNull Notifications notifications,

@@ -4,17 +4,15 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
 import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class QueuedEmailJpaRepositoryAdapter implements QueuedEmailRepository {
     private final QueuedEmailJpaRepository repository;
-
-    public QueuedEmailJpaRepositoryAdapter(@Autowired QueuedEmailJpaRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public @NonNull Optional<QueuedEmail> next() {

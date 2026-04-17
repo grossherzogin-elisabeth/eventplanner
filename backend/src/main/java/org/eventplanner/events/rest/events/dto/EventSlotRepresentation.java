@@ -9,8 +9,8 @@ import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.events.SlotKey;
 import org.eventplanner.events.domain.values.positions.PositionKey;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record EventSlotRepresentation(
     @NonNull String key,

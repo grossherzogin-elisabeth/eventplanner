@@ -2,8 +2,8 @@ package org.eventplanner.events.domain.values.config;
 
 import java.util.Objects;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,13 +35,13 @@ public record FrontendConfig(
     @Getter
     @Setter
     @AllArgsConstructor
-    public static final class UpdateSpec {
+    public static final class FrontendConfigUpdateSpec {
         private @Nullable String menuTitle;
         private @Nullable String tabTitle;
         private @Nullable String technicalSupportEmail;
         private @Nullable String supportEmail;
 
-        public @NonNull UpdateSpec clearUnchanged(@NonNull final FrontendConfig current) {
+        public @NonNull FrontendConfigUpdateSpec clearUnchanged(@NonNull final FrontendConfig current) {
             if (Objects.equals(menuTitle, current.menuTitle)) {
                 menuTitle = null;
             }

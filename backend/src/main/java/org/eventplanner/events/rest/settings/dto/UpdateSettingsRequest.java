@@ -6,8 +6,8 @@ import org.eventplanner.events.domain.aggregates.ApplicationConfig;
 import org.eventplanner.events.domain.values.config.EmailConfig;
 import org.eventplanner.events.domain.values.config.FrontendConfig;
 import org.eventplanner.events.domain.values.config.NotificationConfig;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record UpdateSettingsRequest(
     @NonNull Notifications notifications,
@@ -15,12 +15,12 @@ public record UpdateSettingsRequest(
     @NonNull Ui ui
 ) implements Serializable {
 
-    public ApplicationConfig.UpdateSpec toDomain() {
-        return new ApplicationConfig.UpdateSpec(
-            new NotificationConfig.UpdateSpec(
+    public ApplicationConfig.ApplicationConfigUpdateSpec toDomain() {
+        return new ApplicationConfig.ApplicationConfigUpdateSpec(
+            new NotificationConfig.NotificationConfigUpdateSpec(
                 notifications.teamsWebhookUrl()
             ),
-            new EmailConfig.UpdateSpec(
+            new EmailConfig.EmailConfigUpdateSpec(
                 email.from(),
                 email.fromDisplayName(),
                 email.replyTo(),
@@ -32,7 +32,7 @@ public record UpdateSettingsRequest(
                 email.username(),
                 email.password()
             ),
-            new FrontendConfig.UpdateSpec(
+            new FrontendConfig.FrontendConfigUpdateSpec(
                 ui.menuTitle(),
                 ui.tabTitle(),
                 ui.technicalSupportEmail(),

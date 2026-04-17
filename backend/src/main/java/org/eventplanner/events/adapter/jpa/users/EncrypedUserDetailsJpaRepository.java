@@ -2,8 +2,8 @@ package org.eventplanner.events.adapter.jpa.users;
 
 import java.util.Optional;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.NonNull;
 
 public interface EncrypedUserDetailsJpaRepository extends JpaRepository<EncryptedUserDetailsJpaEntity, String> {
 

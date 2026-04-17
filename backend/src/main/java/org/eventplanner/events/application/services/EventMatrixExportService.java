@@ -30,7 +30,7 @@ import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
