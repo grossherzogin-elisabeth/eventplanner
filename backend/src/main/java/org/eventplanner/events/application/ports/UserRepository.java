@@ -8,7 +8,7 @@ import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public interface UserRepository {
     @NonNull

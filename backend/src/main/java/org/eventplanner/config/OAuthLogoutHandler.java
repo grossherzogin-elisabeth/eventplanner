@@ -2,12 +2,13 @@ package org.eventplanner.config;
 
 import java.util.Set;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.security.oauth2.client.autoconfigure.OAuth2ClientProperties;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -28,9 +29,9 @@ public class OAuthLogoutHandler implements LogoutHandler {
     private final String logoutSuccessUrl;
 
     public OAuthLogoutHandler(
-        @Autowired final ClientRegistrationRepository clientRegistrationRepository,
-        @Autowired final OAuth2ClientProperties oAuth2ClientProperties,
-        @Value("${auth.logout-success-url}") String logoutSuccessUrl
+        @NonNull @Autowired final ClientRegistrationRepository clientRegistrationRepository,
+        @NonNull @Autowired final OAuth2ClientProperties oAuth2ClientProperties,
+        @Nullable @Value("${auth.logout-success-url}") String logoutSuccessUrl
     ) {
         this.clientRegistrationRepository = clientRegistrationRepository;
         this.knownClientRegistrationIds = Set.copyOf(oAuth2ClientProperties.getRegistration().keySet());

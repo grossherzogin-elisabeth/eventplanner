@@ -1,6 +1,6 @@
 package org.eventplanner.events.domain.exceptions;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public class UserAlreadyExistsException extends HandledException {
     public UserAlreadyExistsException(@NonNull String message) {

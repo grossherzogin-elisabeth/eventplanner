@@ -11,7 +11,7 @@ import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.eventplanner.events.rest.registrations.dto.RegistrationRepresentation;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public record OptimizeEventSlotsRequest(
     @NonNull List<RegistrationRepresentation> registrations,

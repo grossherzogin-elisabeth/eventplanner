@@ -12,36 +12,23 @@ import org.eventplanner.events.domain.entities.notifications.Notification;
 import org.eventplanner.events.domain.entities.notifications.PersonalNotification;
 import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.values.config.EmailConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EmailService implements NotificationDispatcher {
     private final ConfigurationService configurationService;
     private final UserService userService;
     private final QueuedEmailRepository queuedEmailRepository;
     private final EmailSender emailSender;
     private final Configuration freemarkerConfig;
-
-    public EmailService(
-        @Autowired final ConfigurationService configurationService,
-        @Autowired final UserService userService,
-        @Autowired final QueuedEmailRepository queuedEmailRepository,
-        @Autowired final EmailSender emailSender,
-        @Autowired final Configuration freemarkerConfig
-    ) {
-        this.configurationService = configurationService;
-        this.userService = userService;
-        this.queuedEmailRepository = queuedEmailRepository;
-        this.emailSender = emailSender;
-        this.freemarkerConfig = freemarkerConfig;
-    }
 
     @Override
     public void dispatch(@NonNull final Notification notification) {

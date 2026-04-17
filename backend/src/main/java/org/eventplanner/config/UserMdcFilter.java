@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.eventplanner.events.application.usecases.UserUseCase;
 import org.slf4j.MDC;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

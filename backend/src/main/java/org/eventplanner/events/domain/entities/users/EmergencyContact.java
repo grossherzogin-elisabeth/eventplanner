@@ -1,7 +1,7 @@
 package org.eventplanner.events.domain.entities.users;
 
 import org.eventplanner.events.domain.functions.EncryptFunc;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

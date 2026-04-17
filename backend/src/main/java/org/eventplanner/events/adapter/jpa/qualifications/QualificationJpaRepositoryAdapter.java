@@ -10,7 +10,7 @@ import java.util.Optional;
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;

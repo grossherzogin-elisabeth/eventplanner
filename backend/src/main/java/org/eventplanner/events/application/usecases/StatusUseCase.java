@@ -3,9 +3,10 @@ package org.eventplanner.events.application.usecases;
 import java.time.Instant;
 
 import org.eventplanner.events.domain.values.config.SystemStatus;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,9 +18,9 @@ public class StatusUseCase {
 
     @Autowired
     public StatusUseCase(
-        @Value("${build.commit}") String buildCommit,
-        @Value("${build.branch}") String buildBranch,
-        @Value("${build.time}") String buildTime
+        @Nullable @Value("${build.commit}") String buildCommit,
+        @Nullable @Value("${build.branch}") String buildBranch,
+        @Nullable @Value("${build.time}") String buildTime
     ) {
         this.buildCommit = buildCommit;
         this.buildBranch = buildBranch;

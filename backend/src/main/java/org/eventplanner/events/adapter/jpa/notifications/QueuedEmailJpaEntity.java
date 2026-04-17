@@ -5,7 +5,7 @@ import java.time.Instant;
 import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

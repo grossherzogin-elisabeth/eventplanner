@@ -2,9 +2,12 @@ package org.eventplanner.events.domain.aggregates;
 
 import org.eventplanner.events.domain.values.config.AuthConfig;
 import org.eventplanner.events.domain.values.config.EmailConfig;
+import org.eventplanner.events.domain.values.config.EmailConfig.EmailConfigUpdateSpec;
 import org.eventplanner.events.domain.values.config.FrontendConfig;
+import org.eventplanner.events.domain.values.config.FrontendConfig.FrontendConfigUpdateSpec;
 import org.eventplanner.events.domain.values.config.NotificationConfig;
-import org.springframework.lang.NonNull;
+import org.eventplanner.events.domain.values.config.NotificationConfig.NotificationConfigUpdateSpec;
+import org.jspecify.annotations.NonNull;
 
 public record ApplicationConfig(
     @NonNull NotificationConfig notifications,
@@ -37,13 +40,13 @@ public record ApplicationConfig(
         );
     }
 
-    public record UpdateSpec(
-        @NonNull NotificationConfig.UpdateSpec notifications,
-        @NonNull EmailConfig.UpdateSpec email,
-        @NonNull FrontendConfig.UpdateSpec frontend
+    public record ApplicationConfigUpdateSpec(
+        @NonNull NotificationConfigUpdateSpec notifications,
+        @NonNull EmailConfigUpdateSpec email,
+        @NonNull FrontendConfigUpdateSpec frontend
     ) {
-        public @NonNull UpdateSpec clearUnchanged(@NonNull final ApplicationConfig current) {
-            return new UpdateSpec(
+        public @NonNull ApplicationConfigUpdateSpec clearUnchanged(@NonNull final ApplicationConfig current) {
+            return new ApplicationConfigUpdateSpec(
                 notifications.clearUnchanged(current.notifications),
                 email.clearUnchanged(current.email),
                 frontend.clearUnchanged(current.frontend)

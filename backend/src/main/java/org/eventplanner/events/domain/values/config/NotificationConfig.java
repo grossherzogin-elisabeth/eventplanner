@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eventplanner.events.domain.values.notifications.NotificationType;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,10 +35,10 @@ public record NotificationConfig(
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class UpdateSpec {
+    public static class NotificationConfigUpdateSpec {
         private @Nullable String teamsWebhookUrl;
 
-        public @NonNull UpdateSpec clearUnchanged(@NonNull final NotificationConfig defaults) {
+        public @NonNull NotificationConfigUpdateSpec clearUnchanged(@NonNull final NotificationConfig defaults) {
             if (Objects.equals(teamsWebhookUrl, defaults.teamsWebhookUrl)) {
                 teamsWebhookUrl = null;
             }

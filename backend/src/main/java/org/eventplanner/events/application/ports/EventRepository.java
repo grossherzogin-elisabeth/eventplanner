@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.values.events.EventKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public interface EventRepository {
     @NonNull

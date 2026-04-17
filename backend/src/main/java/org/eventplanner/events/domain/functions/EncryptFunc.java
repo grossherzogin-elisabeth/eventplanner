@@ -3,7 +3,7 @@ package org.eventplanner.events.domain.functions;
 import java.io.Serializable;
 
 import org.eventplanner.common.Encrypted;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
 public interface EncryptFunc {

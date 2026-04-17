@@ -6,7 +6,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.eventplanner.events.application.ports.EmailSender;
 import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.values.config.EmailConfig;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;

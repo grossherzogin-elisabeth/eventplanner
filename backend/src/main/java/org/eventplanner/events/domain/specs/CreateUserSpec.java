@@ -1,6 +1,6 @@
 package org.eventplanner.events.domain.specs;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public record CreateUserSpec(
     @NonNull String firstName,

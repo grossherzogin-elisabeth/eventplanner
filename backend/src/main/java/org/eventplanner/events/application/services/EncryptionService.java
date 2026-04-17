@@ -14,9 +14,9 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.eventplanner.common.Encrypted;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,7 +33,7 @@ public class EncryptionService {
 
     public EncryptionService(
         @NonNull final JsonMapper jsonMapper,
-        @Value("${data.encryption-password}") final String password
+        @Nullable @Value("${data.encryption-password}") final String password
     ) {
         this.jsonMapper = jsonMapper;
         this.secretKey = deriveSecretKey("99066439-9e45-48e7-bb3d-7abff0e9cb9c", password);

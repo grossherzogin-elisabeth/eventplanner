@@ -1,7 +1,7 @@
 package org.eventplanner.events.domain.entities.positions;
 
 import org.eventplanner.events.domain.values.positions.PositionKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public interface QualificationRepository {
     public @NonNull List<Qualification> findAll();

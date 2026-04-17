@@ -2,7 +2,7 @@ package org.eventplanner.events.application.ports;
 
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
 import org.eventplanner.events.domain.functions.DecryptFunc;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public interface ConfigurationSource {
     public int getPriority();

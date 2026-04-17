@@ -2,10 +2,11 @@ package org.eventplanner.events.application.usecases;
 
 import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.application.services.EncryptionService;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -20,11 +21,11 @@ public class SecretRotationUseCase {
     private final JsonMapper jsonMapper;
 
     public SecretRotationUseCase(
-        @Autowired UserRepository userRepository,
-        @Autowired JsonMapper jsonMapper,
-        @Value("${data.encryption-rotation.rotate-users}") String rotateUserEncryption,
-        @Value("${data.encryption-rotation.old-secret}") String oldSecret,
-        @Value("${data.encryption-rotation.new-secret}") String newSecret
+        @NonNull @Autowired UserRepository userRepository,
+        @NonNull @Autowired JsonMapper jsonMapper,
+        @Nullable @Value("${data.encryption-rotation.rotate-users}") String rotateUserEncryption,
+        @Nullable @Value("${data.encryption-rotation.old-secret}") String oldSecret,
+        @Nullable @Value("${data.encryption-rotation.new-secret}") String newSecret
     ) {
         this.userRepository = userRepository;
         this.jsonMapper = jsonMapper;

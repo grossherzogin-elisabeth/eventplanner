@@ -6,8 +6,9 @@ import java.util.List;
 import org.eventplanner.events.application.ports.ConfigurationRepository;
 import org.eventplanner.events.application.ports.ConfigurationSource;
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
+import org.eventplanner.events.domain.aggregates.ApplicationConfig.ApplicationConfigUpdateSpec;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class ConfigurationService {
         return applicationConfig;
     }
 
-    public @NonNull ApplicationConfig updateConfig(@NonNull final ApplicationConfig.UpdateSpec spec) {
+    public @NonNull ApplicationConfig updateConfig(@NonNull final ApplicationConfigUpdateSpec spec) {
         var changed = spec.clearUnchanged(getConfig());
         configurationRepository.updateConfig(changed, encryptionService::encrypt);
         applicationConfig = readConfig();

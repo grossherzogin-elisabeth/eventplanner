@@ -1,11 +1,12 @@
 package org.eventplanner.config;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,10 +27,10 @@ public class SecurityConfig {
     private final boolean enableCSRF;
 
     public SecurityConfig(
-        @Autowired final UserMdcFilter userMdcFilter,
-        @Autowired final LogRequestsFilter logRequestsFilter,
-        @Autowired final OAuthClientConfig oAuthClientConfig,
-        @Value("${security.enable-csrf}") String enableCSRF
+        @NonNull @Autowired final UserMdcFilter userMdcFilter,
+        @NonNull @Autowired final LogRequestsFilter logRequestsFilter,
+        @NonNull @Autowired final OAuthClientConfig oAuthClientConfig,
+        @Nullable @Value("${security.enable-csrf}") String enableCSRF
     ) {
         this.userMdcFilter = userMdcFilter;
         this.logRequestsFilter = logRequestsFilter;

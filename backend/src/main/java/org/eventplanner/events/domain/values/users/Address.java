@@ -3,8 +3,8 @@ package org.eventplanner.events.domain.values.users;
 import java.io.Serializable;
 
 import org.eventplanner.events.domain.functions.EncryptFunc;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record Address(
     @NonNull String addressLine1,
