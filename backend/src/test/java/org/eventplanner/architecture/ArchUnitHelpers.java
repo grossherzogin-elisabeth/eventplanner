@@ -153,7 +153,7 @@ public class ArchUnitHelpers {
             return true;
         }
         return Arrays.stream(returnTypeAnnotations)
-            .anyMatch(annotation -> annotation.annotationType().getSimpleName().equals("NonNull")
-                || annotation.annotationType().getSimpleName().equals("Nullable"));
+            .anyMatch(annotation -> annotation instanceof NonNull
+                || annotation instanceof Nullable);
     }
 }

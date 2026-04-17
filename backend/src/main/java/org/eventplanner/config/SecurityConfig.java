@@ -39,7 +39,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public @NonNull SecurityFilterChain securityConfigCustomizer(@NonNull HttpSecurity http) throws Exception {
+    public @NonNull SecurityFilterChain securityConfigCustomizer(@NonNull HttpSecurity http) {
         if (enableCSRF) {
             http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
         } else {
