@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.eventplanner.common.EncryptionSecret;
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
@@ -37,7 +38,10 @@ class UserServiceTest {
             qualificationWithPosition()
         ));
         userRepository = mock();
-        encryptionService = new EncryptionService(defaultJsonMapper(), "password");
+        encryptionService = new EncryptionService(
+            defaultJsonMapper(),
+            new EncryptionSecret("password", "99066439-9e45-48e7-bb3d-7abff0e9cb9c", 512)
+        );
 
         testee = new UserService(
             userRepository,
