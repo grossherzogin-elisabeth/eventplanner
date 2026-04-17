@@ -3,6 +3,7 @@ package org.eventplanner.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -26,7 +27,11 @@ public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
     private final List<String> admins;
 
     public OAuthUserAuthoritiesMapper(@Nullable @Value("${auth.admins}") String admins) {
-        this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
+        if (admins != null && !admins.isBlank()) {
+            this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
+        } else {
+            this.admins = Collections.emptyList();
+        }
     }
 
     @Override

@@ -42,7 +42,7 @@ public class OAuthLogoutHandler implements LogoutHandler {
     public void logout(
         @NonNull final HttpServletRequest request,
         @NonNull final HttpServletResponse response,
-        @NonNull final Authentication authentication
+        @Nullable final Authentication authentication
     ) {
         try {
             response.sendRedirect(getLogoutUrl(authentication));
@@ -51,7 +51,7 @@ public class OAuthLogoutHandler implements LogoutHandler {
         }
     }
 
-    private @NonNull String getLogoutUrl(@NonNull Authentication authentication) {
+    private @NonNull String getLogoutUrl(@Nullable Authentication authentication) {
         if (!(authentication instanceof OAuth2AuthenticationToken oAuth2Token)) {
             return logoutSuccessUrl;
         }

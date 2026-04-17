@@ -70,9 +70,9 @@ export default defineConfig(({ mode }) => {
             port: 8090,
             host: true,
             proxy: {
-                '/api/': `http://${host}:8091`,
-                '/auth/': `http://${host}:8091`,
-                '/login/oauth2/code/': `http://${host}:8091`,
+                '/api/': `http://localhost:8091`,
+                '/auth/': `http://localhost:8091`,
+                '/login/oauth2/code/': `http://localhost:8091`,
             },
             allowedHosts: [host],
         },

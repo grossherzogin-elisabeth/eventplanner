@@ -25,7 +25,7 @@ public class OAuthClientConfig {
         this.oAuthUserAuthoritiesMapper = oAuthUserAuthoritiesMapper;
     }
 
-    public @NonNull HttpSecurity configure(@NonNull HttpSecurity http) throws Exception {
+    public @NonNull HttpSecurity configure(@NonNull HttpSecurity http) {
         http.oauth2Login(oauth2Login -> {
             // open frontend home page after login
             oauth2Login.defaultSuccessUrl(loginSuccessUrl, true);

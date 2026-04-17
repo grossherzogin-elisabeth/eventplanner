@@ -1,7 +1,7 @@
 package org.eventplanner.config;
 
-import org.springframework.context.annotation.Bean;
 import org.jspecify.annotations.NonNull;
+import org.springframework.context.annotation.Bean;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
