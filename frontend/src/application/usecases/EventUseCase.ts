@@ -76,10 +76,12 @@ export class EventUseCase {
     public async getEventByKey(year: number, eventKey: EventKey, ignoreCache: boolean = false): Promise<Event> {
         try {
             const signedInUser = this.authService.getSignedInUser();
-            let event = await this.eventCachingService.getEventByKey(eventKey);
+            let event: Event | undefined;
             if (ignoreCache) {
                 event = await this.eventRepository.findByKey(eventKey);
                 await this.eventCachingService.updateCache(event);
+            } else {
+                event = await this.eventCachingService.getEventByKey(eventKey);
             }
             if (event) {
                 return this.eventService.updateComputedValues(event, signedInUser);
