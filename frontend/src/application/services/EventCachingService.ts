@@ -63,8 +63,7 @@ export class EventCachingService {
 
     public async updateCache(event: Event): Promise<Event> {
         await this.initialized;
-        const all = await this.storage.findAll();
-        if (all.some((it) => it.start.getFullYear() === event.start.getFullYear())) {
+        if (this.fetchedYears.includes(event.start.getFullYear())) {
             return await this.storage.save(event);
         }
         return event;
