@@ -25,13 +25,9 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog } from '@/ui/components/common';
-
-const i18n = useI18n();
 
 const dlg = ref<Dialog<Event, string | undefined> | null>(null);
 const event = ref<Event | null>(null);
@@ -39,21 +35,7 @@ const message = ref<string>('');
 
 async function open(evt: Event): Promise<string | undefined> {
     event.value = evt;
-    message.value = `
-            Moin liebe Lissi Crew, \n
-
-            ihr seid für die Veranstaltung
-            vom ${i18n.d(evt.start, DateTimeFormat.DDD_DD_MM_YYYY)}
-            bis zum ${i18n.d(evt.end, DateTimeFormat.DDD_DD_MM_YYYY)}
-            als Crew eingeplant. Leider müssen wir die Veranstaltung hiermit absagen. \n
-
-            Viele Grüße, \n
-            Euer Büroteam`
-        .split('\n')
-        .map((l) => l.trim())
-        .map((l) => (l.length === 0 ? '\n' : `${l} `))
-        .join('')
-        .trim();
+    message.value = 'Diese Veranstaltung wurde abgesagt';
     return await dlg.value?.open().catch(() => undefined);
 }
 
