@@ -235,7 +235,6 @@ async function stopCreateEventDrag(date: Date): Promise<void> {
         if (from && to && createEventDialog.value) {
             const result = await createEventDialog.value.open({ start: from, end: to });
             if (result) {
-                await eventAdministrationService.createEvent(result);
                 await fetchEvents();
             }
             createEventFromDate.value = null;
