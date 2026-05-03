@@ -70,7 +70,7 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
+import { useEventUseCase } from '@/application';
 import { DateTimeFormat, Month, addToDate } from '@/common/date';
 import { type Event, EventState, Permission } from '@/domain';
 import { useEventService } from '@/domain';
@@ -107,7 +107,6 @@ const route = useRoute();
 const i18n = useI18n();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
-const eventAdministrationService = useEventAdministrationUseCase();
 const { hasPermission } = useSession();
 
 const createEventDialog = ref<Dialog<Partial<Event>, Event> | null>(null);
