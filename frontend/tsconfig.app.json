@@ -21,10 +21,9 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
-        "baseUrl": "./",
         "paths": {
-            "@/*": ["src/*"],
-            "~/*": ["test/*"]
+            "@/*": ["./src/*"],
+            "~/*": ["./test/*"]
         }
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "test/**/*.ts"]
