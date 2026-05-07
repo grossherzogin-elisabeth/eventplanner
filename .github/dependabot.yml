@@ -47,9 +47,6 @@ updates:
   - package-ecosystem: "github-actions"
     cooldown:
       default-days: 5
-      semver-major-days: 14
-      semver-minor-days: 5
-      semver-patch-days: 5
     directory: "/"
     labels:
       - "dependabot"
@@ -59,9 +56,6 @@ updates:
   - package-ecosystem: "docker"
     cooldown:
       default-days: 5
-      semver-major-days: 14
-      semver-minor-days: 5
-      semver-patch-days: 5
     directory: "/"
     labels:
       - "dependabot"
