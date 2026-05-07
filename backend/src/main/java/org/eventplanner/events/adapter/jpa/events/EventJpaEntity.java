@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
+import org.eventplanner.config.JsonMapperFactory;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;
@@ -16,10 +17,10 @@ import org.eventplanner.events.domain.values.events.EventLocation;
 import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -36,7 +37,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class EventJpaEntity {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final JsonMapper jsonMapper = JsonMapperFactory.defaultJsonMapper();
 
     @Id
     @Column(name = "key", nullable = false, updatable = false)
@@ -98,7 +99,7 @@ public class EventJpaEntity {
 
     public static @NonNull List<EventLocation> deserializeLocations(@NonNull String json) {
         try {
-            var entities = objectMapper.readValue(
+            var entities = jsonMapper.readValue(
                 json, new TypeReference<List<LocationJsonEntity>>() {
                 }
             );
@@ -111,7 +112,7 @@ public class EventJpaEntity {
     public static @NonNull String serializeLocations(@NonNull List<EventLocation> locations) {
         try {
             var entities = locations.stream().map(LocationJsonEntity::fromDomain).toList();
-            return objectMapper.writeValueAsString(entities);
+            return jsonMapper.writeValueAsString(entities);
         } catch (IOException _) {
             return "[]";
         }
@@ -119,7 +120,7 @@ public class EventJpaEntity {
 
     public static @NonNull List<EventSlot> deserializeSlots(@NonNull String json) {
         try {
-            var entities = objectMapper.readValue(
+            var entities = jsonMapper.readValue(
                 json, new TypeReference<List<SlotJsonEntity>>() {
                 }
             );
@@ -132,7 +133,7 @@ public class EventJpaEntity {
     public static @NonNull String serializeSlots(@NonNull List<EventSlot> slots) {
         try {
             var entities = slots.stream().map(SlotJsonEntity::fromDomain).toList();
-            return objectMapper.writeValueAsString(entities);
+            return jsonMapper.writeValueAsString(entities);
         } catch (IOException _) {
             return "[]";
         }

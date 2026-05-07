@@ -9,12 +9,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
+import org.eventplanner.events.domain.specs.UpdateUserSpec.UpdateUserQualificationSpec;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.Diet;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record UpdateUserRequest(
     @Nullable String authKey,
@@ -79,8 +80,8 @@ public record UpdateUserRequest(
         @Nullable String expiresAt
     ) implements Serializable {
 
-        public @NonNull UpdateUserSpec.UpdateUserQualificationSpec toDomain() {
-            return new UpdateUserSpec.UpdateUserQualificationSpec(
+        public @NonNull UpdateUserQualificationSpec toDomain() {
+            return new UpdateUserQualificationSpec(
                 new QualificationKey(qualificationKey),
                 ofNullable(expiresAt)
                     .map(Instant::parse)

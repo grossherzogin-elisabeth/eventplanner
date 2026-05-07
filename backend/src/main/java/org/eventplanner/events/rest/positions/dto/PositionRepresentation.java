@@ -3,7 +3,7 @@ package org.eventplanner.events.rest.positions.dto;
 import java.io.Serializable;
 
 import org.eventplanner.events.domain.entities.positions.Position;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public record PositionRepresentation(
     @NonNull String key,

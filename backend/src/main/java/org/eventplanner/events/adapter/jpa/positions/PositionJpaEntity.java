@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.values.positions.PositionKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

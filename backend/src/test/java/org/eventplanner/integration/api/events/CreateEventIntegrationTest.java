@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.eventplanner.config.ObjectMapperFactory;
+import org.eventplanner.config.JsonMapperFactory;
 import org.eventplanner.events.adapter.jpa.events.EventJpaRepository;
 import org.eventplanner.events.rest.events.dto.CreateEventRequest;
 import org.eventplanner.events.rest.events.dto.EventRepresentation;
@@ -18,8 +18,8 @@ import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -90,10 +90,10 @@ class CreateEventIntegrationTest {
 
     @Test
     void shouldCreateEvent() throws Exception {
-        ObjectMapper objectMapper = ObjectMapperFactory.defaultObjectMapper();
+        JsonMapper jsonMapper = JsonMapperFactory.defaultJsonMapper();
 
         var requestBody = TestResources.getString("/integration/api/events/create-event-request.json");
-        var request = objectMapper.readValue(requestBody, CreateEventRequest.class);
+        var request = jsonMapper.readValue(requestBody, CreateEventRequest.class);
         var createEventResponse = webMvc.perform(post("/api/v1/events")
                 .with(withAuthentication(TestUser.ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +112,7 @@ class CreateEventIntegrationTest {
             .andReturn().getResponse().getContentAsString();
 
         // verify event exist in database
-        var createdEvent = objectMapper.readValue(createEventResponse, EventRepresentation.class);
+        var createdEvent = jsonMapper.readValue(createEventResponse, EventRepresentation.class);
         assertThat(eventJpaRepository.existsById(createdEvent.key())).isTrue();
 
         // verify create event returns same response as the get event request

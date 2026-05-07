@@ -2,8 +2,8 @@ package org.eventplanner.events.domain.entities.notifications;
 
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import lombok.With;
 

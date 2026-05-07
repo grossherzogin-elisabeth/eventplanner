@@ -11,8 +11,8 @@ import org.eventplanner.events.domain.values.events.EventLocation;
 import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record CreateEventSpec(
     @NonNull EventType type,

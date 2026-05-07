@@ -9,8 +9,8 @@ import org.eventplanner.common.validation.IsoTimestamp;
 import org.eventplanner.events.domain.specs.CreateEventSpec;
 import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventType;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

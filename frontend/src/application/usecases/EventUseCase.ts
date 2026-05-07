@@ -9,7 +9,7 @@ import type {
     UserCachingService,
 } from '@/application/services';
 import { isSameDate, subtractFromDate } from '@/common';
-import { saveBlobToFile, saveStringToFile } from '@/common/utils/DownloadUtils';
+import { saveStringToFile } from '@/common/utils/DownloadUtils';
 import type {
     Event,
     EventKey,
@@ -73,23 +73,15 @@ export class EventUseCase {
         }
     }
 
-    public async exportEvents(year: number): Promise<void> {
-        try {
-            const blob = await this.eventRepository.export(year);
-            saveBlobToFile(`Einsatzmatrix ${year}.xlsx`, blob);
-        } catch (e) {
-            this.errorHandlingService.handleRawError(e);
-            throw e;
-        }
-    }
-
     public async getEventByKey(year: number, eventKey: EventKey, ignoreCache: boolean = false): Promise<Event> {
         try {
             const signedInUser = this.authService.getSignedInUser();
-            let event = await this.eventCachingService.getEventByKey(eventKey);
+            let event: Event | undefined;
             if (ignoreCache) {
                 event = await this.eventRepository.findByKey(eventKey);
                 await this.eventCachingService.updateCache(event);
+            } else {
+                event = await this.eventCachingService.getEventByKey(eventKey);
             }
             if (event) {
                 return this.eventService.updateComputedValues(event, signedInUser);

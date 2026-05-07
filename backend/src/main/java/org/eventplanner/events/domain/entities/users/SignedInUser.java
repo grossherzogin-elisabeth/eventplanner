@@ -1,7 +1,5 @@
 package org.eventplanner.events.domain.entities.users;
 
-import static org.eventplanner.common.ObjectUtils.orElse;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,8 +13,8 @@ import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -35,13 +33,13 @@ public record SignedInUser(
     public static @NonNull SignedInUser fromUser(@NonNull UserDetails user) {
         return new SignedInUser(
             user.getKey(),
-            orElse(user.getAuthKey(), new AuthKey("")),
+            Optional.ofNullable(user.getAuthKey()).orElse(new AuthKey("")),
             user.getRoles(),
             user.getRoles().stream()
                 .flatMap(Role::getPermissions)
                 .distinct()
                 .toList(),
-            orElse(user.getEmail(), ""),
+            Optional.ofNullable(user.getEmail()).orElse(""),
             user.getPositions(),
             user.getGender(),
             user.getDisplayName(),

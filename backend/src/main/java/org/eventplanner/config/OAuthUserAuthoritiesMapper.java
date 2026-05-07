@@ -3,13 +3,14 @@ package org.eventplanner.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.eventplanner.events.domain.values.auth.Role;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -25,8 +26,12 @@ public class OAuthUserAuthoritiesMapper implements GrantedAuthoritiesMapper {
 
     private final List<String> admins;
 
-    public OAuthUserAuthoritiesMapper(@Value("${auth.admins}") String admins) {
-        this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
+    public OAuthUserAuthoritiesMapper(@Nullable @Value("${auth.admins}") String admins) {
+        if (admins != null && !admins.isBlank()) {
+            this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
+        } else {
+            this.admins = Collections.emptyList();
+        }
     }
 
     @Override

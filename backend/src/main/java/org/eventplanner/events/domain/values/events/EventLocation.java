@@ -3,8 +3,8 @@ package org.eventplanner.events.domain.values.events;
 import java.io.Serializable;
 import java.time.Instant;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import lombok.With;
 

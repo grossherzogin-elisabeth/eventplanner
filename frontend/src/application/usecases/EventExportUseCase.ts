@@ -37,6 +37,16 @@ export class EventExportUseCase {
         }
     }
 
+    public async exportEvents(year: number): Promise<void> {
+        try {
+            const blob = await this.eventRepository.export(year);
+            saveBlobToFile(`Einsatzmatrix ${year}.xlsx`, blob);
+        } catch (e) {
+            this.errorHandlingService.handleRawError(e);
+            throw e;
+        }
+    }
+
     private formatDate(date: Date | string | number): string {
         const d = new Date(date);
         const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate().toString();

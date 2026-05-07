@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'msw';
 import { HttpResponse, http } from 'msw';
-import type { SetupServerApi } from 'msw/node';
+import type { SetupServer } from 'msw/node';
 import { setupServer } from 'msw/node';
 import type { AccountRepresentation } from '@/adapter/rest/AccountRestRepository';
 import type { EventRepresentation, OptimizeEventSlotsRequest, SlotRepresentation } from '@/adapter/rest/EventRestRepository.ts';
@@ -130,7 +130,7 @@ export function mockEventTemplatesRequest(response?: string[], status: number = 
     );
 }
 
-export function setupDefaultMockServer(): SetupServerApi {
+export function setupDefaultMockServer(): SetupServer {
     return setupServer(
         mockGetAccount(),
         mockGetConfig(),

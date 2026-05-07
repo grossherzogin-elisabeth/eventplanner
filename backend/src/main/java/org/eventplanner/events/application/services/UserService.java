@@ -15,29 +15,20 @@ import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final QualificationRepository qualificationRepository;
     private final EncryptionService encryptionService;
-
-    public UserService(
-        @Autowired UserRepository userRepository,
-        @Autowired QualificationRepository qualificationRepository,
-        @Autowired EncryptionService encryptionService
-    ) {
-        this.userRepository = userRepository;
-        this.qualificationRepository = qualificationRepository;
-        this.encryptionService = encryptionService;
-    }
 
     public @NonNull List<User> getUsers() {
         var qualificationMap = qualificationRepository.findAll()

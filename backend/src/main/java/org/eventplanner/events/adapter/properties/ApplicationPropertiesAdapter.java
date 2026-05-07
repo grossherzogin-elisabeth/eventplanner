@@ -12,8 +12,8 @@ import org.eventplanner.events.domain.values.config.EmailConfig;
 import org.eventplanner.events.domain.values.config.FrontendConfig;
 import org.eventplanner.events.domain.values.config.NotificationConfig;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;

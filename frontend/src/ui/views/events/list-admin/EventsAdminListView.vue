@@ -16,7 +16,7 @@
                         v-if="hasPermission(Permission.WRITE_USERS) && !Number.isNaN(Number.parseInt(tab, 10))"
                         class="z-10 hidden lg:block"
                     >
-                        <AsyncButton class="btn-ghost" name="export" :action="() => eventUseCase.exportEvents(Number.parseInt(tab, 10))">
+                        <AsyncButton class="btn-ghost" name="export" :action="() => eventExports.exportEvents(Number.parseInt(tab, 10))">
                             <template #icon>
                                 <i class="fa-solid fa-download"></i>
                             </template>

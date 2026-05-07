@@ -17,8 +17,8 @@ import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -113,11 +113,10 @@ public class Event {
     }
 
     public boolean isVisibleForUser(@NonNull final SignedInUser signedInUser) {
-        return switch (state) {
-            case DRAFT -> signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS);
-            case CANCELED -> findRegistrationByUserKey(signedInUser.key()).isPresent();
-            default -> true;
-        };
+        if (EventState.DRAFT.equals(state)) {
+            return signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS);
+        }
+        return true;
     }
 
     public @NonNull Event clearConfidentialData(@NonNull final SignedInUser signedInUser) {

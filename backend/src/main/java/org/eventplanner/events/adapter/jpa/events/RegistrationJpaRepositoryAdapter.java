@@ -7,7 +7,7 @@ import org.eventplanner.events.application.ports.RegistrationRepository;
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
@@ -43,7 +43,7 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
     }
 
     @PostConstruct
-    public @NonNull void generateMissingAccessKeys() {
+    public void generateMissingAccessKeys() {
         var registrations = registrationJpaRepository.findAllByAccessKeyNull();
         registrations.forEach(registration -> {
             log.info("Generating missing access key for registration {}", registration.getKey());

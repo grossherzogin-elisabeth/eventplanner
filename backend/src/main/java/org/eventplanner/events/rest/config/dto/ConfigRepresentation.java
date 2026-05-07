@@ -3,7 +3,7 @@ package org.eventplanner.events.rest.config.dto;
 import java.io.Serializable;
 
 import org.eventplanner.events.domain.values.config.FrontendConfig;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record ConfigRepresentation(
     @Nullable String menuTitle,

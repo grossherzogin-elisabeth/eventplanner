@@ -2,13 +2,14 @@ package org.eventplanner.events.application.usecases;
 
 import org.eventplanner.events.application.ports.UserRepository;
 import org.eventplanner.events.application.services.EncryptionService;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,17 +18,17 @@ import lombok.extern.slf4j.Slf4j;
 public class SecretRotationUseCase {
 
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     public SecretRotationUseCase(
-        @Autowired UserRepository userRepository,
-        @Autowired ObjectMapper objectMapper,
-        @Value("${data.encryption-rotation.rotate-users}") String rotateUserEncryption,
-        @Value("${data.encryption-rotation.old-secret}") String oldSecret,
-        @Value("${data.encryption-rotation.new-secret}") String newSecret
+        @NonNull @Autowired UserRepository userRepository,
+        @NonNull @Autowired JsonMapper jsonMapper,
+        @Nullable @Value("${data.encryption-rotation.rotate-users}") String rotateUserEncryption,
+        @Nullable @Value("${data.encryption-rotation.old-secret}") String oldSecret,
+        @Nullable @Value("${data.encryption-rotation.new-secret}") String newSecret
     ) {
         this.userRepository = userRepository;
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
         if (Boolean.parseBoolean(rotateUserEncryption) && oldSecret != null && newSecret != null) {
             rotateUserEncryptionSecret(oldSecret, newSecret);
         }
@@ -37,8 +38,8 @@ public class SecretRotationUseCase {
         try {
             log.info("Rotating user encryption secret");
 
-            var decryptionService = new EncryptionService(objectMapper, oldSecret);
-            var encryptionService = new EncryptionService(objectMapper, newSecret);
+            var decryptionService = new EncryptionService(jsonMapper, oldSecret);
+            var encryptionService = new EncryptionService(jsonMapper, newSecret);
             var usersEncryptedWithOldSecret = userRepository.findAll();
             var usersEncryptedWithNewSecret = usersEncryptedWithOldSecret.stream()
                 .map(user -> user.decrypt(decryptionService::decrypt))

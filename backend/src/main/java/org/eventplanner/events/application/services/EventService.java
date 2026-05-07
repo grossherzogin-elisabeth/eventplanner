@@ -7,7 +7,7 @@ import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.values.events.EventKey;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;

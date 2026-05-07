@@ -2,7 +2,7 @@ package org.eventplanner.common;
 
 import java.io.Serializable;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

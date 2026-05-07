@@ -9,7 +9,7 @@ import java.net.http.HttpResponse;
 import org.eventplanner.events.domain.entities.notifications.GlobalNotification;
 import org.eventplanner.events.domain.entities.notifications.Notification;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,11 @@ public class TeamsNotificationService implements NotificationDispatcher {
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                log.error("Thread was interrupted while creating MS Teams alert for {} notification", notification.type(), e);
+                log.error(
+                    "Thread was interrupted while creating MS Teams alert for {} notification",
+                    notification.type(),
+                    e
+                );
             } catch (Exception e) {
                 log.error("Failed to create MS Teams alert for {} notification", notification.type(), e);
             }

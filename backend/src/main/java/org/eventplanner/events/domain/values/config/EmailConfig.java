@@ -3,8 +3,8 @@ package org.eventplanner.events.domain.values.config;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -64,7 +64,7 @@ public record EmailConfig(
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class UpdateSpec {
+    public static class EmailConfigUpdateSpec {
         private @Nullable String from;
         private @Nullable String fromDisplayName;
         private @Nullable String replyTo;
@@ -76,7 +76,7 @@ public record EmailConfig(
         private @Nullable String username;
         private @Nullable String password;
 
-        public @NonNull UpdateSpec clearUnchanged(@NonNull final EmailConfig current) {
+        public @NonNull EmailConfigUpdateSpec clearUnchanged(@NonNull final EmailConfig current) {
             if (Objects.equals(from, current.from)) {
                 from = null;
             }
