@@ -18,7 +18,7 @@ public record UpdateRegistrationRequest(
     @Nullable String userKey,
     @Nullable String name,
     @Nullable String note,
-    @Nullable boolean confirmed,
+    @Nullable Boolean confirmed,
     @Nullable Boolean overnightStay,
     @Nullable String arrival
 ) implements Serializable {
@@ -34,7 +34,7 @@ public record UpdateRegistrationRequest(
                 : null,
             name,
             note,
-            confirmed ? Instant.now() : null,
+            Boolean.TRUE.equals(confirmed) ? Instant.now() : null,
             overnightStay,
             arrival != null
                 ? LocalDate.parse(arrival)

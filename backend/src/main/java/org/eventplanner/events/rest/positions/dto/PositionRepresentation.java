@@ -9,7 +9,7 @@ public record PositionRepresentation(
     @NonNull String key,
     @NonNull String name,
     @NonNull String color,
-    int prio,
+    @NonNull Integer prio,
     @NonNull String imoListRank
 ) implements Serializable {
 

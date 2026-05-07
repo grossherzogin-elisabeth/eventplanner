@@ -13,7 +13,7 @@ import org.jspecify.annotations.Nullable;
 public record UserQualificationRepresentation(
     @NonNull String qualificationKey,
     @Nullable String expiresAt,
-    boolean expires
+    @NonNull Boolean expires
 ) implements Serializable {
 
     public static @Nullable UserQualificationRepresentation fromDomain(@Nullable UserQualification userQualification) {

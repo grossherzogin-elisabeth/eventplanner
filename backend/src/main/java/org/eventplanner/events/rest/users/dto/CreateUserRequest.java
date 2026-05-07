@@ -9,9 +9,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record CreateUserRequest(
-    @NotBlank String firstName,
-    @NotBlank String lastName,
-    @NotBlank @Email String email
+    @NonNull @NotBlank String firstName,
+    @NonNull @NotBlank String lastName,
+    @NonNull @NotBlank @Email String email
 ) implements Serializable {
 
     public @NonNull CreateUserSpec toDomain() {

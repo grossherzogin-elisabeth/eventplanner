@@ -14,8 +14,8 @@ import org.jspecify.annotations.Nullable;
 
 public record EventSlotRepresentation(
     @NonNull String key,
-    int order,
-    int criticality,
+    @NonNull Integer order,
+    @NonNull Integer criticality,
     @NonNull List<String> positionKeys,
     @Nullable String name,
     @Nullable String assignedRegistrationKey

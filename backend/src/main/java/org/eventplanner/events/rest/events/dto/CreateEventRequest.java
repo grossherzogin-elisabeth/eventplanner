@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 public record CreateEventRequest(
     @Nullable @EnumValue(EventType.class) String type,
     @Nullable @EnumValue(EventSignupType.class) String signupType,
-    @NonNull @NotBlank String name,
+    @NonNull @NotNull @NotBlank String name,
     @Nullable String note,
     @Nullable String description,
     @NonNull @NotNull @IsoTimestamp String start,
