@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "org.eventplanner"
-version = "1.3.3-SNAPSHOT"
+version = "1.3.4-SNAPSHOT"
 
 java {
     sourceCompatibility = "25"
