@@ -13,7 +13,7 @@ public record AddressRepresentation(
     @NonNull String zipCode,
     @Nullable String country
 ) implements Serializable {
-    public static @Nullable AddressRepresentation fromDomain(@Nullable Address address) {
+    public static @NonNull AddressRepresentation fromDomain(@Nullable Address address) {
         if (address == null) {
             return new AddressRepresentation("", null, "", "", "");
         }

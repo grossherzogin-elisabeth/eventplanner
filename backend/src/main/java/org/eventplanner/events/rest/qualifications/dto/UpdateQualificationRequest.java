@@ -14,17 +14,17 @@ public record UpdateQualificationRequest(
     @NonNull String name,
     @Nullable String icon,
     @Nullable String description,
-    boolean expires,
+    @Nullable Boolean expires,
     @Nullable List<String> grantsPositions
 ) implements Serializable {
 
-    public Qualification toDomain(String key) {
+    public @NonNull Qualification toDomain(@NonNull String key) {
         return new Qualification(
             new QualificationKey(key),
             name,
             icon,
             description,
-            expires,
+            Boolean.TRUE.equals(expires),
             grantsPositions != null
                 ? grantsPositions.stream().map(PositionKey::new).toList()
                 : Collections.emptyList()

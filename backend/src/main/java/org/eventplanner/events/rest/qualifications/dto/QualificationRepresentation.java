@@ -13,11 +13,11 @@ public record QualificationRepresentation(
     @NonNull String name,
     @Nullable String icon,
     @Nullable String description,
-    boolean expires,
+    @NonNull Boolean expires,
     @Nullable List<String> grantsPositions
 ) implements Serializable {
 
-    public static QualificationRepresentation fromDomain(@NonNull Qualification qualification) {
+    public static @NonNull QualificationRepresentation fromDomain(@NonNull Qualification qualification) {
         return new QualificationRepresentation(
             qualification.getKey().value(),
             qualification.getName(),

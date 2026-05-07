@@ -9,7 +9,7 @@ import org.jspecify.annotations.NonNull;
 public record UpdatePositionRequest(
     @NonNull String name,
     @NonNull String color,
-    int prio,
+    @NonNull Integer prio,
     @NonNull String imoListRank
 ) implements Serializable {
 
