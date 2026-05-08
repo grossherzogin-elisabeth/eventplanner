@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -31,19 +30,10 @@ public class GlobalExceptionHandlingController {
         @NonNull final Exception exception,
         @NonNull final HttpServletRequest request
     ) {
-        if (isBrokenPipe(exception)) {
-            log.info(
-                "A broken pipe exception occurred on request {} {}",
-                request.getMethod(),
-                request.getRequestURI()
-            );
-            var body =
-                ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Broken pipe, please try again");
-            body.setInstance(URI.create(request.getRequestURI()));
-            return ResponseEntity.status(body.getStatus()).body(body);
+        if (isClientAbort(exception)) {
+            return ResponseEntity.noContent().build();
         }
         log.error("Unhandled exception on request {} {}", request.getMethod(), request.getRequestURI(), exception);
-
         var body = ProblemDetail.forStatusAndDetail(
             HttpStatus.INTERNAL_SERVER_ERROR,
             "Unexpected error, see server logs for details"
@@ -52,9 +42,27 @@ public class GlobalExceptionHandlingController {
         return ResponseEntity.status(body.getStatus()).body(body);
     }
 
-    private boolean isBrokenPipe(@Nullable final Throwable e) {
-        return (e instanceof IOException && e.getMessage().contains("Broken pipe"))
-            || (e != null && isBrokenPipe(e.getCause()));
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Void> handleIOException(IOException ex, HttpServletRequest request) {
+        if (isClientAbort(ex)) {
+            return ResponseEntity.noContent().build();
+        }
+        log.error("I/O error on {} {}", request.getMethod(), request.getRequestURI(), ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    private boolean isClientAbort(@NonNull Throwable t) {
+        if (t.getClass().getName().contains("ClientAbortException")) {
+            return true;
+        }
+        var msg = t.getMessage();
+        if (msg != null && (msg.contains("Broken pipe") || msg.contains("Connection reset by peer"))) {
+            return true;
+        }
+        if (t.getCause() != null) {
+            return isClientAbort(t.getCause());
+        }
+        return false;
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -142,7 +150,7 @@ public class GlobalExceptionHandlingController {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public @NonNull ResponseEntity<ProblemDetail> handleMissingServletRequestParameterException(
-        @NonNull final MethodArgumentNotValidException exception,
+        @NonNull final MissingServletRequestParameterException exception,
         @NonNull final HttpServletRequest request
     ) {
         var body = exception.getBody();
