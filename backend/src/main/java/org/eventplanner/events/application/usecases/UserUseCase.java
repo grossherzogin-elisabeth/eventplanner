@@ -3,7 +3,6 @@ package org.eventplanner.events.application.usecases;
 import static java.util.Optional.ofNullable;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -18,12 +17,10 @@ import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.User;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
-import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
 import org.eventplanner.events.domain.specs.CreateUserSpec;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.auth.Role;
-import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -31,8 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -47,83 +43,19 @@ public class UserUseCase {
     private final QualificationRepository qualificationRepository;
     private final PositionRepository positionRepository;
 
-    public @NonNull SignedInUser getSignedInUser(@Nullable final Authentication authentication) {
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+    public @NonNull SignedInUser getSignedInUser() {
+        return getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+    }
+
+    public @NonNull SignedInUser getSignedInUser(@Nullable final Authentication authentication)
+    throws UnauthorizedException {
+        if (authentication instanceof SignedInUser signedInUser) {
+            return signedInUser;
+        } else if (authentication instanceof AnonymousAuthenticationToken) {
             throw new UnauthorizedException();
+        } else if (authentication != null) {
+            log.error("Got an authentication of unexpected type {}", authentication.getClass().getSimpleName());
         }
-        if (authentication.getPrincipal() instanceof OidcUser oidcUser) {
-            var authkey = new AuthKey(oidcUser.getSubject());
-            var maybeUser = userService.getUserByAuthKey(authkey);
-            if (maybeUser.isPresent()) {
-                var user = maybeUser.get();
-                user.setLastLoginAt(Instant.now());
-                userService.updateUser(user);
-                if (!Objects.equals(user.getEmail(), oidcUser.getEmail())) {
-                    log.warn(
-                        "Oidc user {} has a different email than the linked internal user {}",
-                        authkey,
-                        user.getKey()
-                    );
-                }
-                return SignedInUser
-                    .fromUser(user)
-                    .withPermissionsFromAuthentication(authentication);
-            }
-            maybeUser = userService.getUserByEmail(oidcUser.getEmail());
-            if (maybeUser.isPresent()) {
-                var user = maybeUser.get();
-                log.info("Linking user {} with oidc user {} by email", user.getKey(), authkey);
-                user.setAuthKey(authkey);
-                user.setLastLoginAt(Instant.now());
-                userService.updateUser(user);
-                return SignedInUser
-                    .fromUser(user)
-                    .withPermissionsFromAuthentication(authentication);
-            }
-
-            var firstName = oidcUser.getAttributes().get("given_name").toString();
-            var lastName = oidcUser.getAttributes().get("family_name").toString();
-            if (firstName != null && lastName != null) {
-                try {
-                    var newUser = new UserDetails(new UserKey(), Instant.now(), Instant.now(), firstName, lastName);
-                    newUser.setEmail(oidcUser.getEmail());
-                    newUser.setAuthKey(authkey);
-                    newUser.setLastLoginAt(Instant.now());
-                    newUser = userService.createUser(newUser);
-                    log.info("Created new user with key {}", newUser.getKey());
-                    return SignedInUser
-                        .fromUser(newUser)
-                        .withPermissionsFromAuthentication(authentication);
-                } catch (UserAlreadyExistsException e) {
-                    // can happen
-                    var user = userService.getUserByAuthKey(authkey)
-                        .orElseThrow(UnauthorizedException::new);
-                    return SignedInUser
-                        .fromUser(user)
-                        .withPermissionsFromAuthentication(authentication);
-                }
-            }
-
-            log.error("Oidc user {} cannot be linked to an existing user and has no name information", authkey);
-
-            // this should not happen
-            return new SignedInUser(
-                new UserKey("unknown"),
-                authkey,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                oidcUser.getEmail(),
-                Collections.emptyList(),
-                null,
-                "",
-                ""
-            ).withPermissionsFromAuthentication(authentication);
-        }
-        if (authentication.getPrincipal() instanceof OAuth2User) {
-            log.error("Provided authentication is an OAuth2User, which is not implemented!");
-            throw new UnauthorizedException();
-        }
-        log.error("Authentication is of unknown type: {}", authentication.getClass().getName());
         throw new UnauthorizedException();
     }
 

@@ -24,7 +24,7 @@ import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
-import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.testdata.QualificationFactory;
 import org.eventplanner.testdata.SignedInUserFactory;
 import org.eventplanner.testdata.UserFactory;
@@ -99,7 +99,7 @@ class UserUseCaseTest {
 
     @Test
     void shouldNotSendAnyNotification() {
-        signedInUser = SignedInUserFactory.createSignedInUser().withPermissions(Permission.WRITE_USERS);
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
         var spec = createUpdateQualificationSpecs();
         var updateUser = testee.updateUser(
             signedInUser, user.getKey(), UpdateUserSpec
@@ -118,7 +118,7 @@ class UserUseCaseTest {
 
     @Test
     void shouldAddQualifications() {
-        signedInUser = SignedInUserFactory.createSignedInUser().withPermissions(Permission.WRITE_USERS);
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
         var spec = createUpdateQualificationSpecs();
         spec.add(new UpdateUserSpec.UpdateUserQualificationSpec(
             NON_EXPIRING_NEW_QUALIFICATION.getKey(),
@@ -153,7 +153,7 @@ class UserUseCaseTest {
 
     @Test
     void shouldRemoveQualification() {
-        signedInUser = SignedInUserFactory.createSignedInUser().withPermissions(Permission.WRITE_USERS);
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
         var spec = createUpdateQualificationSpecs();
         spec.removeIf(it -> it.qualificationKey().equals(NON_EXPIRING_QUALIFICATION.getKey()));
         var updatedUser = testee.updateUser(
@@ -177,7 +177,7 @@ class UserUseCaseTest {
 
     @Test
     void shouldUpdateQualification() {
-        signedInUser = SignedInUserFactory.createSignedInUser().withPermissions(Permission.WRITE_USERS);
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
         var spec = createUpdateQualificationSpecs();
         var updateIndex = -1;
         for (int i = 0; i < spec.size(); i++) {

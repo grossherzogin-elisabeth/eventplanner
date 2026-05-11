@@ -42,7 +42,8 @@ class UserServiceTest {
         testee = new UserService(
             userRepository,
             qualificationRepository,
-            encryptionService
+            encryptionService,
+            null
         );
     }
 

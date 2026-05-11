@@ -57,6 +57,7 @@ import { useI18n } from 'vue-i18n';
 import { useAuthUseCase, useEventUseCase } from '@/application';
 import { DateTimeFormat, Month } from '@/common/date';
 import type { Event } from '@/domain';
+import { Role } from '@/domain';
 import { Permission } from '@/domain';
 import { useEventService } from '@/domain/services';
 import { Routes } from '@/ui/views/Routes';
@@ -113,10 +114,13 @@ function isNextMonth(date: Date): boolean {
 
 function init(): void {
     emit('update:tab-title', i18n.t('views.home.tab-title'));
-    if (user.permissions.includes(Permission.READ_EVENTS)) {
+    try {
         fetchEvents();
-    } else {
-        router.push({ name: Routes.Onboarding });
+    } catch (e) {
+        if (!user.permissions.includes(Permission.READ_EVENTS)) {
+            console.log('User has no role assigned, redirecting to onboarding view');
+            router.push({ name: Routes.Onboarding });
+        }
     }
 }
 

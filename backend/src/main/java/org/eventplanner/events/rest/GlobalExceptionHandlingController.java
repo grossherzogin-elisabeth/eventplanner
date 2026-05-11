@@ -11,6 +11,9 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -91,27 +94,30 @@ public class GlobalExceptionHandlingController {
         return ResponseEntity.status(body.getStatus()).body(body);
     }
 
-    @ExceptionHandler(MissingPermissionException.class)
-    public @NonNull ResponseEntity<ProblemDetail> handleMissingPermissionException(
-        @NonNull final MissingPermissionException exception,
+    @ExceptionHandler(value = {
+        AccessDeniedException.class,
+        MissingPermissionException.class,
+        UnauthorizedException.class
+    })
+    public @NonNull ResponseEntity<ProblemDetail> handleAuthenticationException(
+        @NonNull final Exception exception,
         @NonNull final HttpServletRequest request
     ) {
+        // user is not authenticated at all
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            var body = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
+            body.setInstance(URI.create(request.getRequestURI()));
+            return ResponseEntity.status(body.getStatus()).body(body);
+        }
+
+        // user is missing permissions
         log.warn(
             "Tried to access resource at {} {} without proper permission",
             request.getMethod(),
             request.getRequestURI()
         );
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, exception.getMessage());
-        body.setInstance(URI.create(request.getRequestURI()));
-        return ResponseEntity.status(body.getStatus()).body(body);
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    public @NonNull ResponseEntity<ProblemDetail> handleUnauthorizedException(
-        @NonNull final UnauthorizedException exception,
-        @NonNull final HttpServletRequest request
-    ) {
-        var body = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
         body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(body.getStatus()).body(body);
     }

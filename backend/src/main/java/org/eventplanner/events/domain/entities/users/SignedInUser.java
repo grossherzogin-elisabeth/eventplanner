@@ -1,10 +1,9 @@
 package org.eventplanner.events.domain.entities.users;
 
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
@@ -18,43 +17,50 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public record SignedInUser(
     @NonNull UserKey key,
     @NonNull AuthKey authKey,
     @NonNull List<Role> roles,
-    @NonNull List<Permission> permissions,
     @NonNull String email,
     @NonNull List<PositionKey> positions,
     @Nullable String gender,
     @NonNull String firstName,
-    @NonNull String lastName
-) {
+    @NonNull String lastName,
+    @NonNull Instant loginAt
+) implements Authentication {
 
     public static @NonNull SignedInUser fromUser(@NonNull UserDetails user) {
         return new SignedInUser(
             user.getKey(),
             Optional.ofNullable(user.getAuthKey()).orElse(new AuthKey("")),
             user.getRoles(),
-            user.getRoles().stream()
-                .flatMap(Role::getPermissions)
-                .distinct()
-                .toList(),
             Optional.ofNullable(user.getEmail()).orElse(""),
             user.getPositions(),
             user.getGender(),
             user.getDisplayName(),
-            user.getLastName()
+            user.getLastName(),
+            Instant.now()
         );
     }
 
+    public @NonNull List<Permission> permissions() {
+        return roles().stream()
+            .flatMap(Role::getPermissions)
+            .distinct()
+            .toList();
+    }
+
     public boolean hasPermission(@NonNull Permission permission) {
-        return permissions.contains(permission);
+        return permissions().contains(permission);
     }
 
     public void assertHasPermission(@NonNull Permission permission)
     throws UnauthorizedException, MissingPermissionException {
         if (!hasPermission(permission)) {
-            throw new MissingPermissionException();
+            throw new MissingPermissionException(permission);
         }
     }
 
@@ -65,47 +71,41 @@ public record SignedInUser(
                 return;
             }
         }
-        throw new MissingPermissionException();
+        throw new MissingPermissionException(permissions);
     }
 
-    public @NonNull SignedInUser withPermission(@NonNull Permission permission) {
-        if (!permissions().contains(permission)) {
-            var permissions = new LinkedList<>(permissions());
-            permissions.add(permission);
-            return new SignedInUser(key, authKey, roles, permissions, email, positions, gender, firstName, lastName);
-        }
+    @Override
+    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
+        return permissions();
+    }
+
+    @Override
+    public @Nullable Object getCredentials() {
+        return null;
+    }
+
+    @Override
+    public @NonNull SignedInUser getDetails() {
         return this;
     }
 
-    public @NonNull SignedInUser withPermissions(@NonNull Permission... permission) {
-        var permissions = Stream.concat(Arrays.stream(permission), permissions().stream())
-            .distinct()
-            .toList();
-        return new SignedInUser(key, authKey, roles, permissions, email, positions, gender, firstName, lastName);
+    @Override
+    public @NonNull Object getPrincipal() {
+        return key();
     }
 
-    public @NonNull SignedInUser withRole(@NonNull Role role) {
-        if (!roles().contains(role)) {
-            var roles = new LinkedList<>(roles());
-            roles.add(role);
-            var permissions = Stream.concat(role.getPermissions(), permissions().stream())
-                .distinct()
-                .toList();
-            return new SignedInUser(key, authKey, roles, permissions, email, positions, gender, firstName, lastName);
-        }
-        return this;
+    @Override
+    public boolean isAuthenticated() {
+        return true;
     }
 
-    public @NonNull SignedInUser withPermissionsFromAuthentication(@NonNull Authentication authentication) {
-        var permissions = authentication.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .map(Role::fromString)
-            .flatMap(Optional::stream)
-            .flatMap(Role::getPermissions);
-        var mergedPermissions = Stream.concat(permissions, permissions().stream())
-            .distinct()
-            .toList();
-        return new SignedInUser(key, authKey, roles, mergedPermissions, email, positions, gender, firstName, lastName);
+    @Override
+    public void setAuthenticated(final boolean isAuthenticated) throws IllegalArgumentException {
+        throw new UnsupportedOperationException("Cannot change authentication status of a SignedInUser");
+    }
 
+    @Override
+    public @NonNull String getName() {
+        return firstName() + " " + lastName();
     }
 }

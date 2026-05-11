@@ -8,22 +8,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class OAuthClientConfig {
 
-    private final String loginSuccessUrl;
     private final OAuthLogoutHandler oAuthLogoutHandler;
-    private final OAuthUserAuthoritiesMapper oAuthUserAuthoritiesMapper;
 
-    public OAuthClientConfig(
-        @Nullable @Value("${auth.login-success-url}") String loginSuccessUrl,
-        @NonNull OAuthLogoutHandler oAuthLogoutHandler,
-        @NonNull OAuthUserAuthoritiesMapper oAuthUserAuthoritiesMapper
-    ) {
-        this.loginSuccessUrl = loginSuccessUrl;
-        this.oAuthLogoutHandler = oAuthLogoutHandler;
-        this.oAuthUserAuthoritiesMapper = oAuthUserAuthoritiesMapper;
-    }
+    @Value("${auth.login-success-url}")
+    private @Nullable String loginSuccessUrl;
 
     public @NonNull HttpSecurity configure(@NonNull HttpSecurity http) {
         http.oauth2Login(oauth2Login -> {
@@ -32,9 +28,6 @@ public class OAuthClientConfig {
             oauth2Login.failureUrl(loginSuccessUrl);
             oauth2Login.authorizationEndpoint(authorizationEndpoint -> {
                 authorizationEndpoint.baseUri("/auth/login");
-            });
-            oauth2Login.userInfoEndpoint(userInfoEndpoint -> {
-                userInfoEndpoint.userAuthoritiesMapper(oAuthUserAuthoritiesMapper);
             });
         });
 
