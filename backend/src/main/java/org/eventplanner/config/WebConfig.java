@@ -46,7 +46,7 @@ public class WebConfig implements WebMvcConfigurer {
         throws IOException {
             if (resourcePath.startsWith("/api/")) {
                 var auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+                if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
                     throw new UnauthorizedException("Authentication required");
                 } else {
                     throw new NoSuchElementException("No such endpoint");

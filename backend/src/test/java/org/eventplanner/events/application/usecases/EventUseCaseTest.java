@@ -16,7 +16,7 @@ import org.eventplanner.events.application.services.EventService;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;
-import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,8 +44,7 @@ class EventUseCaseTest {
 
     @Test
     void shouldNotReturnDraftEventsForNonAdminUsers() {
-        var signedInUser = createSignedInUser()
-            .withPermissions(Permission.READ_EVENTS);
+        var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
 
         event.setState(EventState.DRAFT);
 
@@ -55,8 +54,7 @@ class EventUseCaseTest {
 
     @Test
     void shouldReturnDraftEventsForAdminUsers() {
-        var signedInUser = createSignedInUser()
-            .withPermissions(Permission.READ_EVENTS, Permission.WRITE_EVENT_DETAILS);
+        var signedInUser = createSignedInUser(Role.ADMIN);
 
         event.setState(EventState.DRAFT);
 
@@ -66,8 +64,7 @@ class EventUseCaseTest {
 
     @Test
     void shouldNotReturnPrivateRegistrationDataForNonAdminUsers() {
-        var signedInUser = createSignedInUser()
-            .withPermissions(Permission.READ_EVENTS);
+        var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
 
         event.setState(EventState.PLANNED);
 
@@ -84,8 +81,7 @@ class EventUseCaseTest {
 
     @Test
     void shouldReturnOwnRegistrationPrivateDataForNonAdminUsers() {
-        var signedInUser = createSignedInUser()
-            .withPermissions(Permission.READ_EVENTS);
+        var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
 
         event.setState(EventState.PLANNED);
         event.getRegistrations().getFirst().setUserKey(signedInUser.key());
@@ -99,8 +95,7 @@ class EventUseCaseTest {
 
     @Test
     void shouldNotReturnAssignmentsForNonAdminUsers() {
-        var signedInUser = createSignedInUser()
-            .withPermissions(Permission.READ_EVENTS);
+        var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
 
         event.setState(EventState.OPEN_FOR_SIGNUP);
         assignRegistration(event.getSlots(), event.getRegistrations(), 0);
@@ -116,8 +111,7 @@ class EventUseCaseTest {
 
     @Test
     void shouldReturnAssignmentsForAdminUsers() {
-        var signedInUser = createSignedInUser()
-            .withPermissions(Permission.READ_EVENTS, Permission.WRITE_EVENT_SLOTS);
+        var signedInUser = createSignedInUser(Role.ADMIN);
 
         event.setState(EventState.OPEN_FOR_SIGNUP);
         assignRegistration(event.getSlots(), event.getRegistrations(), 0);

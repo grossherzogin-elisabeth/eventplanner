@@ -7,34 +7,39 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
-import org.springframework.security.web.session.SessionManagementFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserMdcFilter userMdcFilter;
-    private final LogRequestsFilter logRequestsFilter;
     private final OAuthClientConfig oAuthClientConfig;
-    private final boolean enableCSRF;
+    private final UserAuthenticationMapper userAuthenticationMapper;
+    private final LogSignedInUserKeyFilter logSignedInUserKeyFilter;
+    private final LogRequestsFilter logRequestsFilter;
+    private boolean enableCSRF;
 
     public SecurityConfig(
-        @NonNull @Autowired final UserMdcFilter userMdcFilter,
-        @NonNull @Autowired final LogRequestsFilter logRequestsFilter,
         @NonNull @Autowired final OAuthClientConfig oAuthClientConfig,
+        @NonNull @Autowired final UserAuthenticationMapper userAuthenticationMapper,
+        @NonNull @Autowired final LogSignedInUserKeyFilter logSignedInUserKeyFilter,
+        @NonNull @Autowired final LogRequestsFilter logRequestsFilter,
         @Nullable @Value("${security.enable-csrf}") String enableCSRF
     ) {
-        this.userMdcFilter = userMdcFilter;
-        this.logRequestsFilter = logRequestsFilter;
         this.oAuthClientConfig = oAuthClientConfig;
+        this.userAuthenticationMapper = userAuthenticationMapper;
+        this.logSignedInUserKeyFilter = logSignedInUserKeyFilter;
+        this.logRequestsFilter = logRequestsFilter;
         this.enableCSRF = "true".equals(enableCSRF);
     }
 
@@ -60,8 +65,9 @@ public class SecurityConfig {
         });
 
         http = oAuthClientConfig.configure(http);
-        http.addFilterAfter(userMdcFilter, SessionManagementFilter.class);
-        http.addFilterAfter(logRequestsFilter, UserMdcFilter.class);
+        http.addFilterAfter(userAuthenticationMapper, AnonymousAuthenticationFilter.class);
+        http.addFilterAfter(logSignedInUserKeyFilter, UserAuthenticationMapper.class);
+        http.addFilterAfter(logRequestsFilter, LogSignedInUserKeyFilter.class);
         return http.build();
     }
 }
