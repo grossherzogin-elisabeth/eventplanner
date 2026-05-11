@@ -38,7 +38,7 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
     // sqlite
-    implementation "org.xerial:sqlite-jdbc:3.53.0.0"
+    implementation "org.xerial:sqlite-jdbc:3.53.1.0"
     implementation "org.hibernate.orm:hibernate-community-dialects"
     implementation "org.flywaydb:flyway-core:12.5.0"
 
