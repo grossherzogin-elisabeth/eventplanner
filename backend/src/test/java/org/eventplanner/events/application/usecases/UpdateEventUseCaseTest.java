@@ -30,7 +30,7 @@ import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.specs.CreateRegistrationSpec;
 import org.eventplanner.events.domain.specs.UpdateEventSpec;
-import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.users.UserKey;
@@ -51,14 +51,7 @@ class UpdateEventUseCaseTest {
 
     @BeforeEach
     void setup() {
-        signedInUser = createSignedInUser()
-            .withPermissions(
-                Permission.READ_EVENTS,
-                Permission.WRITE_EVENTS,
-                Permission.WRITE_EVENT_DETAILS,
-                Permission.WRITE_EVENT_SLOTS,
-                Permission.WRITE_REGISTRATIONS
-            );
+        signedInUser = createSignedInUser(Role.ADMIN);
         event = createEvent();
 
         var eventRepository = mock(EventRepository.class);
@@ -107,8 +100,7 @@ class UpdateEventUseCaseTest {
 
     @Test
     void shouldNotUpdateEventDetails() {
-        signedInUser = createSignedInUser()
-            .withPermissions(Permission.READ_EVENTS, Permission.WRITE_EVENTS, Permission.WRITE_EVENT_SLOTS);
+        signedInUser = createSignedInUser(Role.TEAM_PLANNER);
         var updateSpec = new UpdateEventSpec(event.getKey())
             .withName("Updated name")
             .withDescription("Updated description")

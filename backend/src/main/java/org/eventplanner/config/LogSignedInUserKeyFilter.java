@@ -2,7 +2,7 @@ package org.eventplanner.config;
 
 import java.io.IOException;
 
-import org.eventplanner.events.application.usecases.UserUseCase;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.MDC;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,16 +13,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
-public class UserMdcFilter extends OncePerRequestFilter {
+public class LogSignedInUserKeyFilter extends OncePerRequestFilter {
 
     private static final String MDC_KEY = "user";
-    private final UserUseCase userUseCase;
 
     @Override
     protected void doFilterInternal(
@@ -31,12 +28,16 @@ public class UserMdcFilter extends OncePerRequestFilter {
         @NonNull final FilterChain filterChain
     )
     throws ServletException, IOException {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
-            var user = userUseCase.getSignedInUser(authentication);
-            MDC.put(MDC_KEY, user.key().value());
-        } catch (Exception _) {
-            MDC.put(MDC_KEY, "unknown");
+            var authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication instanceof SignedInUser signedInUser) {
+                MDC.put(MDC_KEY, signedInUser.key().value());
+            } else {
+                MDC.put(MDC_KEY, "unknown");
+            }
+        } catch (Exception e) {
+            log.warn("Failed to resolve user key from authentication", e);
+            MDC.put(MDC_KEY, "error");
         }
         try {
             filterChain.doFilter(request, response);

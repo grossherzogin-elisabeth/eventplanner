@@ -21,7 +21,7 @@ import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
-import org.eventplanner.events.domain.values.auth.Permission;
+import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.testdata.PositionKeys;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +57,7 @@ class RegistrationUseCaseTest {
 
     @Test
     void shouldNotAllowUpdatingOtherPersonsRegistration() {
-        var signedInUser = createSignedInUser().withPermission(Permission.WRITE_OWN_REGISTRATIONS);
+        var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
         var registration = event.getRegistrations().getFirst();
         var updateSpec = new UpdateRegistrationSpec(
             event.getKey(),
@@ -79,7 +79,7 @@ class RegistrationUseCaseTest {
 
     @Test
     void shouldAllowUpdatingOwnRegistration() {
-        var signedInUser = createSignedInUser().withPermission(Permission.WRITE_OWN_REGISTRATIONS);
+        var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
 
         var registration = event.getRegistrations().getFirst();
         registration.setUserKey(signedInUser.key());
@@ -105,7 +105,7 @@ class RegistrationUseCaseTest {
 
     @Test
     void shouldAllowUpdatingOtherPersonsRegistrationForAdmins() {
-        var signedInUser = createSignedInUser().withPermission(Permission.WRITE_REGISTRATIONS);
+        var signedInUser = createSignedInUser(Role.ADMIN);
 
         var registration = event.getRegistrations().getFirst();
         registration.setPosition(PositionKeys.DECKHAND);

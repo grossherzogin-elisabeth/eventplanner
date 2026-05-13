@@ -5,10 +5,11 @@ import java.util.UUID;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 
 public record UserKey(
     @NonNull String value
-) implements Serializable {
+) implements Serializable, GrantedAuthority {
     public UserKey() {
         this(null);
     }
@@ -25,6 +26,11 @@ public record UserKey(
 
     @Override
     public @NonNull String toString() {
+        return value;
+    }
+
+    @Override
+    public @NonNull String getAuthority() {
         return value;
     }
 }

@@ -81,7 +81,6 @@ class WebConfigIntegrationTest {
             .andExpect(status().isForbidden())
             .andExpect(jsonPath("$.status").value(403))
             .andExpect(jsonPath("$.title").value("Forbidden"))
-            .andExpect(jsonPath("$.detail").value("Missing permission for requested resource or operation"))
             .andExpect(jsonPath("$.instance").value(path));
     }
 

@@ -5,11 +5,12 @@ import java.util.Optional;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum Permission {
+public enum Permission implements GrantedAuthority {
     READ_EVENTS("events:read"),
     WRITE_EVENTS("events:write"),
     DELETE_EVENTS("events:delete"),
@@ -63,6 +64,11 @@ public enum Permission {
     @JsonValue
     @Override
     public @NonNull String toString() {
+        return value;
+    }
+
+    @Override
+    public @NonNull String getAuthority() {
         return value;
     }
 }
