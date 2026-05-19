@@ -57,7 +57,6 @@ import { useI18n } from 'vue-i18n';
 import { useAuthUseCase, useEventUseCase } from '@/application';
 import { DateTimeFormat, Month } from '@/common/date';
 import type { Event } from '@/domain';
-import { Role } from '@/domain';
 import { Permission } from '@/domain';
 import { useEventService } from '@/domain/services';
 import { Routes } from '@/ui/views/Routes';
