@@ -16,7 +16,7 @@ public class SignedInUserFactory {
         return new SignedInUser(
             new UserKey(),
             new AuthKey("test"),
-            Stream.of(roles).toList(),
+            roles != null ? Stream.of(roles).toList() : Collections.emptyList(),
             "test@email.com",
             Collections.emptyList(),
             "m",

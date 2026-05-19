@@ -47,11 +47,10 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
             } else if (principal instanceof OAuth2User oAuth2User) {
                 transformToSignedInUser(oAuth2User);
             }
-        } else if (authentication instanceof SignedInUser signedInUser) {
-            if (signedInUser.loginAt().isBefore(Instant.now().minus(CACHING_DURATION))) {
-                log.debug("Refreshing signed in user, because session is older than {}", CACHING_DURATION);
-                refreshSignedInUser(signedInUser);
-            }
+        } else if (authentication instanceof SignedInUser signedInUser
+            && signedInUser.loginAt().isBefore(Instant.now().minus(CACHING_DURATION))) {
+            log.debug("Refreshing signed in user, because session is older than {}", CACHING_DURATION);
+            refreshSignedInUser(signedInUser);
         }
         filterChain.doFilter(request, response);
     }

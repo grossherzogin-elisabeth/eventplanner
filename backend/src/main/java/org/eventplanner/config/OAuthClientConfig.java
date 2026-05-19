@@ -18,7 +18,7 @@ public class OAuthClientConfig {
 
     private final OAuthLogoutHandler oAuthLogoutHandler;
 
-    @Value("${auth.login-success-url}")
+    @Value("${auth.login-success-url:#{null}}")
     private @Nullable String loginSuccessUrl;
 
     public @NonNull HttpSecurity configure(@NonNull HttpSecurity http) {

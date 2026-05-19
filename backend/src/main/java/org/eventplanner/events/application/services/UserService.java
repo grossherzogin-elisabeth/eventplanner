@@ -183,7 +183,7 @@ public class UserService {
             newUser = createUser(newUser);
             log.info("Created new user with key {}", newUser.getKey());
             return newUser;
-        } catch (UserAlreadyExistsException e) {
+        } catch (UserAlreadyExistsException _) {
             // can happen on simultaneous requests
             return getUserByAuthKey(authKey)
                 .orElseThrow(UnauthorizedException::new);
