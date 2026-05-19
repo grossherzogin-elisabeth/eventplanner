@@ -220,6 +220,33 @@ class UserServiceTest {
         }));
     }
 
+    @Test
+    void shouldCreateUserOnAuthenticateWhenNoUserCanBeFound() {
+        var authKey = new AuthKey("new-auth");
+        var email = "new.user@email.com";
+        var firstName = "New";
+        var lastName = "User";
+        var authentication = mock(AuthenticatedPrincipal.class);
+
+        when(userRepository.findByAuthKey(authKey)).thenReturn(Optional.empty());
+        when(userRepository.findAll()).thenReturn(List.of());
+        when(userRepository.create(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.update(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var result = testee.authenticate(authKey, email, firstName, lastName, authentication);
+
+        assertThat(result.authKey()).isEqualTo(authKey);
+        assertThat(result.email()).isEqualTo(email);
+        assertThat(result.firstName()).isEqualTo(firstName);
+        assertThat(result.lastName()).isEqualTo(lastName);
+
+        verify(userRepository).create(argThat((encrypted) ->
+            Objects.equals(authKey, encrypted.getAuthKey())
+                && Objects.equals(email, encryptionService.decrypt(encrypted.getEmail()))
+                && Objects.equals(firstName, encryptionService.decrypt(encrypted.getFirstName()))
+                && Objects.equals(lastName, encryptionService.decrypt(encrypted.getLastName()))));
+    }
+
     private static Qualification qualificationWithoutExpiration() {
         return new Qualification(
             new QualificationKey("non-expiring-qualification"),
