@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.users;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
-import org.eventplanner.events.domain.entities.users.UserQualification;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.eventplanner.testdata.PositionKeys;
 import org.junit.jupiter.api.Test;

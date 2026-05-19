@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -136,7 +137,8 @@ public class UserService {
         @NonNull AuthKey authKey,
         @NonNull String email,
         @NonNull String firstName,
-        @NonNull String lastName
+        @NonNull String lastName,
+        @NonNull AuthenticatedPrincipal authentication
     ) {
         var user = getUserByAuthKey(authKey)
             .or(() -> getUserByEmail(email))
@@ -166,7 +168,7 @@ public class UserService {
         }
 
         // return mapped authorities
-        return SignedInUser.fromUser(user);
+        return SignedInUser.fromUser(user, authentication);
     }
 
     private @NonNull UserDetails createUser(

@@ -14,6 +14,7 @@ import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -29,10 +30,14 @@ public record SignedInUser(
     @Nullable String gender,
     @NonNull String firstName,
     @NonNull String lastName,
-    @NonNull Instant loginAt
+    @NonNull Instant loginAt,
+    @NonNull AuthenticatedPrincipal authentication
 ) implements Authentication {
 
-    public static @NonNull SignedInUser fromUser(@NonNull UserDetails user) {
+    public static @NonNull SignedInUser fromUser(
+        @NonNull UserDetails user,
+        @NonNull AuthenticatedPrincipal authentication
+    ) {
         return new SignedInUser(
             user.getKey(),
             Optional.ofNullable(user.getAuthKey()).orElse(new AuthKey("")),
@@ -42,7 +47,8 @@ public record SignedInUser(
             user.getGender(),
             user.getDisplayName(),
             user.getLastName(),
-            Instant.now()
+            Instant.now(),
+            authentication
         );
     }
 
@@ -80,8 +86,8 @@ public record SignedInUser(
     }
 
     @Override
-    public @Nullable Object getCredentials() {
-        return null;
+    public @NonNull AuthenticatedPrincipal getCredentials() {
+        return authentication;
     }
 
     @Override
@@ -90,7 +96,7 @@ public record SignedInUser(
     }
 
     @Override
-    public @NonNull Object getPrincipal() {
+    public @NonNull UserKey getPrincipal() {
         return key();
     }
 

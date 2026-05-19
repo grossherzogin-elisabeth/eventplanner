@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.events;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testdata.EventFactory.createEvent;
@@ -10,9 +10,6 @@ import static org.eventplanner.testdata.RegistrationFactory.createRegistration;
 
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.events.Event;
-import org.eventplanner.events.domain.entities.events.EventSlot;
-import org.eventplanner.events.domain.entities.events.Registration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

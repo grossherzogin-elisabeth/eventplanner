@@ -1,4 +1,4 @@
-package org.eventplanner.events.domain.entities;
+package org.eventplanner.events.domain.entities.events;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testdata.EventFactory.createEvent;

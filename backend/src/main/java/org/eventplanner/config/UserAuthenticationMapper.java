@@ -60,7 +60,8 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
             new AuthKey(oidcUser.getSubject()),
             oidcUser.getEmail(),
             oidcUser.getGivenName(),
-            oidcUser.getFamilyName()
+            oidcUser.getFamilyName(),
+            oidcUser
         );
         SecurityContextHolder.getContext().setAuthentication(signedInUser);
     }
@@ -78,13 +79,14 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
         var lastName = Optional.ofNullable(oAuth2User.getAttribute(StandardClaimNames.FAMILY_NAME))
             .map(Object::toString)
             .orElse("");
-        var signedInUser = userService.authenticate(new AuthKey(sub), email, firstName, lastName);
+        var signedInUser = userService.authenticate(new AuthKey(sub), email, firstName, lastName, oAuth2User);
         SecurityContextHolder.getContext().setAuthentication(signedInUser);
     }
 
     private void refreshSignedInUser(@NonNull SignedInUser signedInUser) {
         var user = userService.getUserByKey(signedInUser.key())
             .orElseThrow(UnauthorizedException::new);
-        SecurityContextHolder.getContext().setAuthentication(SignedInUser.fromUser(user));
+        SecurityContextHolder.getContext()
+            .setAuthentication(SignedInUser.fromUser(user, signedInUser.authentication()));
     }
 }

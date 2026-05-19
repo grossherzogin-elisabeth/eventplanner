@@ -1,5 +1,7 @@
 package org.eventplanner.testdata;
 
+import static org.mockito.Mockito.mock;
+
 import java.time.Instant;
 import java.util.Collections;
 import java.util.stream.Stream;
@@ -10,6 +12,7 @@ import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.params.shadow.de.siegmar.fastcsv.util.Nullable;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 public class SignedInUserFactory {
     public static @NonNull SignedInUser createSignedInUser(@Nullable Role... roles) {
@@ -22,7 +25,8 @@ public class SignedInUserFactory {
             "m",
             "John",
             "Doe",
-            Instant.now()
+            Instant.now(),
+            mock(OidcUser.class)
         );
     }
 }
