@@ -124,7 +124,7 @@
     "name": "Canceled Event",
     "state": "canceled",
     "note": "",
-    "description": "Moin liebe Lissi Crew, \n\nihr seid für die Reise vom Fr., 21.03.2025 bis zum Mo., 24.03.2025 als Crew eingeplant. Leider müssen wir die Reise hiermit absagen. \n\nViele Grüße, \nEuer Büroteam",
+    "description": "This event was canceled",
     "start": "2025-03-21T15:00:00Z",
     "end": "2025-03-24T17:00:00Z",
     "locations": [
