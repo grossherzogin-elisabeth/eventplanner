@@ -82,7 +82,6 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    url: jdbc:sqlite:${data.directory}/eventplanner.db
   security:
     oauth2:
       client:
