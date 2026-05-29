@@ -49,6 +49,22 @@ server:
 security:
   enable-csrf: false
 
+spring:
+  datasource:
+    hikari:
+      # The in-memory database ceases to exist as soon as the database connection is closed. Every :memory: database is
+      # distinct from every other. So, opening two database connections each with the filename ":memory:" will create
+      # two independent in-memory databases, which we don't want here.
+      maximum-pool-size: 1
+      max-lifetime: 0
+    url: 'jdbc:sqlite::memory:'
+  flyway:
+    clean-disabled: false
+    locations:
+      - classpath:db/migration
+      - classpath:db/testdata
+
+
 logging:
   level:
     org.eventplanner: DEBUG
