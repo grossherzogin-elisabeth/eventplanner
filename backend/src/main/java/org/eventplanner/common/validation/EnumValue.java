@@ -65,6 +65,15 @@ public @interface EnumValue {
                 return true;
             }
 
+            if (value instanceof Iterable<?> values) {
+                for (final Object v : values) {
+                    if (!isValid(v, context)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
             if (creatorMethod != null) {
                 try {
                     return creatorMethod.invoke(null, value) != null;

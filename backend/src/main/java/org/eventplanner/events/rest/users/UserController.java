@@ -56,7 +56,7 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<UserDetailsRepresentation> createUser(
-        @Valid @RequestBody CreateUserRequest spec
+        @RequestBody @Valid CreateUserRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var user = userUseCase.createUser(signedInUser, spec.toDomain());
@@ -88,7 +88,7 @@ public class UserController {
     @PatchMapping("/{key}")
     public ResponseEntity<UserDetailsRepresentation> updateUser(
         @PathVariable("key") String userKey,
-        @RequestBody UpdateUserRequest spec
+        @RequestBody @Valid UpdateUserRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var user = userUseCase.updateUser(signedInUser, new UserKey(userKey), spec.toDomain());
@@ -97,7 +97,7 @@ public class UserController {
 
     @PatchMapping("/self")
     public ResponseEntity<UserDetailsRepresentation> updateSignedInUser(
-        @RequestBody UpdateUserRequest spec
+        @RequestBody @Valid UpdateUserRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var user = userUseCase.updateUser(signedInUser, signedInUser.key(), spec.toDomain());
@@ -105,7 +105,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{key}")
-    public ResponseEntity<Void> updateUser(
+    public ResponseEntity<Void> deleteUser(
         @PathVariable("key") String userKey
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());

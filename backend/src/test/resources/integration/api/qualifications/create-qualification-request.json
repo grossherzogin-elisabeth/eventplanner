@@ -1,0 +1,10 @@
+{
+  "name": "Test Qualification",
+  "icon": "fa-certificate",
+  "description": "A test qualification for integration testing",
+  "expires": false,
+  "grantsPositions": [
+    "4b2ff7f9-9ec9-44d0-8de3-57bbefed2545"
+  ]
+}
+

@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.QualificationRepository;
@@ -12,6 +13,7 @@ import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +41,7 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
     }
 
     @Override
+    @Transactional
     public void create(@NonNull final Qualification qualification) {
         if (qualificationJpaRepository.existsById(qualification.getKey().value())) {
             throw new IllegalArgumentException("Qualification with key " + qualification.getKey()
@@ -48,17 +51,21 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
     }
 
     @Override
+    @Transactional
     public void update(@NonNull final Qualification qualification) {
+        if (!qualificationJpaRepository.existsById(qualification.getKey().value())) {
+            throw new NoSuchElementException("Qualification with key " + qualification.getKey()
+                .value() + " does not exist");
+        }
         qualificationJpaRepository.save(QualificationJpaEntity.fromDomain(qualification));
     }
 
     @Override
+    @Transactional
     public void deleteByKey(@NonNull final QualificationKey key) {
+        if (!qualificationJpaRepository.existsById(key.value())) {
+            throw new NoSuchElementException("Qualification with key " + key.value() + " does not exist");
+        }
         qualificationJpaRepository.deleteById(key.value());
-    }
-
-    @Override
-    public void deleteAll() {
-        qualificationJpaRepository.deleteAll();
     }
 }

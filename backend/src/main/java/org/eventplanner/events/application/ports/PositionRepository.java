@@ -2,6 +2,7 @@ package org.eventplanner.events.application.ports;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.eventplanner.events.domain.entities.positions.Position;
@@ -18,9 +19,7 @@ public interface PositionRepository {
 
     public void create(@NonNull final Position position);
 
-    public void update(@NonNull final Position position);
+    public void update(@NonNull final Position position) throws NoSuchElementException;
 
-    public void deleteByKey(@NonNull final PositionKey key);
-
-    public void deleteAll();
+    public void deleteByKey(@NonNull final PositionKey key) throws NoSuchElementException;
 }

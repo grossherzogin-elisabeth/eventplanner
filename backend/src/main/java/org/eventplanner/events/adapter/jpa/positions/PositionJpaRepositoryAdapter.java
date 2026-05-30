@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.PositionRepository;
@@ -13,6 +14,7 @@ import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,6 +45,7 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
     }
 
     @Override
+    @Transactional
     public void create(@NonNull final Position position) {
         if (positionJpaRepository.existsById(position.getKey().value())) {
             throw new IllegalArgumentException("Position with key " + position.getKey().value() + " already exists");
@@ -51,17 +54,20 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
     }
 
     @Override
+    @Transactional
     public void update(@NonNull final Position position) {
+        if (!positionJpaRepository.existsById(position.getKey().value())) {
+            throw new NoSuchElementException("Position with key " + position.getKey() + " does not exist");
+        }
         positionJpaRepository.save(PositionJpaEntity.fromDomain(position));
     }
 
     @Override
+    @Transactional
     public void deleteByKey(@NonNull final PositionKey key) {
+        if (!positionJpaRepository.existsById(key.value())) {
+            throw new NoSuchElementException("Position with key " + key + " does not exist");
+        }
         positionJpaRepository.deleteById(key.value());
-    }
-
-    @Override
-    public void deleteAll() {
-        positionJpaRepository.deleteAll();
     }
 }

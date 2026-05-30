@@ -10,8 +10,10 @@ import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import jakarta.validation.constraints.NotNull;
+
 public record CreateQualificationRequest(
-    @NonNull String name,
+    @NonNull @NotNull String name,
     @Nullable String icon,
     @Nullable String description,
     @Nullable Boolean expires,

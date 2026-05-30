@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,7 +35,7 @@ public class QualificationController {
 
     @PostMapping("")
     public ResponseEntity<QualificationRepresentation> createQualification(
-        @RequestBody CreateQualificationRequest spec
+        @Valid @RequestBody CreateQualificationRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
@@ -56,7 +57,7 @@ public class QualificationController {
     @PutMapping("/{qualificationKey}")
     public ResponseEntity<QualificationRepresentation> updateQualification(
         @PathVariable String qualificationKey,
-        @RequestBody UpdateQualificationRequest spec
+        @Valid @RequestBody UpdateQualificationRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 

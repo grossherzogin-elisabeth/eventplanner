@@ -11,6 +11,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -133,6 +134,16 @@ public class GlobalExceptionHandlingController {
             request.getRequestURI()
         );
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
+        body.setInstance(URI.create(request.getRequestURI()));
+        return ResponseEntity.status(body.getStatus()).body(body);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public @NonNull ResponseEntity<ProblemDetail> handleHttpMessageNotReadableException(
+        @NonNull final HttpMessageNotReadableException exception,
+        @NonNull final HttpServletRequest request
+    ) {
+        var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMostSpecificCause().getMessage());
         body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(body.getStatus()).body(body);
     }

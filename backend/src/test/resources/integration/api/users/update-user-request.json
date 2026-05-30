@@ -1,0 +1,9 @@
+{
+  "firstName": "Updated",
+  "lastName": "User",
+  "email": "updated.user@email.com",
+  "roles": [
+    "ROLE_TEAM_MEMBER"
+  ]
+}
+

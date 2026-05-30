@@ -1,13 +1,15 @@
 package org.eventplanner.events.rest.users.dto;
 
 import static java.util.Optional.ofNullable;
-import static org.eventplanner.common.ObjectUtils.mapNullable;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.eventplanner.common.validation.EnumValue;
+import org.eventplanner.common.validation.IsoDate;
+import org.eventplanner.common.validation.IsoTimestamp;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
 import org.eventplanner.events.domain.specs.UpdateUserSpec.UpdateUserQualificationSpec;
 import org.eventplanner.events.domain.values.auth.Role;
@@ -17,6 +19,8 @@ import org.eventplanner.events.domain.values.users.Diet;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import jakarta.validation.constraints.Email;
+
 public record UpdateUserRequest(
     @Nullable String authKey,
     @Nullable String gender,
@@ -25,14 +29,14 @@ public record UpdateUserRequest(
     @Nullable String nickName,
     @Nullable String secondName,
     @Nullable String lastName,
-    @Nullable List<String> roles,
+    @Nullable @EnumValue(Role.class) List<String> roles,
     @Nullable List<UpdateUserQualificationRepresentation> qualifications,
     @Nullable AddressRepresentation address,
-    @Nullable String email,
+    @Nullable @Email String email,
     @Nullable String phone,
     @Nullable String phoneWork,
     @Nullable String mobile,
-    @Nullable String dateOfBirth,
+    @Nullable @IsoDate String dateOfBirth,
     @Nullable String placeOfBirth,
     @Nullable String passNr,
     @Nullable String comment,
@@ -41,37 +45,41 @@ public record UpdateUserRequest(
     @Nullable String diseases,
     @Nullable String intolerances,
     @Nullable String medication,
-    @Nullable String diet,
-    @Nullable String verifiedAt
+    @Nullable @EnumValue(Diet.class) String diet,
+    @Nullable @IsoTimestamp String verifiedAt
 ) implements Serializable {
 
     public @NonNull UpdateUserSpec toDomain() {
         return new UpdateUserSpec(
-            mapNullable(authKey, AuthKey::new),
+            authKey != null ? new AuthKey(authKey) : null,
             gender,
             title,
             firstName,
             nickName,
             secondName,
             lastName,
-            mapNullable(roles, Role::parse),
-            mapNullable(qualifications, UpdateUserQualificationRepresentation::toDomain),
-            mapNullable(address, AddressRepresentation::toDomain),
+            roles != null
+                ? roles.stream().map(Role::parse).toList()
+                : null,
+            qualifications != null
+                ? qualifications.stream().map(UpdateUserQualificationRepresentation::toDomain).toList()
+                : null,
+            address != null ? address.toDomain() : null,
             email,
             phone,
             phoneWork,
             mobile,
-            ofNullable(dateOfBirth).map(LocalDate::parse).orElse(null),
+            dateOfBirth != null ? LocalDate.parse(dateOfBirth) : null,
             placeOfBirth,
             passNr,
             comment,
             nationality,
-            mapNullable(emergencyContact, EmergencyContactRepresentation::toDomain),
+            emergencyContact != null ? emergencyContact.toDomain() : null,
             diseases,
             intolerances,
             medication,
-            mapNullable(diet, (String s) -> Diet.fromString(s).orElse(Diet.OMNIVORE)),
-            ofNullable(verifiedAt).map(Instant::parse).orElse(null)
+            diet != null ? Diet.parse(diet) : null,
+            verifiedAt != null ? Instant.parse(verifiedAt) : null
         );
     }
 

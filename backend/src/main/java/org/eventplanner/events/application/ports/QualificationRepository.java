@@ -2,6 +2,7 @@ package org.eventplanner.events.application.ports;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
@@ -17,9 +18,7 @@ public interface QualificationRepository {
 
     public void create(@NonNull final Qualification qualification);
 
-    public void update(@NonNull final Qualification qualification);
+    public void update(@NonNull final Qualification qualification) throws NoSuchElementException;
 
-    public void deleteByKey(@NonNull final QualificationKey key);
-
-    public void deleteAll();
+    public void deleteByKey(@NonNull final QualificationKey key) throws NoSuchElementException;
 }
