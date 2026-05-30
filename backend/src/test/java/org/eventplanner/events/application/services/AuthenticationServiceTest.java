@@ -35,6 +35,21 @@ class AuthenticationServiceTest {
     }
 
     @Test
+    void shouldAuthenticateOidcUser() {
+        var authKey = new AuthKey("auth");
+        var email = "someones@email.com";
+        var user = createUser().withAuthKey(null).withEmail(email);
+        var oidcUser = mockOidcUser("auth", email, user.getFirstName(), user.getLastName());
+
+        when(userService.getUserByAuthKey(authKey)).thenReturn(Optional.of(user));
+        when(userService.updateUser(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var result = testee.authenticate(oidcUser);
+
+        assertThat(result.key()).isEqualTo(user.getKey());
+    }
+
+    @Test
     void shouldUpdateUserEmailOnAuthenticate() {
         var authKey = new AuthKey("auth");
         var oldEmail = "old@email.com";
@@ -149,10 +164,44 @@ class AuthenticationServiceTest {
     @Test
     void shouldThrowWhenOAuth2SubClaimIsMissing() {
         var oAuth2User = mock(OAuth2User.class);
+        when(oAuth2User.getAttribute(StandardClaimNames.SUB)).thenReturn(null);
         when(oAuth2User.getAttribute(StandardClaimNames.EMAIL)).thenReturn("user@email.com");
+        when(oAuth2User.getAttribute(StandardClaimNames.GIVEN_NAME)).thenReturn("given name");
+        when(oAuth2User.getAttribute(StandardClaimNames.FAMILY_NAME)).thenReturn("last name");
 
         assertThatException().isThrownBy(() -> testee.authenticate(oAuth2User))
             .isInstanceOf(IllegalArgumentException.class)
             .withMessage("Missing sub claim in OAuth2 user");
+    }
+
+    @Test
+    void shouldThrowWhenOAuth2EmailClaimIsMissing() {
+        var oAuth2User = mock(OAuth2User.class);
+        when(oAuth2User.getAttribute(StandardClaimNames.SUB)).thenReturn("sub");
+        when(oAuth2User.getAttribute(StandardClaimNames.EMAIL)).thenReturn(null);
+        when(oAuth2User.getAttribute(StandardClaimNames.GIVEN_NAME)).thenReturn("given name");
+        when(oAuth2User.getAttribute(StandardClaimNames.FAMILY_NAME)).thenReturn("last name");
+
+        assertThatException().isThrownBy(() -> testee.authenticate(oAuth2User))
+            .isInstanceOf(IllegalArgumentException.class)
+            .withMessage("Missing email claim in OAuth2 user");
+    }
+
+    @Test
+    void shouldAuthenticateOAuth2User() {
+        var authKey = new AuthKey("auth");
+        var email = "new@email.com";
+        var user = createUser().withAuthKey(authKey).withEmail(email);
+        var oAuth2User = mock(OAuth2User.class);
+        when(oAuth2User.getAttribute(StandardClaimNames.SUB)).thenReturn(authKey.value());
+        when(oAuth2User.getAttribute(StandardClaimNames.EMAIL)).thenReturn(email);
+        when(oAuth2User.getAttribute(StandardClaimNames.GIVEN_NAME)).thenReturn("given name");
+        when(oAuth2User.getAttribute(StandardClaimNames.FAMILY_NAME)).thenReturn("last name");
+
+        when(userService.getUserByAuthKey(authKey)).thenReturn(Optional.of(user));
+        when(userService.updateUser(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var result = testee.authenticate(oAuth2User);
+        assertThat(result.key()).isEqualTo(user.getKey());
     }
 }
