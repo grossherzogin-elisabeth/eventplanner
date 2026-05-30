@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Event } from '@/domain';
-import { useEventService } from '@/domain';
-import { EventState, SlotCriticality } from '@/domain';
+import { EventState, SlotCriticality, useEventService } from '@/domain';
 import { EventService } from '@/domain/services/EventService';
 import {
     CAPTAIN,
@@ -642,7 +641,7 @@ describe('EventService', () => {
             expect(updatedEvent.isInPast).toBe(true);
         });
 
-        it('should set signed in user registration correctly', () => {
+        it('should set signed-in user registration correctly', () => {
             let updatedEvent = testee.updateComputedValues({ ...pastEvent }, userWithAssignment);
             expect(updatedEvent.signedInUserRegistration).toEqual(mockRegistrationCaptain());
             expect(updatedEvent.isSignedInUserAssigned).toBe(true);
@@ -656,7 +655,7 @@ describe('EventService', () => {
             expect(updatedEvent.isSignedInUserAssigned).toBe(false);
         });
 
-        it('should set signed in user assigned slot correctly', () => {
+        it('should set signed-in user assigned slot correctly', () => {
             let updatedEvent = testee.updateComputedValues({ ...pastEvent }, userWithAssignment);
             expect(updatedEvent.signedInUserAssignedSlot).toEqual(pastEvent.slots[0]);
 
@@ -664,56 +663,56 @@ describe('EventService', () => {
             expect(updatedEvent.signedInUserAssignedSlot).toBeUndefined();
         });
 
-        it('should update flags of past event for signed in user with registration correctly', () => {
+        it('should update flags of past event for signed-in user with registration correctly', () => {
             const updatedEvent = testee.updateComputedValues({ ...pastEvent }, userWithRegistration);
             expect(updatedEvent.canSignedInUserJoin).toBe(false);
             expect(updatedEvent.canSignedInUserLeave).toBe(false);
             expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(false);
         });
 
-        it('should update flags of past event for signed in user without registration correctly', () => {
+        it('should update flags of past event for signed-in user without registration correctly', () => {
             const updatedEvent = testee.updateComputedValues({ ...pastEvent }, userWithoutRegistration);
             expect(updatedEvent.canSignedInUserJoin).toBe(false);
             expect(updatedEvent.canSignedInUserLeave).toBe(false);
             expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(false);
         });
 
-        it('should update flags of soon event for signed in user with assigned registration correctly', () => {
+        it('should update flags of soon event for signed-in user with assigned registration correctly', () => {
             const updatedEvent = testee.updateComputedValues({ ...soonEvent }, userWithAssignment);
             expect(updatedEvent.canSignedInUserJoin).toBe(false);
             expect(updatedEvent.canSignedInUserLeave).toBe(false);
             expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
         });
 
-        it('should update flags of soon event for signed in user with registration correctly', () => {
+        it('should update flags of soon event for signed-in user with registration correctly', () => {
             const updatedEvent = testee.updateComputedValues({ ...soonEvent }, userWithRegistration);
             expect(updatedEvent.canSignedInUserJoin).toBe(false);
             expect(updatedEvent.canSignedInUserLeave).toBe(true);
             expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
         });
 
-        it('should update flags of soon event for signed in user without registration correctly', () => {
+        it('should update flags of soon event for signed-in user without registration correctly', () => {
             const updatedEvent = testee.updateComputedValues({ ...soonEvent }, userWithoutRegistration);
             expect(updatedEvent.canSignedInUserJoin).toBe(true);
             expect(updatedEvent.canSignedInUserLeave).toBe(false);
             expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(false);
         });
 
-        it('should update flags of future event for signed in user with assigned registration correctly', () => {
+        it('should update flags of future event for signed-in user with assigned registration correctly', () => {
             const updatedEvent = testee.updateComputedValues({ ...futureEvent }, userWithAssignment);
             expect(updatedEvent.canSignedInUserJoin).toBe(false);
             expect(updatedEvent.canSignedInUserLeave).toBe(true);
             expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
         });
 
-        it('should update flags of future event for signed in user with registration correctly', () => {
+        it('should update flags of future event for signed-in user with registration correctly', () => {
             const updatedEvent = testee.updateComputedValues({ ...futureEvent }, userWithRegistration);
             expect(updatedEvent.canSignedInUserJoin).toBe(false);
             expect(updatedEvent.canSignedInUserLeave).toBe(true);
             expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
         });
 
-        it('should update flags of future event for signed in user without registration correctly', () => {
+        it('should update flags of future event for signed-in user without registration correctly', () => {
             const updatedEvent = testee.updateComputedValues({ ...futureEvent }, userWithoutRegistration);
             expect(updatedEvent.canSignedInUserJoin).toBe(true);
             expect(updatedEvent.canSignedInUserLeave).toBe(false);

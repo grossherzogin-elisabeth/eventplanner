@@ -25,7 +25,13 @@ public class LogRequestsFilter extends OncePerRequestFilter {
         @NonNull final FilterChain filterChain
     )
     throws ServletException, IOException {
-        log.debug("Received request: {} {}", request.getMethod(), request.getRequestURI());
+        log.debug("Received request {} {}", request.getMethod(), request.getRequestURI());
         filterChain.doFilter(request, response);
+        log.debug(
+            "Completed request {} {} with status {}",
+            request.getMethod(),
+            request.getRequestURI(),
+            response.getStatus()
+        );
     }
 }

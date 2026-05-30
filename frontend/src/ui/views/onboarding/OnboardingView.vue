@@ -64,10 +64,13 @@ const { signedInUser } = useSession();
 function init(): void {
     emit('update:tab-title', 'Start');
     if (signedInUser.value?.roles.includes(Role.TEAM_MEMBER)) {
+        console.log(`User has role ${Role.TEAM_MEMBER}, redirecting to home view`);
         router.push({ name: Routes.Home });
     } else if (signedInUser.value?.roles.includes(Role.USER_MANAGER)) {
+        console.log(`User has role ${Role.USER_MANAGER}, redirecting to home view`);
         router.push({ name: Routes.UsersList });
     } else if (signedInUser.value?.roles.includes(Role.EVENT_PLANNER)) {
+        console.log(`User has role ${Role.EVENT_PLANNER}, redirecting to home view`);
         router.push({ name: Routes.EventsListAdmin });
     }
 }

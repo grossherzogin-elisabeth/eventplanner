@@ -41,3 +41,4 @@ security:
 logging:
   level:
     org.eventplanner: DEBUG
+    org.eventplanner.events.domain.entities.events: INFO

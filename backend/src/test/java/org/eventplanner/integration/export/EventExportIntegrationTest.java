@@ -33,9 +33,7 @@ class EventExportIntegrationTest {
 
     @Test
     void shouldReturnAvailableExcelTemplates() {
-        var templates = testee.getAvailableTemplates(
-            createSignedInUser().withRole(Role.ADMIN)
-        );
+        var templates = testee.getAvailableTemplates(createSignedInUser(Role.ADMIN));
 
         assertThat(templates)
             .containsExactlyInAnyOrder("consumption-list", "imo-crew-list", "sample");
@@ -96,7 +94,7 @@ class EventExportIntegrationTest {
 
     private File generateExcelExport(String template) {
         var out = testee.exportEvent(
-            createSignedInUser().withRole(Role.ADMIN),
+            createSignedInUser(Role.ADMIN),
             new EventKey("7fa48570-963a-4e95-b72f-acaf70c70a24"),
             template
         );

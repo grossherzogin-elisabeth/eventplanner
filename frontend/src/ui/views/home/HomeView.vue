@@ -113,11 +113,12 @@ function isNextMonth(date: Date): boolean {
 
 function init(): void {
     emit('update:tab-title', i18n.t('views.home.tab-title'));
-    if (user.permissions.includes(Permission.READ_EVENTS)) {
-        fetchEvents();
-    } else {
+    if (!user.permissions.includes(Permission.READ_EVENTS)) {
+        console.log('User has no role assigned, redirecting to onboarding view');
         router.push({ name: Routes.Onboarding });
+        return;
     }
+    fetchEvents();
 }
 
 async function fetchEvents(): Promise<void> {

@@ -8,6 +8,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -45,13 +46,15 @@ public class WebConfig implements WebMvcConfigurer {
         protected @NonNull Resource getResource(@NonNull String resourcePath, @NonNull Resource location)
         throws IOException {
             if (resourcePath.startsWith("/api/")) {
+                // this branch only triggers for routes that are not mapped to any endpoint -> 404
                 var auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
+                if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
                     throw new UnauthorizedException("Authentication required");
                 } else {
-                    throw new NoSuchElementException("No such endpoint");
+                    throw new NoSuchElementException("Resource not found");
                 }
             }
+            // return frontend resources
             Resource requestedResource = location.createRelative(resourcePath);
             return requestedResource.exists() && requestedResource.isReadable()
                 ? requestedResource

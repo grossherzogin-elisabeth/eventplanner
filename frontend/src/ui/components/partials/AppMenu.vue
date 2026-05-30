@@ -154,7 +154,7 @@ const eventsExpanded = ref<boolean>(false);
 
 function init(): void {
     authUseCase
-        .authenticate()
+        .authenticate(true)
         .then(() => (loading.value = false))
         .catch(() => (loading.value = false));
     watch(route, () => {
