@@ -1,6 +1,7 @@
 package org.eventplanner.testdata;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -12,7 +13,9 @@ import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.params.shadow.de.siegmar.fastcsv.util.Nullable;
+import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public class SignedInUserFactory {
     public static @NonNull SignedInUser createSignedInUser(@Nullable Role... roles) {
@@ -28,5 +31,33 @@ public class SignedInUserFactory {
             Instant.now(),
             mock(OidcUser.class)
         );
+    }
+
+    public static @NonNull OidcUser mockOidcUser(
+        @NonNull String sub,
+        @NonNull String email,
+        @NonNull String firstName,
+        @NonNull String lastName
+    ) {
+        var oidcUser = mock(OidcUser.class);
+        when(oidcUser.getSubject()).thenReturn(sub);
+        when(oidcUser.getEmail()).thenReturn(email);
+        when(oidcUser.getGivenName()).thenReturn(firstName);
+        when(oidcUser.getFamilyName()).thenReturn(lastName);
+        return oidcUser;
+    }
+
+    public static @NonNull OAuth2User mockOAuth2User(
+        @NonNull String sub,
+        @NonNull String email,
+        @NonNull String firstName,
+        @NonNull String lastName
+    ) {
+        var oAuth2User = mock(OAuth2User.class);
+        when(oAuth2User.getAttribute(StandardClaimNames.SUB)).thenReturn(sub);
+        when(oAuth2User.getAttribute(StandardClaimNames.EMAIL)).thenReturn(email);
+        when(oAuth2User.getAttribute(StandardClaimNames.GIVEN_NAME)).thenReturn(firstName);
+        when(oAuth2User.getAttribute(StandardClaimNames.FAMILY_NAME)).thenReturn(lastName);
+        return oAuth2User;
     }
 }
