@@ -143,7 +143,8 @@ public class GlobalExceptionHandlingController {
         @NonNull final HttpMessageNotReadableException exception,
         @NonNull final HttpServletRequest request
     ) {
-        var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMostSpecificCause().getMessage());
+        log.warn("Unreadable request body on {} {}", request.getMethod(), request.getRequestURI(), exception);
+        var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request is invalid");
         body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(body.getStatus()).body(body);
     }

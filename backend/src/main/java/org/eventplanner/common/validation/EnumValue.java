@@ -67,7 +67,7 @@ public @interface EnumValue {
 
             if (value instanceof Iterable<?> values) {
                 for (final Object v : values) {
-                    if (!isValid(v, context)) {
+                    if (v == null || !isValid(v, context)) {
                         return false;
                     }
                 }
