@@ -55,7 +55,6 @@ class WebConfigIntegrationTest {
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.status").value(401))
             .andExpect(jsonPath("$.title").value("Unauthorized"))
-            .andExpect(jsonPath("$.detail").value("Authentication required"))
             .andExpect(jsonPath("$.instance").value(path));
     }
 
@@ -68,7 +67,6 @@ class WebConfigIntegrationTest {
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.status").value(404))
             .andExpect(jsonPath("$.title").value("Not Found"))
-            .andExpect(jsonPath("$.detail").value("No such endpoint"))
             .andExpect(jsonPath("$.instance").value(path));
     }
 

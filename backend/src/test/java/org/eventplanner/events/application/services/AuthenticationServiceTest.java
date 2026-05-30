@@ -79,7 +79,7 @@ class AuthenticationServiceTest {
         var result = testee.authenticate(oidcUser);
 
         assertThat(result.authKey()).isEqualTo(authKey);
-        verify(userService).updateUser(argThat((updateRequest) ->
+        verify(userService).updateUser(argThat(updateRequest ->
             Objects.equals(user.getEmail(), updateRequest.getEmail())
                 && Objects.equals(authKey, updateRequest.getAuthKey())));
     }
@@ -131,7 +131,7 @@ class AuthenticationServiceTest {
         testee.authenticate(oidcUser);
 
         verify(userService, never()).updateUser(
-            argThat((updateRequest) -> updateRequest.getRoles().contains(Role.ADMIN)));
+            argThat(updateRequest -> updateRequest.getRoles().contains(Role.ADMIN)));
     }
 
     @Test
@@ -154,7 +154,7 @@ class AuthenticationServiceTest {
         assertThat(result.firstName()).isEqualTo(firstName);
         assertThat(result.lastName()).isEqualTo(lastName);
 
-        verify(userService).createUser(argThat((createRequest) ->
+        verify(userService).createUser(argThat(createRequest ->
             Objects.equals(authKey, createRequest.getAuthKey())
                 && Objects.equals(email, createRequest.getEmail())
                 && Objects.equals(firstName, createRequest.getFirstName())

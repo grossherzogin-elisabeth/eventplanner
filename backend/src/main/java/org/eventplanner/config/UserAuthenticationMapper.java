@@ -37,7 +37,7 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
     private final UserService userService;
     private final ConcurrentHashMap<String, Object> authenticationMutexes = new ConcurrentHashMap<>();
 
-    @Scheduled(cron = "0 0 0 * * *") // every hour
+    @Scheduled(cron = "0 0 0 * * *")
     private void clearMutexes() {
         log.info("Clearing authentication mutexes");
         authenticationMutexes.clear();
@@ -89,10 +89,7 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
         if (key == null) {
             return null;
         }
-        if (!authenticationMutexes.containsKey(key)) {
-            authenticationMutexes.put(key, new Object());
-        }
-        return authenticationMutexes.get(key);
+        return authenticationMutexes.computeIfAbsent(key, _ -> new Object());
     }
 
     private void refreshSignedInUser(@NonNull SignedInUser signedInUser) {
