@@ -1,11 +1,8 @@
 package org.eventplanner.events.rest.registrations.dto;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.io.Serializable;
 
 import org.eventplanner.events.domain.entities.events.Registration;
-import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -27,7 +24,9 @@ public record RegistrationRepresentation(
         return new RegistrationRepresentation(
             domain.getKey().value(),
             domain.getPosition().value(),
-            mapNullable(domain.getUserKey(), UserKey::value),
+            domain.getUserKey() != null
+                ? domain.getUserKey().value()
+                : null,
             domain.getName(),
             domain.getNote(),
             domain.getConfirmedAt() != null ? true : null,

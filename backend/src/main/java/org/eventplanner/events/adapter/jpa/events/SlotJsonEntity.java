@@ -1,7 +1,5 @@
 package org.eventplanner.events.adapter.jpa.events;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +26,9 @@ public record SlotJsonEntity(
             domain.getCriticality(),
             domain.getPositions().stream().map(PositionKey::value).toList(),
             domain.getName(),
-            mapNullable(domain.getAssignedRegistration(), RegistrationKey::value)
+            domain.getAssignedRegistration() != null
+                ? domain.getAssignedRegistration().value()
+                : null
         );
     }
 
@@ -41,7 +41,9 @@ public record SlotJsonEntity(
                 ? positions.stream().map(PositionKey::new).toList()
                 : Collections.emptyList(),
             name,
-            mapNullable(assignedRegistration, RegistrationKey::new)
+            assignedRegistration != null
+                ? new RegistrationKey(assignedRegistration)
+                : null
         );
     }
 }

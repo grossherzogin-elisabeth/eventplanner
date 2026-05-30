@@ -1,7 +1,5 @@
 package org.eventplanner.events.rest.events.dto;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,7 +26,9 @@ public record EventSlotRepresentation(
             domain.getCriticality(),
             domain.getPositions().stream().map((PositionKey::value)).toList(),
             domain.getName(),
-            mapNullable(domain.getAssignedRegistration(), RegistrationKey::value)
+            domain.getAssignedRegistration() != null
+                ? domain.getAssignedRegistration().value()
+                : null
         );
     }
 
@@ -39,7 +39,9 @@ public record EventSlotRepresentation(
             criticality,
             positionKeys().stream().map((PositionKey::new)).toList(),
             name,
-            mapNullable(assignedRegistrationKey, RegistrationKey::new)
+            assignedRegistrationKey != null
+                ? new RegistrationKey(assignedRegistrationKey)
+                : null
         );
     }
 }
