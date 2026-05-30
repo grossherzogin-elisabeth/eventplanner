@@ -95,7 +95,7 @@ public class AuthenticationService {
             user.setEmail(email);
         }
 
-        log.debug("Authenticated user {}", user.getKey());
+        log.info("Authenticated user {}", user.getKey());
         // save changes
         userService.updateUser(user);
         if (admins.contains(user.getEmail()) && !user.getRoles().contains(Role.ADMIN)) {

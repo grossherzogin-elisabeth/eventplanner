@@ -33,6 +33,15 @@ public class SignedInUserFactory {
         );
     }
 
+    public static @NonNull OidcUser mockOidcUser(@NonNull SignedInUser signedInUser) {
+        return mockOidcUser(
+            signedInUser.authKey().value(),
+            signedInUser.email(),
+            signedInUser.firstName(),
+            signedInUser.lastName()
+        );
+    }
+
     public static @NonNull OidcUser mockOidcUser(
         @NonNull String sub,
         @NonNull String email,
