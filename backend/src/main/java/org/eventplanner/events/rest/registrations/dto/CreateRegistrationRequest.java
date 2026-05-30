@@ -1,7 +1,5 @@
 package org.eventplanner.events.rest.registrations.dto;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -30,7 +28,7 @@ public record CreateRegistrationRequest(
             new RegistrationKey(registrationKey),
             eventKey,
             new PositionKey(positionKey),
-            mapNullable(userKey, UserKey::new),
+            userKey != null ? new UserKey(userKey) : null,
             name,
             note,
             isSelfSignup,

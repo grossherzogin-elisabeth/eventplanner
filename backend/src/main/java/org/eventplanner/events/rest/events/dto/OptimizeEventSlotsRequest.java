@@ -1,7 +1,5 @@
 package org.eventplanner.events.rest.events.dto;
 
-import static org.eventplanner.common.ObjectUtils.mapNullable;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public record OptimizeEventSlotsRequest(
                 return new Registration(
                     key,
                     new PositionKey(it.positionKey()),
-                    mapNullable(it.userKey(), UserKey::new),
+                    it.userKey() != null ? new UserKey(it.userKey()) : null,
                     it.name(),
                     it.note(),
                     originalRegistration.map(Registration::getAccessKey).orElse(null),

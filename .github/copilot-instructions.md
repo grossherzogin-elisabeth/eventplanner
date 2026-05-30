@@ -22,10 +22,12 @@
 - Single Spring Boot service serving REST APIs and the built Vue frontend. Local dev runs Vue on Vite and proxies to the backend.
 
 ## Tech stack
-- Backend: Java 25, Spring Boot 3.5, Hibernate, Flyway, SQLite, Freemarker, Lombok, Micrometer/Prometheus, Apache POI. Build via Gradle wrapper.
+- Backend: Java 25, Spring Boot 4.0.6, Hibernate, Flyway, SQLite, Freemarker, Lombok, Micrometer/Prometheus, Apache POI. Build via Gradle wrapper.
 - Frontend: Vue 3 + TypeScript, Vite, Tailwind CSS, PWA (vite-plugin-pwa), ESLint + Prettier, Vitest + happy-dom + MSW.
 - Docker: Multi-stage (Node 24, Temurin JDK 25), one container serving both.
 - CI: GitHub Actions (lint, typecheck, build, tests, coverage, Docker, SonarCloud).
+
+Version source of truth: use `backend/build.gradle` for backend framework/library versions if this document and build files differ.
 
 ## Repository map
 - Root: Dockerfile, Dockerfile-local, build_docker.sh, README.md, .tool-versions, `.github/` (workflows, CODEOWNERS, dependabot, this file).
