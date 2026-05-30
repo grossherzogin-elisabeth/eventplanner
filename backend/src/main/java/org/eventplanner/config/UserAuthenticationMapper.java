@@ -3,6 +3,7 @@ package org.eventplanner.config;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.UserService;
@@ -10,6 +11,7 @@ import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -33,6 +35,13 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
     private static final Duration CACHING_DURATION = Duration.ofMinutes(1);
     private final AuthenticationService authService;
     private final UserService userService;
+    private final ConcurrentHashMap<String, Object> authenticationMutexes = new ConcurrentHashMap<>();
+
+    @Scheduled(cron = "0 0 0 * * *") // every hour
+    private void clearMutexes() {
+        log.info("Clearing authentication mutexes");
+        authenticationMutexes.clear();
+    }
 
     @Override
     protected void doFilterInternal(
@@ -65,22 +74,25 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
     }
 
     private @Nullable Object getAuthenticationMutex(@Nullable Authentication authentication) {
+        String key = null;
         if (authentication instanceof SignedInUser signedInUser) {
-            return signedInUser.authKey().value().intern();
+            key = signedInUser.authKey().value();
         }
         if (authentication instanceof OAuth2AuthenticationToken oAuth2AuthenticationToken) {
             var principal = oAuth2AuthenticationToken.getPrincipal();
-            String sub = null;
             if (principal instanceof OidcUser oidcUser) {
-                sub = oidcUser.getSubject();
+                key = oidcUser.getSubject();
             } else if (principal instanceof OAuth2User oAuth2User) {
-                sub = oAuth2User.getAttribute(StandardClaimNames.SUB);
-            }
-            if (sub != null) {
-                return sub.intern();
+                key = oAuth2User.getAttribute(StandardClaimNames.SUB);
             }
         }
-        return null;
+        if (key == null) {
+            return null;
+        }
+        if (!authenticationMutexes.containsKey(key)) {
+            authenticationMutexes.put(key, new Object());
+        }
+        return authenticationMutexes.get(key);
     }
 
     private void refreshSignedInUser(@NonNull SignedInUser signedInUser) {
