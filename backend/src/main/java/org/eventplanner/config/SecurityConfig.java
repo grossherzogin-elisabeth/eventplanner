@@ -27,7 +27,7 @@ public class SecurityConfig {
     private final UserAuthenticationMapper userAuthenticationMapper;
     private final LogSignedInUserKeyFilter logSignedInUserKeyFilter;
     private final LogRequestsFilter logRequestsFilter;
-    private boolean enableCSRF;
+    private final boolean enableCSRF;
 
     public SecurityConfig(
         @NonNull @Autowired final OAuthClientConfig oAuthClientConfig,

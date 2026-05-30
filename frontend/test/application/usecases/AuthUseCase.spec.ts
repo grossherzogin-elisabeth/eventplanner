@@ -74,7 +74,7 @@ describe('AuthUseCase', () => {
         });
     });
 
-    it('should fetch account and store signed in user when no cached session exists', async () => {
+    it('should fetch account and store signed-in user when no cached session exists', async () => {
         const signedInUser = mockSignedInUser({ firstName: 'Nina' });
         accountRepository.getAccount = vi.fn(async () => signedInUser);
 
@@ -101,7 +101,7 @@ describe('AuthUseCase', () => {
         expect(notificationService.warning).toHaveBeenCalled();
     });
 
-    it('should clear signed in user on unauthorized fetch errors', async () => {
+    it('should clear signed-in user on unauthorized fetch errors', async () => {
         accountRepository.getAccount = vi.fn(async () => {
             throw { status: 401 };
         });

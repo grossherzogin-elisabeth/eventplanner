@@ -137,7 +137,7 @@ describe('EventUseCase', () => {
         expect(result).toEqual(saved);
     });
 
-    it('should skip join registration creation when signed in user is already registered', async () => {
+    it('should skip join registration creation when signed-in user is already registered', async () => {
         const event = mockEvent({ key: 'event-1', registrations: [mockRegistrationDeckhand({ userKey: 'mocked' })] });
         const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
 

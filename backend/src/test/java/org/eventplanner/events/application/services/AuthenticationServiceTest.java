@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,6 +67,25 @@ class AuthenticationServiceTest {
         verify(userService).updateUser(argThat((updateRequest) ->
             Objects.equals(user.getEmail(), updateRequest.getEmail())
                 && Objects.equals(authKey, updateRequest.getAuthKey())));
+    }
+
+    @Test
+    void shouldPreventRelinkingUserToDifferentAuthKeyWhenFoundByEmail() {
+        var existingAuthKey = new AuthKey("existing-auth");
+        var incomingAuthKey = new AuthKey("incoming-auth");
+        var email = "someones@email.com";
+        var user = createUser().withAuthKey(existingAuthKey).withEmail(email);
+
+        when(userService.getUserByAuthKey(incomingAuthKey)).thenReturn(Optional.empty());
+        when(userService.getUserByEmail(email)).thenReturn(Optional.of(user));
+
+        var oidcUser = mockOidcUser("incoming-auth", email, user.getFirstName(), user.getLastName());
+
+        assertThatException().isThrownBy(() -> testee.authenticate(oidcUser))
+            .isInstanceOf(UnauthorizedException.class);
+
+        verify(userService, never()).updateUser(any());
+        verify(userService, never()).createUser(any());
     }
 
     @Test

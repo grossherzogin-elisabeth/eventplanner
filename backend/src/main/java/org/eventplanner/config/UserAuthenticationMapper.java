@@ -47,7 +47,7 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
             synchronized (authenticationMutex) {
                 authentication = SecurityContextHolder.getContext().getAuthentication();
                 if (authentication instanceof OAuth2AuthenticationToken oAuth2AuthenticationToken) {
-                    log.debug("Mapping oauth authentication to signed in user");
+                    log.debug("Mapping oauth authentication to signed-in user");
                     var principal = oAuth2AuthenticationToken.getPrincipal();
                     if (principal instanceof OidcUser oidcUser) {
                         SecurityContextHolder.getContext().setAuthentication(authService.authenticate(oidcUser));
@@ -56,7 +56,7 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
                     }
                 } else if (authentication instanceof SignedInUser signedInUser
                     && signedInUser.loginAt().isBefore(Instant.now().minus(CACHING_DURATION))) {
-                    log.debug("Refreshing signed in user, because session is older than {}", CACHING_DURATION);
+                    log.debug("Refreshing signed-in user, because session is older than {}", CACHING_DURATION);
                     refreshSignedInUser(signedInUser);
                 }
             }
@@ -86,7 +86,7 @@ public class UserAuthenticationMapper extends OncePerRequestFilter {
     private void refreshSignedInUser(@NonNull SignedInUser signedInUser) {
         var user = userService.getUserByKey(signedInUser.key());
         if (user.isEmpty()) {
-            log.error("Signed in user with key {} does no longer exist", signedInUser.key());
+            log.error("Signed-in user with key {} does no longer exist", signedInUser.key());
             SecurityContextHolder.getContext().setAuthentication(null);
             throw new UnauthorizedException();
         }

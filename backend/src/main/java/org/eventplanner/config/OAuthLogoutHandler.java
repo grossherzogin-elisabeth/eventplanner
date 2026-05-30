@@ -50,7 +50,7 @@ public class OAuthLogoutHandler implements LogoutHandler {
                 log.debug("User is already logged out");
                 response.sendRedirect(logoutSuccessUrl);
             } else if (authentication instanceof SignedInUser signedInUser) {
-                log.info("Logging out signed in user");
+                log.info("Logging out signed-in user");
                 response.sendRedirect(logout(signedInUser));
             } else {
                 log.warn(
@@ -76,7 +76,7 @@ public class OAuthLogoutHandler implements LogoutHandler {
     }
 
     private @NonNull String logout(@NonNull OidcUser oidcUser) {
-        log.debug("Logging out OIDC user");
+        log.debug("Logging out oidc user");
         // get the registration id for the users issuer
         var issuer = oidcUser.getIdToken().getIssuer().toString();
         var registrationId = oAuth2ClientProperties.getProvider().entrySet().stream()

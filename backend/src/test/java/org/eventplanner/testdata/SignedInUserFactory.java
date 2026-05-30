@@ -12,7 +12,7 @@ import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.params.shadow.de.siegmar.fastcsv.util.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;

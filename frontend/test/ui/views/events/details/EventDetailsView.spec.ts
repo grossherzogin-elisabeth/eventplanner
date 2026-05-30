@@ -1,8 +1,8 @@
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
 import type { VueWrapper } from '@vue/test-utils';
-import { HttpResponse, http } from 'msw';
+import { mount } from '@vue/test-utils';
+import { http, HttpResponse } from 'msw';
 import type { EventRepresentation, RegistrationRepresentation } from '@/adapter/rest/EventRestRepository';
 import { useAuthUseCase } from '@/application';
 import type { SignedInUser } from '@/domain';
@@ -36,7 +36,7 @@ describe('EventDetailsView.vue', () => {
         await router.push({ name: Routes.EventDetails, params: { year, key: 'example-event' } });
     });
 
-    describe('Signed in user is not registered', () => {
+    describe('Signed-in user is not registered', () => {
         beforeEach(async () => {
             testee = mount(EventDetailsView, { global: { plugins: [router] } });
         });
@@ -67,7 +67,7 @@ describe('EventDetailsView.vue', () => {
         });
     });
 
-    describe('Signed in user is on waiting list', () => {
+    describe('Signed-in user is on waiting list', () => {
         beforeEach(async () => {
             const registration: RegistrationRepresentation = {
                 key: 'signed-in-user-regitration-key',

@@ -86,12 +86,21 @@ public class AuthenticationService {
         // store login time
         user.setLastLoginAt(Instant.now());
 
+        if (user.getAuthKey() != null && !authKey.equals(user.getAuthKey())) {
+            log.error(
+                "Prevented linking user {} with external user {}, because user is already linked to external user {}",
+                user.getKey(),
+                authKey,
+                user.getAuthKey()
+            );
+            throw new UnauthorizedException();
+        }
         // check if user needs to be linked
         if (user.getAuthKey() == null) {
-            log.info("Linking user {} with oidc user {} by email", user.getKey(), authKey);
+            log.info("Linking user {} with external user {} by email", user.getKey(), authKey);
             user.setAuthKey(authKey);
         } else if (!Objects.equals(user.getEmail(), email)) {
-            log.info("Updating email of user {} to match linked oidc user", user.getKey());
+            log.info("Updating email of user {} to match linked external user", user.getKey());
             user.setEmail(email);
         }
 
@@ -99,7 +108,7 @@ public class AuthenticationService {
         // save changes
         userService.updateUser(user);
         if (admins.contains(user.getEmail()) && !user.getRoles().contains(Role.ADMIN)) {
-            log.info("Signed in user has been temporary made admin by configuration");
+            log.info("Temporarily granting admin role to signed-in user via configuration");
             var roles = new ArrayList<>(user.getRoles());
             roles.add(Role.ADMIN);
             user = user.withRoles(roles);

@@ -58,13 +58,13 @@ describe('EventsListView.vue', () => {
                 end: '2024-06-08T16:00',
             }),
             mockEventRepresentation({
-                name: 'event with signed in user on waiting list',
+                name: 'event with signed-in user on waiting list',
                 start: '2024-07-05T16:00',
                 end: '2024-07-08T16:00',
                 registrations: [{ key: 'reg-1-key', positionKey: DECKHAND, userKey: signedInUser.key }],
             }),
             mockEventRepresentation({
-                name: 'event with signed in user in crew',
+                name: 'event with signed-in user in crew',
                 start: '2024-08-05T16:00',
                 end: '2024-08-08T16:00',
                 registrations: [{ key: 'reg-2-key', positionKey: DECKHAND, userKey: signedInUser.key }],
@@ -126,7 +126,7 @@ describe('EventsListView.vue', () => {
         await testee.find('[data-test-id="filter-waiting-list"]').trigger('click');
         const rows = testee.findAll('tbody tr');
         expect(rows).toHaveLength(1);
-        expect(rows[0].text()).toContain('event with signed in user on waiting list');
+        expect(rows[0].text()).toContain('event with signed-in user on waiting list');
     });
 
     it('should filter events to show only assigned events', async () => {
@@ -134,7 +134,7 @@ describe('EventsListView.vue', () => {
         await testee.find('[data-test-id="filter-assigned"]').trigger('click');
         const rows = testee.findAll('tbody tr');
         expect(rows).toHaveLength(1);
-        expect(rows[0].text()).toContain('event with signed in user in crew');
+        expect(rows[0].text()).toContain('event with signed-in user in crew');
     });
 
     it('should show events of current year', async () => {

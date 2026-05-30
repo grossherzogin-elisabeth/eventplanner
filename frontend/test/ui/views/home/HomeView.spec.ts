@@ -1,7 +1,7 @@
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
 import type { VueWrapper } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { useAuthUseCase } from '@/application';
@@ -36,7 +36,7 @@ describe('HomeView.vue', () => {
             }),
             mockEventRepresentation({
                 key: 'b',
-                name: 'event without registration for signed in user should not be visible',
+                name: 'event without registration for signed-in user should not be visible',
                 start: '2024-03-05T16:00',
                 end: '2024-03-08T16:00',
                 registrations: [],

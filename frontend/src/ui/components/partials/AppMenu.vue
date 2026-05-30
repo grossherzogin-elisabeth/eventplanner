@@ -139,7 +139,6 @@ import { Permission } from '@/domain';
 import { VInfo } from '@/ui/components/common';
 import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes';
-import type { RouteMetaData } from '@/ui/model/RouteMetaData.ts';
 
 const menuTitle = useConfigService().getConfig().menuTitle;
 const authUseCase = useAuthUseCase();
