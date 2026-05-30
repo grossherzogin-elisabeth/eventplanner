@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,7 +34,7 @@ public class PositionController {
     private final PositionUseCase positionUseCase;
 
     @PostMapping("")
-    public ResponseEntity<PositionRepresentation> createPosition(@RequestBody CreatePositionRequest spec) {
+    public ResponseEntity<PositionRepresentation> createPosition(@Valid @RequestBody CreatePositionRequest spec) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 
         var positionSpec = spec.toDomain();
@@ -54,7 +55,7 @@ public class PositionController {
     @PutMapping("/{positionKey}")
     public ResponseEntity<PositionRepresentation> updatePosition(
         @PathVariable String positionKey,
-        @RequestBody UpdatePositionRequest spec
+        @Valid @RequestBody UpdatePositionRequest spec
     ) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
 

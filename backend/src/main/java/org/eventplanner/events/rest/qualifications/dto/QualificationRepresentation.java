@@ -8,12 +8,14 @@ import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import jakarta.validation.constraints.NotNull;
+
 public record QualificationRepresentation(
-    @NonNull String key,
-    @NonNull String name,
+    @NonNull @NotNull String key,
+    @NonNull @NotNull String name,
     @Nullable String icon,
     @Nullable String description,
-    @NonNull Boolean expires,
+    @NonNull @NotNull Boolean expires,
     @Nullable List<String> grantsPositions
 ) implements Serializable {
 

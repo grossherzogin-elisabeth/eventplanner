@@ -79,6 +79,9 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
 
     @Override
     public void deleteByKey(@NonNull final UserKey key) {
+        if (!encrypedUserDetailsJpaRepository.existsById(key.value())) {
+            throw new NoSuchElementException("User with key " + key.value() + " does not exist");
+        }
         encrypedUserDetailsJpaRepository.deleteById(key.value());
     }
 }

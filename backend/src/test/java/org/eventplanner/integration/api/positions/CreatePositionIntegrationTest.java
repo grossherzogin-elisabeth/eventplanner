@@ -1,18 +1,15 @@
-package org.eventplanner.integration.api.users;
+package org.eventplanner.integration.api.positions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testutil.TestUser.withAuthentication;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.eventplanner.config.JsonMapperFactory;
-import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
-import org.eventplanner.events.rest.users.dto.CreateUserRequest;
-import org.eventplanner.events.rest.users.dto.UserDetailsRepresentation;
+import org.eventplanner.events.adapter.jpa.positions.PositionJpaRepository;
+import org.eventplanner.events.rest.positions.dto.PositionRepresentation;
 import org.eventplanner.testutil.TestResources;
 import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +24,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles(profiles = { "test" })
 @AutoConfigureMockMvc
 @Transactional // resets db changes after each test
-class CreateUserIntegrationTest {
+class CreatePositionIntegrationTest {
 
     private MockMvc webMvc;
 
@@ -43,7 +39,7 @@ class CreateUserIntegrationTest {
     private WebApplicationContext context;
 
     @Autowired
-    private EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository;
+    private PositionJpaRepository positionJpaRepository;
 
     @BeforeEach
     void setup() {
@@ -54,8 +50,8 @@ class CreateUserIntegrationTest {
 
     @Test
     void shouldRequireAuthentication() throws Exception {
-        var requestBody = TestResources.getString("/integration/api/users/create-user-request.json");
-        webMvc.perform(post("/api/v1/users")
+        var requestBody = TestResources.getString("/integration/api/positions/create-position-request.json");
+        webMvc.perform(post("/api/v1/positions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
@@ -64,8 +60,8 @@ class CreateUserIntegrationTest {
 
     @Test
     void shouldRequireAuthorization() throws Exception {
-        var requestBody = TestResources.getString("/integration/api/users/create-user-request.json");
-        webMvc.perform(post("/api/v1/users")
+        var requestBody = TestResources.getString("/integration/api/positions/create-position-request.json");
+        webMvc.perform(post("/api/v1/positions")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -75,45 +71,45 @@ class CreateUserIntegrationTest {
 
     @Test
     void shouldReturnValidationErrors() throws Exception {
-        var requestBody = "{}";
-        webMvc.perform(post("/api/v1/users")
+        var requestBody = "{ \"name\": \"\" }";
+        webMvc.perform(post("/api/v1/positions")
                 .with(withAuthentication(TestUser.ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors").isMap())
-            .andExpect(jsonPath("$.errors.firstName").value("must not be blank"))
-            .andExpect(jsonPath("$.errors.lastName").value("must not be blank"))
-            .andExpect(jsonPath("$.errors.email").value("must not be blank"));
+            .andExpect(jsonPath("$.errors.name").value("must not be blank"))
+            .andExpect(jsonPath("$.errors.color").value("must not be blank"))
+            .andExpect(jsonPath("$.errors.prio").value("must not be null"))
+            .andExpect(jsonPath("$.errors.imoListRank").value("must not be blank"));
     }
 
     @Test
-    void shouldCreateNewUser() throws Exception {
-        JsonMapper jsonMapper = JsonMapperFactory.defaultJsonMapper();
+    void shouldCreateNewPosition() throws Exception {
+        var jsonMapper = JsonMapperFactory.defaultJsonMapper();
 
-        var requestBody = TestResources.getString("/integration/api/users/create-user-request.json");
-        var request = jsonMapper.readValue(requestBody, CreateUserRequest.class);
-        var createUserResponse = webMvc.perform(post("/api/v1/users")
+        var requestBody = TestResources.getString("/integration/api/positions/create-position-request.json");
+        var createResponse = webMvc.perform(post("/api/v1/positions")
                 .with(withAuthentication(TestUser.ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.firstName").value(request.firstName()))
-            .andExpect(jsonPath("$.lastName").value(request.lastName()))
-            .andExpect(jsonPath("$.email").value(request.email()))
+            .andExpect(jsonPath("$.name").value("Test Position"))
+            .andExpect(jsonPath("$.color").value("#FF0000"))
+            .andExpect(jsonPath("$.prio").value(75))
+            .andExpect(jsonPath("$.imoListRank").value("TestRank"))
+            .andExpect(jsonPath("$.key").exists())
             .andReturn().getResponse().getContentAsString();
 
-        // verify user exist in database
-        var createdUser = jsonMapper.readValue(createUserResponse, UserDetailsRepresentation.class);
-        assertThat(encrypedUserDetailsJpaRepository.existsById(createdUser.key())).isTrue();
+        var created = jsonMapper.readValue(createResponse, PositionRepresentation.class);
 
-        // verify create user returns same response as the user details request
-        webMvc.perform(get("/api/v1/users/" + createdUser.key())
-                .with(withAuthentication(TestUser.ADMIN))
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string(createUserResponse));
+        var persisted = positionJpaRepository.findById(created.key());
+        assertThat(persisted).isPresent();
+        assertThat(persisted.orElseThrow().getName()).isEqualTo("Test Position");
+        assertThat(persisted.orElseThrow().getColor()).isEqualTo("#FF0000");
+        assertThat(persisted.orElseThrow().getPrio()).isEqualTo(75);
+        assertThat(persisted.orElseThrow().getImoListRank()).isEqualTo("TestRank");
     }
 }
