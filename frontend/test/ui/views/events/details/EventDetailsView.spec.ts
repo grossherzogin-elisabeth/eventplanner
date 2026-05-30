@@ -2,7 +2,7 @@ import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 import type { EventRepresentation, RegistrationRepresentation } from '@/adapter/rest/EventRestRepository';
 import { useAuthUseCase } from '@/application';
 import type { SignedInUser } from '@/domain';
