@@ -70,6 +70,17 @@ class UpdateUserIntegrationTest {
     }
 
     @Test
+    void shouldRejectMalformedJson() throws Exception {
+        var requestBody = "{ invalid: json }";
+        webMvc.perform(patch("/api/v1/users/" + TestUser.USER_WITHOUT_ROLE)
+                .with(withAuthentication(TestUser.ADMIN))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void shouldReturnValidationErrors() throws Exception {
         var requestBody = """
             {
