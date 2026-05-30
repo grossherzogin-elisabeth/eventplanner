@@ -93,7 +93,7 @@ public class EventController {
     }
 
     @PostMapping("")
-    public ResponseEntity<EventRepresentation> createEvent(@RequestBody @Valid CreateEventRequest spec) {
+    public ResponseEntity<EventRepresentation> createEvent(@Valid @RequestBody CreateEventRequest spec) {
         var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
         var event = eventUseCase.createEvent(signedInUser, spec.toDomain());
         return ResponseEntity.status(HttpStatus.CREATED).body(EventRepresentation.fromDomain(event));
