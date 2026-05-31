@@ -20,7 +20,7 @@ describe('EventCreateDlg.vue', () => {
         result = undefined;
         closed = false;
         createFunc = vi.spyOn(useEventAdministrationUseCase(), 'createEvent');
-        useEventCachingService().clear();
+        await useEventCachingService().clear();
         testee = mount(EventCreateDlg);
         await open();
     });
