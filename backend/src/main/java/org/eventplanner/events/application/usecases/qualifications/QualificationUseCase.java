@@ -1,13 +1,12 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.qualifications;
 
 import java.util.List;
 
 import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
-import org.eventplanner.events.domain.entities.users.SignedInUser;
-import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -20,31 +19,27 @@ public class QualificationUseCase {
 
     private final QualificationRepository qualificationRepository;
 
-    public @NonNull List<Qualification> getQualifications(@NonNull final SignedInUser signedInUser) {
-        signedInUser.assertHasPermission(Permission.READ_QUALIFICATIONS);
-
+    @PreAuthorize("hasAuthority('qualifications:read')")
+    public @NonNull List<Qualification> getQualifications() {
+        log.debug("Reading qualifications");
         return this.qualificationRepository.findAll();
     }
 
+    @PreAuthorize("hasAuthority('qualifications:write')")
     public @NonNull Qualification createQualification(
-        @NonNull final SignedInUser signedInUser,
         @NonNull final Qualification qualification
     ) {
-        signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
-
         qualification.setKey(new QualificationKey());
         log.info("Creating qualification {}", qualification.getKey());
         qualificationRepository.create(qualification);
         return qualification;
     }
 
+    @PreAuthorize("hasAuthority('qualifications:write')")
     public @NonNull Qualification updateQualification(
-        @NonNull final SignedInUser signedInUser,
         @NonNull final QualificationKey qualificationKey,
         @NonNull final Qualification qualification
     ) {
-        signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
-
         if (!qualificationKey.equals(qualification.getKey())) {
             throw new IllegalArgumentException("Keys cannot be changed");
         }
@@ -54,12 +49,10 @@ public class QualificationUseCase {
         return qualification;
     }
 
+    @PreAuthorize("hasAuthority('qualifications:write')")
     public void deleteQualification(
-        @NonNull final SignedInUser signedInUser,
         @NonNull final QualificationKey qualificationKey
     ) {
-        signedInUser.assertHasPermission(Permission.WRITE_QUALIFICATIONS);
-
         log.info("Deleting qualification {}", qualificationKey);
         // TODO remove qualification from all users
         // TODO might want soft delete here
