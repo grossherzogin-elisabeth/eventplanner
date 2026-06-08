@@ -19,7 +19,10 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -44,6 +47,22 @@ public class AuthenticationService {
         } else {
             this.admins = Collections.emptyList();
         }
+    }
+
+    public @NonNull SignedInUser getSignedInUser() {
+        return getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+    }
+
+    public @NonNull SignedInUser getSignedInUser(@Nullable final Authentication authentication)
+    throws UnauthorizedException {
+        if (authentication instanceof SignedInUser signedInUser) {
+            return signedInUser;
+        } else if (authentication instanceof AnonymousAuthenticationToken) {
+            throw new UnauthorizedException();
+        } else if (authentication != null) {
+            log.error("Got an authentication of unexpected type {}", authentication.getClass().getSimpleName());
+        }
+        throw new UnauthorizedException();
     }
 
     public @NonNull SignedInUser authenticate(@NonNull OidcUser oidcUser) {

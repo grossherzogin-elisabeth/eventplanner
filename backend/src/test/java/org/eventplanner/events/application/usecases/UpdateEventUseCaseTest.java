@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.ports.RegistrationRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
@@ -39,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 class UpdateEventUseCaseTest {
     private static final int YEAR = ZonedDateTime.now().getYear();
@@ -46,12 +48,18 @@ class UpdateEventUseCaseTest {
     private SignedInUser signedInUser;
     private Event event;
     private NotificationService notificationService;
+    private AuthenticationService authenticationService;
     private UserService userService;
     private UpdateEventUseCase testee;
 
     @BeforeEach
     void setup() {
+        authenticationService = mock(AuthenticationService.class);
+
         signedInUser = createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         event = createEvent();
 
         var eventRepository = mock(EventRepository.class);
@@ -69,6 +77,7 @@ class UpdateEventUseCaseTest {
         when(userService.getUserByKey(any())).thenReturn(Optional.of(createUser()));
 
         testee = new UpdateEventUseCase(
+            authenticationService,
             userService,
             notificationService,
             new RegistrationService(
@@ -89,7 +98,7 @@ class UpdateEventUseCaseTest {
             .withNote("Updated note")
             .withStart(Instant.parse("2024-01-01T00:00:00Z"))
             .withEnd(Instant.parse("2024-01-03T00:00:00Z"));
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getName()).isEqualTo("Updated name");
         assertThat(updatedEvent.getDescription()).isEqualTo("Updated description");
@@ -101,13 +110,16 @@ class UpdateEventUseCaseTest {
     @Test
     void shouldNotUpdateEventDetails() {
         signedInUser = createSignedInUser(Role.TEAM_PLANNER);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var updateSpec = new UpdateEventSpec(event.getKey())
             .withName("Updated name")
             .withDescription("Updated description")
             .withNote("Updated note")
             .withStart(Instant.parse("2024-01-01T00:00:00Z"))
             .withEnd(Instant.parse("2024-01-03T00:00:00Z"));
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getName()).isNotEqualTo("Updated name");
         assertThat(updatedEvent.getDescription()).isNotEqualTo("Updated description");
@@ -124,7 +136,7 @@ class UpdateEventUseCaseTest {
 
         var updateSpec = new UpdateEventSpec(event.getKey()).withSlots(createDefaultSlots());
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 0);
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getAssignedRegistrationKeys()).contains(registrationKey);
         assertThat(updatedEvent.findRegistrationByKey(registrationKey)).isPresent();
@@ -141,7 +153,7 @@ class UpdateEventUseCaseTest {
         assertThat(event.getAssignedRegistrationKeys()).contains(registrationKey);
 
         var updateSpec = new UpdateEventSpec(event.getKey()).withSlots(createDefaultSlots());
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getAssignedRegistrationKeys()).isEmpty();
         assertThat(updatedEvent.findRegistrationByKey(registrationKey)).isPresent();
@@ -157,7 +169,7 @@ class UpdateEventUseCaseTest {
 
         var updateSpec = new UpdateEventSpec(event.getKey()).withSlots(createDefaultSlots());
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 0);
-        testee.updateEvent(signedInUser, updateSpec);
+        testee.updateEvent(updateSpec);
 
         verify(notificationService, times(1))
             .sendAddedToCrewNotification(any(), any());
@@ -173,7 +185,7 @@ class UpdateEventUseCaseTest {
 
         var updateSpec = new UpdateEventSpec(event.getKey()).withSlots(createDefaultSlots());
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 0);
-        testee.updateEvent(signedInUser, updateSpec);
+        testee.updateEvent(updateSpec);
 
         verify(notificationService, times(1))
             .sendAddedToCrewNotification(any(), any());
@@ -200,7 +212,7 @@ class UpdateEventUseCaseTest {
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 0); // keep one
         // assignRegistration(updateSpec.slots(), event.getRegistrations(), 1); // remove one
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 2); // add one
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getAssignedRegistrations()).hasSize(2)
             .contains(event.getRegistrations().get(0))
@@ -229,7 +241,7 @@ class UpdateEventUseCaseTest {
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 0); // keep one
         // assignRegistration(updateSpec.slots(), event.getRegistrations(), 1); // remove one
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 2); // add one
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getAssignedRegistrations()).hasSize(2)
             .contains(event.getRegistrations().get(0))
@@ -252,7 +264,7 @@ class UpdateEventUseCaseTest {
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 0);
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 1);
         assignRegistration(updateSpec.slots(), event.getRegistrations(), 2);
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getAssignedRegistrations()).hasSize(3)
             .contains(event.getRegistrations().get(0))
@@ -270,7 +282,7 @@ class UpdateEventUseCaseTest {
 
         var updateSpec = new UpdateEventSpec(event.getKey())
             .withRegistrationsToRemove(List.of(event.getRegistrations().getFirst().getKey()));
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getAssignedRegistrationKeys()).isEmpty();
         assertThat(updatedEvent.getRegistrations()).hasSize(count - 1);
@@ -296,7 +308,7 @@ class UpdateEventUseCaseTest {
                 null,
                 null
             )));
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getRegistrations()).hasSize(count + 1);
         verify(notificationService, times(1))
@@ -324,7 +336,7 @@ class UpdateEventUseCaseTest {
             )))
             .withSlots(createDefaultSlots());
         updateSpec.slots().getFirst().setAssignedRegistration(registrationKey);
-        var updatedEvent = testee.updateEvent(signedInUser, updateSpec);
+        var updatedEvent = testee.updateEvent(updateSpec);
 
         assertThat(updatedEvent.getRegistrations()).hasSize(count + 1);
         assertThat(updatedEvent.getAssignedRegistrationKeys()).contains(registrationKey);

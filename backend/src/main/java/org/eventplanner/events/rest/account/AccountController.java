@@ -1,10 +1,9 @@
 package org.eventplanner.events.rest.account;
 
-import org.eventplanner.events.application.usecases.UserUseCase;
+import org.eventplanner.events.application.usecases.AuthenticationUseCase;
 import org.eventplanner.events.rest.account.dto.AccountRepresentation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +16,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final UserUseCase userUseCase;
+    private final AuthenticationUseCase authenticationUseCase;
 
     @GetMapping("")
     public ResponseEntity<AccountRepresentation> getSignedInUser() {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var signedInUser = authenticationUseCase.getSignedInUser();
         return ResponseEntity.ok(AccountRepresentation.fromDomain(signedInUser));
     }
 }

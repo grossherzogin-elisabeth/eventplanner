@@ -1,12 +1,10 @@
 package org.eventplanner.events.rest.settings;
 
 import org.eventplanner.events.application.usecases.SettingsUseCase;
-import org.eventplanner.events.application.usecases.UserUseCase;
 import org.eventplanner.events.rest.settings.dto.SettingsRepresentation;
 import org.eventplanner.events.rest.settings.dto.UpdateSettingsRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,13 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SettingsController {
 
-    private final UserUseCase userUseCase;
     private final SettingsUseCase settingsUseCase;
 
     @GetMapping("")
     public ResponseEntity<SettingsRepresentation> getSettings() {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var settings = settingsUseCase.getSettings(signedInUser);
+        var settings = settingsUseCase.getSettings();
         return ResponseEntity.ok(SettingsRepresentation.fromDomain(settings));
     }
 
@@ -35,8 +31,7 @@ public class SettingsController {
     public ResponseEntity<SettingsRepresentation> updateSettings(
         @RequestBody UpdateSettingsRequest updateSettingsRequest
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var updatedSettings = settingsUseCase.updateSettings(signedInUser, updateSettingsRequest.toDomain());
+        var updatedSettings = settingsUseCase.updateSettings(updateSettingsRequest.toDomain());
         return ResponseEntity.ok(SettingsRepresentation.fromDomain(updatedSettings));
     }
 }

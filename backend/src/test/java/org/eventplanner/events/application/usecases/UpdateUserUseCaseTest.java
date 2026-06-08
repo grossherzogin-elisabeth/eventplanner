@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.QualificationRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
@@ -30,9 +31,9 @@ import org.eventplanner.testdata.SignedInUserFactory;
 import org.eventplanner.testdata.UserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-class UserUseCaseTest {
-
+class UpdateUserUseCaseTest {
     private static final Qualification NON_EXPIRING_QUALIFICATION =
         QualificationFactory.createQualification().withExpires(false);
     private static final Qualification EXPIRING_QUALIFICATION = QualificationFactory.createQualification();
@@ -46,14 +47,16 @@ class UserUseCaseTest {
     private UserDetails user;
     private List<Qualification> qualifications;
 
-    private UserUseCase testee;
+    private UpdateUserUseCase testee;
     private NotificationService notificationService;
     private UserService userService;
+    private AuthenticationService authenticationService;
     private QualificationRepository qualificationRepository;
     private PositionRepository positionRepository;
 
     @BeforeEach
     void setup() {
+        authenticationService = mock();
         notificationService = mock();
 
         positionRepository = mock();
@@ -89,8 +92,9 @@ class UserUseCaseTest {
         when(userService.getUsers()).thenReturn(List.of(user.cropToUser()));
         when(userService.updateUser(any())).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
-        testee = new UserUseCase(
+        testee = new UpdateUserUseCase(
             userService,
+            authenticationService,
             notificationService,
             qualificationRepository,
             positionRepository
@@ -100,9 +104,12 @@ class UserUseCaseTest {
     @Test
     void shouldNotSendAnyNotification() {
         signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var spec = createUpdateQualificationSpecs();
         var updateUser = testee.updateUser(
-            signedInUser, user.getKey(), UpdateUserSpec
+            user.getKey(), UpdateUserSpec
                 .builder()
                 .qualifications(spec)
                 .build()
@@ -119,6 +126,9 @@ class UserUseCaseTest {
     @Test
     void shouldAddQualifications() {
         signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var spec = createUpdateQualificationSpecs();
         spec.add(new UpdateUserSpec.UpdateUserQualificationSpec(
             NON_EXPIRING_NEW_QUALIFICATION.getKey(),
@@ -129,7 +139,7 @@ class UserUseCaseTest {
             Instant.now().plusSeconds(100000000)
         ));
         var updatedUser = testee.updateUser(
-            signedInUser, user.getKey(), UpdateUserSpec
+            user.getKey(), UpdateUserSpec
                 .builder()
                 .qualifications(spec)
                 .build()
@@ -154,10 +164,13 @@ class UserUseCaseTest {
     @Test
     void shouldRemoveQualification() {
         signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var spec = createUpdateQualificationSpecs();
         spec.removeIf(it -> it.qualificationKey().equals(NON_EXPIRING_QUALIFICATION.getKey()));
         var updatedUser = testee.updateUser(
-            signedInUser, user.getKey(), UpdateUserSpec
+            user.getKey(), UpdateUserSpec
                 .builder()
                 .qualifications(spec)
                 .build()
@@ -178,6 +191,9 @@ class UserUseCaseTest {
     @Test
     void shouldUpdateQualification() {
         signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var spec = createUpdateQualificationSpecs();
         var updateIndex = -1;
         for (int i = 0; i < spec.size(); i++) {
@@ -194,7 +210,7 @@ class UserUseCaseTest {
             )
         );
         var updatedUser = testee.updateUser(
-            signedInUser, user.getKey(), UpdateUserSpec
+            user.getKey(), UpdateUserSpec
                 .builder()
                 .qualifications(spec)
                 .build()

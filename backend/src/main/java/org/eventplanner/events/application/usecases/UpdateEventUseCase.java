@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.eventplanner.events.application.ports.EventRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
@@ -20,6 +21,7 @@ import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -30,21 +32,19 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UpdateEventUseCase {
 
+    private final AuthenticationService authenticationService;
     private final UserService userService;
     private final NotificationService notificationService;
     private final RegistrationService registrationService;
     private final EventRepository eventRepository;
 
+    @PreAuthorize("hasPermission('events:write-details') " +
+        "or hasPermission('events:write-slots') " +
+        "or hasPermission('events:write-registrations')")
     public @NonNull Event updateEvent(
-        @NonNull final SignedInUser signedInUser,
         @NonNull final UpdateEventSpec spec
     ) throws NoSuchElementException {
-        signedInUser.assertHasAnyPermission(
-            Permission.WRITE_EVENT_DETAILS,
-            Permission.WRITE_EVENT_SLOTS,
-            Permission.WRITE_REGISTRATIONS
-        );
-
+        var signedInUser = authenticationService.getSignedInUser();
         var event = eventRepository.findByKey(spec.eventKey())
             .orElseThrow(() -> new NoSuchElementException("Event does not exist"));
         log.info("Updating event {}", event.getName());

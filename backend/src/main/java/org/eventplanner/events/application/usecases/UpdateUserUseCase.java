@@ -6,108 +6,65 @@ import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.QualificationRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
-import org.eventplanner.events.domain.entities.users.SignedInUser;
-import org.eventplanner.events.domain.entities.users.User;
 import org.eventplanner.events.domain.entities.users.UserDetails;
-import org.eventplanner.events.domain.exceptions.UnauthorizedException;
-import org.eventplanner.events.domain.specs.CreateUserSpec;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserUseCase {
+public class UpdateUserUseCase {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
+    private final AuthenticationService authenticationService;
     private final NotificationService notificationService;
     private final QualificationRepository qualificationRepository;
     private final PositionRepository positionRepository;
 
-    public @NonNull SignedInUser getSignedInUser() {
-        return getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+    @Transactional
+    @PreAuthorize("hasAuthority('users:write') or hasAuthority('users:write-self')")
+    public @NonNull UserDetails updateUserSelf(@NonNull final UpdateUserSpec spec) {
+        var signedInUser = authenticationService.getSignedInUser();
+        log.info("User {} is updating their personal information", signedInUser.key());
+        var user = updateUserInternal(signedInUser.key(), spec);
+        notificationService.sendUserChangedPersonalDataNotification(Role.USER_MANAGER, user);
+        return user;
     }
 
-    public @NonNull SignedInUser getSignedInUser(@Nullable final Authentication authentication)
-    throws UnauthorizedException {
-        if (authentication instanceof SignedInUser signedInUser) {
-            return signedInUser;
-        } else if (authentication instanceof AnonymousAuthenticationToken) {
-            throw new UnauthorizedException();
-        } else if (authentication != null) {
-            log.error("Got an authentication of unexpected type {}", authentication.getClass().getSimpleName());
-        }
-        throw new UnauthorizedException();
-    }
-
-    public @NonNull List<User> getUsers(@NonNull final SignedInUser signedInUser) {
-        signedInUser.assertHasPermission(Permission.READ_USERS);
-        return userService.getUsers();
-    }
-
-    public @NonNull List<UserDetails> getDetailedUsers(@NonNull final SignedInUser signedInUser) {
-        signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
-        return userService.getDetailedUsers();
-    }
-
-    public @NonNull Optional<UserDetails> getUserByKey(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final UserKey key
-    ) {
-        if (!signedInUser.key().equals(key)) {
-            signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
-        }
-        return userService.getUserByKey(key);
-    }
-
-    public @NonNull UserDetails createUser(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final CreateUserSpec spec
-    ) {
-        signedInUser.assertHasPermission(Permission.WRITE_USERS);
-        var newUser = new UserDetails(new UserKey(), Instant.now(), Instant.now(), spec.firstName(), spec.lastName());
-        log.info("Creating user {}", newUser.getKey());
-        newUser.setEmail(spec.email());
-        return userService.createUser(newUser);
-    }
-
+    @Transactional
+    @PreAuthorize("hasAuthority('users:write')")
     public @NonNull UserDetails updateUser(
-        @NonNull final SignedInUser signedInUser,
         @NonNull final UserKey userKey,
         @NonNull final UpdateUserSpec spec
     ) {
-        if (signedInUser.key().equals(userKey)) {
-            signedInUser.assertHasPermission(Permission.WRITE_OWN_USER_DETAILS);
-            log.info("User {} is updating their personal information", userKey);
-        } else {
-            signedInUser.assertHasPermission(Permission.WRITE_USERS);
-            log.info("Updating user {}", userKey);
-        }
+        log.info("Updating user {}", userKey);
+        return updateUserInternal(userKey, spec);
+    }
 
+    private @NonNull UserDetails updateUserInternal(
+        @NonNull final UserKey userKey,
+        @NonNull final UpdateUserSpec spec
+    ) {
+        var signedInUser = authenticationService.getSignedInUser();
         var user = userService.getUserByKey(userKey).orElseThrow();
-
-        if (signedInUser.key().equals(userKey)) {
-            notificationService.sendUserChangedPersonalDataNotification(Role.USER_MANAGER, user);
-        }
+        var changedFields = spec.changes();
+        log.info("Updating attributes {}", String.join(", ", changedFields));
 
         // these may be changed by a user themselves
         ofNullable(spec.gender()).map(String::trim).ifPresent(user::setGender);
@@ -137,6 +94,16 @@ public class UserUseCase {
             ofNullable(spec.qualifications()).ifPresent(specs -> updateUserQualifications(user, specs));
             ofNullable(spec.roles()).ifPresent(user::setRoles);
             ofNullable(spec.verifiedAt()).ifPresent(user::setVerifiedAt);
+        } else if (changedFields.contains("authKey")
+            || changedFields.contains("firstName")
+            || changedFields.contains("secondName")
+            || changedFields.contains("lastName")
+            || changedFields.contains("email")
+            || changedFields.contains("comment")
+            || changedFields.contains("qualifications")
+            || changedFields.contains("roles")
+            || changedFields.contains("verifiedAt")) {
+            log.warn("Blocked updating some user attributes because of insufficient permissions");
         }
         // these may be changed by a user themselves, if there is no value yet
         if (hasWritePermission || user.getDateOfBirth() == null) {
@@ -209,15 +176,5 @@ public class UserUseCase {
             q,
             positions
         ));
-    }
-
-    public void deleteUser(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final UserKey userKey
-    ) {
-        signedInUser.assertHasPermission(Permission.DELETE_USERS);
-
-        log.info("Deleting user {}", userKey);
-        userService.deleteUser(userKey);
     }
 }

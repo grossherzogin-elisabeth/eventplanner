@@ -3,10 +3,9 @@ package org.eventplanner.events.application.usecases;
 import org.eventplanner.events.application.services.ConfigurationService;
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
 import org.eventplanner.events.domain.aggregates.ApplicationConfig.ApplicationConfigUpdateSpec;
-import org.eventplanner.events.domain.entities.users.SignedInUser;
-import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.config.FrontendConfig;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -19,18 +18,16 @@ public class SettingsUseCase {
 
     private final ConfigurationService configurationService;
 
-    public @NonNull ApplicationConfig getSettings(@NonNull final SignedInUser signedInUser) {
-        signedInUser.assertHasPermission(Permission.READ_APP_SETTINGS);
-
+    @PreAuthorize("hasAuthority('application-settings:read')")
+    public @NonNull ApplicationConfig getSettings() {
+        log.debug("Reading settings");
         return configurationService.getConfig();
     }
 
+    @PreAuthorize("hasAuthority('application-settings:write')")
     public @NonNull ApplicationConfig updateSettings(
-        @NonNull final SignedInUser signedInUser,
         @NonNull final ApplicationConfigUpdateSpec updateSpec
     ) {
-        signedInUser.assertHasPermission(Permission.WRITE_APP_SETTINGS);
-
         log.info("Updating settings");
         return configurationService.updateConfig(updateSpec);
     }

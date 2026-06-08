@@ -12,10 +12,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.events.application.usecases.EventExportUseCase;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.events.EventKey;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +33,15 @@ class EventExportIntegrationTest {
     @Autowired
     private EventExportUseCase testee;
 
+    @BeforeEach
+    public void setup() {
+        var signedInUser = createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+    }
+
     @Test
     void shouldReturnAvailableExcelTemplates() {
-        var templates = testee.getAvailableTemplates(createSignedInUser(Role.ADMIN));
+        var templates = testee.getAvailableTemplates();
 
         assertThat(templates)
             .containsExactlyInAnyOrder("consumption-list", "imo-crew-list", "sample");
@@ -94,7 +102,6 @@ class EventExportIntegrationTest {
 
     private File generateExcelExport(String template) {
         var out = testee.exportEvent(
-            createSignedInUser(Role.ADMIN),
             new EventKey("7fa48570-963a-4e95-b72f-acaf70c70a24"),
             template
         );
