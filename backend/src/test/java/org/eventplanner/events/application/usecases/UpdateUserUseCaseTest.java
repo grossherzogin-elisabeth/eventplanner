@@ -26,6 +26,8 @@ import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
 import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.users.Address;
+import org.eventplanner.events.domain.values.users.Diet;
 import org.eventplanner.testdata.QualificationFactory;
 import org.eventplanner.testdata.SignedInUserFactory;
 import org.eventplanner.testdata.UserFactory;
@@ -121,6 +123,88 @@ class UpdateUserUseCaseTest {
         assertThat(updateUser.findQualification(SOON_EXPIRING_QUALIFICATION.getKey())).isPresent();
         assertThat(updateUser.findQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
         verifyNoInteractions(notificationService);
+    }
+
+    @Test
+    void shouldUpdateUserAsAdmin() {
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
+        var updatedUser = testee.updateUser(
+            user.getKey(), UpdateUserSpec
+                .builder()
+                .firstName("Updated")
+                .lastName("Updated")
+                .comment("Updated")
+                .build()
+        );
+
+        assertThat(updatedUser.getFirstName()).isEqualTo("Updated");
+        assertThat(updatedUser.getLastName()).isEqualTo("Updated");
+        assertThat(updatedUser.getComment()).isEqualTo("Updated");
+        verify(userService).updateUser(updatedUser);
+        verifyNoInteractions(notificationService);
+    }
+
+    @Test
+    void shouldUpdateUserAsSelf() {
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.TEAM_MEMBER).withKey(user.getKey());
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
+        var updatedUser = testee.updateUserSelf(
+            UpdateUserSpec.builder()
+                .nickName("Updated")
+                .phone("Updated")
+                .phoneWork("Updated")
+                .mobile("Updated")
+                .address(new Address(
+                    "Updated Street",
+                    null,
+                    "Updated City",
+                    "Updated Zipcode",
+                    "Updated Country"
+                ))
+                .medication("Updated")
+                .diseases("Updated")
+                .intolerances("Updated")
+                .diet(Diet.VEGAN)
+                .build()
+        );
+
+        assertThat(updatedUser.getNickName()).isEqualTo("Updated");
+        assertThat(updatedUser.getPhone()).isEqualTo("Updated");
+        assertThat(updatedUser.getPhoneWork()).isEqualTo("Updated");
+        assertThat(updatedUser.getMobile()).isEqualTo("Updated");
+        assertThat(updatedUser.getAddress().addressLine1()).isEqualTo("Updated Street");
+        assertThat(updatedUser.getAddress().addressLine2()).isEqualTo(null);
+        assertThat(updatedUser.getAddress().town()).isEqualTo("Updated City");
+        assertThat(updatedUser.getAddress().zipCode()).isEqualTo("Updated Zipcode");
+        assertThat(updatedUser.getAddress().country()).isEqualTo("Updated Country");
+        assertThat(updatedUser.getMedication()).isEqualTo("Updated");
+        assertThat(updatedUser.getDiseases()).isEqualTo("Updated");
+        assertThat(updatedUser.getIntolerances()).isEqualTo("Updated");
+        assertThat(updatedUser.getDiet()).isEqualTo(Diet.VEGAN);
+        verify(userService).updateUser(updatedUser);
+        verify(notificationService).sendUserChangedPersonalDataNotification(any(), eq(user));
+    }
+
+    @Test
+    void shouldNotUpdateUserAsSelf() {
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.TEAM_MEMBER).withKey(user.getKey());
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
+        var updatedUser = testee.updateUserSelf(
+            UpdateUserSpec.builder()
+                .firstName("Updated")
+                .comment("Updated")
+                .build()
+        );
+
+        assertThat(updatedUser.getFirstName()).isNotEqualTo("Updated");
+        assertThat(updatedUser.getComment()).isNotEqualTo("Updated");
     }
 
     @Test
