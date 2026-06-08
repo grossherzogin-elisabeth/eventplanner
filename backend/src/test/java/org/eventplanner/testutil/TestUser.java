@@ -3,6 +3,7 @@ package org.eventplanner.testutil;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -39,6 +40,11 @@ public enum TestUser {
     @Override
     public @NonNull String toString() {
         return oidcId;
+    }
+
+    public @NonNull UserKey getKey() {
+        // auth key and user key are equal in testdata
+        return new UserKey(oidcId);
     }
 
     public static @NonNull RequestPostProcessor withAuthentication(@NonNull final TestUser user) {

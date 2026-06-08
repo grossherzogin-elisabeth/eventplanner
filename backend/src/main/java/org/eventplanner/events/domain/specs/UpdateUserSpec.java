@@ -1,7 +1,9 @@
 package org.eventplanner.events.domain.specs;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eventplanner.events.domain.entities.users.EmergencyContact;
@@ -64,5 +66,19 @@ public record UpdateUserSpec(
             }
             throw new IllegalArgumentException("Qualification keys do not match");
         }
+    }
+
+    public @NonNull List<String> changes() {
+        return Arrays.stream(this.getClass().getDeclaredFields())
+            .filter(field -> !field.isSynthetic())
+            .filter(field -> {
+                try {
+                    return field.get(this) != null;
+                } catch (Exception e) {
+                    return false;
+                }
+            }).map(Field::getName)
+            .sorted()
+            .toList();
     }
 }

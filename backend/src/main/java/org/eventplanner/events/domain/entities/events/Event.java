@@ -119,6 +119,23 @@ public class Event {
         return true;
     }
 
+    public @NonNull Event clearConfidentialData(@NonNull final String accessKey) {
+        // clear notes of all but the signed-in user
+        log.debug("Clearing assigned registrations and registration notes on event {}", name);
+        slots.forEach(slot -> slot.setAssignedRegistration(null));
+        registrations.stream()
+            .filter(it -> it.getNote() != null)
+            .filter(it -> !accessKey.equals(it.getAccessKey()))
+            .forEach(it -> {
+                it.setNote(null);
+                it.setOvernightStay(null);
+                it.setArrival(null);
+                it.setConfirmedAt(null);
+                it.setAccessKey(null);
+            });
+        return this;
+    }
+
     public @NonNull Event clearConfidentialData(@NonNull final SignedInUser signedInUser) {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
             && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(state)) {
