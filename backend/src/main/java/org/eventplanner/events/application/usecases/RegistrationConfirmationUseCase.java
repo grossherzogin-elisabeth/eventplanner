@@ -166,14 +166,7 @@ public class RegistrationConfirmationUseCase {
             .filter(r -> accessKey.equals(r.getAccessKey()))
             .findFirst();
         if (registration.isPresent()) {
-            // clear assigned registrations on slots
-            event.getSlots().forEach(slot -> slot.setAssignedRegistration(null));
-            // clear notes of all others
-            event.getRegistrations().stream()
-                .filter(it -> it.getNote() != null)
-                .filter(it -> !Objects.equals(it.getAccessKey(), accessKey))
-                .forEach(it -> it.setNote(null));
-            return event;
+            return event.clearConfidentialData(accessKey);
         }
         throw new NoSuchElementException();
     }

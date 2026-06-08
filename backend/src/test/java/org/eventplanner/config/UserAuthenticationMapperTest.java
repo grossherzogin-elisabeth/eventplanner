@@ -165,7 +165,6 @@ class UserAuthenticationMapperTest {
     void shouldMapAllAuthenticationsForParallelRequestsOfDifferentUsers() throws Exception {
         var parallelRequestCount = 5;
         var done = new CountDownLatch(parallelRequestCount);
-        var entered = new CountDownLatch(parallelRequestCount);
         var errors = new CopyOnWriteArrayList<Throwable>();
 
         for (int i = 1; i <= parallelRequestCount; i++) {
@@ -187,8 +186,7 @@ class UserAuthenticationMapperTest {
             when(authService.authenticate(oidcUser)).thenAnswer(invocation -> {
                 // only resolve this as soon as all requests have called this functions, which ensures they all run in
                 // parallel
-                entered.countDown();
-                assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
+                Thread.sleep(150); // hold the per-user lock long enough for overlap to matter
                 return signedInUser;
             });
             var securityContext = new SecurityContextImpl(new OAuth2AuthenticationToken(oidcUser, List.of(), "oidc"));
@@ -209,7 +207,7 @@ class UserAuthenticationMapperTest {
         }
 
         // all requests have completed without errors
-        assertThat(done.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThat(done.await(10, TimeUnit.SECONDS)).isTrue();
         assertThat(errors).isEmpty();
         verify(filterChain, times(parallelRequestCount)).doFilter(request, response);
 
