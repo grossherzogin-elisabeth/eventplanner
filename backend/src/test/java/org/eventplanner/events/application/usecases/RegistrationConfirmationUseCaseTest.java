@@ -189,7 +189,7 @@ class RegistrationConfirmationUseCaseTest {
         var event = createEvent();
         var registration = event.getRegistrations().getFirst();
         registration.setAccessKey("valid-key");
-        registration.setConfirmedAt(Instant.now());
+        registration.setConfirmedAt(Instant.parse("2026-05-07T09:30:00Z"));
 
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
 

@@ -74,7 +74,7 @@ public record UpdateUserSpec(
             .filter(field -> {
                 try {
                     return field.get(this) != null;
-                } catch (Exception e) {
+                } catch (Exception _) {
                     return false;
                 }
             }).map(Field::getName)
