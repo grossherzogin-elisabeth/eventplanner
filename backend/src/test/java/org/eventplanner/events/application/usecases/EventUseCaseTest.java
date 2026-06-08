@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EventRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.EventService;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
@@ -26,10 +27,12 @@ class EventUseCaseTest {
 
     private Event event;
     private EventUseCase testee;
+    private AuthenticationService authenticationService;
 
     @BeforeEach
     void setup() {
         event = createEvent();
+        authenticationService = mock(AuthenticationService.class);
         var eventRepository = mock(EventRepository.class);
         when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
@@ -37,6 +40,7 @@ class EventUseCaseTest {
         when(eventRepository.update(any())).thenAnswer(mock -> mock.getArgument(0));
 
         testee = new EventUseCase(
+            authenticationService,
             new EventService(eventRepository),
             eventRepository
         );
@@ -45,30 +49,33 @@ class EventUseCaseTest {
     @Test
     void shouldNotReturnDraftEventsForNonAdminUsers() {
         var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
         event.setState(EventState.DRAFT);
 
-        var events = testee.getEvents(signedInUser, YEAR);
+        var events = testee.getEvents(YEAR);
         assertThat(events).isEmpty();
     }
 
     @Test
     void shouldReturnDraftEventsForAdminUsers() {
         var signedInUser = createSignedInUser(Role.ADMIN);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
         event.setState(EventState.DRAFT);
 
-        var events = testee.getEvents(signedInUser, YEAR);
+        var events = testee.getEvents(YEAR);
         assertThat(events).isNotEmpty();
     }
 
     @Test
     void shouldNotReturnPrivateRegistrationDataForNonAdminUsers() {
         var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
         event.setState(EventState.PLANNED);
 
-        var events = testee.getEvents(signedInUser, YEAR);
+        var events = testee.getEvents(YEAR);
         assertThat(events).isNotEmpty();
         for (final var evt : events) {
             for (final Registration registration : evt.getRegistrations()) {
@@ -82,11 +89,12 @@ class EventUseCaseTest {
     @Test
     void shouldReturnOwnRegistrationPrivateDataForNonAdminUsers() {
         var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
         event.setState(EventState.PLANNED);
         event.getRegistrations().getFirst().setUserKey(signedInUser.key());
 
-        var events = testee.getEvents(signedInUser, YEAR);
+        var events = testee.getEvents(YEAR);
         assertThat(events).isNotEmpty();
         assertThat(events.getFirst().getRegistrations().getFirst().getNote()).isNotNull();
         assertThat(events.getFirst().getRegistrations().getFirst().getOvernightStay()).isNotNull();
@@ -96,11 +104,12 @@ class EventUseCaseTest {
     @Test
     void shouldNotReturnAssignmentsForNonAdminUsers() {
         var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
         event.setState(EventState.OPEN_FOR_SIGNUP);
         assignRegistration(event.getSlots(), event.getRegistrations(), 0);
 
-        var events = testee.getEvents(signedInUser, YEAR);
+        var events = testee.getEvents(YEAR);
         assertThat(events).isNotEmpty();
         for (final var evt : events) {
             for (final var slot : evt.getSlots()) {
@@ -112,11 +121,12 @@ class EventUseCaseTest {
     @Test
     void shouldReturnAssignmentsForAdminUsers() {
         var signedInUser = createSignedInUser(Role.ADMIN);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
         event.setState(EventState.OPEN_FOR_SIGNUP);
         assignRegistration(event.getSlots(), event.getRegistrations(), 0);
 
-        var events = testee.getEvents(signedInUser, YEAR);
+        var events = testee.getEvents(YEAR);
         assertThat(events.getFirst().getSlots().getFirst().getAssignedRegistration()).isNotNull();
     }
 

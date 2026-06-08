@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.eventplanner.common.StringUtils;
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.QualificationRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.EventMatrixExportService;
 import org.eventplanner.events.application.services.EventService;
 import org.eventplanner.events.application.services.ExcelExportService;
@@ -23,15 +24,14 @@ import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.entities.positions.Position;
-import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
-import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -43,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class EventExportUseCase {
+    private final AuthenticationService authenticationService;
     private final EventService eventService;
     private final ExcelExportService excelExportService;
     private final EventMatrixExportService eventMatrixExportService;
@@ -53,9 +54,8 @@ public class EventExportUseCase {
     @Value("${templates.directory}")
     private String templatesDirectory;
 
-    public @NonNull List<String> getAvailableTemplates(@NonNull final SignedInUser signedInUser) {
-        signedInUser.assertHasPermission(Permission.EXPORT_EVENTS);
-
+    @PreAuthorize("hasAuthority('events:export')")
+    public @NonNull List<String> getAvailableTemplates() {
         var dir = new File(templatesDirectory);
         if (!dir.exists()) {
             log.warn("Template directory {} does not exist", templatesDirectory);
@@ -74,13 +74,12 @@ public class EventExportUseCase {
             .toList();
     }
 
+    @PreAuthorize("hasAuthority('events:export')")
     public @NonNull ByteArrayOutputStream exportEvent(
-        @NonNull final SignedInUser signedInUser,
         @NonNull final EventKey eventKey,
         @NonNull final String templateName
     ) {
-        signedInUser.assertHasPermission(Permission.EXPORT_EVENTS);
-
+        var signedInUser = authenticationService.getSignedInUser();
         var event = eventService.getEvent(signedInUser, eventKey);
         var model = getEventExportModel(event);
         var template = new File(templatesDirectory, templateName + ".xlsx");
@@ -91,12 +90,11 @@ public class EventExportUseCase {
         return excelExportService.exportToExcel(template, model);
     }
 
+    @PreAuthorize("hasAuthority('events:export')")
     public @NonNull ByteArrayOutputStream exportEventMatrix(
-        @NonNull final SignedInUser signedInUser,
         final int year
     ) {
-        signedInUser.assertHasPermission(Permission.EXPORT_EVENTS);
-
+        var signedInUser = authenticationService.getSignedInUser();
         var events = eventService.getEvents(signedInUser, year);
         log.info("Generating event matric for {} events of year {}", events.size(), year);
         return eventMatrixExportService.exportEventMatrix(events);

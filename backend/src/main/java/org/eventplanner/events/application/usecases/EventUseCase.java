@@ -3,13 +3,13 @@ package org.eventplanner.events.application.usecases;
 import java.util.List;
 
 import org.eventplanner.events.application.ports.EventRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.EventService;
 import org.eventplanner.events.domain.entities.events.Event;
-import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.specs.CreateEventSpec;
-import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -19,53 +19,40 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class EventUseCase {
+    private final AuthenticationService authenticationService;
     private final EventService eventService;
     private final EventRepository eventRepository;
 
-    public @NonNull List<Event> getEvents(
-        @NonNull final SignedInUser signedInUser,
-        final int year
-    ) {
-        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+    @PreAuthorize("hasAuthority('events:read')")
+    public @NonNull List<Event> getEvents(final int year) {
+        log.debug("Reading events");
+        var signedInUser = authenticationService.getSignedInUser();
         return eventService.getEvents(signedInUser, year);
     }
 
-    public @NonNull Event getEventByKey(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final EventKey key
-    ) {
-        signedInUser.assertHasPermission(Permission.READ_EVENTS);
+    @PreAuthorize("hasAuthority('events:read')")
+    public @NonNull Event getEventByKey(@NonNull final EventKey key) {
+        log.debug("Reading event {}", key);
+        var signedInUser = authenticationService.getSignedInUser();
         return eventService.getEvent(signedInUser, key);
     }
 
-    public @NonNull Event createEvent(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final CreateEventSpec spec
-    ) {
-        signedInUser.assertHasPermission(Permission.CREATE_EVENTS);
-
+    @PreAuthorize("hasAuthority('events:create')")
+    public @NonNull Event createEvent(@NonNull final CreateEventSpec spec) {
         var event = spec.toEvent();
         log.info("Creating new event {}", event.getName());
         return eventRepository.create(event);
     }
 
-    public void deleteEvent(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final EventKey eventKey
-    ) {
-        signedInUser.assertHasPermission(Permission.DELETE_EVENTS);
-
+    @PreAuthorize("hasAuthority('events:delete')")
+    public void deleteEvent(@NonNull final EventKey eventKey) {
         var event = eventRepository.findByKey(eventKey).orElseThrow();
         log.info("Deleting event {}", event.getName());
         eventRepository.deleteByKey(event.getKey());
     }
 
-    public @NonNull Event optimizeEventSlots(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final Event event
-    ) {
-        signedInUser.assertHasPermission(Permission.WRITE_EVENT_SLOTS);
-
+    @PreAuthorize("hasAuthority('events:write-slots')")
+    public @NonNull Event optimizeEventSlots(@NonNull final Event event) {
         event.optimizeSlots();
         return event;
     }

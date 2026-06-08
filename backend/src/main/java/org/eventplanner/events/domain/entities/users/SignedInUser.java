@@ -18,9 +18,11 @@ import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@With
 public record SignedInUser(
     @NonNull UserKey key,
     @NonNull AuthKey authKey,

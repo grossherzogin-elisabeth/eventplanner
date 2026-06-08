@@ -2,9 +2,9 @@ package org.eventplanner.events.rest.registrations;
 
 import java.util.Objects;
 
+import org.eventplanner.events.application.usecases.AuthenticationUseCase;
 import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.RegistrationUseCase;
-import org.eventplanner.events.application.usecases.UserUseCase;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.rest.events.dto.EventRepresentation;
@@ -13,7 +13,6 @@ import org.eventplanner.events.rest.registrations.dto.UpdateRegistrationRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegistrationController {
 
-    private final UserUseCase userUseCase;
+    private final AuthenticationUseCase authenticationUseCase;
     private final RegistrationUseCase registrationUseCase;
     private final RegistrationConfirmationUseCase registrationConfirmationUseCase;
 
@@ -41,7 +40,7 @@ public class RegistrationController {
         @PathVariable("eventKey") String eventKey,
         @RequestBody CreateRegistrationRequest spec
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var signedInUser = authenticationUseCase.getSignedInUser();
         var isSelfSignup = Objects.equals(signedInUser.key().value(), spec.userKey());
         var event =
             registrationUseCase.createRegistration(signedInUser, spec.toDomain(new EventKey(eventKey), isSelfSignup));
@@ -53,7 +52,7 @@ public class RegistrationController {
         @PathVariable("eventKey") String eventKey,
         @PathVariable("registrationKey") String registrationKey
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var signedInUser = authenticationUseCase.getSignedInUser();
         var event = registrationUseCase.removeRegistration(
             signedInUser,
             new EventKey(eventKey),
@@ -68,7 +67,7 @@ public class RegistrationController {
         @PathVariable("registrationKey") String registrationKey,
         @RequestBody UpdateRegistrationRequest spec
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var signedInUser = authenticationUseCase.getSignedInUser();
         var event = registrationUseCase.updateRegistration(
             signedInUser,
             spec.toDomain(

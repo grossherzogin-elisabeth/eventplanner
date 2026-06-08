@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.QualificationRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
@@ -25,14 +26,16 @@ import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
 import org.eventplanner.events.domain.values.auth.Role;
+import org.eventplanner.events.domain.values.users.Address;
+import org.eventplanner.events.domain.values.users.Diet;
 import org.eventplanner.testdata.QualificationFactory;
 import org.eventplanner.testdata.SignedInUserFactory;
 import org.eventplanner.testdata.UserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-class UserUseCaseTest {
-
+class UpdateUserUseCaseTest {
     private static final Qualification NON_EXPIRING_QUALIFICATION =
         QualificationFactory.createQualification().withExpires(false);
     private static final Qualification EXPIRING_QUALIFICATION = QualificationFactory.createQualification();
@@ -46,14 +49,16 @@ class UserUseCaseTest {
     private UserDetails user;
     private List<Qualification> qualifications;
 
-    private UserUseCase testee;
+    private UpdateUserUseCase testee;
     private NotificationService notificationService;
     private UserService userService;
+    private AuthenticationService authenticationService;
     private QualificationRepository qualificationRepository;
     private PositionRepository positionRepository;
 
     @BeforeEach
     void setup() {
+        authenticationService = mock();
         notificationService = mock();
 
         positionRepository = mock();
@@ -89,8 +94,9 @@ class UserUseCaseTest {
         when(userService.getUsers()).thenReturn(List.of(user.cropToUser()));
         when(userService.updateUser(any())).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
-        testee = new UserUseCase(
+        testee = new UpdateUserUseCase(
             userService,
+            authenticationService,
             notificationService,
             qualificationRepository,
             positionRepository
@@ -100,9 +106,12 @@ class UserUseCaseTest {
     @Test
     void shouldNotSendAnyNotification() {
         signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var spec = createUpdateQualificationSpecs();
         var updateUser = testee.updateUser(
-            signedInUser, user.getKey(), UpdateUserSpec
+            user.getKey(), UpdateUserSpec
                 .builder()
                 .qualifications(spec)
                 .build()
@@ -117,8 +126,93 @@ class UserUseCaseTest {
     }
 
     @Test
+    void shouldUpdateUserAsAdmin() {
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
+        var updatedUser = testee.updateUser(
+            user.getKey(), UpdateUserSpec
+                .builder()
+                .firstName("Updated")
+                .lastName("Updated")
+                .comment("Updated")
+                .build()
+        );
+
+        assertThat(updatedUser.getFirstName()).isEqualTo("Updated");
+        assertThat(updatedUser.getLastName()).isEqualTo("Updated");
+        assertThat(updatedUser.getComment()).isEqualTo("Updated");
+        verify(userService).updateUser(updatedUser);
+        verifyNoInteractions(notificationService);
+    }
+
+    @Test
+    void shouldUpdateUserAsSelf() {
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.TEAM_MEMBER).withKey(user.getKey());
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
+        var updatedUser = testee.updateUserSelf(
+            UpdateUserSpec.builder()
+                .nickName("Updated")
+                .phone("Updated")
+                .phoneWork("Updated")
+                .mobile("Updated")
+                .address(new Address(
+                    "Updated Street",
+                    null,
+                    "Updated City",
+                    "Updated Zipcode",
+                    "Updated Country"
+                ))
+                .medication("Updated")
+                .diseases("Updated")
+                .intolerances("Updated")
+                .diet(Diet.VEGAN)
+                .build()
+        );
+
+        assertThat(updatedUser.getNickName()).isEqualTo("Updated");
+        assertThat(updatedUser.getPhone()).isEqualTo("Updated");
+        assertThat(updatedUser.getPhoneWork()).isEqualTo("Updated");
+        assertThat(updatedUser.getMobile()).isEqualTo("Updated");
+        assertThat(updatedUser.getAddress().addressLine1()).isEqualTo("Updated Street");
+        assertThat(updatedUser.getAddress().addressLine2()).isNull();
+        assertThat(updatedUser.getAddress().town()).isEqualTo("Updated City");
+        assertThat(updatedUser.getAddress().zipCode()).isEqualTo("Updated Zipcode");
+        assertThat(updatedUser.getAddress().country()).isEqualTo("Updated Country");
+        assertThat(updatedUser.getMedication()).isEqualTo("Updated");
+        assertThat(updatedUser.getDiseases()).isEqualTo("Updated");
+        assertThat(updatedUser.getIntolerances()).isEqualTo("Updated");
+        assertThat(updatedUser.getDiet()).isEqualTo(Diet.VEGAN);
+        verify(userService).updateUser(updatedUser);
+        verify(notificationService).sendUserChangedPersonalDataNotification(any(), eq(user));
+    }
+
+    @Test
+    void shouldNotUpdateUserAsSelf() {
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.TEAM_MEMBER).withKey(user.getKey());
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
+        var updatedUser = testee.updateUserSelf(
+            UpdateUserSpec.builder()
+                .firstName("Updated")
+                .comment("Updated")
+                .build()
+        );
+
+        assertThat(updatedUser.getFirstName()).isNotEqualTo("Updated");
+        assertThat(updatedUser.getComment()).isNotEqualTo("Updated");
+    }
+
+    @Test
     void shouldAddQualifications() {
         signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var spec = createUpdateQualificationSpecs();
         spec.add(new UpdateUserSpec.UpdateUserQualificationSpec(
             NON_EXPIRING_NEW_QUALIFICATION.getKey(),
@@ -129,7 +223,7 @@ class UserUseCaseTest {
             Instant.now().plusSeconds(100000000)
         ));
         var updatedUser = testee.updateUser(
-            signedInUser, user.getKey(), UpdateUserSpec
+            user.getKey(), UpdateUserSpec
                 .builder()
                 .qualifications(spec)
                 .build()
@@ -154,10 +248,13 @@ class UserUseCaseTest {
     @Test
     void shouldRemoveQualification() {
         signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var spec = createUpdateQualificationSpecs();
         spec.removeIf(it -> it.qualificationKey().equals(NON_EXPIRING_QUALIFICATION.getKey()));
         var updatedUser = testee.updateUser(
-            signedInUser, user.getKey(), UpdateUserSpec
+            user.getKey(), UpdateUserSpec
                 .builder()
                 .qualifications(spec)
                 .build()
@@ -178,6 +275,9 @@ class UserUseCaseTest {
     @Test
     void shouldUpdateQualification() {
         signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var spec = createUpdateQualificationSpecs();
         var updateIndex = -1;
         for (int i = 0; i < spec.size(); i++) {
@@ -194,7 +294,7 @@ class UserUseCaseTest {
             )
         );
         var updatedUser = testee.updateUser(
-            signedInUser, user.getKey(), UpdateUserSpec
+            user.getKey(), UpdateUserSpec
                 .builder()
                 .qualifications(spec)
                 .build()

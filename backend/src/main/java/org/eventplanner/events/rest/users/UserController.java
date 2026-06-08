@@ -3,7 +3,11 @@ package org.eventplanner.events.rest.users;
 import java.net.URI;
 import java.util.List;
 
-import org.eventplanner.events.application.usecases.UserUseCase;
+import org.eventplanner.events.application.usecases.AuthenticationUseCase;
+import org.eventplanner.events.application.usecases.CreateUserUseCase;
+import org.eventplanner.events.application.usecases.DeleteUserUseCase;
+import org.eventplanner.events.application.usecases.ReadUserUseCase;
+import org.eventplanner.events.application.usecases.UpdateUserUseCase;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.eventplanner.events.rest.users.dto.CreateUserRequest;
@@ -35,21 +39,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserUseCase userUseCase;
+    private final AuthenticationUseCase authenticationUseCase;
+    private final ReadUserUseCase readUserUseCase;
+    private final CreateUserUseCase createUserUseCase;
+    private final UpdateUserUseCase updateUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
 
     @GetMapping("")
     public ResponseEntity<List<?>> getUsers(
         @RequestParam(name = "details", required = false) Boolean details
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        var signedInUser = authenticationUseCase.getSignedInUser();
         if (signedInUser.hasPermission(Permission.READ_USER_DETAILS)) {
-            var users = userUseCase.getDetailedUsers(signedInUser).stream();
+            var users = readUserUseCase.getDetailedUsers().stream();
             if (Boolean.TRUE.equals(details)) {
                 return ResponseEntity.ok(users.map(UserDetailsRepresentation::fromDomain).toList());
             }
             return ResponseEntity.ok(users.map(UserAdminListRepresentation::fromDomain).toList());
         } else {
-            var users = userUseCase.getUsers(signedInUser).stream();
+            var users = readUserUseCase.getUsers().stream();
             return ResponseEntity.ok(users.map(UserRepresentation::fromDomain).toList());
         }
     }
@@ -58,8 +66,7 @@ public class UserController {
     public ResponseEntity<UserDetailsRepresentation> createUser(
         @Valid @RequestBody CreateUserRequest spec
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var user = userUseCase.createUser(signedInUser, spec.toDomain());
+        var user = createUserUseCase.createUser(spec.toDomain());
         return ResponseEntity.status(HttpStatus.CREATED)
             .location(URI.create("/api/v1/users/" + user.getKey().value()))
             .body(UserDetailsRepresentation.fromDomain(user));
@@ -69,8 +76,7 @@ public class UserController {
     public ResponseEntity<UserDetailsRepresentation> getUserByKey(
         @PathVariable("key") String userKey
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        return userUseCase.getUserByKey(signedInUser, new UserKey(userKey))
+        return readUserUseCase.getUserByKey(new UserKey(userKey))
             .map(UserDetailsRepresentation::fromDomain)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -78,8 +84,9 @@ public class UserController {
 
     @GetMapping("/self")
     public ResponseEntity<UserSelfRepresentation> getSignedInUser() {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        return userUseCase.getUserByKey(signedInUser, signedInUser.key())
+        var signedInUser =
+            authenticationUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
+        return readUserUseCase.getUserByKey(signedInUser.key())
             .map(UserSelfRepresentation::fromDomain)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -90,8 +97,7 @@ public class UserController {
         @PathVariable("key") String userKey,
         @Valid @RequestBody UpdateUserRequest spec
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var user = userUseCase.updateUser(signedInUser, new UserKey(userKey), spec.toDomain());
+        var user = updateUserUseCase.updateUser(new UserKey(userKey), spec.toDomain());
         return ResponseEntity.ok(UserDetailsRepresentation.fromDomain(user));
     }
 
@@ -99,17 +105,13 @@ public class UserController {
     public ResponseEntity<UserDetailsRepresentation> updateSignedInUser(
         @Valid @RequestBody UpdateUserRequest spec
     ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        var user = userUseCase.updateUser(signedInUser, signedInUser.key(), spec.toDomain());
+        var user = updateUserUseCase.updateUserSelf(spec.toDomain());
         return ResponseEntity.ok(UserDetailsRepresentation.fromDomain(user));
     }
 
     @DeleteMapping("/{key}")
-    public ResponseEntity<Void> deleteUser(
-        @PathVariable("key") String userKey
-    ) {
-        var signedInUser = userUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        userUseCase.deleteUser(signedInUser, new UserKey(userKey));
+    public ResponseEntity<Void> deleteUser(@PathVariable String key) {
+        deleteUserUseCase.deleteUser(new UserKey(key));
         return ResponseEntity.ok().build();
     }
 }
