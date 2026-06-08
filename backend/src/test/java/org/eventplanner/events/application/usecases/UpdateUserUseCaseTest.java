@@ -178,7 +178,7 @@ class UpdateUserUseCaseTest {
         assertThat(updatedUser.getPhoneWork()).isEqualTo("Updated");
         assertThat(updatedUser.getMobile()).isEqualTo("Updated");
         assertThat(updatedUser.getAddress().addressLine1()).isEqualTo("Updated Street");
-        assertThat(updatedUser.getAddress().addressLine2()).isEqualTo(null);
+        assertThat(updatedUser.getAddress().addressLine2()).isNull();
         assertThat(updatedUser.getAddress().town()).isEqualTo("Updated City");
         assertThat(updatedUser.getAddress().zipCode()).isEqualTo("Updated Zipcode");
         assertThat(updatedUser.getAddress().country()).isEqualTo("Updated Country");

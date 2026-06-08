@@ -34,7 +34,7 @@ class EventExportIntegrationTest {
     private EventExportUseCase testee;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         var signedInUser = createSignedInUser(Role.ADMIN);
         SecurityContextHolder.getContext().setAuthentication(signedInUser);
     }
