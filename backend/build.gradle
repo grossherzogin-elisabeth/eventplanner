@@ -34,6 +34,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-flyway:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
 
     // Adds support for java.time.LocalDate and java.time.Instant parsing
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"

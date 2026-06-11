@@ -102,6 +102,23 @@ spring:
   session:
     timeout: ${auth.session-timout}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - logfile
+          - sessions
+          - auditevents
+  endpoint:
+    health:
+      show-details: always
+  server:
+    port: 8092
+
 server:
   protocol: ${PROTOCOL:https}
   host: ${HOST:localhost}
