@@ -12,7 +12,6 @@ EXPOSE 80
 ENTRYPOINT ["java", \
   "-XX:MaxRAM=128m", \
   "-Xss512k", \
-  "-XX:ReservedCodeCacheSize=24m", \
   "-XX:+UseContainerSupport", \
   "-XX:+UseSerialGC", \
   "-jar", "/app/eventplanner.jar"]

@@ -28,7 +28,6 @@ COPY --from=backend-builder /builder/build/libs/*.jar eventplanner.jar
 ENTRYPOINT ["java", \
   "-XX:MaxRAM=128m", \
   "-Xss512k", \
-  "-XX:ReservedCodeCacheSize=24m", \
   "-XX:+UseContainerSupport", \
   "-XX:+UseSerialGC", \
   "-jar", "/app/eventplanner.jar"]
