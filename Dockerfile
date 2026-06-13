@@ -24,4 +24,10 @@ ENV BUILD_TIME=${TIME}
 WORKDIR /app
 RUN mkdir -p /app/data
 COPY --from=backend-builder /builder/build/libs/*.jar eventplanner.jar
-ENTRYPOINT ["java","-XX:+UseContainerSupport","-jar","/app/eventplanner.jar"]
+
+ENTRYPOINT ["java", \
+  "-XX:MaxRAM=128m", \
+  "-Xss512k", \
+  "-XX:+UseContainerSupport", \
+  "-XX:+UseSerialGC", \
+  "-jar", "/app/eventplanner.jar"]

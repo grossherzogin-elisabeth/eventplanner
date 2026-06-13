@@ -46,8 +46,8 @@ auth:
   login-success-url: ${frontend.url}
   # OIDC users with this email address in their token will automatically become admins
   admins: ${ADMIN_EMAILS:}
-  # 60 * 60 * 24 * 30 seconds
-  session-timout: 2592000
+  # 60 * 60 * 24 * 30 seconds = 30 days
+  session-timeout: 2592000
 
 security:
   # TODO csrf protection currently blocks all post requests even if the xsrf token is present
@@ -100,18 +100,23 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   session:
-    timeout: ${auth.session-timout}
+    timeout: ${auth.session-timeout}
 
 server:
   protocol: ${PROTOCOL:https}
   host: ${HOST:localhost}
   port: ${PORT:80}
   url: ${HOST_URL:${server.protocol}://${server.host}:${server.port}}
+  tomcat:
+    threads:
+      # Default is 200, taking 1MB of stack size each. As we don't need that many
+      # parallel requests, we can save some memory here
+      max: 20
   servlet:
     session:
-      timeout: ${auth.session-timout}s
+      timeout: ${auth.session-timeout}s
       cookie:
-        max-age: ${auth.session-timout}
+        max-age: ${auth.session-timeout}
 
 frontend:
   protocol: ${server.protocol}
@@ -127,3 +132,4 @@ logging:
     console: "%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd'T'HH:mm:ss. SSSXXX}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr([%mdc{user:-system}]){yellow}%clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
   level:
     root: INFO
+    org.eventplanner: ${LOG_LEVEL:INFO}
