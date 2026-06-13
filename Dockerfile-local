@@ -8,4 +8,11 @@ WORKDIR /app
 RUN mkdir -p /app/data
 COPY /backend/build/libs/*.jar eventplanner.jar
 EXPOSE 80
-ENTRYPOINT ["java","-XX:+UseContainerSupport","-jar","/app/eventplanner.jar"]
+
+ENTRYPOINT ["java", \
+  "-XX:MaxRAM=128m", \
+  "-Xss512k", \
+  "-XX:ReservedCodeCacheSize=24m", \
+  "-XX:+UseContainerSupport", \
+  "-XX:+UseSerialGC", \
+  "-jar", "/app/eventplanner.jar"]
