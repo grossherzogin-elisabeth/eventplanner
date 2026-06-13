@@ -1,5 +1,5 @@
 # build frontend
-FROM node:24.15 AS frontend-builder
+FROM node:26.3 AS frontend-builder
 WORKDIR /builder
 COPY ./frontend .
 RUN npm install && npm run build
