@@ -46,7 +46,7 @@ auth:
   login-success-url: ${frontend.url}
   # OIDC users with this email address in their token will automatically become admins
   admins: ${ADMIN_EMAILS:}
-  # 60 * 60 * 24 * 30 seconds = 60 days
+  # 60 * 60 * 24 * 30 seconds = 30 days
   session-timeout: 2592000
 
 security:
