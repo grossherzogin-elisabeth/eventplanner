@@ -1,8 +1,10 @@
 package org.eventplanner.config;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.jspecify.annotations.NonNull;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,12 +28,19 @@ public class LogRequestsFilter extends OncePerRequestFilter {
     )
     throws ServletException, IOException {
         log.debug("Received request {} {}", request.getMethod(), request.getRequestURI());
+        MDC.put("request_method", request.getMethod());
+        MDC.put("request_url", request.getRequestURI());
+        MDC.put("trace_id", UUID.randomUUID().toString());
+
         filterChain.doFilter(request, response);
+
+        MDC.put("response_url", String.valueOf(response.getStatus()));
         log.debug(
             "Completed request {} {} with status {}",
             request.getMethod(),
             request.getRequestURI(),
             response.getStatus()
         );
+        MDC.clear();
     }
 }

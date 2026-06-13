@@ -26,6 +26,11 @@ public class OAuthClientConfig {
             // open frontend home page after login
             oauth2Login.defaultSuccessUrl(loginSuccessUrl, true);
             oauth2Login.failureUrl(loginSuccessUrl);
+            oauth2Login
+                .failureHandler((request, response, exception) -> {
+                    log.error("OAuth login failed: {}", exception.getMessage(), exception);
+                    response.sendRedirect("/login?error");
+                });
             oauth2Login.authorizationEndpoint(authorizationEndpoint -> {
                 authorizationEndpoint.baseUri("/auth/login");
             });
