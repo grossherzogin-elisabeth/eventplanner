@@ -121,7 +121,7 @@ management:
     health:
       show-details: always
   server:
-    port: 8092
+    port: 8082
 
 server:
   protocol: ${PROTOCOL:https}
