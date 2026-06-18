@@ -4,7 +4,7 @@ plugins {
     id "org.springframework.boot" version "4.0.6"
     id "io.spring.dependency-management" version "1.1.7"
     id "io.freefair.lombok" version "9.5.0"
-    id "org.sonarqube" version "7.3.0.8198"
+    id "org.sonarqube" version "7.3.1.8318"
 }
 
 group = "org.eventplanner"
@@ -39,7 +39,7 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     // sqlite
-    implementation "org.xerial:sqlite-jdbc:3.53.1.0"
+    implementation "org.xerial:sqlite-jdbc:3.53.2.0"
     implementation "org.hibernate.orm:hibernate-community-dialects"
 
     // excel
@@ -54,7 +54,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-mail-test:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-validation-test:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-restclient-test:${springBootVersion}"
-    testImplementation "org.springframework.security:spring-security-test:7.0.5"
+    testImplementation "org.springframework.security:spring-security-test:7.1.0"
     testImplementation "com.tngtech.archunit:archunit:1.4.2"
 
     // silence "unknown enum constant javax.annotation.meta.When.MAYBE" warning
