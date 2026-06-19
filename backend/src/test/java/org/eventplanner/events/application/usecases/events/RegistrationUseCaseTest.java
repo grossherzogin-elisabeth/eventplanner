@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.events;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testdata.EventFactory.createEvent;
@@ -19,7 +19,6 @@ import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
-import org.eventplanner.events.application.usecases.events.RegistrationUseCase;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
@@ -115,7 +114,7 @@ class RegistrationUseCaseTest {
     void shouldAllowUpdatingOtherPersonsRegistrationForAdmins() {
         var signedInUser = createSignedInUser(Role.ADMIN);
         when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
-        
+
         var registration = event.getRegistrations().getFirst();
         registration.setPosition(PositionKeys.DECKHAND);
 

@@ -1,9 +1,11 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.users;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -21,13 +23,13 @@ import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
-import org.eventplanner.events.application.usecases.users.UpdateUserUseCase;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.specs.UpdateUserSpec;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.Address;
+import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.Diet;
 import org.eventplanner.testdata.QualificationFactory;
 import org.eventplanner.testdata.SignedInUserFactory;
@@ -35,6 +37,8 @@ import org.eventplanner.testdata.UserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import jakarta.validation.ValidationException;
 
 class UpdateUserUseCaseTest {
     private static final Qualification NON_EXPIRING_QUALIFICATION =
@@ -135,12 +139,16 @@ class UpdateUserUseCaseTest {
         var updatedUser = testee.updateUser(
             user.getKey(), UpdateUserSpec
                 .builder()
+                .authKey(new AuthKey("Updated"))
+                .email("updated@email.com")
                 .firstName("Updated")
                 .lastName("Updated")
                 .comment("Updated")
                 .build()
         );
 
+        assertThat(updatedUser.getAuthKey()).isEqualTo(new AuthKey("Updated"));
+        assertThat(updatedUser.getEmail()).isEqualTo("updated@email.com");
         assertThat(updatedUser.getFirstName()).isEqualTo("Updated");
         assertThat(updatedUser.getLastName()).isEqualTo("Updated");
         assertThat(updatedUser.getComment()).isEqualTo("Updated");
@@ -307,6 +315,40 @@ class UpdateUserUseCaseTest {
         assertThat(updatedUser.findQualification(EXPIRED_QUALIFICATION.getKey())).isPresent();
         verify(notificationService).sendQualificationUpdatedNotification(eq(user), eq(EXPIRED_QUALIFICATION), any());
         verifyNoMoreInteractions(notificationService);
+    }
+
+    @Test
+    void shouldPreventDuplicateOidcIds() {
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+        when(userService.getUserByAuthKey(any())).thenReturn(Optional.of(UserFactory.createUser()));
+
+        var spec = UpdateUserSpec.builder().authKey(new AuthKey("duplicate")).build();
+        assertThatException()
+            .isThrownBy(() -> testee.updateUser(user.getKey(), spec))
+            .isInstanceOf(ValidationException.class)
+            .withMessageContaining("OIDC");
+
+        verify(userService, never()).updateUser(any());
+        verifyNoInteractions(notificationService);
+    }
+
+    @Test
+    void shouldPreventDuplicateEmails() {
+        signedInUser = SignedInUserFactory.createSignedInUser(Role.ADMIN);
+        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+        when(userService.getUserByEmail(any())).thenReturn(Optional.of(UserFactory.createUser()));
+
+        var spec = UpdateUserSpec.builder().email("duplicate@email.com").build();
+        assertThatException()
+            .isThrownBy(() -> testee.updateUser(user.getKey(), spec))
+            .isInstanceOf(ValidationException.class)
+            .withMessageContaining("email");
+
+        verify(userService, never()).updateUser(any());
+        verifyNoInteractions(notificationService);
     }
 
     private List<UpdateUserSpec.UpdateUserQualificationSpec> createUpdateQualificationSpecs() {

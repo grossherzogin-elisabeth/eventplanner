@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.events;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
@@ -23,7 +23,6 @@ import org.eventplanner.events.application.ports.RegistrationRepository;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
-import org.eventplanner.events.application.usecases.events.RegistrationConfirmationUseCase;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
 import org.eventplanner.events.domain.values.events.EventState;
