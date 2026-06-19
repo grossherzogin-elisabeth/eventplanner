@@ -1,0 +1,75 @@
+# This docker compose file is intended for local testing and preview only and not production
+# ready, but you can use it as a starting point.
+#
+# For the authentication flow to work locally we need the keycloak container to be reachable
+# from the eventplanner container and the browser of your host system with the same url. To
+# achieve this we set the hosts local IP to the HOST_IP environment variable.
+#
+# You can start this docker compose by using the following command. Alternatively you can also
+# set the HOST_IP in a `.env` file.
+#
+# ```bash
+# HOST_IP="$(ipconfig getifaddr en0)" docker compose up -d
+# ```
+
+services:
+  eventplanner:
+    # Use eventplanner:local when running this on an ARM Mac or if you want to test a locally
+    # created docker image
+    #image: ghcr.io/grossherzogin-elisabeth/eventplanner:latest
+    image: eventplanner:local
+    container_name: eventplanner
+    depends_on:
+      - keycloak
+    restart: unless-stopped
+    environment:
+      # use this email when creating a user in keycloak, or adjust these vars to contain your
+      # desired email address
+      ADMIN_EMAILS: admin@email.com
+      EMAIL_WHITELIST: admin@email.com
+      OAUTH_ISSUER_URI: 'http://${HOST_IP}:8081/realms/master'
+      HOST_URL: 'http://localhost:8080'
+      PORT: 8080
+      OAUTH_CLIENT_ID: eventplanner
+      OAUTH_CLIENT_SECRET: sample-client-secret
+      DATA_ENCRYPTION_PASSWORD: replace-me
+      LOG_LEVEL: DEBUG
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./data/docker-compose/eventplanner:/app/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    depends_on:
+      - keycloak-db
+    restart: unless-stopped
+    volumes:
+      - ./backend/src/test/resources/keycloak:/opt/keycloak/data/import
+    ports:
+      - '8081:8080'
+    environment:
+      KC_HOSTNAME: 'http://${HOST_IP}:8081'
+      KC_HTTP_ENABLED: true
+      # while you can use this user to log in to the eventplanner, it is recommended to register
+      # a new user, because the keycloak bootstrap user has no email address and thus cannot be
+      # made an eventplanner admin by configuring the ADMIN_EMAILS environment variable
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db/keycloakdb
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+    command: 'start-dev --import-realm'
+
+  keycloak-db:
+    image: postgres:16.2
+    container_name: postgres
+    restart: unless-stopped
+    volumes:
+      - ./data/docker-compose/keycloak:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloakdb
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
