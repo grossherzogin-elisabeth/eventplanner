@@ -21,6 +21,7 @@ import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
+import org.eventplanner.events.application.usecases.users.UpdateUserUseCase;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;

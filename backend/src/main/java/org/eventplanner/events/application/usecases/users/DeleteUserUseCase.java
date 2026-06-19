@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.users;
 
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.values.users.UserKey;

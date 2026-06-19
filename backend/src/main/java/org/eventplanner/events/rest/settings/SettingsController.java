@@ -1,6 +1,6 @@
 package org.eventplanner.events.rest.settings;
 
-import org.eventplanner.events.application.usecases.SettingsUseCase;
+import org.eventplanner.events.application.usecases.settings.SettingsUseCase;
 import org.eventplanner.events.rest.settings.dto.SettingsRepresentation;
 import org.eventplanner.events.rest.settings.dto.UpdateSettingsRequest;
 import org.springframework.http.ResponseEntity;

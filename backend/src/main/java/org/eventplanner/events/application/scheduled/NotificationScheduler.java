@@ -1,7 +1,7 @@
 package org.eventplanner.events.application.scheduled;
 
-import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
-import org.eventplanner.events.application.usecases.UserQualificationExpirationUseCase;
+import org.eventplanner.events.application.usecases.events.RegistrationConfirmationUseCase;
+import org.eventplanner.events.application.usecases.users.UserQualificationExpirationUseCase;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

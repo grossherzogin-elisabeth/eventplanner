@@ -2,10 +2,10 @@ package org.eventplanner.events.rest.events;
 
 import java.util.List;
 
-import org.eventplanner.events.application.usecases.EventExportUseCase;
-import org.eventplanner.events.application.usecases.EventUseCase;
-import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
-import org.eventplanner.events.application.usecases.UpdateEventUseCase;
+import org.eventplanner.events.application.usecases.events.EventExportUseCase;
+import org.eventplanner.events.application.usecases.events.EventUseCase;
+import org.eventplanner.events.application.usecases.events.RegistrationConfirmationUseCase;
+import org.eventplanner.events.application.usecases.events.UpdateEventUseCase;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.rest.events.dto.CreateEventRequest;

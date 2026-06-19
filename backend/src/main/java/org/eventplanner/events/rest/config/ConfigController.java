@@ -1,6 +1,6 @@
 package org.eventplanner.events.rest.config;
 
-import org.eventplanner.events.application.usecases.SettingsUseCase;
+import org.eventplanner.events.application.usecases.settings.SettingsUseCase;
 import org.eventplanner.events.rest.config.dto.ConfigRepresentation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;

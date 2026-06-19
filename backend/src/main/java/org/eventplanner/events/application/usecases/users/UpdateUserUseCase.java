@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.users;
 
 import static java.util.Optional.ofNullable;
 

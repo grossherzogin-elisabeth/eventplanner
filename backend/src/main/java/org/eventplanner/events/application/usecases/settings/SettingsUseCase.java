@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.settings;
 
 import org.eventplanner.events.application.services.ConfigurationService;
 import org.eventplanner.events.domain.aggregates.ApplicationConfig;
