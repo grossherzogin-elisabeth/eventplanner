@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.users;
 
 import static org.eventplanner.events.domain.values.notifications.NotificationType.QUALIFICATION_CLOSE_TO_EXPIRED;
 import static org.eventplanner.events.domain.values.notifications.NotificationType.QUALIFICATION_EXPIRED;
@@ -21,7 +21,6 @@ import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.services.ConfigurationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
-import org.eventplanner.events.application.usecases.users.UserQualificationExpirationUseCase;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.eventplanner.testdata.QualificationFactory;
