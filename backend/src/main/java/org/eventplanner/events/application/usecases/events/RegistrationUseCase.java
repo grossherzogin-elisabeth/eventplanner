@@ -1,8 +1,9 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.events;
 
 import java.util.NoSuchElementException;
 
 import org.eventplanner.events.application.ports.EventRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
@@ -12,6 +13,7 @@ import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class RegistrationUseCase {
 
     private final EventRepository eventRepository;
     private final RegistrationService registrationService;
+    private final AuthenticationService authenticationService;
 
     /**
      * @param signedInUser the user performing this action
@@ -94,23 +97,21 @@ public class RegistrationUseCase {
     }
 
     /**
-     * @param signedInUser the user performing this action
-     * @param spec         the update specification
+     * @param spec the update specification
      * @return the updated event
      * @throws NoSuchElementException when the event or the registration does not exist
      * @throws IllegalStateException  when the event cannot be reloaded after removing the registration
      */
-    public @NonNull Event updateRegistration(
-        @NonNull final SignedInUser signedInUser,
-        @NonNull final UpdateRegistrationSpec spec
-    ) throws NoSuchElementException, IllegalStateException {
+    @PreAuthorize("hasAuthority('registrations:write') or hasAuthority('registrations:write-self')")
+    public @NonNull Event updateRegistration(@NonNull final UpdateRegistrationSpec spec)
+    throws NoSuchElementException, IllegalStateException {
+        var signedInUser = authenticationService.getSignedInUser();
         var event = eventRepository.findByKey(spec.eventKey())
             .orElseThrow(() -> new NoSuchElementException("Event does not exist"));
         var registration = event.findRegistrationByKey(spec.registrationKey())
             .orElseThrow(() -> new NoSuchElementException("Registration does not exist"));
 
         if (signedInUser.key().equals(registration.getUserKey())) {
-            signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
             log.info(
                 "User {} updates their registration on event {}",
                 registration.getUserKey(),

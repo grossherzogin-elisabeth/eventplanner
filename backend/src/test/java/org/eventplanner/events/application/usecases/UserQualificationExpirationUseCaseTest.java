@@ -21,6 +21,7 @@ import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.application.services.ConfigurationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.UserService;
+import org.eventplanner.events.application.usecases.users.UserQualificationExpirationUseCase;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.eventplanner.testdata.QualificationFactory;

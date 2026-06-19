@@ -3,8 +3,8 @@ package org.eventplanner.events.rest.registrations;
 import java.util.Objects;
 
 import org.eventplanner.events.application.usecases.AuthenticationUseCase;
-import org.eventplanner.events.application.usecases.RegistrationConfirmationUseCase;
-import org.eventplanner.events.application.usecases.RegistrationUseCase;
+import org.eventplanner.events.application.usecases.events.RegistrationConfirmationUseCase;
+import org.eventplanner.events.application.usecases.events.RegistrationUseCase;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.rest.events.dto.EventRepresentation;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -37,7 +38,7 @@ public class RegistrationController {
 
     @PostMapping("/{eventKey}/registrations")
     public ResponseEntity<EventRepresentation> createRegistration(
-        @PathVariable("eventKey") String eventKey,
+        @PathVariable String eventKey,
         @RequestBody CreateRegistrationRequest spec
     ) {
         var signedInUser = authenticationUseCase.getSignedInUser();
@@ -49,8 +50,8 @@ public class RegistrationController {
 
     @DeleteMapping("/{eventKey}/registrations/{registrationKey}")
     public ResponseEntity<EventRepresentation> deleteRegistration(
-        @PathVariable("eventKey") String eventKey,
-        @PathVariable("registrationKey") String registrationKey
+        @PathVariable String eventKey,
+        @PathVariable String registrationKey
     ) {
         var signedInUser = authenticationUseCase.getSignedInUser();
         var event = registrationUseCase.removeRegistration(
@@ -63,14 +64,15 @@ public class RegistrationController {
 
     @PutMapping("/{eventKey}/registrations/{registrationKey}")
     public ResponseEntity<EventRepresentation> updateRegistration(
-        @PathVariable("eventKey") String eventKey,
-        @PathVariable("registrationKey") String registrationKey,
-        @RequestBody UpdateRegistrationRequest spec
+        @PathVariable String eventKey,
+        @PathVariable String registrationKey,
+        @RequestBody UpdateRegistrationRequest updateRegistrationRequest
     ) {
-        var signedInUser = authenticationUseCase.getSignedInUser();
+        if (!updateRegistrationRequest.registrationKey().equals(registrationKey)) {
+            throw new ValidationException("Registration key cannot be updated");
+        }
         var event = registrationUseCase.updateRegistration(
-            signedInUser,
-            spec.toDomain(
+            updateRegistrationRequest.toDomain(
                 new EventKey(eventKey)
             )
         );
@@ -79,8 +81,8 @@ public class RegistrationController {
 
     @GetMapping("/{eventKey}/registrations/{registrationKey}/confirm")
     public ResponseEntity<Void> confirmRegistration(
-        @PathVariable("eventKey") String eventKey,
-        @PathVariable("registrationKey") String registrationKey,
+        @PathVariable String eventKey,
+        @PathVariable String registrationKey,
         @RequestParam("accessKey") String accessKey
     ) {
         registrationConfirmationUseCase.confirmRegistration(
@@ -93,8 +95,8 @@ public class RegistrationController {
 
     @GetMapping("/{eventKey}/registrations/{registrationKey}/decline")
     public ResponseEntity<Void> declineRegistration(
-        @PathVariable("eventKey") String eventKey,
-        @PathVariable("registrationKey") String registrationKey,
+        @PathVariable String eventKey,
+        @PathVariable String registrationKey,
         @RequestParam("accessKey") String accessKey
     ) {
         registrationConfirmationUseCase.declineRegistration(

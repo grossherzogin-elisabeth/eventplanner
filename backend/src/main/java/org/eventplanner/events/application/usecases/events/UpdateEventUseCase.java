@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.events;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;

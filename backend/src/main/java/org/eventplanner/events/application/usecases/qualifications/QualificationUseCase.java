@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.qualifications;
 
 import java.util.List;
 

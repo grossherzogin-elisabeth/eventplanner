@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.users;
 
 import java.util.List;
 import java.util.Optional;

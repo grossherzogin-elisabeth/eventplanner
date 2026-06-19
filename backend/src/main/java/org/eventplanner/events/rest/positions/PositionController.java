@@ -2,7 +2,7 @@ package org.eventplanner.events.rest.positions;
 
 import java.util.List;
 
-import org.eventplanner.events.application.usecases.PositionUseCase;
+import org.eventplanner.events.application.usecases.positions.PositionUseCase;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.rest.positions.dto.CreatePositionRequest;
 import org.eventplanner.events.rest.positions.dto.PositionRepresentation;

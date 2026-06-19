@@ -15,9 +15,11 @@ import java.util.Optional;
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.application.ports.RegistrationRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
+import org.eventplanner.events.application.usecases.events.RegistrationUseCase;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
@@ -32,6 +34,7 @@ class RegistrationUseCaseTest {
 
     private Event event;
     private EventRepository eventRepository;
+    private AuthenticationService authenticationService;
     private RegistrationUseCase testee;
 
     @BeforeEach
@@ -39,6 +42,7 @@ class RegistrationUseCaseTest {
         event = createEvent().withState(EventState.OPEN_FOR_SIGNUP);
 
         eventRepository = mock(EventRepository.class);
+        authenticationService = mock(AuthenticationService.class);
         when(eventRepository.findAllByYear(YEAR)).thenReturn(List.of(event));
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
         when(eventRepository.create(any())).thenAnswer(mock -> mock.getArgument(0));
@@ -51,13 +55,16 @@ class RegistrationUseCaseTest {
                 mock(UserService.class),
                 mock(RegistrationRepository.class),
                 mock(PositionRepository.class)
-            )
+            ),
+            authenticationService
         );
     }
 
     @Test
     void shouldNotAllowUpdatingOtherPersonsRegistration() {
         var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
         var registration = event.getRegistrations().getFirst();
         var updateSpec = new UpdateRegistrationSpec(
             event.getKey(),
@@ -73,13 +80,14 @@ class RegistrationUseCaseTest {
 
         assertThrows(
             MissingPermissionException.class,
-            () -> testee.updateRegistration(signedInUser, updateSpec)
+            () -> testee.updateRegistration(updateSpec)
         );
     }
 
     @Test
     void shouldAllowUpdatingOwnRegistration() {
         var signedInUser = createSignedInUser(Role.TEAM_MEMBER);
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
         var registration = event.getRegistrations().getFirst();
         registration.setUserKey(signedInUser.key());
@@ -96,7 +104,7 @@ class RegistrationUseCaseTest {
             null,
             null
         );
-        var updatedEvent = testee.updateRegistration(signedInUser, updateSpec);
+        var updatedEvent = testee.updateRegistration(updateSpec);
 
         assertThat(updatedEvent.getKey()).isEqualTo(event.getKey());
         assertThat(updatedEvent.getRegistrations().getFirst().getPosition()).isEqualTo(PositionKeys.ENGINEER);
@@ -106,7 +114,8 @@ class RegistrationUseCaseTest {
     @Test
     void shouldAllowUpdatingOtherPersonsRegistrationForAdmins() {
         var signedInUser = createSignedInUser(Role.ADMIN);
-
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+        
         var registration = event.getRegistrations().getFirst();
         registration.setPosition(PositionKeys.DECKHAND);
 
@@ -121,7 +130,7 @@ class RegistrationUseCaseTest {
             null,
             null
         );
-        var updatedEvent = testee.updateRegistration(signedInUser, updateSpec);
+        var updatedEvent = testee.updateRegistration(updateSpec);
 
         assertThat(updatedEvent.getKey()).isEqualTo(event.getKey());
         assertThat(updatedEvent.getRegistrations().getFirst().getPosition()).isEqualTo(PositionKeys.ENGINEER);

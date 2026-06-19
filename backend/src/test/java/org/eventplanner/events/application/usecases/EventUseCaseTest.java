@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.eventplanner.events.application.ports.EventRepository;
 import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.EventService;
+import org.eventplanner.events.application.usecases.events.EventUseCase;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;

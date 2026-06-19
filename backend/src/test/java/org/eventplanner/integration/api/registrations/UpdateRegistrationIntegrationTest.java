@@ -83,12 +83,13 @@ class UpdateRegistrationIntegrationTest extends EmailSpy {
     @Test
     void shouldReturnNotFoundForUnknownEvent() throws Exception {
         var requestBody = TestResources.getString("/integration/api/registrations/update-registration-request.json");
-        requestBody = requestBody.replace("$registrationKey", randomUUID().toString());
+        var registrationKey = randomUUID().toString();
+        requestBody = requestBody.replace("$registrationKey", registrationKey);
         requestBody = requestBody.replace("$positionKey", PositionKeys.DECKHAND.value());
         requestBody = requestBody.replace("$userKey", TestUser.EVENT_PLANNER.getOidcId());
         requestBody = requestBody.replace("$arrival", "2025-10-02");
 
-        webMvc.perform(put("/api/v1/events/" + randomUUID() + "/registrations/" + randomUUID())
+        webMvc.perform(put("/api/v1/events/" + randomUUID() + "/registrations/" + registrationKey)
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

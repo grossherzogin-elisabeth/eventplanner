@@ -4,10 +4,10 @@ import java.net.URI;
 import java.util.List;
 
 import org.eventplanner.events.application.usecases.AuthenticationUseCase;
-import org.eventplanner.events.application.usecases.CreateUserUseCase;
-import org.eventplanner.events.application.usecases.DeleteUserUseCase;
-import org.eventplanner.events.application.usecases.ReadUserUseCase;
-import org.eventplanner.events.application.usecases.UpdateUserUseCase;
+import org.eventplanner.events.application.usecases.users.CreateUserUseCase;
+import org.eventplanner.events.application.usecases.users.DeleteUserUseCase;
+import org.eventplanner.events.application.usecases.users.ReadUserUseCase;
+import org.eventplanner.events.application.usecases.users.UpdateUserUseCase;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.eventplanner.events.rest.users.dto.CreateUserRequest;

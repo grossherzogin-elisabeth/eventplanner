@@ -9,7 +9,7 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.eventplanner.events.application.usecases.EventExportUseCase;
+import org.eventplanner.events.application.usecases.events.EventExportUseCase;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.junit.jupiter.api.BeforeEach;

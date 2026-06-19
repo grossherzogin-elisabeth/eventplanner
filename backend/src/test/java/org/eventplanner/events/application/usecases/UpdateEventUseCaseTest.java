@@ -25,6 +25,7 @@ import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
+import org.eventplanner.events.application.usecases.events.UpdateEventUseCase;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;

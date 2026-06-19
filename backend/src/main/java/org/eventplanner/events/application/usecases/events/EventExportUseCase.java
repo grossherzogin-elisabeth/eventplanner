@@ -1,4 +1,4 @@
-package org.eventplanner.events.application.usecases;
+package org.eventplanner.events.application.usecases.events;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
