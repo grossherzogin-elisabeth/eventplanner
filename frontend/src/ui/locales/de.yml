@@ -160,6 +160,7 @@ components:
     default-title: 'Unerwarteter Fehler'
     default-text: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.'
     show-details: 'Details anzeigen'
+    details: 'Fehler Details'
 domain:
   types:
     event: 'Veranstaltung|Veranstaltungen'

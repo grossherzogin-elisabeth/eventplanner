@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -145,6 +146,22 @@ public class GlobalExceptionHandlingController {
     ) {
         log.warn("Unreadable request body on {} {}", request.getMethod(), request.getRequestURI(), exception);
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request is invalid");
+        body.setInstance(URI.create(request.getRequestURI()));
+        return ResponseEntity.status(body.getStatus()).body(body);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public @NonNull ResponseEntity<ProblemDetail> handleValidationException(
+        @NonNull final ValidationException exception,
+        @NonNull final HttpServletRequest request
+    ) {
+        log.warn(
+            "Request {} {} failed with validation exception {}",
+            request.getMethod(),
+            request.getRequestURI(),
+            exception.getMessage()
+        );
+        var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
         body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(body.getStatus()).body(body);
     }

@@ -23,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,11 +86,25 @@ public class UpdateUserUseCase {
         // these may only be changed by admins
         var hasWritePermission = signedInUser.hasPermission(Permission.WRITE_USERS);
         if (hasWritePermission) {
-            ofNullable(spec.authKey()).ifPresent(user::setAuthKey);
+            if (spec.authKey() != null) {
+                var existingUser = userService.getUserByAuthKey(spec.authKey());
+                if (existingUser.isPresent() && !existingUser.get().getKey().equals(userKey)) {
+                    log.warn("OIDC id is already assigned to another user");
+                    throw new ValidationException("A user with the provided OIDC id already exits");
+                }
+                user.setAuthKey(spec.authKey());
+            }
+            if (spec.email() != null) {
+                var existingUser = userService.getUserByEmail(spec.email());
+                if (existingUser.isPresent() && !existingUser.get().getKey().equals(userKey)) {
+                    log.warn("Email is already assigned to another user");
+                    throw new ValidationException("A user with the provided email already exits");
+                }
+                user.setEmail(spec.email());
+            }
             ofNullable(spec.firstName()).map(String::trim).ifPresent(user::setFirstName);
             ofNullable(spec.secondName()).map(String::trim).ifPresent(user::setSecondName);
             ofNullable(spec.lastName()).map(String::trim).ifPresent(user::setLastName);
-            ofNullable(spec.email()).map(String::trim).ifPresent(user::setEmail);
             ofNullable(spec.comment()).map(String::trim).ifPresent(user::setComment);
             ofNullable(spec.qualifications()).ifPresent(specs -> updateUserQualifications(user, specs));
             ofNullable(spec.roles()).ifPresent(user::setRoles);

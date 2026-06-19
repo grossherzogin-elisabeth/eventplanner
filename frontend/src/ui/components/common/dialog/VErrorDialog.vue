@@ -7,7 +7,8 @@
                     {{ error.message || $t('components.error-dialog.default-text') }}
                 </p>
             </div>
-            <div v-if="showDetails" class="max-h-64 overflow-auto pb-8">
+            <div v-if="showDetails" class="bg-surface/10 max-h-64 overflow-auto pt-4 pb-8 shadow-inner">
+                <h3 class="xs:pl-8 mb-4 pl-4 text-sm font-bold lg:pl-10">{{ $t('components.error-dialog.details') }}</h3>
                 <pre class="xs:pl-8 text-onerror-container pl-4 text-xs lg:pl-10">{{ details }}</pre>
             </div>
         </template>
@@ -30,7 +31,7 @@
     </VDialog>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useErrorHandlingService } from '@/application';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog } from '@/ui/components/common';
@@ -40,17 +41,7 @@ const errorHandlingService = useErrorHandlingService();
 const dlg = ref<Dialog<ErrorDialogMessage, void> | null>(null);
 const error = ref<ErrorDialogMessage>({});
 const showDetails = ref<boolean>(false);
-
-const details = computed<string>(() => {
-    const e = error.value.error;
-    if (e instanceof Response) {
-        return e.status + ': ' + e.statusText;
-    }
-    if (e instanceof Error) {
-        return e.stack ?? e.message;
-    }
-    return '';
-});
+const details = ref<string>('');
 
 function init(): void {
     errorHandlingService.registerErrorHandler((err) => open(err));
@@ -64,6 +55,18 @@ async function open(message?: ErrorDialogMessage): Promise<void> {
     if (dlg.value && message) {
         error.value = message;
         showDetails.value = false;
+        details.value = '';
+        const e = error.value.error;
+        if (e instanceof Response) {
+            try {
+                details.value = await e.clone().json();
+            } catch (err) {
+                details.value = `${e.status}: ${e.statusText}`;
+            }
+        }
+        if (e instanceof Error) {
+            details.value = e.stack ?? e.message;
+        }
         await dlg.value?.open(message).catch(() => undefined);
     }
 }
