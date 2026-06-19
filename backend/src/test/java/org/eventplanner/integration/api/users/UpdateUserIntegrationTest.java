@@ -118,6 +118,17 @@ class UpdateUserIntegrationTest {
     }
 
     @Test
+    void shouldReturnBadRequestForDuplicateOidcIds() throws Exception {
+        var requestBody = "{\"authKey\": \"" + TestUser.TEAM_MEMBER.getOidcId() + "\"}";
+        webMvc.perform(patch("/api/v1/users/" + TestUser.USER_WITHOUT_ROLE.getOidcId())
+                .with(withAuthentication(TestUser.ADMIN))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void shouldUpdateUser() throws Exception {
         var userKey = TestUser.USER_WITHOUT_ROLE.getOidcId();
         var before = encrypedUserDetailsJpaRepository.findById(userKey).orElseThrow();
