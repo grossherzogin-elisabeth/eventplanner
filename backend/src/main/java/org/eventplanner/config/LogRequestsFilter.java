@@ -34,21 +34,22 @@ public class LogRequestsFilter extends OncePerRequestFilter {
         if (request.getRequestURI().startsWith("/api/")) {
             log.info("Received request {} {}", request.getMethod(), request.getRequestURI());
         }
-
-        filterChain.doFilter(request, response);
-
-        var durationMillis = System.currentTimeMillis() - startTimeMillis;
-        MDC.put("response_status", String.valueOf(response.getStatus()));
-        MDC.put("request_duration_millis", String.valueOf(durationMillis));
-        if (request.getRequestURI().startsWith("/api/")) {
-            log.info(
-                "Completed request {} {} with status {} in {} ms",
-                request.getMethod(),
-                request.getRequestURI(),
-                response.getStatus(),
-                durationMillis
-            );
+        try {
+            filterChain.doFilter(request, response);
+        } finally {
+            var durationMillis = System.currentTimeMillis() - startTimeMillis;
+            MDC.put("response_status", String.valueOf(response.getStatus()));
+            MDC.put("request_duration_millis", String.valueOf(durationMillis));
+            if (request.getRequestURI().startsWith("/api/")) {
+                log.info(
+                    "Completed request {} {} with status {} in {} ms",
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    response.getStatus(),
+                    durationMillis
+                );
+            }
+            MDC.clear();
         }
-        MDC.clear();
     }
 }
