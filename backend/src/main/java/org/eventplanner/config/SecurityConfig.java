@@ -24,21 +24,18 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 public class SecurityConfig {
 
     private final OAuthClientConfig oAuthClientConfig;
-    private final UserAuthenticationMapper userAuthenticationMapper;
-    private final LogSignedInUserKeyFilter logSignedInUserKeyFilter;
+    private final UserAuthenticationFilter userAuthenticationFilter;
     private final LogRequestsFilter logRequestsFilter;
     private final boolean enableCSRF;
 
     public SecurityConfig(
         @NonNull @Autowired final OAuthClientConfig oAuthClientConfig,
-        @NonNull @Autowired final UserAuthenticationMapper userAuthenticationMapper,
-        @NonNull @Autowired final LogSignedInUserKeyFilter logSignedInUserKeyFilter,
+        @NonNull @Autowired final UserAuthenticationFilter userAuthenticationFilter,
         @NonNull @Autowired final LogRequestsFilter logRequestsFilter,
         @Nullable @Value("${security.enable-csrf}") String enableCSRF
     ) {
         this.oAuthClientConfig = oAuthClientConfig;
-        this.userAuthenticationMapper = userAuthenticationMapper;
-        this.logSignedInUserKeyFilter = logSignedInUserKeyFilter;
+        this.userAuthenticationFilter = userAuthenticationFilter;
         this.logRequestsFilter = logRequestsFilter;
         this.enableCSRF = "true".equals(enableCSRF);
     }
@@ -65,9 +62,8 @@ public class SecurityConfig {
         });
 
         http = oAuthClientConfig.configure(http);
-        http.addFilterAfter(userAuthenticationMapper, AnonymousAuthenticationFilter.class);
-        http.addFilterAfter(logSignedInUserKeyFilter, UserAuthenticationMapper.class);
-        http.addFilterAfter(logRequestsFilter, LogSignedInUserKeyFilter.class);
+        http.addFilterAfter(logRequestsFilter, AnonymousAuthenticationFilter.class);
+        http.addFilterAfter(userAuthenticationFilter, LogRequestsFilter.class);
         return http.build();
     }
 }

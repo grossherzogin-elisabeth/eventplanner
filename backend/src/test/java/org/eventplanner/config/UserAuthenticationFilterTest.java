@@ -46,11 +46,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-class UserAuthenticationMapperTest {
+class UserAuthenticationFilterTest {
 
     private AuthenticationService authService;
     private UserService userService;
-    private UserAuthenticationMapper testee;
+    private UserAuthenticationFilter testee;
     private HttpServletRequest request;
     private HttpServletResponse response;
     private FilterChain filterChain;
@@ -59,7 +59,7 @@ class UserAuthenticationMapperTest {
     void setup() {
         userService = mock();
         authService = mock();
-        testee = new UserAuthenticationMapper(authService, userService);
+        testee = new UserAuthenticationFilter(authService, userService);
         request = mock();
         response = mock();
         filterChain = mock();
@@ -73,7 +73,7 @@ class UserAuthenticationMapperTest {
     @Test
     void shouldMapOidcAuthenticationToSignedInUser() throws Exception {
         var oidcUser = mockOidcUser("subject", "user@email.com", "Jane", "Doe");
-        var signedInUser = mock(SignedInUser.class);
+        var signedInUser = createSignedInUser();
 
         when(authService.authenticate(oidcUser)).thenReturn(signedInUser);
 
@@ -89,7 +89,7 @@ class UserAuthenticationMapperTest {
     @Test
     void shouldMapOAuth2AuthenticationToSignedInUser() throws Exception {
         var oAuth2User = mockOAuth2User("subject", "user@email.com", "Jane", "Doe");
-        var signedInUser = mock(SignedInUser.class);
+        var signedInUser = createSignedInUser();
 
         when(authService.authenticate(oAuth2User)).thenReturn(signedInUser);
 
@@ -107,7 +107,7 @@ class UserAuthenticationMapperTest {
         var oAuth2User = mock(OAuth2User.class);
         when(oAuth2User.getAttribute(StandardClaimNames.SUB)).thenReturn("subject");
         when(oAuth2User.getAttribute(StandardClaimNames.EMAIL)).thenReturn("user@email.com");
-        var signedInUser = mock(SignedInUser.class);
+        var signedInUser = createSignedInUser();
         when(authService.authenticate(oAuth2User)).thenReturn(signedInUser);
 
         SecurityContextHolder.getContext()
