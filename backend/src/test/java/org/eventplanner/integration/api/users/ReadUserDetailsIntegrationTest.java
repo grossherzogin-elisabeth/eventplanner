@@ -60,7 +60,7 @@ class ReadUserDetailsIntegrationTest {
 
     @Test
     void shouldReturnUserInformationForSelf() throws Exception {
-        webMvc.perform(get("/api/v1/users/" + TestUser.TEAM_MEMBER)
+        webMvc.perform(get("/api/v1/users/self")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())

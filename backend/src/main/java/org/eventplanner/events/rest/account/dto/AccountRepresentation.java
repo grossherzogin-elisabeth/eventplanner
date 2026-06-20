@@ -13,8 +13,8 @@ import org.jspecify.annotations.Nullable;
 public record AccountRepresentation(
     @NonNull String key,
     @NonNull String email,
-    @NonNull List<String> roles,
-    @NonNull List<String> permissions,
+    @NonNull List<Role> roles,
+    @NonNull List<Permission> permissions,
     @NonNull List<String> positions,
     @Nullable String gender,
     @NonNull String firstName,
@@ -24,8 +24,8 @@ public record AccountRepresentation(
         return new AccountRepresentation(
             signedInUser.key().value(),
             signedInUser.email(),
-            signedInUser.roles().stream().map(Role::value).toList(),
-            signedInUser.permissions().stream().map(Permission::value).toList(),
+            signedInUser.roles(),
+            signedInUser.permissions(),
             signedInUser.positions().stream().map(PositionKey::value).toList(),
             signedInUser.gender(),
             signedInUser.firstName(),

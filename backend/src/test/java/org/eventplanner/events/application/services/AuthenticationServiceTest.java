@@ -175,19 +175,6 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void shouldThrowWhenOAuth2EmailClaimIsMissing() {
-        var oAuth2User = mock(OAuth2User.class);
-        when(oAuth2User.getAttribute(StandardClaimNames.SUB)).thenReturn("sub");
-        when(oAuth2User.getAttribute(StandardClaimNames.EMAIL)).thenReturn(null);
-        when(oAuth2User.getAttribute(StandardClaimNames.GIVEN_NAME)).thenReturn("given name");
-        when(oAuth2User.getAttribute(StandardClaimNames.FAMILY_NAME)).thenReturn("last name");
-
-        assertThatException().isThrownBy(() -> testee.authenticate(oAuth2User))
-            .isInstanceOf(IllegalArgumentException.class)
-            .withMessage("Missing email claim in OAuth2 user");
-    }
-
-    @Test
     void shouldAuthenticateOAuth2User() {
         var authKey = new AuthKey("auth");
         var email = "new@email.com";

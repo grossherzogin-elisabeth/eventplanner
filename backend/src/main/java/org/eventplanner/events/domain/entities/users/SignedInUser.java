@@ -43,7 +43,7 @@ public record SignedInUser(
         return new SignedInUser(
             user.getKey(),
             Optional.ofNullable(user.getAuthKey()).orElse(new AuthKey("")),
-            user.getRoles(),
+            user.getRoles().isEmpty() ? List.of(Role.NONE) : user.getRoles(),
             Optional.ofNullable(user.getEmail()).orElse(""),
             user.getPositions(),
             user.getGender(),

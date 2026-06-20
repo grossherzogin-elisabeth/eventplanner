@@ -69,8 +69,8 @@ public class AuthenticationService {
         return authenticate(
             new AuthKey(oidcUser.getSubject()),
             oidcUser.getEmail(),
-            oidcUser.getGivenName(),
-            oidcUser.getFamilyName(),
+            Optional.ofNullable(oidcUser.getGivenName()).orElse("Unknown"),
+            Optional.ofNullable(oidcUser.getFamilyName()).orElse("Unknown"),
             oidcUser
         );
     }
@@ -81,19 +81,19 @@ public class AuthenticationService {
             .orElseThrow(() -> new IllegalArgumentException("Missing sub claim in OAuth2 user"));
         var email = Optional.ofNullable(oAuth2User.getAttribute(StandardClaimNames.EMAIL))
             .map(Object::toString)
-            .orElseThrow(() -> new IllegalArgumentException("Missing email claim in OAuth2 user"));
+            .orElse(null);
         var firstName = Optional.ofNullable(oAuth2User.getAttribute(StandardClaimNames.GIVEN_NAME))
             .map(Object::toString)
-            .orElse("");
+            .orElse("Unknown");
         var lastName = Optional.ofNullable(oAuth2User.getAttribute(StandardClaimNames.FAMILY_NAME))
             .map(Object::toString)
-            .orElse("");
+            .orElse("Unknown");
         return authenticate(new AuthKey(sub), email, firstName, lastName, oAuth2User);
     }
 
     private @NonNull SignedInUser authenticate(
         @NonNull AuthKey authKey,
-        @NonNull String email,
+        @Nullable String email,
         @NonNull String firstName,
         @NonNull String lastName,
         @NonNull AuthenticatedPrincipal authentication
@@ -127,7 +127,7 @@ public class AuthenticationService {
         // save changes
         userService.updateUser(user);
         if (admins.contains(user.getEmail()) && !user.getRoles().contains(Role.ADMIN)) {
-            log.info("Temporarily granting admin role to signed-in user via configuration");
+            log.info("Temporarily granting admin role to signed-in user by configuration");
             var roles = new ArrayList<>(user.getRoles());
             roles.add(Role.ADMIN);
             user = user.withRoles(roles);
@@ -139,7 +139,7 @@ public class AuthenticationService {
 
     private @NonNull UserDetails createUser(
         @NonNull AuthKey authKey,
-        @NonNull String email,
+        @Nullable String email,
         @NonNull String firstName,
         @NonNull String lastName
     ) {
