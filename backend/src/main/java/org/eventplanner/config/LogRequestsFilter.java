@@ -27,20 +27,28 @@ public class LogRequestsFilter extends OncePerRequestFilter {
         @NonNull final FilterChain filterChain
     )
     throws ServletException, IOException {
-        log.debug("Received request {} {}", request.getMethod(), request.getRequestURI());
+        var startTimeMillis = System.currentTimeMillis();
         MDC.put("request_method", request.getMethod());
         MDC.put("request_url", request.getRequestURI());
         MDC.put("trace_id", UUID.randomUUID().toString());
+        if (request.getRequestURI().startsWith("/api/")) {
+            log.debug("Received request {} {}", request.getMethod(), request.getRequestURI());
+        }
 
         filterChain.doFilter(request, response);
 
-        MDC.put("response_url", String.valueOf(response.getStatus()));
-        log.debug(
-            "Completed request {} {} with status {}",
-            request.getMethod(),
-            request.getRequestURI(),
-            response.getStatus()
-        );
+        var durationMillis = System.currentTimeMillis() - startTimeMillis;
+        MDC.put("response_status", String.valueOf(response.getStatus()));
+        MDC.put("request_duration_millis", String.valueOf(durationMillis));
+        if (request.getRequestURI().startsWith("/api/")) {
+            log.debug(
+                "Completed request {} {} with status {} in {} ms",
+                request.getMethod(),
+                request.getRequestURI(),
+                response.getStatus(),
+                durationMillis
+            );
+        }
         MDC.clear();
     }
 }
