@@ -161,7 +161,6 @@ public class Event {
     }
 
     public @NonNull Event removeInvalidSlotAssignments() {
-        log.debug("Removing invalid slot assignments for event {}", name);
         var counter = 0;
         var validRegistrationKeys = registrations.stream().map(Registration::getKey).toList();
         for (EventSlot slot : slots) {
@@ -173,8 +172,6 @@ public class Event {
         }
         if (counter > 0) {
             log.info("Removed {} invalid slot assignments for event {}", counter, name);
-        } else {
-            log.debug("All slot assignments for event {} are valid", name);
         }
         return this;
     }
