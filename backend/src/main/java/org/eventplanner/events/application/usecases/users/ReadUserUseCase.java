@@ -7,7 +7,6 @@ import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.users.User;
 import org.eventplanner.events.domain.entities.users.UserDetails;
-import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,13 +35,16 @@ public class ReadUserUseCase {
         return userService.getDetailedUsers();
     }
 
-    @PreAuthorize("hasAuthority('users:read-details') or hasAuthority('users:read-details-self')")
+    @PreAuthorize("hasAuthority('users:read-details')")
     public @NonNull Optional<UserDetails> getUserByKey(@NonNull final UserKey key) {
-        var signedInUser = authenticationService.getSignedInUser();
-        if (!signedInUser.key().equals(key)) {
-            signedInUser.assertHasPermission(Permission.READ_USER_DETAILS);
-        }
         log.debug("Reading details of user {}", key);
         return userService.getUserByKey(key);
+    }
+
+    @PreAuthorize("hasAuthority('users:read-details-self')")
+    public @NonNull Optional<UserDetails> getSignedInUserDetails() {
+        var signedInUser = authenticationService.getSignedInUser();
+        log.debug("Reading details of signed in user {}", signedInUser.key());
+        return userService.getUserByKey(signedInUser.key());
     }
 }

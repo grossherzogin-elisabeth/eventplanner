@@ -19,7 +19,6 @@ import org.eventplanner.events.rest.users.dto.UserSelfRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -84,9 +83,7 @@ public class UserController {
 
     @GetMapping("/self")
     public ResponseEntity<UserSelfRepresentation> getSignedInUser() {
-        var signedInUser =
-            authenticationUseCase.getSignedInUser(SecurityContextHolder.getContext().getAuthentication());
-        return readUserUseCase.getUserByKey(signedInUser.key())
+        return readUserUseCase.getSignedInUserDetails()
             .map(UserSelfRepresentation::fromDomain)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
