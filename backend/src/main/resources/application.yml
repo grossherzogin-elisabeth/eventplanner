@@ -59,14 +59,23 @@ templates:
 
 data:
   directory: ${DATA_DIRECTORY:data}
-  # the password to use for encrypting sensible data
-  encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
-  # to rotate the encryption password we have to read all encrypted data with the old secret and then reencrypt with
+  encryption:
+    # the secret to use for encrypting sensible data
+    password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
+    salt: ${DATA_ENCRYPTION_SALT:99066439-9e45-48e7-bb3d-7abff0e9cb9c}
+    iteration-count: ${DATA_ENCRYPTION_ITERATION_COUNT:1000000}
+  # to rotate the encryption secret we have to read all encrypted data with the old secret and then reencrypt with
   # the new one
   encryption-rotation:
     rotate-users: ${ROTATE_USER_ENCRYPTION:false}
-    old-secret: ${DATA_ENCRYPTION_PASSWORD_OLD:}
-    new-secret: ${DATA_ENCRYPTION_PASSWORD:}
+    old:
+      password: ${DATA_ENCRYPTION_PASSWORD_OLD:}
+      salt: ${DATA_ENCRYPTION_SALT_OLD:99066439-9e45-48e7-bb3d-7abff0e9cb9c}
+      iteration-count: ${DATA_ENCRYPTION_ITERATION_COUNT_OLD:1000000}
+    new:
+      password: ${DATA_ENCRYPTION_PASSWORD:}
+      salt: ${DATA_ENCRYPTION_SALT:99066439-9e45-48e7-bb3d-7abff0e9cb9c}
+      iteration-count: ${DATA_ENCRYPTION_ITERATION_COUNT:1000000}
 
 spring:
   datasource:
