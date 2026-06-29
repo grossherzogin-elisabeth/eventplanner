@@ -38,9 +38,9 @@ public class UpdateEventUseCase {
     private final RegistrationService registrationService;
     private final EventRepository eventRepository;
 
-    @PreAuthorize("hasPermission('events:write-details') " +
-        "or hasPermission('events:write-slots') " +
-        "or hasPermission('events:write-registrations')")
+    @PreAuthorize("hasAuthority('events:write-details') " +
+        "or hasAuthority('events:write-slots') " +
+        "or hasAuthority('events:write-registrations')")
     public @NonNull Event updateEvent(
         @NonNull final UpdateEventSpec spec
     ) throws NoSuchElementException {

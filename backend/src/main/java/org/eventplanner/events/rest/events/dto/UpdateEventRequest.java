@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
+import org.eventplanner.common.validation.EnumValue;
+import org.eventplanner.common.validation.IsoTimestamp;
 import org.eventplanner.events.domain.specs.UpdateEventSpec;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventSignupType;
@@ -17,13 +19,13 @@ import org.jspecify.annotations.Nullable;
 
 public record UpdateEventRequest(
     @Nullable String name,
-    @Nullable String type,
-    @Nullable String signupType,
+    @Nullable @EnumValue(EventType.class) String type,
+    @Nullable @EnumValue(EventSignupType.class) String signupType,
     @Nullable String state,
     @Nullable String note,
     @Nullable String description,
-    @Nullable String start,
-    @Nullable String end,
+    @Nullable @IsoTimestamp String start,
+    @Nullable @IsoTimestamp String end,
     @Nullable List<EventLocationRepresentation> locations,
     @Nullable List<EventSlotRepresentation> slots,
     @Nullable List<String> registrationsToRemove,

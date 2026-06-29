@@ -1,0 +1,11 @@
+{
+  "type": "other",
+  "signupType": "assignment",
+  "name": "Test event",
+  "note": "Note",
+  "description": "Description",
+  "start": "2025-08-15T09:00:00Z",
+  "end": "2025-08-18T16:00:00Z",
+  "locations": [],
+  "slots": []
+}
