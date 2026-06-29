@@ -134,6 +134,7 @@ public class GlobalExceptionHandlingController {
             request.getMethod(),
             request.getRequestURI()
         );
+        log.debug("Caught an IllegalArgumentException", exception);
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
         body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(body.getStatus()).body(body);

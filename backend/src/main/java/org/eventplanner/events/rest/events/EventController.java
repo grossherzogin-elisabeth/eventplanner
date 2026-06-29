@@ -95,7 +95,7 @@ public class EventController {
     @PatchMapping("/{eventKey}")
     public ResponseEntity<EventRepresentation> updateEvent(
         @PathVariable String eventKey,
-        @RequestBody UpdateEventRequest spec
+        @Valid @RequestBody UpdateEventRequest spec
     ) {
         var event = updateEventUseCase.updateEvent(spec.toDomain(new EventKey(eventKey)));
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
