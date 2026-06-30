@@ -1,0 +1,24 @@
+{
+  "slots": [
+    {
+      "key": "11111111-1111-1111-1111-111111111111",
+      "order": 1,
+      "criticality": 2,
+      "positionKeys": ["24dd5aef-e819-4d9d-8b19-d9d592c4ff8f"],
+      "name": "Skipper",
+      "assignedRegistrationKey": null
+    },
+    {
+      "key": "22222222-2222-2222-2222-222222222222",
+      "order": 2,
+      "criticality": 0,
+      "positionKeys": [
+        "08c609d2-26c9-4848-b17b-8feac2e2a91f",
+        "3ea10356-8f2f-49df-abc8-b9ecd1a6934e"
+      ],
+      "name": "Deck Crew",
+      "assignedRegistrationKey": null
+    }
+  ]
+}
+
