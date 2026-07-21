@@ -71,7 +71,11 @@ data:
 spring:
   datasource:
     hikari:
-      maximum-pool-size: 1
+      connection-init-sql: |
+        PRAGMA journal_mode=WAL;
+        PRAGMA synchronous=NORMAL;
+        PRAGMA cache_size=-10000;
+        PRAGMA temp_store=MEMORY;
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:${data.directory}/eventplanner.db
   jpa:
