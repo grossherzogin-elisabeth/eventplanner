@@ -40,14 +40,14 @@ public class EventUseCase {
     @PreAuthorize("hasAuthority('events:create')")
     public @NonNull Event createEvent(@NonNull final CreateEventSpec spec) {
         var event = spec.toEvent();
-        log.info("Creating new event {}", event.getName());
+        log.info("Creating new event");
         return eventRepository.create(event);
     }
 
     @PreAuthorize("hasAuthority('events:delete')")
     public void deleteEvent(@NonNull final EventKey eventKey) {
         var event = eventRepository.findByKey(eventKey).orElseThrow();
-        log.info("Deleting event {}", event.getName());
+        log.info("Deleting event {}", eventKey);
         eventRepository.deleteByKey(event.getKey());
     }
 
