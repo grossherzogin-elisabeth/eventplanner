@@ -1,0 +1,27 @@
+{
+  "locations": [
+    {
+      "name": "Harbor",
+      "icon": "fa-anchor",
+      "address": "Pier 7",
+      "country": "DE",
+      "addressLink": "https://maps.example/harbor",
+      "information": "Boarding starts 30 minutes before departure.",
+      "informationLink": "https://example.org/boarding",
+      "eta": null,
+      "etd": "2025-04-12T14:15:00Z"
+    },
+    {
+      "name": "Island Base",
+      "icon": "fa-location-dot",
+      "address": "Dock 2",
+      "country": "DE",
+      "addressLink": null,
+      "information": "Return transfer available.",
+      "informationLink": null,
+      "eta": "2025-04-13T15:30:00Z",
+      "etd": null
+    }
+  ]
+}
+
