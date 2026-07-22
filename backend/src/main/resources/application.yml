@@ -115,7 +115,7 @@ server:
     threads:
       # Default is 200, taking 1MB of stack size each. As we don't need that many
       # parallel requests, we can save some memory here
-      max: 20
+      max: 50
   servlet:
     session:
       timeout: ${auth.session-timeout}s
