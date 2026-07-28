@@ -69,11 +69,12 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(signedInUser);
                         MDC.put("user", signedInUser.key().value());
                     }
-                } else if (authentication instanceof SignedInUser signedInUser
-                    && signedInUser.loginAt().isBefore(Instant.now().minus(CACHING_DURATION))) {
+                } else if (authentication instanceof SignedInUser signedInUser) {
                     MDC.put("user", signedInUser.key().value());
-                    log.debug("Refreshing signed-in user, because session is older than {}", CACHING_DURATION);
-                    refreshSignedInUser(signedInUser);
+                    if (signedInUser.loginAt().isBefore(Instant.now().minus(CACHING_DURATION))) {
+                        log.debug("Refreshing signed-in user, because session is older than {}", CACHING_DURATION);
+                        refreshSignedInUser(signedInUser);
+                    }
                 }
             }
         }
@@ -102,7 +103,10 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     private void refreshSignedInUser(@NonNull SignedInUser signedInUser) {
         var user = userService.getUserByKey(signedInUser.key());
         if (user.isEmpty()) {
-            log.error("Signed-in user with key {} does no longer exist", signedInUser.key());
+            log.error(
+                "Cannot refresh signed-in user, because user with key {} does no longer exist",
+                signedInUser.key()
+            );
             SecurityContextHolder.getContext().setAuthentication(null);
             throw new UnauthorizedException();
         }
