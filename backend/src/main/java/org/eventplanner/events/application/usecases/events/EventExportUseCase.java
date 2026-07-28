@@ -96,7 +96,7 @@ public class EventExportUseCase {
     ) {
         var signedInUser = authenticationService.getSignedInUser();
         var events = eventService.getEvents(signedInUser, year);
-        log.info("Generating event matric for {} events of year {}", events.size(), year);
+        log.info("Generating event matrix for {} events of year {}", events.size(), year);
         return eventMatrixExportService.exportEventMatrix(events);
     }
 
