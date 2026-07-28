@@ -31,7 +31,7 @@
     "devDependencies": {
         "@babel/core": "^7.29.7",
         "@babel/preset-env": "^7.29.7",
-        "@babel/preset-typescript": "^7.29.7",
+        "@babel/preset-typescript": "^8.0.1",
         "@material/material-color-utilities": "^0.4.0",
         "@modyfi/vite-plugin-yaml": "^1.1.1",
         "@tailwindcss/postcss": "^4.3.3",
