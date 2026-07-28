@@ -26,7 +26,7 @@ RUN mkdir -p /app/data
 COPY --from=backend-builder /builder/build/libs/*.jar eventplanner.jar
 
 ENTRYPOINT ["java", \
-  "-XX:MaxRAM=128m", \
+  "-XX:MaxRAM=512m", \
   "-Xss512k", \
   "-XX:+UseContainerSupport", \
   "-XX:+UseSerialGC", \
