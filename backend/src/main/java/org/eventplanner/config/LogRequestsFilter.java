@@ -32,7 +32,7 @@ public class LogRequestsFilter extends OncePerRequestFilter {
         MDC.put("request_url", request.getRequestURI());
         MDC.put("trace_id", UUID.randomUUID().toString());
         if (request.getRequestURI().startsWith("/api/")) {
-            log.info("Received request {} {}", request.getMethod(), request.getRequestURI());
+            log.debug("Received request {} {}", request.getMethod(), request.getRequestURI());
         }
         try {
             filterChain.doFilter(request, response);
@@ -41,7 +41,7 @@ public class LogRequestsFilter extends OncePerRequestFilter {
             MDC.put("response_status", String.valueOf(response.getStatus()));
             MDC.put("request_duration_millis", String.valueOf(durationMillis));
             if (request.getRequestURI().startsWith("/api/")) {
-                log.info(
+                log.debug(
                     "Completed request {} {} with status {} in {} ms",
                     request.getMethod(),
                     request.getRequestURI(),
