@@ -46,7 +46,7 @@
             @close="showDropdown = false"
         >
             <VDatepicker
-                class="w-96"
+                class="w-96 p-4"
                 :model-value="props.modelValue ?? new Date()"
                 :highlight-from="props.highlightFrom"
                 :highlight-to="props.highlightTo"
@@ -56,7 +56,12 @@
         <VDialog ref="dialog" type="modal" width="auto">
             <template #title>{{ props.label }}</template>
             <template #default>
-                <VDatepicker v-model="dialogValue" :highlight-from="props.highlightFrom" :highlight-to="props.highlightTo" />
+                <VDatepicker
+                    v-model="dialogValue"
+                    :highlight-from="props.highlightFrom"
+                    :highlight-to="props.highlightTo"
+                    class="w-96 p-4"
+                />
             </template>
             <template #buttons="{ close, submit }">
                 <button class="btn-ghost" @click="close()">

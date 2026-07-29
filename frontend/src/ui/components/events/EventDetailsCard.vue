@@ -4,11 +4,7 @@
             {{ $t('components.event-details-card.title') }}
         </h2>
         <VInteractiveList>
-            <VListItem
-                icon="fa-calendar-day"
-                :label="$t('domain.event.time')"
-                :content="formatTimeRange(props.event.start, props.event.end)"
-            />
+            <EventTimeCard :event="props.event" />
             <VListItem
                 icon="fa-users"
                 :label="$t('domain.event.crew')"
@@ -48,9 +44,9 @@
 import { computed } from 'vue';
 import { type Event, EventState } from '@/domain';
 import { VInteractiveList, VListItem, VMarkdown } from '@/ui/components/common';
-import { formatTimeRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
+import EventTimeCard from '@/ui/components/events/EventTimeCard.vue';
 
 interface Props {
     event: Event;
