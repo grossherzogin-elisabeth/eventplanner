@@ -46,6 +46,9 @@ const openPositions = computed<Position[]>(() => {
 
 const content = computed<StateBannerContent | undefined>(() => {
     // event is still in planning state
+    if (props.event.state === EventState.Draft) {
+        return { type: VInfo, message: 'views.event-details.info-draft' };
+    }
     if (props.event.state === EventState.OpenForSignup && props.event.signupType === EventSignupType.Assignment) {
         return { type: VInfo, message: 'views.event-details.info-planning' };
     }

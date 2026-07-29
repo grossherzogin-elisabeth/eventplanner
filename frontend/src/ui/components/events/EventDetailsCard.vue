@@ -31,6 +31,11 @@
                 </template>
             </VListItem>
             <VListItem icon="fa-shapes" :label="$t('domain.event.type')" :content="eventTypes.getName(props.event.type)" />
+            <VListItem
+                icon="fa-user-check"
+                :label="$t('domain.event.signup-type')"
+                :content="eventSignupTypes.getName(props.event.signupType)"
+            />
             <VListItem v-if="props.event.description" icon="fa-file-lines" :label="$t('domain.event.description')">
                 <template #default>
                     <VMarkdown :value="props.event.description" />
@@ -45,6 +50,7 @@ import { type Event, EventState } from '@/domain';
 import { VInteractiveList, VListItem, VMarkdown } from '@/ui/components/common';
 import { formatTimeRange } from '@/ui/composables/DateRangeFormatter.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
+import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 
 interface Props {
     event: Event;
@@ -52,6 +58,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const eventTypes = useEventTypes();
+const eventSignupTypes = useEventSignupTypes();
 
 const waitingListCount = computed<number>(() => {
     if (!props.event) return 0;

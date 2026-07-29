@@ -235,6 +235,7 @@
         <VConfirmationDialog ref="confirmationDialog" />
         <EventBatchEditDlg ref="eventBatchEditDialog" />
         <CreateRegistrationDlg ref="createRegistrationDialog" :submit-text="$t('generic.save')" />
+        <EventDetailsSheet ref="eventPreviewSheet" :link-to="Routes.EventEdit" :link-label="$t('generic.edit')" />
 
         <div class="flex-1"></div>
 
@@ -330,7 +331,7 @@ import { filterUndefined } from '@/common';
 import { DateTimeFormat } from '@/common/date';
 import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
 import { EventState, Permission, SlotCriticality, useEventService } from '@/domain';
-import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import type { ConfirmationDialog, Dialog, Sheet } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VMultiSelectActions, VSearchButton, VTable, VTabs, VTooltip } from '@/ui/components/common';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
@@ -348,6 +349,7 @@ import { restoreScrollPosition } from '@/ui/plugins/router';
 import { Routes } from '@/ui/views/Routes';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
 import EventStateBadge from '@/ui/views/events/list-admin/EventStateBadge.vue';
+import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
 
 interface EventTableViewItem extends Event {
     selected: boolean;
@@ -389,6 +391,7 @@ const cancelEventDialog = ref<Dialog<Event, string> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
+const eventPreviewSheet = ref<Sheet<Event, Event> | null>(null);
 
 const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
     const f = filter.value.toLowerCase();
@@ -433,6 +436,10 @@ const tabs = computed<InputSelectOption[]>(() => {
 async function init(): Promise<void> {
     emit('update:tab-title', t('views.event-admin-list.tab-title'));
     watch(tab, () => fetchEvents());
+    watch(
+        () => router.currentRoute.value,
+        () => eventPreviewSheet.value?.close()
+    );
     await positions.loading;
     await nextTick(); // wait for the tab to have the correct value before fetching
     await fetchEvents();
@@ -499,7 +506,8 @@ async function editEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
     if (evt.ctrlKey || evt.metaKey) {
         window.open(router.resolve(to).href, '_blank');
     } else {
-        await router.push(to);
+        await eventPreviewSheet.value?.open(item);
+        // await router.push(to);
     }
 }
 

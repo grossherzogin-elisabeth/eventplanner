@@ -189,8 +189,8 @@ domain:
     training-event: 'Ausbildung'
     other: 'Sonstige'
   event-signup-type:
-    open: 'Offene Teilnahme'
-    assignment: 'Offene Anmeldung mit manueller Einteilung'
+    open: 'Direktanmeldung'
+    assignment: 'Warteliste'
   event:
     crew: 'Crew'
     waiting-list: 'Warteliste'
@@ -404,6 +404,8 @@ views:
           Veranstaltung wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann
           schwierig ist noch einen Ersatz für dich zu finden.'
   event-details:
+    info-draft: 'Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist nur für Nutzer mit 
+        Bearbeiten-Berechtigung sichtbar.'
     info-planning: 'Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme
         an der Veranstaltung! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.'
     info-canceled: 'Diese Veranstaltung wurde abgesagt!'
