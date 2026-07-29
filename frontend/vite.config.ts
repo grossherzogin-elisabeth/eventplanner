@@ -24,6 +24,7 @@ const pwa = VitePWA({
     },
     registerType: 'autoUpdate',
     workbox: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB
         navigateFallbackDenylist: [
             // api routes should always return the current server state and data caching should be done in app
             /^\/api.*/,
@@ -52,15 +53,21 @@ export default defineConfig(({ mode }) => {
     return {
         plugins: [vue(), svgLoader(), pwa, ViteYaml()],
         build: {
-            rollupOptions: {
+            rolldownOptions: {
                 output: {
-                    manualChunks: (id): string | null => {
-                        for (const [key, value] of Object.entries(chunks)) {
-                            if (id.includes(key)) {
-                                return value;
-                            }
-                        }
-                        return null;
+                    codeSplitting: {
+                        groups: [
+                            {
+                                name(moduleId): string | null {
+                                    for (const [key, value] of Object.entries(chunks)) {
+                                        if (moduleId.includes(key)) {
+                                            return value;
+                                        }
+                                    }
+                                    return null;
+                                },
+                            },
+                        ],
                     },
                 },
             },
