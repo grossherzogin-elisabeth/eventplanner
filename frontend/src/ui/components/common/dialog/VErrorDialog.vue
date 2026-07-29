@@ -61,6 +61,7 @@ async function open(message?: ErrorDialogMessage): Promise<void> {
             try {
                 details.value = await e.clone().json();
             } catch (err) {
+                console.error(err);
                 details.value = `${e.status}: ${e.statusText}`;
             }
         }
