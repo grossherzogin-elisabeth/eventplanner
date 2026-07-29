@@ -39,7 +39,7 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     // sqlite
-    implementation "org.xerial:sqlite-jdbc:3.53.2.0"
+    implementation "org.xerial:sqlite-jdbc:3.53.2.1"
     implementation "org.hibernate.orm:hibernate-community-dialects"
 
     // excel
