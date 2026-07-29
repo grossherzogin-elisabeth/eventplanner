@@ -18,6 +18,12 @@ describe('EventStateBanner.vue', () => {
         await usePositions().loading;
     });
 
+    it('should show draft banner as info', async () => {
+        const event = mockEvent({ state: EventState.Draft });
+        await testee.setProps({ event });
+        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-draft'));
+    });
+
     it('should show planning banner as info', async () => {
         const event = mockEvent({ state: EventState.OpenForSignup });
         await testee.setProps({ event });

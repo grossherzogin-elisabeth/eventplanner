@@ -235,7 +235,7 @@
         <VConfirmationDialog ref="confirmationDialog" />
         <EventBatchEditDlg ref="eventBatchEditDialog" />
         <CreateRegistrationDlg ref="createRegistrationDialog" :submit-text="$t('generic.save')" />
-        <EventAdminDetailsSheet ref="eventPreviewSheet" />
+        <EventDetailsSheet ref="eventPreviewSheet" :link-to="Routes.EventEdit" :link-label="$t('generic.edit')" />
 
         <div class="flex-1"></div>
 
@@ -349,7 +349,7 @@ import { restoreScrollPosition } from '@/ui/plugins/router';
 import { Routes } from '@/ui/views/Routes';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
 import EventStateBadge from '@/ui/views/events/list-admin/EventStateBadge.vue';
-import EventAdminDetailsSheet from '@/ui/components/sheets/EventAdminDetailsSheet.vue';
+import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
 
 interface EventTableViewItem extends Event {
     selected: boolean;

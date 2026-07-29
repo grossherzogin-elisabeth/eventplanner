@@ -11,10 +11,10 @@
         <template #bottom>
             <div class="lg:px-10-lg flex justify-end gap-2 px-8 py-4">
                 <RouterLink
-                    :to="{ name: Routes.EventDetails, params: { year: event.start.getFullYear(), key: event.key } }"
+                    :to="{ name: props.linkTo ?? Routes.EventDetails, params: { year: event.start.getFullYear(), key: event.key } }"
                     class="btn-ghost"
                 >
-                    <span>{{ $t('components.event-details-sheet.show-details') }}</span>
+                    <span>{{ props.linkLabel ?? $t('components.event-details-sheet.show-details') }}</span>
                 </RouterLink>
             </div>
         </template>
@@ -30,6 +30,13 @@ import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
 import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
 import EventStateBanner from '@/ui/components/events/EventStateBanner.vue';
 import { Routes } from '@/ui/views/Routes.ts';
+
+interface Props {
+    linkTo?: Routes.EventDetails | Routes.EventEdit;
+    linkLabel?: string;
+}
+
+const props = defineProps<Props>();
 
 const route = useRoute();
 
