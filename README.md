@@ -6,7 +6,8 @@
 
 # Eventplanner
 
-Eventplanner is a web application for planning multi-day events with scheduling, crew management, notifications, and exports.
+Eventplanner is a web application for planning multi-day events with scheduling, crew management, notifications, and
+exports.
 
 ## Tech stack
 
@@ -70,7 +71,7 @@ services:
 ### Prerequisites
 
 - Java 25 (Temurin recommended)
-- Node.js 24
+- Node.js 26
 - An OIDC provider (for login)
 
 ### 1) Start backend
@@ -124,18 +125,18 @@ cd backend
 
 ## Environment variables
 
-| Variable | Description | Default | Required |
-|---|---|---|---|
-| `OAUTH_ISSUER_URI` | OIDC issuer URI | - | yes |
-| `OAUTH_CLIENT_ID` | OIDC client ID | - | yes |
-| `OAUTH_CLIENT_SECRET` | OIDC client secret | - | yes |
-| `PORT` | HTTP port used by backend service | `80` | no |
-| `PROTOCOL` | Public protocol (`http` or `https`) | `https` | no |
-| `HOST` | Public host name | `localhost` | no |
-| `HOST_URL` | Full public URL (important when exposed port differs from app port) | `${PROTOCOL}://${HOST}/${PORT}` | no |
-| `DATA_ENCRYPTION_PASSWORD` | Password used to encrypt PII data | `default-encryption-password` | strongly recommended |
-| `EMAIL_WHITELIST` | Restrict outgoing email notifications to listed addresses | empty | no |
-| `ADMIN_EMAILS` | Comma-separated emails automatically granted admin role | empty | no |
+| Variable                   | Description                                                         | Default                         | Required             |
+|----------------------------|---------------------------------------------------------------------|---------------------------------|----------------------|
+| `OAUTH_ISSUER_URI`         | OIDC issuer URI                                                     | -                               | yes                  |
+| `OAUTH_CLIENT_ID`          | OIDC client ID                                                      | -                               | yes                  |
+| `OAUTH_CLIENT_SECRET`      | OIDC client secret                                                  | -                               | yes                  |
+| `PORT`                     | HTTP port used by backend service                                   | `80`                            | no                   |
+| `PROTOCOL`                 | Public protocol (`http` or `https`)                                 | `https`                         | no                   |
+| `HOST`                     | Public host name                                                    | `localhost`                     | no                   |
+| `HOST_URL`                 | Full public URL (important when exposed port differs from app port) | `${PROTOCOL}://${HOST}/${PORT}` | no                   |
+| `DATA_ENCRYPTION_PASSWORD` | Password used to encrypt PII data                                   | `default-encryption-password`   | strongly recommended |
+| `EMAIL_WHITELIST`          | Restrict outgoing email notifications to listed addresses           | empty                           | no                   |
+| `ADMIN_EMAILS`             | Comma-separated emails automatically granted admin role             | empty                           | no                   |
 
 ## Authentication notes
 
