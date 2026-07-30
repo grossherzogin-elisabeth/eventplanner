@@ -65,7 +65,7 @@ public class UpdateUserUseCase {
         var signedInUser = authenticationService.getSignedInUser();
         var user = userService.getUserByKey(userKey).orElseThrow();
         var changedFields = spec.changes();
-        log.info("Updating attributes {}", String.join(", ", changedFields));
+        log.debug("Updating user attributes: {}", String.join(", ", changedFields));
 
         // these may be changed by a user themselves
         ofNullable(spec.gender()).map(String::trim).ifPresent(user::setGender);
@@ -129,6 +129,7 @@ public class UpdateUserUseCase {
         }
 
         user.setUpdatedAt(Instant.now());
+        log.trace("Saving changes");
         return userService.updateUser(user);
     }
 
@@ -179,7 +180,14 @@ public class UpdateUserUseCase {
                 }
             }
         }
+        log.debug(
+            "Updating user qualifications: {} added, {} updated, {} removed",
+            addedQualifications.size(),
+            updatedQualifications.size(),
+            removedQualifications.size()
+        );
 
+        // send notifications
         addedQualifications.forEach(q -> notificationService.sendQualificationAddedNotification(user, q, positions));
         removedQualifications.forEach(q -> notificationService.sendQualificationRemovedNotification(
             user,

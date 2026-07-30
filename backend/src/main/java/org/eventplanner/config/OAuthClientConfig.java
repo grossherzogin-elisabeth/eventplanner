@@ -28,7 +28,7 @@ public class OAuthClientConfig {
             oauth2Login.failureUrl(loginSuccessUrl);
             oauth2Login
                 .failureHandler((request, response, exception) -> {
-                    log.error("OAuth login failed: {}", exception.getMessage(), exception);
+                    log.warn("OAuth login failed: {}", exception.getMessage(), exception);
                     response.sendRedirect("/login?error");
                 });
             oauth2Login.authorizationEndpoint(authorizationEndpoint -> {
