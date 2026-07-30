@@ -59,21 +59,21 @@ export class AuthService {
     public onLogin(cb: (signedInUser: SignedInUser) => void): () => void {
         const id = randomUUID();
         this.loginListeners[id] = cb;
-         
+
         return () => delete this.loginListeners[id];
     }
 
     public onLogout(cb: () => void): () => void {
         const id = randomUUID();
         this.logoutListeners[id] = cb;
-         
+
         return () => delete this.logoutListeners[id];
     }
 
     public onChange(cb: () => void): () => void {
         const id = randomUUID();
         this.changeListeners[id] = cb;
-         
+
         return () => delete this.changeListeners[id];
     }
 
