@@ -59,21 +59,21 @@ export class AuthService {
     public onLogin(cb: (signedInUser: SignedInUser) => void): () => void {
         const id = randomUUID();
         this.loginListeners[id] = cb;
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+         
         return () => delete this.loginListeners[id];
     }
 
     public onLogout(cb: () => void): () => void {
         const id = randomUUID();
         this.logoutListeners[id] = cb;
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+         
         return () => delete this.logoutListeners[id];
     }
 
     public onChange(cb: () => void): () => void {
         const id = randomUUID();
         this.changeListeners[id] = cb;
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+         
         return () => delete this.changeListeners[id];
     }
 

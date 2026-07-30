@@ -25,7 +25,7 @@ export function useQuery<T = string | number | boolean | string[]>(name: string,
     async function setQueryParameter(value: T): Promise<void> {
         const route = router.currentRoute.value;
         if (Array.isArray(value) && value.length === 0) {
-            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+             
             delete route.query[name];
         } else if (value !== undefined && value !== null && JSON.stringify(value) !== JSON.stringify(defaultValue)) {
             // update the query param
@@ -36,7 +36,7 @@ export function useQuery<T = string | number | boolean | string[]>(name: string,
             }
         } else {
             // remove the query param
-            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+             
             delete route.query[name];
         }
 

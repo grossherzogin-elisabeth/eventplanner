@@ -116,7 +116,7 @@ function getRoutes(): RouteRecordRaw[] {
             }>('@/ui/views/**/Route.ts', { eager: true })
         )
             .filter((module) => module.default !== undefined)
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+             
             .map((module) => module.default!)
     );
 }
