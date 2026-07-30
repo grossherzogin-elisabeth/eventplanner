@@ -109,14 +109,12 @@ export function setupRouter(authUseCase: AuthUseCase): Router {
  * route and exported as default.
  */
 function getRoutes(): RouteRecordRaw[] {
-    return (
-        Object.values(
-            import.meta.glob<{
-                default?: RouteRecordRaw;
-            }>('@/ui/views/**/Route.ts', { eager: true })
-        )
-            .filter((module) => module.default !== undefined)
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            .map((module) => module.default!)
-    );
+    return Object.values(
+        import.meta.glob<{
+            default?: RouteRecordRaw;
+        }>('@/ui/views/**/Route.ts', { eager: true })
+    )
+        .filter((module) => module.default !== undefined)
+
+        .map((module) => module.default!);
 }
