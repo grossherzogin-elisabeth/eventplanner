@@ -1,9 +1,11 @@
 package org.eventplanner.events.domain.entities.users;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
@@ -79,6 +81,10 @@ public record SignedInUser(
                 return;
             }
         }
+        log.debug(
+            "Signed-in user is missing permission {}",
+            Arrays.stream(permissions).map(Permission::name).collect(Collectors.joining(", "))
+        );
         throw new MissingPermissionException(permissions);
     }
 

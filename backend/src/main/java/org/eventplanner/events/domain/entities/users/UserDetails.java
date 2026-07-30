@@ -30,7 +30,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Setter
 @With
@@ -114,6 +116,7 @@ public class UserDetails {
         @NonNull final Qualification qualification,
         @Nullable final Instant expirationDate
     ) {
+        log.trace("Updating qualification {} for user {}", qualification.getKey(), key);
         var maybeExistingQualification = findQualification(qualification.getKey());
         if (maybeExistingQualification.isEmpty()) {
             throw new IllegalStateException("Qualification with key " + qualification.getKey() + " not found");
@@ -134,6 +137,7 @@ public class UserDetails {
     }
 
     public void addQualification(@NonNull final Qualification qualification, @Nullable final Instant expirationDate) {
+        log.trace("Adding qualification {} to user {}", qualification.getKey(), key);
         var maybeExistingQualification = findQualification(qualification.getKey());
         if (maybeExistingQualification.isPresent()) {
             throw new IllegalStateException("Qualification with key " + qualification.getKey() + " already assigned");
@@ -159,6 +163,7 @@ public class UserDetails {
     }
 
     public void removeQualification(@NonNull final QualificationKey qualificationKey) {
+        log.trace("Removing qualification {} from user {}", qualificationKey, key);
         var mutableList = new LinkedList<>(qualifications);
         mutableList.removeIf(it -> it.getQualificationKey().equals(qualificationKey));
         qualifications = mutableList.stream().toList();
@@ -173,6 +178,13 @@ public class UserDetails {
             .findFirst();
     }
 
+    /**
+     * This function is used by our email templates to resolve a user qualification. Your IDE may say it is unused. This
+     * is a lie. Don't delete this function.
+     *
+     * @param qualificationKey the key of the qualification
+     * @return user qualification or null
+     */
     @TemplateAccessible
     public @Nullable UserQualification getQualification(@NonNull String qualificationKey) {
         return findQualification(new QualificationKey(qualificationKey)).orElse(null);

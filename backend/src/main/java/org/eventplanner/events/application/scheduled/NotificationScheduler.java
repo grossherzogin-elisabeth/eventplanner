@@ -1,7 +1,10 @@
 package org.eventplanner.events.application.scheduled;
 
+import java.util.UUID;
+
 import org.eventplanner.events.application.usecases.events.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.users.UserQualificationExpirationUseCase;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,17 +23,27 @@ public class NotificationScheduler {
     @Scheduled(cron = "0 0 8 * * *")
     @PostConstruct
     public void sendConfirmationRequest() {
+        MDC.put("trace_id", UUID.randomUUID().toString());
         try {
             registrationConfirmationUseCase.sendConfirmationRequests();
             registrationConfirmationUseCase.sendConfirmationReminders();
         } catch (Exception e) {
             log.error("Failed to send registration confirmation requests", e);
+        } finally {
+            MDC.clear();
         }
     }
 
     @Scheduled(cron = "0 0 8 * * *")
     @PostConstruct
     public void sendQualificationExpirationNotifications() {
-        userQualificationExpirationUseCase.sendExpirationNotifications();
+        MDC.put("trace_id", UUID.randomUUID().toString());
+        try {
+            userQualificationExpirationUseCase.sendExpirationNotifications();
+        } catch (Exception e) {
+            log.error("Failed to send qualification expiration notifications", e);
+        } finally {
+            MDC.clear();
+        }
     }
 }

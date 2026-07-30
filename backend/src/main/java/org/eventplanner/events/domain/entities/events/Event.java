@@ -77,12 +77,14 @@ public class Event {
     }
 
     public void addRegistration(@NonNull final Registration registration) {
+        log.trace("Adding new registration {} to event {}", registration.getKey(), key);
         var temp = new LinkedList<>(registrations);
         temp.add(registration);
         registrations = temp.stream().toList();
     }
 
     public void removeRegistration(@NonNull final Registration registration) {
+        log.trace("Removing registration {} from event {}", registration.getKey(), key);
         var temp = new LinkedList<>(registrations);
         temp.removeIf(it -> it.getKey().equals(registration.getKey()));
         registrations = temp.stream().toList();
@@ -121,7 +123,7 @@ public class Event {
 
     public @NonNull Event clearConfidentialData(@NonNull final String accessKey) {
         // clear notes of all but the signed-in user
-        log.debug("Clearing assigned registrations and registration notes on event {}", name);
+        log.trace("Clearing assigned registrations and registration notes on event {}", key);
         slots.forEach(slot -> slot.setAssignedRegistration(null));
         registrations.stream()
             .filter(it -> it.getNote() != null)
@@ -140,12 +142,12 @@ public class Event {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
             && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(state)) {
             // clear assigned registrations on slots if crew is not published yet
-            log.debug("Clearing assigned registrations on event {}", name);
+            log.trace("Clearing assigned registrations on event {}", key);
             slots.forEach(slot -> slot.setAssignedRegistration(null));
         }
         if (!signedInUser.hasPermission(Permission.WRITE_REGISTRATIONS)) {
             // clear notes of all but the signed-in user
-            log.debug("Clearing registration notes on event {}", name);
+            log.trace("Clearing registration notes on event {}", key);
             registrations.stream()
                 .filter(it -> it.getNote() != null)
                 .filter(it -> !signedInUser.key().equals(it.getUserKey()))
@@ -161,6 +163,7 @@ public class Event {
     }
 
     public @NonNull Event removeInvalidSlotAssignments() {
+        log.trace("Removing invalid slot assignments on event {}", key);
         var counter = 0;
         var validRegistrationKeys = registrations.stream().map(Registration::getKey).toList();
         for (EventSlot slot : slots) {
@@ -171,7 +174,7 @@ public class Event {
             }
         }
         if (counter > 0) {
-            log.info("Removed {} invalid slot assignments for event {}", counter, name);
+            log.info("Removed {} invalid slot assignments for event {}", counter, key);
         }
         return this;
     }
@@ -181,7 +184,7 @@ public class Event {
      * team members
      */
     public void optimizeSlots() {
-        log.debug("Optimizing slot assignments for event {}", name);
+        log.trace("Optimizing slot assignments for event {}", name);
         var counter = 0;
         for (int i = 0; i < slots.size(); i++) {
             var slot = slots.get(i);
