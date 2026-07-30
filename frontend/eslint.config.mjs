@@ -1,13 +1,13 @@
-import vueTsEslintConfig from '@vue/eslint-config-typescript';
+import { vueTsConfigs, withVueTs } from '@vue/eslint-config-typescript';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import pluginVue from 'eslint-plugin-vue';
-import tseslint from 'typescript-eslint';
+import eslintPluginVue from 'eslint-plugin-vue';
+import typescriptEslint from 'typescript-eslint';
 
-export default [
-    ...tseslint.configs.strict,
-    ...tseslint.configs.stylistic,
-    ...pluginVue.configs['flat/recommended'],
-    ...vueTsEslintConfig(),
+export default withVueTs([
+    ...typescriptEslint.configs.strict,
+    ...typescriptEslint.configs.stylistic,
+    ...eslintPluginVue.configs['flat/recommended'],
+    ...vueTsConfigs.recommended,
     eslintConfigPrettier,
     {
         rules: {
@@ -22,4 +22,4 @@ export default [
             '@typescript-eslint/explicit-function-return-type': ['error'],
         },
     },
-];
+]);
