@@ -29,10 +29,10 @@ public class NotificationScheduler {
         try {
             SecurityContextHolder.getContext().setAuthentication(new SystemUser());
             registrationConfirmationUseCase.sendConfirmationRequests();
-            SecurityContextHolder.getContext().setAuthentication(null);
         } catch (Exception e) {
             log.error("Failed to send registration confirmation requests", e);
         } finally {
+            SecurityContextHolder.getContext().setAuthentication(null);
             MDC.clear();
         }
     }
@@ -44,10 +44,10 @@ public class NotificationScheduler {
         try {
             SecurityContextHolder.getContext().setAuthentication(new SystemUser());
             userQualificationExpirationUseCase.sendExpirationNotifications();
-            SecurityContextHolder.getContext().setAuthentication(null);
         } catch (Exception e) {
             log.error("Failed to send qualification expiration notifications", e);
         } finally {
+            SecurityContextHolder.getContext().setAuthentication(null);
             MDC.clear();
         }
     }
