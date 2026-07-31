@@ -92,7 +92,7 @@ public class RegistrationConfirmationUseCase {
                 .flatMap(Optional::stream)
                 .toList();
 
-            users.forEach((user) -> sendConfirmationRequest(event, user));
+            users.forEach(user -> sendConfirmationRequest(event, user));
 
             if (event.isUpForConfirmationReminder()) {
                 event.setConfirmationsRequestsSent(2);

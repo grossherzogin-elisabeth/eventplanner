@@ -9,6 +9,9 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public final class AccessKeyAuthentication implements Authentication {
 
     private final @NonNull AccessKey accessKey;
@@ -50,16 +53,5 @@ public final class AccessKeyAuthentication implements Authentication {
     @Override
     public void setAuthenticated(final boolean isAuthenticated) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Cannot change authentication status of an access key authentication");
-    }
-
-    @Override
-    public boolean equals(@Nullable final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj instanceof AccessKeyAuthentication other) {
-            return accessKey.equals(other.accessKey);
-        }
-        return false;
     }
 }

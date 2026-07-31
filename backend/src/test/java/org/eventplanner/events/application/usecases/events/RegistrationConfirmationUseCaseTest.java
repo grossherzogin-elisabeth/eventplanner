@@ -73,7 +73,7 @@ class RegistrationConfirmationUseCaseTest {
 
         testee.sendConfirmationRequests();
 
-        verify(notificationService).sendConfirmationRequestNotification(eq(user), eq(event), eq(registration));
+        verify(notificationService).sendConfirmationRequestNotification(user, event, registration);
         verify(eventRepository).update(event);
         assertThat(event.getConfirmationsRequestsSent()).isEqualTo(1);
     }

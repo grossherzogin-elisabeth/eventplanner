@@ -171,7 +171,7 @@ function init(): void {
 
 async function fetchEvent(): Promise<void> {
     try {
-        const year = parseInt(route.params.year as string, 10);
+        const year = Number.parseInt(route.params.year as string, 10);
         const eventKey = route.params.eventKey as EventKey;
         event.value = await eventUseCase.getEventByKey(year, eventKey, true);
         emit('update:tab-title', event.value.name);

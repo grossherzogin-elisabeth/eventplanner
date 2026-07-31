@@ -34,14 +34,10 @@ public class ConvertToAccessKeyAuthenticationFilter extends OncePerRequestFilter
         @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
         try {
+            var accessKeyQueryParameter = request.getParameter("accessKey");
             var authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication instanceof AnonymousAuthenticationToken
-                && request.getQueryString() != null
-                && request.getQueryString().contains("accessKey=")) {
-
-                var query = request.getQueryString();
-                query = query.substring(query.indexOf("accessKey=") + "accessKey=".length());
-                var accessKey = new AccessKey(query);
+            if (authentication instanceof AnonymousAuthenticationToken && accessKeyQueryParameter != null) {
+                var accessKey = new AccessKey(accessKeyQueryParameter);
                 var accessKeyAuthentication = new AccessKeyAuthentication(accessKey);
                 synchronized (authenticationMutexHolder.getMutex(accessKeyAuthentication)) {
                     if (!cachedSecurityContexts.containsKey(accessKey)) {
