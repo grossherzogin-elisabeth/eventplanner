@@ -1,3 +1,4 @@
+import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { QualificationRepository } from '@/application';
 import type { Qualification, QualificationKey } from '@/domain';
@@ -41,7 +42,8 @@ export class QualificationRestRepository implements QualificationRepository {
     }
 
     public async findAll(): Promise<Qualification[]> {
-        const response = await fetch('/api/v1/qualifications', { credentials: 'include' });
+        const uri = appendAccessKey('/api/v1/qualifications');
+        const response = await fetch(uri, { credentials: 'include' });
         if (!response.ok) {
             throw response;
         }
@@ -58,7 +60,8 @@ export class QualificationRestRepository implements QualificationRepository {
             expires: qualification.expires,
             grantsPositions: qualification.grantsPositions,
         };
-        const response = await fetch('/api/v1/qualifications', {
+        const uri = appendAccessKey('/api/v1/qualifications');
+        const response = await fetch(uri, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -82,7 +85,8 @@ export class QualificationRestRepository implements QualificationRepository {
             expires: qualification.expires,
             grantsPositions: qualification.grantsPositions,
         };
-        const response = await fetch(`/api/v1/qualifications/${qualificationKey}`, {
+        const uri = appendAccessKey(`/api/v1/qualifications/${qualificationKey}`);
+        const response = await fetch(uri, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -99,7 +103,8 @@ export class QualificationRestRepository implements QualificationRepository {
     }
 
     public async deleteByKey(qualificationKey: QualificationKey): Promise<void> {
-        const response = await fetch(`/api/v1/qualifications/${qualificationKey}`, {
+        const uri = appendAccessKey(`/api/v1/qualifications/${qualificationKey}`);
+        const response = await fetch(uri, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

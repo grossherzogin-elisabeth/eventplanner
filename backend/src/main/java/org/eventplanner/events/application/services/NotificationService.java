@@ -22,6 +22,7 @@ import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.entities.users.UserQualification;
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.eventplanner.events.domain.values.positions.PositionKey;
@@ -42,6 +43,7 @@ public class NotificationService {
     private static final ZoneId timezone = ZoneId.of("Europe/Berlin");
 
     private final Configuration freeMarkerConfig;
+    private final AuthenticationService authenticationService;
     private final ConfigurationService configurationService;
     private final List<NotificationDispatcher> notificationDispatchers;
 
@@ -151,34 +153,36 @@ public class NotificationService {
     }
 
     public void sendConfirmationRequestNotification(
-        @Nullable final UserDetails to,
+        @NonNull final UserDetails to,
         @NonNull final Event event,
         @NonNull final Registration registration
     ) {
+        var accessKey = authenticationService.createAccessKey(to.getKey());
         var title = "Bitte um Rückmeldung: " + event.getName();
         var type = NotificationType.CONFIRM_REGISTRATION_REQUEST;
         var props = new HashMap<String, Object>();
         addRecipientDetails(props, to);
         addEventDetails(props, event);
         addRegistrationDetails(props, event, to);
-        addRegistrationConfirmationDetails(props, event, registration);
+        addRegistrationConfirmationDetails(props, event, registration, accessKey);
         var link = createEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
     }
 
     public void sendConfirmationReminderNotification(
-        @Nullable final UserDetails to,
+        @NonNull final UserDetails to,
         @NonNull final Event event,
         @NonNull final Registration registration
     ) {
+        var accessKey = authenticationService.createAccessKey(to.getKey());
         var title = "Bitte um sofortige Rückmeldung: " + event.getName();
         var type = NotificationType.CONFIRM_REGISTRATION_REMINDER;
         var props = new HashMap<String, Object>();
         addRecipientDetails(props, to);
         addEventDetails(props, event);
         addRegistrationDetails(props, event, to);
-        addRegistrationConfirmationDetails(props, event, registration);
+        addRegistrationConfirmationDetails(props, event, registration, accessKey);
         var link = createEventDeepLink(event);
 
         createNotification(to, type, title, props, link);
@@ -286,15 +290,16 @@ public class NotificationService {
     private void addRegistrationConfirmationDetails(
         @NonNull HashMap<String, Object> props,
         @NonNull final Event event,
-        @NonNull final Registration registration
+        @NonNull final Registration registration,
+        @NonNull final AccessKey accessKey
     ) {
         props.put("deadline", formatDate(event.getStart().atZone(timezone).minusDays(7)));
         var eventUrl = configurationService.getConfig().frontend().url()
             + "/events/" + event.getStart().atZone(timezone).getYear()
             + "/details/" + event.getKey()
             + "/registrations/" + registration.getKey();
-        props.put("confirm_link", eventUrl + "/confirm?accessKey=" + registration.getAccessKey());
-        props.put("deny_link", eventUrl + "/deny?accessKey=" + registration.getAccessKey());
+        props.put("confirm_link", eventUrl + "/confirm?accessKey=" + accessKey);
+        props.put("deny_link", eventUrl + "/deny?accessKey=" + accessKey);
     }
 
     private void addEventDetails(

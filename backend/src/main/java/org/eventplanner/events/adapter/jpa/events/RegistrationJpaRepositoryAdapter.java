@@ -1,7 +1,6 @@
 package org.eventplanner.events.adapter.jpa.events;
 
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 import org.eventplanner.events.application.ports.RegistrationRepository;
 import org.eventplanner.events.domain.entities.events.Registration;
@@ -10,7 +9,6 @@ import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,15 +38,5 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
     @Override
     public void deleteRegistration(@NonNull RegistrationKey registrationKey, @NonNull EventKey eventKey) {
         registrationJpaRepository.deleteByKeyAndEventKey(registrationKey.value(), eventKey.value());
-    }
-
-    @PostConstruct
-    public void generateMissingAccessKeys() {
-        var registrations = registrationJpaRepository.findAllByAccessKeyNull();
-        registrations.forEach(registration -> {
-            log.info("Generating missing access key for registration {}", registration.getKey());
-            registration.setAccessKey(UUID.randomUUID().toString());
-            registrationJpaRepository.save(registration);
-        });
     }
 }

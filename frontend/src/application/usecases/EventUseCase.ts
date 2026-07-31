@@ -321,23 +321,18 @@ export class EventUseCase {
         saveStringToFile(`${event.name}.ics`, ics);
     }
 
-    public async getEventByAccessKey(eventKey: EventKey, accessKey: string): Promise<Event> {
-        const event = await this.eventRepository.findByKey(eventKey, accessKey);
-        return this.eventService.updateComputedValues(event, this.authService.getSignedInUser());
-    }
-
-    public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
+    public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
         try {
-            await this.eventRegistrationsRepository.confirmParticipation(eventKey, registrationKey, accessKey);
+            await this.eventRegistrationsRepository.confirmParticipation(eventKey, registrationKey);
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;
         }
     }
 
-    public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
+    public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
         try {
-            await this.eventRegistrationsRepository.declineParticipation(eventKey, registrationKey, accessKey);
+            await this.eventRegistrationsRepository.declineParticipation(eventKey, registrationKey);
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
             throw e;

@@ -1,3 +1,4 @@
+import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
 import type { AccountRepository } from '@/application';
 import { wait } from '@/common';
 import type { Permission, Role, SignedInUser } from '@/domain';
@@ -15,7 +16,8 @@ export interface AccountRepresentation {
 
 export class AccountRestRepository implements AccountRepository {
     public async getAccount(): Promise<SignedInUser> {
-        const response = await fetch('/api/v1/account', { credentials: 'include' });
+        const uri = appendAccessKey('/api/v1/account');
+        const response = await fetch(uri, { credentials: 'include' });
         if (!response.ok) {
             throw response;
         }

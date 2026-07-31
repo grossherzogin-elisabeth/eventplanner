@@ -1,5 +1,6 @@
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventRestRepository } from '@/adapter/rest/EventRestRepository';
+import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRegistrationsRepository } from '@/application';
 import { toIsoDateString } from '@/common';
@@ -36,7 +37,8 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             overnightStay: registration.overnightStay,
             arrival: toIsoDateString(registration.arrival),
         };
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations`, {
+        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations`);
+        const response = await fetch(uri, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -62,7 +64,8 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             overnightStay: registration.overnightStay,
             arrival: toIsoDateString(registration.arrival),
         };
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
+        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations/${registration.key}`);
+        const response = await fetch(uri, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -79,7 +82,8 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
     }
 
     public async deleteRegistration(eventKey: EventKey, registration: Registration): Promise<Event> {
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
+        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations/${registration.key}`);
+        const response = await fetch(uri, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -93,8 +97,9 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
         return EventRestRepository.mapEventToDomain(responseData);
     }
 
-    public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/confirm?accessKey=${accessKey}`, {
+    public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
+        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations/${registrationKey}/confirm`);
+        const response = await fetch(uri, {
             method: 'GET',
             credentials: 'include',
         });
@@ -103,8 +108,9 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
         }
     }
 
-    public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/decline?accessKey=${accessKey}`, {
+    public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
+        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations/${registrationKey}/decline`);
+        const response = await fetch(uri, {
             method: 'GET',
             credentials: 'include',
         });

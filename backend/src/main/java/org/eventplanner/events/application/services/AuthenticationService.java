@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.eventplanner.events.application.ports.AccessKeyRepository;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
@@ -35,13 +37,16 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationService {
 
     private final UserService userService;
+    private final AccessKeyRepository accessKeyRepository;
     private final List<String> admins;
 
     public AuthenticationService(
         @NonNull @Autowired final UserService userService,
+        @NonNull @Autowired final AccessKeyRepository accessKeyRepository,
         @Nullable @Value("${auth.admins}") String admins
     ) {
         this.userService = userService;
+        this.accessKeyRepository = accessKeyRepository;
         if (admins != null && !admins.isBlank()) {
             this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
         } else {
@@ -65,7 +70,26 @@ public class AuthenticationService {
         throw new UnauthorizedException();
     }
 
-    public @NonNull SignedInUser authenticate(@NonNull OidcUser oidcUser) {
+    public @NonNull AccessKey createAccessKey(@NonNull final UserKey userKey) {
+        log.debug("Creating access key for user {}", userKey);
+        var accessKey = new AccessKey();
+        accessKeyRepository.create(userKey, accessKey);
+        return accessKey;
+    }
+
+    public @NonNull SignedInUser authenticate(@NonNull final AccessKey accessKey) {
+        var user = accessKeyRepository.findUserByAccessKey(accessKey)
+            .flatMap(userService::getUserByKey)
+            .orElseThrow(() -> new UnauthorizedException("Unknown access key"));
+
+        log.info("Authenticated user {} by access key", user.getKey());
+        return SignedInUser.fromUser(user, accessKey);
+    }
+
+    public @NonNull SignedInUser authenticate(@NonNull final OidcUser oidcUser) {
+        if (oidcUser.getSubject() == null) {
+            throw new UnauthorizedException("Oidc user is missing required attribute 'sub'");
+        }
         return authenticate(
             new AuthKey(oidcUser.getSubject()),
             oidcUser.getEmail(),
@@ -75,7 +99,7 @@ public class AuthenticationService {
         );
     }
 
-    public @NonNull SignedInUser authenticate(@NonNull OAuth2User oAuth2User) {
+    public @NonNull SignedInUser authenticate(@NonNull final OAuth2User oAuth2User) {
         var sub = Optional.ofNullable(oAuth2User.getAttribute(StandardClaimNames.SUB))
             .map(Object::toString)
             .orElseThrow(() -> new IllegalArgumentException("Missing sub claim in OAuth2 user"));

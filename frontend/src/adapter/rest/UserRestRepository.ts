@@ -1,3 +1,4 @@
+import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { UserRepository } from '@/application';
 import { toIsoDateString } from '@/common';
@@ -134,7 +135,8 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async findAll(): Promise<User[]> {
-        const response = await fetch('/api/v1/users', {
+        const uri = appendAccessKey('/api/v1/users');
+        const response = await fetch(uri, {
             credentials: 'include',
         });
         if (!response.ok) {
@@ -160,7 +162,8 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async findByKey(key: UserKey): Promise<UserDetails> {
-        const response = await fetch(`/api/v1/users/${key}`, {
+        const uri = appendAccessKey(`/api/v1/users/${key}`);
+        const response = await fetch(uri, {
             credentials: 'include',
         });
         if (!response.ok) {
@@ -171,7 +174,8 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async findBySignedInUser(): Promise<UserDetails> {
-        const response = await fetch('/api/v1/users/self', {
+        const uri = appendAccessKey('/api/v1/users/self');
+        const response = await fetch(uri, {
             credentials: 'include',
         });
         if (!response.ok) {
@@ -226,7 +230,8 @@ export class UserRestRepository implements UserRepository {
                   }
                 : undefined,
         };
-        const response = await fetch(`/api/v1/users/${userKey}`, {
+        const uri = appendAccessKey(`/api/v1/users/${userKey}`);
+        const response = await fetch(uri, {
             method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -248,7 +253,8 @@ export class UserRestRepository implements UserRepository {
             lastName: user.lastName,
             email: user.email || '',
         };
-        const response = await fetch('/api/v1/users', {
+        const uri = appendAccessKey('/api/v1/users');
+        const response = await fetch(uri, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -265,7 +271,8 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async deleteUser(userKey: UserKey): Promise<void> {
-        const response = await fetch(`/api/v1/users/${userKey}`, {
+        const uri = appendAccessKey(`/api/v1/users/${userKey}`);
+        const response = await fetch(uri, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -311,7 +318,8 @@ export class UserRestRepository implements UserRepository {
             dateOfBirth: toIsoDateString(user.dateOfBirth),
             placeOfBirth: user.placeOfBirth,
         };
-        const response = await fetch(`/api/v1/users/self`, {
+        const uri = appendAccessKey('/api/v1/users/self');
+        const response = await fetch(uri, {
             method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),

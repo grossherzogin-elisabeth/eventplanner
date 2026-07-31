@@ -163,7 +163,7 @@ class UpdateEventUseCaseTest {
     }
 
     @Test
-    void shouldSendConfirmationRequest_1() {
+    void shouldSendConfirmationRequest() {
         event.setState(EventState.PLANNED);
         event.setStart(ZonedDateTime.now().plusDays(10).toInstant());
 
@@ -179,7 +179,7 @@ class UpdateEventUseCaseTest {
     }
 
     @Test
-    void shouldSendConfirmationRequest_2() {
+    void shouldSendConfirmationReminders() {
         event.setState(EventState.PLANNED);
         event.setStart(ZonedDateTime.now().plusDays(5).toInstant());
 

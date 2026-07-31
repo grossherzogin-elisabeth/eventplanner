@@ -4,8 +4,10 @@ import java.util.UUID;
 
 import org.eventplanner.events.application.usecases.events.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.users.UserQualificationExpirationUseCase;
+import org.eventplanner.events.domain.entities.users.SystemUser;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
@@ -25,8 +27,9 @@ public class NotificationScheduler {
     public void sendConfirmationRequest() {
         MDC.put("trace_id", UUID.randomUUID().toString());
         try {
+            SecurityContextHolder.getContext().setAuthentication(new SystemUser());
             registrationConfirmationUseCase.sendConfirmationRequests();
-            registrationConfirmationUseCase.sendConfirmationReminders();
+            SecurityContextHolder.getContext().setAuthentication(null);
         } catch (Exception e) {
             log.error("Failed to send registration confirmation requests", e);
         } finally {
@@ -39,7 +42,9 @@ public class NotificationScheduler {
     public void sendQualificationExpirationNotifications() {
         MDC.put("trace_id", UUID.randomUUID().toString());
         try {
+            SecurityContextHolder.getContext().setAuthentication(new SystemUser());
             userQualificationExpirationUseCase.sendExpirationNotifications();
+            SecurityContextHolder.getContext().setAuthentication(null);
         } catch (Exception e) {
             log.error("Failed to send qualification expiration notifications", e);
         } finally {

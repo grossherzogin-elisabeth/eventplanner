@@ -1,4 +1,4 @@
-package org.eventplanner.config;
+package org.eventplanner.beans;
 
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;

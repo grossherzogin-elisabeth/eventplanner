@@ -1,3 +1,4 @@
+import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
 import { deserializeDate } from '@/common';
@@ -136,12 +137,9 @@ export class EventRestRepository implements EventRepository {
         }));
     }
 
-    public async findByKey(key: EventKey, accessKey?: string): Promise<Event> {
-        let url = `/api/v1/events/${key}`;
-        if (accessKey) {
-            url = `${url}?accessKey=${accessKey}`;
-        }
-        const response = await fetch(url, {
+    public async findByKey(key: EventKey): Promise<Event> {
+        const uri = appendAccessKey(`/api/v1/events/${key}`);
+        const response = await fetch(uri, {
             credentials: 'include',
         });
         if (!response.ok) {
@@ -152,7 +150,8 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async findAll(year: number): Promise<Event[]> {
-        const response = await fetch(`/api/v1/events?year=${year}`, {
+        const uri = appendAccessKey(`/api/v1/events?year=${year}`);
+        const response = await fetch(uri, {
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
@@ -166,7 +165,8 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async export(year: number): Promise<Blob> {
-        const response = await fetch(`/api/v1/events?year=${year}`, {
+        const uri = appendAccessKey(`/api/v1/events?year=${year}`);
+        const response = await fetch(uri, {
             credentials: 'include',
             headers: {
                 Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -207,7 +207,8 @@ export class EventRestRepository implements EventRepository {
                 assignedRegistrationKey: it.assignedRegistrationKey,
             })),
         };
-        const response = await fetch(`/api/v1/events`, {
+        const uri = appendAccessKey(`/api/v1/events`);
+        const response = await fetch(uri, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -274,7 +275,8 @@ export class EventRestRepository implements EventRepository {
                 note: it.note,
             })),
         };
-        const response = await fetch(`/api/v1/events/${eventKey}`, {
+        const uri = appendAccessKey(`/api/v1/events/${eventKey}`);
+        const response = await fetch(uri, {
             method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -292,7 +294,8 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async deleteEvent(eventKey: EventKey): Promise<void> {
-        const response = await fetch(`/api/v1/events/${eventKey}`, {
+        const uri = appendAccessKey(`/api/v1/events/${eventKey}`);
+        const response = await fetch(uri, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -305,7 +308,8 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async getExportTemplates(): Promise<string[]> {
-        const response = await fetch('/api/v1/events/export/templates', {
+        const uri = appendAccessKey('/api/v1/events/export/templates');
+        const response = await fetch(uri, {
             method: 'GET',
             credentials: 'include',
         });
@@ -316,7 +320,8 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async exportEvent(event: Event, template: string): Promise<Blob> {
-        const response = await fetch(`/api/v1/events/${event.key}/export/${template}`, {
+        const uri = appendAccessKey(`/api/v1/events/${event.key}/export/${template}`);
+        const response = await fetch(uri, {
             method: 'GET',
             credentials: 'include',
         });
@@ -345,7 +350,8 @@ export class EventRestRepository implements EventRepository {
                 confirmed: it.confirmed,
             })),
         };
-        const response = await fetch(`/api/v1/events/${event.key}/optimized-slots`, {
+        const uri = appendAccessKey(`/api/v1/events/${event.key}/optimized-slots`);
+        const response = await fetch(uri, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),

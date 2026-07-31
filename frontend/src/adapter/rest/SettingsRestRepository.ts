@@ -1,3 +1,4 @@
+import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { SettingsRepository } from '@/application';
 import type { AppSettings, UiSettings } from '@/domain';
@@ -74,7 +75,8 @@ export class SettingsRestRepository implements SettingsRepository {
     }
 
     public async readConfig(): Promise<UiSettings> {
-        const response = await fetch('/api/v1/config', { credentials: 'include' });
+        const uri = appendAccessKey('/api/v1/config');
+        const response = await fetch(uri, { credentials: 'include' });
         if (response.ok) {
             const representation = (await response.clone().json()) as UiSettingsRepresentation;
             return {
@@ -89,7 +91,8 @@ export class SettingsRestRepository implements SettingsRepository {
     }
 
     public async readAdminSettings(): Promise<AppSettings> {
-        const response = await fetch('/api/v1/settings', { credentials: 'include' });
+        const uri = appendAccessKey('/api/v1/settings');
+        const response = await fetch(uri, { credentials: 'include' });
         if (response.ok) {
             const representation = (await response.clone().json()) as SettingsRepresentation;
             return SettingsRestRepository.mapToDomain(representation);
@@ -123,7 +126,8 @@ export class SettingsRestRepository implements SettingsRepository {
             },
         };
 
-        const response = await fetch('/api/v1/settings', {
+        const uri = appendAccessKey('/api/v1/settings');
+        const response = await fetch(uri, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),

@@ -31,7 +31,7 @@ class AuthenticationServiceTest {
     @BeforeEach
     void setup() {
         userService = mock();
-        testee = new AuthenticationService(userService, "admin@email.com");
+        testee = new AuthenticationService(userService, mock(), "admin@email.com");
     }
 
     @Test

@@ -1,3 +1,4 @@
+import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { PositionRepository } from '@/application';
 import type { Position, PositionKey } from '@/domain';
@@ -37,7 +38,8 @@ export class PositionRestRepository implements PositionRepository {
     }
 
     public async findAll(): Promise<Position[]> {
-        const response = await fetch('/api/v1/positions', { credentials: 'include' });
+        const uri = appendAccessKey('/api/v1/positions');
+        const response = await fetch(uri, { credentials: 'include' });
         if (response.ok) {
             const positions = (await response.clone().json()) as PositionRepresentation[];
             return positions.map(PositionRestRepository.mapToDomain);
@@ -54,7 +56,8 @@ export class PositionRestRepository implements PositionRepository {
             color: position.color,
             prio: position.prio,
         };
-        const response = await fetch('/api/v1/positions', {
+        const uri = appendAccessKey('/api/v1/positions');
+        const response = await fetch(uri, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -77,7 +80,8 @@ export class PositionRestRepository implements PositionRepository {
             color: position.color,
             prio: position.prio,
         };
-        const response = await fetch(`/api/v1/positions/${positionKey}`, {
+        const uri = appendAccessKey(`/api/v1/positions/${positionKey}`);
+        const response = await fetch(uri, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -94,7 +98,8 @@ export class PositionRestRepository implements PositionRepository {
     }
 
     public async deleteByKey(positionKey: PositionKey): Promise<void> {
-        const response = await fetch(`/api/v1/positions/${positionKey}`, {
+        const uri = appendAccessKey(`/api/v1/positions/${positionKey}`);
+        const response = await fetch(uri, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
