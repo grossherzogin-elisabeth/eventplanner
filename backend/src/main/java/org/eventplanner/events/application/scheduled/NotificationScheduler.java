@@ -47,7 +47,7 @@ public class NotificationScheduler {
         } catch (Exception e) {
             log.error("Failed to send qualification expiration notifications", e);
         } finally {
-            SecurityContextHolder.getContext().setAuthentication(null);
+            SecurityContextHolder.clearContext();
             MDC.clear();
         }
     }

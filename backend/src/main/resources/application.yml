@@ -46,6 +46,8 @@ auth:
   login-success-url: ${frontend.url}
   # OIDC users with this email address in their token will automatically become admins
   admins: ${ADMIN_EMAILS:}
+  # Maximum age for access keys before scheduled cleanup removes them
+  access-key-expiration: ${ACCESS_KEY_EXPIRATION:P21D}
   # 60 * 60 * 24 * 30 seconds = 30 days
   session-timeout: 2592000
 

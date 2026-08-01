@@ -36,6 +36,8 @@ public enum Permission implements GrantedAuthority {
     READ_QUALIFICATIONS("qualifications:read"),
     WRITE_QUALIFICATIONS("qualifications:write"),
 
+    DELETE_ACCESS_KEYS("access-keys:delete"),
+
     READ_APP_SETTINGS("application-settings:read"),
     WRITE_APP_SETTINGS("application-settings:write");
 

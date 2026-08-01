@@ -1,9 +1,8 @@
 package org.eventplanner.events.application.scheduled;
 
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
-import org.eventplanner.events.application.services.EmailService;
+import org.eventplanner.events.application.usecases.AuthenticationUseCase;
 import org.eventplanner.events.domain.entities.users.SystemUser;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,18 +15,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EmailScheduler {
+public class AccessKeyScheduler {
 
-    private final EmailService emailService;
+    private final AuthenticationUseCase authenticationUseCase;
 
-    @Scheduled(fixedRate = 1L, timeUnit = TimeUnit.SECONDS)
-    public void sendNotification() {
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteExpiredAccessKeys() {
         MDC.put("trace_id", UUID.randomUUID().toString());
         try {
             SecurityContextHolder.getContext().setAuthentication(new SystemUser());
-            emailService.sendNextEmail();
+            authenticationUseCase.deleteExpiredAccessKeys();
         } catch (Exception e) {
-            log.error("Failed to send email", e);
+            log.error("Failed to delete expired access keys", e);
         } finally {
             SecurityContextHolder.clearContext();
             MDC.clear();

@@ -26,6 +26,7 @@
     "positions:write",
     "qualifications:read",
     "qualifications:write",
+    "access-keys:delete",
     "application-settings:read",
     "application-settings:write"
   ],
