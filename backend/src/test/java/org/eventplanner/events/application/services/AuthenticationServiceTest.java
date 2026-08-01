@@ -212,7 +212,7 @@ class AuthenticationServiceTest {
 
         var accessKeyCaptor = ArgumentCaptor.forClass(String.class);
         verify(accessKeyRepository).create(argThat(key -> key.equals(userKey)), accessKeyCaptor.capture());
-        assertThat(result).isNotEqualTo(accessKeyCaptor.getValue());
+        assertThat(result.value()).isNotEqualTo(accessKeyCaptor.getValue());
         assertThat(accessKeyCaptor.getValue()).isEqualTo(hashAccessKey(result.value()));
     }
 
