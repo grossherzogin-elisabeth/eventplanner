@@ -1,12 +1,18 @@
 package org.eventplanner.events.application.services;
 
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.eventplanner.auth.AccessKeyAuthentication;
 import org.eventplanner.events.application.ports.AccessKeyRepository;
@@ -40,14 +46,17 @@ public class AuthenticationService {
     private final UserService userService;
     private final AccessKeyRepository accessKeyRepository;
     private final List<String> admins;
+    private final String accessKeyHashSecret;
 
     public AuthenticationService(
         @NonNull @Autowired final UserService userService,
         @NonNull @Autowired final AccessKeyRepository accessKeyRepository,
-        @Nullable @Value("${auth.admins}") String admins
+        @Nullable @Value("${auth.admins}") String admins,
+        @NonNull @Value("${auth.access-key-hash-secret}") String accessKeyHashSecret
     ) {
         this.userService = userService;
         this.accessKeyRepository = accessKeyRepository;
+        this.accessKeyHashSecret = accessKeyHashSecret;
         if (admins != null && !admins.isBlank()) {
             this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
         } else {
@@ -74,12 +83,15 @@ public class AuthenticationService {
     public @NonNull AccessKey createAccessKey(@NonNull final UserKey userKey) {
         log.debug("Creating access key for user {}", userKey);
         var accessKey = new AccessKey();
-        accessKeyRepository.create(userKey, accessKey);
+        accessKeyRepository.create(userKey, hashAccessKey(accessKey));
         return accessKey;
     }
 
     public @NonNull SignedInUser authenticate(@NonNull final AccessKey accessKey) {
-        var user = accessKeyRepository.findUserByAccessKey(accessKey)
+        var hashedAccessKey = hashAccessKey(accessKey);
+        var user = accessKeyRepository.findUserByAccessKey(hashedAccessKey)
+            // TODO remove legacy fallback for access keys that were not hashed
+            .or(() -> accessKeyRepository.findUserByAccessKey(accessKey.value()))
             .flatMap(userService::getUserByKey)
             .orElseThrow(() -> {
                 log.info("Rejected unknown access key");
@@ -183,6 +195,16 @@ public class AuthenticationService {
             // can happen on simultaneous requests
             return userService.getUserByAuthKey(authKey)
                 .orElseThrow(UnauthorizedException::new);
+        }
+    }
+
+    private @NonNull String hashAccessKey(@NonNull final AccessKey accessKey) {
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(accessKeyHashSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            return HexFormat.of().formatHex(mac.doFinal(accessKey.value().getBytes(StandardCharsets.UTF_8)));
+        } catch (GeneralSecurityException e) {
+            throw new IllegalStateException("Failed to hash access key", e);
         }
     }
 }

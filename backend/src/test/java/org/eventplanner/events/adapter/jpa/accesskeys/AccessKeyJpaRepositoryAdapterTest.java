@@ -32,7 +32,7 @@ class AccessKeyJpaRepositoryAdapterTest {
         var accessKey = new AccessKey("access-1");
         var beforeCreate = Instant.now();
 
-        testee.create(userKey, accessKey);
+        testee.create(userKey, accessKey.value());
 
         var entityCaptor = ArgumentCaptor.forClass(AccessKeyJpaEntity.class);
         verify(repository).save(entityCaptor.capture());
@@ -50,7 +50,7 @@ class AccessKeyJpaRepositoryAdapterTest {
         when(repository.findById("access-1"))
             .thenReturn(Optional.of(new AccessKeyJpaEntity("access-1", "user-1", Instant.now().toString())));
 
-        var result = testee.findUserByAccessKey(new AccessKey("access-1"));
+        var result = testee.findUserByAccessKey("access-1");
 
         assertThat(result).contains(new UserKey("user-1"));
     }
@@ -59,7 +59,7 @@ class AccessKeyJpaRepositoryAdapterTest {
     void shouldReturnEmptyForUnknownAccessKey() {
         when(repository.findById("unknown")).thenReturn(Optional.empty());
 
-        var result = testee.findUserByAccessKey(new AccessKey("unknown"));
+        var result = testee.findUserByAccessKey("unknown");
 
         assertThat(result).isEmpty();
     }

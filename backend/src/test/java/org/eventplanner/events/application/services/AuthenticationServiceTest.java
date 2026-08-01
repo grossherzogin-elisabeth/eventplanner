@@ -11,9 +11,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.eventplanner.events.application.ports.AccessKeyRepository;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
@@ -28,6 +33,7 @@ import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 class AuthenticationServiceTest {
+    private static final String ACCESS_KEY_HASH_SECRET = "test-access-key-hash-secret";
 
     private UserService userService;
     private AccessKeyRepository accessKeyRepository;
@@ -37,7 +43,7 @@ class AuthenticationServiceTest {
     void setup() {
         userService = mock();
         accessKeyRepository = mock();
-        testee = new AuthenticationService(userService, accessKeyRepository, "admin@email.com");
+        testee = new AuthenticationService(userService, accessKeyRepository, "admin@email.com", ACCESS_KEY_HASH_SECRET);
     }
 
     @Test
@@ -204,16 +210,33 @@ class AuthenticationServiceTest {
 
         var result = testee.createAccessKey(userKey);
 
-        var accessKeyCaptor = ArgumentCaptor.forClass(AccessKey.class);
+        var accessKeyCaptor = ArgumentCaptor.forClass(String.class);
         verify(accessKeyRepository).create(argThat(key -> key.equals(userKey)), accessKeyCaptor.capture());
-        assertThat(result).isEqualTo(accessKeyCaptor.getValue());
+        assertThat(result).isNotEqualTo(accessKeyCaptor.getValue());
+        assertThat(accessKeyCaptor.getValue()).isEqualTo(hashAccessKey(result.value()));
     }
 
     @Test
-    void shouldAuthenticateUserByAccessKey() {
+    void shouldAuthenticateUserByHashedAccessKey() {
         var accessKey = new AccessKey("access-1");
         var user = createUser();
-        when(accessKeyRepository.findUserByAccessKey(accessKey)).thenReturn(Optional.of(user.getKey()));
+        when(accessKeyRepository.findUserByAccessKey(hashAccessKey(accessKey.value())))
+            .thenReturn(Optional.of(user.getKey()));
+        when(userService.getUserByKey(user.getKey())).thenReturn(Optional.of(user));
+
+        var result = testee.authenticate(accessKey);
+
+        assertThat(result.key()).isEqualTo(user.getKey());
+        assertThat(result.authentication()).isEqualTo(accessKey);
+    }
+
+    @Test
+    void shouldFallbackToRawAccessKeyForLegacyEntries() {
+        var accessKey = new AccessKey("access-1");
+        var hashedAccessKey = hashAccessKey(accessKey.value());
+        var user = createUser();
+        when(accessKeyRepository.findUserByAccessKey(hashedAccessKey)).thenReturn(Optional.empty());
+        when(accessKeyRepository.findUserByAccessKey(accessKey.value())).thenReturn(Optional.of(user.getKey()));
         when(userService.getUserByKey(user.getKey())).thenReturn(Optional.of(user));
 
         var result = testee.authenticate(accessKey);
@@ -225,7 +248,8 @@ class AuthenticationServiceTest {
     @Test
     void shouldThrowWhenAccessKeyIsUnknown() {
         var accessKey = new AccessKey("access-unknown");
-        when(accessKeyRepository.findUserByAccessKey(accessKey)).thenReturn(Optional.empty());
+        when(accessKeyRepository.findUserByAccessKey(hashAccessKey(accessKey.value()))).thenReturn(Optional.empty());
+        when(accessKeyRepository.findUserByAccessKey(accessKey.value())).thenReturn(Optional.empty());
 
         assertThatException().isThrownBy(() -> testee.authenticate(accessKey))
             .isInstanceOf(UnauthorizedException.class);
@@ -234,11 +258,22 @@ class AuthenticationServiceTest {
     @Test
     void shouldThrowWhenAccessKeyMapsToMissingUser() {
         var accessKey = new AccessKey("access-1");
+        var hashedAccessKey = hashAccessKey(accessKey.value());
         var userKey = new UserKey("user-1");
-        when(accessKeyRepository.findUserByAccessKey(accessKey)).thenReturn(Optional.of(userKey));
+        when(accessKeyRepository.findUserByAccessKey(hashedAccessKey)).thenReturn(Optional.of(userKey));
         when(userService.getUserByKey(userKey)).thenReturn(Optional.empty());
 
         assertThatException().isThrownBy(() -> testee.authenticate(accessKey))
             .isInstanceOf(UnauthorizedException.class);
+    }
+
+    private String hashAccessKey(String accessKey) {
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(ACCESS_KEY_HASH_SECRET.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            return HexFormat.of().formatHex(mac.doFinal(accessKey.getBytes(StandardCharsets.UTF_8)));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

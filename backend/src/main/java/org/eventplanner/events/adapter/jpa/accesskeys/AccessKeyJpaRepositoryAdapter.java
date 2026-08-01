@@ -5,7 +5,6 @@ import java.time.Instant;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.AccessKeyRepository;
-import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
@@ -19,9 +18,9 @@ public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
     private final AccessKeyJpaRepository accessKeyJpaRepository;
 
     @Override
-    public void create(final @NonNull UserKey userKey, final @NonNull AccessKey accessKey) {
+    public void create(final @NonNull UserKey userKey, final @NonNull String accessKeyHash) {
         var entity = new AccessKeyJpaEntity(
-            accessKey.value(),
+            accessKeyHash,
             userKey.value(),
             Instant.now().toString()
         );
@@ -29,8 +28,8 @@ public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
     }
 
     @Override
-    public @NonNull Optional<UserKey> findUserByAccessKey(final @NonNull AccessKey accessKey) {
-        var entity = accessKeyJpaRepository.findById(accessKey.value());
+    public @NonNull Optional<UserKey> findUserByAccessKey(final @NonNull String accessKeyHash) {
+        var entity = accessKeyJpaRepository.findById(accessKeyHash);
         return entity.map(e -> new UserKey(e.getUserKey()));
     }
 
