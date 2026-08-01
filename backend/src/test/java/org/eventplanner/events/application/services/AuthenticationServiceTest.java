@@ -15,23 +15,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.eventplanner.events.application.ports.AccessKeyRepository;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.AuthKey;
+import org.eventplanner.events.domain.values.users.UserKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 class AuthenticationServiceTest {
 
     private UserService userService;
+    private AccessKeyRepository accessKeyRepository;
     private AuthenticationService testee;
 
     @BeforeEach
     void setup() {
         userService = mock();
-        testee = new AuthenticationService(userService, mock(), "admin@email.com");
+        accessKeyRepository = mock();
+        testee = new AuthenticationService(userService, accessKeyRepository, "admin@email.com");
     }
 
     @Test
@@ -190,5 +196,49 @@ class AuthenticationServiceTest {
 
         var result = testee.authenticate(oAuth2User);
         assertThat(result.key()).isEqualTo(user.getKey());
+    }
+
+    @Test
+    void shouldCreateAndPersistAccessKeyForUser() {
+        var userKey = new UserKey("user-1");
+
+        var result = testee.createAccessKey(userKey);
+
+        var accessKeyCaptor = ArgumentCaptor.forClass(AccessKey.class);
+        verify(accessKeyRepository).create(argThat(key -> key.equals(userKey)), accessKeyCaptor.capture());
+        assertThat(result).isEqualTo(accessKeyCaptor.getValue());
+    }
+
+    @Test
+    void shouldAuthenticateUserByAccessKey() {
+        var accessKey = new AccessKey("access-1");
+        var user = createUser();
+        when(accessKeyRepository.findUserByAccessKey(accessKey)).thenReturn(Optional.of(user.getKey()));
+        when(userService.getUserByKey(user.getKey())).thenReturn(Optional.of(user));
+
+        var result = testee.authenticate(accessKey);
+
+        assertThat(result.key()).isEqualTo(user.getKey());
+        assertThat(result.authentication()).isEqualTo(accessKey);
+    }
+
+    @Test
+    void shouldThrowWhenAccessKeyIsUnknown() {
+        var accessKey = new AccessKey("access-unknown");
+        when(accessKeyRepository.findUserByAccessKey(accessKey)).thenReturn(Optional.empty());
+
+        assertThatException().isThrownBy(() -> testee.authenticate(accessKey))
+            .isInstanceOf(UnauthorizedException.class);
+    }
+
+    @Test
+    void shouldThrowWhenAccessKeyMapsToMissingUser() {
+        var accessKey = new AccessKey("access-1");
+        var userKey = new UserKey("user-1");
+        when(accessKeyRepository.findUserByAccessKey(accessKey)).thenReturn(Optional.of(userKey));
+        when(userService.getUserByKey(userKey)).thenReturn(Optional.empty());
+
+        assertThatException().isThrownBy(() -> testee.authenticate(accessKey))
+            .isInstanceOf(UnauthorizedException.class);
     }
 }

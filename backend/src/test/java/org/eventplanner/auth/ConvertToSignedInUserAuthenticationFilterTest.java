@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.junit.jupiter.api.AfterEach;
@@ -105,6 +106,93 @@ class ConvertToSignedInUserAuthenticationFilterTest {
         testee.doFilterInternal(request, response, filterChain);
 
         verify(authService).authenticate(oAuth2User);
+    }
+
+    @Test
+    void shouldMapAccessKeyAuthenticationToSignedInUser() throws Exception {
+        var accessKey = new AccessKey("access-key-1");
+        var signedInUser = createSignedInUser();
+        when(authService.authenticate(accessKey)).thenReturn(signedInUser);
+
+        SecurityContextHolder.getContext().setAuthentication(new AccessKeyAuthentication(accessKey));
+
+        testee.doFilterInternal(request, response, filterChain);
+
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isSameAs(signedInUser);
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void shouldMapAccessKeyAuthenticationOnlyOnceForParallelRequestsOfSameKey() throws Exception {
+        var parallelRequestCount = 10;
+        var accessKey = new AccessKey("access-key-shared");
+        var signedInUser = createSignedInUser();
+
+        when(authService.authenticate(accessKey)).thenAnswer(invocation -> {
+            Thread.sleep(150);
+            return signedInUser;
+        });
+
+        var securityContext = new SecurityContextImpl(new AccessKeyAuthentication(accessKey));
+        var done = new CountDownLatch(parallelRequestCount);
+        var errors = new CopyOnWriteArrayList<Throwable>();
+        Runnable runRequest = () -> {
+            try {
+                SecurityContextHolder.setContext(securityContext);
+                testee.doFilterInternal(request, response, filterChain);
+            } catch (Throwable t) {
+                errors.add(t);
+            } finally {
+                SecurityContextHolder.clearContext();
+                done.countDown();
+            }
+        };
+
+        for (int i = 0; i < parallelRequestCount; i++) {
+            new Thread(runRequest).start();
+        }
+
+        assertThat(done.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThat(errors).isEmpty();
+        verify(filterChain, times(parallelRequestCount)).doFilter(request, response);
+        verify(authService, times(1)).authenticate(accessKey);
+        assertThat(securityContext.getAuthentication()).isSameAs(signedInUser);
+    }
+
+    @Test
+    void shouldMapAccessKeyAuthenticationsForParallelRequestsOfDifferentKeys() throws Exception {
+        var parallelRequestCount = 5;
+        var done = new CountDownLatch(parallelRequestCount);
+        var errors = new CopyOnWriteArrayList<Throwable>();
+
+        for (int i = 1; i <= parallelRequestCount; i++) {
+            var accessKey = new AccessKey("access-key-" + i);
+            var signedInUser = createSignedInUser().withAuthentication(accessKey);
+            when(authService.authenticate(accessKey)).thenAnswer(invocation -> {
+                Thread.sleep(150);
+                return signedInUser;
+            });
+
+            var securityContext = new SecurityContextImpl(new AccessKeyAuthentication(accessKey));
+            Runnable runRequest = () -> {
+                try {
+                    SecurityContextHolder.setContext(securityContext);
+                    testee.doFilterInternal(request, response, filterChain);
+                } catch (Throwable t) {
+                    errors.add(t);
+                } finally {
+                    SecurityContextHolder.clearContext();
+                    done.countDown();
+                }
+            };
+
+            new Thread(runRequest).start();
+        }
+
+        assertThat(done.await(10, TimeUnit.SECONDS)).isTrue();
+        assertThat(errors).isEmpty();
+        verify(filterChain, times(parallelRequestCount)).doFilter(request, response);
+        verify(authService, times(parallelRequestCount)).authenticate(any(AccessKey.class));
     }
 
     @Test
@@ -204,4 +292,3 @@ class ConvertToSignedInUserAuthenticationFilterTest {
         verify(authService, times(parallelRequestCount)).authenticate(any(OidcUser.class));
     }
 }
-
