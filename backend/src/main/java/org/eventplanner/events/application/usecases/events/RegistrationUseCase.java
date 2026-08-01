@@ -45,15 +45,15 @@ public class RegistrationUseCase {
 
         if (spec.isSelfSignup()) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
-            log.info("User {} signed up on event {}", spec.userKey(), event.getName());
+            log.info("User {} signed up on event {}", spec.userKey(), event.getKey());
             registrationService.createUserRegistration(spec, event);
         } else if (spec.userKey() != null) {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-            log.info("Adding registration for user {} on event {}", spec.userKey(), event.getName());
+            log.info("Adding registration for user {} on event {}", spec.userKey(), event.getKey());
             registrationService.createUserRegistration(spec, event);
         } else if (spec.name() != null) {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-            log.info("Adding registration for guest {} on event {}", spec.name(), event.getName());
+            log.info("Adding registration for guest {} on event {}", spec.name(), event.getKey());
             registrationService.createGuestRegistration(spec, event);
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
@@ -83,13 +83,13 @@ public class RegistrationUseCase {
         var isRemovedByUser = signedInUser.key().equals(registration.getUserKey());
         if (isRemovedByUser) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
-            log.info("User {} removed their registration from event {}", signedInUser.key(), event.getName());
+            log.info("User {} removed their registration from event {}", signedInUser.key(), event.getKey());
         } else if (registration.getUserKey() != null) {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-            log.info("Removing registration of {} from event {}", registration.getUserKey(), event.getName());
+            log.info("Removing registration of {} from event {}", registration.getUserKey(), event.getKey());
         } else if (registration.getName() != null) {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-            log.info("Removing guest registration of {} from event {}", registration.getName(), event.getName());
+            log.info("Removing guest registration of {} from event {}", registration.getName(), event.getKey());
         }
 
         registrationService.removeRegistration(registrationKey, event, isRemovedByUser);
@@ -115,11 +115,11 @@ public class RegistrationUseCase {
             log.info(
                 "User {} updates their registration on event {}",
                 registration.getUserKey(),
-                event.getName()
+                event.getKey()
             );
         } else {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
-            log.info("Updating registration {} on event {}", spec.registrationKey(), event.getName());
+            log.info("Updating registration {} on event {}", spec.registrationKey(), event.getKey());
         }
 
         registrationService.updateRegistration(spec, event);
