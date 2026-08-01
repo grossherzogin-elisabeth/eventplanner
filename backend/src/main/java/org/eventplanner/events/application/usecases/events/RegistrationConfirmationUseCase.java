@@ -152,7 +152,7 @@ public class RegistrationConfirmationUseCase {
             log.info("User tried to confirm registration {}, which was already confirmed", registrationKey);
             return;
         }
-        log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getName());
+        log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getKey());
         registrationService.updateRegistration(
             new UpdateRegistrationSpec(
                 event.getKey(),
@@ -187,10 +187,10 @@ public class RegistrationConfirmationUseCase {
         // TODO should this be allowed?
         if (registration.getConfirmedAt() != null) {
             log.warn("User tried to decline registration {}, but was already confirmed", registrationKey);
-            throw new IllegalStateException("User already confirmed their participation on event " + event.getName());
+            throw new IllegalStateException("User already confirmed their participation on event " + event.getKey());
         }
 
-        log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getName());
+        log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getKey());
         registrationService.removeRegistration(registration.getKey(), event, true);
         eventRepository.update(event);
     }
