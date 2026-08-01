@@ -41,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 class ConvertToSignedInUserAuthenticationFilterTest {
 
     private AuthenticationService authService;
+    private AuthenticationMutexHolder authenticationMutexHolder;
     private ConvertToSignedInUserAuthenticationFilter testee;
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -49,7 +50,9 @@ class ConvertToSignedInUserAuthenticationFilterTest {
     @BeforeEach
     void setup() {
         authService = mock();
-        testee = new ConvertToSignedInUserAuthenticationFilter(authService, new AuthenticationMutexHolder());
+        authenticationMutexHolder = mock();
+        when(authenticationMutexHolder.getMutex(any())).thenReturn(new Object());
+        testee = new ConvertToSignedInUserAuthenticationFilter(authService, authenticationMutexHolder);
         request = mock();
         response = mock();
         filterChain = mock();
@@ -127,6 +130,8 @@ class ConvertToSignedInUserAuthenticationFilterTest {
         var parallelRequestCount = 10;
         var accessKey = new AccessKey("access-key-shared");
         var signedInUser = createSignedInUser();
+        var concurrencyTestee =
+            new ConvertToSignedInUserAuthenticationFilter(authService, new AuthenticationMutexHolder());
 
         when(authService.authenticate(accessKey)).thenReturn(signedInUser);
 
@@ -140,7 +145,7 @@ class ConvertToSignedInUserAuthenticationFilterTest {
                 SecurityContextHolder.setContext(securityContext);
                 ready.countDown();
                 assertThat(start.await(2, TimeUnit.SECONDS)).isTrue();
-                testee.doFilterInternal(request, response, filterChain);
+                concurrencyTestee.doFilterInternal(request, response, filterChain);
             } catch (Throwable t) {
                 errors.add(t);
             } finally {
@@ -165,6 +170,8 @@ class ConvertToSignedInUserAuthenticationFilterTest {
     @Test
     void shouldMapAccessKeyAuthenticationsForParallelRequestsOfDifferentKeys() throws Exception {
         var parallelRequestCount = 5;
+        var concurrencyTestee =
+            new ConvertToSignedInUserAuthenticationFilter(authService, new AuthenticationMutexHolder());
         var ready = new CountDownLatch(parallelRequestCount);
         var start = new CountDownLatch(1);
         var done = new CountDownLatch(parallelRequestCount);
@@ -181,7 +188,7 @@ class ConvertToSignedInUserAuthenticationFilterTest {
                     SecurityContextHolder.setContext(securityContext);
                     ready.countDown();
                     assertThat(start.await(2, TimeUnit.SECONDS)).isTrue();
-                    testee.doFilterInternal(request, response, filterChain);
+                    concurrencyTestee.doFilterInternal(request, response, filterChain);
                 } catch (Throwable t) {
                     errors.add(t);
                 } finally {
@@ -206,6 +213,8 @@ class ConvertToSignedInUserAuthenticationFilterTest {
         var parallelRequestCount = 10;
         var signedInUser = createSignedInUser();
         var oidcUser = mockOidcUser(signedInUser);
+        var concurrencyTestee =
+            new ConvertToSignedInUserAuthenticationFilter(authService, new AuthenticationMutexHolder());
 
         when(authService.authenticate(oidcUser)).thenReturn(signedInUser);
 
@@ -219,7 +228,7 @@ class ConvertToSignedInUserAuthenticationFilterTest {
                 SecurityContextHolder.setContext(securityContext);
                 ready.countDown();
                 assertThat(start.await(2, TimeUnit.SECONDS)).isTrue();
-                testee.doFilterInternal(request, response, filterChain);
+                concurrencyTestee.doFilterInternal(request, response, filterChain);
             } catch (Throwable t) {
                 errors.add(t);
             } finally {
@@ -249,6 +258,8 @@ class ConvertToSignedInUserAuthenticationFilterTest {
     @Test
     void shouldMapAllAuthenticationsForParallelRequestsOfDifferentUsers() throws Exception {
         var parallelRequestCount = 5;
+        var concurrencyTestee =
+            new ConvertToSignedInUserAuthenticationFilter(authService, new AuthenticationMutexHolder());
         var ready = new CountDownLatch(parallelRequestCount);
         var start = new CountDownLatch(1);
         var allAuthCallsEntered = new CountDownLatch(parallelRequestCount);
@@ -281,7 +292,7 @@ class ConvertToSignedInUserAuthenticationFilterTest {
                     SecurityContextHolder.setContext(securityContext);
                     ready.countDown();
                     assertThat(start.await(2, TimeUnit.SECONDS)).isTrue();
-                    testee.doFilterInternal(request, response, filterChain);
+                    concurrencyTestee.doFilterInternal(request, response, filterChain);
                 } catch (Throwable t) {
                     errors.add(t);
                 } finally {
