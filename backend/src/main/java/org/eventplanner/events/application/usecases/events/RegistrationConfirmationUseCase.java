@@ -41,7 +41,7 @@ public class RegistrationConfirmationUseCase {
     private final UserService userService;
     private final RegistrationService registrationService;
 
-    @PreAuthorize("hasAuthority('events:write-details')")
+    @PreAuthorize("hasAuthority('events:send-confirmation-requests')")
     public void sendConfirmationRequests() {
         var currentYear = Instant.now().atZone(timezone).getYear();
         var eventsToNotify = Stream.concat(
