@@ -42,7 +42,7 @@ class ConvertToAccessKeyAuthenticationFilterTest {
 
     @Test
     void shouldConvertAnonymousAuthenticationToAccessKeyAuthentication() throws Exception {
-        when(request.getParameter("accessKey")).thenReturn("access-1");
+        when(request.getHeader("Access-Key")).thenReturn("access-1");
         SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
 
         testee.doFilterInternal(request, response, filterChain);
@@ -57,8 +57,8 @@ class ConvertToAccessKeyAuthenticationFilterTest {
     void shouldConvertDifferentAccessKeysToDifferentAuthentications() throws Exception {
         var request1 = mock(HttpServletRequest.class);
         var request2 = mock(HttpServletRequest.class);
-        when(request1.getParameter("accessKey")).thenReturn("access-1");
-        when(request2.getParameter("accessKey")).thenReturn("access-2");
+        when(request1.getHeader("Access-Key")).thenReturn("access-1");
+        when(request2.getHeader("Access-Key")).thenReturn("access-2");
 
         SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
         testee.doFilterInternal(request1, response, filterChain);
@@ -74,7 +74,7 @@ class ConvertToAccessKeyAuthenticationFilterTest {
 
     @Test
     void shouldNotReuseSecurityContextForSameAccessKey() throws Exception {
-        when(request.getParameter("accessKey")).thenReturn("access-1");
+        when(request.getHeader("Access-Key")).thenReturn("access-1");
 
         SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
         testee.doFilterInternal(request, response, filterChain);
@@ -89,7 +89,7 @@ class ConvertToAccessKeyAuthenticationFilterTest {
 
     @Test
     void shouldNotConvertWhenAuthenticationIsNotAnonymous() throws Exception {
-        when(request.getParameter("accessKey")).thenReturn("access-1");
+        when(request.getHeader("Access-Key")).thenReturn("access-1");
         SecurityContextHolder.setContext(new SecurityContextImpl(createSignedInUser()));
         var previousAuthentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -101,7 +101,7 @@ class ConvertToAccessKeyAuthenticationFilterTest {
 
     @Test
     void shouldNotConvertWhenAccessKeyIsMissing() throws Exception {
-        when(request.getParameter("accessKey")).thenReturn(null);
+        when(request.getHeader("Access-Key")).thenReturn(null);
         SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
         var previousAuthentication = SecurityContextHolder.getContext().getAuthentication();
 

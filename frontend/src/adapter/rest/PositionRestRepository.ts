@@ -1,4 +1,4 @@
-import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { PositionRepository } from '@/application';
 import type { Position, PositionKey } from '@/domain';
@@ -38,8 +38,10 @@ export class PositionRestRepository implements PositionRepository {
     }
 
     public async findAll(): Promise<Position[]> {
-        const uri = appendAccessKey('/api/v1/positions');
-        const response = await fetch(uri, { credentials: 'include' });
+        const response = await fetch('/api/v1/positions', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (response.ok) {
             const positions = (await response.clone().json()) as PositionRepresentation[];
             return positions.map(PositionRestRepository.mapToDomain);
@@ -56,14 +58,14 @@ export class PositionRestRepository implements PositionRepository {
             color: position.color,
             prio: position.prio,
         };
-        const uri = appendAccessKey('/api/v1/positions');
-        const response = await fetch(uri, {
+        const response = await fetch('/api/v1/positions', {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -80,14 +82,14 @@ export class PositionRestRepository implements PositionRepository {
             color: position.color,
             prio: position.prio,
         };
-        const uri = appendAccessKey(`/api/v1/positions/${positionKey}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/positions/${positionKey}`, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -98,12 +100,12 @@ export class PositionRestRepository implements PositionRepository {
     }
 
     public async deleteByKey(positionKey: PositionKey): Promise<void> {
-        const uri = appendAccessKey(`/api/v1/positions/${positionKey}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/positions/${positionKey}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {

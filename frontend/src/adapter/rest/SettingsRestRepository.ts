@@ -1,4 +1,4 @@
-import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { SettingsRepository } from '@/application';
 import type { AppSettings, UiSettings } from '@/domain';
@@ -75,8 +75,10 @@ export class SettingsRestRepository implements SettingsRepository {
     }
 
     public async readConfig(): Promise<UiSettings> {
-        const uri = appendAccessKey('/api/v1/config');
-        const response = await fetch(uri, { credentials: 'include' });
+        const response = await fetch('/api/v1/config', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (response.ok) {
             const representation = (await response.clone().json()) as UiSettingsRepresentation;
             return {
@@ -91,8 +93,10 @@ export class SettingsRestRepository implements SettingsRepository {
     }
 
     public async readAdminSettings(): Promise<AppSettings> {
-        const uri = appendAccessKey('/api/v1/settings');
-        const response = await fetch(uri, { credentials: 'include' });
+        const response = await fetch('/api/v1/settings', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (response.ok) {
             const representation = (await response.clone().json()) as SettingsRepresentation;
             return SettingsRestRepository.mapToDomain(representation);
@@ -126,14 +130,14 @@ export class SettingsRestRepository implements SettingsRepository {
             },
         };
 
-        const uri = appendAccessKey('/api/v1/settings');
-        const response = await fetch(uri, {
+        const response = await fetch('/api/v1/settings', {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (response.ok) {

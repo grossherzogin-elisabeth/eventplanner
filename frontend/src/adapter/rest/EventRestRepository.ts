@@ -1,4 +1,4 @@
-import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRepository } from '@/application';
 import { deserializeDate } from '@/common';
@@ -138,9 +138,9 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async findByKey(key: EventKey): Promise<Event> {
-        const uri = appendAccessKey(`/api/v1/events/${key}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${key}`, {
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -150,11 +150,11 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async findAll(year: number): Promise<Event[]> {
-        const uri = appendAccessKey(`/api/v1/events?year=${year}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events?year=${year}`, {
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -165,11 +165,11 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async export(year: number): Promise<Blob> {
-        const uri = appendAccessKey(`/api/v1/events?year=${year}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events?year=${year}`, {
             credentials: 'include',
             headers: {
                 Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -207,8 +207,7 @@ export class EventRestRepository implements EventRepository {
                 assignedRegistrationKey: it.assignedRegistrationKey,
             })),
         };
-        const uri = appendAccessKey(`/api/v1/events`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events`, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -216,6 +215,7 @@ export class EventRestRepository implements EventRepository {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -275,8 +275,7 @@ export class EventRestRepository implements EventRepository {
                 note: it.note,
             })),
         };
-        const uri = appendAccessKey(`/api/v1/events/${eventKey}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${eventKey}`, {
             method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -284,6 +283,7 @@ export class EventRestRepository implements EventRepository {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -294,12 +294,12 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async deleteEvent(eventKey: EventKey): Promise<void> {
-        const uri = appendAccessKey(`/api/v1/events/${eventKey}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${eventKey}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -308,10 +308,10 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async getExportTemplates(): Promise<string[]> {
-        const uri = appendAccessKey('/api/v1/events/export/templates');
-        const response = await fetch(uri, {
+        const response = await fetch('/api/v1/events/export/templates', {
             method: 'GET',
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -320,10 +320,10 @@ export class EventRestRepository implements EventRepository {
     }
 
     public async exportEvent(event: Event, template: string): Promise<Blob> {
-        const uri = appendAccessKey(`/api/v1/events/${event.key}/export/${template}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${event.key}/export/${template}`, {
             method: 'GET',
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -350,8 +350,7 @@ export class EventRestRepository implements EventRepository {
                 confirmed: it.confirmed,
             })),
         };
-        const uri = appendAccessKey(`/api/v1/events/${event.key}/optimized-slots`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${event.key}/optimized-slots`, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -359,6 +358,7 @@ export class EventRestRepository implements EventRepository {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {

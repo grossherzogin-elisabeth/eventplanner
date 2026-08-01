@@ -1,6 +1,6 @@
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventRestRepository } from '@/adapter/rest/EventRestRepository';
-import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { EventRegistrationsRepository } from '@/application';
 import { toIsoDateString } from '@/common';
@@ -37,14 +37,14 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             overnightStay: registration.overnightStay,
             arrival: toIsoDateString(registration.arrival),
         };
-        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations`, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -64,14 +64,14 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             overnightStay: registration.overnightStay,
             arrival: toIsoDateString(registration.arrival),
         };
-        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations/${registration.key}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -82,12 +82,12 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
     }
 
     public async deleteRegistration(eventKey: EventKey, registration: Registration): Promise<Event> {
-        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations/${registration.key}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registration.key}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -98,10 +98,10 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
     }
 
     public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
-        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations/${registrationKey}/confirm`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/confirm`, {
             method: 'GET',
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -109,10 +109,10 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
     }
 
     public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
-        const uri = appendAccessKey(`/api/v1/events/${eventKey}/registrations/${registrationKey}/decline`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/decline`, {
             method: 'GET',
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;

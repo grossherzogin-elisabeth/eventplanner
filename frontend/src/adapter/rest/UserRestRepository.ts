@@ -1,4 +1,4 @@
-import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { UserRepository } from '@/application';
 import { toIsoDateString } from '@/common';
@@ -135,9 +135,9 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async findAll(): Promise<User[]> {
-        const uri = appendAccessKey('/api/v1/users');
-        const response = await fetch(uri, {
+        const response = await fetch('/api/v1/users', {
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -162,9 +162,9 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async findByKey(key: UserKey): Promise<UserDetails> {
-        const uri = appendAccessKey(`/api/v1/users/${key}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/users/${key}`, {
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -174,9 +174,9 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async findBySignedInUser(): Promise<UserDetails> {
-        const uri = appendAccessKey('/api/v1/users/self');
-        const response = await fetch(uri, {
+        const response = await fetch('/api/v1/users/self', {
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -230,14 +230,14 @@ export class UserRestRepository implements UserRepository {
                   }
                 : undefined,
         };
-        const uri = appendAccessKey(`/api/v1/users/${userKey}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/users/${userKey}`, {
             method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -253,14 +253,14 @@ export class UserRestRepository implements UserRepository {
             lastName: user.lastName,
             email: user.email || '',
         };
-        const uri = appendAccessKey('/api/v1/users');
-        const response = await fetch(uri, {
+        const response = await fetch('/api/v1/users', {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -271,13 +271,13 @@ export class UserRestRepository implements UserRepository {
     }
 
     public async deleteUser(userKey: UserKey): Promise<void> {
-        const uri = appendAccessKey(`/api/v1/users/${userKey}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/users/${userKey}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -318,14 +318,14 @@ export class UserRestRepository implements UserRepository {
             dateOfBirth: toIsoDateString(user.dateOfBirth),
             placeOfBirth: user.placeOfBirth,
         };
-        const uri = appendAccessKey('/api/v1/users/self');
-        const response = await fetch(uri, {
+        const response = await fetch('/api/v1/users/self', {
             method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {

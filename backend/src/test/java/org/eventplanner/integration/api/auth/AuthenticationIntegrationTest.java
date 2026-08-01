@@ -62,7 +62,7 @@ class AuthenticationIntegrationTest {
         ));
 
         MvcResult result = webMvc.perform(get("/api/v1/account")
-                .param("accessKey", accessKey)
+                .header("Access-Key", accessKey)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.key").value(TestUser.TEAM_MEMBER.getKey().value()))

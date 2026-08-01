@@ -1,4 +1,4 @@
-import { appendAccessKey } from '@/adapter/util/AccessKeyAuthentication.ts';
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { QualificationRepository } from '@/application';
 import type { Qualification, QualificationKey } from '@/domain';
@@ -42,8 +42,10 @@ export class QualificationRestRepository implements QualificationRepository {
     }
 
     public async findAll(): Promise<Qualification[]> {
-        const uri = appendAccessKey('/api/v1/qualifications');
-        const response = await fetch(uri, { credentials: 'include' });
+        const response = await fetch('/api/v1/qualifications', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (!response.ok) {
             throw response;
         }
@@ -60,14 +62,14 @@ export class QualificationRestRepository implements QualificationRepository {
             expires: qualification.expires,
             grantsPositions: qualification.grantsPositions,
         };
-        const uri = appendAccessKey('/api/v1/qualifications');
-        const response = await fetch(uri, {
+        const response = await fetch('/api/v1/qualifications', {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -85,14 +87,14 @@ export class QualificationRestRepository implements QualificationRepository {
             expires: qualification.expires,
             grantsPositions: qualification.grantsPositions,
         };
-        const uri = appendAccessKey(`/api/v1/qualifications/${qualificationKey}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/qualifications/${qualificationKey}`, {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -103,12 +105,12 @@ export class QualificationRestRepository implements QualificationRepository {
     }
 
     public async deleteByKey(qualificationKey: QualificationKey): Promise<void> {
-        const uri = appendAccessKey(`/api/v1/qualifications/${qualificationKey}`);
-        const response = await fetch(uri, {
+        const response = await fetch(`/api/v1/qualifications/${qualificationKey}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
