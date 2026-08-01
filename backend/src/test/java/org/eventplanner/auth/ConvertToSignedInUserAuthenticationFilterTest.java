@@ -128,17 +128,18 @@ class ConvertToSignedInUserAuthenticationFilterTest {
         var accessKey = new AccessKey("access-key-shared");
         var signedInUser = createSignedInUser();
 
-        when(authService.authenticate(accessKey)).thenAnswer(invocation -> {
-            Thread.sleep(150);
-            return signedInUser;
-        });
+        when(authService.authenticate(accessKey)).thenReturn(signedInUser);
 
         var securityContext = new SecurityContextImpl(new AccessKeyAuthentication(accessKey));
+        var ready = new CountDownLatch(parallelRequestCount);
+        var start = new CountDownLatch(1);
         var done = new CountDownLatch(parallelRequestCount);
         var errors = new CopyOnWriteArrayList<Throwable>();
         Runnable runRequest = () -> {
             try {
                 SecurityContextHolder.setContext(securityContext);
+                ready.countDown();
+                assertThat(start.await(2, TimeUnit.SECONDS)).isTrue();
                 testee.doFilterInternal(request, response, filterChain);
             } catch (Throwable t) {
                 errors.add(t);
@@ -152,6 +153,8 @@ class ConvertToSignedInUserAuthenticationFilterTest {
             new Thread(runRequest).start();
         }
 
+        assertThat(ready.await(2, TimeUnit.SECONDS)).isTrue();
+        start.countDown();
         assertThat(done.await(5, TimeUnit.SECONDS)).isTrue();
         assertThat(errors).isEmpty();
         verify(filterChain, times(parallelRequestCount)).doFilter(request, response);
@@ -162,21 +165,22 @@ class ConvertToSignedInUserAuthenticationFilterTest {
     @Test
     void shouldMapAccessKeyAuthenticationsForParallelRequestsOfDifferentKeys() throws Exception {
         var parallelRequestCount = 5;
+        var ready = new CountDownLatch(parallelRequestCount);
+        var start = new CountDownLatch(1);
         var done = new CountDownLatch(parallelRequestCount);
         var errors = new CopyOnWriteArrayList<Throwable>();
 
         for (int i = 1; i <= parallelRequestCount; i++) {
             var accessKey = new AccessKey("access-key-" + i);
             var signedInUser = createSignedInUser().withAuthentication(accessKey);
-            when(authService.authenticate(accessKey)).thenAnswer(invocation -> {
-                Thread.sleep(150);
-                return signedInUser;
-            });
+            when(authService.authenticate(accessKey)).thenReturn(signedInUser);
 
             var securityContext = new SecurityContextImpl(new AccessKeyAuthentication(accessKey));
             Runnable runRequest = () -> {
                 try {
                     SecurityContextHolder.setContext(securityContext);
+                    ready.countDown();
+                    assertThat(start.await(2, TimeUnit.SECONDS)).isTrue();
                     testee.doFilterInternal(request, response, filterChain);
                 } catch (Throwable t) {
                     errors.add(t);
@@ -189,6 +193,8 @@ class ConvertToSignedInUserAuthenticationFilterTest {
             new Thread(runRequest).start();
         }
 
+        assertThat(ready.await(2, TimeUnit.SECONDS)).isTrue();
+        start.countDown();
         assertThat(done.await(10, TimeUnit.SECONDS)).isTrue();
         assertThat(errors).isEmpty();
         verify(filterChain, times(parallelRequestCount)).doFilter(request, response);
@@ -201,18 +207,18 @@ class ConvertToSignedInUserAuthenticationFilterTest {
         var signedInUser = createSignedInUser();
         var oidcUser = mockOidcUser(signedInUser);
 
-        // make sure the authenticate request takes long enough for the synchronized block to have an effect
-        when(authService.authenticate(oidcUser)).thenAnswer(invocation -> {
-            Thread.sleep(150);
-            return signedInUser;
-        });
+        when(authService.authenticate(oidcUser)).thenReturn(signedInUser);
 
         var securityContext = new SecurityContextImpl(new OAuth2AuthenticationToken(oidcUser, List.of(), "oidc"));
+        var ready = new CountDownLatch(parallelRequestCount);
+        var start = new CountDownLatch(1);
         var done = new CountDownLatch(parallelRequestCount);
         var errors = new CopyOnWriteArrayList<Throwable>();
         Runnable runRequest = () -> {
             try {
                 SecurityContextHolder.setContext(securityContext);
+                ready.countDown();
+                assertThat(start.await(2, TimeUnit.SECONDS)).isTrue();
                 testee.doFilterInternal(request, response, filterChain);
             } catch (Throwable t) {
                 errors.add(t);
@@ -228,6 +234,8 @@ class ConvertToSignedInUserAuthenticationFilterTest {
             new Thread(runRequest).start();
         }
 
+        assertThat(ready.await(2, TimeUnit.SECONDS)).isTrue();
+        start.countDown();
         // all requests have completed without errors
         assertThat(done.await(5, TimeUnit.SECONDS)).isTrue();
         assertThat(errors).isEmpty();
@@ -241,6 +249,9 @@ class ConvertToSignedInUserAuthenticationFilterTest {
     @Test
     void shouldMapAllAuthenticationsForParallelRequestsOfDifferentUsers() throws Exception {
         var parallelRequestCount = 5;
+        var ready = new CountDownLatch(parallelRequestCount);
+        var start = new CountDownLatch(1);
+        var allAuthCallsEntered = new CountDownLatch(parallelRequestCount);
         var done = new CountDownLatch(parallelRequestCount);
         var errors = new CopyOnWriteArrayList<Throwable>();
 
@@ -259,17 +270,17 @@ class ConvertToSignedInUserAuthenticationFilterTest {
             );
             var oidcUser = mockOidcUser(signedInUser);
 
-            // make sure the authenticate request takes long enough for the synchronized block to have an effect
             when(authService.authenticate(oidcUser)).thenAnswer(invocation -> {
-                // only resolve this as soon as all requests have called this functions, which ensures they all run in
-                // parallel
-                Thread.sleep(150); // hold the per-user lock long enough for overlap to matter
+                allAuthCallsEntered.countDown();
+                assertThat(allAuthCallsEntered.await(2, TimeUnit.SECONDS)).isTrue();
                 return signedInUser;
             });
             var securityContext = new SecurityContextImpl(new OAuth2AuthenticationToken(oidcUser, List.of(), "oidc"));
             Runnable runRequest = () -> {
                 try {
                     SecurityContextHolder.setContext(securityContext);
+                    ready.countDown();
+                    assertThat(start.await(2, TimeUnit.SECONDS)).isTrue();
                     testee.doFilterInternal(request, response, filterChain);
                 } catch (Throwable t) {
                     errors.add(t);
@@ -283,6 +294,8 @@ class ConvertToSignedInUserAuthenticationFilterTest {
             new Thread(runRequest).start();
         }
 
+        assertThat(ready.await(2, TimeUnit.SECONDS)).isTrue();
+        start.countDown();
         // all requests have completed without errors
         assertThat(done.await(10, TimeUnit.SECONDS)).isTrue();
         assertThat(errors).isEmpty();
