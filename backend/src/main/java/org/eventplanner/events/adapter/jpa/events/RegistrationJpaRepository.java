@@ -10,9 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface RegistrationJpaRepository extends JpaRepository<RegistrationJpaEntity, String> {
 
     @NonNull
-    List<RegistrationJpaEntity> findAllByAccessKeyNull();
-
-    @NonNull
     List<RegistrationJpaEntity> findAllByEventKey(@NonNull String eventKey);
 
     @NonNull

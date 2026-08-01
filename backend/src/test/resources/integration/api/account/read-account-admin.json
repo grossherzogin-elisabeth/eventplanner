@@ -13,6 +13,7 @@
     "events:export",
     "events:write-details",
     "events:write-slots",
+    "events:send-confirmation-requests",
     "registrations:write",
     "registrations:write-self",
     "users:read",
@@ -26,6 +27,7 @@
     "positions:write",
     "qualifications:read",
     "qualifications:write",
+    "access-keys:delete",
     "application-settings:read",
     "application-settings:write"
   ],

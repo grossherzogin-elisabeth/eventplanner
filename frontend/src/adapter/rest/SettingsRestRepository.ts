@@ -1,3 +1,4 @@
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { SettingsRepository } from '@/application';
 import type { AppSettings, UiSettings } from '@/domain';
@@ -74,7 +75,10 @@ export class SettingsRestRepository implements SettingsRepository {
     }
 
     public async readConfig(): Promise<UiSettings> {
-        const response = await fetch('/api/v1/config', { credentials: 'include' });
+        const response = await fetch('/api/v1/config', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (response.ok) {
             const representation = (await response.clone().json()) as UiSettingsRepresentation;
             return {
@@ -89,7 +93,10 @@ export class SettingsRestRepository implements SettingsRepository {
     }
 
     public async readAdminSettings(): Promise<AppSettings> {
-        const response = await fetch('/api/v1/settings', { credentials: 'include' });
+        const response = await fetch('/api/v1/settings', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (response.ok) {
             const representation = (await response.clone().json()) as SettingsRepresentation;
             return SettingsRestRepository.mapToDomain(representation);
@@ -130,6 +137,7 @@ export class SettingsRestRepository implements SettingsRepository {
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (response.ok) {

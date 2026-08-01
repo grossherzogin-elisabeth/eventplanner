@@ -1,3 +1,4 @@
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { QualificationRepository } from '@/application';
 import type { Qualification, QualificationKey } from '@/domain';
@@ -41,7 +42,10 @@ export class QualificationRestRepository implements QualificationRepository {
     }
 
     public async findAll(): Promise<Qualification[]> {
-        const response = await fetch('/api/v1/qualifications', { credentials: 'include' });
+        const response = await fetch('/api/v1/qualifications', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (!response.ok) {
             throw response;
         }
@@ -65,6 +69,7 @@ export class QualificationRestRepository implements QualificationRepository {
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -89,6 +94,7 @@ export class QualificationRestRepository implements QualificationRepository {
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -104,6 +110,7 @@ export class QualificationRestRepository implements QualificationRepository {
             credentials: 'include',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {

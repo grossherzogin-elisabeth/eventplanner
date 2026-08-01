@@ -46,6 +46,10 @@ auth:
   login-success-url: ${frontend.url}
   # OIDC users with this email address in their token will automatically become admins
   admins: ${ADMIN_EMAILS:}
+  # Secret used to hash access keys before they are stored in the database
+  access-key-hash-secret: ${ACCESS_KEY_HASH_SECRET:default-access-key-hash-secret}
+  # Maximum age for access keys before scheduled cleanup removes them
+  access-key-expiration: ${ACCESS_KEY_EXPIRATION:P21D}
   # 60 * 60 * 24 * 30 seconds = 30 days
   session-timeout: 2592000
 
@@ -121,6 +125,10 @@ server:
       timeout: ${auth.session-timeout}s
       cookie:
         max-age: ${auth.session-timeout}
+        http-only: true
+        # TODO check if we can enable these
+#        same-site: strict
+#        secure: true
 
 frontend:
   protocol: ${server.protocol}

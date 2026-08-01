@@ -18,6 +18,7 @@ public enum Permission implements GrantedAuthority {
     EXPORT_EVENTS("events:export"),
     WRITE_EVENT_DETAILS("events:write-details"),
     WRITE_EVENT_SLOTS("events:write-slots"),
+    SEND_PARTICIPATION_CONFIRMATION_REQUESTS("events:send-confirmation-requests"),
 
     WRITE_REGISTRATIONS("registrations:write"),
     WRITE_OWN_REGISTRATIONS("registrations:write-self"),
@@ -35,6 +36,8 @@ public enum Permission implements GrantedAuthority {
 
     READ_QUALIFICATIONS("qualifications:read"),
     WRITE_QUALIFICATIONS("qualifications:write"),
+
+    DELETE_ACCESS_KEYS("access-keys:delete"),
 
     READ_APP_SETTINGS("application-settings:read"),
     WRITE_APP_SETTINGS("application-settings:write");

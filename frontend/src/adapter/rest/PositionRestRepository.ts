@@ -1,3 +1,4 @@
+import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
 import { getCsrfToken } from '@/adapter/util/Csrf';
 import type { PositionRepository } from '@/application';
 import type { Position, PositionKey } from '@/domain';
@@ -37,7 +38,10 @@ export class PositionRestRepository implements PositionRepository {
     }
 
     public async findAll(): Promise<Position[]> {
-        const response = await fetch('/api/v1/positions', { credentials: 'include' });
+        const response = await fetch('/api/v1/positions', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (response.ok) {
             const positions = (await response.clone().json()) as PositionRepresentation[];
             return positions.map(PositionRestRepository.mapToDomain);
@@ -61,6 +65,7 @@ export class PositionRestRepository implements PositionRepository {
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -84,6 +89,7 @@ export class PositionRestRepository implements PositionRepository {
             headers: {
                 'Content-Type': 'application/json',
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -99,6 +105,7 @@ export class PositionRestRepository implements PositionRepository {
             credentials: 'include',
             headers: {
                 'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {

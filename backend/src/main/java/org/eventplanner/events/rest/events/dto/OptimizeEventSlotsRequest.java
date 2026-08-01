@@ -28,7 +28,6 @@ public record OptimizeEventSlotsRequest(
                     it.userKey() != null ? new UserKey(it.userKey()) : null,
                     it.name(),
                     it.note(),
-                    originalRegistration.map(Registration::getAccessKey).orElse(null),
                     originalRegistration.map(Registration::getConfirmedAt).orElse(null),
                     originalRegistration.map(Registration::getOvernightStay).orElse(null),
                     originalRegistration.map(Registration::getArrival).orElse(null)
