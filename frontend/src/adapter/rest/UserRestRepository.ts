@@ -1,5 +1,5 @@
-import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { UserRepository } from '@/application';
 import { toIsoDateString } from '@/common';
 import type { PositionKey, Role, User, UserDetails, UserKey } from '@/domain';
@@ -236,8 +236,8 @@ export class UserRestRepository implements UserRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -259,8 +259,8 @@ export class UserRestRepository implements UserRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -276,8 +276,8 @@ export class UserRestRepository implements UserRepository {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -324,8 +324,8 @@ export class UserRestRepository implements UserRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {

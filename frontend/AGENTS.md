@@ -8,7 +8,7 @@
 - Domain is the core business layer (`src/domain`); UI consumes application use cases and selected domain types; adapter
   integration stays behind application ports.
 - Keep auth/fetch/cookie details in REST adapters (for example `src/adapter/rest/*.ts`, CSRF via
-  `src/adapter/util/Csrf.ts`).
+  `src/adapter/util/getCsrfTokenHeader.ts`).
 - Add new dependencies through `useX()` factories and `reset...()` hooks in layer `index.ts` files (`src/adapter`,
   `src/application/services`, `src/application/usecases`, `src/domain/services`).
 - Routes are discovered from `src/ui/views/**/Route.ts`; each route module exports one default `RouteRecordRaw`.
@@ -40,7 +40,7 @@
 - Common (`src/common`) contains domain-agnostic shared utilities reusable across layers.
 - UI should not call adapter implementations directly; adapter usage is wired through application ports/factories.
 - Keep fetch/auth/cookie handling in adapters (example: `src/adapter/rest/EventRestRepository.ts`,
-  `src/adapter/util/Csrf.ts`).
+  `src/adapter/util/getCsrfTokenHeader.ts`).
 
 ## Dependency wiring pattern (important)
 

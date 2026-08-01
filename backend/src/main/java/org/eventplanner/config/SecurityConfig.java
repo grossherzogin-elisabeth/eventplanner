@@ -20,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 @Configuration
@@ -40,7 +41,7 @@ public class SecurityConfig {
         @NonNull @Autowired final ConvertToSignedInUserAuthenticationFilter convertToSignedInUserAuthenticationFilter,
         @NonNull @Autowired final RefreshSignedInUserAuthenticationFilter refreshSignedInUserAuthenticationFilter,
         @NonNull @Autowired final LogRequestsFilter logRequestsFilter,
-        @Nullable @Value("${security.enable-csrf}") String enableCSRF
+        @Nullable @Value("${auth.csrf.enabled}") String enableCSRF
     ) {
         this.oAuthClientConfig = oAuthClientConfig;
         this.convertToAccessKeyAuthenticationFilter = convertToAccessKeyAuthenticationFilter;
@@ -53,7 +54,9 @@ public class SecurityConfig {
     @Bean
     public @NonNull SecurityFilterChain securityConfigCustomizer(@NonNull HttpSecurity http) {
         if (enableCSRF) {
-            http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
+            http.csrf(csrf -> csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .spa());
         } else {
             http.csrf(AbstractHttpConfigurer::disable);
         }
@@ -72,7 +75,7 @@ public class SecurityConfig {
         });
 
         http = oAuthClientConfig.configure(http);
-        http.addFilterBefore(logRequestsFilter, AnonymousAuthenticationFilter.class);
+        http.addFilterBefore(logRequestsFilter, CsrfFilter.class);
         http.addFilterAfter(convertToAccessKeyAuthenticationFilter, AnonymousAuthenticationFilter.class);
         http.addFilterAfter(convertToSignedInUserAuthenticationFilter, ConvertToAccessKeyAuthenticationFilter.class);
         http.addFilterAfter(refreshSignedInUserAuthenticationFilter, ConvertToSignedInUserAuthenticationFilter.class);

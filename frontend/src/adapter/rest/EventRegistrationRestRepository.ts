@@ -1,7 +1,7 @@
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventRestRepository } from '@/adapter/rest/EventRestRepository';
-import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { EventRegistrationsRepository } from '@/application';
 import { toIsoDateString } from '@/common';
 import type { Event, EventKey, Registration, RegistrationKey } from '@/domain';
@@ -43,7 +43,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getCsrfTokenHeader(),
                 ...getAccessKeyHeader(),
             },
         });
@@ -70,7 +70,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getCsrfTokenHeader(),
                 ...getAccessKeyHeader(),
             },
         });
@@ -86,7 +86,7 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             method: 'DELETE',
             credentials: 'include',
             headers: {
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getCsrfTokenHeader(),
                 ...getAccessKeyHeader(),
             },
         });
