@@ -48,7 +48,9 @@ const chunks = {
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
-    const host = process.env.VITE_HOST || 'localhost';
+    const host = process.env.VITE_HOST;
+    const port = Number.parseInt(process.env.VITE_PORT as string, 10);
+    const serviceUrl = process.env.VITE_SERVICE_URL;
 
     return {
         plugins: [vue(), svgLoader(), pwa, ViteYaml()],
@@ -74,12 +76,12 @@ export default defineConfig(({ mode }) => {
         },
         assetsInclude: ['**/*.csv'],
         server: {
-            port: 8090,
+            port: port,
             host: true,
             proxy: {
-                '/api/': `http://localhost:8091`,
-                '/auth/': `http://localhost:8091`,
-                '/login/oauth2/code/': `http://localhost:8091`,
+                '/api/': serviceUrl,
+                '/auth/': serviceUrl,
+                '/login/oauth2/code/': serviceUrl,
             },
             allowedHosts: [host],
         },

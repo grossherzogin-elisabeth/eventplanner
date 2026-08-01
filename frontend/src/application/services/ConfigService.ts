@@ -3,7 +3,6 @@ import type { Config } from '@/application/values/Config';
 
 export const defaultConfig: Config = {
     baseUrl: import.meta.env.BASE_URL,
-    buildType: import.meta.env.VITE_BUILD_TYPE || 'localhost',
     i18nLocale: import.meta.env.VITE_I18N_LOCALE || 'de',
     i18nAvailableLocales: (import.meta.env.VITE_I18N_LOCALES || 'de').split(','),
     i18nFallbackLocale: import.meta.env.VITE_I18N_FALLBACK_LOCALE || 'de',

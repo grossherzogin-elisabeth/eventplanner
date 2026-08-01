@@ -2,7 +2,6 @@
  * This type contains the application config.
  */
 export interface Config {
-    buildType: 'prod' | 'stage' | 'dev' | 'localhost';
     baseUrl: string;
 
     // i18n
