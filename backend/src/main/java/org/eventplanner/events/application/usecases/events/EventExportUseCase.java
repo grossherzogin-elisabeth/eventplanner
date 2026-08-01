@@ -86,7 +86,7 @@ public class EventExportUseCase {
         if (!template.exists()) {
             throw new NoSuchElementException("Cannot find template file");
         }
-        log.info("Generating excel export {} for event {}", templateName, event.getName());
+        log.info("Generating excel export {} for event {}", templateName, event.getKey());
         return excelExportService.exportToExcel(template, model);
     }
 

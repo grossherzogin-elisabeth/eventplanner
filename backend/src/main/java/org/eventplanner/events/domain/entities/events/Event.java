@@ -166,7 +166,7 @@ public class Event {
      * team members
      */
     public void optimizeSlots() {
-        log.trace("Optimizing slot assignments for event {}", name);
+        log.trace("Optimizing slot assignments for event {}", key);
         var counter = 0;
         for (int i = 0; i < slots.size(); i++) {
             var slot = slots.get(i);
@@ -190,7 +190,7 @@ public class Event {
             }
         }
         if (counter > 0) {
-            log.info("Optimized slots by moving {} assignments on event {}", counter, name);
+            log.info("Optimized slots by moving {} assignments on event {}", counter, key);
         }
     }
 }

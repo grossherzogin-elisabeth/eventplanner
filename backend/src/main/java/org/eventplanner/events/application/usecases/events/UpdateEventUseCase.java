@@ -47,7 +47,7 @@ public class UpdateEventUseCase {
         var signedInUser = authenticationService.getSignedInUser();
         var event = eventRepository.findByKey(spec.eventKey())
             .orElseThrow(() -> new NoSuchElementException("Event does not exist"));
-        log.info("Updating event {}", event.getName());
+        log.info("Updating event {}", event.getKey());
 
         var previousState = event.getState();
         List<Registration> registrations = new LinkedList<>(event.getRegistrations());
@@ -127,7 +127,7 @@ public class UpdateEventUseCase {
             changedAttributes.add("locations");
         }
         if (!changedAttributes.isEmpty()) {
-            log.info("Updated attributes {} on event {}", String.join(", ", changedAttributes), event.getName());
+            log.info("Updated attributes {} on event {}", String.join(", ", changedAttributes), event.getKey());
         }
     }
 
@@ -157,7 +157,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!createdRegistrations.isEmpty()) {
-            log.info("Added {} registrations to event {}", createdRegistrations.size(), event.getName());
+            log.info("Added {} registrations to event {}", createdRegistrations.size(), event.getKey());
         }
     }
 
@@ -181,7 +181,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!updatedRegistrations.isEmpty()) {
-            log.info("Updated {} registrations on event {}", updatedRegistrations.size(), event.getName());
+            log.info("Updated {} registrations on event {}", updatedRegistrations.size(), event.getKey());
         }
     }
 
@@ -205,7 +205,7 @@ public class UpdateEventUseCase {
             }
         }
         if (!removedRegistrations.isEmpty()) {
-            log.info("Removed {} registrations from event {}", removedRegistrations.size(), event.getName());
+            log.info("Removed {} registrations from event {}", removedRegistrations.size(), event.getKey());
         }
     }
 
@@ -232,20 +232,20 @@ public class UpdateEventUseCase {
             || !unassignedRegistrations.isEmpty()
             || !event.getSlots().equals(spec.slots())) {
             event.setSlots(spec.slots());
-            log.info("Updated slots of event {}", event.getName());
+            log.info("Updated slots of event {}", event.getKey());
         }
         if (!assignedRegistrations.isEmpty()) {
             log.info(
                 "Assigned {} registrations to crew of event {}",
                 assignedRegistrations.size(),
-                event.getName()
+                event.getKey()
             );
         }
         if (!unassignedRegistrations.isEmpty()) {
             log.info(
                 "Unassigned {} registrations from crew of event {}",
                 unassignedRegistrations.size(),
-                event.getName()
+                event.getKey()
             );
         }
     }
