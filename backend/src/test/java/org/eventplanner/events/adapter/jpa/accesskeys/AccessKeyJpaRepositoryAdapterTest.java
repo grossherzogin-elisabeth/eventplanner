@@ -1,7 +1,6 @@
 package org.eventplanner.events.adapter.jpa.accesskeys;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,8 +40,9 @@ class AccessKeyJpaRepositoryAdapterTest {
         assertThat(saved.getKey()).isEqualTo("access-1");
         assertThat(saved.getUserKey()).isEqualTo("user-1");
         var createdAt = Instant.parse(saved.getCreatedAt());
-        assertThat(createdAt).isAfterOrEqualTo(beforeCreate);
-        assertThat(createdAt).isBeforeOrEqualTo(Instant.now());
+        assertThat(createdAt)
+            .isAfterOrEqualTo(beforeCreate)
+            .isBeforeOrEqualTo(Instant.now());
     }
 
     @Test
@@ -74,7 +74,8 @@ class AccessKeyJpaRepositoryAdapterTest {
         var thresholdCaptor = ArgumentCaptor.forClass(Instant.class);
         verify(repository).deleteAllByCreatedAtBefore(thresholdCaptor.capture());
         var threshold = thresholdCaptor.getValue();
-        assertThat(threshold).isAfterOrEqualTo(beforeDelete.minus(maxAge));
-        assertThat(threshold).isBeforeOrEqualTo(Instant.now().minus(maxAge));
+        assertThat(threshold)
+            .isAfterOrEqualTo(beforeDelete.minus(maxAge))
+            .isBeforeOrEqualTo(Instant.now().minus(maxAge));
     }
 }

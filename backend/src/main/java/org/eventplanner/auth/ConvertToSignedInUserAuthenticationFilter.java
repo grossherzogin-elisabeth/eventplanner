@@ -1,9 +1,14 @@
 package org.eventplanner.auth;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eventplanner.events.application.services.AuthenticationService;
+import org.eventplanner.events.domain.entities.users.SignedInUser;
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.jspecify.annotations.NonNull;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -23,6 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ConvertToSignedInUserAuthenticationFilter extends OncePerRequestFilter {
     private final AuthenticationService authService;
     private final AuthenticationMutexHolder authenticationMutexHolder;
+    private final Map<AccessKey, SignedInUser> authorizedAccessKeys = new ConcurrentHashMap<>();
+
+    @Scheduled(cron = "0 0 * * * *")
+    public void clearAuthorizedAccessKeys() {
+        authorizedAccessKeys.clear();
+    }
 
     @Override
     protected void doFilterInternal(
@@ -49,7 +60,8 @@ public class ConvertToSignedInUserAuthenticationFilter extends OncePerRequestFil
 
                     } else if (authentication instanceof AccessKeyAuthentication accessKeyAuthentication) {
                         log.debug("Mapping access key authentication to signed-in user");
-                        var signedInUser = authService.authenticate(accessKeyAuthentication.getCredentials());
+                        var accessKey = accessKeyAuthentication.getCredentials();
+                        var signedInUser = authorizedAccessKeys.computeIfAbsent(accessKey, authService::authenticate);
                         SecurityContextHolder.getContext().setAuthentication(signedInUser);
                     }
                 }

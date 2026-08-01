@@ -2,10 +2,8 @@ package org.eventplanner.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testdata.SignedInUserFactory.createSignedInUser;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -24,7 +22,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 class ConvertToAccessKeyAuthenticationFilterTest {
 
-    private AuthenticationMutexHolder authenticationMutexHolder;
     private ConvertToAccessKeyAuthenticationFilter testee;
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -32,9 +29,7 @@ class ConvertToAccessKeyAuthenticationFilterTest {
 
     @BeforeEach
     void setup() {
-        authenticationMutexHolder = mock();
-        when(authenticationMutexHolder.getMutex(any())).thenReturn(new Object());
-        testee = new ConvertToAccessKeyAuthenticationFilter(authenticationMutexHolder);
+        testee = new ConvertToAccessKeyAuthenticationFilter();
         request = mock();
         response = mock();
         filterChain = mock();
@@ -59,7 +54,26 @@ class ConvertToAccessKeyAuthenticationFilterTest {
     }
 
     @Test
-    void shouldReuseCachedSecurityContextForSameAccessKey() throws Exception {
+    void shouldConvertDifferentAccessKeysToDifferentAuthentications() throws Exception {
+        var request1 = mock(HttpServletRequest.class);
+        var request2 = mock(HttpServletRequest.class);
+        when(request1.getParameter("accessKey")).thenReturn("access-1");
+        when(request2.getParameter("accessKey")).thenReturn("access-2");
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
+        testee.doFilterInternal(request1, response, filterChain);
+        var firstAuthentication = (AccessKeyAuthentication) SecurityContextHolder.getContext().getAuthentication();
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
+        testee.doFilterInternal(request2, response, filterChain);
+        var secondAuthentication = (AccessKeyAuthentication) SecurityContextHolder.getContext().getAuthentication();
+
+        assertThat(firstAuthentication.getCredentials().value()).isEqualTo("access-1");
+        assertThat(secondAuthentication.getCredentials().value()).isEqualTo("access-2");
+    }
+
+    @Test
+    void shouldNotReuseSecurityContextForSameAccessKey() throws Exception {
         when(request.getParameter("accessKey")).thenReturn("access-1");
 
         SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
@@ -68,24 +82,6 @@ class ConvertToAccessKeyAuthenticationFilterTest {
 
         SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
         testee.doFilterInternal(request, response, filterChain);
-        var secondContext = SecurityContextHolder.getContext();
-
-        assertThat(secondContext).isSameAs(firstContext);
-    }
-
-    @Test
-    void shouldUseDifferentCachedContextsForDifferentAccessKeys() throws Exception {
-        var request1 = mock(HttpServletRequest.class);
-        var request2 = mock(HttpServletRequest.class);
-        when(request1.getParameter("accessKey")).thenReturn("access-1");
-        when(request2.getParameter("accessKey")).thenReturn("access-2");
-
-        SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
-        testee.doFilterInternal(request1, response, filterChain);
-        var firstContext = SecurityContextHolder.getContext();
-
-        SecurityContextHolder.setContext(new SecurityContextImpl(createAnonymousAuthentication()));
-        testee.doFilterInternal(request2, response, filterChain);
         var secondContext = SecurityContextHolder.getContext();
 
         assertThat(secondContext).isNotSameAs(firstContext);
@@ -100,7 +96,6 @@ class ConvertToAccessKeyAuthenticationFilterTest {
         testee.doFilterInternal(request, response, filterChain);
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isSameAs(previousAuthentication);
-        verifyNoInteractions(authenticationMutexHolder);
         verify(filterChain).doFilter(request, response);
     }
 
@@ -113,7 +108,6 @@ class ConvertToAccessKeyAuthenticationFilterTest {
         testee.doFilterInternal(request, response, filterChain);
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isSameAs(previousAuthentication);
-        verifyNoInteractions(authenticationMutexHolder);
         verify(filterChain).doFilter(request, response);
     }
 

@@ -47,7 +47,7 @@ public final class AccessKeyAuthentication implements Authentication {
 
     @Override
     public boolean isAuthenticated() {
-        return true;
+        return false; // the access key will be authenticated when converted to a signed-in user
     }
 
     @Override
