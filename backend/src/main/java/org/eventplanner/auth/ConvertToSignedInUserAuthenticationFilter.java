@@ -1,6 +1,8 @@
 package org.eventplanner.auth;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,13 +28,16 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class ConvertToSignedInUserAuthenticationFilter extends OncePerRequestFilter {
+    private static final Duration ACCESS_KEY_CACHE_TTL = Duration.ofMinutes(2);
+
     private final AuthenticationService authService;
     private final AuthenticationMutexHolder authenticationMutexHolder;
-    private final Map<AccessKey, SignedInUser> authorizedAccessKeys = new ConcurrentHashMap<>();
+    private final Map<AccessKey, CachedSignedInUser> authorizedAccessKeys = new ConcurrentHashMap<>();
 
-    @Scheduled(cron = "0 0 * * * *")
-    public void clearAuthorizedAccessKeys() {
-        authorizedAccessKeys.clear();
+    @Scheduled(cron = "0 * * * * *")
+    public void clearExpiredAuthorizedAccessKeys() {
+        var threshold = Instant.now().minus(ACCESS_KEY_CACHE_TTL);
+        authorizedAccessKeys.entrySet().removeIf(entry -> entry.getValue().cachedAt().isBefore(threshold));
     }
 
     @Override
@@ -60,9 +65,15 @@ public class ConvertToSignedInUserAuthenticationFilter extends OncePerRequestFil
 
                     } else if (authentication instanceof AccessKeyAuthentication accessKeyAuthentication) {
                         log.debug("Mapping access key authentication to signed-in user");
-                        var accessKey = accessKeyAuthentication.getCredentials();
-                        var signedInUser = authorizedAccessKeys.computeIfAbsent(accessKey, authService::authenticate);
-                        SecurityContextHolder.getContext().setAuthentication(signedInUser);
+                        var cachedSignedInUser = authorizedAccessKeys
+                            .computeIfAbsent(
+                                accessKeyAuthentication.getCredentials(),
+                                (accessKey) -> new CachedSignedInUser(
+                                    authService.authenticate(accessKey),
+                                    Instant.now()
+                                )
+                            );
+                        SecurityContextHolder.getContext().setAuthentication(cachedSignedInUser.signedInUser());
                     }
                 }
             }
@@ -70,5 +81,11 @@ public class ConvertToSignedInUserAuthenticationFilter extends OncePerRequestFil
             log.error("Filter failed with exception", e);
         }
         filterChain.doFilter(request, response);
+    }
+
+    private record CachedSignedInUser(
+        @NonNull SignedInUser signedInUser,
+        @NonNull Instant cachedAt
+    ) {
     }
 }
