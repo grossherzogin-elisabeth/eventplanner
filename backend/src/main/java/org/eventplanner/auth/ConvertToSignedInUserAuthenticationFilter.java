@@ -65,15 +65,13 @@ public class ConvertToSignedInUserAuthenticationFilter extends OncePerRequestFil
 
                     } else if (authentication instanceof AccessKeyAuthentication accessKeyAuthentication) {
                         log.debug("Mapping access key authentication to signed-in user");
-                        var cachedSignedInUser = authorizedAccessKeys
-                            .computeIfAbsent(
-                                accessKeyAuthentication.getCredentials(),
-                                (accessKey) -> new CachedSignedInUser(
-                                    authService.authenticate(accessKey),
-                                    Instant.now()
-                                )
-                            );
-                        SecurityContextHolder.getContext().setAuthentication(cachedSignedInUser.signedInUser());
+                        var accessKey = accessKeyAuthentication.getCredentials();
+                        if (!authorizedAccessKeys.containsKey(accessKey)) {
+                            var signedInUser = authService.authenticate(accessKey);
+                            authorizedAccessKeys.put(accessKey, new CachedSignedInUser(signedInUser, Instant.now()));
+                        }
+                        var signedInUser = authorizedAccessKeys.get(accessKey).signedInUser();
+                        SecurityContextHolder.getContext().setAuthentication(signedInUser);
                     }
                 }
             }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.eventplanner.auth.AccessKeyAuthentication;
 import org.eventplanner.events.application.ports.AccessKeyRepository;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
@@ -62,7 +63,7 @@ public class AuthenticationService {
     throws UnauthorizedException {
         if (authentication instanceof SignedInUser signedInUser) {
             return signedInUser;
-        } else if (authentication instanceof AnonymousAuthenticationToken) {
+        } else if (authentication instanceof AnonymousAuthenticationToken || authentication instanceof AccessKeyAuthentication) {
             throw new UnauthorizedException();
         } else if (authentication != null) {
             log.error("Got an authentication of unexpected type {}", authentication.getClass().getSimpleName());
@@ -80,7 +81,10 @@ public class AuthenticationService {
     public @NonNull SignedInUser authenticate(@NonNull final AccessKey accessKey) {
         var user = accessKeyRepository.findUserByAccessKey(accessKey)
             .flatMap(userService::getUserByKey)
-            .orElseThrow(() -> new UnauthorizedException("Unknown access key"));
+            .orElseThrow(() -> {
+                log.info("Rejected unknown access key");
+                return new UnauthorizedException("Unknown access key");
+            });
 
         log.info("Authenticated user {} by access key", user.getKey());
         return SignedInUser.fromUser(user, accessKey);
