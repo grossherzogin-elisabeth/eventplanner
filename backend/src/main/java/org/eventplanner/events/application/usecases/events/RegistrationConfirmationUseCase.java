@@ -133,7 +133,9 @@ public class RegistrationConfirmationUseCase {
         }
     }
 
-    @PreAuthorize("hasAuthority('registrations:write-self')")
+    @PreAuthorize("hasAuthority('registrations:write') " +
+        "or hasAuthority('registrations:write-self') " +
+        "or hasAuthority('registrations:confirm-self')")
     public void confirmRegistration(
         @NonNull final EventKey eventKey,
         @NonNull final RegistrationKey registrationKey
@@ -169,7 +171,9 @@ public class RegistrationConfirmationUseCase {
         );
     }
 
-    @PreAuthorize("hasAuthority('registrations:write-self')")
+    @PreAuthorize("hasAuthority('registrations:write') " +
+        "or hasAuthority('registrations:write-self') " +
+        "or hasAuthority('registrations:decline-self')")
     public void declineRegistration(
         @NonNull final EventKey eventKey,
         @NonNull final RegistrationKey registrationKey

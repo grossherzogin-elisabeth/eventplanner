@@ -52,8 +52,8 @@ describe('ConfirmParticipationView.vue', () => {
 
     describe('with unconfirmed registration', () => {
         beforeEach(async () => {
-            server.use(http.get('/api/v1/events/example-event/registrations/registration-key/confirm', () => HttpResponse.json(event)));
-            server.use(http.get('/api/v1/events/example-event/registrations/registration-key/decline', () => HttpResponse.json(event)));
+            server.use(http.put('/api/v1/events/example-event/registrations/registration-key/confirm', () => HttpResponse.json(event)));
+            server.use(http.put('/api/v1/events/example-event/registrations/registration-key/decline', () => HttpResponse.json(event)));
             event = mockEventRepresentation({
                 registrations: [{ ...registration, confirmed: false }],
                 slots: [{ ...slot }],

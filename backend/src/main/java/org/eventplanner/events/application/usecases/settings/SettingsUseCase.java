@@ -32,6 +32,7 @@ public class SettingsUseCase {
         return configurationService.updateConfig(updateSpec);
     }
 
+    @PreAuthorize("true") // this usecase does not require authentication
     public @NonNull FrontendConfig getUiSettings() {
         return configurationService.getConfig().frontend();
     }

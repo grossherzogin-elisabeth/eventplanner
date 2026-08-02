@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.eventplanner.events.domain.entities.users.SignedInUser;
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.positions.PositionKey;
@@ -18,7 +19,8 @@ public record AccountRepresentation(
     @NonNull List<String> positions,
     @Nullable String gender,
     @NonNull String firstName,
-    @NonNull String lastName
+    @NonNull String lastName,
+    boolean hasLimitedAccess
 ) implements Serializable {
     public static AccountRepresentation fromDomain(@NonNull SignedInUser signedInUser) {
         return new AccountRepresentation(
@@ -29,7 +31,8 @@ public record AccountRepresentation(
             signedInUser.positions().stream().map(PositionKey::value).toList(),
             signedInUser.gender(),
             signedInUser.firstName(),
-            signedInUser.lastName()
+            signedInUser.lastName(),
+            signedInUser.authentication() instanceof AccessKey
         );
     }
 }

@@ -99,9 +99,12 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
 
     public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
         const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/confirm`, {
-            method: 'GET',
+            method: 'PUT',
             credentials: 'include',
-            headers: getAccessKeyHeader(),
+            headers: {
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
+            },
         });
         if (!response.ok) {
             throw response;
@@ -110,9 +113,12 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
 
     public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
         const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/decline`, {
-            method: 'GET',
+            method: 'PUT',
             credentials: 'include',
-            headers: getAccessKeyHeader(),
+            headers: {
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
+            },
         });
         if (!response.ok) {
             throw response;
