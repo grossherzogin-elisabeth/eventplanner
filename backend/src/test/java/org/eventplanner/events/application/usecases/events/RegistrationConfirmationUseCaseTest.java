@@ -101,6 +101,57 @@ class RegistrationConfirmationUseCaseTest {
     }
 
     @Test
+    void shouldNotSendAnyNotificationWhenNoEventsAreEligible() {
+        var currentYear = Instant.now().atZone(BERLIN_TIMEZONE).getYear();
+        when(eventRepository.findAllByYear(currentYear)).thenReturn(List.of());
+        when(eventRepository.findAllByYear(currentYear + 1)).thenReturn(List.of());
+
+        testee.sendConfirmationRequests();
+
+        verify(notificationService, never()).sendConfirmationRequestNotification(any(), any(), any());
+        verify(notificationService, never()).sendConfirmationReminderNotification(any(), any(), any());
+        verify(eventRepository, never()).update(any());
+    }
+
+    @Test
+    void shouldNotSendAnyNotificationForEventsThatAreNotPlanned() {
+        var event = createNotifiableEvent(0, 10);
+        event.setState(EventState.DRAFT);
+        mockCurrentYearLookup(event);
+
+        testee.sendConfirmationRequests();
+
+        verify(notificationService, never()).sendConfirmationRequestNotification(any(), any(), any());
+        verify(notificationService, never()).sendConfirmationReminderNotification(any(), any(), any());
+        verify(eventRepository, never()).update(any());
+    }
+
+    @Test
+    void shouldNotSendAnyNotificationForEventsInThePast() {
+        var event = createNotifiableEvent(0, 10);
+        event.setStart(Instant.now().minusSeconds(60 * 60 * 24));
+        mockCurrentYearLookup(event);
+
+        testee.sendConfirmationRequests();
+
+        verify(notificationService, never()).sendConfirmationRequestNotification(any(), any(), any());
+        verify(notificationService, never()).sendConfirmationReminderNotification(any(), any(), any());
+        verify(eventRepository, never()).update(any());
+    }
+
+    @Test
+    void shouldNotSendAnyNotificationForEventsOutsideTwoWeekWindow() {
+        var event = createNotifiableEvent(0, 20);
+        mockCurrentYearLookup(event);
+
+        testee.sendConfirmationRequests();
+
+        verify(notificationService, never()).sendConfirmationRequestNotification(any(), any(), any());
+        verify(notificationService, never()).sendConfirmationReminderNotification(any(), any(), any());
+        verify(eventRepository, never()).update(any());
+    }
+
+    @Test
     void shouldConfirmRegistration() {
         var event = createEvent();
         var signedInUser = createSignedInUser();
