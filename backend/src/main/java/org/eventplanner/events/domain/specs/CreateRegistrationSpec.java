@@ -28,7 +28,6 @@ public record CreateRegistrationSpec(
             userKey,
             name,
             note,
-            Registration.generateAccessKey(),
             null,
             overnightStay,
             arrival

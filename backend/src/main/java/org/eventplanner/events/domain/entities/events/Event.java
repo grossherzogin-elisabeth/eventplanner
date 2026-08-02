@@ -121,23 +121,6 @@ public class Event {
         return true;
     }
 
-    public @NonNull Event clearConfidentialData(@NonNull final String accessKey) {
-        // clear notes of all but the signed-in user
-        log.trace("Clearing assigned registrations and registration notes on event {}", key);
-        slots.forEach(slot -> slot.setAssignedRegistration(null));
-        registrations.stream()
-            .filter(it -> it.getNote() != null)
-            .filter(it -> !accessKey.equals(it.getAccessKey()))
-            .forEach(it -> {
-                it.setNote(null);
-                it.setOvernightStay(null);
-                it.setArrival(null);
-                it.setConfirmedAt(null);
-                it.setAccessKey(null);
-            });
-        return this;
-    }
-
     public @NonNull Event clearConfidentialData(@NonNull final SignedInUser signedInUser) {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
             && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(state)) {
@@ -155,7 +138,6 @@ public class Event {
                     it.setNote(null);
                     it.setOvernightStay(null);
                     it.setArrival(null);
-                    it.setAccessKey(null);
                     it.setConfirmedAt(null);
                 });
         }
@@ -184,7 +166,7 @@ public class Event {
      * team members
      */
     public void optimizeSlots() {
-        log.trace("Optimizing slot assignments for event {}", name);
+        log.trace("Optimizing slot assignments for event {}", key);
         var counter = 0;
         for (int i = 0; i < slots.size(); i++) {
             var slot = slots.get(i);
@@ -208,7 +190,7 @@ public class Event {
             }
         }
         if (counter > 0) {
-            log.info("Optimized slots by moving {} assignments on event {}", counter, name);
+            log.info("Optimized slots by moving {} assignments on event {}", counter, key);
         }
     }
 }

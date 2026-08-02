@@ -1,4 +1,4 @@
-package org.eventplanner.config;
+package org.eventplanner.auth;
 
 import java.util.Objects;
 

@@ -1,7 +1,7 @@
 package org.eventplanner.events.application.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.config.JsonMapperFactory.defaultJsonMapper;
+import static org.eventplanner.beans.JsonMapperFactory.defaultJsonMapper;
 import static org.eventplanner.testdata.UserFactory.createUser;
 
 import java.io.Serializable;

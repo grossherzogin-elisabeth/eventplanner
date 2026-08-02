@@ -1,6 +1,7 @@
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventRestRepository } from '@/adapter/rest/EventRestRepository';
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { EventRegistrationsRepository } from '@/application';
 import { toIsoDateString } from '@/common';
 import type { Event, EventKey, Registration, RegistrationKey } from '@/domain';
@@ -42,7 +43,8 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getCsrfTokenHeader(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -68,7 +70,8 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getCsrfTokenHeader(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -83,7 +86,8 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
             method: 'DELETE',
             credentials: 'include',
             headers: {
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getCsrfTokenHeader(),
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -93,20 +97,22 @@ export class EventRegistrationRestRepository implements EventRegistrationsReposi
         return EventRestRepository.mapEventToDomain(responseData);
     }
 
-    public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/confirm?accessKey=${accessKey}`, {
+    public async confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/confirm`, {
             method: 'GET',
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
         }
     }
 
-    public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void> {
-        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/decline?accessKey=${accessKey}`, {
+    public async declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void> {
+        const response = await fetch(`/api/v1/events/${eventKey}/registrations/${registrationKey}/decline`, {
             method: 'GET',
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;

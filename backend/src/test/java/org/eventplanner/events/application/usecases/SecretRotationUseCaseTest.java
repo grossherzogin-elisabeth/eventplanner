@@ -2,7 +2,7 @@ package org.eventplanner.events.application.usecases;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eventplanner.config.JsonMapperFactory.defaultJsonMapper;
+import static org.eventplanner.beans.JsonMapperFactory.defaultJsonMapper;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

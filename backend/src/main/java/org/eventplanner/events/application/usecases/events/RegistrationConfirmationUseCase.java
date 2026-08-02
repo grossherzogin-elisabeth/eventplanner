@@ -3,26 +3,26 @@ package org.eventplanner.events.application.usecases.events;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.eventplanner.events.application.ports.EventRepository;
-import org.eventplanner.events.application.ports.RegistrationRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.Registration;
+import org.eventplanner.events.domain.entities.users.UserDetails;
+import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
-import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -37,156 +37,122 @@ public class RegistrationConfirmationUseCase {
 
     private final EventRepository eventRepository;
     private final NotificationService notificationService;
+    private final AuthenticationService authenticationService;
     private final UserService userService;
     private final RegistrationService registrationService;
-    private final RegistrationRepository registrationRepository;
 
+    @PreAuthorize("hasAuthority('events:send-confirmation-requests')")
     public void sendConfirmationRequests() {
-        var eventsToNotify = getEventsToNotify(0);
-        if (eventsToNotify.isEmpty()) {
-            log.debug("No events to notify for registration confirmation request");
-        } else {
-            for (final Event event : eventsToNotify) {
-                try {
-                    sendNotifications(event, 0);
-                } catch (Exception e) {
-                    log.error(
-                        "Failed to send registration confirmation requests for event {}",
-                        event.getName(),
-                        e
-                    );
-                }
-            }
-        }
-    }
-
-    public void sendConfirmationReminders() {
-        var eventsToNotify = getEventsToNotify(1);
-        if (eventsToNotify.isEmpty()) {
-            log.debug("No events to notify for registration confirmation reminder");
-        } else {
-            for (final Event event : eventsToNotify) {
-                try {
-                    sendNotifications(event, 1);
-                } catch (Exception e) {
-                    log.error(
-                        "Failed to send registration confirmation reminder for event {}",
-                        event.getName(),
-                        e
-                    );
-                }
-            }
-        }
-    }
-
-    private void sendNotifications(@NonNull final Event event, final int alreadySentRequests) {
-        log.info(
-            "Sending registration confirmation requests #{} for event {}",
-            alreadySentRequests + 1,
-            event.getName()
-        );
-        var registrations = event.getAssignedRegistrations().stream()
-            .filter(registration -> registration.getConfirmedAt() == null)
-            .toList();
-
-        // make sure every userKey has a registration with accessKey
-        // needed for legacy registrations, where accessKey was not generated
-        registrations.stream()
-            .filter(registration -> registration.getAccessKey() == null)
-            .forEach(registration -> {
-                log.info("Generating missing access key for registration {}", registration.getKey());
-                registration.setAccessKey(Registration.generateAccessKey());
-                registrationRepository.updateRegistration(registration, event.getKey());
-            });
-
-        var userKeyRegistrationMap = new HashMap<UserKey, Registration>();
-        registrations.forEach(registration -> userKeyRegistrationMap.put(registration.getUserKey(), registration));
-        var users = registrations.stream()
-            .map(Registration::getUserKey)
-            .distinct()
-            .map(userService::getUserByKey)
-            .flatMap(Optional::stream)
-            .toList();
-
-        for (var user : users) {
-            var registration = userKeyRegistrationMap.get(user.getKey());
-            try {
-                if (alreadySentRequests == 0) {
-                    notificationService
-                        .sendConfirmationRequestNotification(
-                            user,
-                            event,
-                            registration
-                        );
-                } else if (alreadySentRequests == 1) {
-                    notificationService
-                        .sendConfirmationReminderNotification(
-                            user,
-                            event,
-                            registration
-                        );
-                }
-            } catch (Exception e) {
-                log.error("Failed to create registration confirmation notification for user {}", user.getKey(), e);
-            }
-        }
-
-        event.setConfirmationsRequestsSent(alreadySentRequests + 1);
-        eventRepository.update(event);
-    }
-
-    private @NonNull List<Event> getEventsToNotify(final int alreadySentRequests) {
         var currentYear = Instant.now().atZone(timezone).getYear();
-        return Stream.concat(
+        var eventsToNotify = Stream.concat(
                 eventRepository.findAllByYear(currentYear + 1).stream(),
                 eventRepository.findAllByYear(currentYear).stream()
             )
             .filter(event -> event.getState().equals(EventState.PLANNED))
-            .filter(event -> event.getEnd().isAfter(Instant.now()))
-            .filter(event -> event.getConfirmationsRequestsSent() == alreadySentRequests)
+            // only events that start in the future within the next 2 weeks
+            .filter(event -> event.getStart().isAfter(Instant.now()))
             .filter(event -> {
                 var start = event.getStart().atZone(timezone);
-                if (alreadySentRequests == 0) {
-                    return start.minusWeeks(2).isBefore(ZonedDateTime.now(timezone));
-                }
-                if (alreadySentRequests == 1) {
-                    return start.minusWeeks(1).isBefore(ZonedDateTime.now(timezone));
-                }
-                return false;
+                return start.minusWeeks(2).isBefore(ZonedDateTime.now(timezone));
             })
             .toList();
-    }
-
-    public @NonNull Event getEventByAccessKey(
-        @NonNull final EventKey eventKey,
-        @NonNull final String accessKey
-    ) {
-        var event = eventRepository.findByKey(eventKey).orElseThrow();
-        var registration = event.getRegistrations().stream()
-            .filter(r -> accessKey.equals(r.getAccessKey()))
-            .findFirst();
-        if (registration.isPresent()) {
-            return event.clearConfidentialData(accessKey);
+        if (eventsToNotify.isEmpty()) {
+            log.debug("No events to notify for registration confirmation request");
+        } else {
+            eventsToNotify.forEach(this::sendConfirmationRequests);
         }
-        throw new NoSuchElementException();
     }
 
+    private void sendConfirmationRequests(@NonNull final Event event) {
+        if (event.getConfirmationsRequestsSent() >= 2) {
+            log.debug("All confirmation requests for event {} have already been sent", event.getKey());
+            // all requests have been sent
+            return;
+        }
+        if (event.getConfirmationsRequestsSent() >= 1 && !event.isUpForConfirmationReminder()) {
+            log.debug(
+                "1st confirmation requests for event {} have already been sent and 2nd is not yet due",
+                event.getKey()
+            );
+            // first request has been sent and 2nd is not yet due
+            return;
+        }
+
+        try {
+            log.info("Sending registration confirmation requests for event {}", event.getKey());
+            // get a list of unconfirmed registrations
+            var registrations = event.getAssignedRegistrations().stream()
+                .filter(registration -> registration.getConfirmedAt() == null)
+                .toList();
+
+            var users = registrations.stream()
+                .map(Registration::getUserKey)
+                .distinct()
+                .map(userService::getUserByKey)
+                .flatMap(Optional::stream)
+                .toList();
+
+            users.forEach(user -> sendConfirmationRequest(event, user));
+
+            if (event.isUpForConfirmationReminder()) {
+                event.setConfirmationsRequestsSent(2);
+            } else {
+                event.setConfirmationsRequestsSent(1);
+            }
+            eventRepository.update(event);
+        } catch (Exception e) {
+            log.error(
+                "Failed to send registration confirmation requests for event {}",
+                event.getKey(),
+                e
+            );
+        }
+    }
+
+    private void sendConfirmationRequest(@NonNull final Event event, @NonNull final UserDetails user) {
+        try {
+            var registration = event.findRegistrationByUserKey(user.getKey())
+                .orElseThrow(() -> new NoSuchElementException("Cannot find registration for user"));
+            if (event.isUpForConfirmationReminder()) {
+                notificationService
+                    .sendConfirmationReminderNotification(
+                        user,
+                        event,
+                        registration
+                    );
+            } else if (event.isUpForConfirmationRequest()) {
+                notificationService
+                    .sendConfirmationRequestNotification(
+                        user,
+                        event,
+                        registration
+                    );
+            }
+        } catch (Exception e) {
+            log.error("Failed to create registration confirmation notification for user {}", user.getKey(), e);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('registrations:write-self')")
     public void confirmRegistration(
         @NonNull final EventKey eventKey,
-        @NonNull final RegistrationKey registrationKey,
-        @NonNull final String accessKey
+        @NonNull final RegistrationKey registrationKey
     ) {
-        var event = eventRepository.findByKey(eventKey).orElseThrow();
-        var registration = getRegistrationByKey(event, registrationKey);
-        if (!Objects.equals(registration.getAccessKey(), accessKey)) {
-            log.warn("User tried to confirm registration {} with invalid access key {}", registrationKey, accessKey);
-            throw new NoSuchElementException();
+        var event = eventRepository.findByKey(eventKey)
+            .orElseThrow(() -> new NoSuchElementException("Event not found"));
+        var registration = event.findRegistrationByKey(registrationKey)
+            .orElseThrow(() -> new NoSuchElementException("Registration not found"));
+        var signedInUser = authenticationService.getSignedInUser();
+        if (!Objects.equals(registration.getUserKey(), signedInUser.key())) {
+            log.error("User tried to confirm registration {} of other user", registrationKey);
+            throw new MissingPermissionException("Registration belongs to another user");
         }
+
         if (registration.getConfirmedAt() != null) {
             log.info("User tried to confirm registration {}, which was already confirmed", registrationKey);
             return;
         }
-        log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getName());
+        log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getKey());
         registrationService.updateRegistration(
             new UpdateRegistrationSpec(
                 event.getKey(),
@@ -203,36 +169,29 @@ public class RegistrationConfirmationUseCase {
         );
     }
 
+    @PreAuthorize("hasAuthority('registrations:write-self')")
     public void declineRegistration(
         @NonNull final EventKey eventKey,
-        @NonNull final RegistrationKey registrationKey,
-        @NonNull final String accessKey
+        @NonNull final RegistrationKey registrationKey
     ) {
-        // delete registration, find slot, delete registration key from slot, send email
-        var event = eventRepository.findByKey(eventKey).orElseThrow();
-        var registration = getRegistrationByKey(event, registrationKey);
-        if (!Objects.equals(registration.getAccessKey(), accessKey)) {
-            log.warn("User tried to edit registration {} with invalid access key {}", registrationKey, accessKey);
-            throw new NoSuchElementException();
+        var event = eventRepository.findByKey(eventKey)
+            .orElseThrow(() -> new NoSuchElementException("Event not found"));
+        var registration = event.findRegistrationByKey(registrationKey)
+            .orElseThrow(() -> new NoSuchElementException("Registration not found"));
+        var signedInUser = authenticationService.getSignedInUser();
+        if (!Objects.equals(registration.getUserKey(), signedInUser.key())) {
+            log.error("User tried to decline registration {} of other user", registrationKey);
+            throw new MissingPermissionException("Registration belongs to another user");
         }
+
         // TODO should this be allowed?
         if (registration.getConfirmedAt() != null) {
             log.warn("User tried to decline registration {}, but was already confirmed", registrationKey);
-            throw new IllegalStateException("User already confirmed their participation on event " + event.getName());
+            throw new IllegalStateException("User already confirmed their participation on event " + event.getKey());
         }
 
-        log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getName());
+        log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getKey());
         registrationService.removeRegistration(registration.getKey(), event, true);
         eventRepository.update(event);
-    }
-
-    private @NonNull Registration getRegistrationByKey(
-        @NonNull final Event event,
-        @NonNull final RegistrationKey registrationKey
-    ) {
-        return event.getRegistrations().stream()
-            .filter(r -> registrationKey.equals(r.getKey()))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Registration not found"));
     }
 }

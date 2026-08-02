@@ -1,4 +1,5 @@
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { QualificationRepository } from '@/application';
 import type { Qualification, QualificationKey } from '@/domain';
 
@@ -41,7 +42,10 @@ export class QualificationRestRepository implements QualificationRepository {
     }
 
     public async findAll(): Promise<Qualification[]> {
-        const response = await fetch('/api/v1/qualifications', { credentials: 'include' });
+        const response = await fetch('/api/v1/qualifications', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (!response.ok) {
             throw response;
         }
@@ -64,7 +68,8 @@ export class QualificationRestRepository implements QualificationRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -88,7 +93,8 @@ export class QualificationRestRepository implements QualificationRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -103,7 +109,8 @@ export class QualificationRestRepository implements QualificationRepository {
             method: 'DELETE',
             credentials: 'include',
             headers: {
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {

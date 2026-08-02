@@ -7,7 +7,7 @@ export interface EventRegistrationsRepository {
 
     deleteRegistration(eventKey: EventKey, registration: Registration): Promise<Event>;
 
-    confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void>;
+    confirmParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void>;
 
-    declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey, accessKey: string): Promise<void>;
+    declineParticipation(eventKey: EventKey, registrationKey: RegistrationKey): Promise<void>;
 }

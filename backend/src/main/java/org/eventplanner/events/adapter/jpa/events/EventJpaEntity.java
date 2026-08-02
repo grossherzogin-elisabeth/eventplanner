@@ -8,7 +8,7 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
-import org.eventplanner.config.JsonMapperFactory;
+import org.eventplanner.beans.JsonMapperFactory;
 import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;

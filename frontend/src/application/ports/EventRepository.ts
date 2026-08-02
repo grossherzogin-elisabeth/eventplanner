@@ -1,7 +1,7 @@
 import type { Event, EventKey, Registration, Slot } from '@/domain';
 
 export interface EventRepository {
-    findByKey(key: EventKey, accessKey?: string): Promise<Event>;
+    findByKey(key: EventKey): Promise<Event>;
 
     findAll(year: number): Promise<Event[]>;
 

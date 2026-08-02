@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.ValidationException;
@@ -82,13 +81,11 @@ public class RegistrationController {
     @GetMapping("/{eventKey}/registrations/{registrationKey}/confirm")
     public ResponseEntity<Void> confirmRegistration(
         @PathVariable String eventKey,
-        @PathVariable String registrationKey,
-        @RequestParam("accessKey") String accessKey
+        @PathVariable String registrationKey
     ) {
         registrationConfirmationUseCase.confirmRegistration(
             new EventKey(eventKey),
-            new RegistrationKey(registrationKey),
-            accessKey
+            new RegistrationKey(registrationKey)
         );
         return ResponseEntity.ok().build();
     }
@@ -96,13 +93,11 @@ public class RegistrationController {
     @GetMapping("/{eventKey}/registrations/{registrationKey}/decline")
     public ResponseEntity<Void> declineRegistration(
         @PathVariable String eventKey,
-        @PathVariable String registrationKey,
-        @RequestParam("accessKey") String accessKey
+        @PathVariable String registrationKey
     ) {
         registrationConfirmationUseCase.declineRegistration(
             new EventKey(eventKey),
-            new RegistrationKey(registrationKey),
-            accessKey
+            new RegistrationKey(registrationKey)
         );
         return ResponseEntity.ok().build();
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="xs:px-8 h-full overflow-y-auto px-4 pt-8 pb-8 md:px-16 xl:px-20">
         <div class="w-full max-w-2xl">
-            <div v-if="!registrationState" data-test-id="loading"></div>
+            <div v-if="!registrationState" data-test-id="loading">Loading</div>
             <div v-else-if="registrationState === State.REGISTRATION_UNCONFIRMED">
                 <div class="mb-8 rounded-2xl">
                     <h1 class="mb-4 text-lg">{{ $t('views.event-confirm-participation.title') }}</h1>
@@ -171,12 +171,14 @@ function init(): void {
 
 async function fetchEvent(): Promise<void> {
     try {
+        const year = Number.parseInt(route.params.year as string, 10);
         const eventKey = route.params.eventKey as EventKey;
-        const accessKey = route.query.accessKey as string;
-        event.value = await eventUseCase.getEventByAccessKey(eventKey, accessKey);
+        event.value = await eventUseCase.getEventByKey(year, eventKey, true);
         emit('update:tab-title', event.value.name);
         registrationState.value = State.REGISTRATION_UNCONFIRMED;
         const registration = event.value?.registrations.find((it) => it.key === route.params.registrationKey);
+        console.log(event.value);
+        console.log(route.params.registrationKey);
         if (!registration) {
             registrationState.value = State.REGISTRATION_WAS_CANCELED;
         } else if (signedInUser.value?.key && registration.userKey !== signedInUser.value?.key) {
@@ -194,16 +196,14 @@ async function fetchEvent(): Promise<void> {
 async function confirm(): Promise<void> {
     const eventKey = route.params.eventKey as EventKey;
     const registrationKey = route.params.registrationKey as RegistrationKey;
-    const accessKey = route.query.accessKey as string;
-    await eventUseCase.confirmParticipation(eventKey, registrationKey, accessKey);
+    await eventUseCase.confirmParticipation(eventKey, registrationKey);
     registrationState.value = State.REGISTRATION_WAS_CONFIRMED;
 }
 
 async function decline(): Promise<void> {
     const eventKey = route.params.eventKey as EventKey;
     const registrationKey = route.params.registrationKey as RegistrationKey;
-    const accessKey = route.query.accessKey as string;
-    await eventUseCase.declineParticipation(eventKey, registrationKey, accessKey);
+    await eventUseCase.declineParticipation(eventKey, registrationKey);
     registrationState.value = State.REGISTRATION_WAS_JUST_CANCELED;
 }
 
