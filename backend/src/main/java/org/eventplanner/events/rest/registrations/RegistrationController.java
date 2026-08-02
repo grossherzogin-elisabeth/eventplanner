@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -78,7 +77,7 @@ public class RegistrationController {
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
 
-    @GetMapping("/{eventKey}/registrations/{registrationKey}/confirm")
+    @PutMapping("/{eventKey}/registrations/{registrationKey}/confirm")
     public ResponseEntity<Void> confirmRegistration(
         @PathVariable String eventKey,
         @PathVariable String registrationKey
@@ -90,7 +89,7 @@ public class RegistrationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{eventKey}/registrations/{registrationKey}/decline")
+    @PutMapping("/{eventKey}/registrations/{registrationKey}/decline")
     public ResponseEntity<Void> declineRegistration(
         @PathVariable String eventKey,
         @PathVariable String registrationKey

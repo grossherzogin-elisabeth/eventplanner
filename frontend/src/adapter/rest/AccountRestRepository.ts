@@ -12,6 +12,7 @@ export interface AccountRepresentation {
     gender: string;
     firstName: string;
     lastName: string;
+    hasLimitedAccess: boolean;
 }
 
 export class AccountRestRepository implements AccountRepository {
@@ -50,6 +51,7 @@ export class AccountRestRepository implements AccountRepository {
             roles: user.roles as Role[],
             permissions: user.permissions as Permission[],
             positions: user.positions,
+            hasLimitedAccess: user.hasLimitedAccess,
             impersonated: false,
         };
     }

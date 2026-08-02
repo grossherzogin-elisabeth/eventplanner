@@ -46,21 +46,26 @@ public enum Role {
         return switch (this) {
             case ADMIN -> Stream.of(Permission.values());
             case NONE -> Stream.of(
+                Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER_DETAILS,
                 Permission.WRITE_OWN_USER_DETAILS,
                 Permission.READ_QUALIFICATIONS,
                 Permission.READ_POSITIONS
             );
             case TEAM_MEMBER -> Stream.of(
+                Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER_DETAILS,
                 Permission.WRITE_OWN_USER_DETAILS,
                 Permission.READ_EVENTS,
                 Permission.READ_USERS,
                 Permission.READ_POSITIONS,
                 Permission.READ_QUALIFICATIONS,
-                Permission.WRITE_OWN_REGISTRATIONS
+                Permission.WRITE_OWN_REGISTRATIONS,
+                Permission.CONFIRM_OWN_REGISTRATIONS,
+                Permission.DECLINE_OWN_REGISTRATIONS
             );
             case EVENT_PLANNER -> Stream.of(
+                Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER_DETAILS,
                 Permission.WRITE_OWN_USER_DETAILS,
                 Permission.READ_EVENTS,
@@ -74,6 +79,7 @@ public enum Role {
                 Permission.EXPORT_EVENTS
             );
             case TEAM_PLANNER -> Stream.of(
+                Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER_DETAILS,
                 Permission.WRITE_OWN_USER_DETAILS,
                 Permission.READ_EVENTS,
@@ -87,6 +93,7 @@ public enum Role {
                 Permission.EXPORT_EVENTS
             );
             case USER_MANAGER -> Stream.of(
+                Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER_DETAILS,
                 Permission.WRITE_OWN_USER_DETAILS,
                 Permission.READ_EVENTS,
@@ -100,6 +107,7 @@ public enum Role {
                 Permission.READ_FULL_USER_DETAILS
             );
             case EVENT_LEADER -> Stream.of(
+                Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER_DETAILS,
                 Permission.WRITE_OWN_USER_DETAILS,
                 Permission.READ_EVENTS,

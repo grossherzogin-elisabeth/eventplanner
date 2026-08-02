@@ -6,6 +6,7 @@
     "ROLE_TEAM_MEMBER"
   ],
   "permissions": [
+    "account:read",
     "events:read",
     "events:write",
     "events:delete",
@@ -16,6 +17,8 @@
     "events:send-confirmation-requests",
     "registrations:write",
     "registrations:write-self",
+    "registrations:confirm-self",
+    "registrations:decline-self",
     "users:read",
     "users:read-details-self",
     "users:write-self",
@@ -36,5 +39,6 @@
   ],
   "gender": "m",
   "firstName": "Tony",
-  "lastName": "Stark"
+  "lastName": "Stark",
+  "hasLimitedAccess": false
 }

@@ -34,10 +34,12 @@ public class AuthenticationUseCase {
         this.accessKeyMaxAge = accessKeyMaxAge != null ? accessKeyMaxAge : Duration.ofDays(21);
     }
 
+    @PreAuthorize("hasAuthority('account:read')")
     public @NonNull SignedInUser getSignedInUser() throws UnauthorizedException {
         return authenticationService.getSignedInUser();
     }
 
+    @PreAuthorize("hasAuthority('account:read')")
     public @NonNull SignedInUser getSignedInUser(@Nullable final Authentication authentication)
     throws UnauthorizedException {
         return authenticationService.getSignedInUser(authentication);

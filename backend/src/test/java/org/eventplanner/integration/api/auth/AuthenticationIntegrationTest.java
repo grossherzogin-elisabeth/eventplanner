@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -61,12 +62,13 @@ class AuthenticationIntegrationTest {
             Instant.now().toString()
         ));
 
-        MvcResult result = webMvc.perform(get("/api/v1/account")
+        var result = webMvc.perform(get("/api/v1/account")
                 .header("Access-Key", accessKey)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.key").value(TestUser.TEAM_MEMBER.getKey().value()))
             .andExpect(jsonPath("$.email").value(TestUser.TEAM_MEMBER.getEmail()))
+            .andExpect(jsonPath("$.hasLimitedAccess").value(true))
             .andReturn();
 
         var authentication = getSessionAuthentication(result);
@@ -76,7 +78,7 @@ class AuthenticationIntegrationTest {
 
     @Test
     void shouldAuthenticateWithOauthAndConvertToSignedInUser() throws Exception {
-        MvcResult result = webMvc.perform(get("/api/v1/account")
+        var result = webMvc.perform(get("/api/v1/account")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -87,6 +89,80 @@ class AuthenticationIntegrationTest {
         var authentication = getSessionAuthentication(result);
         assertThat(authentication).isInstanceOf(SignedInUser.class);
         assertThat(((SignedInUser) authentication).authentication()).isInstanceOf(OidcUser.class);
+    }
+
+    @Test
+    void shouldReplaceAccessKeyAuthenticationWithOauthAuthenticationForSameUser() throws Exception {
+        var accessKey = "integration-access-key-same-user";
+        accessKeyJpaRepository.save(new AccessKeyJpaEntity(
+            accessKey,
+            TestUser.TEAM_MEMBER.getKey().value(),
+            Instant.now().toString()
+        ));
+
+        var accessKeyResult = webMvc.perform(get("/api/v1/account")
+                .header("Access-Key", accessKey)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.key").value(TestUser.TEAM_MEMBER.getKey().value()))
+            .andExpect(jsonPath("$.hasLimitedAccess").value(true))
+            .andReturn();
+
+        var session = (MockHttpSession) accessKeyResult.getRequest().getSession(false);
+        assertThat(session).isNotNull();
+
+        var oauthResult = webMvc.perform(get("/api/v1/account")
+                .session(session)
+                .header("Access-Key", accessKey) // old access key is still present and should be ignored
+                .with(withAuthentication(TestUser.TEAM_MEMBER))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.key").value(TestUser.TEAM_MEMBER.getKey().value()))
+            .andExpect(jsonPath("$.hasLimitedAccess").value(false))
+            .andReturn();
+
+        var authentication = getSessionAuthentication(oauthResult);
+        assertThat(authentication).isInstanceOf(SignedInUser.class);
+        assertThat(((SignedInUser) authentication).authentication()).isInstanceOf(OidcUser.class);
+    }
+
+    @Test
+    void shouldReplaceAccessKeyAuthenticationWithOauthAuthenticationForDifferentUser() throws Exception {
+        // access key login of test user TEAM_MEMBER
+        var accessKey = "integration-access-key-different-user";
+        accessKeyJpaRepository.save(new AccessKeyJpaEntity(
+            accessKey,
+            TestUser.TEAM_MEMBER.getKey().value(),
+            Instant.now().toString()
+        ));
+
+        var accessKeyResult = webMvc.perform(get("/api/v1/account")
+                .header("Access-Key", accessKey)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.key").value(TestUser.TEAM_MEMBER.getKey().value()))
+            .andExpect(jsonPath("$.hasLimitedAccess").value(true))
+            .andReturn();
+
+        var session = (MockHttpSession) accessKeyResult.getRequest().getSession(false);
+        assertThat(session).isNotNull();
+
+        // switching to oauth login of test user EVENT_PLANNER
+
+        var oauthResult = webMvc.perform(get("/api/v1/account")
+                .session(session)
+                .header("Access-Key", accessKey) // old access key is still present and should be ignored
+                .with(withAuthentication(TestUser.EVENT_PLANNER))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.key").value(TestUser.EVENT_PLANNER.getKey().value()))
+            .andExpect(jsonPath("$.hasLimitedAccess").value(false))
+            .andReturn();
+
+        var authentication = getSessionAuthentication(oauthResult);
+        assertThat(authentication).isInstanceOf(SignedInUser.class);
+        assertThat(((SignedInUser) authentication).authentication()).isInstanceOf(OidcUser.class);
+        assertThat(((SignedInUser) authentication).key()).isEqualTo(TestUser.EVENT_PLANNER.getKey());
     }
 
     private Authentication getSessionAuthentication(MvcResult result) {

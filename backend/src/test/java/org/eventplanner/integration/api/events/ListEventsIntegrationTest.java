@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.testutil.TestResources;
 import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +36,9 @@ class ListEventsIntegrationTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @BeforeEach
     void setup() {
@@ -73,6 +77,18 @@ class ListEventsIntegrationTest {
         var expected = TestResources.getString("/integration/api/events/list-events-as-team-member.json");
         webMvc.perform(get("/api/v1/events?year=2025")
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(expected, JsonCompareMode.STRICT));
+    }
+
+    @Test
+    void shouldListEventsWithAccessKeyAuthentication() throws Exception {
+        var accessKey = authenticationService.createAccessKey(TestUser.TEAM_MEMBER.getKey());
+        var expected = TestResources.getString("/integration/api/events/list-events-as-team-member.json");
+        webMvc.perform(get("/api/v1/events?year=2025")
+                .header("Access-Key", accessKey.value())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
