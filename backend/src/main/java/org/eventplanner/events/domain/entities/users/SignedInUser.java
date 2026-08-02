@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.auth.Permission;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.positions.PositionKey;
@@ -38,6 +39,13 @@ public record SignedInUser(
     @NonNull AuthenticatedPrincipal authentication
 ) implements Authentication {
 
+    private static final List<Permission> WHITELISTED_PERMISSIONS_FOR_ACCESS_KEY_AUTH = List.of(
+        Permission.READ_ACCOUNT,
+        Permission.READ_EVENTS,
+        Permission.CONFIRM_OWN_REGISTRATIONS,
+        Permission.DECLINE_OWN_REGISTRATIONS
+    );
+
     public static @NonNull SignedInUser fromUser(
         @NonNull UserDetails user,
         @NonNull AuthenticatedPrincipal authentication
@@ -57,10 +65,13 @@ public record SignedInUser(
     }
 
     public @NonNull List<Permission> permissions() {
-        return roles().stream()
+        var permissions = roles().stream()
             .flatMap(Role::getPermissions)
-            .distinct()
-            .toList();
+            .distinct();
+        if (authentication instanceof AccessKey) {
+            permissions = permissions.filter(WHITELISTED_PERMISSIONS_FOR_ACCESS_KEY_AUTH::contains);
+        }
+        return permissions.toList();
     }
 
     public boolean hasPermission(@NonNull Permission permission) {

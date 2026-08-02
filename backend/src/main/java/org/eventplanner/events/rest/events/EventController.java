@@ -6,14 +6,12 @@ import org.eventplanner.events.application.usecases.events.EventExportUseCase;
 import org.eventplanner.events.application.usecases.events.EventUseCase;
 import org.eventplanner.events.application.usecases.events.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.events.UpdateEventUseCase;
-import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.rest.events.dto.CreateEventRequest;
 import org.eventplanner.events.rest.events.dto.EventRepresentation;
 import org.eventplanner.events.rest.events.dto.EventSlotRepresentation;
 import org.eventplanner.events.rest.events.dto.OptimizeEventSlotsRequest;
 import org.eventplanner.events.rest.events.dto.UpdateEventRequest;
-import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -69,21 +67,9 @@ public class EventController {
     }
 
     @GetMapping("/{eventKey}")
-    public ResponseEntity<EventRepresentation> getEventByKey(
-        @PathVariable("eventKey") String eventKey,
-        @Nullable @RequestParam("accessKey") String accessKey
-    ) {
-        try {
-            var event = eventUseCase.getEventByKey(new EventKey(eventKey));
-            return ResponseEntity.ok(EventRepresentation.fromDomain(event));
-        } catch (UnauthorizedException e) {
-            if (accessKey != null) {
-                var event = registrationConfirmationUseCase.getEventByAccessKey(new EventKey(eventKey), accessKey);
-                return ResponseEntity.ok(EventRepresentation.fromDomain(event));
-            } else {
-                throw e;
-            }
-        }
+    public ResponseEntity<EventRepresentation> getEventByKey(@PathVariable String eventKey) {
+        var event = eventUseCase.getEventByKey(new EventKey(eventKey));
+        return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
 
     @PostMapping("")

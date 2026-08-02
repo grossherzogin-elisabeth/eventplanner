@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.testutil.TestResources;
 import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +36,9 @@ class ReadEventIntegrationTest {
     @Autowired
     private WebApplicationContext context;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
     @BeforeEach
     void setup() {
         webMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -58,6 +62,18 @@ class ReadEventIntegrationTest {
         var expected = TestResources.getString("/integration/api/events/read-event-as-event-planner.json");
         webMvc.perform(get("/api/v1/events/7fa48570-963a-4e95-b72f-acaf70c70a24")
                 .with(withAuthentication(TestUser.EVENT_PLANNER))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(expected, JsonCompareMode.STRICT));
+    }
+
+    @Test
+    void shouldReturnSingleEventWithAccessKeyAuthentication() throws Exception {
+        var accessKey = authenticationService.createAccessKey(TestUser.TEAM_MEMBER.getKey());
+        var expected = TestResources.getString("/integration/api/events/read-event-as-team-member.json");
+        webMvc.perform(get("/api/v1/events/7fa48570-963a-4e95-b72f-acaf70c70a24")
+                .header("Access-Key", accessKey.value())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))

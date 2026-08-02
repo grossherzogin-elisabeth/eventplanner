@@ -1,3 +1,4 @@
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
 import type { AccountRepository } from '@/application';
 import { wait } from '@/common';
 import type { Permission, Role, SignedInUser } from '@/domain';
@@ -11,11 +12,15 @@ export interface AccountRepresentation {
     gender: string;
     firstName: string;
     lastName: string;
+    hasLimitedAccess: boolean;
 }
 
 export class AccountRestRepository implements AccountRepository {
     public async getAccount(): Promise<SignedInUser> {
-        const response = await fetch('/api/v1/account', { credentials: 'include' });
+        const response = await fetch('/api/v1/account', {
+            credentials: 'include',
+            headers: getAccessKeyHeader(),
+        });
         if (!response.ok) {
             throw response;
         }
@@ -46,6 +51,7 @@ export class AccountRestRepository implements AccountRepository {
             roles: user.roles as Role[],
             permissions: user.permissions as Permission[],
             positions: user.positions,
+            hasLimitedAccess: user.hasLimitedAccess,
             impersonated: false,
         };
     }

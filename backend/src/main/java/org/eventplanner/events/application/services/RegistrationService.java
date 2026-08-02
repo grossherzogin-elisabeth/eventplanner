@@ -77,13 +77,13 @@ public class RegistrationService {
             "Creating registration {} for user {} on event {}",
             spec.registrationKey(),
             spec.userKey(),
-            event.getName()
+            event.getKey()
         );
 
         // make sure we don't create a 2nd registration for the same user
         var existingRegistration = event.findRegistrationByUserKey(spec.userKey());
         if (existingRegistration.isPresent()) {
-            log.warn("User {} already has a registration on event {}", spec.userKey(), event.getName());
+            log.warn("User {} already has a registration on event {}", spec.userKey(), event.getKey());
             return existingRegistration.get();
         }
 
@@ -126,12 +126,12 @@ public class RegistrationService {
         if (spec.name() == null) {
             throw new IllegalArgumentException("Guest registration must have a name");
         }
-        log.info("Creating guest registration for {} on event {}", spec.name(), event.getName());
+        log.info("Creating guest registration for {} on event {}", spec.name(), event.getKey());
 
         // make sure we don't create a 2nd registration for the same name
         var existingRegistration = event.findRegistrationByName(spec.name());
         if (existingRegistration.isPresent()) {
-            log.warn("Registration for guest with name {} already exists on event {}", spec.name(), event.getName());
+            log.warn("Registration for guest with name {} already exists on event {}", spec.name(), event.getKey());
             throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
         }
 
@@ -155,7 +155,7 @@ public class RegistrationService {
         @NonNull final Event event,
         final boolean isRemovedByUser
     ) throws NoSuchElementException {
-        log.info("Removing registration {} from event {}", registrationKey, event.getName());
+        log.info("Removing registration {} from event {}", registrationKey, event.getKey());
         var registration = event.findRegistrationByKey(registrationKey)
             .orElseThrow(() -> new NoSuchElementException("Registration does not exist"));
         registrationRepository.deleteRegistration(registration.getKey(), event.getKey());
@@ -200,7 +200,7 @@ public class RegistrationService {
         @NonNull final UpdateRegistrationSpec spec,
         @NonNull final Event event
     ) throws NoSuchElementException {
-        log.info("Updating registration {} on event {}", spec.registrationKey(), event.getName());
+        log.info("Updating registration {} on event {}", spec.registrationKey(), event.getKey());
         var registration = event.findRegistrationByKey(spec.registrationKey())
             .orElseThrow(() -> new NoSuchElementException("Registration does not exist"));
 

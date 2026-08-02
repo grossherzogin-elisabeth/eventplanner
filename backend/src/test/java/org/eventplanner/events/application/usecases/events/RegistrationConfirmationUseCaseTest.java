@@ -1,8 +1,10 @@
 package org.eventplanner.events.application.usecases.events;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.eventplanner.testdata.EventFactory.createEvent;
+import static org.eventplanner.testdata.SignedInUserFactory.createSignedInUser;
 import static org.eventplanner.testdata.UserFactory.createUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -19,13 +21,15 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.EventRepository;
-import org.eventplanner.events.application.ports.RegistrationRepository;
+import org.eventplanner.events.application.services.AuthenticationService;
 import org.eventplanner.events.application.services.NotificationService;
 import org.eventplanner.events.application.services.RegistrationService;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.specs.UpdateRegistrationSpec;
 import org.eventplanner.events.domain.values.events.EventState;
+import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -37,26 +41,26 @@ class RegistrationConfirmationUseCaseTest {
 
     private EventRepository eventRepository;
     private NotificationService notificationService;
+    private AuthenticationService authenticationService;
     private UserService userService;
     private RegistrationService registrationService;
-    private RegistrationRepository registrationRepository;
 
     private RegistrationConfirmationUseCase testee;
 
     @BeforeEach
     void setup() {
-        eventRepository = mock(EventRepository.class);
-        notificationService = mock(NotificationService.class);
-        userService = mock(UserService.class);
-        registrationService = mock(RegistrationService.class);
-        registrationRepository = mock(RegistrationRepository.class);
+        eventRepository = mock();
+        notificationService = mock();
+        authenticationService = mock();
+        userService = mock();
+        registrationService = mock();
 
         testee = new RegistrationConfirmationUseCase(
             eventRepository,
             notificationService,
+            authenticationService,
             userService,
-            registrationService,
-            registrationRepository
+            registrationService
         );
     }
 
@@ -79,24 +83,6 @@ class RegistrationConfirmationUseCaseTest {
     }
 
     @Test
-    void shouldSendGenerateMissingAccessKey() {
-        var event = createNotifiableEvent(0, 10);
-        var registration = event.getRegistrations().getFirst();
-        registration.setConfirmedAt(null);
-        registration.setAccessKey(null);
-        event.getSlots().getFirst().setAssignedRegistration(registration.getKey());
-
-        var user = createUser().withKey(registration.getUserKey());
-        mockCurrentYearLookup(event);
-        when(userService.getUserByKey(registration.getUserKey())).thenReturn(Optional.of(user));
-
-        testee.sendConfirmationRequests();
-
-        verify(registrationRepository).updateRegistration(registration, event.getKey());
-        assertThat(registration.getAccessKey()).isNotBlank();
-    }
-
-    @Test
     void shouldSendConfirmationReminderForEligibleEvents() {
         var event = createNotifiableEvent(1, 5);
         var registration = event.getRegistrations().getFirst();
@@ -107,7 +93,7 @@ class RegistrationConfirmationUseCaseTest {
         mockCurrentYearLookup(event);
         when(userService.getUserByKey(registration.getUserKey())).thenReturn(Optional.of(user));
 
-        testee.sendConfirmationReminders();
+        testee.sendConfirmationRequests();
 
         verify(notificationService).sendConfirmationReminderNotification(user, event, registration);
         verify(eventRepository).update(event);
@@ -115,50 +101,68 @@ class RegistrationConfirmationUseCaseTest {
     }
 
     @Test
-    void shouldReturnEventByAccessKeyWithoutPrivateData() {
-        var event = createEvent().withState(EventState.PLANNED);
-        var registration = event.getRegistrations().get(0);
-        var otherRegistration = event.getRegistrations().get(1);
+    void shouldNotSendAnyNotificationWhenNoEventsAreEligible() {
+        var currentYear = Instant.now().atZone(BERLIN_TIMEZONE).getYear();
+        when(eventRepository.findAllByYear(currentYear)).thenReturn(List.of());
+        when(eventRepository.findAllByYear(currentYear + 1)).thenReturn(List.of());
 
-        registration.setAccessKey("valid-key");
-        registration.setNote("keep-me");
-        otherRegistration.setAccessKey("other-key");
-        otherRegistration.setNote("remove-me");
+        testee.sendConfirmationRequests();
 
-        event.getSlots().get(0).setAssignedRegistration(registration.getKey());
-        event.getSlots().get(1).setAssignedRegistration(otherRegistration.getKey());
-
-        when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
-
-        var result = testee.getEventByAccessKey(event.getKey(), "valid-key");
-
-        assertThat(result).isSameAs(event);
-        assertThat(result.getRegistrations().get(0).getAccessKey()).isEqualTo("valid-key");
-        assertThat(result.getRegistrations().get(0).getNote()).isEqualTo("keep-me");
-        assertThat(result.getRegistrations().get(1).getAccessKey()).isNull();
-        assertThat(result.getRegistrations().get(1).getNote()).isNull();
+        verify(notificationService, never()).sendConfirmationRequestNotification(any(), any(), any());
+        verify(notificationService, never()).sendConfirmationReminderNotification(any(), any(), any());
+        verify(eventRepository, never()).update(any());
     }
 
     @Test
-    void shouldThrowWhenEventAccessKeyIsUnknown() {
-        var event = createEvent();
-        when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+    void shouldNotSendAnyNotificationForEventsThatAreNotPlanned() {
+        var event = createNotifiableEvent(0, 10);
+        event.setState(EventState.DRAFT);
+        mockCurrentYearLookup(event);
 
-        assertThatException()
-            .isThrownBy(() -> testee.getEventByAccessKey(event.getKey(), "invalid-key"))
-            .isInstanceOf(NoSuchElementException.class);
+        testee.sendConfirmationRequests();
+
+        verify(notificationService, never()).sendConfirmationRequestNotification(any(), any(), any());
+        verify(notificationService, never()).sendConfirmationReminderNotification(any(), any(), any());
+        verify(eventRepository, never()).update(any());
     }
 
     @Test
-    void shouldConfirmRegistrationWhenAccessKeyMatches() {
+    void shouldNotSendAnyNotificationForEventsInThePast() {
+        var event = createNotifiableEvent(0, 10);
+        event.setStart(Instant.now().minusSeconds(60 * 60 * 24));
+        mockCurrentYearLookup(event);
+
+        testee.sendConfirmationRequests();
+
+        verify(notificationService, never()).sendConfirmationRequestNotification(any(), any(), any());
+        verify(notificationService, never()).sendConfirmationReminderNotification(any(), any(), any());
+        verify(eventRepository, never()).update(any());
+    }
+
+    @Test
+    void shouldNotSendAnyNotificationForEventsOutsideTwoWeekWindow() {
+        var event = createNotifiableEvent(0, 20);
+        mockCurrentYearLookup(event);
+
+        testee.sendConfirmationRequests();
+
+        verify(notificationService, never()).sendConfirmationRequestNotification(any(), any(), any());
+        verify(notificationService, never()).sendConfirmationReminderNotification(any(), any(), any());
+        verify(eventRepository, never()).update(any());
+    }
+
+    @Test
+    void shouldConfirmRegistration() {
         var event = createEvent();
+        var signedInUser = createSignedInUser();
         var registration = event.getRegistrations().getFirst();
-        registration.setAccessKey("valid-key");
         registration.setConfirmedAt(null);
+        registration.setUserKey(signedInUser.key());
 
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
-        testee.confirmRegistration(event.getKey(), registration.getKey(), "valid-key");
+        testee.confirmRegistration(event.getKey(), registration.getKey());
 
         var updateCaptor = ArgumentCaptor.forClass(UpdateRegistrationSpec.class);
         verify(registrationService).updateRegistration(updateCaptor.capture(), eq(event));
@@ -170,30 +174,66 @@ class RegistrationConfirmationUseCaseTest {
     }
 
     @Test
-    void shouldNotConfirmRegistrationWithInvalidAccessKey() {
+    void shouldNotConfirmAlreadyConfirmedRegistration() {
         var event = createEvent();
+        var signedInUser = createSignedInUser();
         var registration = event.getRegistrations().getFirst();
-        registration.setAccessKey("valid-key");
+        registration.setConfirmedAt(Instant.parse("2026-05-07T09:30:00Z"));
+        registration.setUserKey(signedInUser.key());
 
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
-        assertThatException()
-            .isThrownBy(() -> testee.confirmRegistration(event.getKey(), registration.getKey(), "invalid-key"))
-            .isInstanceOf(NoSuchElementException.class);
+        testee.confirmRegistration(event.getKey(), registration.getKey());
 
         verify(registrationService, never()).updateRegistration(any(), any());
     }
 
     @Test
-    void shouldNotConfirmAlreadyConfirmedRegistration() {
+    void shouldThrowWhenConfirmingRegistrationForUnknownEvent() {
         var event = createEvent();
         var registration = event.getRegistrations().getFirst();
-        registration.setAccessKey("valid-key");
-        registration.setConfirmedAt(Instant.parse("2026-05-07T09:30:00Z"));
+
+        when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.empty());
+
+        assertThatException()
+            .isThrownBy(() -> testee.confirmRegistration(event.getKey(), registration.getKey()))
+            .isInstanceOf(NoSuchElementException.class)
+            .withMessageContaining("Event");
+
+        verify(authenticationService, never()).getSignedInUser();
+        verify(registrationService, never()).updateRegistration(any(), any());
+    }
+
+    @Test
+    void shouldThrowWhenConfirmingUnknownRegistration() {
+        var event = createEvent();
+        var unknownRegistrationKey = new RegistrationKey(randomUUID().toString());
 
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
 
-        testee.confirmRegistration(event.getKey(), registration.getKey(), "valid-key");
+        assertThatException()
+            .isThrownBy(() -> testee.confirmRegistration(event.getKey(), unknownRegistrationKey))
+            .isInstanceOf(NoSuchElementException.class)
+            .withMessageContaining("Registration");
+
+        verify(authenticationService, never()).getSignedInUser();
+        verify(registrationService, never()).updateRegistration(any(), any());
+    }
+
+    @Test
+    void shouldThrowWhenConfirmingRegistrationOfAnotherUser() {
+        var event = createEvent();
+        var signedInUser = createSignedInUser();
+        var registration = event.getRegistrations().getFirst();
+        registration.setUserKey(createSignedInUser().key());
+
+        when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
+        assertThatException()
+            .isThrownBy(() -> testee.confirmRegistration(event.getKey(), registration.getKey()))
+            .isInstanceOf(MissingPermissionException.class);
 
         verify(registrationService, never()).updateRegistration(any(), any());
     }
@@ -201,46 +241,86 @@ class RegistrationConfirmationUseCaseTest {
     @Test
     void shouldDeclineRegistrationAndPersistEvent() {
         var event = createEvent();
+        var signedInUser = createSignedInUser();
         var registration = event.getRegistrations().getFirst();
-        registration.setAccessKey("valid-key");
         registration.setConfirmedAt(null);
+        registration.setUserKey(signedInUser.key());
 
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
-        testee.declineRegistration(event.getKey(), registration.getKey(), "valid-key");
+        testee.declineRegistration(event.getKey(), registration.getKey());
 
         verify(registrationService).removeRegistration(registration.getKey(), event, true);
         verify(eventRepository).update(event);
     }
 
     @Test
-    void shouldNotDeclineRegistrationWithInvalidAccessKey() {
+    void shouldNotDeclineAlreadyConfirmedRegistration() {
         var event = createEvent();
+        var signedInUser = createSignedInUser();
         var registration = event.getRegistrations().getFirst();
-        registration.setAccessKey("valid-key");
+        registration.setConfirmedAt(Instant.now());
+        registration.setUserKey(signedInUser.key());
 
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
 
         assertThatException()
-            .isThrownBy(() -> testee.declineRegistration(event.getKey(), registration.getKey(), "invalid-key"))
-            .isInstanceOf(NoSuchElementException.class);
+            .isThrownBy(() -> testee.declineRegistration(event.getKey(), registration.getKey()))
+            .isInstanceOf(IllegalStateException.class);
 
         verify(registrationService, never()).removeRegistration(any(), any(), eq(true));
         verify(eventRepository, never()).update(any());
     }
 
     @Test
-    void shouldNotDeclineAlreadyConfirmedRegistration() {
+    void shouldThrowWhenDecliningRegistrationForUnknownEvent() {
         var event = createEvent();
         var registration = event.getRegistrations().getFirst();
-        registration.setAccessKey("valid-key");
-        registration.setConfirmedAt(Instant.now());
+
+        when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.empty());
+
+        assertThatException()
+            .isThrownBy(() -> testee.declineRegistration(event.getKey(), registration.getKey()))
+            .isInstanceOf(NoSuchElementException.class)
+            .withMessageContaining("Event");
+
+        verify(authenticationService, never()).getSignedInUser();
+        verify(registrationService, never()).removeRegistration(any(), any(), eq(true));
+        verify(eventRepository, never()).update(any());
+    }
+
+    @Test
+    void shouldThrowWhenDecliningUnknownRegistration() {
+        var event = createEvent();
+        var unknownRegistrationKey = new RegistrationKey(randomUUID().toString());
 
         when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
 
         assertThatException()
-            .isThrownBy(() -> testee.declineRegistration(event.getKey(), registration.getKey(), "valid-key"))
-            .isInstanceOf(IllegalStateException.class);
+            .isThrownBy(() -> testee.declineRegistration(event.getKey(), unknownRegistrationKey))
+            .isInstanceOf(NoSuchElementException.class)
+            .withMessageContaining("Registration");
+
+        verify(authenticationService, never()).getSignedInUser();
+        verify(registrationService, never()).removeRegistration(any(), any(), eq(true));
+        verify(eventRepository, never()).update(any());
+    }
+
+    @Test
+    void shouldThrowWhenDecliningRegistrationOfAnotherUser() {
+        var event = createEvent();
+        var signedInUser = createSignedInUser();
+        var registration = event.getRegistrations().getFirst();
+        registration.setUserKey(createSignedInUser().key());
+
+        when(eventRepository.findByKey(event.getKey())).thenReturn(Optional.of(event));
+        when(authenticationService.getSignedInUser()).thenReturn(signedInUser);
+
+        assertThatException()
+            .isThrownBy(() -> testee.declineRegistration(event.getKey(), registration.getKey()))
+            .isInstanceOf(MissingPermissionException.class);
 
         verify(registrationService, never()).removeRegistration(any(), any(), eq(true));
         verify(eventRepository, never()).update(any());
@@ -261,4 +341,3 @@ class RegistrationConfirmationUseCaseTest {
         return event;
     }
 }
-

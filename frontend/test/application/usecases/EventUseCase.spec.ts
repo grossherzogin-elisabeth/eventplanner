@@ -247,10 +247,4 @@ describe('EventUseCase', () => {
         expect(calendarService.createCalendarEntries).toHaveBeenCalledWith([event]);
         expect(saveStringToFileSpy).toHaveBeenCalledWith('Harbor Weekend.ics', 'BEGIN:VCALENDAR');
     });
-
-    it('should confirm participation via repository', async () => {
-        await testee.confirmParticipation('event-1', 'reg-1', 'access-key');
-
-        expect(eventRegistrationsRepository.confirmParticipation).toHaveBeenCalledWith('event-1', 'reg-1', 'access-key');
-    });
 });

@@ -32,6 +32,7 @@ public class SettingsUseCase {
         return configurationService.updateConfig(updateSpec);
     }
 
+    @PreAuthorize("permitAll()")
     public @NonNull FrontendConfig getUiSettings() {
         return configurationService.getConfig().frontend();
     }

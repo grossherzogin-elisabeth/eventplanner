@@ -324,7 +324,6 @@ class EventMatrixExportServiceTest {
                 null,
                 null,
                 null,
-                null,
                 null
             );
             event.addRegistration(registration);
@@ -358,7 +357,6 @@ class EventMatrixExportServiceTest {
                 new RegistrationKey(),
                 slot.getPositions().getLast(),
                 randomUsers.removeFirst().getKey(),
-                null,
                 null,
                 null,
                 null,
@@ -402,7 +400,6 @@ class EventMatrixExportServiceTest {
                 null,
                 null,
                 null,
-                null,
                 null
             );
             slot.setAssignedRegistration(registration.getKey());
@@ -440,7 +437,6 @@ class EventMatrixExportServiceTest {
                 null,
                 null,
                 null,
-                null,
                 null
             );
             slot.setAssignedRegistration(registration.getKey());
@@ -453,7 +449,6 @@ class EventMatrixExportServiceTest {
                 new RegistrationKey(),
                 slot.getPositions().getLast(),
                 randomUsers.removeFirst().getKey(),
-                null,
                 null,
                 null,
                 null,

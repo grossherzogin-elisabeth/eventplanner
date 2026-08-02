@@ -6,6 +6,7 @@
     "ROLE_TEAM_MEMBER"
   ],
   "permissions": [
+    "account:read",
     "events:read",
     "events:write",
     "events:delete",
@@ -13,8 +14,11 @@
     "events:export",
     "events:write-details",
     "events:write-slots",
+    "events:send-confirmation-requests",
     "registrations:write",
     "registrations:write-self",
+    "registrations:confirm-self",
+    "registrations:decline-self",
     "users:read",
     "users:read-details-self",
     "users:write-self",
@@ -26,6 +30,7 @@
     "positions:write",
     "qualifications:read",
     "qualifications:write",
+    "access-keys:delete",
     "application-settings:read",
     "application-settings:write"
   ],
@@ -34,5 +39,6 @@
   ],
   "gender": "m",
   "firstName": "Tony",
-  "lastName": "Stark"
+  "lastName": "Stark",
+  "hasLimitedAccess": false
 }

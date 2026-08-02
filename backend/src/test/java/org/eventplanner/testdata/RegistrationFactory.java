@@ -2,7 +2,6 @@ package org.eventplanner.testdata;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.UUID;
 
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
@@ -25,7 +24,6 @@ public class RegistrationFactory {
             userKey,
             null,
             "Lorem ipsum dolor sit amet",
-            UUID.randomUUID().toString(),
             Instant.now(),
             true,
             LocalDate.now()

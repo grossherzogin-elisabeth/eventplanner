@@ -101,7 +101,7 @@ npm install
 npm run dev
 ```
 
-Frontend runs on `http://localhost:8090` and proxies API/auth traffic to backend on `http://localhost:8091`.
+Frontend runs on `http://localhost:8080` by default and proxies API/auth traffic to backend on `http://localhost:8081`.
 
 ## Build, lint, and test
 

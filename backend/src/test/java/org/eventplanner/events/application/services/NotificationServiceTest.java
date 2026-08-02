@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,7 @@ import freemarker.template.TemplateException;
 
 class NotificationServiceTest {
 
+    private AuthenticationService authenticationService;
     private ConfigurationService configurationService;
     private NotificationDispatcher dispatcher;
 
@@ -43,14 +45,17 @@ class NotificationServiceTest {
         var freeMarkerConfig = new FreeMarkerConfigurationFactory().createConfiguration();
         freeMarkerConfig.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
 
-        configurationService = mock(ConfigurationService.class);
-        dispatcher = mock(NotificationDispatcher.class);
+        configurationService = mock();
+        authenticationService = mock();
+        dispatcher = mock();
 
         when(configurationService.getConfig()).thenReturn(createApplicationConfig());
         when(configurationService.isNotificationEnabled(any())).thenReturn(true);
+        when(authenticationService.createAccessKey(any())).thenReturn(new AccessKey());
 
         testee = new NotificationService(
             freeMarkerConfig,
+            authenticationService,
             configurationService,
             List.of(dispatcher)
         );

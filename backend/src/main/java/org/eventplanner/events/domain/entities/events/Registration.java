@@ -2,7 +2,6 @@ package org.eventplanner.events.domain.entities.events;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.UUID;
 
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.positions.PositionKey;
@@ -31,12 +30,7 @@ public class Registration {
     private @Nullable UserKey userKey;
     private @Nullable String name;
     private @Nullable String note;
-    private @Nullable String accessKey;
     private @Nullable Instant confirmedAt;
     private @Nullable Boolean overnightStay;
     private @Nullable LocalDate arrival;
-
-    public static @NonNull String generateAccessKey() {
-        return UUID.randomUUID().toString();
-    }
 }

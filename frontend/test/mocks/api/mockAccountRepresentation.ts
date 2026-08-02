@@ -12,6 +12,7 @@ export function mockAccountRepresentation(overwrite?: Partial<AccountRepresentat
         roles: [Role.ADMIN],
         permissions: Object.values(Permission),
         positions: [DECKHAND],
+        hasLimitedAccess: false,
     };
     return overwrite ? Object.assign(account, overwrite) : account;
 }
