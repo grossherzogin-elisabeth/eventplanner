@@ -67,6 +67,7 @@ class AuthenticationIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.key").value(TestUser.TEAM_MEMBER.getKey().value()))
             .andExpect(jsonPath("$.email").value(TestUser.TEAM_MEMBER.getEmail()))
+            .andExpect(jsonPath("$.hasLimitedAccess").value(true))
             .andReturn();
 
         var authentication = getSessionAuthentication(result);
