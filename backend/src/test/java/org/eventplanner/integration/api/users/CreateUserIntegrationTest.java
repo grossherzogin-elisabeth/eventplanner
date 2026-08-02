@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.eventplanner.config.JsonMapperFactory;
+import org.eventplanner.beans.JsonMapperFactory;
 import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
 import org.eventplanner.events.rest.users.dto.CreateUserRequest;
 import org.eventplanner.events.rest.users.dto.UserDetailsRepresentation;

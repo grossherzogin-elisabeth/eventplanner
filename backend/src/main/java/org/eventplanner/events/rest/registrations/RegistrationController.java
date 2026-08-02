@@ -14,13 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.ValidationException;
@@ -79,30 +77,26 @@ public class RegistrationController {
         return ResponseEntity.ok(EventRepresentation.fromDomain(event));
     }
 
-    @GetMapping("/{eventKey}/registrations/{registrationKey}/confirm")
+    @PutMapping("/{eventKey}/registrations/{registrationKey}/confirm")
     public ResponseEntity<Void> confirmRegistration(
         @PathVariable String eventKey,
-        @PathVariable String registrationKey,
-        @RequestParam("accessKey") String accessKey
+        @PathVariable String registrationKey
     ) {
         registrationConfirmationUseCase.confirmRegistration(
             new EventKey(eventKey),
-            new RegistrationKey(registrationKey),
-            accessKey
+            new RegistrationKey(registrationKey)
         );
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{eventKey}/registrations/{registrationKey}/decline")
+    @PutMapping("/{eventKey}/registrations/{registrationKey}/decline")
     public ResponseEntity<Void> declineRegistration(
         @PathVariable String eventKey,
-        @PathVariable String registrationKey,
-        @RequestParam("accessKey") String accessKey
+        @PathVariable String registrationKey
     ) {
         registrationConfirmationUseCase.declineRegistration(
             new EventKey(eventKey),
-            new RegistrationKey(registrationKey),
-            accessKey
+            new RegistrationKey(registrationKey)
         );
         return ResponseEntity.ok().build();
     }

@@ -10,7 +10,7 @@
         <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
         <div class="mx-12 mb-6 h-6 rounded-full bg-current opacity-10"></div>
     </div>
-    <div v-else-if="signedInUser" class="menu flex-1 overflow-y-auto">
+    <div v-else-if="signedInUser && !signedInUser.hasLimitedAccess" class="menu flex-1 overflow-y-auto">
         <h1 class="mt-8 mb-8 px-8 text-2xl font-thin xl:pl-14">{{ menuTitle }}</h1>
         <div v-if="signedInUser.impersonated" class="bg-error-container text-onerror-container mx-4 rounded-2xl pl-4 xl:mx-8 xl:pl-6">
             <div class="flex items-center">
@@ -154,7 +154,7 @@ const eventsExpanded = ref<boolean>(false);
 
 function init(): void {
     authUseCase
-        .authenticate(true)
+        .authenticate(false)
         .then(() => (loading.value = false))
         .catch(() => (loading.value = false));
     watch(route, () => {

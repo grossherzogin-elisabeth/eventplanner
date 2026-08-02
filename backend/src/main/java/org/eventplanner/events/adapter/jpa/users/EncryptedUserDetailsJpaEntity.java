@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.Arrays;
 
 import org.eventplanner.common.Encrypted;
-import org.eventplanner.config.JsonMapperFactory;
+import org.eventplanner.beans.JsonMapperFactory;
 import org.eventplanner.events.domain.entities.users.EncryptedEmergencyContact;
 import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.entities.users.EncryptedUserQualification;

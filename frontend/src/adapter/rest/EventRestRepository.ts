@@ -1,4 +1,5 @@
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { EventRepository } from '@/application';
 import { deserializeDate } from '@/common';
 import type { Event, EventKey, EventSignupType, EventState, EventType, Registration, Slot } from '@/domain';
@@ -136,13 +137,10 @@ export class EventRestRepository implements EventRepository {
         }));
     }
 
-    public async findByKey(key: EventKey, accessKey?: string): Promise<Event> {
-        let url = `/api/v1/events/${key}`;
-        if (accessKey) {
-            url = `${url}?accessKey=${accessKey}`;
-        }
-        const response = await fetch(url, {
+    public async findByKey(key: EventKey): Promise<Event> {
+        const response = await fetch(`/api/v1/events/${key}`, {
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -156,6 +154,7 @@ export class EventRestRepository implements EventRepository {
             credentials: 'include',
             headers: {
                 Accept: 'application/json',
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -170,6 +169,7 @@ export class EventRestRepository implements EventRepository {
             credentials: 'include',
             headers: {
                 Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                ...getAccessKeyHeader(),
             },
         });
         if (!response.ok) {
@@ -214,7 +214,8 @@ export class EventRestRepository implements EventRepository {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -281,7 +282,8 @@ export class EventRestRepository implements EventRepository {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -296,7 +298,8 @@ export class EventRestRepository implements EventRepository {
             method: 'DELETE',
             credentials: 'include',
             headers: {
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -308,6 +311,7 @@ export class EventRestRepository implements EventRepository {
         const response = await fetch('/api/v1/events/export/templates', {
             method: 'GET',
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -319,6 +323,7 @@ export class EventRestRepository implements EventRepository {
         const response = await fetch(`/api/v1/events/${event.key}/export/${template}`, {
             method: 'GET',
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -352,7 +357,8 @@ export class EventRestRepository implements EventRepository {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {

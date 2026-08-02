@@ -1,17 +1,26 @@
 package org.eventplanner.events.application.services;
 
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.eventplanner.auth.AccessKeyAuthentication;
+import org.eventplanner.events.application.ports.AccessKeyRepository;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
+import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.auth.Role;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
@@ -35,13 +44,19 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationService {
 
     private final UserService userService;
+    private final AccessKeyRepository accessKeyRepository;
     private final List<String> admins;
+    private final String accessKeyHashSecret;
 
     public AuthenticationService(
         @NonNull @Autowired final UserService userService,
-        @Nullable @Value("${auth.admins}") String admins
+        @NonNull @Autowired final AccessKeyRepository accessKeyRepository,
+        @Nullable @Value("${auth.admins}") String admins,
+        @NonNull @Value("${auth.access-key.hash-secret}") String accessKeyHashSecret
     ) {
         this.userService = userService;
+        this.accessKeyRepository = accessKeyRepository;
+        this.accessKeyHashSecret = accessKeyHashSecret;
         if (admins != null && !admins.isBlank()) {
             this.admins = Arrays.stream(admins.split(",")).map(String::trim).toList();
         } else {
@@ -57,7 +72,7 @@ public class AuthenticationService {
     throws UnauthorizedException {
         if (authentication instanceof SignedInUser signedInUser) {
             return signedInUser;
-        } else if (authentication instanceof AnonymousAuthenticationToken) {
+        } else if (authentication instanceof AnonymousAuthenticationToken || authentication instanceof AccessKeyAuthentication) {
             throw new UnauthorizedException();
         } else if (authentication != null) {
             log.error("Got an authentication of unexpected type {}", authentication.getClass().getSimpleName());
@@ -65,7 +80,32 @@ public class AuthenticationService {
         throw new UnauthorizedException();
     }
 
-    public @NonNull SignedInUser authenticate(@NonNull OidcUser oidcUser) {
+    public @NonNull AccessKey createAccessKey(@NonNull final UserKey userKey) {
+        log.debug("Creating access key for user {}", userKey);
+        var accessKey = new AccessKey();
+        accessKeyRepository.create(userKey, hashAccessKey(accessKey));
+        return accessKey;
+    }
+
+    public @NonNull SignedInUser authenticate(@NonNull final AccessKey accessKey) {
+        var hashedAccessKey = hashAccessKey(accessKey);
+        var user = accessKeyRepository.findUserByAccessKey(hashedAccessKey)
+            // TODO remove legacy fallback for access keys that were not hashed
+            .or(() -> accessKeyRepository.findUserByAccessKey(accessKey.value()))
+            .flatMap(userService::getUserByKey)
+            .orElseThrow(() -> {
+                log.info("Rejected unknown access key");
+                return new UnauthorizedException("Unknown access key");
+            });
+
+        log.info("Authenticated user {} by access key", user.getKey());
+        return SignedInUser.fromUser(user, accessKey);
+    }
+
+    public @NonNull SignedInUser authenticate(@NonNull final OidcUser oidcUser) {
+        if (oidcUser.getSubject() == null) {
+            throw new UnauthorizedException("Oidc user is missing required attribute 'sub'");
+        }
         return authenticate(
             new AuthKey(oidcUser.getSubject()),
             oidcUser.getEmail(),
@@ -75,7 +115,7 @@ public class AuthenticationService {
         );
     }
 
-    public @NonNull SignedInUser authenticate(@NonNull OAuth2User oAuth2User) {
+    public @NonNull SignedInUser authenticate(@NonNull final OAuth2User oAuth2User) {
         var sub = Optional.ofNullable(oAuth2User.getAttribute(StandardClaimNames.SUB))
             .map(Object::toString)
             .orElseThrow(() -> new IllegalArgumentException("Missing sub claim in OAuth2 user"));
@@ -155,6 +195,16 @@ public class AuthenticationService {
             // can happen on simultaneous requests
             return userService.getUserByAuthKey(authKey)
                 .orElseThrow(UnauthorizedException::new);
+        }
+    }
+
+    private @NonNull String hashAccessKey(@NonNull final AccessKey accessKey) {
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(accessKeyHashSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            return HexFormat.of().formatHex(mac.doFinal(accessKey.value().getBytes(StandardCharsets.UTF_8)));
+        } catch (GeneralSecurityException e) {
+            throw new IllegalStateException("Failed to hash access key", e);
         }
     }
 }

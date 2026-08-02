@@ -1,4 +1,4 @@
-package org.eventplanner.config;
+package org.eventplanner.auth;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 

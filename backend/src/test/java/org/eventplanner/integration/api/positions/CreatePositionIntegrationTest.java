@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.eventplanner.config.JsonMapperFactory;
+import org.eventplanner.beans.JsonMapperFactory;
 import org.eventplanner.events.adapter.jpa.positions.PositionJpaRepository;
 import org.eventplanner.events.rest.positions.dto.PositionRepresentation;
 import org.eventplanner.testutil.TestResources;

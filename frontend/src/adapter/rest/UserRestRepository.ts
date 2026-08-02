@@ -1,4 +1,5 @@
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { UserRepository } from '@/application';
 import { toIsoDateString } from '@/common';
 import type { PositionKey, Role, User, UserDetails, UserKey } from '@/domain';
@@ -136,6 +137,7 @@ export class UserRestRepository implements UserRepository {
     public async findAll(): Promise<User[]> {
         const response = await fetch('/api/v1/users', {
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -162,6 +164,7 @@ export class UserRestRepository implements UserRepository {
     public async findByKey(key: UserKey): Promise<UserDetails> {
         const response = await fetch(`/api/v1/users/${key}`, {
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -173,6 +176,7 @@ export class UserRestRepository implements UserRepository {
     public async findBySignedInUser(): Promise<UserDetails> {
         const response = await fetch('/api/v1/users/self', {
             credentials: 'include',
+            headers: getAccessKeyHeader(),
         });
         if (!response.ok) {
             throw response;
@@ -232,7 +236,8 @@ export class UserRestRepository implements UserRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -254,7 +259,8 @@ export class UserRestRepository implements UserRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -270,7 +276,8 @@ export class UserRestRepository implements UserRepository {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -311,13 +318,14 @@ export class UserRestRepository implements UserRepository {
             dateOfBirth: toIsoDateString(user.dateOfBirth),
             placeOfBirth: user.placeOfBirth,
         };
-        const response = await fetch(`/api/v1/users/self`, {
+        const response = await fetch('/api/v1/users/self', {
             method: 'PATCH',
             credentials: 'include',
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
+                ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {

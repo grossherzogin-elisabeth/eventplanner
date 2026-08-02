@@ -48,9 +48,6 @@ public class RegistrationJpaEntity {
     @Column(name = "note")
     public @Nullable String note;
 
-    @Column(name = "access_key")
-    public @Nullable String accessKey;
-
     @Column(name = "confirmed_at")
     public @Nullable String confirmedAt;
 
@@ -70,7 +67,6 @@ public class RegistrationJpaEntity {
                 : null,
             domain.getName(),
             domain.getNote(),
-            domain.getAccessKey(),
             domain.getConfirmedAt() != null
                 ? domain.getConfirmedAt().toString()
                 : null,
@@ -90,7 +86,6 @@ public class RegistrationJpaEntity {
                 : null,
             name,
             note,
-            accessKey,
             confirmedAt != null
                 ? Instant.parse(confirmedAt)
                 : null,
