@@ -1,5 +1,5 @@
-import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { EventRepository } from '@/application';
 import { deserializeDate } from '@/common';
 import type { Event, EventKey, EventSignupType, EventState, EventType, Registration, Slot } from '@/domain';
@@ -214,8 +214,8 @@ export class EventRestRepository implements EventRepository {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -282,8 +282,8 @@ export class EventRestRepository implements EventRepository {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -298,8 +298,8 @@ export class EventRestRepository implements EventRepository {
             method: 'DELETE',
             credentials: 'include',
             headers: {
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -357,8 +357,8 @@ export class EventRestRepository implements EventRepository {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {

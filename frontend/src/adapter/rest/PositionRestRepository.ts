@@ -1,5 +1,5 @@
-import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { PositionRepository } from '@/application';
 import type { Position, PositionKey } from '@/domain';
 
@@ -64,8 +64,8 @@ export class PositionRestRepository implements PositionRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -88,8 +88,8 @@ export class PositionRestRepository implements PositionRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {
@@ -104,8 +104,8 @@ export class PositionRestRepository implements PositionRepository {
             method: 'DELETE',
             credentials: 'include',
             headers: {
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (!response.ok) {

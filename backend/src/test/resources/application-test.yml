@@ -5,6 +5,8 @@
 # The password we use to encrypt PII data in our database
 DATA_ENCRYPTION_PASSWORD: super-secret-password
 
+CSRF_ENABLED: false
+
 # -----------------
 # Overwrites
 # -----------------
@@ -41,13 +43,6 @@ notifications:
 
 data:
   directory: src/test/resources
-
-server:
-  protocol: http
-  host: localhost
-
-security:
-  enable-csrf: false
 
 spring:
   datasource:

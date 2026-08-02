@@ -52,6 +52,10 @@ export default defineConfig(({ mode }) => {
     const port = Number.parseInt(process.env.VITE_PORT as string, 10);
     const serviceUrl = process.env.VITE_SERVICE_URL;
 
+    if (!host) throw new Error('env variable VITE_HOST is not set');
+    if (!port) throw new Error('env variable VITE_PORT is not set');
+    if (!serviceUrl) throw new Error('env variable VITE_SERVICE_URL is not set');
+
     return {
         plugins: [vue(), svgLoader(), pwa, ViteYaml()],
         build: {

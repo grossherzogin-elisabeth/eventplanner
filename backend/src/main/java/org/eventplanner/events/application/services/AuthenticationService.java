@@ -52,7 +52,7 @@ public class AuthenticationService {
         @NonNull @Autowired final UserService userService,
         @NonNull @Autowired final AccessKeyRepository accessKeyRepository,
         @Nullable @Value("${auth.admins}") String admins,
-        @NonNull @Value("${auth.access-key-hash-secret}") String accessKeyHashSecret
+        @NonNull @Value("${auth.access-key.hash-secret}") String accessKeyHashSecret
     ) {
         this.userService = userService;
         this.accessKeyRepository = accessKeyRepository;

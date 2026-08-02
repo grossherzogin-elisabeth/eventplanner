@@ -1,4 +1,4 @@
-import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
 import type { AccountRepository } from '@/application';
 import { wait } from '@/common';
 import type { Permission, Role, SignedInUser } from '@/domain';

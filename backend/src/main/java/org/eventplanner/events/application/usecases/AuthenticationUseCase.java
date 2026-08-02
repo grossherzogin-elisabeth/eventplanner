@@ -22,16 +22,16 @@ public class AuthenticationUseCase {
 
     private final AuthenticationService authenticationService;
     private final AccessKeyRepository accessKeyRepository;
-    private final Duration accessKeyExpiration;
+    private final Duration accessKeyMaxAge;
 
     public AuthenticationUseCase(
         @NonNull @Autowired final AuthenticationService authenticationService,
         @NonNull @Autowired final AccessKeyRepository accessKeyRepository,
-        @Nullable @Value("${auth.access-key-expiration}") Duration accessKeyExpiration
+        @Nullable @Value("${auth.access-key.max-age}") Duration accessKeyMaxAge
     ) {
         this.authenticationService = authenticationService;
         this.accessKeyRepository = accessKeyRepository;
-        this.accessKeyExpiration = accessKeyExpiration != null ? accessKeyExpiration : Duration.ofDays(21);
+        this.accessKeyMaxAge = accessKeyMaxAge != null ? accessKeyMaxAge : Duration.ofDays(21);
     }
 
     public @NonNull SignedInUser getSignedInUser() throws UnauthorizedException {
@@ -45,7 +45,7 @@ public class AuthenticationUseCase {
 
     @PreAuthorize("hasAuthority('access-keys:delete')")
     public void deleteExpiredAccessKeys() {
-        log.info("Deleting access keys older than {}", accessKeyExpiration);
-        accessKeyRepository.deleteExpired(accessKeyExpiration);
+        log.info("Deleting access keys older than {}", accessKeyMaxAge);
+        accessKeyRepository.deleteExpired(accessKeyMaxAge);
     }
 }

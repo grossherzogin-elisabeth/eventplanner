@@ -1,5 +1,5 @@
-import { getAccessKeyHeader } from '@/adapter/util/AccessKeyAuthentication.ts';
-import { getCsrfToken } from '@/adapter/util/Csrf';
+import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
+import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { SettingsRepository } from '@/application';
 import type { AppSettings, UiSettings } from '@/domain';
 
@@ -136,8 +136,8 @@ export class SettingsRestRepository implements SettingsRepository {
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json',
-                'X-XSRF-TOKEN': getCsrfToken(),
                 ...getAccessKeyHeader(),
+                ...getCsrfTokenHeader(),
             },
         });
         if (response.ok) {
