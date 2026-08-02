@@ -113,6 +113,7 @@ class AuthenticationIntegrationTest {
 
         var oauthResult = webMvc.perform(get("/api/v1/account")
                 .session(session)
+                .header("Access-Key", accessKey) // old access key is still present and should be ignored
                 .with(withAuthentication(TestUser.TEAM_MEMBER))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -150,6 +151,7 @@ class AuthenticationIntegrationTest {
 
         var oauthResult = webMvc.perform(get("/api/v1/account")
                 .session(session)
+                .header("Access-Key", accessKey) // old access key is still present and should be ignored
                 .with(withAuthentication(TestUser.EVENT_PLANNER))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
