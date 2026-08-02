@@ -39,6 +39,13 @@ public record SignedInUser(
     @NonNull AuthenticatedPrincipal authentication
 ) implements Authentication {
 
+    private static final List<Permission> WHITELISTED_PERMISSIONS_FOR_ACCESS_KEY_AUTH = List.of(
+        Permission.READ_ACCOUNT,
+        Permission.READ_EVENTS,
+        Permission.CONFIRM_OWN_REGISTRATIONS,
+        Permission.DECLINE_OWN_REGISTRATIONS
+    );
+
     public static @NonNull SignedInUser fromUser(
         @NonNull UserDetails user,
         @NonNull AuthenticatedPrincipal authentication
@@ -62,13 +69,7 @@ public record SignedInUser(
             .flatMap(Role::getPermissions)
             .distinct();
         if (authentication instanceof AccessKey) {
-            var whitelistedPermissions = List.of(
-                Permission.READ_ACCOUNT,
-                Permission.READ_EVENTS,
-                Permission.CONFIRM_OWN_REGISTRATIONS,
-                Permission.DECLINE_OWN_REGISTRATIONS
-            );
-            permissions = permissions.filter(whitelistedPermissions::contains);
+            permissions = permissions.filter(WHITELISTED_PERMISSIONS_FOR_ACCESS_KEY_AUTH::contains);
         }
         return permissions.toList();
     }

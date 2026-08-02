@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Permission implements GrantedAuthority {
     /**
-     * Allows reading account details containing the signed-in users permissions and basic user date
+     * Allows reading account details containing the signed-in users permissions and basic user data
      */
     READ_ACCOUNT("account:read"),
 
