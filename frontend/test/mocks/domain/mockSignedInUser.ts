@@ -18,6 +18,7 @@ export function mockSignedInUser(overwrite?: Partial<SignedInUser>): SignedInUse
             Permission.READ_POSITIONS,
         ],
         positions: [DECKHAND],
+        hasLimitedAccess: false,
         impersonated: false,
     };
     return overwrite ? Object.assign(user, overwrite) : user;
