@@ -6,6 +6,7 @@ export function getCsrfTokenHeader(): Record<string, string> {
     return {};
 }
 
-function getCookieValue(name: string): string {
-    return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || '';
+function getCookieValue(name: string): string | undefined {
+    let regex = new RegExp('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return regex.exec(decodeURIComponent(document.cookie))?.pop() ?? undefined;
 }
