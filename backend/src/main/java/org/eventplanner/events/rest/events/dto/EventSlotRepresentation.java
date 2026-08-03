@@ -44,7 +44,7 @@ public record EventSlotRepresentation(
             assignedRegistrationKey != null
                 ? new RegistrationKey(assignedRegistrationKey)
                 : null,
-            implicit != null ? implicit : false
+            Boolean.TRUE.equals(implicit)
         );
     }
 }

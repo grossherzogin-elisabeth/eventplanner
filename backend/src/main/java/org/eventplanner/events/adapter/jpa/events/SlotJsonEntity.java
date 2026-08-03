@@ -46,7 +46,7 @@ public record SlotJsonEntity(
             assignedRegistration != null
                 ? new RegistrationKey(assignedRegistration)
                 : null,
-            implicit != null ? implicit : false
+            Boolean.TRUE.equals(implicit)
         );
     }
 }
