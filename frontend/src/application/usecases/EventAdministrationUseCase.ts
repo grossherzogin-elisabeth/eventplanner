@@ -2,7 +2,9 @@ import type { EventRegistrationsRepository, EventRepository } from '@/applicatio
 import type { AuthService, ErrorHandlingService, EventCachingService, NotificationService } from '@/application/services';
 import { filterUndefined } from '@/common';
 import type { Event, EventKey, EventService, Registration, ResolvedRegistrationSlot, SlotKey, User } from '@/domain';
+import { SlotCriticality } from '@/domain';
 import { EventState } from '@/domain';
+import { v4 as uuid } from 'uuid';
 
 export class EventAdministrationUseCase {
     private readonly eventCachingService: EventCachingService;
@@ -217,6 +219,19 @@ export class EventAdministrationUseCase {
         }
     }
 
+    public async assignRegistrationToImplicitSlot(event: Event, registration: Registration): Promise<Event> {
+        event.slots.push({
+            key: uuid(),
+            positionKeys: [registration.positionKey],
+            criticality: SlotCriticality.Optional,
+            assignedRegistrationKey: registration.key,
+            order: event.slots.length,
+            implicit: true,
+        });
+        event.assignedUserCount = event.slots.filter((it) => it.assignedRegistrationKey).length;
+        return event;
+    }
+
     public async assignUserToSlot(event: Event, user: User, slotKey: SlotKey): Promise<Event> {
         const slot = event.slots.find((it) => it.key === slotKey);
         if (!slot) {
@@ -258,6 +273,9 @@ export class EventAdministrationUseCase {
         }
         slot.assignedRegistrationKey = undefined;
         event.slots = await this.eventRepository.optimizeSlots(event);
+        if (slot.implicit) {
+            event.slots = event.slots.filter((it) => it.key !== slotKey);
+        }
         return event;
     }
 }

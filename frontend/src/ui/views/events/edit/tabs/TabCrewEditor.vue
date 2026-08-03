@@ -153,14 +153,13 @@ import { useI18n } from 'vue-i18n';
 import { useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
 import { deepCopy } from '@/common';
 import type { Event, PositionKey, Registration, Slot } from '@/domain';
-import { SlotCriticality, useEventService } from '@/domain';
+import { useEventService } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot.ts';
 import type { Dialog } from '@/ui/components/common';
 import { VDropzone } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import RegistrationRow from '@/ui/views/events/edit/components/RegistrationRow.vue';
 import SlotEditDlg from '@/ui/views/events/edit/components/SlotEditDlg.vue';
-import { v4 as uuid } from 'uuid';
 import RegistrationEditDlg from '../components/RegistrationEditDlg.vue';
 
 enum DragSource {
@@ -208,6 +207,10 @@ const secureMinimumCrewMembers = computed<number>(() => {
 
 async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
     const slot = eventService.getOpenSlots(props.event).find((it) => it.positionKeys.includes(aggregate.position.key));
+    if (!aggregate.registration) {
+        return;
+    }
+    const registration = aggregate.registration;
     if (!slot) {
         errorHandler.handleError({
             title: t('domain.event.no-slot-for-position-error.title'),
@@ -215,15 +218,7 @@ async function addToCrew(aggregate: ResolvedRegistrationSlot): Promise<void> {
             cancelText: t('generic.cancel'),
             retryText: t('domain.event.no-slot-for-position-error.retry'),
             retry: async () => {
-                const event = deepCopy(props.event);
-                event.slots.push({
-                    key: uuid(),
-                    positionKeys: [aggregate.position.key],
-                    criticality: SlotCriticality.Optional,
-                    assignedRegistrationKey: aggregate.registration?.key,
-                    order: event.slots.length,
-                });
-                emit('update:event', event);
+                emit('update:event', await eventAdminUseCase.assignRegistrationToImplicitSlot(deepCopy(props.event), registration));
             },
         });
     } else if (aggregate.user) {

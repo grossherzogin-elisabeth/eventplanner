@@ -29,7 +29,7 @@ class EventTest {
         assertThat(testee.findRegistrationByKey(registration.getKey())).isNotEmpty();
         assertThat(testee.findSlotByAssignedRegistrationKey(registration.getKey())).isNotEmpty();
 
-        testee.removeRegistration(registration);
+        testee.removeRegistration(registration.getKey());
 
         assertThat(testee.findRegistrationByKey(registration.getKey())).isEmpty();
         assertThat(testee.findSlotByAssignedRegistrationKey(registration.getKey())).isEmpty();

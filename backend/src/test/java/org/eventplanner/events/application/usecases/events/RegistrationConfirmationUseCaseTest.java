@@ -165,7 +165,7 @@ class RegistrationConfirmationUseCaseTest {
         testee.confirmRegistration(event.getKey(), registration.getKey());
 
         var updateCaptor = ArgumentCaptor.forClass(UpdateRegistrationSpec.class);
-        verify(registrationService).updateRegistration(updateCaptor.capture(), eq(event));
+        verify(registrationService).updateRegistration(eq(event), updateCaptor.capture());
 
         var updateSpec = updateCaptor.getValue();
         assertThat(updateSpec.eventKey()).isEqualTo(event.getKey());
@@ -251,7 +251,7 @@ class RegistrationConfirmationUseCaseTest {
 
         testee.declineRegistration(event.getKey(), registration.getKey());
 
-        verify(registrationService).removeRegistration(registration.getKey(), event, true);
+        verify(registrationService).removeRegistration(event, registration.getKey(), true);
         verify(eventRepository).update(event);
     }
 
