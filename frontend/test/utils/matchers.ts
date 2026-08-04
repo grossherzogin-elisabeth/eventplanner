@@ -23,23 +23,3 @@ export function copyOf<T extends object>(
         },
     };
 }
-
-export function differentReferenceThan<T extends object>(
-    original: T
-): {
-    asymmetricMatch(received: unknown): boolean;
-    toString(): string;
-    getExpectedType(): string;
-} {
-    return {
-        asymmetricMatch(received: unknown): boolean {
-            return received !== original;
-        },
-        toString(): string {
-            return 'differentReferenceThan';
-        },
-        getExpectedType(): string {
-            return 'object';
-        },
-    };
-}
