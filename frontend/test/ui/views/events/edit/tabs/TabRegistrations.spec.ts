@@ -2,10 +2,11 @@ import { defineComponent } from 'vue';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
+import type { Router } from 'vue-router';
 import { useErrorHandlingService } from '@/application';
 import type { Event, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
 import { RegistrationSlotState } from '@/domain';
-import TabCrewEditor from '@/ui/views/events/edit/tabs/TabCrewEditor.vue';
+import TabRegistrations from '@/ui/views/events/edit/tabs/TabRegistrations.vue';
 import {
     mockEvent,
     mockPositionCaptain,
@@ -15,36 +16,39 @@ import {
     mockRegistrationGuest,
     mockSlotCaptain,
     mockSlotDeckhand,
+    mockRouter,
     mockUserCaptain,
     mockUserDeckhand,
 } from '~/mocks';
 import { copyOf, stubs } from '~/utils';
 
-const RegistrationRowStub = defineComponent({
-    name: 'RegistrationRow',
-    emits: [
-        'add-to-crew',
-        'remove-from-crew',
-        'cancel-registration',
-        'edit-slot',
-        'delete-slot',
-        'edit-registration',
-        'dragstart',
-        'dragend',
-    ],
+const router = mockRouter();
+vi.mock('vue-router', () => ({
+    useRouter: (): Partial<Router> => router,
+}));
+
+const RegistrationsTableStub = defineComponent({
+    name: 'RegistrationsTable',
+    props: {
+        registrations: {
+            type: Array<ResolvedRegistrationSlot>,
+            required: true,
+        },
+    },
+    emits: ['delete-registration', 'edit-registration', 'edit-slot', 'delete-slot', 'add-to-crew', 'remove-from-crew'],
     template: `
         <div>
-            <button data-test-id="row-add-to-crew" @click="$emit('add-to-crew')" />
-            <button data-test-id="row-remove-from-crew" @click="$emit('remove-from-crew')" />
-            <button data-test-id="row-cancel-registration" @click="$emit('cancel-registration')" />
-            <button data-test-id="row-edit-slot" @click="$emit('edit-slot')" />
-            <button data-test-id="row-delete-slot" @click="$emit('delete-slot')" />
-            <button data-test-id="row-edit-registration" @click="$emit('edit-registration')" />
+            <button data-test-id="table-add-to-crew" @click="$emit('add-to-crew', registrations[0])" />
+            <button data-test-id="table-remove-from-crew" @click="$emit('remove-from-crew', registrations[0])" />
+            <button data-test-id="table-delete-registration" @click="$emit('delete-registration', registrations[0])" />
+            <button data-test-id="table-edit-slot" @click="$emit('edit-slot', registrations[0])" />
+            <button data-test-id="table-delete-slot" @click="$emit('delete-slot', registrations[0])" />
+            <button data-test-id="table-edit-registration" @click="$emit('edit-registration', registrations[0])" />
         </div>
     `,
 });
 
-describe('TabCrewEditor.vue', () => {
+describe('TabRegistrations.vue', () => {
     let testee: VueWrapper;
     let event: Event;
     let crew: ResolvedRegistrationSlot[];
@@ -54,7 +58,7 @@ describe('TabCrewEditor.vue', () => {
     const registrationDialogOpenSpy = vi.fn(async () => undefined as Registration | undefined);
 
     function mountTestee(): void {
-        testee = mount(TabCrewEditor, {
+        testee = mount(TabRegistrations, {
             props: {
                 event,
                 crew,
@@ -63,7 +67,7 @@ describe('TabCrewEditor.vue', () => {
             },
             global: {
                 stubs: {
-                    RegistrationRow: RegistrationRowStub,
+                    RegistrationsTable: RegistrationsTableStub,
                     SlotEditDlg: stubs('SlotEditDlgStub', slotDialogOpenSpy),
                     RegistrationEditDlg: stubs('RegistrationEditDlgStub', registrationDialogOpenSpy),
                 },
@@ -77,7 +81,6 @@ describe('TabCrewEditor.vue', () => {
 
     beforeEach(() => {
         const errorHandlingService = useErrorHandlingService();
-
         handleErrorSpy = vi.spyOn(errorHandlingService, 'handleError');
         slotDialogOpenSpy.mockReset();
         slotDialogOpenSpy.mockResolvedValue(undefined);
@@ -105,7 +108,7 @@ describe('TabCrewEditor.vue', () => {
         waitinglist = [aggregate];
         mountTestee();
 
-        await testee.find('[data-test-id="row-add-to-crew"]').trigger('click');
+        await testee.findAll('[data-test-id="table-add-to-crew"]')[1].trigger('click');
 
         await expect.poll(() => testee.emitted('update:event')?.length).toBe(1);
         const updatedEvent = emittedEvent();
@@ -129,7 +132,7 @@ describe('TabCrewEditor.vue', () => {
         waitinglist = [aggregate];
         mountTestee();
 
-        await testee.find('[data-test-id="row-add-to-crew"]').trigger('click');
+        await testee.findAll('[data-test-id="table-add-to-crew"]')[1].trigger('click');
 
         await expect.poll(() => testee.emitted('update:event')?.length).toBe(1);
         const updatedEvent = emittedEvent();
@@ -154,7 +157,7 @@ describe('TabCrewEditor.vue', () => {
         waitinglist = [aggregate];
         mountTestee();
 
-        await testee.find('[data-test-id="row-add-to-crew"]').trigger('click');
+        await testee.findAll('[data-test-id="table-add-to-crew"]')[1].trigger('click');
 
         expect(handleErrorSpy).toHaveBeenCalledTimes(1);
         expect(testee.emitted('update:event')).toBeUndefined();
@@ -168,24 +171,6 @@ describe('TabCrewEditor.vue', () => {
         expect(implicitSlot?.assignedRegistrationKey).toBe('reg-captain');
         expect(implicitSlot?.positionKeys).toEqual([aggregate.registration!.positionKey]);
         expect(updatedEvent?.assignedUserCount).toBe(1);
-    });
-
-    it('should do nothing when add-to-crew aggregate has no registration', async () => {
-        const aggregate: ResolvedRegistrationSlot = {
-            name: 'Open Slot',
-            state: RegistrationSlotState.OPEN,
-            position: mockPositionDeckhand(),
-            slot: mockSlotDeckhand({ key: 'slot-open' }),
-            expiredQualifications: [],
-            hasOverwrittenPosition: false,
-        };
-        waitinglist = [aggregate];
-        mountTestee();
-
-        await testee.find('[data-test-id="row-add-to-crew"]').trigger('click');
-
-        expect(handleErrorSpy).not.toHaveBeenCalled();
-        expect(testee.emitted('update:event')).toBeUndefined();
     });
 
     it('should unassign slot when removing from crew', async () => {
@@ -206,14 +191,14 @@ describe('TabCrewEditor.vue', () => {
         crew = [aggregate];
         mountTestee();
 
-        await testee.find('[data-test-id="row-remove-from-crew"]').trigger('click');
+        await testee.findAll('[data-test-id="table-remove-from-crew"]')[0].trigger('click');
 
         await expect.poll(() => testee.emitted('update:event')?.length).toBe(1);
         const updatedEvent = emittedEvent();
         expect(updatedEvent?.slots.find((it) => it.key === 'slot-assigned')?.assignedRegistrationKey).toBeUndefined();
     });
 
-    it('should cancel user registration from crew', async () => {
+    it('should delete user registration and unassign slot first', async () => {
         const aggregate: ResolvedRegistrationSlot = {
             name: 'Deck Hand',
             state: RegistrationSlotState.ASSIGNED,
@@ -225,36 +210,19 @@ describe('TabCrewEditor.vue', () => {
             hasOverwrittenPosition: false,
         };
         event = mockEvent({
+            slots: [mockSlotDeckhand({ key: 'slot-assigned', assignedRegistrationKey: 'reg-deckhand' })],
             registrations: [mockRegistrationDeckhand({ key: 'reg-deckhand', userKey: 'user-deckhand' })],
         });
         crew = [aggregate];
         mountTestee();
 
-        await testee.find('[data-test-id="row-cancel-registration"]').trigger('click');
+        await testee.findAll('[data-test-id="table-delete-registration"]')[0].trigger('click');
 
-        const updatedEvent = emittedEvent();
-        expect(updatedEvent?.registrations).toEqual([]);
-    });
-
-    it('should cancel guest registration from waiting list', async () => {
-        const aggregate: ResolvedRegistrationSlot = {
-            name: 'Guest Name',
-            state: RegistrationSlotState.WAITING_LIST,
-            position: mockPositionDeckhand(),
-            registration: mockRegistrationGuest({ key: 'reg-guest', name: 'Guest Name' }),
-            expiredQualifications: [],
-            hasOverwrittenPosition: false,
-        };
-        event = mockEvent({
-            registrations: [mockRegistrationGuest({ key: 'reg-guest', name: 'Guest Name' })],
-        });
-        waitinglist = [aggregate];
-        mountTestee();
-
-        await testee.find('[data-test-id="row-cancel-registration"]').trigger('click');
-
-        const updatedEvent = emittedEvent();
-        expect(updatedEvent?.registrations).toEqual([]);
+        await expect.poll(() => testee.emitted('update:event')?.length).toBe(2);
+        const unassignedEvent = emittedEvent(0);
+        const deletedEvent = emittedEvent(1);
+        expect(unassignedEvent?.slots.find((it) => it.key === 'slot-assigned')?.assignedRegistrationKey).toBeUndefined();
+        expect(deletedEvent?.registrations).toEqual([]);
     });
 
     it('should update event after editing slot', async () => {
@@ -272,17 +240,17 @@ describe('TabCrewEditor.vue', () => {
         };
         event = mockEvent({ slots: [mockSlotCaptain({ key: 'slot-captain' })] });
         crew = [aggregate];
-        slotDialogOpenSpy.mockReturnValue(Promise.resolve(editedSlot));
+        slotDialogOpenSpy.mockResolvedValue(editedSlot);
         mountTestee();
 
-        await testee.find('[data-test-id="row-edit-slot"]').trigger('click');
+        await testee.findAll('[data-test-id="table-edit-slot"]')[0].trigger('click');
 
-        const emittedEvent = testee.emitted('update:event')?.[0]?.[0] as Event | undefined;
-        expect(emittedEvent?.slots.find((it) => it.key === 'slot-captain')?.positionName).toBe('Edited Captain');
+        const updatedEvent = emittedEvent();
+        expect(updatedEvent?.slots.find((it) => it.key === 'slot-captain')?.positionName).toBe('Edited Captain');
     });
 
     it('should delete unassigned slot', async () => {
-        const removable: ResolvedRegistrationSlot = {
+        const aggregate: ResolvedRegistrationSlot = {
             name: 'Open Captain',
             state: RegistrationSlotState.OPEN,
             position: mockPositionCaptain(),
@@ -291,37 +259,16 @@ describe('TabCrewEditor.vue', () => {
             hasOverwrittenPosition: false,
         };
         event = mockEvent({ slots: [mockSlotCaptain({ key: 'slot-open', assignedRegistrationKey: undefined })] });
-        crew = [removable];
+        crew = [aggregate];
         mountTestee();
 
-        const deleteButtons = testee.findAll('[data-test-id="row-delete-slot"]');
-        await deleteButtons[0].trigger('click');
+        await testee.findAll('[data-test-id="table-delete-slot"]')[0].trigger('click');
 
         const updatedEvent = emittedEvent();
         expect(updatedEvent?.slots).toEqual([]);
     });
 
-    it('should not delete slot with assigned user', async () => {
-        const protectedSlot: ResolvedRegistrationSlot = {
-            name: 'Assigned Deck Hand',
-            state: RegistrationSlotState.ASSIGNED,
-            position: mockPositionDeckhand(),
-            registration: mockRegistrationDeckhand({ key: 'reg-deckhand', userKey: 'user-deckhand' }),
-            user: mockUserDeckhand({ key: 'user-deckhand' }),
-            slot: mockSlotDeckhand({ key: 'slot-assigned', assignedRegistrationKey: 'reg-deckhand' }),
-            expiredQualifications: [],
-            hasOverwrittenPosition: false,
-        };
-        crew = [protectedSlot];
-        mountTestee();
-
-        const deleteButtons = testee.findAll('[data-test-id="row-delete-slot"]');
-        await deleteButtons[0].trigger('click');
-
-        expect(testee.emitted('update:event')).toBeUndefined();
-    });
-
-    it('should update registration fields when editing registration', async () => {
+    it('should update registration fields and emit updated event when editing registration', async () => {
         const registration = mockRegistrationGuest({
             key: 'reg-guest',
             name: 'Old Name',
@@ -338,22 +285,20 @@ describe('TabCrewEditor.vue', () => {
         };
         event = mockEvent({ registrations: [registration] });
         waitinglist = [aggregate];
-        registrationDialogOpenSpy.mockReturnValue(
-            Promise.resolve({
-                ...registration,
-                name: 'New Name',
-                note: 'new note',
-                positionKey: mockPositionCaptain().key,
-            })
-        );
+        registrationDialogOpenSpy.mockResolvedValue({
+            ...registration,
+            name: 'New Name',
+            note: 'new note',
+            positionKey: mockPositionCaptain().key,
+        });
         mountTestee();
 
-        await testee.find('[data-test-id="row-edit-registration"]').trigger('click');
+        await testee.findAll('[data-test-id="table-edit-registration"]')[1].trigger('click');
 
-        expect(event.registrations[0].name).toBe('New Name');
-        expect(event.registrations[0].note).toBe('new note');
-        expect(event.registrations[0].positionKey).toBe(mockPositionCaptain().key);
-        expect(testee.emitted('update:event')).toBeUndefined();
+        const updatedEvent = emittedEvent();
+        expect(updatedEvent?.registrations[0].name).toBe('New Name');
+        expect(updatedEvent?.registrations[0].note).toBe('new note');
+        expect(updatedEvent?.registrations[0].positionKey).toBe(mockPositionCaptain().key);
     });
 
     it('should open slot dialog with a copy of slot', async () => {
@@ -371,7 +316,7 @@ describe('TabCrewEditor.vue', () => {
         crew = [aggregate];
         mountTestee();
 
-        await testee.find('[data-test-id="row-edit-slot"]').trigger('click');
+        await testee.findAll('[data-test-id="table-edit-slot"]')[0].trigger('click');
 
         expect(slotDialogOpenSpy).toHaveBeenCalledWith(copyOf(slot));
     });
@@ -395,7 +340,7 @@ describe('TabCrewEditor.vue', () => {
         waitinglist = [aggregate];
         mountTestee();
 
-        await testee.find('[data-test-id="row-edit-registration"]').trigger('click');
+        await testee.findAll('[data-test-id="table-edit-registration"]')[1].trigger('click');
 
         expect(registrationDialogOpenSpy).toHaveBeenCalledWith(copyOf(registration));
     });

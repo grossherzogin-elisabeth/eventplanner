@@ -171,7 +171,7 @@ async function editSlot(aggregate: ResolvedRegistrationSlot): Promise<void> {
     if (!aggregate.slot) {
         return;
     }
-    const editedSlot = await editSlotDialog.value?.open(aggregate.slot);
+    const editedSlot = await editSlotDialog.value?.open(deepCopy(aggregate.slot));
     if (editedSlot) {
         const updatedEvent = eventService.updateSlot(deepCopy(props.event), editedSlot);
         emit('update:event', updatedEvent);
@@ -183,7 +183,7 @@ async function editRegistration(aggregate: ResolvedRegistrationSlot): Promise<vo
         const updatedEvent = deepCopy(props.event);
         const registration = eventService.findRegistration(updatedEvent, aggregate.user?.key, aggregate.name);
         if (registration) {
-            const updatedRegistration = await editRegistrationDialog.value?.open(registration);
+            const updatedRegistration = await editRegistrationDialog.value?.open(deepCopy(registration));
             if (updatedRegistration) {
                 registration.positionKey = updatedRegistration.positionKey;
                 registration.note = updatedRegistration.note;
