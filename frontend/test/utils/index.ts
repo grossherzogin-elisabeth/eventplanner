@@ -3,3 +3,5 @@ export * from './happyDOM';
 export * from './selectDropdownOption';
 export * from './withSetup';
 export * from './permissions';
+export * from './stubs';
+export * from './matchers';

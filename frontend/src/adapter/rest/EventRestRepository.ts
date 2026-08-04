@@ -12,6 +12,7 @@ export interface SlotRepresentation {
     positionKeys: string[];
     name?: string | null;
     assignedRegistrationKey?: string | null;
+    implicit?: boolean;
 }
 
 export interface RegistrationRepresentation {
@@ -84,59 +85,6 @@ export interface OptimizeEventSlotsRequest {
 }
 
 export class EventRestRepository implements EventRepository {
-    public static mapEventToDomain(eventRepresentation: EventRepresentation): Event {
-        const event: Event = {
-            key: eventRepresentation.key,
-            type: eventRepresentation.type as EventType,
-            signupType: eventRepresentation.signupType as EventSignupType,
-            name: eventRepresentation.name,
-            description: eventRepresentation.description,
-            state: eventRepresentation.state as EventState,
-            start: deserializeDate(eventRepresentation.start),
-            end: deserializeDate(eventRepresentation.end),
-            days: 0,
-            registrations: eventRepresentation.registrations.map((it) => ({
-                key: it.key,
-                positionKey: it.positionKey,
-                userKey: it.userKey ?? undefined,
-                name: it.name ?? undefined,
-                note: it.note ?? undefined,
-                confirmed: it.confirmed ?? undefined,
-                overnightStay: it.overnightStay ?? undefined,
-                arrival: it.arrival ? deserializeDate(it.arrival) : undefined,
-            })),
-            locations: eventRepresentation.locations.map((locationRepresentation, index) => ({
-                name: locationRepresentation.name,
-                icon: locationRepresentation.icon,
-                address: locationRepresentation.address,
-                country: locationRepresentation.country,
-                order: index + 1,
-                addressLink: locationRepresentation.addressLink,
-                information: locationRepresentation.information,
-                informationLink: locationRepresentation.informationLink,
-                eta: locationRepresentation.eta ? deserializeDate(locationRepresentation.eta) : undefined,
-                etd: locationRepresentation.etd ? deserializeDate(locationRepresentation.etd) : undefined,
-            })),
-            slots: EventRestRepository.mapSlotsToDomain(eventRepresentation.slots),
-            assignedUserCount: eventRepresentation.slots.filter((it) => it.assignedRegistrationKey).length,
-            canSignedInUserJoin: false,
-            canSignedInUserLeave: false,
-            canSignedInUserUpdateRegistration: false,
-        };
-        return event;
-    }
-
-    private static mapSlotsToDomain(slots: SlotRepresentation[]): Slot[] {
-        return slots.map((slotRepresentation) => ({
-            key: slotRepresentation.key,
-            order: slotRepresentation.order,
-            criticality: slotRepresentation.criticality,
-            positionKeys: slotRepresentation.positionKeys,
-            positionName: slotRepresentation.name ?? undefined,
-            assignedRegistrationKey: slotRepresentation.assignedRegistrationKey ?? undefined,
-        }));
-    }
-
     public async findByKey(key: EventKey): Promise<Event> {
         const response = await fetch(`/api/v1/events/${key}`, {
             credentials: 'include',
@@ -205,6 +153,7 @@ export class EventRestRepository implements EventRepository {
                 positionKeys: it.positionKeys,
                 name: it.positionName,
                 assignedRegistrationKey: it.assignedRegistrationKey,
+                implicit: it.implicit,
             })),
         };
         const response = await fetch(`/api/v1/events`, {
@@ -258,6 +207,7 @@ export class EventRestRepository implements EventRepository {
                 positionKeys: it.positionKeys,
                 name: it.positionName,
                 assignedRegistrationKey: it.assignedRegistrationKey,
+                implicit: it.implicit,
             })),
             registrationsToRemove: registrationsToRemove?.map((it) => it.key),
             registrationsToAdd: registrationsToAdd?.map((it) => ({
@@ -340,6 +290,7 @@ export class EventRestRepository implements EventRepository {
                 positionKeys: it.positionKeys,
                 name: it.positionName,
                 assignedRegistrationKey: it.assignedRegistrationKey,
+                implicit: it.implicit,
             })),
             registrations: event.registrations.map((it) => ({
                 key: it.key,
@@ -366,5 +317,59 @@ export class EventRestRepository implements EventRepository {
         }
         const responseData: SlotRepresentation[] = await response.clone().json();
         return EventRestRepository.mapSlotsToDomain(responseData);
+    }
+
+    public static mapEventToDomain(eventRepresentation: EventRepresentation): Event {
+        const event: Event = {
+            key: eventRepresentation.key,
+            type: eventRepresentation.type as EventType,
+            signupType: eventRepresentation.signupType as EventSignupType,
+            name: eventRepresentation.name,
+            description: eventRepresentation.description,
+            state: eventRepresentation.state as EventState,
+            start: deserializeDate(eventRepresentation.start),
+            end: deserializeDate(eventRepresentation.end),
+            days: 0,
+            registrations: eventRepresentation.registrations.map((it) => ({
+                key: it.key,
+                positionKey: it.positionKey,
+                userKey: it.userKey ?? undefined,
+                name: it.name ?? undefined,
+                note: it.note ?? undefined,
+                confirmed: it.confirmed ?? undefined,
+                overnightStay: it.overnightStay ?? undefined,
+                arrival: it.arrival ? deserializeDate(it.arrival) : undefined,
+            })),
+            locations: eventRepresentation.locations.map((locationRepresentation, index) => ({
+                name: locationRepresentation.name,
+                icon: locationRepresentation.icon,
+                address: locationRepresentation.address,
+                country: locationRepresentation.country,
+                order: index + 1,
+                addressLink: locationRepresentation.addressLink,
+                information: locationRepresentation.information,
+                informationLink: locationRepresentation.informationLink,
+                eta: locationRepresentation.eta ? deserializeDate(locationRepresentation.eta) : undefined,
+                etd: locationRepresentation.etd ? deserializeDate(locationRepresentation.etd) : undefined,
+            })),
+            slots: EventRestRepository.mapSlotsToDomain(eventRepresentation.slots),
+            assignedUserCount: eventRepresentation.slots.filter((it) => it.assignedRegistrationKey).length,
+            canSignedInUserJoin: false,
+            canSignedInUserLeave: false,
+            canSignedInUserUpdateRegistration: false,
+        };
+        return event;
+    }
+
+    private static mapSlotsToDomain(slots: SlotRepresentation[]): Slot[] {
+        return slots.map((slotRepresentation) => ({
+            key: slotRepresentation.key,
+            order: slotRepresentation.order,
+            criticality: slotRepresentation.criticality,
+            positionKeys: slotRepresentation.positionKeys,
+            positionName: slotRepresentation.name ?? undefined,
+            assignedRegistrationKey: slotRepresentation.assignedRegistrationKey ?? undefined,
+            implicit: slotRepresentation.implicit ?? undefined,
+        }));
     }
 }

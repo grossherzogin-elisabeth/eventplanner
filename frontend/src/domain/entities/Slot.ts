@@ -3,6 +3,9 @@ import type { PositionKey, RegistrationKey, SlotCriticality } from '../index';
 export type SlotKey = string;
 
 export interface Slot {
+    /**
+     * Unique key of this slot
+     */
     key: SlotKey;
     /**
      * Display order of this slot
@@ -13,7 +16,7 @@ export interface Slot {
      */
     criticality: SlotCriticality;
     /**
-     * A list-admin of possible positions required for a user to fill this slot
+     * A list of possible positions required for a user to fill this slot
      */
     positionKeys: PositionKey[];
     /**
@@ -21,5 +24,14 @@ export interface Slot {
      */
     positionName?: string;
 
+    /**
+     * If assigned, the key of the registration filling this slot
+     */
     assignedRegistrationKey?: RegistrationKey;
+
+    /**
+     * This slot has been implicitly created and will be removed when the assigned registration gets deleted or
+     * unassigned
+     */
+    implicit?: boolean;
 }

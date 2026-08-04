@@ -12,11 +12,12 @@ import org.jspecify.annotations.Nullable;
 
 public record SlotJsonEntity(
     @NonNull String key,
-    int order,
-    int criticality,
+    @Nullable Integer order,
+    @Nullable Integer criticality,
     @Nullable List<String> positions,
     @Nullable String name,
-    @Nullable String assignedRegistration
+    @Nullable String assignedRegistration,
+    @Nullable Boolean implicit
 ) {
 
     public static @NonNull SlotJsonEntity fromDomain(@NonNull EventSlot domain) {
@@ -28,22 +29,24 @@ public record SlotJsonEntity(
             domain.getName(),
             domain.getAssignedRegistration() != null
                 ? domain.getAssignedRegistration().value()
-                : null
+                : null,
+            domain.isImplicit()
         );
     }
 
     public @NonNull EventSlot toDomain() {
         return new EventSlot(
             new SlotKey(key),
-            order,
-            criticality,
+            order != null ? order : 0,
+            criticality != null ? criticality : 0,
             positions != null
                 ? positions.stream().map(PositionKey::new).toList()
                 : Collections.emptyList(),
             name,
             assignedRegistration != null
                 ? new RegistrationKey(assignedRegistration)
-                : null
+                : null,
+            Boolean.TRUE.equals(implicit)
         );
     }
 }

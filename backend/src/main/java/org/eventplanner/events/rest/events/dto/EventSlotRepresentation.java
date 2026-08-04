@@ -12,11 +12,12 @@ import org.jspecify.annotations.Nullable;
 
 public record EventSlotRepresentation(
     @NonNull String key,
-    @NonNull Integer order,
-    @NonNull Integer criticality,
+    @Nullable Integer order,
+    @Nullable Integer criticality,
     @NonNull List<String> positionKeys,
     @Nullable String name,
-    @Nullable String assignedRegistrationKey
+    @Nullable String assignedRegistrationKey,
+    @Nullable Boolean implicit
 ) implements Serializable {
 
     public static @NonNull EventSlotRepresentation fromDomain(@NonNull EventSlot domain) {
@@ -28,20 +29,22 @@ public record EventSlotRepresentation(
             domain.getName(),
             domain.getAssignedRegistration() != null
                 ? domain.getAssignedRegistration().value()
-                : null
+                : null,
+            domain.isImplicit()
         );
     }
 
     public @NonNull EventSlot toDomain() {
         return new EventSlot(
             new SlotKey(key),
-            order,
-            criticality,
+            order != null ? order : 0,
+            criticality != null ? criticality : 0,
             positionKeys().stream().map((PositionKey::new)).toList(),
             name,
             assignedRegistrationKey != null
                 ? new RegistrationKey(assignedRegistrationKey)
-                : null
+                : null,
+            Boolean.TRUE.equals(implicit)
         );
     }
 }

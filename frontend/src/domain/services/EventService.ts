@@ -182,7 +182,7 @@ export class EventService {
         return openSlots.length > 0;
     }
 
-    public findRegistration(event: Event, userKey?: string, name?: string): Registration | undefined {
+    public findRegistration(event: Event, userKey?: UserKey, name?: string): Registration | undefined {
         return event.registrations.find((r) => (userKey && r.userKey === userKey) || (name && r.name === name));
     }
 

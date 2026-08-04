@@ -3,6 +3,7 @@ package org.eventplanner.events.domain.entities.events;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -83,16 +84,18 @@ public class Event {
         registrations = temp.stream().toList();
     }
 
-    public void removeRegistration(@NonNull final Registration registration) {
-        log.trace("Removing registration {} from event {}", registration.getKey(), key);
+    public void removeRegistration(@NonNull final RegistrationKey registrationKey) {
+        log.trace("Removing registration {} from event {}", registrationKey, key);
         var temp = new LinkedList<>(registrations);
-        temp.removeIf(it -> it.getKey().equals(registration.getKey()));
+        temp.removeIf(it -> it.getKey().equals(registrationKey));
         registrations = temp.stream().toList();
 
-        var assignedSlot = findSlotByAssignedRegistrationKey(registration.getKey());
+        var assignedSlot = findSlotByAssignedRegistrationKey(registrationKey);
         if (assignedSlot.isPresent()) {
             assignedSlot.get().setAssignedRegistration(null);
+            removeInvalidSlotAssignments();
             optimizeSlots();
+            removeEmptyImplicitSlots();
         }
     }
 
@@ -121,7 +124,7 @@ public class Event {
         return true;
     }
 
-    public @NonNull Event clearConfidentialData(@NonNull final SignedInUser signedInUser) {
+    public void clearConfidentialData(@NonNull final SignedInUser signedInUser) {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
             && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(state)) {
             // clear assigned registrations on slots if crew is not published yet
@@ -141,10 +144,9 @@ public class Event {
                     it.setConfirmedAt(null);
                 });
         }
-        return this;
     }
 
-    public @NonNull Event removeInvalidSlotAssignments() {
+    public void removeInvalidSlotAssignments() {
         log.trace("Removing invalid slot assignments on event {}", key);
         var counter = 0;
         var validRegistrationKeys = registrations.stream().map(Registration::getKey).toList();
@@ -158,7 +160,18 @@ public class Event {
         if (counter > 0) {
             log.info("Removed {} invalid slot assignments for event {}", counter, key);
         }
-        return this;
+    }
+
+    public void removeEmptyImplicitSlots() {
+        log.trace("Removing empty implicit slots from event {}", key);
+        var counter = slots.size();
+        slots = slots.stream()
+            .filter(s -> s.getAssignedRegistration() != null || !s.isImplicit())
+            .toList();
+        counter -= slots.size();
+        if (counter >= 1) {
+            log.info("Removed {} empty implicit slots from event {}", counter, key);
+        }
     }
 
     /**
@@ -166,7 +179,8 @@ public class Event {
      * team members
      */
     public void optimizeSlots() {
-        log.trace("Optimizing slot assignments for event {}", key);
+        log.debug("Optimizing slot assignments for event {}", key);
+        var assignedRegistrationsBefore = new HashSet<>(getAssignedRegistrationKeys());
         var counter = 0;
         for (int i = 0; i < slots.size(); i++) {
             var slot = slots.get(i);
@@ -188,6 +202,14 @@ public class Event {
                     break;
                 }
             }
+        }
+
+        // safety check: this should never happen
+        var assignedRegistrationsAfter = new HashSet<>(getAssignedRegistrationKeys());
+        if (assignedRegistrationsAfter.size() != assignedRegistrationsBefore.size()
+            || !assignedRegistrationsAfter.containsAll(assignedRegistrationsBefore)) {
+            log.error("Slot optimization changed assigned registrations");
+            throw new IllegalStateException("Slot optimization failed");
         }
         if (counter > 0) {
             log.info("Optimized slots by moving {} assignments on event {}", counter, key);
