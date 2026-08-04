@@ -156,6 +156,7 @@ public class RegistrationConfirmationUseCase {
         }
         log.info("User {} confirmed their participation on event {}", registration.getUserKey(), event.getKey());
         registrationService.updateRegistration(
+            event,
             new UpdateRegistrationSpec(
                 event.getKey(),
                 registration.getKey(),
@@ -166,9 +167,9 @@ public class RegistrationConfirmationUseCase {
                 Instant.now(),
                 registration.getOvernightStay(),
                 registration.getArrival()
-            ),
-            event
+            )
         );
+        // event does not need to be updated, because all changed data resides in the registration alone
     }
 
     @PreAuthorize("hasAuthority('registrations:write') " +
@@ -195,7 +196,8 @@ public class RegistrationConfirmationUseCase {
         }
 
         log.info("User {} declined their participation on event {}", registration.getUserKey(), event.getKey());
-        registrationService.removeRegistration(registration.getKey(), event, true);
+        registrationService.removeRegistration(event, registration.getKey(), true);
+        event.removeRegistration(registration.getKey());
         eventRepository.update(event);
     }
 }

@@ -50,7 +50,6 @@ public class UpdateEventUseCase {
         log.info("Updating event {}", event.getKey());
 
         var previousState = event.getState();
-        List<Registration> registrations = new LinkedList<>(event.getRegistrations());
         List<RegistrationKey> assignedRegistrations = new LinkedList<>();
         List<RegistrationKey> unassignedRegistrations = new LinkedList<>();
 
@@ -59,13 +58,15 @@ public class UpdateEventUseCase {
         // make sure we have a clean state
         event.removeInvalidSlotAssignments();
         // make sure all registrations are added and up to date  before updating crew assignments
-        addRegistrations(signedInUser, event, spec, registrations);
+        addRegistrations(signedInUser, event, spec);
         updateRegistrations(signedInUser, event, spec);
         updateCrewAssignments(signedInUser, event, spec, assignedRegistrations, unassignedRegistrations);
         // remove registrations last, so removals don't interfere with crew assignments
         removeRegistrations(signedInUser, event, spec);
 
+        event.removeInvalidSlotAssignments();
         event.optimizeSlots();
+        event.removeEmptyImplicitSlots();
 
         // save changes
         var updatedEvent = eventRepository.update(event);
@@ -76,14 +77,14 @@ public class UpdateEventUseCase {
             assignedRegistrations = updatedEvent.getAssignedRegistrationKeys();
         }
 
-        sendNotifications(updatedEvent, registrations, assignedRegistrations, unassignedRegistrations);
+        sendNotifications(updatedEvent, event.getRegistrations(), assignedRegistrations, unassignedRegistrations);
 
         return updatedEvent;
     }
 
     private void updateEventDetails(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final Event event,
+        @NonNull Event event,
         @NonNull final UpdateEventSpec spec
     ) {
         if (!signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
@@ -133,9 +134,8 @@ public class UpdateEventUseCase {
 
     private void addRegistrations(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final Event event,
-        @NonNull final UpdateEventSpec spec,
-        @NonNull final List<Registration> registrations
+        @NonNull Event event,
+        @NonNull final UpdateEventSpec spec
     ) {
         if (!signedInUser.hasPermission(Permission.WRITE_REGISTRATIONS)) {
             return;
@@ -145,8 +145,8 @@ public class UpdateEventUseCase {
         List<RegistrationKey> createdRegistrations = new LinkedList<>();
         for (final var createSpec : ofNullable(spec.registrationsToAdd()).orElse(emptyList())) {
             try {
-                var registration = registrationService.createRegistration(createSpec, event);
-                registrations.add(registration);
+                var registration = registrationService.createRegistration(event, createSpec);
+                event.addRegistration(registration);
                 createdRegistrations.add(registration.getKey());
             } catch (Exception e) {
                 if (createSpec.userKey() != null) {
@@ -163,7 +163,7 @@ public class UpdateEventUseCase {
 
     private void updateRegistrations(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final Event event,
+        @NonNull Event event,
         @NonNull final UpdateEventSpec spec
     ) {
         if (!signedInUser.hasPermission(Permission.WRITE_REGISTRATIONS)) {
@@ -174,7 +174,7 @@ public class UpdateEventUseCase {
         List<RegistrationKey> updatedRegistrations = new LinkedList<>();
         for (final var updateSpec : ofNullable(spec.registrationsToUpdate()).orElse(emptyList())) {
             try {
-                var registration = registrationService.updateRegistration(updateSpec, event);
+                var registration = registrationService.updateRegistration(event, updateSpec);
                 updatedRegistrations.add(registration.getKey());
             } catch (Exception e) {
                 log.error("Failed to update registration {}", updateSpec.registrationKey(), e);
@@ -187,7 +187,7 @@ public class UpdateEventUseCase {
 
     private void removeRegistrations(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final Event event,
+        @NonNull Event event,
         @NonNull final UpdateEventSpec spec
     ) {
         if (!signedInUser.hasPermission(Permission.WRITE_REGISTRATIONS)) {
@@ -198,7 +198,8 @@ public class UpdateEventUseCase {
         List<RegistrationKey> removedRegistrations = new LinkedList<>();
         for (final var registrationKey : ofNullable(spec.registrationsToRemove()).orElse(emptyList())) {
             try {
-                registrationService.removeRegistration(registrationKey, event, false);
+                registrationService.removeRegistration(event, registrationKey, false);
+                event.removeRegistration(registrationKey);
                 removedRegistrations.add(registrationKey);
             } catch (Exception e) {
                 log.error("Failed to remove registration {}", registrationKey, e);
@@ -211,7 +212,7 @@ public class UpdateEventUseCase {
 
     private void updateCrewAssignments(
         @NonNull final SignedInUser signedInUser,
-        @NonNull final Event event,
+        @NonNull Event event,
         @NonNull final UpdateEventSpec spec,
         @NonNull final List<RegistrationKey> assignedRegistrations,
         @NonNull final List<RegistrationKey> unassignedRegistrations
