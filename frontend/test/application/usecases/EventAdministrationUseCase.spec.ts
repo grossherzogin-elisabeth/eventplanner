@@ -3,7 +3,7 @@ import type { EventRegistrationsRepository, EventRepository } from '@/applicatio
 import type { AuthService, ErrorHandlingService, EventCachingService, NotificationService } from '@/application/services';
 import { EventAdministrationUseCase } from '@/application/usecases/EventAdministrationUseCase';
 import type { Event, EventService, ResolvedRegistrationSlot, User } from '@/domain';
-import { EventState } from '@/domain';
+import { EventState, SlotCriticality } from '@/domain';
 import {
     mockEvent,
     mockPositionCaptain,
@@ -194,6 +194,27 @@ describe('EventAdministrationUseCase', () => {
         expect(eventRegistrationsRepository.createRegistration).toHaveBeenCalledWith('event-1', registration);
         expect(eventCachingService.updateCache).toHaveBeenCalledWith(saved);
         expect(notificationService.success).toHaveBeenCalled();
+    });
+
+    it('should assign registration to implicit slot', async () => {
+        const registration = mockRegistrationEngineer({ key: 'reg-implicit' });
+        const assignedSlot = mockSlotCaptain({ assignedRegistrationKey: 'reg-existing' });
+        const unassignedSlot = mockSlotDeckhand({ assignedRegistrationKey: undefined });
+        const event = mockEvent({ slots: [assignedSlot, unassignedSlot], assignedUserCount: 0 });
+
+        const result = await testee.assignRegistrationToImplicitSlot(event, registration);
+
+        expect(result).toBe(event);
+        expect(result.slots).toHaveLength(3);
+        expect(result.slots[2]).toEqual({
+            key: expect.any(String),
+            positionKeys: [registration.positionKey],
+            criticality: SlotCriticality.Optional,
+            assignedRegistrationKey: registration.key,
+            order: 2,
+            implicit: true,
+        });
+        expect(result.assignedUserCount).toBe(2);
     });
 
     it('should assign user to slot and optimize slots', async () => {

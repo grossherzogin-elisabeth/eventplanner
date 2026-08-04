@@ -2,8 +2,7 @@ import type { EventRegistrationsRepository, EventRepository } from '@/applicatio
 import type { AuthService, ErrorHandlingService, EventCachingService, NotificationService } from '@/application/services';
 import { filterUndefined } from '@/common';
 import type { Event, EventKey, EventService, Registration, ResolvedRegistrationSlot, SlotKey, User } from '@/domain';
-import { SlotCriticality } from '@/domain';
-import { EventState } from '@/domain';
+import { EventState, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
 export class EventAdministrationUseCase {
