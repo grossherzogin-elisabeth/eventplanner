@@ -1,8 +1,8 @@
 import { defineComponent } from 'vue';
+import type { Router } from 'vue-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import type { Router } from 'vue-router';
 import { useErrorHandlingService } from '@/application';
 import type { Event, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
 import { RegistrationSlotState } from '@/domain';
@@ -14,9 +14,9 @@ import {
     mockRegistrationCaptain,
     mockRegistrationDeckhand,
     mockRegistrationGuest,
+    mockRouter,
     mockSlotCaptain,
     mockSlotDeckhand,
-    mockRouter,
     mockUserCaptain,
     mockUserDeckhand,
 } from '~/mocks';
