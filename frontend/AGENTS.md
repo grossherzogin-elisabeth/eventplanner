@@ -76,6 +76,7 @@
   must be mocked.
 - Use test alias `~` for helpers/mocks (`vitest.config.ts`).
 - Prefer shared fixtures from `~/mocks` (see `test/mocks/index.ts`) instead of ad-hoc inline entity factories in specs.
+- Prefer existing shared stubs/matchers/helpers from `test/utils` before creating new local ones in a spec.
 - Use test names in the `it('should ...')` style for consistency across specs.
 - Name the tested unit `testee`; for specs with repeated dependency wiring, define reusable DI requirements in
   `beforeEach()` (see `test/application/services/EventCachingService.spec.ts`).
@@ -87,4 +88,3 @@
 - Import order is auto-sorted by Prettier plugins (`.prettierrc.json`); keep alias usage consistent (`@` for `src`, `~`
   for `test`).
 - For i18n imports, keep the `vue-i18n` alias behavior from `vite.config.ts` (`vue-i18n/dist/vue-i18n.cjs.js`).
-

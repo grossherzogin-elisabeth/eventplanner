@@ -46,19 +46,20 @@ public class RegistrationUseCase {
         if (spec.isSelfSignup()) {
             signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
             log.info("User {} signed up on event {}", spec.userKey(), event.getKey());
-            registrationService.createUserRegistration(spec, event);
+            registrationService.createUserRegistration(event, spec);
         } else if (spec.userKey() != null) {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             log.info("Adding registration for user {} on event {}", spec.userKey(), event.getKey());
-            registrationService.createUserRegistration(spec, event);
+            registrationService.createUserRegistration(event, spec);
         } else if (spec.name() != null) {
             signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
             log.info("Adding registration for guest {} on event {}", spec.name(), event.getKey());
-            registrationService.createGuestRegistration(spec, event);
+            registrationService.createGuestRegistration(event, spec);
         } else {
             throw new IllegalArgumentException("Either a user key or a name must be provided");
         }
 
+        // reload the event from db
         return eventRepository.findByKey(spec.eventKey())
             .orElseThrow(() -> new IllegalStateException("Event does not exist after update"));
     }
@@ -92,7 +93,8 @@ public class RegistrationUseCase {
             log.info("Removing guest registration of {} from event {}", registration.getName(), event.getKey());
         }
 
-        registrationService.removeRegistration(registrationKey, event, isRemovedByUser);
+        registrationService.removeRegistration(event, registration.getKey(), isRemovedByUser);
+        event.removeRegistration(registration.getKey());
         return eventRepository.update(event);
     }
 
@@ -122,9 +124,8 @@ public class RegistrationUseCase {
             log.info("Updating registration {} on event {}", spec.registrationKey(), event.getKey());
         }
 
-        registrationService.updateRegistration(spec, event);
+        registrationService.updateRegistration(event, spec);
         return eventRepository.findByKey(spec.eventKey())
             .orElseThrow(() -> new IllegalStateException("Event does not exist after update"));
     }
-
 }

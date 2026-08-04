@@ -59,7 +59,7 @@ public class EventJpaRepositoryAdapter implements EventRepository {
         }
         var entity = EventJpaEntity.fromDomain(event);
         entity = this.eventJpaRepository.save(entity);
-        return entity.toDomain(event.getRegistrations());
+        return entity.toDomain(getRegistrations(event.getKey()));
     }
 
     @Override

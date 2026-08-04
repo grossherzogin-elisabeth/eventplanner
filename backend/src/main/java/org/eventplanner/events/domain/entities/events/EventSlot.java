@@ -32,6 +32,11 @@ public class EventSlot {
     private @NonNull List<PositionKey> positions = new LinkedList<>();
     private @Nullable String name = null;
     private @Nullable RegistrationKey assignedRegistration = null;
+    /**
+     * This slot has been implicitly created and will be removed automatically when the assigned
+     * registration gets deleted or unassigned.
+     */
+    private boolean implicit = false;
 
     public static @NonNull EventSlot of(@NonNull PositionKey... positions) {
         return new EventSlot(
@@ -40,7 +45,8 @@ public class EventSlot {
             0,
             List.of(positions),
             null,
-            null
+            null,
+            false
         );
     }
 

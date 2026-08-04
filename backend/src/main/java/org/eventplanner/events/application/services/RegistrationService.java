@@ -33,23 +33,24 @@ public class RegistrationService {
     private final PositionRepository positionRepository;
 
     /**
-     * Add a registration to the specified event and send notifications when needed.<br>
-     * Note: This function also adds the registration to the event. However, it does not persist the changes to the
-     * event.
+     * Add a registration to the specified event and send notifications when needed.
+     * <br>
+     * Note: This function does not alter the passed event object in any way. The event either has to be updated
+     * separately or reloaded from db to contain the new registration.
      *
-     * @param spec  registration creation specification
      * @param event the event to add the registration on
+     * @param spec  registration creation specification
      * @return the newly created registration
      * @throws IllegalArgumentException when the spec is invalid
      */
     public @NonNull Registration createRegistration(
-        @NonNull final CreateRegistrationSpec spec,
-        @NonNull final Event event
+        @NonNull final Event event,
+        @NonNull final CreateRegistrationSpec spec
     ) throws IllegalArgumentException, IllegalStateException {
         if (spec.userKey() != null) {
-            return createUserRegistration(spec, event);
+            return createUserRegistration(event, spec);
         } else if (spec.name() != null) {
-            return createGuestRegistration(spec, event);
+            return createGuestRegistration(event, spec);
         } else {
             throw new IllegalArgumentException("Registration must have a user key or a name");
         }
@@ -57,18 +58,19 @@ public class RegistrationService {
 
     /**
      * Add a user registration to the specified event and send notifications to the user and all crew planners, when
-     * the registration has been added by the user themselves.<br>
-     * Note: This function also adds the registration to the event. However, it does not persist the changes to the
-     * event.
+     * the registration has been added by the user themselves.
+     * <br>
+     * Note: This function does not alter the passed event object in any way. The event either has to be updated
+     * separately or reloaded from db to contain the new registration.
      *
-     * @param spec  registration creation specification
      * @param event the event to add the registration on
+     * @param spec  registration creation specification
      * @return the newly created registration
      * @throws IllegalArgumentException when the spec is invalid
      */
     public @NonNull Registration createUserRegistration(
-        @NonNull final CreateRegistrationSpec spec,
-        @NonNull final Event event
+        @NonNull final Event event,
+        @NonNull final CreateRegistrationSpec spec
     ) throws IllegalArgumentException {
         if (spec.userKey() == null) {
             throw new IllegalArgumentException("User registration must have a user key");
@@ -90,7 +92,6 @@ public class RegistrationService {
         var user = userService.getUserByKey(spec.userKey())
             .orElseThrow(() -> new IllegalArgumentException("User does not exist"));
         var registration = registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
-        event.addRegistration(registration);
 
         // send notifications
         notificationService.sendAddedToWaitingListNotification(user, event);
@@ -110,18 +111,19 @@ public class RegistrationService {
     }
 
     /**
-     * Add a guest registration to the specified event.<br>
-     * Note: This function also adds the registration to the event. However, it does not persist the changes to the
-     * event.
+     * Add a guest registration to the specified event.
+     * <br>
+     * Note: This function does not alter the passed event object in any way. The event either has to be updated
+     * separately or reloaded from db to contain the new registration.
      *
-     * @param spec  registration creation specification
      * @param event the event to add the registration on
+     * @param spec  registration creation specification
      * @return the newly created registration
      * @throws IllegalArgumentException when the spec is invalid
      */
     public @NonNull Registration createGuestRegistration(
-        @NonNull final CreateRegistrationSpec spec,
-        @NonNull final Event event
+        @NonNull final Event event,
+        @NonNull final CreateRegistrationSpec spec
     ) throws IllegalArgumentException {
         if (spec.name() == null) {
             throw new IllegalArgumentException("Guest registration must have a name");
@@ -135,34 +137,33 @@ public class RegistrationService {
             throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
         }
 
-        var registration = registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
-        event.addRegistration(registration);
-        return registration;
+        return registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
     }
 
     /**
-     * Remove a registration from the specified event and send notifications when needed.<br>
-     * Note: This function also removes the registration from the event and clears the slot assignment if present.
-     * However, it does not persist the changes to the event.
+     * Remove a registration from the specified event and send notifications when needed.
+     * <br>
+     * Note: This function does not alter the passed event object in any way. The event either has to be
+     * updated separately or reloaded from db to no longer contain the deleted registration.
      *
-     * @param registrationKey the key of the registration to remove
      * @param event           the event to remove the registration from
+     * @param registrationKey the key of the registration to remove
      * @throws NoSuchElementException when the registration does not exist on the event
      */
     @Transactional
     public void removeRegistration(
-        @NonNull final RegistrationKey registrationKey,
         @NonNull final Event event,
+        @NonNull final RegistrationKey registrationKey,
         final boolean isRemovedByUser
     ) throws NoSuchElementException {
         log.info("Removing registration {} from event {}", registrationKey, event.getKey());
         var registration = event.findRegistrationByKey(registrationKey)
             .orElseThrow(() -> new NoSuchElementException("Registration does not exist"));
         registrationRepository.deleteRegistration(registration.getKey(), event.getKey());
+
+        // send notifications
+
         var assignedSlot = event.findSlotByAssignedRegistrationKey(registration.getKey());
-
-        event.removeRegistration(registration);
-
         var user = userService.getUserByKey(registration.getUserKey());
         if (user.isEmpty()) {
             if (registration.getUserKey() != null) {
@@ -171,7 +172,6 @@ public class RegistrationService {
             return;
         }
 
-        // send notifications
         if (assignedSlot.isPresent()) {
             notificationService.sendRemovedFromCrewNotification(user.get(), event);
         } else {
@@ -189,16 +189,16 @@ public class RegistrationService {
 
     /**
      * Updates a registration.<br>
-     * Note: This function does not alter a potential slot assignment in any way!
+     * Note: This function does not alter the event or a potential slot assignment in any way!
      *
-     * @param spec  the update specification
      * @param event the event the registration exists on
+     * @param spec  the update specification
      * @return the updated registration
      * @throws NoSuchElementException when the registration does not exist on the event
      */
     public @NonNull Registration updateRegistration(
-        @NonNull final UpdateRegistrationSpec spec,
-        @NonNull final Event event
+        @NonNull final Event event,
+        @NonNull final UpdateRegistrationSpec spec
     ) throws NoSuchElementException {
         log.info("Updating registration {} on event {}", spec.registrationKey(), event.getKey());
         var registration = event.findRegistrationByKey(spec.registrationKey())

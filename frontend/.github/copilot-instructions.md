@@ -25,6 +25,7 @@ Docker, CI). This file keeps frontend-only guidance concise.
 - Format/lint/typecheck: `npm run check:format` ; `npm run check:lint`
 - Build: `npm run build`
 - Tests: `npm run test:coverage` (CET timezone). Uses Vitest + happy-dom + MSW.
+- In tests, prefer existing shared stubs/matchers/helpers from `test/utils` before introducing new ad-hoc versions.
 
 ## Local dev
 

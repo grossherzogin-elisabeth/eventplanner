@@ -20,6 +20,7 @@ import org.eventplanner.events.adapter.jpa.events.EventJpaRepository;
 import org.eventplanner.events.adapter.jpa.events.RegistrationJpaEntity;
 import org.eventplanner.events.adapter.jpa.events.RegistrationJpaRepository;
 import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.eventplanner.testdata.PositionKeys;
 import org.eventplanner.testutil.EmailSpy;
@@ -169,12 +170,46 @@ class DeleteRegistrationIntegrationTest extends EmailSpy {
         verifyEmailsSent(atLeastOnce(), NotificationType.REMOVED_FROM_CREW);
     }
 
-    private Event saveTestEvent(Event event) {
+    @Test
+    void shouldDeleteOwnRegistrationAndImplicitSlot() throws Exception {
+        var registrationToDelete = createRegistration()
+            .withPosition(PositionKeys.DECKHAND)
+            .withUserKey(TestUser.TEAM_MEMBER.getKey());
+        var event = createEvent()
+            .withRegistrations(List.of(
+                registrationToDelete,
+                createRegistration(),
+                createRegistration()
+            ));
+        var implicitSlot = EventSlot.of(PositionKeys.DECKHAND);
+        implicitSlot.setImplicit(true);
+        implicitSlot.setAssignedRegistration(registrationToDelete.getKey());
+        event.getSlots().add(implicitSlot);
+        var initialSlotCount = event.getSlots().size();
+        saveTestEvent(event);
+
+        webMvc.perform(delete("/api/v1/events/" + event.getKey() + "/registrations/" + registrationToDelete.getKey())
+                .with(withAuthentication(TestUser.TEAM_MEMBER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.key").value(event.getKey().value()))
+            .andExpect(jsonPath("$.registrations", iterableWithSize(2)))
+            .andExpect(jsonPath("$.slots", iterableWithSize(initialSlotCount - 1)));
+
+        assertThat(registrationJpaRepository.findById(registrationToDelete.getKey().value())).isEmpty();
+        var persistedEvent = eventJpaRepository.findById(event.getKey().value()).orElseThrow();
+        var persistedRegistrations = registrationJpaRepository.findAllByEventKey(event.getKey().value()).stream()
+            .map(RegistrationJpaEntity::toDomain)
+            .toList();
+        assertThat(persistedEvent.toDomain(persistedRegistrations).getSlots()).noneMatch(EventSlot::isImplicit);
+        verifyEmailsSent(atLeastOnce(), NotificationType.REMOVED_FROM_CREW);
+    }
+
+    private void saveTestEvent(Event event) {
         eventJpaRepository.save(EventJpaEntity.fromDomain(event));
         registrationJpaRepository.saveAll(event.getRegistrations().stream()
             .map(r -> RegistrationJpaEntity.fromDomain(r, event.getKey()))
             .toList());
-        return event;
     }
 }
-
