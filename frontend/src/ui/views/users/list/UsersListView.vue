@@ -47,84 +47,7 @@
                 @click="editUser($event.item, $event.event)"
             >
                 <template #row="{ item }">
-                    <td class="w-1/3 font-semibold whitespace-nowrap">
-                        <p class="mb-2">
-                            {{ item.nickName || item.firstName }} {{ item.lastName }}
-                            <span
-                                v-if="item.verified"
-                                class="bg-success-container/50 inline-flex h-5 w-5 items-center justify-center rounded-full"
-                            >
-                                <i class="fa-solid fa-check text-onsuccess-container text-xs"></i>
-                            </span>
-                        </p>
-                        <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
-                            {{ item.rolesStr }}
-                        </p>
-                        <p v-else class="max-w-64 truncate text-sm italic">Keine Rolle zugewiesen</p>
-                    </td>
-                    <td class="w-1/3">
-                        <div class="flex max-w-64 flex-wrap gap-1">
-                            <span
-                                v-for="position in item.positions"
-                                :key="position.key"
-                                class="tag custom"
-                                :style="{ '--color': position.color }"
-                            >
-                                {{ position.name }}
-                            </span>
-                        </div>
-                    </td>
-                    <td class="w-1/5">
-                        <div class="flex space-x-8">
-                            <div :class="{ 'opacity-25': !item.singleDayEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item.singleDayEventsCount || '-' }}</p>
-                                <p class="text-sm" title="Tagesfahrten">TF</p>
-                            </div>
-                            <div :class="{ 'opacity-25': !item.weekendEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item.weekendEventsCount || '-' }}</p>
-                                <p class="text-sm" title="Wochenendfahrten">WE</p>
-                            </div>
-                            <div :class="{ 'opacity-25': !item.multiDayEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item.multiDayEventsCount || '-' }}</p>
-                                <p class="text-sm" title="Sommerreisen und mehrtägige Fahrten">SR</p>
-                            </div>
-                            <div :class="{ 'opacity-25': !item.waitingListCount }">
-                                <p class="mb-1 font-semibold">{{ item.waitingListCount || '-' }}</p>
-                                <p class="text-sm" title="Warteliste">WL</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="w-1/12">
-                        <div class="flex items-center justify-end">
-                            <div v-if="item.qualifications?.length === 0" class="status-badge neutral">
-                                <i class="fa-solid fa-question-circle"></i>
-                                <span>Keine Angaben</span>
-                            </div>
-                            <div
-                                v-else-if="item.expiredQualifications.length > 0"
-                                class="status-badge error"
-                                :title="item.expiredQualifications.join(', ')"
-                            >
-                                <i class="fa-solid fa-ban"></i>
-                                <span> {{ item.expiredQualifications.length }} abgelaufen </span>
-                            </div>
-                            <div
-                                v-else-if="item.soonExpiringQualifications.length > 0"
-                                class="status-badge warning"
-                                :title="item.soonExpiringQualifications.join(', ')"
-                            >
-                                <i class="fa-solid fa-warning"></i>
-                                <span>
-                                    <template v-if="item.soonExpiringQualifications.length === 1"> 1 läuft bald ab </template>
-                                    <template v-else> {{ item.soonExpiringQualifications.length }} laufen bald ab </template>
-                                </span>
-                            </div>
-                            <div v-else class="status-badge success">
-                                <i class="fa-solid fa-check-circle"></i>
-                                <span>Alle gültig</span>
-                            </div>
-                        </div>
-                    </td>
+                    <UserRow :user="item" />
                 </template>
                 <template #context-menu="{ item }">
                     <li
@@ -151,9 +74,6 @@
                         <i class="fa-solid fa-trash-alt" />
                         <span>Nutzer löschen</span>
                     </li>
-                </template>
-                <template #loading>
-                    <UsersListSkeletonLoader :count="20" />
                 </template>
             </VTable>
         </div>
@@ -211,8 +131,8 @@ import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
-import { filterUndefined, hasAnyOverlap } from '@/common';
-import type { Event, EventKey, Position, PositionKey, QualificationKey, User } from '@/domain';
+import { hasAnyOverlap } from '@/common';
+import type { Event, EventKey, PositionKey, User } from '@/domain';
 import { EventType, Permission, Role, useEventService, useUserService } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
@@ -227,7 +147,7 @@ import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
 import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
-import UsersListSkeletonLoader from '@/ui/views/users/list/UsersListSkeletonLoader.vue';
+import UserRow from '@/ui/views/users/list/UserRow.vue';
 
 enum Tab {
     TEAM_MEMBERS = 'members',
@@ -236,14 +156,10 @@ enum Tab {
 }
 
 interface UserRegistrations extends User, Selectable {
-    positions: Position[];
-    rolesStr: string;
     singleDayEventsCount: number;
     weekendEventsCount: number;
     multiDayEventsCount: number;
     waitingListCount: number;
-    expiredQualifications: QualificationKey[];
-    soonExpiringQualifications: QualificationKey[];
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -288,7 +204,7 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
         (it) =>
             matchesActiveCategory(it) &&
             (!filterOnlyActive.value || hasAnyEvents(it)) &&
-            (!filterExpiredQualifications.value || it.expiredQualifications.length > 0) &&
+            (!filterExpiredQualifications.value || usersService.getExpiredQualifications(it).length > 0) &&
             (!filterPendingVerification.value || !it.verified) &&
             (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys ?? [])) &&
             (filterEvent.value === undefined || participatesInEvent(it)) &&
@@ -403,7 +319,6 @@ async function fetchEvents(): Promise<void> {
 }
 
 async function fetchUsers(): Promise<void> {
-    const positions = await usersUseCase.resolvePositionNames();
     const userlist: User[] = await usersUseCase.getUsers();
     const currentYear = new Date().getFullYear();
     const events = (
@@ -428,14 +343,10 @@ async function fetchUsers(): Promise<void> {
     users.value = userlist.map((user: User) => {
         return {
             ...user,
-            rolesStr: user.roles?.map((k) => t(`domain.role.${k}`)).join(', ') || '',
             waitingListCount: registrationsWaitinglist.filter((it) => it.userKey === user.key).length,
             multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
             weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,
             singleDayEventsCount: registrationsSingleDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
-            positions: user.positionKeys?.map((key) => positions.get(key)).filter(filterUndefined) ?? [],
-            expiredQualifications: usersService.getExpiredQualifications(user),
-            soonExpiringQualifications: usersService.getSoonExpiringQualifications(user),
         };
     });
 }

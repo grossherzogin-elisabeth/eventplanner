@@ -7,40 +7,27 @@
         @reordered="updateOrders"
         @click="editLocation($event.item)"
     >
-        <template #row="{ item, first, last }">
-            <td class="hidden py-0">
-                <div class="text-secondary flex flex-col items-center">
-                    <div
-                        class="min-h-4 grow border-r-2 border-dashed border-current"
-                        :class="{ 'min-h-2 opacity-0': first, 'min-h-6': last }"
-                    ></div>
-                    <div class="my-1 h-4 w-4 rounded-full border-2 border-current"></div>
-                    <div
-                        class="min-h-4 grow border-r-2 border-dashed border-current"
-                        :class="{ 'min-h-2 opacity-0': last, 'min-h-6': first }"
-                    ></div>
-                </div>
-            </td>
-            <td :key="item.icon" class="text-xl">
-                <i class="fa-solid" :class="item.icon" />
+        <template #row="{ item }">
+            <td :key="item?.icon" class="pr-4 text-xl">
+                <i class="fa-solid" :class="item?.icon" />
             </td>
             <td class="w-full max-w-[50vw] sm:w-1/2 sm:max-w-full">
                 <p class="font-semibold">
-                    <span>{{ item.name }}</span>
+                    <span>{{ item?.name }}</span>
                 </p>
-                <p v-if="item.address" class="mt-1 truncate text-sm font-light">
+                <p v-if="item?.address" class="mt-1 truncate text-sm font-light">
                     <span>{{ item.address }}</span>
                 </p>
             </td>
             <td class="hidden w-1/2 whitespace-nowrap sm:table-cell">
                 <p class="mb-2 text-sm">
                     <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.eta') }}:</span>
-                    <span v-if="item.eta" class="font-semibold">{{ $d(item.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
+                    <span v-if="item?.eta" class="font-semibold">{{ $d(item.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
                     <span v-else>-</span>
                 </p>
                 <p class="text-sm">
                     <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.etd') }}: </span>
-                    <span v-if="item.etd" class="font-semibold">{{ $d(item.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
+                    <span v-if="item?.etd" class="font-semibold">{{ $d(item.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
                     <span v-else>-</span>
                 </p>
             </td>

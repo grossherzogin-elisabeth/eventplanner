@@ -11,7 +11,7 @@ const routeMeta: RouteMetaData = {
 const route: RouteRecordRaw = {
     path: 'list',
     name: Routes.EventsList,
-    component: () => import('./EventsListView.vue'),
+    component: () => import('./EventListView.vue'),
     meta: routeMeta,
 };
 

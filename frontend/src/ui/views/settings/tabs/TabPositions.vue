@@ -7,28 +7,28 @@
                 @click="editPosition($event.item)"
             >
                 <template #row="{ item }">
-                    <td>
+                    <td class="pr-4">
                         <div class="bg-surface-container-high flex w-12 items-center justify-center rounded-full px-2 py-1">
                             <i class="fa-solid fa-arrow-up text-xs"></i>
                             <span class="ml-2 text-center text-sm font-semibold">
-                                {{ item.prio }}
+                                {{ item?.prio }}
                             </span>
                         </div>
                     </td>
                     <td class="w-3/4 min-w-80">
-                        <p class="truncate font-semibold" data-test-id="position-name">{{ item.name }}</p>
+                        <p class="truncate font-semibold" data-test-id="position-name">{{ item?.name }}</p>
                     </td>
                     <td class="w-1/4">
                         <div class="flex items-center space-x-2">
-                            <div class="mb-0.5 h-6 w-6 rounded-lg" :style="{ background: item.color }"></div>
-                            <p class="truncate font-bold" :style="{ color: item.color }">
-                                {{ item.color }}
+                            <div class="mb-0.5 h-6 w-6 rounded-lg" :style="{ background: item?.color }"></div>
+                            <p class="truncate font-bold" :style="{ color: item?.color }">
+                                {{ item?.color }}
                             </p>
                         </div>
                     </td>
                     <td class="w-96">
-                        <span class="tag custom" :style="{ '--color': item.color }">
-                            {{ item.name }}
+                        <span class="tag custom" :style="{ '--color': item?.color }">
+                            {{ item?.name }}
                         </span>
                     </td>
                 </template>

@@ -58,92 +58,7 @@
                 @click="editEvent($event.item, $event.event)"
             >
                 <template #row="{ item }">
-                    <!-- date -->
-                    <td class="hidden w-1/6 whitespace-nowrap lg:table-cell">
-                        <p class="mb-1 font-semibold 2xl:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
-                        <p class="mb-1 hidden font-semibold 2xl:block">{{ formatDateRange(item.start, item.end) }}</p>
-                        <p class="text-sm">{{ $t('views.event-admin-list.table.day-count', { count: item.days }) }}</p>
-                    </td>
-                    <!-- name -->
-                    <td class="w-2/3 max-w-[80vw] font-semibold whitespace-nowrap" style="max-width: min(65vw, 20rem)">
-                        <p class="mb-1 truncate" :class="{ 'text-error line-through': item.state === EventState.Canceled }">
-                            <span v-if="item.state === EventState.Draft" class="opacity-50">{{ $t('domain.event-state.draft') }}: </span>
-                            <span v-else-if="item.state === EventState.Canceled">{{ $t('domain.event-state.canceled') }}: </span>
-                            {{ item.name }}
-                        </p>
-
-                        <p class="hidden truncate text-sm font-light lg:block">
-                            <template v-if="item.description">{{ item.description }}</template>
-                            <template v-else-if="item.locations.length === 0">{{ $t('views.event-admin-list.table.no-route') }}</template>
-                            <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
-                        </p>
-                        <p class="truncate text-sm font-light lg:hidden">
-                            {{ formatDateRange(item.start, item.end) }} |
-                            {{ $t('views.event-admin-list.table.day-count', { count: item.days }) }}
-                        </p>
-                        <div class="flex w-full items-center gap-px pt-2">
-                            <template v-for="(position, index) in item.assignedPositions" :key="`${position.key}-${index}`">
-                                <div :data-index="index" class="w-1 grow">
-                                    <VTooltip :delay="50">
-                                        <template #tooltip>
-                                            <span class="tag custom" :style="{ '--color': position.color }">
-                                                {{ position.name }}
-                                            </span>
-                                        </template>
-                                        <template #default>
-                                            <div class="h-2 rounded-sm" :style="{ backgroundColor: position.color }" />
-                                        </template>
-                                    </VTooltip>
-                                </div>
-                            </template>
-                        </div>
-                    </td>
-                    <!-- status -->
-                    <td class="w-1/6">
-                        <EventStateBadge :event="item" />
-                    </td>
-                    <!-- crew -->
-                    <td class="w-1/6 min-w-24 whitespace-nowrap">
-                        <p class="mb-1 pl-4 font-semibold">
-                            {{ item.assignedUserCount }}
-                            <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
-                        </p>
-                        <p class="pl-4 text-sm">{{ $t('views.event-admin-list.table.team') }}</p>
-                    </td>
-                </template>
-                <template #loading>
-                    <tr v-for="i in 20" :key="i" class="animate-pulse">
-                        <td></td>
-                        <td class="w-1/2 max-w-[65vw]">
-                            <p class="bg-surface-container-highest mb-1 h-5 w-64 rounded-lg"></p>
-                            <p class="flex items-center space-x-2 text-sm font-light">
-                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <div class="status-badge neutral">
-                                <i class="fa-solid fa-circle text-surface-container-high"></i>
-                                <span class="bg-surface-container-high my-0.5 inline-block h-4 w-12 rounded-lg"></span>
-                            </div>
-                        </td>
-                        <td class="w-1/6">
-                            <p class="bg-surface-container-highest mb-1 h-5 w-16 rounded-lg"></p>
-                            <p class="bg-surface-container-highest h-3 w-10 rounded-lg"></p>
-                        </td>
-                        <td class="w-2/6">
-                            <p class="bg-surface-container-highest mb-1 h-5 w-56 rounded-lg"></p>
-                            <p class="bg-surface-container-highest h-3 w-16 rounded-lg"></p>
-                        </td>
-
-                        <td>
-                            <div class="px-4 py-2">
-                                <i class="fa-solid fa-circle text-surface-container-highest"></i>
-                            </div>
-                        </td>
-                        <td></td>
-                    </tr>
+                    <EventAdminListRow :event="item" />
                 </template>
                 <template #context-menu="{ item }">
                     <li class="permission-read-events">
@@ -326,17 +241,15 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEventAdministrationUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
 import { filterUndefined } from '@/common';
-import { DateTimeFormat } from '@/common/date';
-import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
-import { EventState, Permission, SlotCriticality, useEventService } from '@/domain';
+import type { Event, EventType, InputSelectOption, Registration } from '@/domain';
+import { EventState, Permission, useEventService } from '@/domain';
 import type { ConfirmationDialog, Dialog, Sheet } from '@/ui/components/common';
-import { AsyncButton, VConfirmationDialog, VMultiSelectActions, VSearchButton, VTable, VTabs, VTooltip } from '@/ui/components/common';
+import { AsyncButton, VConfirmationDialog, VMultiSelectActions, VSearchButton, VTable, VTabs } from '@/ui/components/common';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { useEventExports } from '@/ui/composables/EventExports.ts';
 import { useEventStates } from '@/ui/composables/EventStates';
 import { useEventTypes } from '@/ui/composables/EventTypes';
@@ -346,17 +259,9 @@ import { useSession } from '@/ui/composables/Session';
 import { restoreScrollPosition } from '@/ui/plugins/router';
 import { Routes } from '@/ui/views/Routes';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
-import EventStateBadge from '@/ui/views/events/list-admin/EventStateBadge.vue';
 import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
-
-interface EventTableViewItem extends Event {
-    selected: boolean;
-    isPastEvent: boolean;
-    waitingListCount: number;
-    hasOpenSlots: boolean;
-    hasOpenRequiredSlots: boolean;
-    assignedPositions: Position[];
-}
+import EventAdminListRow from './EventAdminListRow.vue';
+import type { Selectable } from '@/ui/model/Selectable.ts';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
@@ -380,7 +285,7 @@ const filterFreeSlots = useQuery<boolean>('has-free-slots', false).parameter;
 const filterEventStates = useQuery<EventState[]>('states', []).parameter;
 const filterEventType = useQuery<EventType[]>('types', []).parameter;
 
-const events = ref<EventTableViewItem[] | null>(null);
+const events = ref<(Event & Selectable)[] | null>(null);
 const eventExports = useEventExports();
 const tab = ref<string>('future');
 
@@ -391,17 +296,17 @@ const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
 const eventPreviewSheet = ref<Sheet<Event, Event> | null>(null);
 
-const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
+const filteredEvents = computed<(Event & Selectable)[] | undefined>(() => {
     const f = filter.value.toLowerCase();
     return events.value
         ?.filter((it) => eventService.doesEventMatchFilter(it, f))
         .filter((it) => filterEventType.value.length === 0 || filterEventType.value.includes(it.type))
-        .filter((it) => !filterFreeSlots.value || it.hasOpenSlots)
+        .filter((it) => !filterFreeSlots.value || eventService.hasOpenSlots(it))
         .filter((it) => filterEventStates.value.length === 0 || filterEventStates.value.includes(it.state))
-        .filter((it) => !filterWaitinglist.value || it.waitingListCount > 0);
+        .filter((it) => !filterWaitinglist.value || it.registrations.length - it.assignedUserCount > 0);
 });
 
-const selectedEvents = computed<EventTableViewItem[] | undefined>(() => {
+const selectedEvents = computed<(Event & Selectable)[] | undefined>(() => {
     return filteredEvents.value?.filter((it) => it.selected);
 });
 
@@ -466,31 +371,30 @@ async function fetchEvents(): Promise<void> {
     }
 }
 
-async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
+async function fetchEventsByYear(year: number): Promise<Event[]> {
     const evts = await eventUseCase.getEvents(year);
     return evts.map((evt) => {
-        const openSlots = eventService.getOpenSlots(evt);
-        const openRequiredSlots = openSlots.filter((slot) => slot.criticality !== SlotCriticality.Optional);
-        const openOptionalSlots = openSlots.filter((slot) => slot.criticality === SlotCriticality.Optional);
+        // const openSlots = eventService.getOpenSlots(evt);
+        // const openRequiredSlots = openSlots.filter((slot) => slot.criticality !== SlotCriticality.Optional);
+        // const openOptionalSlots = openSlots.filter((slot) => slot.criticality === SlotCriticality.Optional);
 
-        const tableItem: EventTableViewItem = {
-            ...evt,
-            selected: false,
-            isPastEvent: evt.start.getTime() < Date.now(),
-            waitingListCount: evt.registrations.length - evt.assignedUserCount,
-            hasOpenSlots: openOptionalSlots.length > 0,
-            hasOpenRequiredSlots: openRequiredSlots.length > 0,
-            assignedPositions: eventService
-                .getAssignedRegistrations(evt)
-                .map((reg) => positions.get(reg.positionKey))
-                .filter(filterUndefined)
-                .sort((a, b) => b.prio - a.prio),
-        };
-        return tableItem;
+        // const tableItem: Event = {
+        //     ...evt,
+        //     isPastEvent: evt.start.getTime() < Date.now(),
+        //     waitingListCount: evt.registrations.length - evt.assignedUserCount,
+        //     hasOpenSlots: openOptionalSlots.length > 0,
+        //     hasOpenRequiredSlots: openRequiredSlots.length > 0,
+        //     assignedPositions: eventService
+        //         .getAssignedRegistrations(evt)
+        //         .map((reg) => positions.get(reg.positionKey))
+        //         .filter(filterUndefined)
+        //         .sort((a, b) => b.prio - a.prio),
+        // };
+        return evt;
     });
 }
 
-async function editEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {
+async function editEvent(item: Event, evt: MouseEvent): Promise<void> {
     let to: RouteLocationRaw = {
         name: Routes.EventDetails,
         params: { year: item.start.getFullYear(), key: item.key },

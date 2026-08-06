@@ -6,20 +6,20 @@
         @click="editUserQualification($event.item)"
     >
         <template #row="{ item }">
-            <td :key="item.icon" class="text-xl">
-                <i class="fa-solid" :class="item.icon" />
+            <td :key="item?.icon" class="pr-4 text-xl">
+                <i class="fa-solid" :class="item?.icon" />
             </td>
             <td class="w-2/3 min-w-80">
-                <p class="mb-1 font-semibold">{{ item.name }}</p>
+                <p class="mb-1 font-semibold">{{ item?.name }}</p>
                 <p class="text-sm">
-                    {{ item.description }}
+                    {{ item?.description }}
                 </p>
             </td>
 
             <td class="w-1/6">
                 <div class="flex flex-wrap items-center justify-end">
                     <span
-                        v-for="positionKey in item.grantsPositions"
+                        v-for="positionKey in item?.grantsPositions"
                         :key="positionKey"
                         class="tag custom"
                         :style="{ '--color': positions.get(positionKey).color }"
@@ -29,8 +29,8 @@
                 </div>
             </td>
             <td class="w-1/6">
-                <template v-if="item.expires">
-                    <p v-if="item.expiresAt" class="mb-1 font-semibold">
+                <template v-if="item?.expires">
+                    <p v-if="item?.expiresAt" class="mb-1 font-semibold">
                         {{ $d(item.expiresAt, DateTimeFormat.DD_MM_YYYY) }}
                     </p>
                     <p v-else class="mb-1 font-semibold">k.A.</p>
@@ -43,18 +43,7 @@
             </td>
             <td>
                 <div class="flex items-center justify-end">
-                    <div v-if="item.isExpired" class="status-badge error">
-                        <i class="fa-solid fa-ban"></i>
-                        <span>Abgelaufen</span>
-                    </div>
-                    <div v-else-if="item.willExpireSoon" class="status-badge warning">
-                        <i class="fa-solid fa-warning"></i>
-                        <span> Läuft bald ab</span>
-                    </div>
-                    <div v-else class="status-badge success">
-                        <i class="fa-solid fa-check-circle"></i>
-                        <span>Gültig</span>
-                    </div>
+                    <UserQualificationStatus :value="item" />
                 </div>
             </td>
         </template>
@@ -83,6 +72,7 @@ import { usePositions } from '@/ui/composables/Positions.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
 import { useSession } from '@/ui/composables/Session.ts';
 import UserQualificationDetailsDlg from '../components/UserQualificationDetailsDlg.vue';
+import UserQualificationStatus from '@/ui/components/users/UserQualificationStatus.vue';
 
 interface Props {
     modelValue: UserDetails;

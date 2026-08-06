@@ -1,25 +1,43 @@
 <template>
     <VTable :items="userRoles" class="scrollbar-invisible no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20">
         <template #row="{ item }">
-            <td class="w-0">
-                <i class="fa-solid" :class="item.icon"></i>
+            <td class="hidden w-0 pr-4 md:table-cell">
+                <i class="fa-solid text-2xl" :class="item?.icon"></i>
             </td>
-            <td class="w-2/3 min-w-80">
-                <p class="mb-1 font-semibold">{{ item.name }}</p>
-                <p class="text-sm">
-                    {{ item.description }}
-                </p>
-            </td>
-            <td class="w-1/3 min-w-48">
-                <div class="flex items-center justify-end" @click="toggleRole(item.role)">
-                    <div v-if="item.enabled" class="status-badge success" data-test-id="status-assigned">
+            <td class="w-full sm:w-2/3 sm:min-w-80">
+                <div class="mb-2 flex items-center justify-between gap-2">
+                    <p class="mb-1 w-0 grow truncate font-semibold">
+                        <span class="xs:inline hidden md:hidden">
+                            <i class="fa-solid pr-2" :class="item?.icon"></i>
+                        </span>
+                        {{ item?.name }}
+                    </p>
+                    <div v-if="item?.enabled" class="status-badge success text-xs sm:hidden" data-test-id="status-assigned">
                         <i class="fa-solid fa-check-circle"></i>
                         <span>zugewiesen</span>
                     </div>
-                    <div v-else class="status-badge neutral" data-test-id="status-not-assigned">
+                    <div v-else class="status-badge neutral text-xs sm:hidden" data-test-id="status-not-assigned">
                         <i class="fa-solid fa-xmark-circle"></i>
                         <span>nicht zugewiesen</span>
                     </div>
+                </div>
+                <p class="text-sm">{{ item?.description }}</p>
+            </td>
+            <td class="hidden w-1/3 min-w-48 sm:table-cell">
+                <div class="flex items-center justify-end">
+                    <button
+                        v-if="item?.enabled"
+                        class="status-badge success"
+                        data-test-id="status-assigned"
+                        @click="toggleRole(item?.role)"
+                    >
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>zugewiesen</span>
+                    </button>
+                    <button v-else class="status-badge neutral" data-test-id="status-not-assigned" @click="toggleRole(item?.role)">
+                        <i class="fa-solid fa-xmark-circle"></i>
+                        <span>nicht zugewiesen</span>
+                    </button>
                 </div>
             </td>
         </template>
@@ -116,13 +134,15 @@ const userRoles = computed<RoleTableEntry[]>(() => {
     }));
 });
 
-function toggleRole(role: Role): void {
-    const user = props.modelValue;
-    if (user.roles.includes(role)) {
-        user.roles = user.roles.filter((r) => r !== role);
-    } else {
-        user.roles.push(role);
+function toggleRole(role?: Role): void {
+    if (role) {
+        const user = props.modelValue;
+        if (user.roles.includes(role)) {
+            user.roles = user.roles.filter((r) => r !== role);
+        } else {
+            user.roles.push(role);
+        }
+        emit('update:modelValue', user);
     }
-    emit('update:modelValue', user);
 }
 </script>
