@@ -17,7 +17,7 @@
         <div class="flex-1">
             <VTable
                 :items="qualifications"
-                class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20"
+                class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
                 @click="editQualification($event.item)"
             >
                 <template #row="{ item }">
