@@ -17,7 +17,7 @@
     --max-height-6xl: 72rem;
     --max-height-7xl: 80rem;
 
-    --breakpoint-xs: 25rem;
+    --breakpoint-xs: 30rem;
 }
 
 @theme {
