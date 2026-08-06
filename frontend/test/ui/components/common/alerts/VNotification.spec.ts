@@ -10,6 +10,8 @@ describe.each(components)('$component.__name', ({ component }) => {
             slots: { default: 'message to display' },
         });
         expect(testee.text()).toContain('message to display');
+
+        testee.unmount();
     });
 
     it('should display dismiss button', () => {
@@ -18,6 +20,8 @@ describe.each(components)('$component.__name', ({ component }) => {
             props: { dismissable: true },
         });
         expect(testee.find('[data-test-id="button-dismiss"]').isVisible()).toBe(true);
+
+        testee.unmount();
     });
 
     it('should not display dismiss button', () => {
@@ -26,6 +30,8 @@ describe.each(components)('$component.__name', ({ component }) => {
             props: { dismissable: false },
         });
         expect(testee.find('[data-test-id="button-dismiss"]').exists()).toBe(false);
+
+        testee.unmount();
     });
 
     it('should emit dismiss event', async () => {
@@ -35,5 +41,7 @@ describe.each(components)('$component.__name', ({ component }) => {
         });
         await testee.find('[data-test-id="button-dismiss"]').trigger('click');
         expect(testee.emitted('dismiss')).toHaveLength(1);
+
+        testee.unmount();
     });
 });

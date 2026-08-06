@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useAuthService } from '@/application';
@@ -21,6 +21,8 @@ describe('PositionDetailsDlg.vue', () => {
         useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_POSITIONS, Permission.WRITE_POSITIONS] }));
         testee = mount(PositionDetailsDlg);
     });
+
+    afterEach(() => testee.unmount());
 
     describe('create mode', () => {
         beforeEach(async () => {

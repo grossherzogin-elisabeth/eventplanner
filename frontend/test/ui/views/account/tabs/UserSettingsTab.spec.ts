@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { UserSettings } from '@/domain';
@@ -24,6 +24,8 @@ describe('UserSettingsTab.vue', () => {
             },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render users preferred position', async () => {
         const positions = usePositions();

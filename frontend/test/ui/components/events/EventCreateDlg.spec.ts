@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { type MockInstance, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type MockInstance, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useEventAdministrationUseCase, useEventCachingService } from '@/application';
@@ -24,6 +24,8 @@ describe('EventCreateDlg.vue', () => {
         testee = mount(EventCreateDlg);
         await open();
     });
+
+    afterEach(() => testee.unmount());
 
     it('should open dialog', async () => {
         const dialog = testee.find('[data-test-id="event-create-dialog"]');

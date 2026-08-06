@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useErrorHandlingService } from '@/application';
@@ -91,6 +91,8 @@ describe('TabCrewEditor.vue', () => {
         crew = [];
         waitinglist = [];
     });
+
+    afterEach(() => testee.unmount());
 
     it('should assign user registration to matching open slot', async () => {
         const aggregate: ResolvedRegistrationSlot = {

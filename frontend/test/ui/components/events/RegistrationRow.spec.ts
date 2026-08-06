@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useAuthService } from '@/application';
@@ -35,6 +35,8 @@ describe('RegistrationRow.vue', () => {
         });
         await usePositions().loading;
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render user name and position', async () => {
         expect(testee.text()).toContain(registration.name);

@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import type { Router } from 'vue-router';
-import { type MockInstance, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type MockInstance, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useAuthService, useQualificationsAdministrationUseCase } from '@/application';
@@ -29,6 +29,8 @@ describe('TabQualifications.vue', () => {
         createFunc = vi.spyOn(useQualificationsAdministrationUseCase(), 'createQualification');
         await router.push({ name: Routes.AppSettings, query: { tab: 'qualifications' } });
     });
+
+    afterEach(() => testee.unmount());
 
     describe('users with permission qualifications:read', () => {
         beforeEach(async () => {

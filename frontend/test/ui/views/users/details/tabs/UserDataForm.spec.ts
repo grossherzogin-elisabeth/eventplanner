@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { Permission } from '@/domain';
@@ -16,6 +16,8 @@ describe('UserDataForm.vue', () => {
             props: { modelValue: user, errors: {} },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     const inputs = [
         { selector: '[data-test-id="first-name"] input', expected: user.firstName },

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
@@ -44,6 +44,8 @@ describe('EventLocationsCard.vue', () => {
         });
         testee = mount(EventLocationsCard, { props: { event } });
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render all locations', async () => {
         event.locations.forEach((location, index) => {

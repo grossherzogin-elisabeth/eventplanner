@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { ResolvedRegistrationSlot } from '@/domain';
@@ -55,6 +55,8 @@ describe('RegistrationRow.vue', () => {
         };
         mountTestee();
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render guest marker for registration without user', async () => {
         value = {

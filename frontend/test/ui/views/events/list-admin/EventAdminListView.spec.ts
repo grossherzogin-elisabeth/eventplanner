@@ -1,5 +1,5 @@
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
@@ -69,6 +69,8 @@ describe('EventsAdminListView.vue', () => {
         await router.push({ name: Routes.EventsListAdmin });
         testee = mount(EventsAdminListView, { global: { plugins: [router] } });
     });
+
+    afterEach(() => testee.unmount());
 
     it('should show tabs for last, current and next year', async () => {
         expect(testee.find('[data-test-id="tab-2023"]').exists()).toBe(true);

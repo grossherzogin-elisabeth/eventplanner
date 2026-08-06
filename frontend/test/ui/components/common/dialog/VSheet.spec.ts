@@ -23,6 +23,7 @@ describe('VSheet', () => {
 
     afterEach(() => {
         vi.useRealTimers();
+        testee.unmount();
     });
 
     it('should open sheet on method call', async () => {

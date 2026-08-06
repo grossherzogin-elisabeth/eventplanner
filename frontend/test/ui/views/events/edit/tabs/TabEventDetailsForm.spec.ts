@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useAuthService } from '@/application';
@@ -21,6 +21,8 @@ describe('TabEventDetailsForm.vue', () => {
             },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     describe('Users with permission events:write-details', () => {
         beforeAll(() => {

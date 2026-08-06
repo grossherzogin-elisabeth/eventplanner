@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import EventRegistrationDetailsCard from '@/ui/components/events/EventRegistrationDetailsCard.vue';
@@ -26,6 +26,8 @@ describe('EventRegistrationDetailsCard.vue', () => {
         });
         await usePositions().loading;
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render registration position', async () => {
         const position = testee.findComponent(RegistrationPositionCard);

@@ -1,5 +1,6 @@
 import { nextTick } from 'vue';
 import type { MockInstance } from 'vitest';
+import { afterEach } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
@@ -36,6 +37,8 @@ describe('EventBatchEditDlg.vue', () => {
         testee = mount(EventBatchEditDlg);
         await open([eventA, eventB]);
     });
+
+    afterEach(() => testee.unmount());
 
     it('should open dialog', async () => {
         const dialog = testee.find('[data-test-id="event-batch-edit-dialog"]');

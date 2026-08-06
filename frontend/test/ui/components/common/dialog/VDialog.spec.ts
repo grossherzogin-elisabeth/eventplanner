@@ -22,6 +22,7 @@ describe('VDialog', () => {
 
     afterEach(() => {
         vi.useRealTimers();
+        testee.unmount();
     });
 
     it('should open dialog on method call', async () => {

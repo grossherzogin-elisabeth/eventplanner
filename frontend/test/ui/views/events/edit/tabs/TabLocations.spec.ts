@@ -1,5 +1,5 @@
 import type { Router } from 'vue-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { Event } from '@/domain';
@@ -36,6 +36,8 @@ describe('TabLocations.vue', () => {
             global: { plugins: [router] },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     it('Should render all locations', () => {
         const tableRows = testee.findAll('tbody tr');

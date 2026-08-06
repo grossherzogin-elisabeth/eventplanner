@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import type { Router } from 'vue-router';
-import { type MockInstance, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type MockInstance, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { AuthService } from '@/application';
@@ -31,6 +31,8 @@ describe('TabPositions.vue', () => {
         createFunc = vi.spyOn(usePositionAdministrationUseCase(), 'createPosition');
         await router.push({ name: Routes.AppSettings, query: { tab: 'positions' } });
     });
+
+    afterEach(() => testee.unmount());
 
     describe('users with permission positions:read', () => {
         beforeEach(async () => {

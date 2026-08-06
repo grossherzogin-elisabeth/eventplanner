@@ -1,5 +1,5 @@
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
@@ -35,6 +35,8 @@ describe('EventDetailsView.vue', () => {
         signedInUser = await useAuthUseCase().authenticate(); // uses the default mocked http requests for authentication
         await router.push({ name: Routes.EventDetails, params: { year, key: 'example-event' } });
     });
+
+    afterEach(() => testee.unmount());
 
     describe('Signed-in user is not registered', () => {
         beforeEach(async () => {

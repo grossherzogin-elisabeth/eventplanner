@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import VDatepicker from '@/ui/components/common/datepicker/VDatepicker.vue';
@@ -13,6 +13,8 @@ describe('VDatepicker.vue', () => {
             },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     it('Should render selected year', () => {
         const monthButton = testee.find('[data-test-id="datepicker-year"]');

@@ -27,6 +27,7 @@ describe.each(components)('$component.__name', ({ component }) => {
 
     afterEach(() => {
         vi.useRealTimers();
+        testee.unmount();
     });
 
     it('should open dropdown on click', async () => {

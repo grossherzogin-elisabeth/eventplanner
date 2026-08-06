@@ -1,5 +1,5 @@
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useAppSettingsUseCase } from '@/application';
@@ -23,6 +23,8 @@ describe('AppSettingsView.vue', async () => {
         testee = mount(AppSettingsView);
         setupUserPermissions([Permission.WRITE_SETTINGS]);
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render all tabs', async () => {
         const tabs = getTabs(testee);

@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { usePositionCachingService, useUserCachingService } from '@/application';
@@ -18,6 +18,8 @@ describe('EventParticipantsCard.vue', () => {
     beforeEach(async () => {
         event = mockEvent();
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render placeholder', async () => {
         testee = mount(EventParticipantsCard, { props: { event } });
