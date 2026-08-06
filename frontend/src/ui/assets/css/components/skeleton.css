@@ -9,7 +9,8 @@
     color: transparent;
 }
 
-.skeleton p, .skeleton span {
+.skeleton p,
+.skeleton span {
     min-width: 5rem;
     content: '';
 }
