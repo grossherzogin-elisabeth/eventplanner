@@ -17,6 +17,7 @@ describe('VConfirmationDialog.vue', () => {
 
     afterEach(() => {
         vi.useRealTimers();
+        testee.unmount();
     });
 
     it('should display the message', async () => {

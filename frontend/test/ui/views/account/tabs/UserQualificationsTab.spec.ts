@@ -1,5 +1,5 @@
 import type { Router } from 'vue-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { UserDetails } from '@/domain';
@@ -27,6 +27,8 @@ describe('UserQualificationsTab.vue', () => {
             global: { plugins: [router] },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render all qualifications', async () => {
         const tableRows = testee.findAll('tbody tr');

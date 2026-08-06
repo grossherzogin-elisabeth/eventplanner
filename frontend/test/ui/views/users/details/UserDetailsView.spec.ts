@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
@@ -28,6 +28,8 @@ describe('UserDetailsView.vue', () => {
         testee = mount(UserDetailsView, { global: { plugins: [router] } });
         await nextTick();
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render user name', async () => {
         await awaitPageContentLoaded(testee);

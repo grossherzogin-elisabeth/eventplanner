@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { EventState } from '@/domain';
@@ -17,6 +17,8 @@ describe('EventStateBanner.vue', () => {
         });
         await usePositions().loading;
     });
+
+    afterEach(() => testee.unmount());
 
     it('should show draft banner as info', async () => {
         const event = mockEvent({ state: EventState.Draft });

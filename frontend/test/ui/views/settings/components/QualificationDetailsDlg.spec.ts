@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { useAuthService } from '@/application';
@@ -23,6 +23,8 @@ describe('QualificationDetailsDlg.vue', () => {
         );
         testee = mount(QualificationDetailsDlg);
     });
+
+    afterEach(() => testee.unmount());
 
     describe('create mode', () => {
         beforeEach(async () => {

@@ -17,6 +17,7 @@ describe('VDropdownWrapper.vue', () => {
 
     afterEach(() => {
         vi.useRealTimers();
+        testee.unmount();
     });
 
     it('should render slot content', () => {

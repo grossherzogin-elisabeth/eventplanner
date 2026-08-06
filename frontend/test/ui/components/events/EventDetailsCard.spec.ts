@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { EventType } from '@/domain';
@@ -20,6 +20,8 @@ describe('EventDetailsCard.vue', () => {
             props: { event },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render event category', async () => {
         expect(testee.text()).toContain(testee.vm.$t(`domain.event-type.${event.type}`));

@@ -11,6 +11,8 @@ describe('VInputDate', () => {
         const testee = mount(VInputDate, { props });
         const input = testee.find('input');
         expect(input.element.value).toEqual('15.11.2025');
+
+        testee.unmount();
     });
 
     it('should render when value changes', async () => {
@@ -18,6 +20,8 @@ describe('VInputDate', () => {
         await testee.setProps({ modelValue: new Date(2025, 10, 16) });
         const input = testee.find('input');
         expect(input.element.value).toEqual('16.11.2025');
+
+        testee.unmount();
     });
 
     it.each(['15.04.2025', '15.4.25', '15/04/2025', '15/4/2025', '4/15/2025', '15042025', '150425'])(
@@ -29,6 +33,8 @@ describe('VInputDate', () => {
             await input.trigger('blur');
             expect(input.element.value).toEqual('15.04.2025');
             expect(testee.emitted('update:modelValue')?.[0]).toEqual([new Date(2025, 3, 15)]);
+
+            testee.unmount();
         }
     );
 
@@ -42,6 +48,8 @@ describe('VInputDate', () => {
         expect(testee.findComponent(VDialog).emitted('opening')).toBeUndefined();
         // dropdown should be rendered
         expect(testee.findComponent(VDropdownWrapper).exists()).toBeTruthy();
+
+        testee.unmount();
     });
 
     it('should open datepicker dialog on small screens', async () => {
@@ -55,5 +63,7 @@ describe('VInputDate', () => {
         expect(testee.findComponent(VDialog).emitted('opening')).not.toBeUndefined();
         // dropdown should not be rendered
         expect(testee.findComponent(VDropdownWrapper).exists()).toBeFalsy();
+
+        testee.unmount();
     });
 });

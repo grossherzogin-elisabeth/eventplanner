@@ -33,6 +33,8 @@ describe.each(components)('$component.__name', ({ component, props }) => {
         });
         const label = testee.find('label');
         expect(label.text()).toContain('label text');
+
+        testee.unmount();
     });
 
     it('should generate id for input field', async () => {
@@ -42,6 +44,8 @@ describe.each(components)('$component.__name', ({ component, props }) => {
 
         expect(input.attributes().id).not.toBeUndefined();
         expect(label.attributes().for).toEqual(input.attributes().id);
+
+        testee.unmount();
     });
 
     it('should render hint text', async () => {
@@ -51,6 +55,8 @@ describe.each(components)('$component.__name', ({ component, props }) => {
         const hint = testee.find('.input-hint');
 
         expect(hint.text()).toContain('the hint');
+
+        testee.unmount();
     });
 
     it('should render all errors', async () => {
@@ -61,6 +67,8 @@ describe.each(components)('$component.__name', ({ component, props }) => {
 
         expect(errors.text()).toContain('some error');
         expect(errors.text()).toContain('some other error');
+
+        testee.unmount();
     });
 
     it('should not render any error', async () => {
@@ -69,6 +77,8 @@ describe.each(components)('$component.__name', ({ component, props }) => {
         });
         const errors = testee.find('.input-errors');
         expect(errors.exists()).toBeFalsy();
+
+        testee.unmount();
     });
 
     it('should not render hint if errors are present', async () => {
@@ -77,6 +87,8 @@ describe.each(components)('$component.__name', ({ component, props }) => {
         });
         const hint = testee.find('.input-hint');
         expect(hint.exists()).toBeFalsy();
+
+        testee.unmount();
     });
 
     it('should render placeholder', async () => {
@@ -85,6 +97,8 @@ describe.each(components)('$component.__name', ({ component, props }) => {
         });
         const input = testee.find('input,textarea');
         expect(input.attributes().placeholder).toEqual('the placeholder');
+
+        testee.unmount();
     });
 
     it('should disable user input', async () => {
@@ -96,5 +110,7 @@ describe.each(components)('$component.__name', ({ component, props }) => {
 
         await input.setValue('some input');
         expect(testee.emitted()).toEqual({});
+
+        testee.unmount();
     });
 });

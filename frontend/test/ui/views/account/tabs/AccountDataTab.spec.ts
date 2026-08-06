@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { UserDetails } from '@/domain';
@@ -17,6 +17,8 @@ describe('AccountDataTab.vue', () => {
             },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     it('should render users full name', async () => {
         expect(testee.text()).toContain(user.firstName);

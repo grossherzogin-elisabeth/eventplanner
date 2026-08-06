@@ -18,6 +18,7 @@ describe('VErrorDialog.vue', () => {
 
     afterEach(() => {
         vi.useRealTimers();
+        testee.unmount();
     });
 
     it('should register self at error handling service', async () => {

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { wait } from '@/common';
@@ -23,6 +23,8 @@ describe('AsyncButton.vue', () => {
             slots: { label: 'label text' },
         });
     });
+
+    afterEach(() => testee.unmount());
 
     it('should show label text', () => {
         expect(testee.text()).toContain('label text');

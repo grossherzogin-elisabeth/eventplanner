@@ -16,6 +16,8 @@ describe('VMarkdown', () => {
         const h2 = testee.find('h2');
         expect(h2.exists()).toBe(true);
         expect(h2.text()).toBe('headline 2');
+
+        testee.unmount();
     });
 
     it('should render paragraphs', async () => {
@@ -27,6 +29,8 @@ describe('VMarkdown', () => {
         const ps = testee.findAll('p');
         expect(ps).toHaveLength(2);
         expect(ps[0].text()).toEqual('p1\nalso p1');
+
+        testee.unmount();
     });
 
     it('should render lists', async () => {
@@ -39,6 +43,8 @@ describe('VMarkdown', () => {
         expect(ul.exists()).toBe(true);
         const lis = testee.findAll('ul li');
         expect(lis).toHaveLength(4);
+
+        testee.unmount();
     });
 
     it('should render links with target _blank', async () => {
@@ -51,5 +57,7 @@ describe('VMarkdown', () => {
         expect(a.exists()).toBe(true);
         expect(a.text()).toEqual('label');
         expect(a.element.target).toBe('_blank');
+
+        testee.unmount();
     });
 });

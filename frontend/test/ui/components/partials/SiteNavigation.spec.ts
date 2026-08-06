@@ -1,5 +1,5 @@
 import type { RouteLocationNormalizedLoadedGeneric } from 'vue-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { RouterLinkStub } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
@@ -30,6 +30,8 @@ describe('SiteNavigation', () => {
             </div>`;
         testee = mount(SiteNavigation, { global: { plugins: [router] } });
     });
+
+    afterEach(() => testee.unmount());
 
     it('should detect links correctly', () => {
         expect(testee.findAll('a')).toHaveLength(2);

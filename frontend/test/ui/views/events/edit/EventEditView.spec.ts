@@ -1,5 +1,5 @@
 import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
@@ -72,6 +72,8 @@ describe('EventEditView.vue', () => {
 
         await router.push({ name: Routes.EventEdit, params: { year: 2025, key: 'example-event' } });
     });
+
+    afterEach(() => testee.unmount());
 
     describe.each(allEvents)('$name', ({ representation }) => {
         beforeEach(async () => {
