@@ -371,10 +371,12 @@ init();
     position: sticky;
     top: 0;
     z-index: 50;
+    height: var(--nav-height);
     border-right-width: 1px;
     border-right-color: transparent;
     background-color: var(--color-primary);
     color: var(--color-onprimary);
+
     @apply py-2.5;
     @apply pl-20;
     @apply pr-4;
@@ -394,6 +396,7 @@ init();
 
 @media (width >= 40rem) {
     .calendar-header {
+        height: auto;
         border-right-color: var(--color-surface);
     }
 }

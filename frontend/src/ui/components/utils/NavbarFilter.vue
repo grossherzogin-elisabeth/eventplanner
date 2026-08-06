@@ -1,20 +1,27 @@
 <template>
-    <div class="search xs:pr-6 md:pr-14" :class="showSearch ? 'open' : ''">
-        <div class="wrapper flex grow items-stretch self-stretch rounded-lg">
-            <button :class="showSearch ? 'w-11 px-4' : 'btn-icon'" @click="openSearch()">
-                <i class="fa-solid fa-search"></i>
-            </button>
-            <input
-                ref="input"
-                name="search"
-                :value="props.modelValue"
-                :placeholder="placeholder || 'Einträge filtern'"
-                :disabled="!showSearch"
-                @input="onInput($event)"
-            />
-            <button class="px-4" @click="cancel()">
-                <i class="fa-solid fa-xmark" />
-            </button>
+    <div class="h-full w-full lg:hidden">
+        <div class="search" :class="showSearch ? 'open' : ''">
+            <div class="wrapper flex grow items-stretch self-stretch rounded-lg">
+                <button
+                    class="mr-1 flex h-10 w-10 items-center justify-center"
+                    :class="showSearch ? 'xs:ml-4' : 'btn-icon'"
+                    @click="openSearch()"
+                >
+                    <i class="fa-solid fa-search"></i>
+                </button>
+                <input
+                    ref="input"
+                    name="search"
+                    :value="props.modelValue"
+                    :placeholder="placeholder || 'Einträge filtern'"
+                    :disabled="!showSearch"
+                    @input="onInput($event)"
+                    @keydown.esc="input?.blur()"
+                />
+                <button class="btn-icon xs:mr-4" @click="cancel()">
+                    <i class="fa-solid fa-xmark" />
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -55,13 +62,17 @@ function cancel(): void {
 }
 </script>
 <style scoped>
+@import 'tailwindcss';
+
 .search {
     --animation-duration: 100ms;
     position: absolute;
     top: 0;
     bottom: 0;
-    left: calc(100vw - 3.25rem);
+    /* left side - btn-icon width (10) */
+    left: calc(100vw - var(--spacing) * 10);
     width: 100vw;
+    padding-block: calc(var(--spacing) * 1);
     display: flex;
     align-items: center;
     transition-property: left, top;
@@ -109,15 +120,17 @@ html.dark .search input::placeholder {
     opacity: 1;
 }
 
-@media (min-width: 400px) {
+@media (min-width: 30rem) {
     .search {
-        left: calc(100vw - 4.25rem);
+        /* btn-icon width (10) + padding to side (4) */
+        left: calc(100vw - (var(--spacing) * 14));
     }
 }
 
-@media (min-width: 786px) {
+@media (min-width: 48rem) {
     .search {
-        left: calc(100vw - 6.25rem);
+        /* btn-icon width (10) + padding to side (12) */
+        left: calc(100vw - (var(--spacing) * 22));
     }
 }
 
@@ -127,7 +140,7 @@ html.dark .search input::placeholder {
     }
 
     .search.open {
-        left: calc(100vw - 25rem);
+        left: calc(100vw - 25rem - var(--spacing) * 12);
     }
 
     .search.open .wrapper {

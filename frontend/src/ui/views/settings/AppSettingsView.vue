@@ -1,10 +1,8 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
-            <div class="h-full lg:hidden">
-                <NavbarFilter v-if="tab === Tab.QUALIFICATIONS" v-model="filter" />
-                <NavbarFilter v-else-if="tab === Tab.POSITIONS" v-model="filter" />
-            </div>
+            <NavbarFilter v-if="tab === Tab.QUALIFICATIONS" v-model="filter" />
+            <NavbarFilter v-else-if="tab === Tab.POSITIONS" v-model="filter" />
         </teleport>
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #[Tab.QUALIFICATIONS]>

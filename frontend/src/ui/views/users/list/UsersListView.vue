@@ -1,9 +1,7 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
-            <div class="h-full lg:hidden">
-                <NavbarFilter v-model="filter" placeholder="Einträge filtern" />
-            </div>
+            <NavbarFilter v-model="filter" placeholder="Einträge filtern" />
         </teleport>
 
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">

@@ -1,9 +1,7 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
-            <div class="h-full lg:hidden">
-                <NavbarFilter v-model="filter" :placeholder="$t('views.event-list.filter.search')" />
-            </div>
+            <NavbarFilter v-model="filter" :placeholder="$t('views.event-list.filter.search')" />
         </teleport>
 
         <div v-if="signedInUser?.positions.length === 0" class="px-4 md:px-12 xl:px-16">

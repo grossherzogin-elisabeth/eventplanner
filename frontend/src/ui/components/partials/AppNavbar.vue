@@ -20,7 +20,7 @@
                 </h1>
             </div>
             <div class="flex h-full justify-end">
-                <div id="nav-right" class="xs:mx-8 mx-4 h-full md:mr-16 xl:mr-20"></div>
+                <div id="nav-right" class="xs:mr-4 ml-1 h-full w-10 md:mr-12"></div>
             </div>
         </div>
     </nav>
