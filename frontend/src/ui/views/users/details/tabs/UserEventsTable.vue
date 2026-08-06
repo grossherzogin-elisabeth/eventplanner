@@ -3,7 +3,7 @@
         <VTable
             :items="renderedEvents"
             :page-size="-1"
-            class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+            class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20"
             @click="openEvent($event.item, $event.event)"
         >
             <template #row="{ item }">

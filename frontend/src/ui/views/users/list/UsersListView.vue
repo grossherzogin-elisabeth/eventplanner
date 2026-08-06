@@ -1,9 +1,7 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
-            <div class="h-full lg:hidden">
-                <NavbarFilter v-model="filter" placeholder="Einträge filtern" />
-            </div>
+            <NavbarFilter v-model="filter" placeholder="Einträge filtern" />
         </teleport>
 
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
@@ -22,7 +20,7 @@
             </template>
         </VTabs>
 
-        <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
+        <div class="filter-panel scrollbar-invisible mt-4">
             <FilterMultiselect v-model="filterPositions" placeholder="Alle Positionen" :options="positions.options.value" />
             <FilterToggle v-model="filterOnlyActive" label="Aktive Stammcrew" />
             <FilterToggle v-model="filterExpiredQualifications" label="Abgelaufene Qualifikationen" />
@@ -45,7 +43,7 @@
                 :page-size="20"
                 query
                 multiselection
-                class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
+                class="interactive-table no-header scrollbar-invisible xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
                 @click="editUser($event.item, $event.event)"
             >
                 <template #row="{ item }">

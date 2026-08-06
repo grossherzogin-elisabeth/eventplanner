@@ -1,6 +1,6 @@
 <template>
     <div class="flex h-full flex-col">
-        <div class="scrollbar-invisible mb-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
+        <div class="filter-panel scrollbar-invisible">
             <FilterMultiselect
                 v-model="filterPositions"
                 data-test-id="filter-position"
@@ -8,7 +8,7 @@
                 :options="positions.options.value"
             />
             <FilterToggle v-model="filterExpires" data-test-id="filter-expires" :label="$t('views.settings.filter.expires')" />
-            <div class="flex-grow"></div>
+            <div class="grow"></div>
             <div class="hidden lg:block">
                 <VSearchButton v-model="filter" />
             </div>
@@ -17,7 +17,7 @@
         <div class="flex-1">
             <VTable
                 :items="qualifications"
-                class="scrollbar-invisible interactive-table no-header overflow-x-auto px-8 md:px-16 xl:px-20"
+                class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
                 @click="editQualification($event.item)"
             >
                 <template #row="{ item }">

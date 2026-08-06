@@ -1,5 +1,5 @@
 <template>
-    <VTable :items="userRoles" class="scrollbar-invisible no-header overflow-x-auto px-8 md:px-16 xl:px-20">
+    <VTable :items="userRoles" class="scrollbar-invisible no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20">
         <template #row="{ item }">
             <td class="w-0">
                 <i class="fa-solid" :class="item.icon"></i>

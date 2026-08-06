@@ -1,9 +1,7 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
-            <div class="h-full lg:hidden">
-                <NavbarFilter v-model="filter" :placeholder="$t('views.event-admin-list.filter.search')" />
-            </div>
+            <NavbarFilter v-model="filter" :placeholder="$t('views.event-admin-list.filter.search')" />
         </teleport>
 
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
@@ -35,7 +33,7 @@
             </template>
         </VTabs>
 
-        <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
+        <div class="filter-panel scrollbar-invisible mt-4">
             <FilterMultiselect
                 v-model="filterEventType"
                 :placeholder="$t('views.event-admin-list.filter.all-events')"
@@ -56,7 +54,7 @@
                 multiselection
                 query
                 :page-size="20"
-                class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
+                class="interactive-table no-header scrollbar-invisible xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
                 @click="editEvent($event.item, $event.event)"
             >
                 <template #row="{ item }">

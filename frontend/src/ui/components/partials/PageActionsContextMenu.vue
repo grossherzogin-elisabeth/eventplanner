@@ -11,9 +11,11 @@
         </ContextMenuButton>
     </div>
     <teleport to="#nav-right">
-        <div class="flex items-center py-2 lg:hidden" data-test-id="menu-trigger">
-            <ContextMenuButton class="-mt-2 -mr-6 pt-3 pr-6">
-                <slot></slot>
+        <div class="flex h-full items-center lg:hidden" data-test-id="menu-trigger">
+            <ContextMenuButton class="btn-icon">
+                <template #default>
+                    <slot name="default"></slot>
+                </template>
             </ContextMenuButton>
         </div>
     </teleport>
