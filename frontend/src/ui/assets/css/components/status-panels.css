@@ -3,10 +3,14 @@
         display: inline-flex;
         align-items: center;
         width: auto;
-        @apply space-x-2;
         @apply rounded-full;
-        @apply py-1 pr-4 pl-3;
+        padding: 0.25em 0.75em 0.25em 0.5em;
+        gap: 0.5em;
         @apply text-sm;
+    }
+
+    .status-badge > span {
+        padding-top: 0.2em;
     }
 
     .tag {
