@@ -228,6 +228,10 @@ export class EventUseCase {
     }
 
     public async leaveEvents(events: Event[]): Promise<void> {
+        if (events.length === 1) {
+            await this.leaveEvent(events[0]);
+            return;
+        }
         try {
             const canLeaveAllEvents = !events.some((it) => !it.canSignedInUserLeave);
             if (!canLeaveAllEvents) {
