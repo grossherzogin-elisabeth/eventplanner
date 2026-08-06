@@ -320,6 +320,7 @@ export class EventRestRepository implements EventRepository {
     }
 
     public static mapEventToDomain(eventRepresentation: EventRepresentation): Event {
+        const assignedUserCount = eventRepresentation.slots.filter((it) => it.assignedRegistrationKey).length;
         const event: Event = {
             key: eventRepresentation.key,
             type: eventRepresentation.type as EventType,
@@ -353,7 +354,8 @@ export class EventRestRepository implements EventRepository {
                 etd: locationRepresentation.etd ? deserializeDate(locationRepresentation.etd) : undefined,
             })),
             slots: EventRestRepository.mapSlotsToDomain(eventRepresentation.slots),
-            assignedUserCount: eventRepresentation.slots.filter((it) => it.assignedRegistrationKey).length,
+            assignedUserCount: assignedUserCount,
+            waitingListCount: eventRepresentation.registrations.length - assignedUserCount,
             canSignedInUserJoin: false,
             canSignedInUserLeave: false,
             canSignedInUserUpdateRegistration: false,
