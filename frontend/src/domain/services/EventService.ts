@@ -245,4 +245,12 @@ export class EventService {
 
         return event;
     }
+
+    public showWaitingList(event: Event): boolean {
+        return (
+            event !== undefined &&
+            event.signupType !== EventSignupType.Open &&
+            ![EventState.Draft, EventState.OpenForSignup].includes(event.state)
+        );
+    }
 }

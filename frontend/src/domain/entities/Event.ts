@@ -18,6 +18,7 @@ export interface Event {
 
     isInPast?: boolean;
     assignedUserCount: number;
+    waitingListCount: number;
 
     canSignedInUserJoin: boolean;
     canSignedInUserLeave: boolean;

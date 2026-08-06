@@ -157,6 +157,7 @@ const event = ref<Event>({
     slots: [],
     registrations: [],
     assignedUserCount: 0,
+    waitingListCount: 0,
     canSignedInUserJoin: false,
     canSignedInUserLeave: false,
     canSignedInUserUpdateRegistration: false,

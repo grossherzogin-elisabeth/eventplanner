@@ -27,6 +27,7 @@ export function mockEvent(overwrite?: Partial<Event>): Event {
         signedInUserAssignedSlot: undefined,
         days: 0,
         assignedUserCount: 0,
+        waitingListCount: 0,
     };
     return overwrite ? Object.assign(event, overwrite) : event;
 }
