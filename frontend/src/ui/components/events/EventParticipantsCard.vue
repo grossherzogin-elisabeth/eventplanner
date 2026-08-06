@@ -1,7 +1,7 @@
 <template>
     <div
         v-if="props.event.assignedUserCount === 0 && waitingList.length === 0"
-        class="bg-surface-container/50 xs:-mx-4 -mx-2 rounded-2xl px-4 md:-mx-4 md:-mt-4 md:bg-transparent"
+        class="bg-surface-container/50 -mx-4 rounded-2xl px-4 md:-mx-4 md:-mt-4 md:bg-transparent"
         data-test-id="registrations-placeholder"
     >
         <div class="flex items-center py-4">
@@ -29,7 +29,7 @@
             <h2 class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
                 {{ $t('components.event-participants-card.registrations', { count: waitingList.length }) }}
             </h2>
-            <div class="bg-surface-container/50 xs:-mx-4 -mx-2 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
+            <div class="bg-surface-container/50 -mx-4 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
                 <ul class="space-y-2" data-test-id="registration-list">
                     <RegistrationRow v-for="it in waitingList" :key="it.slot?.key || ''" :registration="it" />
                 </ul>
@@ -41,7 +41,7 @@
             <h2 class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
                 {{ $t('components.event-participants-card.assigned', { count: team.length }) }}
             </h2>
-            <div class="bg-surface-container/50 xs:-mx-4 -mx-2 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
+            <div class="bg-surface-container/50 -mx-4 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
                 <ul class="space-y-2" data-test-id="crew-list">
                     <RegistrationRow v-for="it in team" :key="it.slot?.key || ''" :registration="it" />
                 </ul>
@@ -51,7 +51,7 @@
             <h2 class="text-secondary mt-8 mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
                 {{ $t('components.event-participants-card.waitinglist', { count: waitingList.length }) }}
             </h2>
-            <div class="bg-surface-container/50 xs:-mx-4 -mx-2 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
+            <div class="bg-surface-container/50 -mx-4 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
                 <ul class="space-y-2" data-test-id="waiting-list">
                     <RegistrationRow v-for="(it, index) in waitingList" :key="index" :registration="it" />
                 </ul>

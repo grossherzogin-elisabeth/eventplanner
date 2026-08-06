@@ -3,7 +3,7 @@
         <h2 class="text-secondary mb-2 font-bold">
             {{ $t('components.event-locations-card.title', { count: props.event.locations.length }) }}
         </h2>
-        <div class="bg-surface-container/50 xs:-mx-4 -mx-2 space-y-1 rounded-2xl p-4 pb-0">
+        <div class="bg-surface-container/50 -mx-4 space-y-1 rounded-2xl p-4 pb-0">
             <p v-if="props.event.locations.length === 0" class="pb-4 text-sm">
                 {{ $t('components.event-locations-card.placeholder') }}
             </p>

@@ -1,5 +1,5 @@
 <template>
-    <div class="interactive-list xs:-mx-4 -mx-2">
+    <div class="interactive-list -mx-4">
         <slot></slot>
     </div>
 </template>

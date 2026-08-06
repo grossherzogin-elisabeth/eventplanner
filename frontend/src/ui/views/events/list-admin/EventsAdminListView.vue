@@ -35,7 +35,7 @@
             </template>
         </VTabs>
 
-        <div class="scrollbar-invisible mt-4 flex items-center gap-2 overflow-x-auto px-4 md:px-16 xl:min-h-8 xl:px-20">
+        <div class="filter-panel scrollbar-invisible mt-4">
             <FilterMultiselect
                 v-model="filterEventType"
                 :placeholder="$t('views.event-admin-list.filter.all-events')"
@@ -56,7 +56,7 @@
                 multiselection
                 query
                 :page-size="20"
-                class="interactive-table no-header scrollbar-invisible overflow-x-auto px-8 pt-4 md:px-16 xl:px-20"
+                class="interactive-table no-header scrollbar-invisible xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
                 @click="editEvent($event.item, $event.event)"
             >
                 <template #row="{ item }">
