@@ -5,7 +5,7 @@
     <td class="w-full sm:min-w-80">
         <p class="mb-1 line-clamp-2 font-semibold" data-test-id="qualification-name">{{ props.qualification?.name }}</p>
         <p class="line-clamp-2 text-sm">{{ props.qualification?.description }}</p>
-        <p class="mt-2 lg:hidden xl:block 2xl:hidden">
+        <p class="mt-2 flex flex-wrap items-center justify-start text-sm">
             <span
                 v-for="positionKey in props.qualification?.grantsPositions"
                 :key="positionKey"
@@ -15,16 +15,6 @@
                 {{ positions.get(positionKey).name }}
             </span>
         </p>
-    </td>
-    <td class="hidden w-96 lg:table-cell xl:hidden 2xl:table-cell">
-        <span
-            v-for="positionKey in props.qualification?.grantsPositions"
-            :key="positionKey"
-            class="tag custom my-1 mr-2"
-            :style="{ '--color': positions.get(positionKey).color }"
-        >
-            {{ positions.get(positionKey).name }}
-        </span>
     </td>
     <td class="hidden w-80 md:table-cell">
         <div class="flex justify-end">

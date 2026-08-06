@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full flex-col">
+    <div class="flex h-full flex-col xl:max-w-5xl">
         <div class="filter-panel scrollbar-invisible">
             <FilterMultiselect
                 v-model="filterPositions"
