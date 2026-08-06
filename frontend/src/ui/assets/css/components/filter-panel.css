@@ -1,0 +1,6 @@
+.filter-panel {
+    @apply flex items-center gap-2;
+    @apply overflow-x-auto;
+    @apply px-2 pb-1 md:px-16 xl:px-20;
+    @apply xl:min-h-8;
+}

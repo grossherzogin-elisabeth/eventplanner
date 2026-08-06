@@ -1,0 +1,60 @@
+.skeleton {
+    @apply animate-pulse;
+    --skeleton-height: 1em;
+    --skeleton-width: 90%;
+}
+
+.skeleton *:not(svg):not(svg *) {
+    /* remove any real text */
+    color: transparent;
+}
+
+.skeleton p, .skeleton span {
+    min-width: 5rem;
+    content: '';
+}
+
+.skeleton p:nth-child(1) {
+    --skeleton-width: 90%;
+}
+
+.skeleton p:nth-child(2) {
+    --skeleton-width: 70%;
+}
+
+.skeleton p:nth-child(3) {
+    --skeleton-width: 80%;
+}
+
+.skeleton p > span:before {
+    display: none;
+}
+
+.skeleton .font-bold {
+    --skeleton-height: 1.15em;
+}
+
+.skeleton .font-semibold {
+    --skeleton-height: 1.1em;
+}
+
+.skeleton .font-light {
+    --skeleton-height: 0.9em;
+}
+
+.skeleton .font-thin {
+    --skeleton-height: 0.85em;
+}
+
+.skeleton p:before,
+.skeleton span:before {
+    content: '';
+    height: var(--skeleton-height);
+    width: var(--skeleton-width);
+    display: inline-block;
+    align-self: center;
+    margin: auto;
+    vertical-align: middle;
+    background-color: var(--color-surface-container-highest);
+    border-radius: var(--radius-lg);
+}

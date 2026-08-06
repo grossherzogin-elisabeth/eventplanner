@@ -13,6 +13,8 @@
 @import './components/table.css';
 @import './components/pagination.css';
 @import './components/status-panels.css';
+@import './components/filter-panel.css';
+@import './components/skeleton.css';
 
 @import './domain/permission.css';
 
@@ -22,6 +24,7 @@ html {
     --nav-height: 3rem;
     --viewport-width: 100vw;
     --viewport-height: 100vh;
+    font-size: 16px;
 }
 
 html,
@@ -48,6 +51,10 @@ body {
 
 .pt-nav {
     padding-top: var(--nav-height);
+}
+
+.font-size-inherit {
+    font-size: inherit;
 }
 
 *:focus {
