@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +47,7 @@ public class AuthenticationUseCase {
     }
 
     @PreAuthorize("hasAuthority('access-keys:delete')")
+    @Transactional
     public void deleteExpiredAccessKeys() {
         log.info("Deleting access keys older than {}", accessKeyMaxAge);
         accessKeyRepository.deleteExpired(accessKeyMaxAge);

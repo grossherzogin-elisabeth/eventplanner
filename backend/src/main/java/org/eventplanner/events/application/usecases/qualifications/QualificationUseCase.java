@@ -8,6 +8,7 @@ import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class QualificationUseCase {
     }
 
     @PreAuthorize("hasAuthority('qualifications:write')")
+    @Transactional
     public @NonNull Qualification createQualification(
         @NonNull final Qualification qualification
     ) {
@@ -36,6 +38,7 @@ public class QualificationUseCase {
     }
 
     @PreAuthorize("hasAuthority('qualifications:write')")
+    @Transactional
     public @NonNull Qualification updateQualification(
         @NonNull final QualificationKey qualificationKey,
         @NonNull final Qualification qualification
@@ -50,6 +53,7 @@ public class QualificationUseCase {
     }
 
     @PreAuthorize("hasAuthority('qualifications:write')")
+    @Transactional
     public void deleteQualification(
         @NonNull final QualificationKey qualificationKey
     ) {

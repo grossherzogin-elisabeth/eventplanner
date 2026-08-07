@@ -15,6 +15,7 @@ import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ public class RegistrationUseCase {
      * @throws NoSuchElementException   when the event does not exist
      * @throws IllegalStateException    when the event cannot be reloaded after adding the registration
      */
+    @Transactional
     public @NonNull Event createRegistration(
         @NonNull final SignedInUser signedInUser,
         @NonNull final CreateRegistrationSpec spec
@@ -71,6 +73,7 @@ public class RegistrationUseCase {
      * @return the updated event
      * @throws NoSuchElementException when the event or the registration does not exist
      */
+    @Transactional
     public @NonNull Event removeRegistration(
         @NonNull final SignedInUser signedInUser,
         @NonNull final EventKey eventKey,
@@ -105,6 +108,7 @@ public class RegistrationUseCase {
      * @throws IllegalStateException  when the event cannot be reloaded after removing the registration
      */
     @PreAuthorize("hasAuthority('registrations:write') or hasAuthority('registrations:write-self')")
+    @Transactional
     public @NonNull Event updateRegistration(@NonNull final UpdateRegistrationSpec spec)
     throws NoSuchElementException, IllegalStateException {
         var signedInUser = authenticationService.getSignedInUser();
