@@ -7,8 +7,8 @@ import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventType, Permission, SlotCriticality } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
 import EventsListView from '@/ui/views/events/list/EventListView.vue';
-import { DECKHAND, mockEventRepresentation, mockRouter, server } from '~/mocks';
-import { openTableContextMenu, setupUserPermissions } from '~/utils';
+import { DECKHAND, mockEventRepresentation, mockRegistrationDeckhand, mockRouter, server } from '~/mocks';
+import { openTableContextMenu, setupUserPermissions, stubs } from '~/utils';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({
@@ -19,6 +19,8 @@ vi.mock('vue-router', () => ({
 describe('EventsListView.vue', () => {
     let testee: VueWrapper;
     let events: EventRepresentation[];
+    const capturedCreateRegistration: string[] = [];
+    const capturedDeleteRegistration: string[] = [];
 
     beforeEach(async () => {
         vi.setSystemTime(new Date(2024, 3, 1).getTime());
@@ -87,6 +89,20 @@ describe('EventsListView.vue', () => {
         events.forEach((e, i) => (e.key = String(i)));
 
         server.use(http.get('/api/v1/events', () => HttpResponse.json(events)));
+
+        capturedCreateRegistration.length = 0;
+        capturedDeleteRegistration.length = 0;
+        server.use(
+            http.post('/api/v1/events/:key/registrations', ({ params }) => {
+                capturedCreateRegistration.push(params.key as string);
+                return HttpResponse.json(mockEventRepresentation({ key: params.key as string }));
+            }),
+            http.delete('/api/v1/events/:key/registrations/:regKey', ({ params }) => {
+                capturedDeleteRegistration.push(`${params.key}/${params.regKey}`);
+                return HttpResponse.json(mockEventRepresentation({ key: params.key as string, registrations: [] }));
+            })
+        );
+
         await router.push({ name: Routes.EventsList });
         testee = mount(EventsListView, { global: { plugins: [router] } });
     });
@@ -157,6 +173,53 @@ describe('EventsListView.vue', () => {
         const exports = menu.findAll('[data-test-id="action-export"]');
         expect(exports[0].text()).toContain('some template');
         expect(exports[1].text()).toContain('some other template');
+    });
+
+    it('should join event', async () => {
+        const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
+        const openSpy = vi.fn(async () => registration);
+        testee.unmount();
+        testee = mount(EventsListView, {
+            global: {
+                plugins: [router],
+                stubs: { RegistrationDetailsSheet: stubs('RegistrationDetailsSheet', openSpy) },
+            },
+        });
+        await loading();
+
+        const menu = await openTableContextMenu(testee, 0); // row 0: future event without user registration
+        const signUpAction = menu
+            .findAll('.context-menu-item')
+            .find((item) => item.text().includes(testee.vm.$t('domain.event.actions.sign-up')));
+        await signUpAction!.trigger('click');
+
+        await expect.poll(() => capturedCreateRegistration).toHaveLength(1);
+    });
+
+    it('should delete waiting list registration', async () => {
+        await loading();
+
+        const menu = await openTableContextMenu(testee, 4); // row 4: event with signed-in user on waiting list
+        const leaveAction = menu
+            .findAll('.context-menu-item')
+            .find((item) => item.text().includes(testee.vm.$t('domain.event.actions.leave-waiting-list')));
+        await leaveAction!.trigger('click');
+
+        await expect.poll(() => capturedDeleteRegistration).toHaveLength(1);
+        expect(capturedDeleteRegistration[0]).toContain('reg-1-key');
+    });
+
+    it('should cancel crew registration', async () => {
+        await loading();
+
+        const menu = await openTableContextMenu(testee, 5); // row 5: event with signed-in user in crew
+        const cancelAction = menu
+            .findAll('.context-menu-item')
+            .find((item) => item.text().includes(testee.vm.$t('domain.event.actions.cancel')));
+        await cancelAction!.trigger('click');
+
+        await expect.poll(() => capturedDeleteRegistration).toHaveLength(1);
+        expect(capturedDeleteRegistration[0]).toContain('reg-2-key');
     });
 
     async function loading(): Promise<void> {
