@@ -196,7 +196,8 @@ export class EventAdministrationUseCase {
             }
 
             const updates = eventsToUpdate.map(async (event) => {
-                const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, registration);
+                const registrationSpec = { ...registration, key: uuid() };
+                const savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, registrationSpec);
                 await this.eventCachingService.updateCache(savedEvent);
             });
             await Promise.all(updates);

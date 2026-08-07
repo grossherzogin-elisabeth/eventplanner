@@ -11,6 +11,7 @@ import org.eventplanner.events.domain.values.events.EventKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ public class EventUseCase {
     }
 
     @PreAuthorize("hasAuthority('events:create')")
+    @Transactional
     public @NonNull Event createEvent(@NonNull final CreateEventSpec spec) {
         var event = spec.toEvent();
         log.info("Creating new event");
@@ -45,6 +47,7 @@ public class EventUseCase {
     }
 
     @PreAuthorize("hasAuthority('events:delete')")
+    @Transactional
     public void deleteEvent(@NonNull final EventKey eventKey) {
         var event = eventRepository.findByKey(eventKey).orElseThrow();
         log.info("Deleting event {}", eventKey);

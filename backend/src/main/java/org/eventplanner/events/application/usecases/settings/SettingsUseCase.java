@@ -7,6 +7,7 @@ import org.eventplanner.events.domain.values.config.FrontendConfig;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class SettingsUseCase {
     }
 
     @PreAuthorize("hasAuthority('application-settings:write')")
+    @Transactional
     public @NonNull ApplicationConfig updateSettings(
         @NonNull final ApplicationConfigUpdateSpec updateSpec
     ) {

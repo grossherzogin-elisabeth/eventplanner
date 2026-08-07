@@ -8,6 +8,7 @@ import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class PositionUseCase {
     }
 
     @PreAuthorize("hasAuthority('positions:write')")
+    @Transactional
     public @NonNull Position createPosition(@NonNull final Position position) {
         position.setKey(new PositionKey());
         log.info("Creating position {}", position.getKey());
@@ -34,6 +36,7 @@ public class PositionUseCase {
     }
 
     @PreAuthorize("hasAuthority('positions:write')")
+    @Transactional
     public @NonNull Position updatePosition(
         @NonNull final PositionKey positionKey,
         @NonNull final Position position
@@ -48,6 +51,7 @@ public class PositionUseCase {
     }
 
     @PreAuthorize("hasAuthority('positions:write')")
+    @Transactional
     public void deletePosition(
         @NonNull final PositionKey positionKey
     ) {

@@ -21,6 +21,7 @@ import type {
     UserKey,
 } from '@/domain';
 import { EventSignupType, EventState } from '@/domain';
+import { v4 as uuid } from 'uuid';
 
 export class EventUseCase {
     private readonly notificationService: NotificationService;
@@ -167,7 +168,10 @@ export class EventUseCase {
         try {
             await Promise.all(
                 events.map((event) => {
-                    const eventRegistration = { ...registration };
+                    const eventRegistration = {
+                        ...registration,
+                        key: uuid(),
+                    };
                     if (!isSameDate(event.start, event.end)) {
                         eventRegistration.overnightStay = true;
                     }

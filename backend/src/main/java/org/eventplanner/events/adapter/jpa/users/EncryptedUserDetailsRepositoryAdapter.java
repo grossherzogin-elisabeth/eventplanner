@@ -14,16 +14,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
 
-    private final EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository;
+    private final EncryptedUserDetailsJpaRepository encryptedUserDetailsJpaRepository;
 
     @Override
     public @NonNull List<EncryptedUserDetails> findAll() {
-        return encrypedUserDetailsJpaRepository.findAll()
+        return encryptedUserDetailsJpaRepository.findAll()
             .stream()
             .map(EncryptedUserDetailsJpaEntity::toDomain)
             .toList();
@@ -31,13 +33,13 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
 
     @Override
     public @NonNull Optional<EncryptedUserDetails> findByKey(@NonNull final UserKey key) {
-        return encrypedUserDetailsJpaRepository.findByKey(key.value())
+        return encryptedUserDetailsJpaRepository.findByKey(key.value())
             .map(EncryptedUserDetailsJpaEntity::toDomain);
     }
 
     @Override
     public @NonNull Optional<EncryptedUserDetails> findByAuthKey(@NonNull final AuthKey authKey) {
-        return encrypedUserDetailsJpaRepository.findByAuthKey(authKey.value())
+        return encryptedUserDetailsJpaRepository.findByAuthKey(authKey.value())
             .map(EncryptedUserDetailsJpaEntity::toDomain);
     }
 
@@ -46,16 +48,18 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
     public @NonNull EncryptedUserDetails create(@NonNull final EncryptedUserDetails user)
     throws UserAlreadyExistsException {
         // prevent duplicates on primary key
-        if (encrypedUserDetailsJpaRepository.existsById(user.getKey().value())) {
+        if (encryptedUserDetailsJpaRepository.existsById(user.getKey().value())) {
+            log.error("Failed to create new user: key {} already exists", user.getKey());
             throw new UserAlreadyExistsException("User with key " + user.getKey() + " already exists");
         }
         // prevent duplicates on auth key
-        if (user.getAuthKey() != null && encrypedUserDetailsJpaRepository.existsByAuthKey(user.getAuthKey().value())) {
+        if (user.getAuthKey() != null && encryptedUserDetailsJpaRepository.existsByAuthKey(user.getAuthKey().value())) {
+            log.error("Failed to create new user: auth key {} already exists", user.getAuthKey());
             throw new UserAlreadyExistsException("User with auth key " + user.getAuthKey() + " already exists");
         }
 
         var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
-        entity = encrypedUserDetailsJpaRepository.save(entity);
+        entity = encryptedUserDetailsJpaRepository.save(entity);
         return entity.toDomain();
     }
 
@@ -64,24 +68,24 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
     public @NonNull EncryptedUserDetails update(@NonNull final EncryptedUserDetails user)
     throws NoSuchElementException {
         // make sure user exits
-        if (!encrypedUserDetailsJpaRepository.existsById(user.getKey().value())) {
+        if (!encryptedUserDetailsJpaRepository.existsById(user.getKey().value())) {
             throw new NoSuchElementException("User with key " + user.getKey() + " does not exists");
         }
         var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
-        entity = this.encrypedUserDetailsJpaRepository.save(entity);
+        entity = this.encryptedUserDetailsJpaRepository.save(entity);
         return entity.toDomain();
     }
 
     @Override
     public void deleteAll() {
-        encrypedUserDetailsJpaRepository.deleteAll();
+        encryptedUserDetailsJpaRepository.deleteAll();
     }
 
     @Override
     public void deleteByKey(@NonNull final UserKey key) {
-        if (!encrypedUserDetailsJpaRepository.existsById(key.value())) {
+        if (!encryptedUserDetailsJpaRepository.existsById(key.value())) {
             throw new NoSuchElementException("User with key " + key.value() + " does not exist");
         }
-        encrypedUserDetailsJpaRepository.deleteById(key.value());
+        encryptedUserDetailsJpaRepository.deleteById(key.value());
     }
 }

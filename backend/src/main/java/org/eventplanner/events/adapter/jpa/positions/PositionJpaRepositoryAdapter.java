@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PositionJpaRepositoryAdapter implements PositionRepository {
@@ -48,6 +50,7 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
     @Transactional
     public void create(@NonNull final Position position) {
         if (positionJpaRepository.existsById(position.getKey().value())) {
+            log.error("Failed to create new position: key {} already exists", position.getKey());
             throw new IllegalArgumentException("Position with key " + position.getKey().value() + " already exists");
         }
         positionJpaRepository.save(PositionJpaEntity.fromDomain(position));

@@ -24,6 +24,7 @@ import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -136,6 +137,7 @@ public class RegistrationConfirmationUseCase {
     @PreAuthorize("hasAuthority('registrations:write') " +
         "or hasAuthority('registrations:write-self') " +
         "or hasAuthority('registrations:confirm-self')")
+    @Transactional
     public void confirmRegistration(
         @NonNull final EventKey eventKey,
         @NonNull final RegistrationKey registrationKey
@@ -175,6 +177,7 @@ public class RegistrationConfirmationUseCase {
     @PreAuthorize("hasAuthority('registrations:write') " +
         "or hasAuthority('registrations:write-self') " +
         "or hasAuthority('registrations:decline-self')")
+    @Transactional
     public void declineRegistration(
         @NonNull final EventKey eventKey,
         @NonNull final RegistrationKey registrationKey

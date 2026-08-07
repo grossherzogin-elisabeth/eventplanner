@@ -6,7 +6,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
+import org.eventplanner.events.adapter.jpa.users.EncryptedUserDetailsJpaRepository;
 import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class DeleteUserIntegrationTest {
     private WebApplicationContext context;
 
     @Autowired
-    private EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository;
+    private EncryptedUserDetailsJpaRepository encryptedUserDetailsJpaRepository;
 
     @BeforeEach
     void setup() {
@@ -68,13 +68,13 @@ class DeleteUserIntegrationTest {
     @Test
     void shouldDeleteUser() throws Exception {
         var userKey = TestUser.USER_WITHOUT_ROLE.getOidcId();
-        assertThat(encrypedUserDetailsJpaRepository.existsById(userKey)).isTrue();
+        assertThat(encryptedUserDetailsJpaRepository.existsById(userKey)).isTrue();
 
         webMvc.perform(delete("/api/v1/users/" + userKey)
                 .with(withAuthentication(TestUser.ADMIN)))
             .andExpect(status().isOk());
 
-        assertThat(encrypedUserDetailsJpaRepository.existsById(userKey)).isFalse();
+        assertThat(encryptedUserDetailsJpaRepository.existsById(userKey)).isFalse();
     }
 }
 

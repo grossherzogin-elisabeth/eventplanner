@@ -164,6 +164,24 @@ describe('EventUseCase', () => {
         expect(notificationService.success).toHaveBeenCalled();
     });
 
+    it('should generate a unique key for each registration when joining multiple events', async () => {
+        const eventA = mockEvent({ key: 'a', registrations: [] });
+        const eventB = mockEvent({ key: 'b', registrations: [] });
+        const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
+        const capturedRegistrations: unknown[] = [];
+        eventRegistrationsRepository.createRegistration = vi.fn(async (_key: string, reg: unknown) => {
+            capturedRegistrations.push(reg);
+            return mockEvent();
+        });
+
+        await testee.joinEvents([eventA, eventB], registration);
+
+        const [regA, regB] = capturedRegistrations as Array<{ key: string }>;
+        expect(regA.key).not.toEqual(registration.key);
+        expect(regB.key).not.toEqual(registration.key);
+        expect(regA.key).not.toEqual(regB.key);
+    });
+
     it('should prevent leaving events when one event is not leavable', async () => {
         const cannotLeave = mockEvent({ canSignedInUserLeave: false });
 

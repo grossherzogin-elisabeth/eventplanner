@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
+import org.eventplanner.events.adapter.jpa.users.EncryptedUserDetailsJpaRepository;
 import org.eventplanner.testutil.TestUser;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ class WebConfigIntegrationTest {
     private WebApplicationContext context;
 
     @Autowired
-    private EncrypedUserDetailsJpaRepository userJpaRepository;
+    private EncryptedUserDetailsJpaRepository userJpaRepository;
 
     @BeforeEach
     void setup() {
