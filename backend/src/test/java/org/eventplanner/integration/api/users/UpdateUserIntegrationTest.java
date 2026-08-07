@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
+import org.eventplanner.events.adapter.jpa.users.EncryptedUserDetailsJpaRepository;
 import org.eventplanner.testutil.TestResources;
 import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +39,7 @@ class UpdateUserIntegrationTest {
     private WebApplicationContext context;
 
     @Autowired
-    private EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository;
+    private EncryptedUserDetailsJpaRepository encryptedUserDetailsJpaRepository;
 
     @BeforeEach
     void setup() {
@@ -128,14 +128,14 @@ class UpdateUserIntegrationTest {
                 .content(requestBody))
             .andExpect(status().isBadRequest());
 
-        var after = encrypedUserDetailsJpaRepository.findById(userKey).orElseThrow();
+        var after = encryptedUserDetailsJpaRepository.findById(userKey).orElseThrow();
         assertThat(after.getAuthKey()).isEqualTo(userKey);
     }
 
     @Test
     void shouldUpdateUser() throws Exception {
         var userKey = TestUser.USER_WITHOUT_ROLE.getOidcId();
-        var before = encrypedUserDetailsJpaRepository.findById(userKey).orElseThrow();
+        var before = encryptedUserDetailsJpaRepository.findById(userKey).orElseThrow();
         var beforeFirstName = before.getFirstName();
         var beforeLastName = before.getLastName();
         var beforeEmail = before.getEmail();
@@ -156,7 +156,7 @@ class UpdateUserIntegrationTest {
             .andExpect(jsonPath("$.roles").isArray())
             .andExpect(jsonPath("$.roles[0]").value("ROLE_TEAM_MEMBER"));
 
-        var after = encrypedUserDetailsJpaRepository.findById(userKey).orElseThrow();
+        var after = encryptedUserDetailsJpaRepository.findById(userKey).orElseThrow();
         assertThat(after.getUpdatedAt()).isNotEqualTo(beforeUpdatedAt);
         assertThat(after.getFirstName()).isNotEqualTo(beforeFirstName);
         assertThat(after.getLastName()).isNotEqualTo(beforeLastName);

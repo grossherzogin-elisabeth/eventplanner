@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 class EncryptedUserDetailsRepositoryAdapterTest {
 
-    private EncrypedUserDetailsJpaRepository repository;
+    private EncryptedUserDetailsJpaRepository repository;
     private EncryptedUserDetailsRepositoryAdapter testee;
 
     @BeforeEach

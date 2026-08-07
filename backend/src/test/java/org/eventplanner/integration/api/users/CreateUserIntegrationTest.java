@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.eventplanner.beans.JsonMapperFactory;
-import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
+import org.eventplanner.events.adapter.jpa.users.EncryptedUserDetailsJpaRepository;
 import org.eventplanner.events.rest.users.dto.CreateUserRequest;
 import org.eventplanner.events.rest.users.dto.UserDetailsRepresentation;
 import org.eventplanner.testutil.TestResources;
@@ -43,7 +43,7 @@ class CreateUserIntegrationTest {
     private WebApplicationContext context;
 
     @Autowired
-    private EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository;
+    private EncryptedUserDetailsJpaRepository encryptedUserDetailsJpaRepository;
 
     @BeforeEach
     void setup() {
@@ -107,7 +107,7 @@ class CreateUserIntegrationTest {
 
         // verify user exist in database
         var createdUser = jsonMapper.readValue(createUserResponse, UserDetailsRepresentation.class);
-        assertThat(encrypedUserDetailsJpaRepository.existsById(createdUser.key())).isTrue();
+        assertThat(encryptedUserDetailsJpaRepository.existsById(createdUser.key())).isTrue();
 
         // verify create user returns same response as the user details request
         webMvc.perform(get("/api/v1/users/" + createdUser.key())

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eventplanner.events.adapter.jpa.events.EventJpaRepository;
 import org.eventplanner.events.adapter.jpa.events.RegistrationJpaRepository;
-import org.eventplanner.events.adapter.jpa.users.EncrypedUserDetailsJpaRepository;
+import org.eventplanner.events.adapter.jpa.users.EncryptedUserDetailsJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 class ApplicationTest {
 
     @Autowired
-    private EncrypedUserDetailsJpaRepository encrypedUserDetailsJpaRepository;
+    private EncryptedUserDetailsJpaRepository encryptedUserDetailsJpaRepository;
 
     @Autowired
     private EventJpaRepository eventJpaRepository;
@@ -27,7 +27,7 @@ class ApplicationTest {
 
     @Test
     void testDatabaseShouldContainTestData() {
-        assertThat(encrypedUserDetailsJpaRepository.findAll()).isNotEmpty();
+        assertThat(encryptedUserDetailsJpaRepository.findAll()).isNotEmpty();
         assertThat(eventJpaRepository.findAll()).isNotEmpty();
         assertThat(registrationJpaRepository.findAll()).isNotEmpty();
     }
