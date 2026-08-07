@@ -49,15 +49,15 @@
                 <template #row="{ item }">
                     <td class="w-1/3 font-semibold whitespace-nowrap">
                         <p class="mb-2">
-                            {{ item.nickName || item.firstName }} {{ item.lastName }}
+                            {{ item?.nickName || item?.firstName }} {{ item?.lastName }}
                             <span
-                                v-if="item.verified"
+                                v-if="item?.verified"
                                 class="bg-success-container/50 inline-flex h-5 w-5 items-center justify-center rounded-full"
                             >
                                 <i class="fa-solid fa-check text-onsuccess-container text-xs"></i>
                             </span>
                         </p>
-                        <p v-if="item.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
+                        <p v-if="item?.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
                             {{ item.rolesStr }}
                         </p>
                         <p v-else class="max-w-64 truncate text-sm italic">Keine Rolle zugewiesen</p>
@@ -65,7 +65,7 @@
                     <td class="w-1/3">
                         <div class="flex max-w-64 flex-wrap gap-1">
                             <span
-                                v-for="position in item.positions"
+                                v-for="position in item?.positions"
                                 :key="position.key"
                                 class="tag custom"
                                 :style="{ '--color': position.color }"
@@ -76,47 +76,47 @@
                     </td>
                     <td class="w-1/5">
                         <div class="flex space-x-8">
-                            <div :class="{ 'opacity-25': !item.singleDayEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item.singleDayEventsCount || '-' }}</p>
+                            <div :class="{ 'opacity-25': !item?.singleDayEventsCount }">
+                                <p class="mb-1 font-semibold">{{ item?.singleDayEventsCount || '-' }}</p>
                                 <p class="text-sm" title="Tagesfahrten">TF</p>
                             </div>
-                            <div :class="{ 'opacity-25': !item.weekendEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item.weekendEventsCount || '-' }}</p>
+                            <div :class="{ 'opacity-25': !item?.weekendEventsCount }">
+                                <p class="mb-1 font-semibold">{{ item?.weekendEventsCount || '-' }}</p>
                                 <p class="text-sm" title="Wochenendfahrten">WE</p>
                             </div>
-                            <div :class="{ 'opacity-25': !item.multiDayEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item.multiDayEventsCount || '-' }}</p>
+                            <div :class="{ 'opacity-25': !item?.multiDayEventsCount }">
+                                <p class="mb-1 font-semibold">{{ item?.multiDayEventsCount || '-' }}</p>
                                 <p class="text-sm" title="Sommerreisen und mehrtägige Fahrten">SR</p>
                             </div>
-                            <div :class="{ 'opacity-25': !item.waitingListCount }">
-                                <p class="mb-1 font-semibold">{{ item.waitingListCount || '-' }}</p>
+                            <div :class="{ 'opacity-25': !item?.waitingListCount }">
+                                <p class="mb-1 font-semibold">{{ item?.waitingListCount || '-' }}</p>
                                 <p class="text-sm" title="Warteliste">WL</p>
                             </div>
                         </div>
                     </td>
                     <td class="w-1/12">
                         <div class="flex items-center justify-end">
-                            <div v-if="item.qualifications?.length === 0" class="status-badge neutral">
+                            <div v-if="item?.qualifications?.length === 0" class="status-badge neutral">
                                 <i class="fa-solid fa-question-circle"></i>
                                 <span>Keine Angaben</span>
                             </div>
                             <div
-                                v-else-if="item.expiredQualifications.length > 0"
+                                v-else-if="item?.expiredQualifications.length ?? 0 > 0"
                                 class="status-badge error"
-                                :title="item.expiredQualifications.join(', ')"
+                                :title="item?.expiredQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-ban"></i>
-                                <span> {{ item.expiredQualifications.length }} abgelaufen </span>
+                                <span> {{ item?.expiredQualifications.length }} abgelaufen </span>
                             </div>
                             <div
-                                v-else-if="item.soonExpiringQualifications.length > 0"
+                                v-else-if="item?.soonExpiringQualifications.length ?? 0 > 0"
                                 class="status-badge warning"
-                                :title="item.soonExpiringQualifications.join(', ')"
+                                :title="item?.soonExpiringQualifications.join(', ')"
                             >
                                 <i class="fa-solid fa-warning"></i>
                                 <span>
-                                    <template v-if="item.soonExpiringQualifications.length === 1"> 1 läuft bald ab </template>
-                                    <template v-else> {{ item.soonExpiringQualifications.length }} laufen bald ab </template>
+                                    <template v-if="item?.soonExpiringQualifications.length === 1"> 1 läuft bald ab </template>
+                                    <template v-else> {{ item?.soonExpiringQualifications.length }} laufen bald ab </template>
                                 </span>
                             </div>
                             <div v-else class="status-badge success">

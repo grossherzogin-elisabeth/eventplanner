@@ -11,10 +11,16 @@
             <!-- loading -->
             <tbody v-if="loading" data-test-id="table-loading">
                 <slot name="loading" :colspan="columnCount">
-                    <tr>
+                    <tr v-for="i in 10" :key="i" class="skeleton">
                         <td></td>
-                        <td :colspan="columnCount" class="italic">Wird geladen...</td>
-                        <td></td>
+                        <slot name="row" :item="undefined" :index="i" :first="i === 0" :last="i === pagedItems.length - 1"> </slot>
+                        <!-- context menu placeholder-->
+                        <td v-if="$slots['context-menu']" class="w-10">
+                            <span class="hidden sm:inline">
+                                <i class="fa-solid fa-circle text-surface-container-high pr-4 text-2xl"></i>
+                            </span>
+                        </td>
+                        <td v-else></td>
                     </tr>
                 </slot>
             </tbody>
@@ -170,7 +176,7 @@ interface Emits {
 
 interface Slots {
     'head'?: (props: { sortBy: string; sortDirection: 'asc' | 'desc' }) => void;
-    'row'?: (props: { item: T & Selectable; index: number; first: boolean; last: boolean }) => void;
+    'row'?: (props: { item: (T & Selectable) | undefined; index: number; first: boolean; last: boolean }) => void;
     'no-data'?: (props: { colspan: number }) => void;
     'context-menu'?: (props: { item: T & Selectable }) => void;
     'loading'?: (props: { colspan: number }) => void;

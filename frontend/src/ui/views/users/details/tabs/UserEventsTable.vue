@@ -7,8 +7,8 @@
             @click="openEvent($event.item, $event.event)"
         >
             <template #row="{ item }">
-                <td class="w-0 text-xl opacity-50">
-                    <span v-if="!item.waitingList">
+                <td class="w-0 pr-4 text-xl opacity-50">
+                    <span v-if="!item?.waitingList">
                         <i class="fa-solid fa-check text-success"></i>
                     </span>
                     <span v-else>
@@ -17,14 +17,14 @@
                 </td>
                 <td class="w-1/2 max-w-[20rem] border-none font-semibold">
                     <div class="mb-1 md:flex">
-                        <p class="grow truncate md:w-0">{{ item.name }}</p>
+                        <p class="grow truncate md:w-0">{{ item?.name }}</p>
                     </div>
-                    <p class="truncate text-sm font-light">{{ item.locations }}</p>
+                    <p class="truncate text-sm font-light">{{ item?.locations }}</p>
                 </td>
                 <td class="text-center whitespace-nowrap">
                     <p class="mb-1 w-12 font-semibold">
-                        <span data-test-id="crew-count">{{ item.crewCount }}</span>
-                        <span v-if="item.waitingListCount" data-test-id="waiting-list-count" class="opacity-40">
+                        <span data-test-id="crew-count">{{ item?.crewCount }}</span>
+                        <span v-if="item?.waitingListCount" data-test-id="waiting-list-count" class="opacity-40">
                             +{{ item.waitingListCount }}
                         </span>
                     </p>
@@ -32,14 +32,14 @@
                 </td>
                 <td class="whitespace-nowrap">
                     <div class="mb-1 font-semibold">
-                        <p class="hidden w-56 lg:block">{{ formatDateRange(item.start, item.end) }}</p>
-                        <p class="w-20 lg:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
+                        <p class="hidden w-56 lg:block">{{ formatDateRange(item?.start, item?.end) }}</p>
+                        <p class="w-20 lg:hidden">{{ $d(item?.start ?? new Date(), DateTimeFormat.DDD_DD_MM) }}</p>
                     </div>
-                    <p class="text-sm">{{ item.duration }} Tage</p>
+                    <p class="text-sm">{{ item?.duration }} Tage</p>
                 </td>
                 <td>
-                    <span :style="{ '--color': item.position.color }" class="tag custom">
-                        {{ item.positionName }}
+                    <span :style="{ '--color': item?.position.color }" class="tag custom">
+                        {{ item?.positionName }}
                     </span>
                 </td>
             </template>

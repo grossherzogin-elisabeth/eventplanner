@@ -2,7 +2,7 @@
     <div class="flex items-center justify-end">
         <VTooltip v-if="unassignedRequiredPositions.length > 0 || unassignedOptionalPositions.length > 0" :delay="10">
             <template #default>
-                <div :key="state.icon" class="status-badge" :class="state.color">
+                <div :key="state.icon" class="status-badge font-size-inherit" :class="state.color">
                     <i class="fa-solid w-4" :class="state.icon"></i>
                     <span class="font-semibold whitespace-nowrap">{{ state.name }}</span>
                 </div>
@@ -48,7 +48,7 @@
                 </div>
             </template>
         </VTooltip>
-        <div v-else :key="state.icon" class="status-badge" :class="state.color">
+        <div v-else :key="state.icon" class="status-badge font-size-inherit" :class="state.color">
             <i class="fa-solid" :class="state.icon"></i>
             <span>{{ state.name }}</span>
         </div>
@@ -75,7 +75,7 @@ interface StateDetails {
 }
 
 interface Props {
-    event: Event;
+    event?: Event;
 }
 const props = defineProps<Props>();
 
@@ -83,7 +83,7 @@ const eventService = useEventService();
 const positions = usePositions();
 const { t } = useI18n();
 
-const openSlots = computed<Slot[]>(() => eventService.getOpenSlots(props.event));
+const openSlots = computed<Slot[]>(() => (props.event ? eventService.getOpenSlots(props.event) : []));
 const openRequiredSlots = computed<Slot[]>(() => openSlots.value.filter((slot) => slot.criticality !== SlotCriticality.Optional));
 const openOptionalSlots = computed<Slot[]>(() => openSlots.value.filter((slot) => slot.criticality === SlotCriticality.Optional));
 
@@ -99,7 +99,10 @@ const unassignedOptionalPositions = computed<OpenPositionsCounter[]>(() =>
 );
 
 const state = computed<StateDetails>(() => {
-    switch (props.event.state) {
+    if (!props.event) {
+        return { name: '', icon: 'fa-circle text-surface-container-high', color: 'neutral' };
+    }
+    switch (props.event?.state) {
         case EventState.Draft:
             return { name: t('domain.event-state.draft'), icon: 'fa-compass-drafting', color: 'neutral' };
         case EventState.OpenForSignup:

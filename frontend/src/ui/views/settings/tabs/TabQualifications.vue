@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full flex-col">
+    <div class="flex h-full flex-col xl:max-w-5xl">
         <div class="filter-panel scrollbar-invisible">
             <FilterMultiselect
                 v-model="filterPositions"
@@ -21,18 +21,18 @@
                 @click="editQualification($event.item)"
             >
                 <template #row="{ item }">
-                    <td :key="item.icon" class="text-xl">
-                        <i class="fa-solid" :class="item.icon" />
+                    <td :key="item?.icon" class="pr-4 text-xl">
+                        <i class="fa-solid" :class="item?.icon" />
                     </td>
                     <td class="w-full min-w-80">
-                        <p class="mb-1 line-clamp-2 font-semibold" data-test-id="qualification-name">{{ item.name }}</p>
+                        <p class="mb-1 line-clamp-2 font-semibold" data-test-id="qualification-name">{{ item?.name }}</p>
                         <p class="line-clamp-2 text-sm">
-                            {{ item.description }}
+                            {{ item?.description }}
                         </p>
                     </td>
                     <td class="w-96">
                         <span
-                            v-for="positionKey in item.grantsPositions"
+                            v-for="positionKey in item?.grantsPositions"
                             :key="positionKey"
                             class="tag custom my-1 mr-2"
                             :style="{ '--color': positions.get(positionKey).color }"
@@ -42,7 +42,7 @@
                     </td>
                     <td class="w-80">
                         <div class="flex justify-end">
-                            <div v-if="item.expires" class="status-badge warning">
+                            <div v-if="item?.expires" class="status-badge warning">
                                 <i class="fa-solid fa-clock"></i>
                                 <span>{{ $t('views.settings.qualifications.status-expires') }}</span>
                             </div>
