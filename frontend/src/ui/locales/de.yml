@@ -5,6 +5,10 @@ components:
     details: Fehler Details
     retry: Erneut versuchen
     show-details: Details anzeigen
+  event-cancel-dialog:
+    message: Bist du sicher, dass du diese Veranstaltung absagen möchtest? Aktuell wird vom System noch keine automatische Mail an die Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die Veranstaltung absagst. | Bist du sicher, dass du die ausgewählten Veranstaltungen absagen möchtest? Aktuell wird vom System noch keine automatische Mail an die Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die Veranstaltung absagst.
+    submit: Absagen
+    title: Veranstaltung absagen | Veranstaltungen absagen
   event-details-card:
     assigned: '{count} Crew | {count} Crew'
     days: '{count} Tag|{count} Tage'
@@ -80,8 +84,20 @@ domain:
   event:
     actions:
       add-to-crew: Zur Crew hinzufügen
+      cancel: Teilnahme absagen
+      contact-crew: Crew kontaktieren
+      create-calendar-entry: Kalendereintrag erstellen
+      create-registration: Anmeldung hinzufügen
+      delete: Veranstaltung löschen
+      edit: Veranstaltung bearbeiten|Alle bearbeiten
       export-to-template: '{template} exportieren'
+      leave-waiting-list: Warteliste verlassen
       remove-from-crew: Auf die Warteliste
+      sign-up: Anmelden
+      update-state-to-canceled: Veranstaltung absagen
+      update-state-to-open-for-signup: Anmeldungen freischalten
+      update-state-to-published: Crew veröffentlichen
+      view: Veranstaltung anzeigen
     category: Kategorie
     crew: Crew
     crew-count: Crew ({count})
@@ -95,8 +111,8 @@ domain:
       message: '{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die Position {position} gibt. Du kannst entweder einen passenden Slot freigeben, indem du jemand anderes aus der Crew entfernst oder einen neuen Slot für diese Veranstaltung hinzufügen.'
       retry: Slot hinzufügen
       title: Zuweisung nicht möglich
-    registrations: Anmeldungen
     registration-count: Anmeldungen ({count})
+    registrations: Anmeldungen
     route: Geplante Route
     signup-type: Anmeldetyp
     slot:
@@ -362,7 +378,7 @@ views:
       title: Alle bearbeiten
     dialog:
       delete:
-        message: Bist du sicher, dass du die Veranstaltung {name} löschen möchtest? Diese Aktion kann später nicht rückgängig gemacht werden.
+        message: Bist du sicher, dass du die ausgewählten {count} Veranstaltungen löschen möchtest? Diese Aktion kann später nicht rückgängig gemacht werden.
         submit: Unwiederruflich löschen
         title: Veranstaltung löschen
       open-signup:

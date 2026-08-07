@@ -61,84 +61,51 @@
                     <EventAdminListRow :event="item" />
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="permission-read-events">
-                        <RouterLink
-                            :to="{
-                                name: Routes.EventDetails,
-                                params: { year: item.start.getFullYear(), key: item.key },
-                            }"
-                            class="context-menu-item"
-                        >
-                            <i class="fa-solid fa-search" />
-                            <span>{{ $t('views.event-admin-list.action.show-event') }}</span>
-                        </RouterLink>
-                    </li>
-                    <li class="permission-write-event-details">
-                        <RouterLink
-                            :to="{
-                                name: Routes.EventEdit,
-                                params: { year: item.start.getFullYear(), key: item.key },
-                            }"
-                            class="context-menu-item"
-                        >
-                            <i class="fa-solid fa-drafting-compass" />
-                            <span>{{ $t('views.event-admin-list.action.edit-event') }}</span>
-                        </RouterLink>
-                    </li>
-                    <li
-                        v-for="template in eventExports.templates.value"
-                        :key="template"
-                        class="permission-export-events context-menu-item"
-                        data-test-id="action-export"
-                        @click="eventExports.exportEvent(item, template)"
-                    >
-                        <i class="fa-solid fa-file-excel" />
-                        <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
-                        <i class="fa-solid fa-user-plus" />
-                        <span>{{ $t('views.event-admin-list.action.add-registration') }}</span>
-                    </li>
-                    <li
-                        v-if="item.state === EventState.Draft"
-                        class="permission-write-event-details context-menu-item"
-                        @click="openEventsForSignup([item])"
-                    >
-                        <i class="fa-solid fa-people-group" />
-                        <span>{{ $t('views.event-admin-list.action.open-signup') }}</span>
-                    </li>
-                    <li
-                        v-else-if="item.state === EventState.OpenForSignup"
-                        class="permission-write-event-details context-menu-item"
-                        @click="publishCrewPlanning([item])"
-                    >
-                        <i class="fa-solid fa-earth-europe" />
-                        <span>{{ $t('views.event-admin-list.action.publish-crew') }}</span>
-                    </li>
-                    <li class="permission-read-user-details context-menu-item disabled">
-                        <i class="fa-solid fa-users" />
-                        <span>{{ $t('views.event-admin-list.action.request-more-crew') }}</span>
-                    </li>
-                    <li
-                        class="permission-read-user-details context-menu-item"
-                        :class="{ disabled: item.assignedUserCount === 0 }"
-                        @click="contactCrew([item])"
-                    >
-                        <i class="fa-solid fa-envelope" />
-                        <span>{{ $t('views.event-admin-list.action.contact-crew', { count: item.assignedUserCount }) }}</span>
-                    </li>
-                    <li
-                        v-if="item.state === EventState.Canceled"
-                        class="permission-delete-events context-menu-item text-error"
-                        @click="deleteEvent(item)"
-                    >
-                        <i class="fa-solid fa-trash-alt" />
-                        <span>{{ $t('views.event-admin-list.action.delete-event') }}</span>
-                    </li>
-                    <li v-else class="permission-delete-events context-menu-item text-error" @click="cancelEvent(item)">
-                        <i class="fa-solid fa-ban" />
-                        <span>{{ $t('views.event-admin-list.action.cancel-event') }}</span>
-                    </li>
+                    <EventAdminListRowActions :events="[item]" />
+                    <!--                    <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">-->
+                    <!--                        <i class="fa-solid fa-user-plus" />-->
+                    <!--                        <span>{{ $t('views.event-admin-list.action.add-registration') }}</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li-->
+                    <!--                        v-if="item.state === EventState.Draft"-->
+                    <!--                        class="permission-write-event-details context-menu-item"-->
+                    <!--                        @click="openEventsForSignup([item])"-->
+                    <!--                    >-->
+                    <!--                        <i class="fa-solid fa-people-group" />-->
+                    <!--                        <span>{{ $t('views.event-admin-list.action.open-signup') }}</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li-->
+                    <!--                        v-else-if="item.state === EventState.OpenForSignup"-->
+                    <!--                        class="permission-write-event-details context-menu-item"-->
+                    <!--                        @click="publishCrewPlanning([item])"-->
+                    <!--                    >-->
+                    <!--                        <i class="fa-solid fa-earth-europe" />-->
+                    <!--                        <span>{{ $t('views.event-admin-list.action.publish-crew') }}</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li class="permission-read-user-details context-menu-item disabled">-->
+                    <!--                        <i class="fa-solid fa-users" />-->
+                    <!--                        <span>{{ $t('views.event-admin-list.action.request-more-crew') }}</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li-->
+                    <!--                        class="permission-read-user-details context-menu-item"-->
+                    <!--                        :class="{ disabled: item.assignedUserCount === 0 }"-->
+                    <!--                        @click="contactCrew([item])"-->
+                    <!--                    >-->
+                    <!--                        <i class="fa-solid fa-envelope" />-->
+                    <!--                        <span>{{ $t('views.event-admin-list.action.contact-crew', { count: item.assignedUserCount }) }}</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li-->
+                    <!--                        v-if="item.state === EventState.Canceled"-->
+                    <!--                        class="permission-delete-events context-menu-item text-error"-->
+                    <!--                        @click="deleteEvent(item)"-->
+                    <!--                    >-->
+                    <!--                        <i class="fa-solid fa-trash-alt" />-->
+                    <!--                        <span>{{ $t('views.event-admin-list.action.delete-event') }}</span>-->
+                    <!--                    </li>-->
+                    <!--                    <li v-else class="permission-delete-events context-menu-item text-error" @click="cancelEvent(item)">-->
+                    <!--                        <i class="fa-solid fa-ban" />-->
+                    <!--                        <span>{{ $t('views.event-admin-list.action.cancel-event') }}</span>-->
+                    <!--                    </li>-->
                 </template>
             </VTable>
         </div>
@@ -176,49 +143,58 @@
                         <i class="fa-solid fa-earth-europe"></i>
                         <span class="truncate">{{ $t('views.event-admin-list.action.publish-crew') }}</span>
                     </button>
-                    <button v-else class="permission-write-events btn-ghost" @click="editBatch(selectedEvents)">
+                    <button v-else class="permission-write-events btn-ghost" @click="editEvents(selectedEvents)">
                         <i class="fa-solid fa-edit"></i>
                         <span class="truncate">{{ $t('views.event-admin-list.batch-edit.title') }}</span>
                     </button>
                 </div>
             </template>
             <template #menu>
-                <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
-                    <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('views.event-admin-list.action.add-registration') }}</span>
-                </li>
-                <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
-                    <i class="fa-solid fa-edit" />
-                    <span>{{ $t('views.event-admin-list.batch-edit.title') }}</span>
-                </li>
-                <li
-                    v-if="showBatchOpenEventForSignup"
-                    class="permission-write-event-details context-menu-item"
-                    @click="openEventsForSignup(selectedEvents)"
-                >
-                    <i class="fa-solid fa-people-group" />
-                    <span>{{ $t('views.event-admin-list.action.open-signup') }}</span>
-                </li>
-                <li
-                    v-if="showBatchPublishPlannedCrew"
-                    class="permission-write-event-details context-menu-item"
-                    @click="publishCrewPlanning(selectedEvents)"
-                >
-                    <i class="fa-solid fa-earth-europe" />
-                    <span>{{ $t('views.event-admin-list.action.publish-crew') }}</span>
-                </li>
-                <li class="permission-read-user-details permission-write-events context-menu-item disabled">
-                    <i class="fa-solid fa-users" />
-                    <span>{{ $t('views.event-admin-list.action.request-more-crew') }}</span>
-                </li>
-                <li class="permission-read-user-details context-menu-item disabled">
-                    <i class="fa-solid fa-envelope" />
-                    <span>{{ $t('views.event-admin-list.action.contact-crew', { count: '*' }) }}</span>
-                </li>
-                <li class="permission-delete-events context-menu-item disabled text-error">
-                    <i class="fa-solid fa-ban" />
-                    <span>{{ $t('views.event-admin-list.action.cancel-event') }}*</span>
-                </li>
+                <EventAdminListRowActions
+                    :events="selectedEvents"
+                    @update-events:edit="editEvents($event)"
+                    @update-events:create-registration="createRegistration($event)"
+                    @update-events:open-for-signup="openEventsForSignup($event)"
+                    @update-events:publish-crew="publishCrewPlanning($event)"
+                    @update-events:cancel="cancelEvents($event)"
+                    @update-events:delete="deleteEvents($event)"
+                />
+                <!--                <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">-->
+                <!--                    <i class="fa-solid fa-user-plus" />-->
+                <!--                    <span>{{ $t('views.event-admin-list.action.add-registration') }}</span>-->
+                <!--                </li>-->
+                <!--                <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">-->
+                <!--                    <i class="fa-solid fa-edit" />-->
+                <!--                    <span>{{ $t('views.event-admin-list.batch-edit.title') }}</span>-->
+                <!--                </li>-->
+                <!--                <li-->
+                <!--                    v-if="showBatchOpenEventForSignup"-->
+                <!--                    class="permission-write-event-details context-menu-item"-->
+                <!--                    @click="openEventsForSignup(selectedEvents)"-->
+                <!--                >-->
+                <!--                    <i class="fa-solid fa-people-group" />-->
+                <!--                    <span>{{ $t('views.event-admin-list.action.open-signup') }}</span>-->
+                <!--                </li>-->
+                <!--                <li-->
+                <!--                    v-if="showBatchPublishPlannedCrew"-->
+                <!--                    class="permission-write-event-details context-menu-item"-->
+                <!--                    @click="publishCrewPlanning(selectedEvents)"-->
+                <!--                >-->
+                <!--                    <i class="fa-solid fa-earth-europe" />-->
+                <!--                    <span>{{ $t('views.event-admin-list.action.publish-crew') }}</span>-->
+                <!--                </li>-->
+                <!--                <li class="permission-read-user-details permission-write-events context-menu-item disabled">-->
+                <!--                    <i class="fa-solid fa-users" />-->
+                <!--                    <span>{{ $t('views.event-admin-list.action.request-more-crew') }}</span>-->
+                <!--                </li>-->
+                <!--                <li class="permission-read-user-details context-menu-item disabled">-->
+                <!--                    <i class="fa-solid fa-envelope" />-->
+                <!--                    <span>{{ $t('views.event-admin-list.action.contact-crew', { count: '*' }) }}</span>-->
+                <!--                </li>-->
+                <!--                <li class="permission-delete-events context-menu-item disabled text-error">-->
+                <!--                    <i class="fa-solid fa-ban" />-->
+                <!--                    <span>{{ $t('views.event-admin-list.action.cancel-event') }}*</span>-->
+                <!--                </li>-->
             </template>
         </VMultiSelectActions>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
@@ -239,8 +215,7 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useEventAdministrationUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
-import { filterUndefined } from '@/common';
+import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import type { Event, EventType, InputSelectOption, Registration } from '@/domain';
 import { EventState, Permission, useEventService } from '@/domain';
 import type { ConfirmationDialog, Dialog, Sheet } from '@/ui/components/common';
@@ -262,6 +237,8 @@ import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vu
 import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
 import EventAdminListRow from './EventAdminListRow.vue';
 import type { Selectable } from '@/ui/model/Selectable.ts';
+import EventAdminListRowActions from '@/ui/views/events/list-admin/EventAdminListRowActions.vue';
+import type { MouseEvent } from 'happy-dom';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
@@ -269,8 +246,6 @@ const emit = defineEmits<RouteEmits>();
 
 const { t } = useI18n();
 const eventAdminUseCase = useEventAdministrationUseCase();
-const userAdminUseCase = useUserAdministrationUseCase();
-const usersUseCase = useUsersUseCase();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 const positions = usePositions();
@@ -290,7 +265,7 @@ const eventExports = useEventExports();
 const tab = ref<string>('future');
 
 const createEventDialog = ref<Dialog<Event> | null>(null);
-const cancelEventDialog = ref<Dialog<Event, string> | null>(null);
+const cancelEventDialog = ref<Dialog<Event | Event[], boolean> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
@@ -420,44 +395,50 @@ async function createEvent(): Promise<void> {
     }
 }
 
-async function deleteEvent(evt: Event): Promise<void> {
+async function deleteEvents(events: Event[]): Promise<void> {
     const confirmed = await confirmationDialog.value?.open({
         title: t('views.event-admin-list.dialog.delete.title'),
-        message: t('views.event-admin-list.dialog.delete.message', { name: evt.name }),
+        message: t('views.event-admin-list.dialog.delete.message', { count: events.length }),
         submit: t('views.event-admin-list.dialog.delete.submit'),
         danger: true,
     });
     if (confirmed) {
-        await eventAdminUseCase.deleteEvent(evt);
+        for (const event of events) {
+            await eventAdminUseCase.deleteEvent(event);
+        }
         await fetchEvents();
     }
 }
 
-async function cancelEvent(evt: Event): Promise<void> {
-    const message = await cancelEventDialog.value?.open(evt);
-    if (message !== undefined) {
-        await eventAdminUseCase.cancelEvent(evt, message);
+async function cancelEvents(events: Event[]): Promise<void> {
+    const confirmed = await cancelEventDialog.value?.open(events);
+    if (confirmed) {
+        const keys = events.map((it) => it.key);
+        await eventAdminUseCase.updateEvents(keys, { state: EventState.Canceled });
         await fetchEvents();
     }
 }
 
-async function editBatch(events: Event[]): Promise<void> {
-    const changed = await eventBatchEditDialog.value?.open(events);
-    if (changed) {
-        await fetchEvents();
+async function editEvents(events: Event[], mouseEvent?: MouseEvent): Promise<void> {
+    if (events.length === 1) {
+        const to: RouteLocationRaw = {
+            name: Routes.EventEdit,
+            params: { year: events[0].start.getFullYear(), key: events[0].key },
+        };
+        if (mouseEvent?.ctrlKey || mouseEvent?.metaKey) {
+            window.open(router.resolve(to).href, '_blank');
+        } else {
+            await router.push(to);
+        }
+    } else {
+        const changed = await eventBatchEditDialog.value?.open(events);
+        if (changed) {
+            await fetchEvents();
+        }
     }
 }
 
-async function contactCrew(events: Event[]): Promise<void> {
-    const userKeys = events
-        .flatMap((event) => eventService.getAssignedRegistrations(event))
-        .map((it) => it.userKey)
-        .filter(filterUndefined);
-    const users = await usersUseCase.getUsers(userKeys);
-    await userAdminUseCase.contactUsers(users);
-}
-
-async function addRegistration(events: Event[]): Promise<void> {
+async function createRegistration(events: Event[]): Promise<void> {
     const result = await createRegistrationDialog.value?.open(events);
     if (result) {
         await eventAdminUseCase.addRegistrations(events, result);

@@ -16,7 +16,7 @@
         :max-height="props.maxHeight"
         @close="open = false"
     >
-        <div class="bg-surface-container-high rounded-xl p-4 shadow-xl" @click="open = false">
+        <div class="context-menu" @click="open = false">
             <slot />
         </div>
     </VDropdownWrapper>
@@ -50,37 +50,3 @@ const props = defineProps<Props>();
 
 const open = ref<boolean>(false);
 </script>
-
-<style>
-@reference "tailwindcss";
-
-.context-menu-item {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    @apply -mx-4;
-    @apply px-4;
-    @apply space-x-4;
-    @apply py-3;
-    @apply -mx-3;
-    border-radius: var(--radius-lg);
-
-    @apply md:py-2;
-}
-
-.context-menu-item:hover {
-    background-color: var(--color-surface-container-highest);
-    text-decoration-line: none;
-}
-
-.context-menu-item.disabled {
-    pointer-events: none;
-    opacity: 0.5;
-}
-
-.context-menu-item > i,
-.context-menu-item > svg:first-child {
-    display: block;
-    @apply w-6;
-}
-</style>

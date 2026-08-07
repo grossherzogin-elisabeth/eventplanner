@@ -49,7 +49,12 @@
                     <EventListRow :event="item" />
                 </template>
                 <template #context-menu="{ item }">
-                    <EventListRowActions :event="item" @join="joinEvents([$event])" @leave="leaveEvents([$event])" />
+                    <EventListRowActions
+                        :events="[item]"
+                        @join="joinEvents($event)"
+                        @leave-all="leaveEvents($event)"
+                        @leave-waiting-list="leaveEvents($event, true)"
+                    />
                 </template>
             </VTable>
         </div>
@@ -77,37 +82,12 @@
                 </div>
             </template>
             <template #menu>
-                <li class="context-menu-item" @click="eventUseCase.downloadCalendarEntries(selectedEvents)">
-                    <i class="fa-solid fa-calendar-alt" />
-                    <span>{{ $t('views.event-list.action.create-calendar-entry') }}</span>
-                </li>
-                <li
-                    v-if="hasAnySelectedEventWhichSignedInUserCanJoin"
-                    class="permission-write-own-registrations context-menu-item"
-                    :class="{ disabled: !hasAnySelectedEventInFuture }"
-                    @click="joinEvents(selectedEvents)"
-                >
-                    <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('views.event-list.action.signup') }}</span>
-                </li>
-                <li
-                    v-if="hasAnySelectedEventWithSignedInUserOnWaitingList"
-                    class="permission-write-own-registrations context-menu-item"
-                    :class="{ disabled: !hasAnySelectedEventInFuture }"
-                    @click="leaveEvents(selectedEvents, true)"
-                >
-                    <i class="fa-solid fa-user-minus" />
-                    <span>{{ $t('views.event-list.action.leave-waitinglist') }}</span>
-                </li>
-                <li
-                    v-if="hasAnySelectedEventWithSignedInUserInTeam"
-                    class="permission-write-own-registrations context-menu-item text-error"
-                    :class="{ disabled: !hasAnySelectedEventInFuture }"
-                    @click="leaveEvents(selectedEvents)"
-                >
-                    <i class="fa-solid fa-ban" />
-                    <span>{{ $t('views.event-list.action.cancel') }}</span>
-                </li>
+                <EventListRowActions
+                    :events="selectedEvents"
+                    @join="joinEvents($event)"
+                    @leave-all="leaveEvents($event)"
+                    @leave-waiting-list="leaveEvents($event, true)"
+                />
             </template>
         </VMultiSelectActions>
 
@@ -169,18 +149,6 @@ const createRegistrationSheet = ref<Sheet<
 const hasAnySelectedEventInFuture = computed<boolean>(() => {
     const now = Date.now();
     return selectedEvents.value?.find((it) => it.start.getTime() > now) !== undefined;
-});
-
-const hasAnySelectedEventWhichSignedInUserCanJoin = computed<boolean>(() => {
-    return selectedEvents.value?.find((it) => !it.signedInUserRegistration) !== undefined;
-});
-
-const hasAnySelectedEventWithSignedInUserOnWaitingList = computed<boolean>(() => {
-    return selectedEvents.value?.find((it) => it.signedInUserRegistration && !it.isSignedInUserAssigned) !== undefined;
-});
-
-const hasAnySelectedEventWithSignedInUserInTeam = computed<boolean>(() => {
-    return selectedEvents.value?.find((it) => it.signedInUserRegistration && it.isSignedInUserAssigned) !== undefined;
 });
 
 const filteredEvents = computed<(Event & Selectable)[] | undefined>(() => {

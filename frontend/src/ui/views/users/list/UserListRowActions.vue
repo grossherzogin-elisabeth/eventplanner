@@ -1,0 +1,46 @@
+<template>
+    <template v-if="props.users">
+        <hr />
+        <li class="permission-read-user-details context-menu-item" @click="emit('contact', props.users)">
+            <i class="fa-solid fa-envelope" />
+            <span>Email schreiben</span>
+        </li>
+        <template v-if="props.users.length === 1">
+            <li class="permission-write-registrations context-menu-item" @click="emit('impersonate', props.users[0])">
+                <i class="fa-solid fa-user-secret" />
+                <span>Impersonate</span>
+            </li>
+            <li class="permission-write-registrations context-menu-item" @click="emit('create-registration', props.users[0])">
+                <i class="fa-solid fa-calendar-plus" />
+                <span>Anmeldung hinzufügen</span>
+            </li>
+            <li class="permission-write-users context-menu-item" @click="emit('edit', { user: props.users[0], event: $event })">
+                <i class="fa-solid fa-edit" />
+                <span>Nutzer bearbeiten</span>
+            </li>
+            <li class="permission-delete-users context-menu-item text-error" @click="emit('delete', props.users[0])">
+                <i class="fa-solid fa-trash-alt" />
+                <span>Nutzer löschen</span>
+            </li>
+        </template>
+    </template>
+</template>
+
+<script lang="ts" setup>
+import type { User } from '@/domain';
+
+interface Props {
+    users?: User[];
+}
+
+interface Emits {
+    (e: 'impersonate', user: User): void;
+    (e: 'delete', user: User): void;
+    (e: 'edit', payload: { user: User; event: MouseEvent }): void;
+    (e: 'create-registration', user: User): void;
+    (e: 'contact', users: User[]): void;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+</script>

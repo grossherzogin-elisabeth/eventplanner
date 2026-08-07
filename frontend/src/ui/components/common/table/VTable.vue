@@ -15,7 +15,11 @@
                         <td></td>
                         <slot name="row" :item="undefined" :index="i" :first="i === 0" :last="i === pagedItems.length - 1"> </slot>
                         <!-- context menu placeholder-->
-                        <td v-if="$slots['context-menu']"><i class="fa-solid fa-circle text-surface-container-high pr-4 text-2xl"></i></td>
+                        <td v-if="$slots['context-menu']" class="w-10">
+                            <span class="hidden sm:inline">
+                                <i class="fa-solid fa-circle text-surface-container-high pr-4 text-2xl"></i>
+                            </span>
+                        </td>
                         <td v-else></td>
                     </tr>
                 </slot>
@@ -79,7 +83,7 @@
                         v-if="$slots['context-menu']"
                         ref="contextColumns"
                         data-test-id="table-context-menu-trigger"
-                        class="w-0"
+                        class="hidden w-0 sm:table-cell"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
                         <button class="btn-icon lg:mr-3">
@@ -101,7 +105,7 @@
             max-width="20rem"
             @close="dropdownAnchor = null"
         >
-            <div class="bg-surface-container-high mt-2 rounded-xl p-4 shadow-xl" data-test-id="table-context-menu">
+            <div class="context-menu mt-2" data-test-id="table-context-menu">
                 <ul>
                     <template v-if="props.multiselection">
                         <li v-if="dropdownItem.selected" class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">

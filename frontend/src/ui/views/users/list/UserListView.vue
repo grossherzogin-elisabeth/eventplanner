@@ -47,33 +47,17 @@
                 @click="editUser($event.item, $event.event)"
             >
                 <template #row="{ item }">
-                    <UserRow :user="item" />
+                    <UserListRow :user="item" />
                 </template>
                 <template #context-menu="{ item }">
-                    <li
-                        class="permission-read-user-details context-menu-item"
-                        :class="{ disabled: !item.email }"
-                        @click="contactUsers([item])"
-                    >
-                        <i class="fa-solid fa-envelope" />
-                        <span>Email schreiben</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="impersonateUser(item)">
-                        <i class="fa-solid fa-user-secret" />
-                        <span>Impersonate</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="createRegistration(item)">
-                        <i class="fa-solid fa-calendar-plus" />
-                        <span>Anmeldung hinzufügen</span>
-                    </li>
-                    <li class="permission-write-users context-menu-item" @click="editUser(item, $event)">
-                        <i class="fa-solid fa-edit" />
-                        <span>Nutzer bearbeiten</span>
-                    </li>
-                    <li class="permission-delete-users context-menu-item text-error" @click="deleteUser(item)">
-                        <i class="fa-solid fa-trash-alt" />
-                        <span>Nutzer löschen</span>
-                    </li>
+                    <UserListRowActions
+                        :users="[item]"
+                        @contact="contactUsers($event)"
+                        @impersonate="impersonateUser($event)"
+                        @edit="editUser($event.user, $event.event)"
+                        @delete="deleteUser($event)"
+                        @create-registration="createRegistration($event)"
+                    />
                 </template>
             </VTable>
         </div>
@@ -99,18 +83,14 @@
                 </div>
             </template>
             <template #menu>
-                <li class="permission-read-user-details context-menu-item" @click="contactUsers(selectedUsers)">
-                    <i class="fa-solid fa-envelope" />
-                    <span>Email schreiben</span>
-                </li>
-                <li class="permission-write-users context-menu-item disabled">
-                    <i class="fa-solid fa-screwdriver-wrench" />
-                    <span>Arbeitsdienst eintragen*</span>
-                </li>
-                <li class="permission-delete-users context-menu-item disabled text-error">
-                    <i class="fa-solid fa-trash-alt" />
-                    <span>Nutzer löschen*</span>
-                </li>
+                <UserListRowActions
+                    :users="selectedUsers"
+                    @contact="contactUsers($event)"
+                    @impersonate="impersonateUser($event)"
+                    @edit="editUser($event.user, $event.event)"
+                    @delete="deleteUser($event)"
+                    @create-registration="createRegistration($event)"
+                />
             </template>
         </VMultiSelectActions>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
@@ -147,7 +127,8 @@ import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
 import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
-import UserRow from '@/ui/views/users/list/UserRow.vue';
+import UserListRow from './UserListRow.vue';
+import UserListRowActions from '@/ui/views/users/list/UserListRowActions.vue';
 
 enum Tab {
     TEAM_MEMBERS = 'members',
@@ -261,31 +242,32 @@ function createUser(): void {
     createUserDialog.value?.open().catch();
 }
 
-async function editUser(user: UserRegistrations, evt: MouseEvent): Promise<void> {
+async function editUser(user: User, evt?: MouseEvent): Promise<void> {
     if (!hasPermission(Permission.READ_USER_DETAILS)) {
         console.error('User has no permission to edit users.');
         return;
     }
     const to: RouteLocationRaw = { name: Routes.UserDetails, params: { key: user.key } };
-    if (evt.ctrlKey || evt.metaKey) {
+    if (evt?.ctrlKey || evt?.metaKey) {
         window.open(router.resolve(to).href, '_blank');
     } else {
         await router.push(to);
     }
 }
 
-function impersonateUser(user: UserRegistrations): void {
+function impersonateUser(user: User): void {
     authUseCase.impersonateUser(user.key);
 }
 
-async function createRegistration(user: UserRegistrations): Promise<void> {
+async function createRegistration(user: User): Promise<void> {
     const created = await createRegistrationForUserDialog.value?.open(user);
     if (created) {
-        user.waitingListCount = user.waitingListCount + 1;
+        // TODO
+        // user.waitingListCount = user.waitingListCount + 1;
     }
 }
 
-async function deleteUser(user: UserRegistrations): Promise<void> {
+async function deleteUser(user: User): Promise<void> {
     const confirmed = await confirmationDialog.value?.open({
         title: `${user.nickName || user.firstName} ${user.lastName} löschen`,
         message: `Bist du sicher, dass du ${user.nickName || user.firstName} ${user.lastName} löschen möchtest? Wenn

@@ -20,7 +20,6 @@
             </p>
             <!-- mobile state -->
             <div :key="stateDetails.icon" class="status-badge -mt-1 text-xs md:hidden" :class="stateDetails.color">
-                <i class="fa-solid w-4" :class="stateDetails.icon"></i>
                 <span>{{ stateDetails.name }}</span>
             </div>
         </div>
