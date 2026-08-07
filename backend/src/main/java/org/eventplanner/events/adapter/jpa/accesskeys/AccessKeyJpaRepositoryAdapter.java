@@ -10,7 +10,9 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
@@ -19,6 +21,10 @@ public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
 
     @Override
     public void create(final @NonNull UserKey userKey, final @NonNull String accessKeyHash) {
+        if (accessKeyJpaRepository.existsById(accessKeyHash)) {
+            log.error("Failed to create new access key for user {}: hash is already in use", userKey);
+            throw new IllegalStateException("Access key with hash already in use");
+        }
         var entity = new AccessKeyJpaEntity(
             accessKeyHash,
             userKey.value(),

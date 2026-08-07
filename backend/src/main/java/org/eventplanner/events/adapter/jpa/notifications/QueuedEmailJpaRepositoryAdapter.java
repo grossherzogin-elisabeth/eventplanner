@@ -8,7 +8,9 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class QueuedEmailJpaRepositoryAdapter implements QueuedEmailRepository {
@@ -23,6 +25,10 @@ public class QueuedEmailJpaRepositoryAdapter implements QueuedEmailRepository {
 
     @Override
     public void queue(@NonNull QueuedEmail email) {
+        if (repository.existsById(email.getKey())) {
+            log.error("Failed to queue email: key {} already exists", email.getKey());
+            throw new IllegalStateException("Queued email with key " + email.getKey() + " already exists");
+        }
         repository.save(new QueuedEmailJpaEntity(
             email.getKey(),
             email.getType().toString(),

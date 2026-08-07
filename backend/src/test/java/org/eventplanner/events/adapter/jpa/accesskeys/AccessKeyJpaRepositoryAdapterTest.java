@@ -1,7 +1,10 @@
 package org.eventplanner.events.adapter.jpa.accesskeys;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -43,6 +46,17 @@ class AccessKeyJpaRepositoryAdapterTest {
         assertThat(createdAt)
             .isAfterOrEqualTo(beforeCreate)
             .isBeforeOrEqualTo(Instant.now());
+    }
+
+    @Test
+    void shouldThrowWhenAccessKeyHashAlreadyExists() {
+        var accessKeyHash = "access-1";
+        when(repository.existsById(accessKeyHash)).thenReturn(true);
+
+        assertThatThrownBy(() -> testee.create(new UserKey("user-1"), accessKeyHash))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageNotContaining(accessKeyHash);
+        verify(repository, never()).save(any(AccessKeyJpaEntity.class));
     }
 
     @Test

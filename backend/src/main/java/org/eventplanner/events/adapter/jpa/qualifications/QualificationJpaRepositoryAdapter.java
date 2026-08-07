@@ -16,7 +16,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class QualificationJpaRepositoryAdapter implements QualificationRepository {
@@ -44,6 +46,7 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
     @Transactional
     public void create(@NonNull final Qualification qualification) {
         if (qualificationJpaRepository.existsById(qualification.getKey().value())) {
+            log.error("Failed to create new qualification: key {} already exists", qualification.getKey());
             throw new IllegalArgumentException("Qualification with key " + qualification.getKey()
                 .value() + " already exists");
         }

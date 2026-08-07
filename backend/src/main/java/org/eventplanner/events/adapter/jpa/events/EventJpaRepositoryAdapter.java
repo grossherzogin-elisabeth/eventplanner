@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class EventJpaRepositoryAdapter implements EventRepository {
@@ -46,6 +48,10 @@ public class EventJpaRepositoryAdapter implements EventRepository {
     @Override
     @Transactional
     public @NonNull Event create(@NonNull Event event) {
+        if (this.eventJpaRepository.existsById(event.getKey().value())) {
+            log.error("Failed to create new event: key {} already exists", event.getKey());
+            throw new IllegalStateException("Event with key " + event.getKey() + " already exists");
+        }
         var entity = EventJpaEntity.fromDomain(event);
         entity = this.eventJpaRepository.save(entity);
         return entity.toDomain(event.getRegistrations());

@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
@@ -47,10 +49,12 @@ public class EncryptedUserDetailsRepositoryAdapter implements UserRepository {
     throws UserAlreadyExistsException {
         // prevent duplicates on primary key
         if (encrypedUserDetailsJpaRepository.existsById(user.getKey().value())) {
+            log.error("Failed to create new user: key {} already exists", user.getKey());
             throw new UserAlreadyExistsException("User with key " + user.getKey() + " already exists");
         }
         // prevent duplicates on auth key
         if (user.getAuthKey() != null && encrypedUserDetailsJpaRepository.existsByAuthKey(user.getAuthKey().value())) {
+            log.error("Failed to create new user: auth key {} already exists", user.getAuthKey());
             throw new UserAlreadyExistsException("User with auth key " + user.getAuthKey() + " already exists");
         }
 

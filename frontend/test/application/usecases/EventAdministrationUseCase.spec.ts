@@ -178,10 +178,32 @@ describe('EventAdministrationUseCase', () => {
 
         await testee.addRegistrations([eventA, eventB], registration);
 
-        expect(eventRegistrationsRepository.createRegistration).toHaveBeenCalledWith('a', registration);
-        expect(eventRegistrationsRepository.createRegistration).toHaveBeenCalledWith('b', registration);
+        const registrationWithoutKey = expect.objectContaining({
+            userKey: registration.userKey,
+            positionKey: registration.positionKey,
+        });
+        expect(eventRegistrationsRepository.createRegistration).toHaveBeenCalledWith('a', registrationWithoutKey);
+        expect(eventRegistrationsRepository.createRegistration).toHaveBeenCalledWith('b', registrationWithoutKey);
         expect(eventCachingService.updateCache).toHaveBeenCalledTimes(2);
         expect(notificationService.success).toHaveBeenCalled();
+    });
+
+    it('should generate a unique key for each registration when adding to multiple events', async () => {
+        const registration = mockRegistrationDeckhand({ userKey: 'new-user' });
+        const eventA = mockEvent({ key: 'a', registrations: [] });
+        const eventB = mockEvent({ key: 'b', registrations: [] });
+        const capturedRegistrations: unknown[] = [];
+        eventRegistrationsRepository.createRegistration = vi.fn(async (eventKey: string, reg: unknown) => {
+            capturedRegistrations.push(reg);
+            return mockEvent({ key: eventKey });
+        });
+
+        await testee.addRegistrations([eventA, eventB], registration);
+
+        const [regA, regB] = capturedRegistrations as Array<{ key: string }>;
+        expect(regA.key).not.toEqual(registration.key);
+        expect(regB.key).not.toEqual(registration.key);
+        expect(regA.key).not.toEqual(regB.key);
     });
 
     it('should add one registration and update cache', async () => {

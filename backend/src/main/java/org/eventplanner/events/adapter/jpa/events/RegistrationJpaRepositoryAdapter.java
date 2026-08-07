@@ -21,6 +21,10 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
 
     @Override
     public @NonNull Registration createRegistration(@NonNull Registration registration, @NonNull EventKey eventKey) {
+        if (registrationJpaRepository.existsById(registration.getKey().value())) {
+            log.error("Failed to create new registration: key {} already exists", registration.getKey());
+            throw new IllegalStateException("Registration with key " + registration.getKey() + " already exists");
+        }
         var entity = registrationJpaRepository.save(RegistrationJpaEntity.fromDomain(registration, eventKey));
         return entity.toDomain();
     }
@@ -28,8 +32,7 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
     @Override
     public @NonNull Registration updateRegistration(@NonNull Registration registration, @NonNull EventKey eventKey) {
         if (!registrationJpaRepository.existsById(registration.getKey().value())) {
-            throw new NoSuchElementException("Registration with key " + registration.getKey()
-                .value() + " does not exist");
+            throw new NoSuchElementException("Registration with key " + registration.getKey() + " does not exist");
         }
         var entity = registrationJpaRepository.save(RegistrationJpaEntity.fromDomain(registration, eventKey));
         return entity.toDomain();
