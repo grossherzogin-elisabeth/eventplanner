@@ -6,7 +6,7 @@ import { HttpResponse, http } from 'msw';
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventType, Permission, SlotCriticality } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
-import EventsListView from '@/ui/views/events/list/EventsListView.vue';
+import EventListView from '@/ui/views/events/list/EventListView.vue';
 import { DECKHAND, mockEventRepresentation, mockRouter, server } from '~/mocks';
 import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
@@ -16,7 +16,7 @@ vi.mock('vue-router', () => ({
     useRoute: (): RouteLocationNormalizedLoadedGeneric => router.currentRoute.value,
 }));
 
-describe('EventsListView.vue', () => {
+describe('EventListView.vue', () => {
     let testee: VueWrapper;
     let events: EventRepresentation[];
 
@@ -88,7 +88,7 @@ describe('EventsListView.vue', () => {
 
         server.use(http.get('/api/v1/events', () => HttpResponse.json(events)));
         await router.push({ name: Routes.EventsList });
-        testee = mount(EventsListView, { global: { plugins: [router] } });
+        testee = mount(EventListView, { global: { plugins: [router] } });
     });
 
     afterEach(() => testee.unmount());
@@ -153,8 +153,8 @@ describe('EventsListView.vue', () => {
     it('should render export actions in row context menu', async () => {
         await loading();
         const menu = await openTableContextMenu(testee, 0);
+        await expect.poll(() => menu.findAll('[data-test-id="action-export"]')).toHaveLength(2);
         const exports = menu.findAll('[data-test-id="action-export"]');
-        expect(exports).toHaveLength(2);
         expect(exports[0].text()).toContain('some template');
         expect(exports[1].text()).toContain('some other template');
     });

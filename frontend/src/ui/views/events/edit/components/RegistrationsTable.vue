@@ -6,20 +6,20 @@
     >
         <template #row="{ item }">
             <td class="w-0">
-                <span v-if="item.state === RegistrationSlotState.WAITING_LIST">
+                <span v-if="item?.state === RegistrationSlotState.WAITING_LIST">
                     <i class="fa-solid fa-hourglass-half opacity-25" />
                 </span>
-                <span v-else-if="item.state === RegistrationSlotState.CONFIRMED">
+                <span v-else-if="item?.state === RegistrationSlotState.CONFIRMED">
                     <i class="fa-solid fa-user-check text-success opacity-60" />
                 </span>
-                <span v-else-if="item.state === RegistrationSlotState.ASSIGNED">
+                <span v-else-if="item?.state === RegistrationSlotState.ASSIGNED">
                     <i class="fa-solid fa-user-clock opacity-25" />
                 </span>
-                <span v-else-if="item.state === RegistrationSlotState.OPEN">
+                <span v-else-if="item?.state === RegistrationSlotState.OPEN">
                     <i class="fa-solid fa-user-xmark text-error/50" />
                 </span>
             </td>
-            <template v-if="item.registration">
+            <template v-if="item?.registration">
                 <td class="w-full">
                     <VTooltip :delay="500">
                         <template #default>
@@ -77,7 +77,7 @@
                 <p class="text-error mb-1 font-semibold italic opacity-50">
                     {{ $t('domain.event.slot.empty') }}
                 </p>
-                <p v-if="item.slot" class="flex items-center gap-x-1 gap-y-2 opacity-50">
+                <p v-if="item?.slot" class="flex items-center gap-x-1 gap-y-2 opacity-50">
                     <span
                         v-for="position in item.slot.positionKeys.map((it) => positions.get(it))"
                         :key="position.key"

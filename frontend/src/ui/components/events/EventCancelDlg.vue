@@ -1,23 +1,23 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto" type="modal-danger" data-test-id="cancel-event-dialog">
-        <template #title>Veranstaltung absagen</template>
+        <template #title>
+            {{ $t('components.event-cancel-dialog.title', { count: events?.length ?? 1 }) }}
+        </template>
         <template #default>
-            <div v-if="event" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
+            <div v-if="events" class="flex flex-1 flex-col px-8 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
-                        Bist du sicher, dass du diese Veranstaltung absagen möchtest? Aktuell wird vom System noch keine automatische Mail
-                        an die Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die
-                        Veranstaltung absagst.
+                        {{ $t('components.event-cancel-dialog.message', { count: events.length }) }}
                     </p>
                 </section>
             </div>
         </template>
         <template #buttons>
             <button class="btn-ghost-danger" @click="cancel">
-                <span>Abbrechen</span>
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <button class="btn-ghost-danger" @click="submit">
-                <span>Absagen</span>
+                <span>{{ $t('components.event-cancel-dialog.submit') }}</span>
             </button>
         </template>
     </VDialog>
@@ -29,28 +29,26 @@ import type { Event } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog } from '@/ui/components/common';
 
-const dlg = ref<Dialog<Event, string | undefined> | null>(null);
-const event = ref<Event | null>(null);
-const message = ref<string>('');
+const dlg = ref<Dialog<Event | Event[], boolean> | null>(null);
+const events = ref<Event[] | null>(null);
 
-async function open(evt: Event): Promise<string | undefined> {
-    event.value = evt;
-    message.value = 'Diese Veranstaltung wurde abgesagt';
-    return await dlg.value?.open().catch(() => undefined);
+async function open(evt: Event | Event[]): Promise<boolean> {
+    events.value = Array.isArray(evt) ? evt : [evt];
+    return (await dlg.value?.open().catch(() => false)) ?? false;
 }
 
 function submit(): void {
-    dlg.value?.submit(message.value);
+    dlg.value?.submit(true);
 }
 
 function cancel(): void {
-    dlg.value?.submit(undefined);
+    dlg.value?.submit(false);
 }
 
-defineExpose<Dialog<Event, string | undefined>>({
-    open: (evt: Event) => open(evt),
+defineExpose<Dialog<Event | Event[], boolean>>({
+    open: (evt: Event | Event[]) => open(evt),
     close: () => dlg.value?.reject(),
-    submit: (msg?: string) => dlg.value?.submit(msg),
+    submit: () => dlg.value?.submit(true),
     reject: () => dlg.value?.reject(),
 });
 </script>

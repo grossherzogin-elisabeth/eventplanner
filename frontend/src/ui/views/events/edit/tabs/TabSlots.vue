@@ -16,9 +16,9 @@
             </td>
             <td class="w-1/3">
                 <p class="font-semibold whitespace-nowrap">
-                    {{ item.positionName || positions.get(item.positionKeys[0]).name }}
+                    {{ item?.positionName || positions.get(item?.positionKeys[0]).name }}
                 </p>
-                <p v-if="item.assignedRegistrationKey" class="truncate text-sm">
+                <p v-if="item?.assignedRegistrationKey" class="truncate text-sm">
                     {{ props.registrations.find((r) => r.registration?.key === item.assignedRegistrationKey)?.name }}
                 </p>
                 <p v-else class="truncate text-sm">
@@ -28,7 +28,7 @@
             <td class="w-2/3 min-w-96">
                 <div class="flex flex-wrap items-center gap-1">
                     <div
-                        v-for="positionKey in item.positionKeys"
+                        v-for="positionKey in item?.positionKeys"
                         :key="positionKey"
                         :style="{ '--color': positions.get(positionKey).color }"
                         class="tag custom"
@@ -39,11 +39,11 @@
             </td>
             <td class="w-64">
                 <div class="flex items-center justify-end">
-                    <span v-if="item.criticality === 2" class="status-badge error">
+                    <span v-if="item?.criticality === 2" class="status-badge error">
                         <i class="fa-solid fa-warning"></i>
                         <span>{{ $t('domain.event-slot.required') }}</span>
                     </span>
-                    <span v-else-if="item.criticality === 1" class="status-badge warning">
+                    <span v-else-if="item?.criticality === 1" class="status-badge warning">
                         <i class="fa-solid fa-circle-info"></i>
                         <span>{{ $t('domain.event-slot.important') }}</span>
                     </span>

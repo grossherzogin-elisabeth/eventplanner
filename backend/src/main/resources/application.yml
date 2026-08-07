@@ -98,6 +98,7 @@ spring:
         PRAGMA synchronous=NORMAL;
         PRAGMA cache_size=-10000;
         PRAGMA temp_store=MEMORY;
+      maximum-pool-size: 1
     url: jdbc:sqlite:${data.directory}/eventplanner.db
   flyway:
     baseline-on-migrate: true

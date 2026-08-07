@@ -11,10 +11,16 @@
             <!-- loading -->
             <tbody v-if="loading" data-test-id="table-loading">
                 <slot name="loading" :colspan="columnCount">
-                    <tr>
+                    <tr v-for="i in 10" :key="i" class="skeleton">
                         <td></td>
-                        <td :colspan="columnCount" class="italic">Wird geladen...</td>
-                        <td></td>
+                        <slot name="row" :item="undefined" :index="i" :first="i === 0" :last="i === pagedItems.length - 1"> </slot>
+                        <!-- context menu placeholder-->
+                        <td v-if="$slots['context-menu']" class="w-10">
+                            <span class="hidden sm:inline">
+                                <i class="fa-solid fa-circle text-surface-container-high pr-4 text-2xl"></i>
+                            </span>
+                        </td>
+                        <td v-else></td>
                     </tr>
                 </slot>
             </tbody>
@@ -47,11 +53,12 @@
                     @click.stop.prevent="onClick($event, row as T & Selectable)"
                 >
                     <td></td>
-                    <td v-if="props.sortable && viewPortSize.width.value > 1024" class="w-0">
+                    <td v-if="props.sortable" class="w-0 pr-4">
                         <i class="fa-solid fa-grip-vertical text-secondary-variant cursor-move"></i>
                     </td>
                     <td
                         v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"
+                        class="pr-2"
                         @click.stop.prevent="row.selected = !row.selected"
                     >
                         <div v-if="row.selected">
@@ -76,7 +83,7 @@
                         v-if="$slots['context-menu']"
                         ref="contextColumns"
                         data-test-id="table-context-menu-trigger"
-                        class="w-0"
+                        class="hidden w-0 sm:table-cell"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
                         <button class="btn-icon lg:mr-3">
@@ -98,7 +105,7 @@
             max-width="20rem"
             @close="dropdownAnchor = null"
         >
-            <div class="bg-surface-container-high mt-2 rounded-xl p-4 shadow-xl" data-test-id="table-context-menu">
+            <div class="context-menu mt-2" data-test-id="table-context-menu">
                 <ul>
                     <template v-if="props.multiselection">
                         <li v-if="dropdownItem.selected" class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
@@ -169,7 +176,7 @@ interface Emits {
 
 interface Slots {
     'head'?: (props: { sortBy: string; sortDirection: 'asc' | 'desc' }) => void;
-    'row'?: (props: { item: T & Selectable; index: number; first: boolean; last: boolean }) => void;
+    'row'?: (props: { item: (T & Selectable) | undefined; index: number; first: boolean; last: boolean }) => void;
     'no-data'?: (props: { colspan: number }) => void;
     'context-menu'?: (props: { item: T & Selectable }) => void;
     'loading'?: (props: { colspan: number }) => void;
