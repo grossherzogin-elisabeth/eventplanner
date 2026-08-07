@@ -6,7 +6,7 @@ import { HttpResponse, http } from 'msw';
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventType, Permission, SlotCriticality } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
-import EventsListView from '@/ui/views/events/list/EventsListView.vue';
+import EventsListView from '@/ui/views/events/list/EventListView.vue';
 import { DECKHAND, mockEventRepresentation, mockRouter, server } from '~/mocks';
 import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
@@ -153,8 +153,8 @@ describe('EventsListView.vue', () => {
     it('should render export actions in row context menu', async () => {
         await loading();
         const menu = await openTableContextMenu(testee, 0);
+        await expect.poll(() => menu.findAll('[data-test-id="action-export"]')).toHaveLength(2);
         const exports = menu.findAll('[data-test-id="action-export"]');
-        expect(exports).toHaveLength(2);
         expect(exports[0].text()).toContain('some template');
         expect(exports[1].text()).toContain('some other template');
     });
