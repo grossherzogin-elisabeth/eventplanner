@@ -58,7 +58,6 @@ const open = ref<boolean>(false);
     display: flex;
     align-items: center;
     cursor: pointer;
-    @apply -mx-4;
     @apply px-4;
     @apply space-x-4;
     @apply py-3;

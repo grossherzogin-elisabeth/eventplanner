@@ -6,7 +6,7 @@ import { HttpResponse, http } from 'msw';
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
 import { EventType, Permission, SlotCriticality } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
-import EventsListView from '@/ui/views/events/list/EventListView.vue';
+import EventListView from '@/ui/views/events/list/EventListView.vue';
 import { DECKHAND, mockEventRepresentation, mockRegistrationDeckhand, mockRouter, server } from '~/mocks';
 import { openTableContextMenu, setupUserPermissions, stubs } from '~/utils';
 
@@ -16,7 +16,7 @@ vi.mock('vue-router', () => ({
     useRoute: (): RouteLocationNormalizedLoadedGeneric => router.currentRoute.value,
 }));
 
-describe('EventsListView.vue', () => {
+describe('EventListView.vue', () => {
     let testee: VueWrapper;
     let events: EventRepresentation[];
     const capturedCreateRegistration: string[] = [];
@@ -104,7 +104,7 @@ describe('EventsListView.vue', () => {
         );
 
         await router.push({ name: Routes.EventsList });
-        testee = mount(EventsListView, { global: { plugins: [router] } });
+        testee = mount(EventListView, { global: { plugins: [router] } });
     });
 
     afterEach(() => testee.unmount());
@@ -179,7 +179,7 @@ describe('EventsListView.vue', () => {
         const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
         const openSpy = vi.fn(async () => registration);
         testee.unmount();
-        testee = mount(EventsListView, {
+        testee = mount(EventListView, {
             global: {
                 plugins: [router],
                 stubs: { RegistrationDetailsSheet: stubs('RegistrationDetailsSheet', openSpy) },

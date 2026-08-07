@@ -60,7 +60,7 @@
         <template v-if="showWaitingList">
             <p class="mb-1 pl-4 font-semibold">
                 {{ props.event?.assignedUserCount }}
-                <span v-if="waitingListCount" class="opacity-40"> +{{ waitingListCount }} </span>
+                <span v-if="props.event?.waitingListCount" class="opacity-40"> +{{ props.event?.waitingListCount }} </span>
             </p>
             <p class="pl-4 text-sm">
                 {{ $t('domain.event.crew', { count: props.event?.assignedUserCount }) }}
@@ -123,13 +123,6 @@ const hasOpenSlots = computed<boolean>(() => {
 
 const hasOpenImportantSlots = computed<boolean>(() => {
     return props.event !== undefined && eventService.hasOpenImportantSlots(props.event);
-});
-
-const waitingListCount = computed<number>(() => {
-    if (props.event === undefined) {
-        return 0;
-    }
-    return props.event.registrations.length - props.event.assignedUserCount;
 });
 
 const stateDetails = computed<StateDetails>(() => {

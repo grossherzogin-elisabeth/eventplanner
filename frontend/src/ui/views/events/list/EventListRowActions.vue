@@ -99,14 +99,14 @@ const futureEvents = computed<Event[]>(() => {
 });
 
 const joinableEvents = computed<number>(() => {
-    return futureEvents.value.filter((it) => !it.signedInUserRegistration).length ?? 0;
+    return futureEvents.value.filter((it) => it.canSignedInUserJoin).length;
 });
 
 const eventsWithUserOnWaitingList = computed<number>(() => {
-    return futureEvents.value.filter((it) => it.signedInUserRegistration && !it.isSignedInUserAssigned).length ?? 0;
+    return futureEvents.value.filter((it) => it.signedInUserRegistration && !it.isSignedInUserAssigned).length;
 });
 
 const eventsWithUserInCrew = computed<number>(() => {
-    return futureEvents.value.filter((it) => it.signedInUserRegistration && it.isSignedInUserAssigned).length ?? 0;
+    return futureEvents.value.filter((it) => it.signedInUserRegistration && it.isSignedInUserAssigned).length;
 });
 </script>
