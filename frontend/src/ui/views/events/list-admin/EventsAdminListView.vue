@@ -60,29 +60,29 @@
                 <template #row="{ item }">
                     <!-- date -->
                     <td class="hidden w-1/6 whitespace-nowrap lg:table-cell">
-                        <p class="mb-1 font-semibold 2xl:hidden">{{ $d(item.start, DateTimeFormat.DDD_DD_MM) }}</p>
-                        <p class="mb-1 hidden font-semibold 2xl:block">{{ formatDateRange(item.start, item.end) }}</p>
-                        <p class="text-sm">{{ $t('views.event-admin-list.table.day-count', { count: item.days }) }}</p>
+                        <p class="mb-1 font-semibold 2xl:hidden">{{ $d(item?.start ?? new Date(), DateTimeFormat.DDD_DD_MM) }}</p>
+                        <p class="mb-1 hidden font-semibold 2xl:block">{{ formatDateRange(item?.start, item?.end) }}</p>
+                        <p class="text-sm">{{ $t('views.event-admin-list.table.day-count', { count: item?.days }) }}</p>
                     </td>
                     <!-- name -->
                     <td class="w-2/3 max-w-[80vw] font-semibold whitespace-nowrap" style="max-width: min(65vw, 20rem)">
-                        <p class="mb-1 truncate" :class="{ 'text-error line-through': item.state === EventState.Canceled }">
-                            <span v-if="item.state === EventState.Draft" class="opacity-50">{{ $t('domain.event-state.draft') }}: </span>
-                            <span v-else-if="item.state === EventState.Canceled">{{ $t('domain.event-state.canceled') }}: </span>
-                            {{ item.name }}
+                        <p class="mb-1 truncate" :class="{ 'text-error line-through': item?.state === EventState.Canceled }">
+                            <span v-if="item?.state === EventState.Draft" class="opacity-50">{{ $t('domain.event-state.draft') }}: </span>
+                            <span v-else-if="item?.state === EventState.Canceled">{{ $t('domain.event-state.canceled') }}: </span>
+                            {{ item?.name }}
                         </p>
 
                         <p class="hidden truncate text-sm font-light lg:block">
-                            <template v-if="item.description">{{ item.description }}</template>
-                            <template v-else-if="item.locations.length === 0">{{ $t('views.event-admin-list.table.no-route') }}</template>
-                            <template v-else>{{ item.locations.map((it) => it.name).join(' - ') }}</template>
+                            <template v-if="item?.description">{{ item.description }}</template>
+                            <template v-else-if="item?.locations.length === 0">{{ $t('views.event-admin-list.table.no-route') }}</template>
+                            <template v-else>{{ item?.locations.map((it) => it.name).join(' - ') }}</template>
                         </p>
                         <p class="truncate text-sm font-light lg:hidden">
-                            {{ formatDateRange(item.start, item.end) }} |
-                            {{ $t('views.event-admin-list.table.day-count', { count: item.days }) }}
+                            {{ formatDateRange(item?.start, item?.end) }} |
+                            {{ $t('views.event-admin-list.table.day-count', { count: item?.days }) }}
                         </p>
                         <div class="flex w-full items-center gap-px pt-2">
-                            <template v-for="(position, index) in item.assignedPositions" :key="`${position.key}-${index}`">
+                            <template v-for="(position, index) in item?.assignedPositions" :key="`${position.key}-${index}`">
                                 <div :data-index="index" class="w-1 grow">
                                     <VTooltip :delay="50">
                                         <template #tooltip>
@@ -105,8 +105,8 @@
                     <!-- crew -->
                     <td class="w-1/6 min-w-24 whitespace-nowrap">
                         <p class="mb-1 pl-4 font-semibold">
-                            {{ item.assignedUserCount }}
-                            <span v-if="item.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
+                            {{ item?.assignedUserCount }}
+                            <span v-if="item?.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
                         </p>
                         <p class="pl-4 text-sm">{{ $t('views.event-admin-list.table.team') }}</p>
                     </td>

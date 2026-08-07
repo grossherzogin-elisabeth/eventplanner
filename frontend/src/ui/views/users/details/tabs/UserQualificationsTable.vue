@@ -6,20 +6,20 @@
         @click="editUserQualification($event.item)"
     >
         <template #row="{ item }">
-            <td :key="item.icon" class="text-xl">
-                <i class="fa-solid" :class="item.icon" />
+            <td :key="item?.icon" class="pr-4 text-xl">
+                <i class="fa-solid" :class="item?.icon" />
             </td>
             <td class="w-2/3 min-w-80">
-                <p class="mb-1 font-semibold">{{ item.name }}</p>
+                <p class="mb-1 font-semibold">{{ item?.name }}</p>
                 <p class="text-sm">
-                    {{ item.description }}
+                    {{ item?.description }}
                 </p>
             </td>
 
             <td class="w-1/6">
                 <div class="flex flex-wrap items-center justify-end">
                     <span
-                        v-for="positionKey in item.grantsPositions"
+                        v-for="positionKey in item?.grantsPositions"
                         :key="positionKey"
                         class="tag custom"
                         :style="{ '--color': positions.get(positionKey).color }"
@@ -29,7 +29,7 @@
                 </div>
             </td>
             <td class="w-1/6">
-                <template v-if="item.expires">
+                <template v-if="item?.expires">
                     <p v-if="item.expiresAt" class="mb-1 font-semibold">
                         {{ $d(item.expiresAt, DateTimeFormat.DD_MM_YYYY) }}
                     </p>
@@ -43,11 +43,11 @@
             </td>
             <td>
                 <div class="flex items-center justify-end">
-                    <div v-if="item.isExpired" class="status-badge error">
+                    <div v-if="item?.isExpired" class="status-badge error">
                         <i class="fa-solid fa-ban"></i>
                         <span>Abgelaufen</span>
                     </div>
-                    <div v-else-if="item.willExpireSoon" class="status-badge warning">
+                    <div v-else-if="item?.willExpireSoon" class="status-badge warning">
                         <i class="fa-solid fa-warning"></i>
                         <span> Läuft bald ab</span>
                     </div>
