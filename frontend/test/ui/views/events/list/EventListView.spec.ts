@@ -8,7 +8,7 @@ import { EventType, Permission, SlotCriticality } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
 import EventListView from '@/ui/views/events/list/EventListView.vue';
 import { DECKHAND, mockEventRepresentation, mockRegistrationDeckhand, mockRouter, server } from '~/mocks';
-import { openTableContextMenu, setupUserPermissions, stubs } from '~/utils';
+import { openTableContextMenu, setupSignedInUser, setupUserPermissions, stubs } from '~/utils';
 
 const router = mockRouter();
 vi.mock('vue-router', () => ({
@@ -220,6 +220,18 @@ describe('EventListView.vue', () => {
 
         await expect.poll(() => capturedDeleteRegistration).toHaveLength(1);
         expect(capturedDeleteRegistration[0]).toContain('reg-2-key');
+    });
+
+    it('should not show no-position banner when signed-in user has positions', () => {
+        expect(testee.text()).not.toContain(testee.vm.$t('views.event-list.note-no-position'));
+    });
+
+    it('should show no-position banner when signed-in user has no positions', () => {
+        testee.unmount();
+        setupSignedInUser({ positions: [] });
+        testee = mount(EventListView, { global: { plugins: [router] } });
+
+        expect(testee.text()).toContain(testee.vm.$t('views.event-list.note-no-position'));
     });
 
     async function loading(): Promise<void> {
