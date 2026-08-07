@@ -47,11 +47,12 @@
                     @click.stop.prevent="onClick($event, row as T & Selectable)"
                 >
                     <td></td>
-                    <td v-if="props.sortable && viewPortSize.width.value > 1024" class="w-0">
+                    <td v-if="props.sortable" class="w-0 pr-4">
                         <i class="fa-solid fa-grip-vertical text-secondary-variant cursor-move"></i>
                     </td>
                     <td
                         v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"
+                        class="pr-2"
                         @click.stop.prevent="row.selected = !row.selected"
                     >
                         <div v-if="row.selected">
@@ -98,7 +99,7 @@
             max-width="20rem"
             @close="dropdownAnchor = null"
         >
-            <div class="bg-surface-container-high mt-2 rounded-xl p-4 shadow-xl" data-test-id="table-context-menu">
+            <div class="context-menu mt-2" data-test-id="table-context-menu">
                 <ul>
                     <template v-if="props.multiselection">
                         <li v-if="dropdownItem.selected" class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">

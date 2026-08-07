@@ -15,6 +15,7 @@
 @import './components/status-panels.css';
 @import './components/filter-panel.css';
 @import './components/skeleton.css';
+@import './components/context-menu.css';
 
 @import './domain/permission.css';
 

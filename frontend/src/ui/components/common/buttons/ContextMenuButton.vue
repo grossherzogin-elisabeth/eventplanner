@@ -16,7 +16,7 @@
         :max-height="props.maxHeight"
         @close="open = false"
     >
-        <div class="bg-surface-container-high rounded-xl p-4 shadow-xl" @click="open = false">
+        <div class="context-menu" @click="open = false">
             <slot />
         </div>
     </VDropdownWrapper>
@@ -58,7 +58,6 @@ const open = ref<boolean>(false);
     display: flex;
     align-items: center;
     cursor: pointer;
-    @apply -mx-4;
     @apply px-4;
     @apply space-x-4;
     @apply py-3;
