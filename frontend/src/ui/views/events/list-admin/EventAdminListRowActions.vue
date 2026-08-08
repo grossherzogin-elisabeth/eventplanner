@@ -9,6 +9,7 @@
                     params: { year: props.events[0].start.getFullYear(), key: props.events[0].key },
                 }"
                 class="context-menu-item"
+                data-test-id="action-view"
             >
                 <i class="fa-solid fa-search" />
                 <span>{{ $t('domain.event.actions.view') }}</span>
@@ -17,7 +18,11 @@
     </template>
     <template v-if="props.events">
         <!-- Contact crew -->
-        <li class="permission-write-event-details context-menu-item" @click="emit('update-events:edit', props.events)">
+        <li
+            class="permission-write-event-details context-menu-item"
+            data-test-id="action-edit"
+            @click="emit('update-events:edit', props.events)"
+        >
             <i class="fa-solid fa-compass-drafting" />
             <span>{{ $t('generic.edit') }}</span>
         </li>
@@ -25,6 +30,7 @@
         <!-- Transition event state DRAFT -> OPEN_FOR_SIGNUP -->
         <li
             class="permission-write-event-details context-menu-item"
+            data-test-id="action-open-for-signup"
             :class="{ disabled: !hasAnyDraftEvents }"
             @click="emit('update-events:open-for-signup', props.events)"
         >
@@ -34,6 +40,7 @@
         <!-- Transition event state OPEN_FOR_SIGNUP -> PLANNED -->
         <li
             class="permission-write-event-details context-menu-item"
+            data-test-id="action-publish-crew"
             :class="{ disabled: !hasAnyOpenForSignUpEvents }"
             @click="emit('update-events:publish-crew', props.events)"
         >
@@ -41,12 +48,20 @@
             <span>{{ $t('domain.event.actions.update-state-to-published') }}</span>
         </li>
         <!-- Transition event state to CANCELED -->
-        <li class="permission-delete-events context-menu-item text-error" @click="emit('update-events:cancel', props.events)">
+        <li
+            class="permission-delete-events context-menu-item text-error"
+            data-test-id="action-cancel"
+            @click="emit('update-events:cancel', props.events)"
+        >
             <i class="fa-solid fa-ban" />
             <span>{{ $t('domain.event.actions.update-state-to-canceled') }}</span>
         </li>
         <!-- Delete -->
-        <li class="permission-delete-events context-menu-item text-error" @click="emit('update-events:delete', props.events)">
+        <li
+            class="permission-delete-events context-menu-item text-error"
+            data-test-id="action-delete"
+            @click="emit('update-events:delete', props.events)"
+        >
             <i class="fa-solid fa-trash-alt" />
             <span>{{ $t('generic.delete') }}</span>
         </li>
@@ -54,13 +69,17 @@
         <hr />
 
         <!-- Contact crew -->
-        <li class="permission-read-user-details context-menu-item" @click="contactCrew(props.events)">
+        <li class="permission-read-user-details context-menu-item" data-test-id="action-contact-crew" @click="contactCrew(props.events)">
             <i class="fa-solid fa-envelope" />
             <span>{{ $t('domain.event.actions.contact-crew') }}</span>
         </li>
 
         <!-- Add registration -->
-        <li class="permission-write-registrations context-menu-item" @click="emit('update-events:create-registration', props.events)">
+        <li
+            class="permission-write-registrations context-menu-item"
+            data-test-id="action-create-registration"
+            @click="emit('update-events:create-registration', props.events)"
+        >
             <i class="fa-solid fa-user-plus" />
             <span>{{ $t('domain.event.actions.create-registration') }}</span>
         </li>
@@ -73,7 +92,7 @@
                 :key="template"
                 class="permission-export-events context-menu-item"
                 data-test-id="action-export"
-                @click="eventExports.exportEvent(props.events[0], template)"
+                @click="exportEvents(props.events, template)"
             >
                 <i class="fa-solid fa-file-excel" />
                 <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
@@ -127,5 +146,11 @@ async function contactCrew(events: Event[]): Promise<void> {
         .filter(filterUndefined);
     const users = await usersUseCase.getUsers(userKeys);
     await userAdminUseCase.contactUsers(users);
+}
+
+async function exportEvents(events: Event[], template: string): Promise<void> {
+    for (const event of events) {
+        await eventExports.exportEvent(event, template);
+    }
 }
 </script>

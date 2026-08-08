@@ -59,6 +59,7 @@
                     <td
                         v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"
                         class="pr-2"
+                        data-test-id="table-row-select"
                         @click.stop.prevent="row.selected = !row.selected"
                     >
                         <div v-if="row.selected">
@@ -108,11 +109,21 @@
             <div class="context-menu mt-2" data-test-id="table-context-menu">
                 <ul>
                     <template v-if="props.multiselection">
-                        <li v-if="dropdownItem.selected" class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
+                        <li
+                            v-if="dropdownItem.selected"
+                            class="context-menu-item"
+                            data-test-id="action-deselect"
+                            @click="dropdownItem.selected = !dropdownItem.selected"
+                        >
                             <i class="fa-solid fa-xmark" />
                             <span>Abwählen</span>
                         </li>
-                        <li v-else class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
+                        <li
+                            v-else
+                            class="context-menu-item"
+                            data-test-id="action-select"
+                            @click="dropdownItem.selected = !dropdownItem.selected"
+                        >
                             <i class="fa-solid fa-check" />
                             <span>Auswählen</span>
                         </li>

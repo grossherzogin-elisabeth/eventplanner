@@ -143,7 +143,7 @@ const validation = useValidation(registration, (value) => {
     const errors = Validator.validate('positionKey', value.positionKey, notEmpty()).getErrors();
     if (!value.name && !value.userKey) {
         errors.userKey = errors.userKey || [];
-        errors.userKey.push('Bitte wähle eine Stammcrew Mitglied');
+        errors.userKey.push('Bitte wähle ein Stammcrew Mitglied');
     }
     return errors;
 });

@@ -36,16 +36,26 @@
         <div class="filter-panel scrollbar-invisible mt-4">
             <FilterMultiselect
                 v-model="filterEventType"
+                data-test-id="filter-event-type"
                 :placeholder="$t('views.event-admin-list.filter.all-events')"
                 :options="eventTypes.options.value"
             />
             <FilterMultiselect
                 v-model="filterEventStates"
+                data-test-id="filter-event-state"
                 :placeholder="$t('views.event-admin-list.filter.all-status')"
                 :options="eventStates.options.value"
             />
-            <FilterToggle v-model="filterFreeSlots" :label="$t('views.event-admin-list.filter.free-slots')" />
-            <FilterToggle v-model="filterWaitinglist" :label="$t('views.event-admin-list.filter.waitinglist')" />
+            <FilterToggle
+                v-model="filterFreeSlots"
+                data-test-id="filter-free-slots"
+                :label="$t('views.event-admin-list.filter.free-slots')"
+            />
+            <FilterToggle
+                v-model="filterWaitinglist"
+                data-test-id="filter-waiting-list"
+                :label="$t('views.event-admin-list.filter.waitinglist')"
+            />
         </div>
 
         <div class="w-full">
@@ -61,7 +71,15 @@
                     <EventAdminListRow :event="item" />
                 </template>
                 <template #context-menu="{ item }">
-                    <EventAdminListRowActions :events="[item]" />
+                    <EventAdminListRowActions
+                        :events="[item]"
+                        @update-events:edit="editEvents($event)"
+                        @update-events:create-registration="createRegistration($event)"
+                        @update-events:open-for-signup="openEventsForSignup($event)"
+                        @update-events:publish-crew="publishCrewPlanning($event)"
+                        @update-events:cancel="cancelEvents($event)"
+                        @update-events:delete="deleteEvents($event)"
+                    />
                 </template>
             </VTable>
         </div>

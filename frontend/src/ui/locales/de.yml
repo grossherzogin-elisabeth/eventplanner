@@ -484,7 +484,7 @@ views:
       no-qualification: '{name} hat keine Qualifikation für die Position {position}'
       qualifications: '{name} hat zum Zeitpunkt der Veranstaltung die folgenden Qualifikationen:'
       select-position: Bitte wähle eine Position
-      select-user: Bitte wähle eine Stammcrew Mitglied
+      select-user: Bitte wähle ein Stammcrew Mitglied
       title: Anmeldung von {name} {lastName}
     empty-crew:
       desc: Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.

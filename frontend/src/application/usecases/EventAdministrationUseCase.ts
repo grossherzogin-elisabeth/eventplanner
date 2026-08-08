@@ -83,10 +83,6 @@ export class EventAdministrationUseCase {
                 console.log(`Updating event ${eventKey} (${i + 1}/${eventKeys.length})`);
                 await this.updateEventInternal(eventKey, patch);
             }
-
-            for (const eventKey of eventKeys) {
-                await this.updateEventInternal(eventKey, patch);
-            }
             this.notificationService.success('Deine Änderungen wurden gespeichert');
         } catch (e) {
             this.errorHandlingService.handleError({

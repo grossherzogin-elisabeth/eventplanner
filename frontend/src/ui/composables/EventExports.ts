@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import type { Ref } from 'vue';
-import { useEventExportUseCase, useNotificationService } from '@/application';
+import { useEventExportUseCase } from '@/application';
 import type { Event } from '@/domain';
 
 export interface UseEventExports {
@@ -12,11 +12,9 @@ export interface UseEventExports {
 
 export function useEventExports(): UseEventExports {
     const eventExportUseCase = useEventExportUseCase();
-    const notifications = useNotificationService();
     const templates = ref<string[]>([]);
 
     async function exportEvent(event: Event, templateName: string): Promise<void> {
-        notifications.info('Dein Export wird erstellt. Bitte habe einen Moment Geduld.');
         await eventExportUseCase.exportEvent(event, templateName);
     }
 

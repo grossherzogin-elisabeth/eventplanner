@@ -1,5 +1,11 @@
 <template>
-    <button ref="button" v-bind="$attrs" class="cursor-pointer" @click.stop="open = true">
+    <button
+        ref="button"
+        v-bind="$attrs"
+        :data-test-id="$attrs['data-test-id'] ?? 'context-menu-trigger'"
+        class="cursor-pointer"
+        @click.stop="open = true"
+    >
         <slot name="icon">
             <i class="fa-solid fa-ellipsis-vertical mx-1" />
         </slot>
@@ -16,7 +22,7 @@
         :max-height="props.maxHeight"
         @close="open = false"
     >
-        <div class="context-menu" @click="open = false">
+        <div class="context-menu" data-test-id="context-menu" @click="open = false">
             <slot />
         </div>
     </VDropdownWrapper>

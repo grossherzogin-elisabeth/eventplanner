@@ -34,7 +34,10 @@ export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunct
                 const i18nKey = parts[0];
                 const i18nParams = parts[1]?.split(',') ?? [];
                 try {
-                    return i18n.t(i18nKey, i18nParams);
+                    if (i18n.te(i18nKey)) {
+                        return i18n.t(i18nKey, i18nParams);
+                    }
+                    return rawError;
                 } catch (e) {
                     console.warn(e);
                     // test configuration will throw errors if i18n keys cannot be found
