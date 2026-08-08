@@ -2,11 +2,13 @@ import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import { useEventRepository } from '@/adapter';
+import { useEventRegistrationsRepository, useEventRepository } from '@/adapter';
 import type { EventRepository } from '@/application';
 import { addToDate } from '@/common';
 import type { Event } from '@/domain';
+import type { Registration } from '@/domain';
 import { EventState, EventType, Permission } from '@/domain';
+import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import { Routes } from '@/ui/views/Routes.ts';
 import EventAdminListView from '@/ui/views/events/list-admin/EventAdminListView.vue';
 import { mockEvent, mockRouter } from '~/mocks';
@@ -171,7 +173,7 @@ describe('EventAdminListView.vue', () => {
         });
     });
 
-    describe('export action', () => {
+    describe('context menu action "export"', () => {
         it('should render export actions in row context menu', async () => {
             await loading();
             const menu = await openTableContextMenu(testee, 0);
@@ -192,7 +194,7 @@ describe('EventAdminListView.vue', () => {
         });
     });
 
-    describe('edit action', () => {
+    describe('context menu action "edit"', () => {
         it('should navigate to event edit page when only one event selected', async () => {
             await loading();
             await selectEvents(events[1]);
@@ -205,19 +207,24 @@ describe('EventAdminListView.vue', () => {
             });
         });
 
-        it('should open batch edit dialog when multiple events selected', async () => {
+        it('should open batch edit dialog and update selected events', async () => {
+            const updateFunc = vi.spyOn(eventRepository, 'updateEvent');
             await loading();
             await selectEvents(events[1], events[2]);
             const menu = await openMultiSelectContextMenu();
             await menu.find('[data-test-id="action-edit"]').trigger('click');
 
             expect(testee.find('[data-test-id="event-batch-edit-dialog"]').exists()).toBe(true);
+            await testee.find('[data-test-id="input-event-name"] input').setValue('updated');
+            await testee.find('[data-test-id="button-submit"]').trigger('click');
+
+            await expect.poll(() => updateFunc).toHaveBeenCalledWith(events[1].key, { name: 'updated' }, [], [], []);
+            await expect.poll(() => updateFunc).toHaveBeenCalledWith(events[2].key, { name: 'updated' }, [], [], []);
         });
     });
 
-    describe('open for signup action', () => {
+    describe('context menu action "open for signup"', () => {
         it('should update all events state to open for signup', async () => {
-            const eventRepository = useEventRepository();
             const updateFunc = vi.spyOn(eventRepository, 'updateEvent');
             const event1 = findEvent('state-draft-1');
             const event2 = findEvent('state-draft-2');
@@ -230,11 +237,29 @@ describe('EventAdminListView.vue', () => {
             await expect.poll(() => updateFunc).toHaveBeenCalledWith(event1.key, { state: EventState.OpenForSignup }, [], [], []);
             await expect.poll(() => updateFunc).toHaveBeenCalledWith(event2.key, { state: EventState.OpenForSignup }, [], [], []);
         });
+
+        it('should ask for confirmation before updating non-draft events', async () => {
+            const updateFunc = vi.spyOn(eventRepository, 'updateEvent');
+            const event1 = findEvent('state-draft-1');
+            const event2 = findEvent('state-planned-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-open-for-signup"]').trigger('click');
+
+            expect(testee.find('[data-test-id="button-confirm"]').exists()).toBe(true);
+            expect(updateFunc).not.toHaveBeenCalled();
+
+            await testee.find('[data-test-id="button-confirm"]').trigger('click');
+
+            await expect.poll(() => updateFunc).toHaveBeenCalledWith(event1.key, { state: EventState.OpenForSignup }, [], [], []);
+            await expect.poll(() => updateFunc).toHaveBeenCalledWith(event2.key, { state: EventState.OpenForSignup }, [], [], []);
+        });
     });
 
-    describe('publish crew action', () => {
+    describe('context menu action "publish crew"', () => {
         it('should update all event state to planned', async () => {
-            const eventRepository = useEventRepository();
             const updateFunc = vi.spyOn(eventRepository, 'updateEvent');
             const event1 = findEvent('state-open-for-signup-1');
             const event2 = findEvent('state-open-for-signup-2');
@@ -247,11 +272,66 @@ describe('EventAdminListView.vue', () => {
             await expect.poll(() => updateFunc).toHaveBeenCalledWith(event1.key, { state: EventState.Planned }, [], [], []);
             await expect.poll(() => updateFunc).toHaveBeenCalledWith(event2.key, { state: EventState.Planned }, [], [], []);
         });
+
+        it('should ask for confirmation before updating non open-for-signup events', async () => {
+            const updateFunc = vi.spyOn(eventRepository, 'updateEvent');
+            const event1 = findEvent('state-open-for-signup-1');
+            const event2 = findEvent('state-draft-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-publish-crew"]').trigger('click');
+
+            expect(testee.find('[data-test-id="button-confirm"]').exists()).toBe(true);
+            expect(updateFunc).not.toHaveBeenCalled();
+
+            await testee.find('[data-test-id="button-confirm"]').trigger('click');
+
+            await expect.poll(() => updateFunc).toHaveBeenCalledWith(event1.key, { state: EventState.Planned }, [], [], []);
+            await expect.poll(() => updateFunc).toHaveBeenCalledWith(event2.key, { state: EventState.Planned }, [], [], []);
+        });
     });
 
-    describe('cancel action', () => {
+    describe('context menu action "create registration"', () => {
+        it('should create registration for selected events', async () => {
+            const registrationsRepository = useEventRegistrationsRepository();
+            const createFunc = vi
+                .spyOn(registrationsRepository, 'createRegistration')
+                .mockImplementation(async (eventKey: string, registration: Registration) => {
+                    const event = findEvent(eventKey);
+                    event.registrations.push(registration);
+                    return event;
+                });
+            const event1 = findEvent('state-draft-1');
+            const event2 = findEvent('state-open-for-signup-1');
+            const registration: Registration = {
+                key: 'new-registration',
+                userKey: 'user-key',
+                name: undefined,
+                positionKey: 'position-1',
+                note: 'note',
+                overnightStay: false,
+                arrival: undefined,
+            };
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-create-registration"]').trigger('click');
+
+            const dialog = testee.findComponent(CreateRegistrationDlg);
+            expect(dialog.exists()).toBe(true);
+            dialog.vm.submit(registration);
+
+            const { key: _registrationKey, ...registrationWithoutKey } = registration;
+            await expect.poll(() => createFunc).toHaveBeenCalledWith(event1.key, expect.objectContaining(registrationWithoutKey));
+            await expect.poll(() => createFunc).toHaveBeenCalledWith(event2.key, expect.objectContaining(registrationWithoutKey));
+        });
+    });
+
+    describe('context menu action "cancel"', () => {
         it('should update multiple events state to canceled', async () => {
-            const eventRepository = useEventRepository();
             const updateFunc = vi.spyOn(eventRepository, 'updateEvent');
             const event1 = findEvent('state-draft-1');
             const event2 = findEvent('state-open-for-signup-2');
@@ -266,6 +346,27 @@ describe('EventAdminListView.vue', () => {
 
             await expect.poll(() => updateFunc).toHaveBeenCalledWith(event1.key, { state: EventState.Canceled }, [], [], []);
             await expect.poll(() => updateFunc).toHaveBeenCalledWith(event2.key, { state: EventState.Canceled }, [], [], []);
+        });
+    });
+
+    describe('context menu action "delete"', () => {
+        it('should ask for confirmation before deleting selected events', async () => {
+            const deleteFunc = vi.spyOn(eventRepository, 'deleteEvent').mockImplementation(async () => Promise.resolve());
+            const event1 = findEvent('state-draft-1');
+            const event2 = findEvent('state-open-for-signup-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-delete"]').trigger('click');
+
+            expect(testee.find('[data-test-id="button-confirm"]').exists()).toBe(true);
+            expect(deleteFunc).not.toHaveBeenCalled();
+
+            await testee.find('[data-test-id="button-confirm"]').trigger('click');
+
+            await expect.poll(() => deleteFunc).toHaveBeenCalledWith(event1.key);
+            await expect.poll(() => deleteFunc).toHaveBeenCalledWith(event2.key);
         });
     });
 
