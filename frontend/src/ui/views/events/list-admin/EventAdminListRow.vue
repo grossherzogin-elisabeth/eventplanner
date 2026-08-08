@@ -19,9 +19,7 @@
                 {{ props.event?.name }}
             </p>
             <!-- mobile state -->
-            <div :key="stateDetails.icon" class="status-badge -mt-1 text-xs md:hidden" :class="stateDetails.color">
-                <span>{{ stateDetails.name }}</span>
-            </div>
+            <EventStateBadge :event="props.event" class="text-xs lg:hidden" />
         </div>
         <p class="hidden truncate text-sm font-light lg:block">
             <!-- description -->
@@ -54,6 +52,22 @@
                 </template>
             </p>
         </div>
+        <div v-if="config.enableEventPositionsOverview" class="flex w-full items-center gap-px pt-2">
+            <template v-for="(position, index) in assignedPositions" :key="`${position.key}-${index}`">
+                <div :data-index="index" class="w-1 grow">
+                    <VTooltip :delay="50">
+                        <template #tooltip>
+                            <span class="tag custom" :style="{ '--color': position.color }">
+                                {{ position.name }}
+                            </span>
+                        </template>
+                        <template #default>
+                            <div class="h-2 rounded-sm" :style="{ backgroundColor: position.color }" />
+                        </template>
+                    </VTooltip>
+                </div>
+            </template>
+        </div>
     </td>
     <!-- crew -->
     <td class="hidden w-1/6 min-w-16 text-right whitespace-nowrap md:table-cell" :class="{ 'opacity-50': isPastEvent }">
@@ -62,43 +76,30 @@
                 {{ props.event?.assignedUserCount }}
                 <span v-if="props.event?.waitingListCount" class="opacity-40"> +{{ props.event?.waitingListCount }} </span>
             </p>
-            <p class="pl-4 text-sm">
-                {{ $t('domain.event.crew', { count: props.event?.assignedUserCount }) }}
-            </p>
+            <p class="pl-4 text-sm">{{ $t('domain.event.crew') }}</p>
         </template>
         <template v-else>
-            <p class="mb-1 pl-4 font-semibold">
-                {{ props.event?.registrations.length }}
-            </p>
-            <p class="pl-4 text-sm">
-                {{ $t('domain.event.registrations', { count: props.event?.registrations.length }) }}
-            </p>
+            <p class="mb-1 pl-4 font-semibold">{{ props.event?.registrations.length }}</p>
+            <p class="pl-4 text-sm">{{ $t('domain.event.registrations') }}</p>
         </template>
     </td>
     <!-- status -->
-    <td class="hidden w-1/6 md:table-cell" :class="{ 'opacity-50': isPastEvent }">
-        <div class="flex items-center lg:justify-end">
-            <div :key="stateDetails.icon" class="status-badge text-sm" :class="stateDetails.color">
-                <i class="fa-solid w-4" :class="stateDetails.icon"></i>
-                <span>{{ stateDetails.name }}</span>
-            </div>
-        </div>
+    <td class="hidden w-1/6 lg:table-cell">
+        <EventStateBadge :event="props.event" class="text-sm" />
     </td>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
-import type { Event } from '@/domain';
+import type { Event, Position } from '@/domain';
 import { useEventService, EventState } from '@/domain';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
-
-interface StateDetails {
-    name: string;
-    color: string;
-    icon: string;
-}
+import { usePositions } from '@/ui/composables/Positions';
+import { useConfig } from '@/ui/composables/Config';
+import EventStateBadge from '@/ui/views/events/list-admin/EventStateBadge.vue';
+import { VTooltip } from '@/ui/components/common';
+import { filterUndefined } from '@/common';
 
 interface Props {
     event?: Event;
@@ -106,7 +107,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const { t } = useI18n();
+const { config } = useConfig();
+const positions = usePositions();
 const eventService = useEventService();
 
 const showWaitingList = computed<boolean>(() => {
@@ -117,39 +119,14 @@ const isPastEvent = computed<boolean>(() => {
     return props.event !== undefined && props.event.start.getTime() < Date.now();
 });
 
-const hasOpenSlots = computed<boolean>(() => {
-    return props.event !== undefined && eventService.hasOpenSlots(props.event);
-});
-
-const hasOpenImportantSlots = computed<boolean>(() => {
-    return props.event !== undefined && eventService.hasOpenImportantSlots(props.event);
-});
-
-const stateDetails = computed<StateDetails>(() => {
+const assignedPositions = computed<Position[]>(() => {
     if (props.event === undefined) {
-        return { name: '', icon: 'fa-circle text-surface-container-high', color: 'neutral' };
+        return [];
     }
-    if (props.event.state === EventState.Canceled) {
-        return { name: t('domain.event-state.canceled'), icon: 'fa-ban', color: 'error' };
-    }
-    if (props.event.isSignedInUserAssigned) {
-        return { name: t('views.event-list.state.assigned'), icon: 'fa-check-circle', color: 'success' };
-    }
-    if (props.event.signedInUserRegistration) {
-        return { name: t('views.event-list.state.waitinglist'), icon: 'fa-hourglass-half', color: 'neutral' };
-    }
-    if (props.event.state === EventState.Draft) {
-        return { name: t('domain.event-state.draft'), icon: 'fa-compass-drafting', color: 'neutral' };
-    }
-    if (props.event.state === EventState.OpenForSignup) {
-        return { name: t('domain.event-state.open-for-signup'), icon: 'fa-people-group', color: 'info' };
-    }
-    if (hasOpenImportantSlots.value) {
-        return { name: t('domain.event-state.crew-wanted'), icon: 'fa-info-circle', color: 'warning' };
-    }
-    if (hasOpenSlots.value) {
-        return { name: t('domain.event-state.open-slots'), icon: 'fa-info-circle', color: 'info' };
-    }
-    return { name: t('domain.event-state.full'), icon: 'fa-info-circle', color: 'neutral' };
+    return eventService
+        .getAssignedRegistrations(props.event)
+        .map((reg) => positions.get(reg.positionKey))
+        .filter(filterUndefined)
+        .sort((a, b) => b.prio - a.prio);
 });
 </script>

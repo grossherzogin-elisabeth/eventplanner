@@ -7,7 +7,7 @@ import type { EventRepresentation } from '@/adapter/rest/EventRestRepository.ts'
 import { Permission } from '@/domain';
 import { EventState } from '@/domain';
 import { Routes } from '@/ui/views/Routes.ts';
-import EventsAdminListView from '@/ui/views/events/list-admin/EventsAdminListView.vue';
+import EventAdminListView from '@/ui/views/events/list-admin/EventAdminListView.vue';
 import { mockEventRepresentation, mockRouter, server } from '~/mocks';
 import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
@@ -17,7 +17,7 @@ vi.mock('vue-router', () => ({
     useRoute: (): RouteLocationNormalizedLoadedGeneric => router.currentRoute.value,
 }));
 
-describe('EventsAdminListView.vue', () => {
+describe('EventAdminListView.vue', () => {
     let testee: VueWrapper;
     let events: EventRepresentation[];
 
@@ -67,7 +67,7 @@ describe('EventsAdminListView.vue', () => {
         ];
         server.use(http.get('/api/v1/events', () => HttpResponse.json(events)));
         await router.push({ name: Routes.EventsListAdmin });
-        testee = mount(EventsAdminListView, { global: { plugins: [router] } });
+        testee = mount(EventAdminListView, { global: { plugins: [router] } });
     });
 
     afterEach(() => testee.unmount());

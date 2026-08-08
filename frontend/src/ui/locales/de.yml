@@ -94,7 +94,7 @@ domain:
       leave-waiting-list: Warteliste verlassen
       remove-from-crew: Auf die Warteliste
       sign-up: Anmelden
-      update-state-to-canceled: Veranstaltung absagen
+      update-state-to-canceled: Absagen
       update-state-to-open-for-signup: Anmeldungen freischalten
       update-state-to-published: Crew veröffentlichen
       view: Veranstaltung anzeigen
