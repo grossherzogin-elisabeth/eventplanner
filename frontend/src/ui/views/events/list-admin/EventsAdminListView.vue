@@ -58,172 +58,10 @@
                 @click="editEvent($event.item, $event.event)"
             >
                 <template #row="{ item }">
-                    <!-- date -->
-                    <td class="hidden w-1/6 whitespace-nowrap lg:table-cell">
-                        <p class="mb-1 font-semibold 2xl:hidden">{{ $d(item?.start ?? new Date(), DateTimeFormat.DDD_DD_MM) }}</p>
-                        <p class="mb-1 hidden font-semibold 2xl:block">{{ formatDateRange(item?.start, item?.end) }}</p>
-                        <p class="text-sm">{{ $t('views.event-admin-list.table.day-count', { count: item?.days }) }}</p>
-                    </td>
-                    <!-- name -->
-                    <td class="w-2/3 max-w-[80vw] font-semibold whitespace-nowrap" style="max-width: min(65vw, 20rem)">
-                        <p class="mb-1 truncate" :class="{ 'text-error line-through': item?.state === EventState.Canceled }">
-                            <span v-if="item?.state === EventState.Draft" class="opacity-50">{{ $t('domain.event-state.draft') }}: </span>
-                            <span v-else-if="item?.state === EventState.Canceled">{{ $t('domain.event-state.canceled') }}: </span>
-                            {{ item?.name }}
-                        </p>
-
-                        <p class="hidden truncate text-sm font-light lg:block">
-                            <template v-if="item?.description">{{ item.description }}</template>
-                            <template v-else-if="item?.locations.length === 0">{{ $t('views.event-admin-list.table.no-route') }}</template>
-                            <template v-else>{{ item?.locations.map((it) => it.name).join(' - ') }}</template>
-                        </p>
-                        <p class="truncate text-sm font-light lg:hidden">
-                            {{ formatDateRange(item?.start, item?.end) }} |
-                            {{ $t('views.event-admin-list.table.day-count', { count: item?.days }) }}
-                        </p>
-                        <div class="flex w-full items-center gap-px pt-2">
-                            <template v-for="(position, index) in item?.assignedPositions" :key="`${position.key}-${index}`">
-                                <div :data-index="index" class="w-1 grow">
-                                    <VTooltip :delay="50">
-                                        <template #tooltip>
-                                            <span class="tag custom" :style="{ '--color': position.color }">
-                                                {{ position.name }}
-                                            </span>
-                                        </template>
-                                        <template #default>
-                                            <div class="h-2 rounded-sm" :style="{ backgroundColor: position.color }" />
-                                        </template>
-                                    </VTooltip>
-                                </div>
-                            </template>
-                        </div>
-                    </td>
-                    <!-- status -->
-                    <td class="w-1/6">
-                        <EventStateBadge :event="item" />
-                    </td>
-                    <!-- crew -->
-                    <td class="w-1/6 min-w-24 whitespace-nowrap">
-                        <p class="mb-1 pl-4 font-semibold">
-                            {{ item?.assignedUserCount }}
-                            <span v-if="item?.waitingListCount" class="opacity-40"> +{{ item.waitingListCount }} </span>
-                        </p>
-                        <p class="pl-4 text-sm">{{ $t('views.event-admin-list.table.team') }}</p>
-                    </td>
-                </template>
-                <template #loading>
-                    <tr v-for="i in 20" :key="i" class="animate-pulse">
-                        <td></td>
-                        <td class="w-1/2 max-w-[65vw]">
-                            <p class="bg-surface-container-highest mb-1 h-5 w-64 rounded-lg"></p>
-                            <p class="flex items-center space-x-2 text-sm font-light">
-                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                                <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <div class="status-badge neutral">
-                                <i class="fa-solid fa-circle text-surface-container-high"></i>
-                                <span class="bg-surface-container-high my-0.5 inline-block h-4 w-12 rounded-lg"></span>
-                            </div>
-                        </td>
-                        <td class="w-1/6">
-                            <p class="bg-surface-container-highest mb-1 h-5 w-16 rounded-lg"></p>
-                            <p class="bg-surface-container-highest h-3 w-10 rounded-lg"></p>
-                        </td>
-                        <td class="w-2/6">
-                            <p class="bg-surface-container-highest mb-1 h-5 w-56 rounded-lg"></p>
-                            <p class="bg-surface-container-highest h-3 w-16 rounded-lg"></p>
-                        </td>
-
-                        <td>
-                            <div class="px-4 py-2">
-                                <i class="fa-solid fa-circle text-surface-container-highest"></i>
-                            </div>
-                        </td>
-                        <td></td>
-                    </tr>
+                    <EventAdminListRow :event="item" />
                 </template>
                 <template #context-menu="{ item }">
-                    <li class="permission-read-events">
-                        <RouterLink
-                            :to="{
-                                name: Routes.EventDetails,
-                                params: { year: item.start.getFullYear(), key: item.key },
-                            }"
-                            class="context-menu-item"
-                        >
-                            <i class="fa-solid fa-search" />
-                            <span>{{ $t('views.event-admin-list.action.show-event') }}</span>
-                        </RouterLink>
-                    </li>
-                    <li class="permission-write-event-details">
-                        <RouterLink
-                            :to="{
-                                name: Routes.EventEdit,
-                                params: { year: item.start.getFullYear(), key: item.key },
-                            }"
-                            class="context-menu-item"
-                        >
-                            <i class="fa-solid fa-drafting-compass" />
-                            <span>{{ $t('views.event-admin-list.action.edit-event') }}</span>
-                        </RouterLink>
-                    </li>
-                    <li
-                        v-for="template in eventExports.templates.value"
-                        :key="template"
-                        class="permission-export-events context-menu-item"
-                        data-test-id="action-export"
-                        @click="eventExports.exportEvent(item, template)"
-                    >
-                        <i class="fa-solid fa-file-excel" />
-                        <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="addRegistration([item])">
-                        <i class="fa-solid fa-user-plus" />
-                        <span>{{ $t('views.event-admin-list.action.add-registration') }}</span>
-                    </li>
-                    <li
-                        v-if="item.state === EventState.Draft"
-                        class="permission-write-event-details context-menu-item"
-                        @click="openEventsForSignup([item])"
-                    >
-                        <i class="fa-solid fa-people-group" />
-                        <span>{{ $t('views.event-admin-list.action.open-signup') }}</span>
-                    </li>
-                    <li
-                        v-else-if="item.state === EventState.OpenForSignup"
-                        class="permission-write-event-details context-menu-item"
-                        @click="publishCrewPlanning([item])"
-                    >
-                        <i class="fa-solid fa-earth-europe" />
-                        <span>{{ $t('views.event-admin-list.action.publish-crew') }}</span>
-                    </li>
-                    <li class="permission-read-user-details context-menu-item disabled">
-                        <i class="fa-solid fa-users" />
-                        <span>{{ $t('views.event-admin-list.action.request-more-crew') }}</span>
-                    </li>
-                    <li
-                        class="permission-read-user-details context-menu-item"
-                        :class="{ disabled: item.assignedUserCount === 0 }"
-                        @click="contactCrew([item])"
-                    >
-                        <i class="fa-solid fa-envelope" />
-                        <span>{{ $t('views.event-admin-list.action.contact-crew', { count: item.assignedUserCount }) }}</span>
-                    </li>
-                    <li
-                        v-if="item.state === EventState.Canceled"
-                        class="permission-delete-events context-menu-item text-error"
-                        @click="deleteEvent(item)"
-                    >
-                        <i class="fa-solid fa-trash-alt" />
-                        <span>{{ $t('views.event-admin-list.action.delete-event') }}</span>
-                    </li>
-                    <li v-else class="permission-delete-events context-menu-item text-error" @click="cancelEvent(item)">
-                        <i class="fa-solid fa-ban" />
-                        <span>{{ $t('views.event-admin-list.action.cancel-event') }}</span>
-                    </li>
+                    <EventAdminListRowActions :events="[item]" />
                 </template>
             </VTable>
         </div>
@@ -261,49 +99,22 @@
                         <i class="fa-solid fa-earth-europe"></i>
                         <span class="truncate">{{ $t('views.event-admin-list.action.publish-crew') }}</span>
                     </button>
-                    <button v-else class="permission-write-events btn-ghost" @click="editBatch(selectedEvents)">
+                    <button v-else class="permission-write-events btn-ghost" @click="editEvents(selectedEvents)">
                         <i class="fa-solid fa-edit"></i>
                         <span class="truncate">{{ $t('views.event-admin-list.batch-edit.title') }}</span>
                     </button>
                 </div>
             </template>
             <template #menu>
-                <li class="permission-write-registrations context-menu-item" @click="addRegistration(selectedEvents)">
-                    <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('views.event-admin-list.action.add-registration') }}</span>
-                </li>
-                <li class="permission-write-event-details context-menu-item" @click="editBatch(selectedEvents)">
-                    <i class="fa-solid fa-edit" />
-                    <span>{{ $t('views.event-admin-list.batch-edit.title') }}</span>
-                </li>
-                <li
-                    v-if="showBatchOpenEventForSignup"
-                    class="permission-write-event-details context-menu-item"
-                    @click="openEventsForSignup(selectedEvents)"
-                >
-                    <i class="fa-solid fa-people-group" />
-                    <span>{{ $t('views.event-admin-list.action.open-signup') }}</span>
-                </li>
-                <li
-                    v-if="showBatchPublishPlannedCrew"
-                    class="permission-write-event-details context-menu-item"
-                    @click="publishCrewPlanning(selectedEvents)"
-                >
-                    <i class="fa-solid fa-earth-europe" />
-                    <span>{{ $t('views.event-admin-list.action.publish-crew') }}</span>
-                </li>
-                <li class="permission-read-user-details permission-write-events context-menu-item disabled">
-                    <i class="fa-solid fa-users" />
-                    <span>{{ $t('views.event-admin-list.action.request-more-crew') }}</span>
-                </li>
-                <li class="permission-read-user-details context-menu-item disabled">
-                    <i class="fa-solid fa-envelope" />
-                    <span>{{ $t('views.event-admin-list.action.contact-crew', { count: '*' }) }}</span>
-                </li>
-                <li class="permission-delete-events context-menu-item disabled text-error">
-                    <i class="fa-solid fa-ban" />
-                    <span>{{ $t('views.event-admin-list.action.cancel-event') }}*</span>
-                </li>
+                <EventAdminListRowActions
+                    :events="selectedEvents"
+                    @update-events:edit="editEvents($event)"
+                    @update-events:create-registration="createRegistration($event)"
+                    @update-events:open-for-signup="openEventsForSignup($event)"
+                    @update-events:publish-crew="publishCrewPlanning($event)"
+                    @update-events:cancel="cancelEvents($event)"
+                    @update-events:delete="deleteEvents($event)"
+                />
             </template>
         </VMultiSelectActions>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
@@ -324,19 +135,16 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useEventAdministrationUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
-import { filterUndefined } from '@/common';
-import { DateTimeFormat } from '@/common/date';
-import type { Event, EventType, InputSelectOption, Position, Registration } from '@/domain';
-import { EventState, Permission, SlotCriticality, useEventService } from '@/domain';
+import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
+import type { Event, EventType, InputSelectOption, Registration } from '@/domain';
+import { EventState, Permission, useEventService } from '@/domain';
 import type { ConfirmationDialog, Dialog, Sheet } from '@/ui/components/common';
-import { AsyncButton, VConfirmationDialog, VMultiSelectActions, VSearchButton, VTable, VTabs, VTooltip } from '@/ui/components/common';
+import { AsyncButton, VConfirmationDialog, VMultiSelectActions, VSearchButton, VTable, VTabs } from '@/ui/components/common';
 import CreateRegistrationDlg from '@/ui/components/events/CreateRegistrationDlg.vue';
 import EventCancelDlg from '@/ui/components/events/EventCancelDlg.vue';
 import EventCreateDlg from '@/ui/components/events/EventCreateDlg.vue';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
-import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { useEventExports } from '@/ui/composables/EventExports.ts';
 import { useEventStates } from '@/ui/composables/EventStates';
 import { useEventTypes } from '@/ui/composables/EventTypes';
@@ -346,17 +154,10 @@ import { useSession } from '@/ui/composables/Session';
 import { restoreScrollPosition } from '@/ui/plugins/router';
 import { Routes } from '@/ui/views/Routes';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
-import EventStateBadge from '@/ui/views/events/list-admin/EventStateBadge.vue';
 import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
-
-interface EventTableViewItem extends Event {
-    selected: boolean;
-    isPastEvent: boolean;
-    waitingListCount: number;
-    hasOpenSlots: boolean;
-    hasOpenRequiredSlots: boolean;
-    assignedPositions: Position[];
-}
+import EventAdminListRow from './EventAdminListRow.vue';
+import type { Selectable } from '@/ui/model/Selectable.ts';
+import EventAdminListRowActions from './EventAdminListRowActions.vue';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
@@ -364,8 +165,6 @@ const emit = defineEmits<RouteEmits>();
 
 const { t } = useI18n();
 const eventAdminUseCase = useEventAdministrationUseCase();
-const userAdminUseCase = useUserAdministrationUseCase();
-const usersUseCase = useUsersUseCase();
 const eventUseCase = useEventUseCase();
 const eventService = useEventService();
 const positions = usePositions();
@@ -380,28 +179,28 @@ const filterFreeSlots = useQuery<boolean>('has-free-slots', false).parameter;
 const filterEventStates = useQuery<EventState[]>('states', []).parameter;
 const filterEventType = useQuery<EventType[]>('types', []).parameter;
 
-const events = ref<EventTableViewItem[] | null>(null);
+const events = ref<(Event & Selectable)[] | null>(null);
 const eventExports = useEventExports();
 const tab = ref<string>('future');
 
 const createEventDialog = ref<Dialog<Event> | null>(null);
-const cancelEventDialog = ref<Dialog<Event, string> | null>(null);
+const cancelEventDialog = ref<Dialog<Event | Event[], boolean> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 const eventBatchEditDialog = ref<Dialog<Event[], boolean> | null>(null);
 const createRegistrationDialog = ref<Dialog<Event[], Registration | undefined> | null>(null);
 const eventPreviewSheet = ref<Sheet<Event, Event> | null>(null);
 
-const filteredEvents = computed<EventTableViewItem[] | undefined>(() => {
+const filteredEvents = computed<(Event & Selectable)[] | undefined>(() => {
     const f = filter.value.toLowerCase();
     return events.value
         ?.filter((it) => eventService.doesEventMatchFilter(it, f))
         .filter((it) => filterEventType.value.length === 0 || filterEventType.value.includes(it.type))
-        .filter((it) => !filterFreeSlots.value || it.hasOpenSlots)
+        .filter((it) => !filterFreeSlots.value || eventService.hasOpenSlots(it))
         .filter((it) => filterEventStates.value.length === 0 || filterEventStates.value.includes(it.state))
-        .filter((it) => !filterWaitinglist.value || it.waitingListCount > 0);
+        .filter((it) => !filterWaitinglist.value || it.registrations.length - it.assignedUserCount > 0);
 });
 
-const selectedEvents = computed<EventTableViewItem[] | undefined>(() => {
+const selectedEvents = computed<(Event & Selectable)[] | undefined>(() => {
     return filteredEvents.value?.filter((it) => it.selected);
 });
 
@@ -466,31 +265,30 @@ async function fetchEvents(): Promise<void> {
     }
 }
 
-async function fetchEventsByYear(year: number): Promise<EventTableViewItem[]> {
+async function fetchEventsByYear(year: number): Promise<Event[]> {
     const evts = await eventUseCase.getEvents(year);
     return evts.map((evt) => {
-        const openSlots = eventService.getOpenSlots(evt);
-        const openRequiredSlots = openSlots.filter((slot) => slot.criticality !== SlotCriticality.Optional);
-        const openOptionalSlots = openSlots.filter((slot) => slot.criticality === SlotCriticality.Optional);
+        // const openSlots = eventService.getOpenSlots(evt);
+        // const openRequiredSlots = openSlots.filter((slot) => slot.criticality !== SlotCriticality.Optional);
+        // const openOptionalSlots = openSlots.filter((slot) => slot.criticality === SlotCriticality.Optional);
 
-        const tableItem: EventTableViewItem = {
-            ...evt,
-            selected: false,
-            isPastEvent: evt.start.getTime() < Date.now(),
-            waitingListCount: evt.registrations.length - evt.assignedUserCount,
-            hasOpenSlots: openOptionalSlots.length > 0,
-            hasOpenRequiredSlots: openRequiredSlots.length > 0,
-            assignedPositions: eventService
-                .getAssignedRegistrations(evt)
-                .map((reg) => positions.get(reg.positionKey))
-                .filter(filterUndefined)
-                .sort((a, b) => b.prio - a.prio),
-        };
-        return tableItem;
+        // const tableItem: Event = {
+        //     ...evt,
+        //     isPastEvent: evt.start.getTime() < Date.now(),
+        //     waitingListCount: evt.registrations.length - evt.assignedUserCount,
+        //     hasOpenSlots: openOptionalSlots.length > 0,
+        //     hasOpenRequiredSlots: openRequiredSlots.length > 0,
+        //     assignedPositions: eventService
+        //         .getAssignedRegistrations(evt)
+        //         .map((reg) => positions.get(reg.positionKey))
+        //         .filter(filterUndefined)
+        //         .sort((a, b) => b.prio - a.prio),
+        // };
+        return evt;
     });
 }
 
-async function editEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {
+async function editEvent(item: Event, evt: MouseEvent): Promise<void> {
     let to: RouteLocationRaw = {
         name: Routes.EventDetails,
         params: { year: item.start.getFullYear(), key: item.key },
@@ -516,44 +314,50 @@ async function createEvent(): Promise<void> {
     }
 }
 
-async function deleteEvent(evt: Event): Promise<void> {
+async function deleteEvents(events: Event[]): Promise<void> {
     const confirmed = await confirmationDialog.value?.open({
         title: t('views.event-admin-list.dialog.delete.title'),
-        message: t('views.event-admin-list.dialog.delete.message', { name: evt.name }),
+        message: t('views.event-admin-list.dialog.delete.message', { count: events.length }),
         submit: t('views.event-admin-list.dialog.delete.submit'),
         danger: true,
     });
     if (confirmed) {
-        await eventAdminUseCase.deleteEvent(evt);
+        for (const event of events) {
+            await eventAdminUseCase.deleteEvent(event);
+        }
         await fetchEvents();
     }
 }
 
-async function cancelEvent(evt: Event): Promise<void> {
-    const message = await cancelEventDialog.value?.open(evt);
-    if (message !== undefined) {
-        await eventAdminUseCase.cancelEvent(evt, message);
+async function cancelEvents(events: Event[]): Promise<void> {
+    const confirmed = await cancelEventDialog.value?.open(events);
+    if (confirmed) {
+        const keys = events.map((it) => it.key);
+        await eventAdminUseCase.updateEvents(keys, { state: EventState.Canceled });
         await fetchEvents();
     }
 }
 
-async function editBatch(events: Event[]): Promise<void> {
-    const changed = await eventBatchEditDialog.value?.open(events);
-    if (changed) {
-        await fetchEvents();
+async function editEvents(events: Event[], mouseEvent?: MouseEvent): Promise<void> {
+    if (events.length === 1) {
+        const to: RouteLocationRaw = {
+            name: Routes.EventEdit,
+            params: { year: events[0].start.getFullYear(), key: events[0].key },
+        };
+        if (mouseEvent?.ctrlKey || mouseEvent?.metaKey) {
+            window.open(router.resolve(to).href, '_blank');
+        } else {
+            await router.push(to);
+        }
+    } else {
+        const changed = await eventBatchEditDialog.value?.open(events);
+        if (changed) {
+            await fetchEvents();
+        }
     }
 }
 
-async function contactCrew(events: Event[]): Promise<void> {
-    const userKeys = events
-        .flatMap((event) => eventService.getAssignedRegistrations(event))
-        .map((it) => it.userKey)
-        .filter(filterUndefined);
-    const users = await usersUseCase.getUsers(userKeys);
-    await userAdminUseCase.contactUsers(users);
-}
-
-async function addRegistration(events: Event[]): Promise<void> {
+async function createRegistration(events: Event[]): Promise<void> {
     const result = await createRegistrationDialog.value?.open(events);
     if (result) {
         await eventAdminUseCase.addRegistrations(events, result);
