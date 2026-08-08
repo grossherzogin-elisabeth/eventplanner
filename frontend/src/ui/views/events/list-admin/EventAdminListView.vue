@@ -176,6 +176,7 @@ import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
 import EventAdminListRow from './EventAdminListRow.vue';
 import type { Selectable } from '@/ui/model/Selectable.ts';
 import EventAdminListRowActions from './EventAdminListRowActions.vue';
+import { useConfig } from '@/ui/composables/Config.ts';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
@@ -189,6 +190,7 @@ const positions = usePositions();
 const router = useRouter();
 const eventTypes = useEventTypes();
 const eventStates = useEventStates();
+const { config } = useConfig();
 const { hasPermission } = useSession();
 
 const filter = useQuery<string>('filter', '').parameter;
@@ -272,38 +274,15 @@ function selectAll(): void {
 async function fetchEvents(): Promise<void> {
     if (tab.value === tabs.value[0].value) {
         const now = new Date();
-        const currentYear = await fetchEventsByYear(now.getFullYear());
-        const nextYear = await fetchEventsByYear(now.getFullYear() + 1);
+        const currentYear = await eventUseCase.getEvents(now.getFullYear());
+        const nextYear = await eventUseCase.getEvents(now.getFullYear() + 1);
         events.value = currentYear.concat(nextYear).filter((it) => it.end.getTime() > now.getTime());
     } else {
         const year = Number.parseInt(tab.value, 10);
         if (year) {
-            events.value = await fetchEventsByYear(year);
+            events.value = await eventUseCase.getEvents(year);
         }
     }
-}
-
-async function fetchEventsByYear(year: number): Promise<Event[]> {
-    const evts = await eventUseCase.getEvents(year);
-    return evts.map((evt) => {
-        // const openSlots = eventService.getOpenSlots(evt);
-        // const openRequiredSlots = openSlots.filter((slot) => slot.criticality !== SlotCriticality.Optional);
-        // const openOptionalSlots = openSlots.filter((slot) => slot.criticality === SlotCriticality.Optional);
-
-        // const tableItem: Event = {
-        //     ...evt,
-        //     isPastEvent: evt.start.getTime() < Date.now(),
-        //     waitingListCount: evt.registrations.length - evt.assignedUserCount,
-        //     hasOpenSlots: openOptionalSlots.length > 0,
-        //     hasOpenRequiredSlots: openRequiredSlots.length > 0,
-        //     assignedPositions: eventService
-        //         .getAssignedRegistrations(evt)
-        //         .map((reg) => positions.get(reg.positionKey))
-        //         .filter(filterUndefined)
-        //         .sort((a, b) => b.prio - a.prio),
-        // };
-        return evt;
-    });
 }
 
 async function editEvent(item: Event, evt: MouseEvent): Promise<void> {
@@ -319,9 +298,10 @@ async function editEvent(item: Event, evt: MouseEvent): Promise<void> {
     }
     if (evt.ctrlKey || evt.metaKey) {
         window.open(router.resolve(to).href, '_blank');
-    } else {
+    } else if (config.value.enableEventAdminTablePreviewSheet) {
         await eventPreviewSheet.value?.open(item);
-        // await router.push(to);
+    } else {
+        await router.push(to);
     }
 }
 

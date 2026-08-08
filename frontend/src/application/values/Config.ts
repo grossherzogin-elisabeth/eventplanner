@@ -20,4 +20,5 @@ export interface Config {
     // feature flags
     askBeforeLogin?: boolean;
     enableEventPositionsOverview?: boolean;
+    enableEventAdminTablePreviewSheet?: boolean;
 }
