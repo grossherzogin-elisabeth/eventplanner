@@ -14,8 +14,8 @@ export const defaultConfig: Config = {
 
     // feature flags
     askBeforeLogin: import.meta.env.VITE_ASK_BEFORE_LOGIN === 'true',
-    enableEventPositionsOverview: import.meta.env.VITE_ENABLE_EVENT_POSITIONS_OVERVIEW === 'true',
-    enableEventAdminTablePreviewSheet: import.meta.env.VITE_ENABLE_EVENT_ADMIN_TABLE_PREVIEW_SHEET === 'true',
+    enableEventAdminListPositionsOverview: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_POSITIONS_OVERVIEW === 'true',
+    enableEventAdminListPreviewSheet: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_PREVIEW_SHEET === 'true',
 };
 
 if (import.meta.env.MODE === 'development') {

@@ -298,7 +298,7 @@ async function editEvent(item: Event, evt: MouseEvent): Promise<void> {
     }
     if (evt.ctrlKey || evt.metaKey) {
         window.open(router.resolve(to).href, '_blank');
-    } else if (config.value.enableEventAdminTablePreviewSheet) {
+    } else if (config.value.enableEventAdminListPreviewSheet) {
         await eventPreviewSheet.value?.open(item);
     } else {
         await router.push(to);

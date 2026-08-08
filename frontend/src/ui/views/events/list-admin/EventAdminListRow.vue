@@ -52,7 +52,7 @@
                 </template>
             </p>
         </div>
-        <div v-if="config.enableEventPositionsOverview" class="flex w-full items-center gap-px pt-2">
+        <div v-if="config.enableEventAdminListPositionsOverview" class="flex w-full items-center gap-px pt-2">
             <template v-for="(position, index) in assignedPositions" :key="`${position.key}-${index}`">
                 <div :data-index="index" class="w-1 grow">
                     <VTooltip :delay="50">
