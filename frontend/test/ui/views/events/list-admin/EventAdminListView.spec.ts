@@ -111,7 +111,7 @@ describe('EventAdminListView.vue', () => {
         it('should show all future events in initial tab', async () => {
             await loading();
             const rows = testee.findAll('tbody tr');
-            expect(rows.length).toBe(futureEventCount);
+            expect(rows).toHaveLength(futureEventCount);
         });
 
         it('should not render matrix export button on future tab', async () => {

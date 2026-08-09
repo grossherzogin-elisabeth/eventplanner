@@ -132,11 +132,11 @@ const usersUseCase = useUsersUseCase();
 const eventService = useEventService();
 
 const hasAnyDraftEvents = computed<boolean>(() => {
-    return props.events !== undefined && props.events.filter((it) => it.state === EventState.Draft).length > 0;
+    return props.events !== undefined && props.events.some((it) => it.state === EventState.Draft);
 });
 
 const hasAnyOpenForSignUpEvents = computed<boolean>(() => {
-    return props.events !== undefined && props.events.filter((it) => it.state === EventState.OpenForSignup).length > 0;
+    return props.events !== undefined && props.events.some((it) => it.state === EventState.OpenForSignup);
 });
 
 async function contactCrew(events: Event[]): Promise<void> {

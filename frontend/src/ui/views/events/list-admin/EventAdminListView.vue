@@ -24,7 +24,7 @@
                         </AsyncButton>
                     </div>
                     <div class="permission-create-events hidden 2xl:block">
-                        <button class="btn-primary ml-2" name="create" @click="createEvent()">
+                        <button class="btn-primary ml-2" name="create" type="button" @click="createEvent()">
                             <i class="fa-solid fa-calendar-plus"></i>
                             <span>{{ $t('generic.add') }}</span>
                         </button>
@@ -104,6 +104,7 @@
                     <button
                         v-if="showBatchOpenEventForSignup"
                         class="permission-write-events btn-ghost"
+                        type="button"
                         @click="openEventsForSignup(selectedEvents)"
                     >
                         <i class="fa-solid fa-lock-open"></i>
@@ -112,12 +113,13 @@
                     <button
                         v-else-if="showBatchPublishPlannedCrew"
                         class="permission-write-events btn-ghost"
+                        type="button"
                         @click="publishCrewPlanning(selectedEvents)"
                     >
                         <i class="fa-solid fa-earth-europe"></i>
                         <span class="truncate">{{ $t('views.event-admin-list.action.publish-crew') }}</span>
                     </button>
-                    <button v-else class="permission-write-events btn-ghost" @click="editEvents(selectedEvents)">
+                    <button v-else class="permission-write-events btn-ghost" type="button" @click="editEvents(selectedEvents)">
                         <i class="fa-solid fa-edit"></i>
                         <span class="truncate">{{ $t('views.event-admin-list.batch-edit.title') }}</span>
                     </button>
@@ -228,7 +230,7 @@ const showBatchOpenEventForSignup = computed<boolean>(() => {
     return (
         hasPermission(Permission.WRITE_EVENTS) &&
         selectedEvents.value != undefined &&
-        selectedEvents.value.filter((it) => it.state === EventState.Draft).length > 0
+        selectedEvents.value.some((it) => it.state === EventState.Draft)
     );
 });
 
@@ -236,7 +238,7 @@ const showBatchPublishPlannedCrew = computed<boolean>(() => {
     return (
         hasPermission(Permission.WRITE_EVENTS) &&
         selectedEvents.value != undefined &&
-        selectedEvents.value.filter((it) => it.state === EventState.OpenForSignup).length > 0
+        selectedEvents.value.some((it) => it.state === EventState.OpenForSignup)
     );
 });
 
