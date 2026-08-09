@@ -41,7 +41,7 @@ import { useI18n } from 'vue-i18n';
 import type { UserDetails } from '@/domain';
 import { Permission, Role } from '@/domain';
 import { VTable } from '@/ui/components/common';
-import { useSession } from '@/ui/composables/Session.ts';
+import { useSession } from '@/ui/composables/Session';
 
 interface Props {
     modelValue: UserDetails;

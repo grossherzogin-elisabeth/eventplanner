@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { Permission } from '@/domain';
-import UserOtherForm from '@/ui/views/users/details/tabs/UserOtherForm.vue';
+import UserOtherForm from '@/ui/views/users/details/components/UserOtherForm.vue';
 import { mockUserCaptain, mockUserDetails } from '~/mocks';
 import { setupUserPermissions } from '~/utils';
 

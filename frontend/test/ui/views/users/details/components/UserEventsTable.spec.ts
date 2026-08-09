@@ -7,7 +7,7 @@ import { wait } from '@/common';
 import type { Event, UserDetails } from '@/domain';
 import { Permission } from '@/domain';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import UserEventsTable from '@/ui/views/users/details/tabs/UserEventsTable.vue';
+import UserEventsTable from '@/ui/views/users/details/components/UserEventsTable.vue';
 import {
     REGISTRATION_CAPTAIN,
     mockEvent,

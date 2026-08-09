@@ -153,14 +153,14 @@ import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
-import UserEmergencyForm from '@/ui/views/users/details/tabs/UserEmergencyForm.vue';
-import UserOtherForm from '@/ui/views/users/details/tabs/UserOtherForm.vue';
+import UserEmergencyForm from './components/UserEmergencyForm.vue';
+import UserOtherForm from './components/UserOtherForm.vue';
 import UserQualificationDetailsDlg from './components/UserQualificationDetailsDlg.vue';
-import UserContactForm from './tabs/UserContactForm.vue';
-import UserDataForm from './tabs/UserDataForm.vue';
-import UserEventsTable from './tabs/UserEventsTable.vue';
-import UserQualificationsTable from './tabs/UserQualificationsTable.vue';
-import UserRolesTable from './tabs/UserRolesTable.vue';
+import UserContactForm from './components/UserContactForm.vue';
+import UserDataForm from './components/UserDataForm.vue';
+import UserEventsTable from './components/UserEventsTable.vue';
+import UserQualificationsTable from './components/UserQualificationsTable.vue';
+import UserRolesTable from './components/UserRolesTable.vue';
 
 enum Tab {
     USER_DATA = 'data',

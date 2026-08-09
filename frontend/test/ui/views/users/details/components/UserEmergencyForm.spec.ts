@@ -2,17 +2,17 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { Permission } from '@/domain';
-import UserDataForm from '@/ui/views/users/details/tabs/UserDataForm.vue';
+import UserEmergencyForm from '@/ui/views/users/details/components/UserEmergencyForm.vue';
 import { mockUserCaptain, mockUserDetails } from '~/mocks';
 import { setupUserPermissions } from '~/utils';
 
-describe('UserDataForm.vue', () => {
+describe('UserEmergencyForm.vue', () => {
     let testee: VueWrapper;
     let user = mockUserDetails(mockUserCaptain());
 
     beforeEach(async () => {
         user = mockUserDetails(mockUserCaptain());
-        testee = mount(UserDataForm, {
+        testee = mount(UserEmergencyForm, {
             props: { modelValue: user, errors: {} },
         });
     });
@@ -20,13 +20,10 @@ describe('UserDataForm.vue', () => {
     afterEach(() => testee.unmount());
 
     const inputs = [
-        { selector: '[data-test-id="first-name"] input', expected: user.firstName },
-        { selector: '[data-test-id="second-name"] input', expected: user.secondName },
-        { selector: '[data-test-id="last-name"] input', expected: user.lastName },
-        { selector: '[data-test-id="date-of-birth"] input', expected: '01.12.2024' },
-        { selector: '[data-test-id="place-of-birth"] input', expected: user.placeOfBirth },
-        { selector: '[data-test-id="pass-number"] input', expected: user.passNr },
-        { selector: '[data-test-id="nationality"] input', expected: 'Deutsch' },
+        { selector: '[data-test-id="emergency-contact-name"] input', expected: user.emergencyContact.name },
+        { selector: '[data-test-id="emergency-contact-phone"] input', expected: user.emergencyContact.phone },
+        { selector: '[data-test-id="diseases"] textarea', expected: user.diseases },
+        { selector: '[data-test-id="medication"] textarea', expected: user.medication },
     ];
 
     it.each(inputs)('should render $expected in $selector', async ({ selector, expected }) => {

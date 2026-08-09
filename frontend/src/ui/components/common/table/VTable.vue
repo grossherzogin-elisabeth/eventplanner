@@ -37,6 +37,7 @@
             <!-- data -->
             <component
                 :is="props.sortable ? VueDraggableNext : 'tbody'"
+                v-else
                 tag="tbody"
                 :list="props.sortable ? pagedItems : undefined"
                 handle=".cursor-move"
