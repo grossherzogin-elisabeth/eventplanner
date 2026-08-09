@@ -6,66 +6,16 @@
         @click="editUserQualification($event.item)"
     >
         <template #row="{ item }">
-            <td :key="item?.icon" class="pr-4 text-xl">
-                <i class="fa-solid" :class="item?.icon" />
-            </td>
-            <td class="w-2/3 min-w-80">
-                <p class="mb-1 font-semibold">{{ item?.name }}</p>
-                <p class="text-sm">
-                    {{ item?.description }}
-                </p>
-            </td>
-
-            <td class="w-1/6">
-                <div class="flex flex-wrap items-center justify-end">
-                    <span
-                        v-for="positionKey in item?.grantsPositions"
-                        :key="positionKey"
-                        class="tag custom"
-                        :style="{ '--color': positions.get(positionKey).color }"
-                    >
-                        {{ positions.get(positionKey).name }}
-                    </span>
-                </div>
-            </td>
-            <td class="w-1/6">
-                <template v-if="item?.expires">
-                    <p v-if="item.expiresAt" class="mb-1 font-semibold">
-                        {{ $d(item.expiresAt, DateTimeFormat.DD_MM_YYYY) }}
-                    </p>
-                    <p v-else class="mb-1 font-semibold">k.A.</p>
-                    <p class="text-sm">Gültig bis</p>
-                </template>
-                <p v-else class="text-sm">
-                    Ohne<br />
-                    Ablaufdatum
-                </p>
-            </td>
-            <td>
-                <div class="flex items-center justify-end">
-                    <div v-if="item?.isExpired" class="status-badge error">
-                        <i class="fa-solid fa-ban"></i>
-                        <span>Abgelaufen</span>
-                    </div>
-                    <div v-else-if="item?.willExpireSoon" class="status-badge warning">
-                        <i class="fa-solid fa-warning"></i>
-                        <span> Läuft bald ab</span>
-                    </div>
-                    <div v-else class="status-badge success">
-                        <i class="fa-solid fa-check-circle"></i>
-                        <span>Gültig</span>
-                    </div>
-                </div>
-            </td>
+            <UserQualificationRow :value="item" />
         </template>
         <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
             <li class="context-menu-item" data-test-id="action-edit-qualification" @click="editUserQualification(item)">
                 <i class="fa-solid fa-edit" />
-                <span>Qualification bearbeiten</span>
+                <span>{{ $t('generic.edit') }}</span>
             </li>
             <li class="context-menu-item text-error" data-test-id="action-delete-qualification" @click="deleteUserQualification(item)">
                 <i class="fa-solid fa-trash-alt" />
-                <span>Qualifikation entfernen</span>
+                <span>{{ $t('generic.delete') }}</span>
             </li>
         </template>
     </VTable>
@@ -73,16 +23,16 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { DateTimeFormat } from '@/common/date';
 import type { ResolvedUserQualification, UserDetails, UserQualification } from '@/domain';
 import { Permission } from '@/domain';
 import { useUserService } from '@/domain/services';
 import type { Dialog } from '@/ui/components/common';
 import { VTable } from '@/ui/components/common';
+import { useQualifications } from '@/ui/composables/Qualifications';
+import { useSession } from '@/ui/composables/Session';
+import UserQualificationDetailsDlg from './UserQualificationDetailsDlg.vue';
+import UserQualificationRow from '@/ui/components/users/UserQualificationRow.vue';
 import { usePositions } from '@/ui/composables/Positions.ts';
-import { useQualifications } from '@/ui/composables/Qualifications.ts';
-import { useSession } from '@/ui/composables/Session.ts';
-import UserQualificationDetailsDlg from '../components/UserQualificationDetailsDlg.vue';
 
 interface Props {
     modelValue: UserDetails;
@@ -97,12 +47,21 @@ const { hasPermission } = useSession();
 const usersService = useUserService();
 const positions = usePositions();
 const qualifications = useQualifications();
+const loading = ref(true);
 
 const editUserQualificationDialog = ref<Dialog<UserQualification, UserQualification | undefined> | null>(null);
 
 const userQualifications = computed<ResolvedUserQualification[] | undefined>(() => {
+    if (loading.value) {
+        return undefined;
+    }
     return usersService.resolveQualifications(props.modelValue, qualifications.map.value);
 });
+
+async function init(): Promise<void> {
+    await Promise.all([positions.loading, qualifications.loading]);
+    loading.value = false;
+}
 
 function deleteUserQualification(userQualification: ResolvedUserQualification): void {
     const user = props.modelValue;
@@ -135,4 +94,6 @@ async function editUserQualification(userQualification: ResolvedUserQualificatio
         emit('update:modelValue', user);
     }
 }
+
+init();
 </script>

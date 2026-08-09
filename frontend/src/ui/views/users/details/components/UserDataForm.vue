@@ -167,8 +167,8 @@ import { ref, watch } from 'vue';
 import type { InputSelectOption, UserDetails } from '@/domain';
 import { Permission } from '@/domain';
 import { VInputCombobox, VInputDate, VInputSelect, VInputText } from '@/ui/components/common';
-import { useNationalities } from '@/ui/composables/Nationalities.ts';
-import { useSession } from '@/ui/composables/Session.ts';
+import { useNationalities } from '@/ui/composables/Nationalities';
+import { useSession } from '@/ui/composables/Session';
 
 interface Props {
     modelValue: UserDetails;

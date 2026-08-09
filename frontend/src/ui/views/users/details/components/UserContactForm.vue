@@ -109,8 +109,8 @@ import { ref, watch } from 'vue';
 import type { UserDetails } from '@/domain';
 import { Permission } from '@/domain';
 import { VInputCombobox, VInputText } from '@/ui/components/common';
-import { useCountries } from '@/ui/composables/Countries.ts';
-import { useSession } from '@/ui/composables/Session.ts';
+import { useCountries } from '@/ui/composables/Countries';
+import { useSession } from '@/ui/composables/Session';
 
 interface Props {
     modelValue: UserDetails;

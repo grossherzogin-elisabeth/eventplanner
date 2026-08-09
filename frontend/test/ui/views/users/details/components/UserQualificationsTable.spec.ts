@@ -4,9 +4,11 @@ import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { UserDetails } from '@/domain';
 import { Permission } from '@/domain';
+import type { UsePositions } from '@/ui/composables/Positions.ts';
+import { usePositions } from '@/ui/composables/Positions.ts';
 import type { UseQualifications } from '@/ui/composables/Qualifications.ts';
 import { useQualifications } from '@/ui/composables/Qualifications.ts';
-import UserQualificationsTable from '@/ui/views/users/details/tabs/UserQualificationsTable.vue';
+import UserQualificationsTable from '@/ui/views/users/details/components/UserQualificationsTable.vue';
 import { mockRouter, mockUserCaptain, mockUserDetails } from '~/mocks';
 import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
@@ -19,11 +21,14 @@ describe('UserQualificationsTable.vue', () => {
     let testee: VueWrapper;
     let user: UserDetails;
     let qualifications: UseQualifications;
+    let positions: UsePositions;
 
     beforeEach(async () => {
         user = mockUserDetails(mockUserCaptain());
         qualifications = useQualifications();
+        positions = usePositions();
         await qualifications.loading;
+        await positions.loading;
         testee = mount(UserQualificationsTable, {
             props: { modelValue: user },
             global: { plugins: [router] },

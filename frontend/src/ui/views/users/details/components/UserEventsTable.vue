@@ -148,10 +148,10 @@ import { DateTimeFormat } from '@/common/date';
 import type { Event, Position, UserDetails } from '@/domain';
 import { Permission, useEventService } from '@/domain';
 import { VTable } from '@/ui/components/common';
-import { formatDateRange } from '@/ui/composables/DateRangeFormatter.ts';
-import { usePositions } from '@/ui/composables/Positions.ts';
-import { useSession } from '@/ui/composables/Session.ts';
-import { Routes } from '@/ui/views/Routes.ts';
+import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
+import { usePositions } from '@/ui/composables/Positions';
+import { useSession } from '@/ui/composables/Session';
+import { Routes } from '@/ui/views/Routes';
 
 export interface EventTableViewItem {
     eventKey: string;

@@ -5,7 +5,7 @@ import { mount } from '@vue/test-utils';
 import type { UserDetails } from '@/domain';
 import { Role } from '@/domain';
 import { Permission } from '@/domain';
-import UserRolesTable from '@/ui/views/users/details/tabs/UserRolesTable.vue';
+import UserRolesTable from '@/ui/views/users/details/components/UserRolesTable.vue';
 import { mockRouter, mockUserCaptain, mockUserDetails } from '~/mocks';
 import { openTableContextMenu, setupUserPermissions } from '~/utils';
 
