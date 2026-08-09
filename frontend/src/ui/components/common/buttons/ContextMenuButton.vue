@@ -1,6 +1,7 @@
 <template>
     <button
         ref="button"
+        type="button"
         v-bind="$attrs"
         :data-test-id="$attrs['data-test-id'] ?? 'context-menu-trigger'"
         class="cursor-pointer"
