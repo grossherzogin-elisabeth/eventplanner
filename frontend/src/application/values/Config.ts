@@ -18,7 +18,6 @@ export interface Config {
     technicalSupportEmail: string;
 
     // feature flags
-    askBeforeLogin?: boolean;
     enableEventAdminListPositionsOverview?: boolean;
     enableEventAdminListPreviewSheet?: boolean;
 }

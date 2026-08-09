@@ -116,7 +116,7 @@ export function useStorage<K extends string | number, T extends CacheableEntity<
     let cache = caches.get(name);
     if (!cache) {
         console.log(`🚀 Initialising ${name} storage`);
-        if (import.meta.env.VITE_USE_INDEXED_DB === 'true') {
+        if (import.meta.env.VITE_ENABLE_INDEXED_DB === 'true') {
             cache = new IndexedDBStorage(useIndexedDb(), name);
         } else {
             cache = new InMemoryStorage();

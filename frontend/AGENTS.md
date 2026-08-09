@@ -67,7 +67,7 @@
 - REST calls typically use `credentials: 'include'`; mutating calls include `X-XSRF-TOKEN` from cookie helper.
 - Caching services hydrate local storage first and tolerate network failures (example: `EventCachingService` prefetches
   +/-2 years and falls back to cache).
-- Storage backend is env-switched via `VITE_USE_INDEXED_DB` (`IndexedDBStorage` vs `InMemoryStorage` in
+- Storage backend is env-switched via `VITE_ENABLE_INDEXED_DB` (`IndexedDBStorage` vs `InMemoryStorage` in
   `src/adapter/index.ts`).
 
 ## Testing setup and pitfalls

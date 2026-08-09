@@ -13,7 +13,6 @@ export const defaultConfig: Config = {
     supportEmail: 'support@example.de',
 
     // feature flags
-    askBeforeLogin: import.meta.env.VITE_ASK_BEFORE_LOGIN === 'true',
     enableEventAdminListPositionsOverview: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_POSITIONS_OVERVIEW === 'true',
     enableEventAdminListPreviewSheet: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_PREVIEW_SHEET === 'true',
 };
