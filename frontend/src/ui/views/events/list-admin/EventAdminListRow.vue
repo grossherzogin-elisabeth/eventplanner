@@ -48,7 +48,9 @@
                 </template>
                 <template v-else>
                     {{ props.event?.registrations.length }}
-                    {{ $t('domain.event.registrations', { count: props.event?.registrations.length }) }}
+                    <template v-if="props.event">
+                        {{ $t('domain.event.registrations', { count: props.event?.registrations.length }) }}
+                    </template>
                 </template>
             </p>
         </div>
@@ -80,7 +82,9 @@
         </template>
         <template v-else>
             <p class="mb-1 pl-4 font-semibold">{{ props.event?.registrations.length }}</p>
-            <p class="pl-4 text-sm">{{ $t('domain.event.registrations') }}</p>
+            <p class="pl-4 text-sm">
+                <template v-if="props.event">{{ $t('domain.event.registrations') }}</template>
+            </p>
         </template>
     </td>
     <!-- status -->

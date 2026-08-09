@@ -20,4 +20,5 @@ export interface Config {
     // feature flags
     enableEventAdminListPositionsOverview?: boolean;
     enableEventAdminListPreviewSheet?: boolean;
+    enableTableActionsButtonMobile?: boolean;
 }

@@ -16,7 +16,7 @@
                         <slot name="row" :item="undefined" :index="i" :first="i === 0" :last="i === pagedItems.length - 1"> </slot>
                         <!-- context menu placeholder-->
                         <td v-if="$slots['context-menu']" class="w-10">
-                            <span class="hidden sm:inline">
+                            <span :class="{ 'hidden sm:inline': !config.enableTableActionsButtonMobile }">
                                 <i class="fa-solid fa-circle text-surface-container-high pr-4 text-2xl"></i>
                             </span>
                         </td>
@@ -85,6 +85,7 @@
                         ref="contextColumns"
                         data-test-id="table-context-menu-trigger"
                         class="w-0"
+                        :class="{ 'hidden sm:table-cell': !config.enableTableActionsButtonMobile }"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
                         <button class="btn-icon lg:mr-3">
@@ -148,6 +149,7 @@ import type { Selectable } from '@/ui/model/Selectable.ts';
 import { VueDraggableNext } from 'vue-draggable-next';
 import VDropdownWrapper from '../dropdown/VDropdownWrapper.vue';
 import VPagination from './VPagination.vue';
+import { useConfig } from '@/ui/composables/Config.ts';
 
 interface Props<T> {
     /**
@@ -206,6 +208,7 @@ const props = defineProps<Props<T>>();
 const emit = defineEmits<Emits>();
 defineSlots<Slots>();
 
+const { config } = useConfig();
 const viewPortSize = useViewportSize();
 const touch = useLongTouch();
 const page = useQuery<number>('page', 0).parameter;

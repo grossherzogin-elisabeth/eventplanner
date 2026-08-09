@@ -18,7 +18,6 @@
 .skeleton h5,
 .skeleton span {
     min-width: 5rem;
-    content: '';
 }
 
 .skeleton p:nth-child(1) {
@@ -70,6 +69,7 @@
 /* hide nested span elements */
 .skeleton p span:before,
 .skeleton span span:before,
+.skeleton span:has(svg):before,
 .skeleton h1 span:before,
 .skeleton h2 span:before,
 .skeleton h3 span:before,

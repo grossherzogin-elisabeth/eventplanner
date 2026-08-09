@@ -15,6 +15,7 @@ export const defaultConfig: Config = {
     // feature flags
     enableEventAdminListPositionsOverview: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_POSITIONS_OVERVIEW === 'true',
     enableEventAdminListPreviewSheet: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_PREVIEW_SHEET === 'true',
+    enableTableActionsButtonMobile: import.meta.env.VITE_ENABLE_TABLE_ACTIONS_BUTTON_MOBILE === 'true',
 };
 
 if (import.meta.env.MODE === 'development') {

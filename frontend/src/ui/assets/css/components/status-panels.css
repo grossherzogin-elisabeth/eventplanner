@@ -10,7 +10,17 @@
     }
 
     .status-badge > span {
-        padding-top: 0.2em;
+        white-space: nowrap;
+        @apply font-semibold;
+    }
+
+    .status-badge > span:before {
+        vertical-align: unset;
+        --skeleton-height: 0.8em;
+    }
+
+    .status-badge > i {
+        @apply w-4;
     }
 
     .tag {
@@ -61,15 +71,6 @@
         border-color: var(--color);
         z-index: -1;
         opacity: 0.2;
-    }
-
-    .status-badge > span {
-        white-space: nowrap;
-        @apply font-semibold;
-    }
-
-    .status-badge > i {
-        @apply w-4;
     }
 
     .status-panel {
