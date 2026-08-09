@@ -4,36 +4,35 @@ import { afterEach } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import { HttpResponse, http } from 'msw';
-import { useEventAdministrationUseCase } from '@/application';
+import type { EventAdministrationUseCase, EventUseCase } from '@/application';
+import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import type { Event } from '@/domain';
 import { EventSignupType } from '@/domain';
 import { EventType } from '@/domain';
 import { EventState } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
-import { mockEvent, server } from '~/mocks';
+import { mockEvent } from '~/mocks';
 import { selectDropdownOption } from '~/utils';
 
 describe('EventBatchEditDlg.vue', () => {
     let testee: VueWrapper;
     let result: boolean | undefined = undefined;
+    let eventUseCase: EventUseCase;
+    let eventAdministrationUseCase: EventAdministrationUseCase;
     let updateFunc: MockInstance;
     let eventA = mockEvent({ key: 'a' });
     let eventB = mockEvent({ key: 'b' });
 
-    beforeEach(() => {
-        vi.useFakeTimers();
-        server.use(http.get('/api/v1/events', () => HttpResponse.json([eventA, eventB], { status: 200 })));
-        server.use(http.get('/api/v1/events/a', () => HttpResponse.json(eventA, { status: 200 })));
-        server.use(http.get('/api/v1/events/b', () => HttpResponse.json(eventB, { status: 200 })));
-    });
-
     beforeEach(async () => {
+        vi.useFakeTimers();
         result = undefined;
-        updateFunc = vi.spyOn(useEventAdministrationUseCase(), 'updateEvents');
+        eventUseCase = useEventUseCase();
+        eventAdministrationUseCase = useEventAdministrationUseCase();
         eventA = mockEvent({ key: 'a' });
         eventB = mockEvent({ key: 'b' });
+        updateFunc = vi.spyOn(eventAdministrationUseCase, 'updateEvents').mockResolvedValue(undefined);
+        vi.spyOn(eventUseCase, 'getEvents').mockResolvedValue([eventA, eventB]);
         testee = mount(EventBatchEditDlg);
         await open([eventA, eventB]);
     });
@@ -107,7 +106,7 @@ describe('EventBatchEditDlg.vue', () => {
         await selectDropdownOption(testee, 1);
 
         await submit();
-        expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { slots: mockEvent().slots });
+        expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { slots: eventA.slots });
         await expect.poll(() => result).toBe(true);
     });
 

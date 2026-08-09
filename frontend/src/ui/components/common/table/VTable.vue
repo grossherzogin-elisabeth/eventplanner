@@ -16,7 +16,7 @@
                         <slot name="row" :item="undefined" :index="i" :first="i === 0" :last="i === pagedItems.length - 1"> </slot>
                         <!-- context menu placeholder-->
                         <td v-if="$slots['context-menu']" class="w-10">
-                            <span class="hidden sm:inline">
+                            <span :class="{ 'hidden sm:inline': !config.enableTableActionsButtonMobile }">
                                 <i class="fa-solid fa-circle text-surface-container-high pr-4 text-2xl"></i>
                             </span>
                         </td>
@@ -59,6 +59,7 @@
                     <td
                         v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"
                         class="pr-2"
+                        data-test-id="table-row-select"
                         @click.stop.prevent="row.selected = !row.selected"
                     >
                         <div v-if="row.selected">
@@ -84,6 +85,7 @@
                         ref="contextColumns"
                         data-test-id="table-context-menu-trigger"
                         class="w-0"
+                        :class="{ 'hidden sm:table-cell': !config.enableTableActionsButtonMobile }"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
                         <button class="btn-icon lg:mr-3">
@@ -108,11 +110,21 @@
             <div class="context-menu mt-2" data-test-id="table-context-menu">
                 <ul>
                     <template v-if="props.multiselection">
-                        <li v-if="dropdownItem.selected" class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
+                        <li
+                            v-if="dropdownItem.selected"
+                            class="context-menu-item"
+                            data-test-id="action-deselect"
+                            @click="dropdownItem.selected = !dropdownItem.selected"
+                        >
                             <i class="fa-solid fa-xmark" />
                             <span>Abwählen</span>
                         </li>
-                        <li v-else class="context-menu-item" @click="dropdownItem.selected = !dropdownItem.selected">
+                        <li
+                            v-else
+                            class="context-menu-item"
+                            data-test-id="action-select"
+                            @click="dropdownItem.selected = !dropdownItem.selected"
+                        >
                             <i class="fa-solid fa-check" />
                             <span>Auswählen</span>
                         </li>
@@ -137,6 +149,7 @@ import type { Selectable } from '@/ui/model/Selectable.ts';
 import { VueDraggableNext } from 'vue-draggable-next';
 import VDropdownWrapper from '../dropdown/VDropdownWrapper.vue';
 import VPagination from './VPagination.vue';
+import { useConfig } from '@/ui/composables/Config.ts';
 
 interface Props<T> {
     /**
@@ -195,6 +208,7 @@ const props = defineProps<Props<T>>();
 const emit = defineEmits<Emits>();
 defineSlots<Slots>();
 
+const { config } = useConfig();
 const viewPortSize = useViewportSize();
 const touch = useLongTouch();
 const page = useQuery<number>('page', 0).parameter;

@@ -10,11 +10,15 @@ export interface Config {
     i18nAvailableLocales: string[];
 
     overrideSignedInUserKey?: string;
-    askBeforeLogin?: boolean;
 
     // config from service
     menuTitle: string;
     tabTitle: string;
     supportEmail: string;
     technicalSupportEmail: string;
+
+    // feature flags
+    enableEventAdminListPositionsOverview?: boolean;
+    enableEventAdminListPreviewSheet?: boolean;
+    enableTableActionsButtonMobile?: boolean;
 }

@@ -94,7 +94,7 @@ domain:
       leave-waiting-list: Warteliste verlassen
       remove-from-crew: Auf die Warteliste
       sign-up: Anmelden
-      update-state-to-canceled: Veranstaltung absagen
+      update-state-to-canceled: Absagen
       update-state-to-open-for-signup: Anmeldungen freischalten
       update-state-to-published: Crew veröffentlichen
       view: Veranstaltung anzeigen
@@ -484,7 +484,7 @@ views:
       no-qualification: '{name} hat keine Qualifikation für die Position {position}'
       qualifications: '{name} hat zum Zeitpunkt der Veranstaltung die folgenden Qualifikationen:'
       select-position: Bitte wähle eine Position
-      select-user: Bitte wähle eine Stammcrew Mitglied
+      select-user: Bitte wähle ein Stammcrew Mitglied
       title: Anmeldung von {name} {lastName}
     empty-crew:
       desc: Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.

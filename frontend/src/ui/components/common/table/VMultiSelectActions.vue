@@ -1,5 +1,5 @@
 <template>
-    <div class="multi-select-bar sticky bottom-0 z-20">
+    <div class="multi-select-bar sticky bottom-0 z-20" data-test-id="multi-select-actions">
         <div class="border-outline-variant bg-surface border-t px-2 md:px-12 xl:rounded-bl-3xl xl:pr-20 xl:pl-16">
             <div class="flex h-18 items-stretch gap-2 py-4 whitespace-nowrap">
                 <button class="btn-ghost" @click="emit('selectNone')">

@@ -7,21 +7,35 @@ export const defaultConfig: Config = {
     i18nAvailableLocales: (import.meta.env.VITE_I18N_LOCALES || 'de').split(','),
     i18nFallbackLocale: import.meta.env.VITE_I18N_FALLBACK_LOCALE || 'de',
     overrideSignedInUserKey: localStorage.getItem('eventplanner.overrideSignedInUserKey') || undefined,
-    askBeforeLogin: import.meta.env.VITE_AUTH_ASK_BEFORE_LOGIN === 'true',
     menuTitle: 'Reiseplaner',
     tabTitle: 'Reiseplaner',
     technicalSupportEmail: 'support@example.de',
     supportEmail: 'support@example.de',
+
+    // feature flags
+    enableEventAdminListPositionsOverview: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_POSITIONS_OVERVIEW === 'true',
+    enableEventAdminListPreviewSheet: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_PREVIEW_SHEET === 'true',
+    enableTableActionsButtonMobile: import.meta.env.VITE_ENABLE_TABLE_ACTIONS_BUTTON_MOBILE === 'true',
 };
+
+if (import.meta.env.MODE === 'development') {
+    console.log('Loading environment configuration');
+    console.log(import.meta.env);
+}
 
 export class ConfigService {
     private readonly settingsRepository: SettingsRepository;
     private readonly config: Config;
+    private readonly init: Promise<void>;
 
     constructor(params: { settingsRepository: SettingsRepository }) {
         this.settingsRepository = params.settingsRepository;
         this.config = defaultConfig;
-        this.initialize();
+        this.init = this.initialize();
+    }
+
+    public async initialization(): Promise<void> {
+        return this.init;
     }
 
     private async initialize(): Promise<void> {

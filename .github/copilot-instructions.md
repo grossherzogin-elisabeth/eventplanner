@@ -56,6 +56,7 @@ Version source of truth: use `backend/build.gradle` for backend framework/librar
 
 ## Coding guidelines (essentials)
 - Frontend: TS strict; ESLint + Prettier (import-sorted); alias `@` → `frontend/src`; i18n import `vue-i18n/dist/vue-i18n.cjs.js`; keep PWA denylist to avoid caching API/auth routes.
+- Frontend tests: in Vue/UI specs, mock at the application use-case boundary instead of repository/REST level; use MSW as fallback (especially for reads), not as the primary assertion layer.
 - Backend: Controllers under `org.eventplanner..` return `ResponseEntity` or `RedirectView`; validate inputs; use `@Transactional` as needed; DB via Flyway migrations in `resources/db/migration` (no runtime schema changes); OAuth2 client configured in `application.yml`. CSRF currently disabled—be cautious with POST/forms.
 - General: Keep CI Node/Java versions stable with workflows; update Sonar settings in `backend/build.gradle` if paths move.
 

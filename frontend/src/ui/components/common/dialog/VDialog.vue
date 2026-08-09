@@ -31,7 +31,12 @@
                                     </h1>
                                 </div>
                                 <div class="dialog-close-button-wrapper flex w-16 items-center justify-center">
-                                    <button class="dialog-close-button btn-icon" @click="reject()">
+                                    <button
+                                        class="dialog-close-button btn-icon"
+                                        type="button"
+                                        data-test-id="dialog-close-button"
+                                        @click="reject()"
+                                    >
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>

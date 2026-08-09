@@ -2,6 +2,7 @@
     @apply animate-pulse;
     --skeleton-height: 1em;
     --skeleton-width: 90%;
+    pointer-events: none;
 }
 
 .skeleton *:not(svg):not(svg *) {
@@ -10,9 +11,13 @@
 }
 
 .skeleton p,
+.skeleton h1,
+.skeleton h2,
+.skeleton h3,
+.skeleton h4,
+.skeleton h5,
 .skeleton span {
     min-width: 5rem;
-    content: '';
 }
 
 .skeleton p:nth-child(1) {
@@ -25,10 +30,6 @@
 
 .skeleton p:nth-child(3) {
     --skeleton-width: 80%;
-}
-
-.skeleton p > span:before {
-    display: none;
 }
 
 .skeleton .font-bold {
@@ -48,6 +49,11 @@
 }
 
 .skeleton p:before,
+.skeleton h1:before,
+.skeleton h2:before,
+.skeleton h3:before,
+.skeleton h4:before,
+.skeleton h5:before,
 .skeleton span:before {
     content: '';
     height: var(--skeleton-height);
@@ -58,4 +64,16 @@
     vertical-align: middle;
     background-color: var(--color-surface-container-highest);
     border-radius: var(--radius-lg);
+}
+
+/* hide nested span elements */
+.skeleton p span:before,
+.skeleton span span:before,
+.skeleton span:has(svg):before,
+.skeleton h1 span:before,
+.skeleton h2 span:before,
+.skeleton h3 span:before,
+.skeleton h4 span:before,
+.skeleton h5 span:before {
+    display: none;
 }
