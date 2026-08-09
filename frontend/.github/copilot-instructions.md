@@ -26,6 +26,8 @@ Docker, CI). This file keeps frontend-only guidance concise.
 - Build: `npm run build`
 - Tests: `npm run test:coverage` (CET timezone). Uses Vitest + happy-dom + MSW.
 - In tests, prefer existing shared stubs/matchers/helpers from `test/utils` before introducing new ad-hoc versions.
+- UI test boundary: mock at the application use-case level (`useXUseCase()`), not repository/REST level.
+- MSW is fallback infrastructure in UI specs (mainly for unmocked reads). UI tests should not assert repository or HTTP details.
 
 ## Local dev
 

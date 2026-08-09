@@ -1,29 +1,22 @@
-import { ref } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
+import { useEventExportUseCase } from '@/application';
+import type { EventExportUseCase } from '@/application/usecases/EventExportUseCase.ts';
 import type { Event } from '@/domain';
 import { EventState } from '@/domain';
-import type { UseEventExports } from '@/ui/composables/EventExports';
 import EventAdminListRowActions from '@/ui/views/events/list-admin/EventAdminListRowActions.vue';
 import { mockEvent } from '~/mocks';
 
-const exportTemplates = ref<string[]>([]);
-
-vi.mock('@/ui/composables/EventExports', () => ({
-    useEventExports: (): UseEventExports => ({
-        templates: exportTemplates,
-        loading: Promise.resolve(),
-        exportEvents: vi.fn(),
-        exportEvent: vi.fn(),
-    }),
-}));
-
 describe('EventAdminListRowActions.vue', () => {
     let testee: VueWrapper;
+    let eventExportUseCase: EventExportUseCase;
+    let exportTemplates: string[];
 
     beforeEach(() => {
-        exportTemplates.value = ['template a', 'template b'];
+        eventExportUseCase = useEventExportUseCase();
+        exportTemplates = ['template a', 'template b'];
+        vi.spyOn(eventExportUseCase, 'getExportTemplates').mockImplementation(async () => exportTemplates);
     });
 
     afterEach(() => testee?.unmount());
@@ -63,17 +56,17 @@ describe('EventAdminListRowActions.vue', () => {
         expect(testee.findAll('[data-test-id="action-export"]')).toHaveLength(0);
     });
 
-    it('should show export actions when templates are available', () => {
+    it('should show export actions when templates are available', async () => {
         testee = mountTestee([mockEvent()]);
 
-        expect(testee.findAll('[data-test-id="action-export"]')).toHaveLength(2);
+        await expect.poll(() => testee.findAll('[data-test-id="action-export"]').length).toBe(2);
     });
 
-    it('should hide export actions when no templates are available', () => {
-        exportTemplates.value = [];
+    it('should hide export actions when no templates are available', async () => {
+        exportTemplates = [];
         testee = mountTestee([mockEvent()]);
 
-        expect(testee.findAll('[data-test-id="action-export"]')).toHaveLength(0);
+        await expect.poll(() => testee.findAll('[data-test-id="action-export"]').length).toBe(0);
     });
 
     it('should disable open-for-signup action when no draft event is present', () => {

@@ -16,6 +16,7 @@
   stores `login-redirect` in `localStorage`.
 - Tests use Vitest + happy-dom + fake IndexedDB; MSW is strict (`onUnhandledRequest: 'error'`) so every network call
   must be mocked.
+- For Vue/UI specs, mock at the use-case boundary (`useXUseCase()`), not repositories/REST adapters.
 - i18n is strict in tests (`throwOnMissing: true`), so missing locale keys fail tests immediately.
 
 ## Scope and precedence
@@ -74,6 +75,8 @@
 - Test environment: custom happy-dom VM + `fake-indexeddb` (`test/environment.ts`).
 - API mocking: MSW server with `onUnhandledRequest: 'error'` (`test/vitest.setup.ts`), so every network call in tests
   must be mocked.
+- UI test layering: assert UI behavior and use-case calls; repository/HTTP behavior belongs in use-case or adapter tests.
+- Treat MSW as fallback coverage in UI specs (especially read paths), not as the primary assertion target.
 - Use test alias `~` for helpers/mocks (`vitest.config.ts`).
 - Prefer shared fixtures from `~/mocks` (see `test/mocks/index.ts`) instead of ad-hoc inline entity factories in specs.
 - Prefer existing shared stubs/matchers/helpers from `test/utils` before creating new local ones in a spec.
