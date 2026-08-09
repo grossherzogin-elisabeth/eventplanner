@@ -142,7 +142,7 @@
             v-else
             class="permission-create-events pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden"
         >
-            <button class="btn-floating pointer-events-auto" @click="createEvent()">
+            <button class="btn-floating pointer-events-auto" type="button" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
                 <span>{{ $t('views.event-admin-list.action.create-event') }}</span>
             </button>
