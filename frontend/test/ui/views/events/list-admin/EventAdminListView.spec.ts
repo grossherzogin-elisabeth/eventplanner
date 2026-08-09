@@ -221,6 +221,17 @@ describe('EventAdminListView.vue', () => {
 
             await expect.poll(() => updateFunc).toHaveBeenCalledWith([events[1].key, events[2].key], { name: 'updated' });
         });
+
+        it('should not update any event on cancel', async () => {
+            const updateFunc = vi.spyOn(eventAdministrationUseCase, 'updateEvents').mockResolvedValue(undefined);
+            await loading();
+            await selectEvents(events[1], events[2]);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-edit"]').trigger('click');
+            await testee.find('[data-test-id="button-cancel"]').trigger('click');
+
+            expect(updateFunc).not.toHaveBeenCalled();
+        });
     });
 
     describe('context menu action "open for signup"', () => {
@@ -253,6 +264,34 @@ describe('EventAdminListView.vue', () => {
             await testee.find('[data-test-id="button-confirm"]').trigger('click');
 
             await expect.poll(() => updateFunc).toHaveBeenCalledWith([event1.key, event2.key], { state: EventState.OpenForSignup });
+        });
+
+        it('should update only draft events', async () => {
+            const updateFunc = vi.spyOn(eventAdministrationUseCase, 'updateEvents').mockResolvedValue(undefined);
+            const event1 = findEvent('state-draft-1');
+            const event2 = findEvent('state-planned-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-open-for-signup"]').trigger('click');
+            await testee.find('[data-test-id="button-cancel"]').trigger('click');
+
+            await expect.poll(() => updateFunc).toHaveBeenCalledWith([event1.key], { state: EventState.OpenForSignup });
+        });
+
+        it('should not update any event when confirmation dialog is closed via x button', async () => {
+            const updateFunc = vi.spyOn(eventAdministrationUseCase, 'updateEvents').mockResolvedValue(undefined);
+            const event1 = findEvent('state-draft-1');
+            const event2 = findEvent('state-planned-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-open-for-signup"]').trigger('click');
+            await testee.find('[data-test-id="dialog-close-button"]').trigger('click');
+
+            expect(updateFunc).not.toHaveBeenCalled();
         });
     });
 
@@ -291,6 +330,34 @@ describe('EventAdminListView.vue', () => {
                 .poll(() => updateFunc)
                 .toHaveBeenCalledWith(expect.arrayContaining([event1.key, event2.key]), { state: EventState.Planned });
         });
+
+        it('should update only open-for-signup events', async () => {
+            const updateFunc = vi.spyOn(eventAdministrationUseCase, 'updateEvents').mockResolvedValue(undefined);
+            const event1 = findEvent('state-open-for-signup-1');
+            const event2 = findEvent('state-draft-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-publish-crew"]').trigger('click');
+            await testee.find('[data-test-id="button-cancel"]').trigger('click');
+
+            await expect.poll(() => updateFunc).toHaveBeenCalledWith([event1.key], { state: EventState.Planned });
+        });
+
+        it('should not update events when confirmation dialog is closed via x button', async () => {
+            const updateFunc = vi.spyOn(eventAdministrationUseCase, 'updateEvents').mockResolvedValue(undefined);
+            const event1 = findEvent('state-open-for-signup-1');
+            const event2 = findEvent('state-draft-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-publish-crew"]').trigger('click');
+            await testee.find('[data-test-id="dialog-close-button"]').trigger('click');
+
+            expect(updateFunc).not.toHaveBeenCalled();
+        });
     });
 
     describe('context menu action "create registration"', () => {
@@ -319,6 +386,23 @@ describe('EventAdminListView.vue', () => {
 
             await expect.poll(() => createFunc).toHaveBeenCalledWith([event1, event2], registration);
         });
+
+        it('should not create any registration on cancel', async () => {
+            const createFunc = vi.spyOn(eventAdministrationUseCase, 'addRegistrations').mockResolvedValue(undefined);
+            const event1 = findEvent('state-draft-1');
+            const event2 = findEvent('state-open-for-signup-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-create-registration"]').trigger('click');
+
+            const dialog = testee.findComponent(CreateRegistrationDlg);
+            expect(dialog.exists()).toBe(true);
+            dialog.vm.submit(undefined);
+
+            expect(createFunc).not.toHaveBeenCalled();
+        });
     });
 
     describe('context menu action "cancel"', () => {
@@ -336,6 +420,22 @@ describe('EventAdminListView.vue', () => {
             await cancelDialogButtons[cancelDialogButtons.length - 1].trigger('click');
 
             await expect.poll(() => updateFunc).toHaveBeenCalledWith([event1.key, event2.key], { state: EventState.Canceled });
+        });
+
+        it('should not update any event on cancel', async () => {
+            const updateFunc = vi.spyOn(eventAdministrationUseCase, 'updateEvents').mockResolvedValue(undefined);
+            const event1 = findEvent('state-draft-1');
+            const event2 = findEvent('state-open-for-signup-2');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-cancel"]').trigger('click');
+
+            const cancelDialogButtons = testee.findAll('[data-test-id="cancel-event-dialog"] .btn-ghost-danger');
+            await cancelDialogButtons[0].trigger('click');
+
+            expect(updateFunc).not.toHaveBeenCalled();
         });
     });
 
@@ -357,6 +457,20 @@ describe('EventAdminListView.vue', () => {
 
             await expect.poll(() => deleteFunc).toHaveBeenCalledWith(event1);
             await expect.poll(() => deleteFunc).toHaveBeenCalledWith(event2);
+        });
+
+        it('should not delete any event on cancel', async () => {
+            const deleteFunc = vi.spyOn(eventAdministrationUseCase, 'deleteEvent').mockResolvedValue(undefined);
+            const event1 = findEvent('state-draft-1');
+            const event2 = findEvent('state-open-for-signup-1');
+            await loading();
+
+            await selectEvents(event1, event2);
+            const menu = await openMultiSelectContextMenu();
+            await menu.find('[data-test-id="action-delete"]').trigger('click');
+            await testee.find('[data-test-id="button-cancel"]').trigger('click');
+
+            expect(deleteFunc).not.toHaveBeenCalled();
         });
     });
 
