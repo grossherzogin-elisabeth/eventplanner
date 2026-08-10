@@ -55,7 +55,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-validation-test:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-restclient-test:${springBootVersion}"
     testImplementation "org.springframework.security:spring-security-test:7.1.0"
-    testImplementation "com.tngtech.archunit:archunit:1.4.2"
+    testImplementation "com.tngtech.archunit:archunit:1.5.0"
 
     // silence "unknown enum constant javax.annotation.meta.When.MAYBE" warning
     // https://stackoverflow.com/questions/53326271/spring-nullable-annotation-generates-unknown-enum-constant-warning
