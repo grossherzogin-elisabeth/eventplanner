@@ -55,6 +55,14 @@
                 class="interactive-table no-header scrollbar-invisible xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
                 @click="editUser($event.item, $event.event)"
             >
+                <template #icon="{ item }">
+                    <span>
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+                    <span v-if="item?.verified" data-test-id="user-verified-badge">
+                        <i class="fa-solid fa-check-circle text-onsuccess-container absolute -right-1 -bottom-1 text-xs sm:text-sm"></i>
+                    </span>
+                </template>
                 <template #row="{ item }">
                     <UserListRow :user="item" :events="events" />
                 </template>
