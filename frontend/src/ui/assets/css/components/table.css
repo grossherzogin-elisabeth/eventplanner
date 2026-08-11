@@ -142,12 +142,14 @@ table.v-table {
 /* hover */
 /* ------------------------------------------------------ */
 
-.interactive-table:not(.loading) .v-table tbody tr:not(.no-data):hover td:first-child::before {
-    @apply bg-surface-container;
-}
+@media (hover: hover) {
+    .interactive-table:not(.loading) .v-table tbody tr:not(.no-data):hover td:first-child::before {
+        @apply bg-surface-container;
+    }
 
-.interactive-table:not(.loading) .v-table tbody tr:not(.no-data) {
-    cursor: pointer;
+    .interactive-table:not(.loading) .v-table tbody tr:not(.no-data) {
+        cursor: pointer;
+    }
 }
 
 /* ------------------------------------------------------ */
