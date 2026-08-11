@@ -1,19 +1,19 @@
 <template>
     <div class="flex h-full flex-1 flex-col xl:overflow-x-hidden xl:overflow-y-auto">
         <teleport to="#nav-right">
-            <NavbarFilter v-model="filter" placeholder="Einträge filtern" />
+            <NavbarFilter v-model="filter" :placeholder="$t('generic.filter-entries')" />
         </teleport>
 
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
                 <div class="-mr-4 flex items-stretch gap-2 pb-2 2xl:mr-0">
                     <div class="hidden lg:block">
-                        <VSearchButton v-model="filter" placeholder="Einträge filtern" />
+                        <VSearchButton v-model="filter" :placeholder="$t('generic.filter-entries')" />
                     </div>
                     <div v-if="hasPermission(Permission.WRITE_USERS)" class="z-10 hidden 2xl:block">
-                        <button class="btn-primary" name="create" @click="createUser()">
+                        <button class="btn-primary" name="create" type="button" @click="createUser()">
                             <i class="fa-solid fa-user-plus"></i>
-                            <span>{{ $t('generic.add') }}</span>
+                            <span>{{ $t('domain.user.actions.create') }}</span>
                         </button>
                     </div>
                 </div>
@@ -21,20 +21,29 @@
         </VTabs>
 
         <div class="filter-panel scrollbar-invisible mt-4">
-            <FilterMultiselect v-model="filterPositions" placeholder="Alle Positionen" :options="positions.options.value" />
-            <FilterToggle v-model="filterOnlyActive" label="Aktive Stammcrew" />
-            <FilterToggle v-model="filterExpiredQualifications" label="Abgelaufene Qualifikationen" />
+            <FilterMultiselect
+                v-model="filterPositions"
+                data-test-id="filter-positions"
+                :placeholder="$t('views.user-list.filter.all-positions')"
+                :options="positions.options.value"
+            />
+            <FilterToggle v-model="filterOnlyActive" data-test-id="filter-only-active" :label="$t('views.user-list.filter.active-crew')" />
+            <FilterToggle
+                v-model="filterExpiredQualifications"
+                data-test-id="filter-expired-qualifications"
+                :label="$t('views.user-list.filter.expired-qualifications')"
+            />
             <FilterSelect
                 v-model="filterEventKey"
-                :options="
-                    events.map((it) => ({
-                        label: it.name,
-                        value: it.key,
-                    }))
-                "
-                placeholder="Alle Veranstaltungen"
+                data-test-id="filter-event"
+                :options="futureEvents"
+                :placeholder="$t('views.user-list.filter.all-events')"
             />
-            <FilterToggle v-model="filterPendingVerification" label="Verifizierung ausstehend" />
+            <FilterToggle
+                v-model="filterPendingVerification"
+                data-test-id="filter-not-verified"
+                :label="$t('views.user-list.filter.not-verified')"
+            />
         </div>
 
         <div class="w-full">
@@ -47,113 +56,17 @@
                 @click="editUser($event.item, $event.event)"
             >
                 <template #row="{ item }">
-                    <td class="w-1/3 font-semibold whitespace-nowrap">
-                        <p class="mb-2">
-                            {{ item?.nickName || item?.firstName }} {{ item?.lastName }}
-                            <span
-                                v-if="item?.verified"
-                                class="bg-success-container/50 inline-flex h-5 w-5 items-center justify-center rounded-full"
-                            >
-                                <i class="fa-solid fa-check text-onsuccess-container text-xs"></i>
-                            </span>
-                        </p>
-                        <p v-if="item?.rolesStr" class="max-w-64 truncate text-sm" :title="item.rolesStr">
-                            {{ item.rolesStr }}
-                        </p>
-                        <p v-else class="max-w-64 truncate text-sm italic">Keine Rolle zugewiesen</p>
-                    </td>
-                    <td class="w-1/3">
-                        <div class="flex max-w-64 flex-wrap gap-1">
-                            <span
-                                v-for="position in item?.positions"
-                                :key="position.key"
-                                class="tag custom"
-                                :style="{ '--color': position.color }"
-                            >
-                                {{ position.name }}
-                            </span>
-                        </div>
-                    </td>
-                    <td class="w-1/5">
-                        <div class="flex space-x-8">
-                            <div :class="{ 'opacity-25': !item?.singleDayEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item?.singleDayEventsCount || '-' }}</p>
-                                <p class="text-sm" title="Tagesfahrten">TF</p>
-                            </div>
-                            <div :class="{ 'opacity-25': !item?.weekendEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item?.weekendEventsCount || '-' }}</p>
-                                <p class="text-sm" title="Wochenendfahrten">WE</p>
-                            </div>
-                            <div :class="{ 'opacity-25': !item?.multiDayEventsCount }">
-                                <p class="mb-1 font-semibold">{{ item?.multiDayEventsCount || '-' }}</p>
-                                <p class="text-sm" title="Sommerreisen und mehrtägige Fahrten">SR</p>
-                            </div>
-                            <div :class="{ 'opacity-25': !item?.waitingListCount }">
-                                <p class="mb-1 font-semibold">{{ item?.waitingListCount || '-' }}</p>
-                                <p class="text-sm" title="Warteliste">WL</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="w-1/12">
-                        <div class="flex items-center justify-end">
-                            <div v-if="item?.qualifications?.length === 0" class="status-badge neutral">
-                                <i class="fa-solid fa-question-circle"></i>
-                                <span>Keine Angaben</span>
-                            </div>
-                            <div
-                                v-else-if="item?.expiredQualifications.length ?? 0 > 0"
-                                class="status-badge error"
-                                :title="item?.expiredQualifications.join(', ')"
-                            >
-                                <i class="fa-solid fa-ban"></i>
-                                <span> {{ item?.expiredQualifications.length }} abgelaufen </span>
-                            </div>
-                            <div
-                                v-else-if="item?.soonExpiringQualifications.length ?? 0 > 0"
-                                class="status-badge warning"
-                                :title="item?.soonExpiringQualifications.join(', ')"
-                            >
-                                <i class="fa-solid fa-warning"></i>
-                                <span>
-                                    <template v-if="item?.soonExpiringQualifications.length === 1"> 1 läuft bald ab </template>
-                                    <template v-else> {{ item?.soonExpiringQualifications.length }} laufen bald ab </template>
-                                </span>
-                            </div>
-                            <div v-else class="status-badge success">
-                                <i class="fa-solid fa-check-circle"></i>
-                                <span>Alle gültig</span>
-                            </div>
-                        </div>
-                    </td>
+                    <UserListRow :user="item" :events="events" />
                 </template>
                 <template #context-menu="{ item }">
-                    <li
-                        class="permission-read-user-details context-menu-item"
-                        :class="{ disabled: !item.email }"
-                        @click="contactUsers([item])"
-                    >
-                        <i class="fa-solid fa-envelope" />
-                        <span>Email schreiben</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="impersonateUser(item)">
-                        <i class="fa-solid fa-user-secret" />
-                        <span>Impersonate</span>
-                    </li>
-                    <li class="permission-write-registrations context-menu-item" @click="createRegistration(item)">
-                        <i class="fa-solid fa-calendar-plus" />
-                        <span>Anmeldung hinzufügen</span>
-                    </li>
-                    <li class="permission-write-users context-menu-item" @click="editUser(item, $event)">
-                        <i class="fa-solid fa-edit" />
-                        <span>Nutzer bearbeiten</span>
-                    </li>
-                    <li class="permission-delete-users context-menu-item text-error" @click="deleteUser(item)">
-                        <i class="fa-solid fa-trash-alt" />
-                        <span>Nutzer löschen</span>
-                    </li>
-                </template>
-                <template #loading>
-                    <UsersListSkeletonLoader :count="20" />
+                    <UserListRowActions
+                        :users="[item]"
+                        @contact="contactUsers($event)"
+                        @impersonate="impersonateUser($event)"
+                        @edit="editUser($event.user, $event.event)"
+                        @delete="deleteUser($event)"
+                        @create-registration="createRegistration($event)"
+                    />
                 </template>
             </VTable>
         </div>
@@ -172,25 +85,21 @@
         >
             <template #action>
                 <div class="permission-read-user-details hidden sm:block">
-                    <button class="btn-ghost" @click="contactUsers(selectedUsers)">
+                    <button class="btn-ghost" type="button" @click="contactUsers(selectedUsers)">
                         <i class="fa-solid fa-envelope" />
-                        <span>Email schreiben</span>
+                        <span>{{ $t('domain.user.actions.write-email') }}</span>
                     </button>
                 </div>
             </template>
             <template #menu>
-                <li class="permission-read-user-details context-menu-item" @click="contactUsers(selectedUsers)">
-                    <i class="fa-solid fa-envelope" />
-                    <span>Email schreiben</span>
-                </li>
-                <li class="permission-write-users context-menu-item disabled">
-                    <i class="fa-solid fa-screwdriver-wrench" />
-                    <span>Arbeitsdienst eintragen*</span>
-                </li>
-                <li class="permission-delete-users context-menu-item disabled text-error">
-                    <i class="fa-solid fa-trash-alt" />
-                    <span>Nutzer löschen*</span>
-                </li>
+                <UserListRowActions
+                    :users="selectedUsers"
+                    @contact="contactUsers($event)"
+                    @impersonate="impersonateUser($event)"
+                    @edit="editUser($event.user, $event.event)"
+                    @delete="deleteUser($event)"
+                    @create-registration="createRegistration($event)"
+                />
             </template>
         </VMultiSelectActions>
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
@@ -198,9 +107,9 @@
             v-else
             class="permission-write-users pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden"
         >
-            <button class="btn-floating pointer-events-auto" @click="createUser()">
+            <button class="btn-floating pointer-events-auto" type="button" @click="createUser()">
                 <i class="fa-solid fa-user-plus"></i>
-                <span>Nutzer hinzufügen</span>
+                <span>{{ $t('domain.user.actions.create') }} </span>
             </button>
         </div>
     </div>
@@ -211,9 +120,9 @@ import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
-import { filterUndefined, hasAnyOverlap } from '@/common';
-import type { Event, EventKey, Position, PositionKey, QualificationKey, User } from '@/domain';
-import { EventType, Permission, Role, useEventService, useUserService } from '@/domain';
+import { hasAnyOverlap } from '@/common';
+import type { Event, EventKey, InputSelectOption, PositionKey, User } from '@/domain';
+import { Permission, Role, useUserService } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { VConfirmationDialog, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
@@ -227,23 +136,13 @@ import { restoreScrollPosition } from '@/ui/plugins/router.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegistrationForUserDlg.vue';
 import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
-import UsersListSkeletonLoader from '@/ui/views/users/list/UsersListSkeletonLoader.vue';
+import UserListRowActions from '@/ui/views/users/list/UserListRowActions.vue';
+import UserListRow from '@/ui/views/users/list/UserListRow.vue';
 
 enum Tab {
     TEAM_MEMBERS = 'members',
     ADMINS = 'admins',
     UNMATCHED_USERS = 'unknown',
-}
-
-interface UserRegistrations extends User, Selectable {
-    positions: Position[];
-    rolesStr: string;
-    singleDayEventsCount: number;
-    weekendEventsCount: number;
-    multiDayEventsCount: number;
-    waitingListCount: number;
-    expiredQualifications: QualificationKey[];
-    soonExpiringQualifications: QualificationKey[];
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -252,7 +151,6 @@ const emit = defineEmits<RouteEmits>();
 
 const { t } = useI18n();
 const eventUseCase = useEventUseCase();
-const eventService = useEventService();
 const usersUseCase = useUsersUseCase();
 const usersService = useUserService();
 const authUseCase = useAuthUseCase();
@@ -275,20 +173,30 @@ const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS].map((it) => ({
 const tab = ref<string>(tabs[0].value);
 
 const events = ref<Event[]>([]);
-const users = ref<UserRegistrations[] | undefined>(undefined);
+const users = ref<(User & Selectable & { hasEvents?: boolean })[] | undefined>(undefined);
 
 const createUserDialog = ref<Dialog<void, User | undefined> | null>(null);
 const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
+const futureEvents = computed<InputSelectOption<EventKey>[]>(() => {
+    return events.value
+        .filter((evt) => evt.start > new Date())
+        .slice(0, 10)
+        .map((it) => ({
+            label: it.name,
+            value: it.key,
+        }));
+});
+
 const filterEvent = computed<Event | undefined>(() => events.value.find((evt) => evt.key === filterEventKey.value));
 
-const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
+const filteredUsers = computed<(User & Selectable)[] | undefined>(() =>
     users.value?.filter(
         (it) =>
             matchesActiveCategory(it) &&
-            (!filterOnlyActive.value || hasAnyEvents(it)) &&
-            (!filterExpiredQualifications.value || it.expiredQualifications.length > 0) &&
+            (!filterOnlyActive.value || it.hasEvents) &&
+            (!filterExpiredQualifications.value || usersService.getExpiredQualifications(it).length > 0) &&
             (!filterPendingVerification.value || !it.verified) &&
             (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys ?? [])) &&
             (filterEvent.value === undefined || participatesInEvent(it)) &&
@@ -296,7 +204,7 @@ const filteredUsers = computed<UserRegistrations[] | undefined>(() =>
     )
 );
 
-function participatesInEvent(user: UserRegistrations): boolean {
+function participatesInEvent(user: User): boolean {
     if (!filterEvent.value) {
         return true;
     }
@@ -307,22 +215,18 @@ function participatesInEvent(user: UserRegistrations): boolean {
     return filterEvent.value.slots.some((it) => it.assignedRegistrationKey === userRegistration.key);
 }
 
-const selectedUsers = computed<UserRegistrations[] | undefined>(() => {
+const selectedUsers = computed<(User & Selectable)[] | undefined>(() => {
     return filteredUsers.value?.filter((it) => it.selected);
 });
 
 async function init(): Promise<void> {
     emit('update:tab-title', 'Nutzer verwalten');
-    await fetchUsers();
     await fetchEvents();
+    await fetchUsers();
     restoreScrollPosition();
 }
 
-function hasAnyEvents(user: UserRegistrations): boolean {
-    return user.waitingListCount > 0 || user.multiDayEventsCount > 0 || user.weekendEventsCount > 0 || user.singleDayEventsCount > 0;
-}
-
-function matchesActiveCategory(user: UserRegistrations): boolean {
+function matchesActiveCategory(user: User): boolean {
     switch (tab.value) {
         case Tab.TEAM_MEMBERS:
             return user.roles !== undefined && user.roles.includes(Role.TEAM_MEMBER);
@@ -345,7 +249,7 @@ function createUser(): void {
     createUserDialog.value?.open().catch();
 }
 
-async function editUser(user: UserRegistrations, evt: MouseEvent): Promise<void> {
+async function editUser(user: User, evt: MouseEvent): Promise<void> {
     if (!hasPermission(Permission.READ_USER_DETAILS)) {
         console.error('User has no permission to edit users.');
         return;
@@ -358,18 +262,18 @@ async function editUser(user: UserRegistrations, evt: MouseEvent): Promise<void>
     }
 }
 
-function impersonateUser(user: UserRegistrations): void {
+function impersonateUser(user: User): void {
     authUseCase.impersonateUser(user.key);
 }
 
-async function createRegistration(user: UserRegistrations): Promise<void> {
+async function createRegistration(user: User): Promise<void> {
     const created = await createRegistrationForUserDialog.value?.open(user);
     if (created) {
-        user.waitingListCount = user.waitingListCount + 1;
+        // user.waitingListCount = user.waitingListCount + 1; // FIXME
     }
 }
 
-async function deleteUser(user: UserRegistrations): Promise<void> {
+async function deleteUser(user: User): Promise<void> {
     const confirmed = await confirmationDialog.value?.open({
         title: `${user.nickName || user.firstName} ${user.lastName} löschen`,
         message: `Bist du sicher, dass du ${user.nickName || user.firstName} ${user.lastName} löschen möchtest? Wenn
@@ -398,45 +302,21 @@ function selectAll(): void {
 }
 
 async function fetchEvents(): Promise<void> {
-    const allEvents = await eventUseCase.getFutureEvents();
-    events.value = allEvents.slice(0, 10);
-}
-
-async function fetchUsers(): Promise<void> {
-    const positions = await usersUseCase.resolvePositionNames();
-    const userlist: User[] = await usersUseCase.getUsers();
     const currentYear = new Date().getFullYear();
-    const events = (
+    events.value = (
         await Promise.all([
             eventUseCase.getEvents(currentYear - 2),
             eventUseCase.getEvents(currentYear - 1),
             eventUseCase.getEvents(currentYear),
             eventUseCase.getEvents(currentYear + 1),
         ])
-    ).flatMap((evts) => evts);
-    const registrationsSingleDayEventsWithSlot = events
-        .filter((evt) => evt.type === EventType.SingleDayEvent)
-        .flatMap((evt) => eventService.getAssignedRegistrations(evt));
-    const registrationsWeekendEventsWithSlot = events
-        .filter((evt) => evt.type === EventType.WeekendEvent)
-        .flatMap((evt) => eventService.getAssignedRegistrations(evt));
-    const registrationsMultiDayEventsWithSlot = events
-        .filter((evt) => evt.type === EventType.MultiDayEvent)
-        .flatMap((evt) => eventService.getAssignedRegistrations(evt));
-    const registrationsWaitinglist = events.flatMap((evt) => eventService.getRegistrationsOnWaitinglist(evt));
+    ).flatMap((array) => array);
+}
 
-    users.value = userlist.map((user: User) => {
-        return {
-            ...user,
-            rolesStr: user.roles?.map((k) => t(`domain.role.${k}`)).join(', ') || '',
-            waitingListCount: registrationsWaitinglist.filter((it) => it.userKey === user.key).length,
-            multiDayEventsCount: registrationsMultiDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
-            weekendEventsCount: registrationsWeekendEventsWithSlot.filter((it) => it.userKey === user.key).length,
-            singleDayEventsCount: registrationsSingleDayEventsWithSlot.filter((it) => it.userKey === user.key).length,
-            positions: user.positionKeys?.map((key) => positions.get(key)).filter(filterUndefined) ?? [],
-            expiredQualifications: usersService.getExpiredQualifications(user),
-            soonExpiringQualifications: usersService.getSoonExpiringQualifications(user),
-        };
+async function fetchUsers(): Promise<void> {
+    users.value = await usersUseCase.getUsers();
+    users.value?.forEach((user) => {
+        user.hasEvents = events.value.flatMap((evt) => evt.registrations).some((reg) => reg.userKey === user.key);
     });
 }
 

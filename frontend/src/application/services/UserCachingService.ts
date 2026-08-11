@@ -67,6 +67,7 @@ export class UserCachingService {
         return debounce('fetchUsers', async () => {
             const users = await this.userRepository.findAll();
             await this.storage.saveAll(users);
+            console.log(`📡 Fetched ${users.length} users`);
             return users;
         });
     }

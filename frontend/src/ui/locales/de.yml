@@ -186,6 +186,10 @@ domain:
     user: Nutzer:in|Nutzer:innen
   user:
     address: Adresse
+    actions:
+      write-email: Email schreiben
+      impersonate: Impersonate
+      create: Nutzer erstellen
     date-and-place-of-birth: Geburtsdatum und -ort
     date-of-birth: Geburtstag
     diet: Ernährungsweise
@@ -629,3 +633,14 @@ views:
       admins: Verwalter
       members: Stammcrew
       unknown: Nutzer ohne Rolle
+    no-position: Keine Position zugewiesen
+    qualification-summary:
+      expired: '{count} abgelaufen'
+      expiring-soon: '1 läuft bald ab|{count} laufen bald ab'
+      all-valid: Alle gültig
+    filter:
+      all-positions: Alle Positionen
+      all-events: Alle Veranstaltungen
+      not-verified: Verifizierung ausstehend
+      expired-qualifications: Abgelaufene Qualifikationen
+      active-crew: Aktive Stammcrew

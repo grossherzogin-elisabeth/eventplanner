@@ -57,6 +57,7 @@ export class QualificationCachingService {
         return debounce('fetchQualifications', async () => {
             const qualifications = await this.qualificationRepository.findAll();
             await this.storage.saveAll(qualifications);
+            console.log(`📡 Fetched ${qualifications.length} qualifications`);
             return qualifications;
         });
     }
