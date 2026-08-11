@@ -12,14 +12,16 @@ public record UserRepresentation(
     @NonNull String key,
     @NonNull String firstName,
     @Nullable String nickName,
-    @NonNull String lastName
+    @NonNull String lastName,
+    @Nullable String emailHash
 ) implements Serializable {
     public static UserRepresentation fromDomain(@NonNull User user) {
         return new UserRepresentation(
             user.getKey().value(),
             user.getFirstName(),
             trimToNull(user.getNickName()),
-            user.getLastName()
+            user.getLastName(),
+            user.getEmailHash()
         );
     }
 }

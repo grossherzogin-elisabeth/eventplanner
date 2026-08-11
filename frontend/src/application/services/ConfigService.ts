@@ -16,6 +16,7 @@ export const defaultConfig: Config = {
     enableEventAdminListPositionsOverview: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_POSITIONS_OVERVIEW === 'true',
     enableEventAdminListPreviewSheet: import.meta.env.VITE_ENABLE_EVENT_ADMIN_LIST_PREVIEW_SHEET === 'true',
     enableTableActionsButtonMobile: import.meta.env.VITE_ENABLE_TABLE_ACTIONS_BUTTON_MOBILE === 'true',
+    enableGravatar: import.meta.env.VITE_ENABLE_GRAVATAR === 'true',
 };
 
 if (import.meta.env.MODE === 'development') {
@@ -39,9 +40,13 @@ export class ConfigService {
     }
 
     private async initialize(): Promise<void> {
-        this.loadStoredConfig();
+        this.readFeatureFlag('enableEventAdminListPositionsOverview');
+        this.readFeatureFlag('enableEventAdminListPreviewSheet');
+        this.readFeatureFlag('enableTableActionsButtonMobile');
+        this.readFeatureFlag('enableGravatar');
+        this.loadCachedServerConfig();
         try {
-            await this.fetchConfig();
+            await this.fetchServerConfig();
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             console.warn('Failed to fetch config, continuing with local data');
@@ -52,7 +57,7 @@ export class ConfigService {
         return this.config;
     }
 
-    private async fetchConfig(): Promise<void> {
+    private async fetchServerConfig(): Promise<void> {
         console.log('📡 Fetching config');
         const serverConfig = await this.settingsRepository.readConfig();
         if (serverConfig.menuTitle) {
@@ -67,14 +72,22 @@ export class ConfigService {
         if (serverConfig.technicalSupportEmail) {
             this.config.technicalSupportEmail = serverConfig.technicalSupportEmail;
         }
-        this.storeConfig(this.config);
+        this.cacheServerConfig(this.config);
     }
 
-    private storeConfig(config: Config): void {
-        localStorage.setItem('config', JSON.stringify(config));
+    private cacheServerConfig(config: Config): void {
+        localStorage.setItem(
+            'config',
+            JSON.stringify({
+                menuTitle: config.menuTitle,
+                tabTitle: config.tabTitle,
+                supportEmail: config.supportEmail,
+                technicalSupportEmail: config.technicalSupportEmail,
+            })
+        );
     }
 
-    private loadStoredConfig(): void {
+    private loadCachedServerConfig(): void {
         try {
             const cached = JSON.parse(localStorage.getItem('config') ?? '{}');
             if (cached.menuTitle) {
@@ -91,6 +104,17 @@ export class ConfigService {
             }
         } catch (e) {
             console.error('Failed to load stored config', e);
+        }
+    }
+
+    private readFeatureFlag(name: keyof Config): void {
+        const flag = localStorage.getItem(name);
+        if (flag === 'true') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (this.config as any)[name] = true;
+        } else if (flag === 'false') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (this.config as any)[name] = false;
         }
     }
 }

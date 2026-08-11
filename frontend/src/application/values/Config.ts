@@ -21,4 +21,5 @@ export interface Config {
     enableEventAdminListPositionsOverview?: boolean;
     enableEventAdminListPreviewSheet?: boolean;
     enableTableActionsButtonMobile?: boolean;
+    enableGravatar?: boolean;
 }

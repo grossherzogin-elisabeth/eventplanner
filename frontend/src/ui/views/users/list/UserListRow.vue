@@ -1,6 +1,6 @@
 <template>
     <td class="w-full font-semibold">
-        <div class="mb-2 flex items-center justify-between gap-2">
+        <div class="mb-1 flex items-center justify-between gap-2">
             <p class="w-0 grow truncate whitespace-nowrap">
                 {{ props.user?.nickName || props.user?.firstName }} {{ props.user?.lastName }}
             </p>

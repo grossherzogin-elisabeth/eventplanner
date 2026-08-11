@@ -56,9 +56,7 @@
                 @click="editUser($event.item, $event.event)"
             >
                 <template #icon="{ item }">
-                    <span>
-                        <i class="fa-solid fa-user"></i>
-                    </span>
+                    <UserAvatar :user="item" class="h-full w-full" :class="item?.verified ? 'text-success' : 'text-secondary'" />
                     <span v-if="item?.verified" data-test-id="user-verified-badge">
                         <i class="fa-solid fa-check-circle text-onsuccess-container absolute -right-1 -bottom-1 text-xs sm:text-sm"></i>
                     </span>
@@ -146,6 +144,7 @@ import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegi
 import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
 import UserListRowActions from '@/ui/views/users/list/UserListRowActions.vue';
 import UserListRow from '@/ui/views/users/list/UserListRow.vue';
+import UserAvatar from '@/ui/components/users/UserAvatar.vue';
 
 enum Tab {
     TEAM_MEMBERS = 'members',
