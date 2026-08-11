@@ -25,6 +25,10 @@ export interface SignedInUser {
      */
     email: string;
     /**
+     * Hash of the users email address, used for gravatar images
+     */
+    emailHash?: string;
+    /**
      * The users application roles
      */
     roles: Role[];

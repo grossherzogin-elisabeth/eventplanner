@@ -6,6 +6,7 @@ import type { Permission, Role, SignedInUser } from '@/domain';
 export interface AccountRepresentation {
     key: string;
     email: string;
+    emailHash?: string;
     roles: string[];
     permissions: string[];
     positions: string[];
@@ -48,6 +49,7 @@ export class AccountRestRepository implements AccountRepository {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            emailHash: user.emailHash,
             roles: user.roles as Role[],
             permissions: user.permissions as Permission[],
             positions: user.positions,

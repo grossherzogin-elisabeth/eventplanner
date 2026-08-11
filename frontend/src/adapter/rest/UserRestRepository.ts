@@ -13,6 +13,7 @@ export interface UserRepresentation {
     roles?: string[];
     qualifications?: UserQualificationRepresentation[];
     email?: string;
+    emailHash?: string;
     verified?: boolean;
 }
 
@@ -32,6 +33,7 @@ export interface UserDetailsRepresentation {
     positions: string[];
     roles: string[];
     email: string;
+    emailHash?: string;
     qualifications: UserQualificationRepresentation[];
     phone?: string;
     phoneWork?: string;
@@ -157,6 +159,7 @@ export class UserRestRepository implements UserRepository {
                 note: it.note,
             })),
             email: userRepresentation.email,
+            emailHash: userRepresentation.emailHash,
             verified: userRepresentation.verified,
         }));
     }
@@ -358,6 +361,7 @@ export class UserRestRepository implements UserRepository {
                 note: it.note,
             })),
             email: representation.email,
+            emailHash: representation.emailHash,
             phone: representation.phone ?? undefined,
             phoneWork: representation.phoneWork ?? undefined,
             mobile: representation.mobile ?? undefined,

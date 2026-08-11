@@ -27,6 +27,7 @@ public class User {
     private @NonNull String firstName;
     private @NonNull String lastName;
     private @Nullable String nickName;
+    private @Nullable String emailHash;
 
     /**
      * Returns the nickname of the user if present, or the first name otherwise

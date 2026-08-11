@@ -56,7 +56,14 @@
                 @click="editUser($event.item, $event.event)"
             >
                 <template #icon="{ item }">
-                    <span>
+                    <img
+                        v-if="item"
+                        :src="resolveGravatarUrl(item)"
+                        alt="Avatar"
+                        class="h-full w-full rounded-full object-cover"
+                        data-test-id="user-avatar"
+                    />
+                    <span v-else>
                         <i class="fa-solid fa-user"></i>
                     </span>
                     <span v-if="item?.verified" data-test-id="user-verified-badge">
@@ -326,6 +333,12 @@ async function fetchUsers(): Promise<void> {
     users.value?.forEach((user) => {
         user.hasEvents = events.value.flatMap((evt) => evt.registrations).some((reg) => reg.userKey === user.key);
     });
+}
+
+function resolveGravatarUrl(user?: User): string | undefined {
+    const defaultHash = '0000000000000000000000000000000000000000000000000000000000000000';
+    const initials = `${user?.nickName?.[0] || user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toLowerCase();
+    return `https://www.gravatar.com/avatar/${user?.emailHash ?? defaultHash}?d=retro&initials=${initials}`;
 }
 
 init();
