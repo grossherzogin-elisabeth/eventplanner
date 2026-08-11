@@ -125,6 +125,23 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - logfile
+          - sessions
+          - auditevents
+  endpoint:
+    health:
+      show-details: always
+  server:
+    port: 8082
+
 server:
   port: ${backend.port}
   servlet:
