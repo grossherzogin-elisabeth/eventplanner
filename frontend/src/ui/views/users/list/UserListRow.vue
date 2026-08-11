@@ -14,23 +14,36 @@
                 <span></span>
             </template>
             <template v-else>
-                <span v-if="userPositions.length === 0" class="text-sm italic"> {{ $t('views.user-list.no-position') }}</span>
-                <span v-if="userPositions.length >= 1" class="tag custom" :style="{ '--color': userPositions[0].color }">
+                <span v-if="userPositions.length === 0" data-test-id="user-no-position" class="text-sm italic">
+                    {{ $t('views.user-list.no-position') }}
+                </span>
+                <span
+                    v-if="userPositions.length >= 1"
+                    data-test-id="user-position"
+                    class="tag custom"
+                    :style="{ '--color': userPositions[0].color }"
+                >
                     {{ userPositions[0].name }}
                 </span>
-                <span v-if="userPositions.length >= 2" class="tag custom" :style="{ '--color': userPositions[1].color }">
+                <span
+                    v-if="userPositions.length >= 2"
+                    data-test-id="user-position"
+                    class="tag custom"
+                    :style="{ '--color': userPositions[1].color }"
+                >
                     {{ userPositions[1].name }}
                 </span>
                 <template v-if="userPositions.length >= 3">
                     <span
                         v-for="position in userPositions.slice(2)"
                         :key="position.key"
+                        data-test-id="user-position-additional"
                         class="tag custom xs:inline hidden"
                         :style="{ '--color': position.color }"
                     >
                         {{ position.name }}
                     </span>
-                    <span class="tag custom xs:hidden"> + {{ userPositions.length - 2 }} </span>
+                    <span data-test-id="user-position-overflow" class="tag custom xs:hidden"> + {{ userPositions.length - 2 }} </span>
                 </template>
             </template>
         </div>
@@ -38,19 +51,19 @@
     <td class="hidden w-1/5 lg:table-cell">
         <div class="flex space-x-8">
             <div :class="{ 'opacity-25': !userSingleDayEventsCount }">
-                <p class="mb-1 font-semibold">{{ userSingleDayEventsCount || '-' }}</p>
+                <p data-test-id="user-single-day-events-count" class="mb-1 font-semibold">{{ userSingleDayEventsCount || '-' }}</p>
                 <p class="text-sm" :title="$t('domain.event-type.single-day-event')">TF</p>
             </div>
             <div :class="{ 'opacity-25': !userWeekendEventsCount }">
-                <p class="mb-1 font-semibold">{{ userWeekendEventsCount || '-' }}</p>
+                <p data-test-id="user-weekend-events-count" class="mb-1 font-semibold">{{ userWeekendEventsCount || '-' }}</p>
                 <p class="text-sm" :title="$t('domain.event-type.weekend-event')">WE</p>
             </div>
             <div :class="{ 'opacity-25': !userMultiDayEventsCount }">
-                <p class="mb-1 font-semibold">{{ userMultiDayEventsCount || '-' }}</p>
+                <p data-test-id="user-multi-day-events-count" class="mb-1 font-semibold">{{ userMultiDayEventsCount || '-' }}</p>
                 <p class="text-sm" :title="$t('domain.event-type.multi-day-event')">SR</p>
             </div>
             <div :class="{ 'opacity-25': !userWaitingListCount }">
-                <p class="mb-1 font-semibold">{{ userWaitingListCount || '-' }}</p>
+                <p data-test-id="user-waiting-list-count" class="mb-1 font-semibold">{{ userWaitingListCount || '-' }}</p>
                 <p class="text-sm" :title="$t('domain.event.waiting-list')">WL</p>
             </div>
         </div>

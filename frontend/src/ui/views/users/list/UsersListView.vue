@@ -23,13 +23,27 @@
         <div class="filter-panel scrollbar-invisible mt-4">
             <FilterMultiselect
                 v-model="filterPositions"
+                data-test-id="filter-positions"
                 :placeholder="$t('views.user-list.filter.all-positions')"
                 :options="positions.options.value"
             />
-            <FilterToggle v-model="filterOnlyActive" :label="$t('views.user-list.filter.active-crew')" />
-            <FilterToggle v-model="filterExpiredQualifications" :label="$t('views.user-list.filter.expired-qualifications')" />
-            <FilterSelect v-model="filterEventKey" :options="futureEvents" :placeholder="$t('views.user-list.filter.all-events')" />
-            <FilterToggle v-model="filterPendingVerification" :label="$t('views.user-list.filter.not-verified')" />
+            <FilterToggle v-model="filterOnlyActive" data-test-id="filter-only-active" :label="$t('views.user-list.filter.active-crew')" />
+            <FilterToggle
+                v-model="filterExpiredQualifications"
+                data-test-id="filter-expired-qualifications"
+                :label="$t('views.user-list.filter.expired-qualifications')"
+            />
+            <FilterSelect
+                v-model="filterEventKey"
+                data-test-id="filter-event"
+                :options="futureEvents"
+                :placeholder="$t('views.user-list.filter.all-events')"
+            />
+            <FilterToggle
+                v-model="filterPendingVerification"
+                data-test-id="filter-not-verified"
+                :label="$t('views.user-list.filter.not-verified')"
+            />
         </div>
 
         <div class="w-full">

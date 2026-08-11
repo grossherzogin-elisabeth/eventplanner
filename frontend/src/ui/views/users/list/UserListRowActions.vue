@@ -1,24 +1,40 @@
 <template>
     <template v-if="props.users">
         <hr />
-        <li class="permission-read-user-details context-menu-item" @click="emit('contact', props.users)">
+        <li data-test-id="action-contact" class="permission-read-user-details context-menu-item" @click="emit('contact', props.users)">
             <i class="fa-solid fa-envelope" />
             <span>{{ $t('domain.user.actions.write-email') }}</span>
         </li>
         <template v-if="props.users.length === 1">
-            <li class="permission-write-registrations context-menu-item" @click="emit('impersonate', props.users[0])">
+            <li
+                data-test-id="action-impersonate"
+                class="permission-write-registrations context-menu-item"
+                @click="emit('impersonate', props.users[0])"
+            >
                 <i class="fa-solid fa-user-secret" />
                 <span>{{ $t('domain.user.actions.impersonate') }}</span>
             </li>
-            <li class="permission-write-registrations context-menu-item" @click="emit('create-registration', props.users[0])">
+            <li
+                data-test-id="action-create-registration"
+                class="permission-write-registrations context-menu-item"
+                @click="emit('create-registration', props.users[0])"
+            >
                 <i class="fa-solid fa-calendar-plus" />
                 <span>{{ $t('domain.event.actions.create-registration') }}</span>
             </li>
-            <li class="permission-write-users context-menu-item" @click="emit('edit', { user: props.users[0], event: $event })">
+            <li
+                data-test-id="action-edit"
+                class="permission-write-users context-menu-item"
+                @click="emit('edit', { user: props.users[0], event: $event })"
+            >
                 <i class="fa-solid fa-edit" />
                 <span>{{ $t('generic.edit') }}</span>
             </li>
-            <li class="permission-delete-users context-menu-item text-error" @click="emit('delete', props.users[0])">
+            <li
+                data-test-id="action-delete"
+                class="permission-delete-users context-menu-item text-error"
+                @click="emit('delete', props.users[0])"
+            >
                 <i class="fa-solid fa-trash-alt" />
                 <span>{{ $t('generic.delete') }}</span>
             </li>
