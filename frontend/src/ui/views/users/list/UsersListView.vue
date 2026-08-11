@@ -56,16 +56,7 @@
                 @click="editUser($event.item, $event.event)"
             >
                 <template #icon="{ item }">
-                    <img
-                        v-if="item"
-                        :src="resolveGravatarUrl(item)"
-                        alt="Avatar"
-                        class="h-full w-full rounded-full object-cover"
-                        data-test-id="user-avatar"
-                    />
-                    <span v-else>
-                        <i class="fa-solid fa-user"></i>
-                    </span>
+                    <UserAvatar :user="item" class="h-full w-full" :class="item?.verified ? 'text-success' : 'text-secondary'" />
                     <span v-if="item?.verified" data-test-id="user-verified-badge">
                         <i class="fa-solid fa-check-circle text-onsuccess-container absolute -right-1 -bottom-1 text-xs sm:text-sm"></i>
                     </span>
@@ -153,6 +144,7 @@ import CreateRegistrationForUserDlg from '@/ui/views/users/components/CreateRegi
 import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
 import UserListRowActions from '@/ui/views/users/list/UserListRowActions.vue';
 import UserListRow from '@/ui/views/users/list/UserListRow.vue';
+import UserAvatar from '@/ui/components/users/UserAvatar.vue';
 
 enum Tab {
     TEAM_MEMBERS = 'members',
@@ -333,12 +325,6 @@ async function fetchUsers(): Promise<void> {
     users.value?.forEach((user) => {
         user.hasEvents = events.value.flatMap((evt) => evt.registrations).some((reg) => reg.userKey === user.key);
     });
-}
-
-function resolveGravatarUrl(user?: User): string | undefined {
-    const defaultHash = '0000000000000000000000000000000000000000000000000000000000000000';
-    const initials = `${user?.nickName?.[0] || user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toLowerCase();
-    return `https://www.gravatar.com/avatar/${user?.emailHash ?? defaultHash}?d=retro&initials=${initials}`;
 }
 
 init();

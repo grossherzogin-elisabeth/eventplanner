@@ -158,8 +158,12 @@ table.v-table {
     @apply text-primary!;
 }
 
-.v-table tbody tr:not(.no-data).selected td::before {
-    @apply bg-primary/20!;
+.v-table tbody tr.selected td::before {
+    @apply bg-primary/10!;
+}
+
+html.dark .v-table tbody tr.selected td::before {
+    @apply bg-primary/30!;
 }
 
 .v-table td.p-0 {

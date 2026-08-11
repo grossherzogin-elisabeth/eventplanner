@@ -3,9 +3,19 @@
         <i class="fa-solid" :class="props.value?.icon ?? 'fa-circle text-surface-container-highest text-2xl'" />
     </td>
     <td class="w-full sm:w-2/3">
-        <div class="mb-2 flex items-center justify-between gap-2">
+        <div class="mb-1 flex items-center justify-between gap-2">
             <p class="w-0 grow truncate font-semibold" :title="props.value?.name">{{ props.value?.name }}</p>
             <UserQualificationStatus :value="props.value" class="text-xs sm:hidden" />
+        </div>
+        <div class="mb-2 flex flex-wrap items-center justify-start sm:hidden">
+            <span
+                v-for="positionKey in props.value?.grantsPositions"
+                :key="positionKey"
+                class="tag custom"
+                :style="{ '--color': positions.get(positionKey).color }"
+            >
+                {{ positions.get(positionKey).name }}
+            </span>
         </div>
         <p class="line-clamp-3 text-xs">
             {{ props.value?.description }}
