@@ -6,6 +6,6 @@
     align-items: center;
     gap: calc(var(--spacing) * 2);
 
-    @apply px-2 md:px-16 xl:px-20;
+    @apply xs:px-4 px-2 md:px-16 xl:px-20;
     @apply min-h-10;
 }

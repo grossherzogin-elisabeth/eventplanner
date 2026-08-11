@@ -57,6 +57,7 @@ export class PositionCachingService {
         return debounce('fetchPositions', async () => {
             const positions = await this.positionRepository.findAll();
             await this.storage.saveAll(positions);
+            console.log(`📡 Fetched ${positions.length} positions`);
             return positions;
         });
     }
