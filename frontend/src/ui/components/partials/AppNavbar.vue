@@ -6,7 +6,7 @@
         >
             <div class="h-full">
                 <div class="bg-primary dark:bg-surface-container flex h-full items-center xl:hidden">
-                    <button class="btn-icon xs:ml-4 mr-1 ml-1 md:ml-12" @click="menuOpen = true">
+                    <button class="btn-icon xs:ml-4 mr-1 ml-1 md:ml-12" type="button" @click="menuOpen = true">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
@@ -33,7 +33,7 @@
                 Du siehst die Anwendung aus Sicht von
                 <span class="italic">{{ signedInUser.firstName }} {{ signedInUser.lastName }}</span>
             </p>
-            <button class="btn-icon" @click="authUseCase.impersonateUser(null)">
+            <button class="btn-icon" type="button" @click="authUseCase.impersonateUser(null)">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </button>
         </div>

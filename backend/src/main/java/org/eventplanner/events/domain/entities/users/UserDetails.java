@@ -115,6 +115,7 @@ public class UserDetails {
             }
             return sb.toString();
         } catch (Exception e) {
+            log.error("Failed to create email hash", e);
             return null;
         }
     }

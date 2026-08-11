@@ -4,6 +4,7 @@
             <div class="wrapper flex grow items-stretch self-stretch rounded-lg">
                 <button
                     class="mr-1 flex h-10 w-10 items-center justify-center"
+                    type="button"
                     :class="showSearch ? 'xs:ml-4 ml-1' : 'btn-icon'"
                     @click="openSearch()"
                 >
@@ -18,7 +19,7 @@
                     @input="onInput($event)"
                     @keydown.esc="input?.blur()"
                 />
-                <button class="btn-icon xs:mr-4 mr-1" @click="cancel()">
+                <button class="btn-icon xs:mr-4 mr-1" type="button" @click="cancel()">
                     <i class="fa-solid fa-xmark" />
                 </button>
             </div>
