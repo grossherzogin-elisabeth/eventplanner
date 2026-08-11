@@ -12,7 +12,7 @@
         </p>
     </td>
     <!-- name -->
-    <td class="font-semibold md:w-2/3 md:max-w-[80vw]" style="max-width: min(65vw, 20rem)" :class="{ 'opacity-50': isPastEvent }">
+    <td class="w-full font-semibold md:w-2/3 md:max-w-[80vw]" style="max-width: min(65vw, 20rem)" :class="{ 'opacity-50': isPastEvent }">
         <div class="mb-1 flex items-start justify-between gap-x-2">
             <!-- name -->
             <p class="grow truncate whitespace-nowrap" :class="{ 'text-error line-through': props.event?.state === EventState.Canceled }">
