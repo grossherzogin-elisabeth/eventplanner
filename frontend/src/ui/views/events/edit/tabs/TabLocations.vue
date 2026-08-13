@@ -1,57 +1,59 @@
 <template>
-    <VTable
-        :items="props.event.locations"
-        class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20"
-        :class="$attrs.class"
-        :sortable="hasPermission(Permission.WRITE_EVENT_DETAILS)"
-        @reordered="updateOrders"
-        @click="editLocation($event.item)"
-    >
-        <template #row="{ item }">
-            <td :key="item?.icon" class="pr-4 text-xl">
-                <i class="fa-solid" :class="item?.icon" />
-            </td>
-            <td class="w-full max-w-[50vw] sm:w-1/2 sm:max-w-full">
-                <p class="font-semibold">
-                    <span>{{ item?.name }}</span>
-                </p>
-                <p v-if="item?.address" class="mt-1 truncate text-sm font-light">
-                    <span>{{ item.address }}</span>
-                </p>
-            </td>
-            <td class="hidden w-1/2 whitespace-nowrap sm:table-cell">
-                <p class="mb-2 text-sm">
-                    <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.eta') }}:</span>
-                    <span v-if="item?.eta" class="font-semibold">{{ $d(item.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
-                    <span v-else>-</span>
-                </p>
-                <p class="text-sm">
-                    <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.etd') }}: </span>
-                    <span v-if="item?.etd" class="font-semibold">{{ $d(item.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
-                    <span v-else>-</span>
-                </p>
-            </td>
-        </template>
-        <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
-            <li class="context-menu-item" data-test-id="action-edit" @click="editLocation(item)">
-                <i class="fa-solid fa-edit" />
-                <span>{{ $t('views.event-edit.actions.edit-location') }}</span>
-            </li>
-            <li class="context-menu-item" data-test-id="action-move-up" @click="moveLocationUp(item)">
-                <i class="fa-solid fa-arrow-up" />
-                <span>{{ $t('generic.move-up') }}</span>
-            </li>
-            <li class="context-menu-item" data-test-id="action-move-down" @click="moveLocationDown(item)">
-                <i class="fa-solid fa-arrow-down" />
-                <span>{{ $t('generic.move-down') }}</span>
-            </li>
-            <li class="context-menu-item text-error" data-test-id="action-delete" @click="deleteLocation(item)">
-                <i class="fa-solid fa-trash-alt" />
-                <span>{{ $t('views.event-edit.actions.delete-location') }}</span>
-            </li>
-        </template>
-    </VTable>
-    <LocationEditDlg ref="editLocationDialog" />
+    <div class="full-width-scrollable">
+        <VTable
+            :items="props.event.locations"
+            class="scrollbar-invisible interactive-table no-header"
+            :class="$attrs.class"
+            :sortable="hasPermission(Permission.WRITE_EVENT_DETAILS)"
+            @reordered="updateOrders"
+            @click="editLocation($event.item)"
+        >
+            <template #row="{ item }">
+                <td :key="item?.icon" class="pr-4 text-xl">
+                    <i class="fa-solid" :class="item?.icon" />
+                </td>
+                <td class="w-full max-w-[50vw] sm:w-1/2 sm:max-w-full">
+                    <p class="font-semibold">
+                        <span>{{ item?.name }}</span>
+                    </p>
+                    <p v-if="item?.address" class="mt-1 truncate text-sm font-light">
+                        <span>{{ item.address }}</span>
+                    </p>
+                </td>
+                <td class="hidden w-1/2 whitespace-nowrap sm:table-cell">
+                    <p class="mb-2 text-sm">
+                        <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.eta') }}:</span>
+                        <span v-if="item?.eta" class="font-semibold">{{ $d(item.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
+                        <span v-else>-</span>
+                    </p>
+                    <p class="text-sm">
+                        <span class="mr-2 inline-block w-10 opacity-50">{{ $t('domain.location.etd') }}: </span>
+                        <span v-if="item?.etd" class="font-semibold">{{ $d(item.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}</span>
+                        <span v-else>-</span>
+                    </p>
+                </td>
+            </template>
+            <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
+                <li class="context-menu-item" data-test-id="action-edit" @click="editLocation(item)">
+                    <i class="fa-solid fa-edit" />
+                    <span>{{ $t('views.event-edit.actions.edit-location') }}</span>
+                </li>
+                <li class="context-menu-item" data-test-id="action-move-up" @click="moveLocationUp(item)">
+                    <i class="fa-solid fa-arrow-up" />
+                    <span>{{ $t('generic.move-up') }}</span>
+                </li>
+                <li class="context-menu-item" data-test-id="action-move-down" @click="moveLocationDown(item)">
+                    <i class="fa-solid fa-arrow-down" />
+                    <span>{{ $t('generic.move-down') }}</span>
+                </li>
+                <li class="context-menu-item text-error" data-test-id="action-delete" @click="deleteLocation(item)">
+                    <i class="fa-solid fa-trash-alt" />
+                    <span>{{ $t('views.event-edit.actions.delete-location') }}</span>
+                </li>
+            </template>
+        </VTable>
+        <LocationEditDlg ref="editLocationDialog" />
+    </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';

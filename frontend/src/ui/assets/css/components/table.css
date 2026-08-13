@@ -1,197 +1,199 @@
-table.v-table {
-    --side-padding: 1rem;
-    margin-left: calc(-1 * var(--side-padding));
-    margin-right: calc(-1 * var(--side-padding));
-    width: calc(100% + calc(2 * var(--side-padding)));
-}
-
-@media (min-width: 768px) {
+@layer components {
     table.v-table {
-        --side-padding: 1.5rem;
-    }
-}
-
-.v-table thead tr {
-    background: transparent;
-    @apply text-onsurface-variant;
-    @apply text-sm;
-    @apply font-bold;
-}
-
-.v-table th {
-    @apply font-bold;
-    @apply px-4 pt-8 pb-4;
-}
-
-.v-table th[data-sortby] {
-    white-space: nowrap;
-    cursor: pointer;
-    padding-right: 2em;
-}
-
-.v-table th[data-sortby]:after {
-    content: '▼';
-    width: 1em;
-    font-size: 0.675em;
-    margin-left: 0.75em;
-    margin-top: 0.15em;
-    overflow: hidden;
-    opacity: 0.2;
-}
-
-.v-table th[data-sortby]:hover:after {
-    content: '▼';
-    opacity: 1;
-}
-
-.v-table th.sort.asc:after {
-    content: '▼';
-    opacity: 1;
-}
-
-.v-table th.sort.desc:after {
-    content: '▲';
-    opacity: 1;
-}
-
-.v-table td {
-    @apply py-4 sm:pr-4;
-    @apply md:pr-8;
-}
-
-.v-table tbody td {
-}
-
-.sticky-table-header .v-table th {
-    position: sticky;
-    z-index: 10;
-    @apply bg-surface;
-    @apply top-12;
-    @apply pt-4;
-    @apply xl:top-0;
-}
-
-.sticky-table-header .v-table th:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    border-bottom-width: 1px;
-    @apply border-primary-container;
-}
-
-.v-table th:first-child,
-.v-table td:first-child {
-    padding-right: var(--side-padding) !important;
-    width: 0;
-    border-style: none;
-    padding-left: 0;
-    @apply pr-4;
-}
-
-.v-table td:first-child::before {
-    @apply rounded-l-2xl;
-}
-
-.v-table th:last-child,
-.v-table td:last-child {
-    padding-left: var(--side-padding) !important;
-    width: 0;
-    padding-right: 0;
-    border-style: none;
-}
-
-.v-table th:nth-child(2),
-.v-table td:nth-child(2) {
-    padding-left: 0;
-}
-
-.v-table th:nth-last-child(2),
-.v-table td:nth-last-child(2) {
-    padding-right: 0;
-}
-
-.no-header .v-table thead {
-    display: none;
-}
-
-.v-table tbody tr {
-    position: relative;
-    z-index: 10;
-}
-
-/* ------------------------------------------------------ */
-/* normal */
-/* ------------------------------------------------------ */
-
-.v-table tbody tr td:first-child::before {
-    content: '';
-    position: absolute;
-    right: 0;
-    left: 0;
-    z-index: -10;
-    @apply bg-surface-container-low;
-    @apply top-1;
-    @apply bottom-1;
-    @apply rounded-xl;
-}
-
-/* ------------------------------------------------------ */
-/* hover */
-/* ------------------------------------------------------ */
-
-@media (hover: hover) {
-    .interactive-table:not(.loading) .v-table tbody tr:not(.no-data):hover td:first-child::before {
-        @apply bg-surface-container;
+        --side-padding: 1rem;
+        margin-left: calc(-1 * var(--side-padding));
+        margin-right: calc(-1 * var(--side-padding));
+        width: calc(100% + calc(2 * var(--side-padding)));
     }
 
-    .interactive-table:not(.loading) .v-table tbody tr:not(.no-data) {
+    @media (min-width: 768px) {
+        table.v-table {
+            --side-padding: 1.5rem;
+        }
+    }
+
+    .v-table thead tr {
+        background: transparent;
+        @apply text-onsurface-variant;
+        @apply text-sm;
+        @apply font-bold;
+    }
+
+    .v-table th {
+        @apply font-bold;
+        @apply px-4 pt-8 pb-4;
+    }
+
+    .v-table th[data-sortby] {
+        white-space: nowrap;
         cursor: pointer;
+        padding-right: 2em;
     }
-}
 
-/* ------------------------------------------------------ */
-/* selected */
-/* ------------------------------------------------------ */
+    .v-table th[data-sortby]:after {
+        content: '▼';
+        width: 1em;
+        font-size: 0.675em;
+        margin-left: 0.75em;
+        margin-top: 0.15em;
+        overflow: hidden;
+        opacity: 0.2;
+    }
 
-.v-table tbody tr:not(.no-data).selected td {
-    @apply text-primary!;
-}
+    .v-table th[data-sortby]:hover:after {
+        content: '▼';
+        opacity: 1;
+    }
 
-.v-table tbody tr.selected td::before {
-    @apply bg-primary/10!;
-}
+    .v-table th.sort.asc:after {
+        content: '▼';
+        opacity: 1;
+    }
 
-html.dark .v-table tbody tr.selected td::before {
-    @apply bg-primary/30!;
-}
+    .v-table th.sort.desc:after {
+        content: '▲';
+        opacity: 1;
+    }
 
-.v-table td.p-0 {
-    padding: 0 !important;
-}
+    .v-table td {
+        @apply py-4 sm:pr-4;
+        @apply md:pr-8;
+    }
 
-.v-table td.px-0 {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
+    .v-table tbody td {
+    }
 
-.v-table td.py-0 {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-}
+    .sticky-table-header .v-table th {
+        position: sticky;
+        z-index: 10;
+        @apply bg-surface;
+        @apply top-12;
+        @apply pt-4;
+        @apply xl:top-0;
+    }
 
-.v-table td.pt-0 {
-    padding-top: 0 !important;
-}
+    .sticky-table-header .v-table th:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-bottom-width: 1px;
+        @apply border-primary-container;
+    }
 
-.v-table td.pb-0 {
-    padding-bottom: 0 !important;
-}
+    .v-table th:first-child,
+    .v-table td:first-child {
+        padding-right: var(--side-padding) !important;
+        width: 0;
+        border-style: none;
+        padding-left: 0;
+        @apply pr-4;
+    }
 
-.with-multi-selection .v-table,
-.interactive-table .v-table {
-    -webkit-user-select: none;
-    user-select: none;
+    .v-table td:first-child::before {
+        @apply rounded-l-2xl;
+    }
+
+    .v-table th:last-child,
+    .v-table td:last-child {
+        padding-left: var(--side-padding) !important;
+        width: 0;
+        padding-right: 0;
+        border-style: none;
+    }
+
+    .v-table th:nth-child(2),
+    .v-table td:nth-child(2) {
+        padding-left: 0;
+    }
+
+    .v-table th:nth-last-child(2),
+    .v-table td:nth-last-child(2) {
+        padding-right: 0;
+    }
+
+    .no-header .v-table thead {
+        display: none;
+    }
+
+    .v-table tbody tr {
+        position: relative;
+        z-index: 10;
+    }
+
+    /* ------------------------------------------------------ */
+    /* normal */
+    /* ------------------------------------------------------ */
+
+    .v-table tbody tr td:first-child::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        left: 0;
+        z-index: -10;
+        @apply bg-surface-container-low;
+        @apply top-1;
+        @apply bottom-1;
+        @apply rounded-xl;
+    }
+
+    /* ------------------------------------------------------ */
+    /* hover */
+    /* ------------------------------------------------------ */
+
+    @media (hover: hover) {
+        .interactive-table:not(.loading) .v-table tbody tr:not(.no-data):hover td:first-child::before {
+            @apply bg-surface-container;
+        }
+
+        .interactive-table:not(.loading) .v-table tbody tr:not(.no-data) {
+            cursor: pointer;
+        }
+    }
+
+    /* ------------------------------------------------------ */
+    /* selected */
+    /* ------------------------------------------------------ */
+
+    .v-table tbody tr:not(.no-data).selected td {
+        @apply text-primary!;
+    }
+
+    .v-table tbody tr.selected td::before {
+        @apply bg-primary/10!;
+    }
+
+    html.dark .v-table tbody tr.selected td::before {
+        @apply bg-primary/30!;
+    }
+
+    .v-table td.p-0 {
+        padding: 0 !important;
+    }
+
+    .v-table td.px-0 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .v-table td.py-0 {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .v-table td.pt-0 {
+        padding-top: 0 !important;
+    }
+
+    .v-table td.pb-0 {
+        padding-bottom: 0 !important;
+    }
+
+    .with-multi-selection .v-table,
+    .interactive-table .v-table {
+        -webkit-user-select: none;
+        user-select: none;
+    }
 }

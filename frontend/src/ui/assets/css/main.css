@@ -7,6 +7,7 @@
 @import './utility/animations.css';
 @import './utility/scrollbar.css';
 
+@import './components/content.css';
 @import './components/dropdown.css';
 @import './components/inputs/index.css';
 @import './components/buttons/index.css';

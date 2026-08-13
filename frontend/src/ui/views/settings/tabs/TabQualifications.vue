@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full flex-col xl:max-w-5xl">
+    <div class="flex h-full flex-col">
         <div class="filter-panel scrollbar-invisible">
             <FilterMultiselect
                 v-model="filterPositions"
@@ -14,12 +14,8 @@
             </div>
         </div>
 
-        <div class="flex-1">
-            <VTable
-                :items="qualifications"
-                class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
-                @click="editQualification($event.item)"
-            >
+        <div class="full-width-scrollable mt-4 flex-1">
+            <VTable :items="qualifications" class="scrollbar-invisible interactive-table no-header" @click="editQualification($event.item)">
                 <template #row="{ item }">
                     <td :key="item?.icon" class="pr-4 text-xl">
                         <i class="fa-solid" :class="item?.icon" />

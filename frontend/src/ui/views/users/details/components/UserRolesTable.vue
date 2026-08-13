@@ -1,39 +1,41 @@
 <template>
-    <VTable :items="userRoles" class="scrollbar-invisible no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20">
-        <template #row="{ item }">
-            <td class="w-0 pr-4">
-                <i class="fa-solid" :class="item?.icon"></i>
-            </td>
-            <td class="w-2/3 min-w-80">
-                <p class="mb-1 font-semibold">{{ item?.name }}</p>
-                <p class="text-sm">
-                    {{ item?.description }}
-                </p>
-            </td>
-            <td class="w-1/3 min-w-48">
-                <div class="flex items-center justify-end" @click="toggleRole(item?.role)">
-                    <div v-if="item?.enabled" class="status-badge success" data-test-id="status-assigned">
-                        <i class="fa-solid fa-check-circle"></i>
-                        <span>zugewiesen</span>
+    <div class="full-width-scrollable">
+        <VTable :items="userRoles" class="scrollbar-invisible no-header">
+            <template #row="{ item }">
+                <td class="w-0 pr-4">
+                    <i class="fa-solid" :class="item?.icon"></i>
+                </td>
+                <td class="w-2/3 min-w-80">
+                    <p class="mb-1 font-semibold">{{ item?.name }}</p>
+                    <p class="text-sm">
+                        {{ item?.description }}
+                    </p>
+                </td>
+                <td class="w-1/3 min-w-48">
+                    <div class="flex items-center justify-end" @click="toggleRole(item?.role)">
+                        <div v-if="item?.enabled" class="status-badge success" data-test-id="status-assigned">
+                            <i class="fa-solid fa-check-circle"></i>
+                            <span>zugewiesen</span>
+                        </div>
+                        <div v-else class="status-badge neutral" data-test-id="status-not-assigned">
+                            <i class="fa-solid fa-xmark-circle"></i>
+                            <span>nicht zugewiesen</span>
+                        </div>
                     </div>
-                    <div v-else class="status-badge neutral" data-test-id="status-not-assigned">
-                        <i class="fa-solid fa-xmark-circle"></i>
-                        <span>nicht zugewiesen</span>
-                    </div>
-                </div>
-            </td>
-        </template>
-        <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
-            <li v-if="!item.enabled" class="context-menu-item" data-test-id="action-add-role" @click="toggleRole(item.role)">
-                <i class="fa-solid fa-plus" />
-                <span>Rolle hinzufügen</span>
-            </li>
-            <li v-else class="context-menu-item text-error" data-test-id="action-remove-role" @click="toggleRole(item.role)">
-                <i class="fa-solid fa-xmark" />
-                <span>Rolle entfernen</span>
-            </li>
-        </template>
-    </VTable>
+                </td>
+            </template>
+            <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
+                <li v-if="!item.enabled" class="context-menu-item" data-test-id="action-add-role" @click="toggleRole(item.role)">
+                    <i class="fa-solid fa-plus" />
+                    <span>Rolle hinzufügen</span>
+                </li>
+                <li v-else class="context-menu-item text-error" data-test-id="action-remove-role" @click="toggleRole(item.role)">
+                    <i class="fa-solid fa-xmark" />
+                    <span>Rolle entfernen</span>
+                </li>
+            </template>
+        </VTable>
+    </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';

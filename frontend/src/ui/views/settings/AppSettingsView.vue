@@ -6,14 +6,10 @@
         </teleport>
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #[Tab.QUALIFICATIONS]>
-                <div class="xs:-mx-8 -mx-4 h-full md:-mx-16 xl:-mx-20">
-                    <TabQualifications />
-                </div>
+                <TabQualifications />
             </template>
             <template #[Tab.POSITIONS]>
-                <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-                    <TabPositions />
-                </div>
+                <TabPositions />
             </template>
             <template #[Tab.GENERAL_SETTINGS]>
                 <div class="lg:max-w-xl">

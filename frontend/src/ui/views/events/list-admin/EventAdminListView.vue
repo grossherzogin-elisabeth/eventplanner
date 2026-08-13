@@ -33,7 +33,7 @@
             </template>
         </VTabs>
 
-        <div class="filter-panel scrollbar-invisible mt-4">
+        <div class="p-content filter-panel scrollbar-invisible mt-4">
             <FilterMultiselect
                 v-model="filterEventType"
                 data-test-id="filter-event-type"
@@ -58,31 +58,33 @@
             />
         </div>
 
-        <div class="w-full">
-            <VTable
-                :items="filteredEvents"
-                multiselection
-                query
-                :page-size="20"
-                class="interactive-table no-header scrollbar-invisible xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
-                @click="editEvent($event.item, $event.event)"
-            >
-                <template #row="{ item }">
-                    <EventAdminListRow :event="item" />
-                </template>
-                <template #context-menu="{ item }">
-                    <EventAdminListRowActions
-                        :events="[item]"
-                        @update-events:edit="editEvents($event)"
-                        @update-events:create-registration="createRegistration($event)"
-                        @update-events:open-for-signup="openEventsForSignup($event)"
-                        @update-events:publish-crew="publishCrewPlanning($event)"
-                        @update-events:cancel="cancelEvents($event)"
-                        @update-events:delete="deleteEvents($event)"
-                    />
-                </template>
-            </VTable>
-        </div>
+        <MainContent>
+            <div class="full-width-scrollable mt-4">
+                <VTable
+                    :items="filteredEvents"
+                    multiselection
+                    query
+                    :page-size="20"
+                    class="interactive-table no-header scrollbar-invisible"
+                    @click="editEvent($event.item, $event.event)"
+                >
+                    <template #row="{ item }">
+                        <EventAdminListRow :event="item" />
+                    </template>
+                    <template #context-menu="{ item }">
+                        <EventAdminListRowActions
+                            :events="[item]"
+                            @update-events:edit="editEvents($event)"
+                            @update-events:create-registration="createRegistration($event)"
+                            @update-events:open-for-signup="openEventsForSignup($event)"
+                            @update-events:publish-crew="publishCrewPlanning($event)"
+                            @update-events:cancel="cancelEvents($event)"
+                            @update-events:delete="deleteEvents($event)"
+                        />
+                    </template>
+                </VTable>
+            </div>
+        </MainContent>
 
         <EventCreateDlg ref="createEventDialog" />
         <EventCancelDlg ref="cancelEventDialog" />
@@ -179,6 +181,7 @@ import EventAdminListRow from './EventAdminListRow.vue';
 import type { Selectable } from '@/ui/model/Selectable.ts';
 import EventAdminListRowActions from './EventAdminListRowActions.vue';
 import { useConfig } from '@/ui/composables/Config.ts';
+import MainContent from '@/ui/components/partials/MainContent.vue';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
