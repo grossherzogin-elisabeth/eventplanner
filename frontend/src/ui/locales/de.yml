@@ -214,6 +214,8 @@ domain:
       all-valid: Alle gültig
       expired-count: '{count} abgelaufene'
     title: Titel
+    last-login-at: Letzter Login am {date}
+    no-login-recorded: Bisher kein Login registriert
   user-qualification:
     expires-at: Gültig bis {date}
     status:
@@ -278,6 +280,7 @@ generic:
   ok: OK
   optional: optional
   please-select: Bitte auswählen
+  selected-count: '{count} ausgewählt'
   save: Speichern
   theme:
     dark: Dunkel
@@ -288,7 +291,7 @@ generic:
     before: Datum muss vor dem {} liegen
     invalid: Eingabe enthält ungültige Zeichen
     invalid-date: Eingabe ist kein valides Datum
-    invalid-email: Eingabe ist keine gültige Email Addresse
+    invalid-email: Eingabe ist keine gültige Email Adresse
     invalid-name: Namen dürfen keine Zahlen oder Sonderzeichen enthalten
     invalid-phone-number: Eingabe ist keine gültige Telefon Nummer
     max-length: Eingabe darf maximal {0} Zeichen lang sein
