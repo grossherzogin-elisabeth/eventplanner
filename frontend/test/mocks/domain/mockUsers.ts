@@ -30,6 +30,7 @@ export function mockUserCaptain(overwrite?: Partial<User>): User {
             { qualificationKey: QUALIFICATION_MATE, expires: false },
         ],
         verified: true,
+        lastLoginAt: new Date('2024-07-10T09:00:00Z'),
     };
     return overwrite ? Object.assign(user, overwrite) : user;
 }
@@ -47,6 +48,7 @@ export function mockUserEngineer(overwrite?: Partial<User>): User {
             { qualificationKey: QUALIFICATION_GENERIC, expires: false },
         ],
         verified: true,
+        lastLoginAt: new Date('2014-07-10T09:00:00Z'),
     };
     return overwrite ? Object.assign(user, overwrite) : user;
 }
@@ -64,6 +66,7 @@ export function mockUserMate(overwrite?: Partial<User>): User {
             { qualificationKey: QUALIFICATION_EXPIRES, expires: true, expiresAt: new Date('1990-07-10T09:00:00Z') },
         ],
         verified: true,
+        lastLoginAt: new Date('2025-07-10T09:00:00Z'),
     };
     return overwrite ? Object.assign(user, overwrite) : user;
 }
@@ -81,6 +84,7 @@ export function mockUserDeckhand(overwrite?: Partial<User>): User {
             { qualificationKey: QUALIFICATION_EXPIRES, expires: true },
         ],
         verified: true,
+        lastLoginAt: undefined,
     };
     return overwrite ? Object.assign(user, overwrite) : user;
 }
