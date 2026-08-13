@@ -1,14 +1,20 @@
 <template>
-    <td class="w-full font-semibold">
+    <td class="w-full font-semibold md:w-1/2">
         <div class="mb-1 flex items-center justify-between gap-2">
             <p class="w-0 grow truncate whitespace-nowrap">
                 {{ props.user?.nickName || props.user?.firstName }} {{ props.user?.lastName }}
             </p>
-            <div class="lg:hidden">
+            <div class="sm:hidden">
                 <UserQualificationsSummaryBadge :user="props.user" class="text-xs" />
             </div>
         </div>
-        <div class="flex flex-wrap gap-1 opacity-75">
+        <p class="text-sm opacity-50">
+            <template v-if="props.user?.lastLoginAt">
+                {{ $t('domain.user.last-login-at', { date: $d(props.user?.lastLoginAt, DateTimeFormat.DD_MM_YYYY) }) }}
+            </template>
+            <template v-else-if="props.user"> {{ $t('domain.user.no-login-recorded') }} </template>
+        </p>
+        <div class="mt-1 flex flex-wrap gap-1 opacity-75 lg:hidden xl:block 2xl:hidden">
             <template v-if="!props.user">
                 <span></span>
                 <span></span>
@@ -48,7 +54,20 @@
             </template>
         </div>
     </td>
-    <td class="hidden w-1/5 lg:table-cell">
+    <td class="hidden w-1/3 lg:table-cell xl:hidden 2xl:table-cell">
+        <div class="flex flex-wrap gap-1 opacity-75">
+            <template v-if="!props.user">
+                <span></span>
+                <span></span>
+            </template>
+            <template v-else>
+                <span v-for="position in userPositions" :key="position.key" class="tag custom" :style="{ '--color': position.color }">
+                    {{ position.name }}
+                </span>
+            </template>
+        </div>
+    </td>
+    <td class="hidden w-1/3 md:table-cell">
         <div class="flex space-x-8">
             <div :class="{ 'opacity-25': !userSingleDayEventsCount }">
                 <p data-test-id="user-single-day-events-count" class="mb-1 font-semibold">{{ userSingleDayEventsCount || '-' }}</p>
@@ -68,7 +87,7 @@
             </div>
         </div>
     </td>
-    <td class="hidden w-1/12 lg:table-cell">
+    <td class="hidden sm:table-cell">
         <div class="flex items-center justify-end">
             <UserQualificationsSummaryBadge :user="props.user" />
         </div>
@@ -82,6 +101,7 @@ import { EventSignupType, EventType, useEventService } from '@/domain';
 import { filterUndefined } from '@/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import UserQualificationsSummaryBadge from './UserQualificationsSummaryBadge.vue';
+import { DateTimeFormat } from '@/common/date';
 
 interface EventSummary {
     type: EventType;

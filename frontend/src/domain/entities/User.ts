@@ -14,6 +14,7 @@ export interface User {
     emailHash?: string;
     qualifications?: UserQualification[];
     verified?: boolean;
+    lastLoginAt?: Date;
 }
 
 export interface UserDetails {
