@@ -1,9 +1,9 @@
 <template>
-    <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
+    <div class="full-width-scrollable">
         <VTable
             :items="renderedEvents"
             :page-size="-1"
-            class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20"
+            class="scrollbar-invisible interactive-table no-header"
             @click="openEvent($event.item, $event.event)"
         >
             <template #row="{ item }">

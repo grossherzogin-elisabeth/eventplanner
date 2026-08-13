@@ -1,11 +1,12 @@
-.filter-panel {
-    overflow-y: hidden;
-    overflow-x: auto;
+@layer components {
+    .filter-panel {
+        overflow-y: hidden;
+        overflow-x: auto;
 
-    display: flex;
-    align-items: center;
-    gap: calc(var(--spacing) * 2);
+        display: flex;
+        align-items: center;
+        gap: calc(var(--spacing) * 2);
 
-    @apply px-2 md:px-16 xl:px-20;
-    @apply min-h-10;
+        @apply min-h-10;
+    }
 }

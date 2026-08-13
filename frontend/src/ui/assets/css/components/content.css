@@ -1,0 +1,13 @@
+@layer components {
+    .p-content {
+        @apply xs:px-8 px-4 md:px-16 xl:px-20;
+    }
+
+    .full-width-scrollable {
+        @apply xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20;
+    }
+
+    .full-width-scrollable > * {
+        @apply xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20;
+    }
+}

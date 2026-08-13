@@ -1,6 +1,7 @@
 {
   "key": "3f18dea3-44fa-461d-b5c0-d101bf4f1b98",
   "email": "tony.stark@email.com",
+  "emailHash": "fdc14228daf8d89d88e7ce2195845c47e84e1bdf978f8ca40cbd82fffb2d1cf7",
   "roles": [
     "ROLE_ADMIN",
     "ROLE_TEAM_MEMBER"

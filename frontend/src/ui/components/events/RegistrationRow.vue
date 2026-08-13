@@ -1,7 +1,6 @@
 <template>
     <li class="flex items-center space-x-2 md:space-x-4">
-        <i v-if="props.registration.name" class="fa-solid fa-user-circle text-secondary" />
-        <i v-else class="fa-solid fa-user-circle text-error" />
+        <UserAvatar :user="registration.user" class="h-7 w-7" :class="props.registration.name ? 'text-secondary' : 'text-error'" />
         <div class="w-0 grow truncate">
             <RouterLink
                 v-if="props.registration.user && hasPermission(Permission.READ_USER_DETAILS)"
@@ -33,6 +32,7 @@ import type { ResolvedRegistrationSlot } from '@/domain';
 import { Permission } from '@/domain';
 import { useSession } from '@/ui/composables/Session';
 import { Routes } from '@/ui/views/Routes';
+import UserAvatar from '@/ui/components/users/UserAvatar.vue';
 
 interface Props {
     registration: ResolvedRegistrationSlot;

@@ -21,6 +21,7 @@ export class EventExportUseCase {
             if (this.authService.hasPermission(Permission.EXPORT_EVENTS)) {
                 console.log('📡 Fetching event export templates');
                 this.exportTemplates = await this.eventRepository.getExportTemplates();
+                console.log(`📡 Fetched ${this.exportTemplates.length} templates`);
             } else {
                 this.exportTemplates = [];
             }

@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static org.eventplanner.events.domain.entities.users.User.combineNames;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -100,8 +102,26 @@ public class UserDetails {
         return combineNames(firstName, secondName);
     }
 
+    public @Nullable String getEmailHash() {
+        if (email == null || email.isEmpty()) {
+            return null;
+        }
+        try {
+            var md = MessageDigest.getInstance("SHA-256");
+            var hashed = md.digest(email.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for (final byte b : hashed) {
+                sb.append(Integer.toHexString((b & 0xFF) | 0x100), 1, 3);
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            log.error("Failed to create email hash", e);
+            return null;
+        }
+    }
+
     public @NonNull User cropToUser() {
-        return new User(key, firstName, lastName, nickName);
+        return new User(key, firstName, lastName, nickName, getEmailHash());
     }
 
     public void addPosition(@NonNull PositionKey positionKey) {

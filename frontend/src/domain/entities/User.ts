@@ -11,8 +11,10 @@ export interface User {
     roles?: Role[];
     positionKeys?: PositionKey[];
     email?: string;
+    emailHash?: string;
     qualifications?: UserQualification[];
     verified?: boolean;
+    lastLoginAt?: Date;
 }
 
 export interface UserDetails {
@@ -32,6 +34,7 @@ export interface UserDetails {
     positionKeys: PositionKey[];
     qualifications: UserQualification[];
     email: string;
+    emailHash?: string;
     phone?: string;
     phoneWork?: string;
     mobile?: string;

@@ -5,33 +5,31 @@
         </template>
         <template #subheader> </template>
         <template #content>
-            <div class="xs:px-8 flex flex-col px-4 md:px-16 xl:px-20">
-                <section class="xl:max-w-5xl">
-                    <VInfo v-if="event?.state === EventState.Draft" class="mt-4" dismissable clamp data-test-id="info-draft-state">
-                        {{ $t('views.event-edit.info-draft') }}
-                    </VInfo>
-                    <VWarning v-else-if="event?.state === EventState.Canceled" class="mt-4" dismissable data-test-id="info-canceled-state">
-                        {{ $t('views.event-edit.info-canceled') }}
-                    </VWarning>
-                    <VInfo
-                        v-else-if="event?.signupType === EventSignupType.Assignment && event?.state === EventState.OpenForSignup"
-                        class="mt-4"
-                        data-test-id="info-crew-signup-state"
-                        dismissable
-                        clamp
-                    >
-                        {{ $t('views.event-edit.info-signup') }}
-                    </VInfo>
-                    <VWarning
-                        v-else-if="event?.state === EventState.Planned && hasEmptyRequiredSlots"
-                        class="mt-4"
-                        dismissable
-                        data-test-id="info-missing-crew"
-                    >
-                        {{ $t('views.event-edit.info-missing-crew') }}
-                    </VWarning>
-                </section>
-            </div>
+            <MainContent>
+                <VInfo v-if="event?.state === EventState.Draft" class="mt-4" dismissable clamp data-test-id="info-draft-state">
+                    {{ $t('views.event-edit.info-draft') }}
+                </VInfo>
+                <VWarning v-else-if="event?.state === EventState.Canceled" class="mt-4" dismissable data-test-id="info-canceled-state">
+                    {{ $t('views.event-edit.info-canceled') }}
+                </VWarning>
+                <VInfo
+                    v-else-if="event?.signupType === EventSignupType.Assignment && event?.state === EventState.OpenForSignup"
+                    class="mt-4"
+                    data-test-id="info-crew-signup-state"
+                    dismissable
+                    clamp
+                >
+                    {{ $t('views.event-edit.info-signup') }}
+                </VInfo>
+                <VWarning
+                    v-else-if="event?.state === EventState.Planned && hasEmptyRequiredSlots"
+                    class="mt-4"
+                    dismissable
+                    data-test-id="info-missing-crew"
+                >
+                    {{ $t('views.event-edit.info-missing-crew') }}
+                </VWarning>
+            </MainContent>
             <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 lg:top-14 xl:top-20">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
@@ -39,28 +37,16 @@
                     </div>
                 </template>
                 <template #[Tab.EVENT_CREW_EDITOR]>
-                    <div class="xl:max-w-5xl">
-                        <TabCrewEditor v-if="event" v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
-                    </div>
+                    <TabCrewEditor v-if="event" v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
-                    <div class="xl:max-w-5xl">
-                        <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-                            <TabSlots v-if="event" v-model:event="event" :crew="crew" :registrations="registrations" />
-                        </div>
-                    </div>
+                    <TabSlots v-if="event" v-model:event="event" :crew="crew" :registrations="registrations" />
                 </template>
                 <template #[Tab.EVENT_LOCATIONS]>
-                    <div class="xl:max-w-5xl">
-                        <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-                            <TabLocations v-if="event" v-model:event="event" />
-                        </div>
-                    </div>
+                    <TabLocations v-if="event" v-model:event="event" />
                 </template>
                 <template #[Tab.EVENT_REGISTRATIONS]>
-                    <div class="xl:max-w-5xl">
-                        <TabRegistrations v-if="event" v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
-                    </div>
+                    <TabRegistrations v-if="event" v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
                 </template>
             </VTabs>
         </template>
@@ -203,6 +189,7 @@ import SlotEditDlg from './components/SlotEditDlg.vue';
 import TabCrewEditor from './tabs/TabCrewEditor.vue';
 import TabLocations from './tabs/TabLocations.vue';
 import TabSlots from './tabs/TabSlots.vue';
+import MainContent from '@/ui/components/partials/MainContent.vue';
 
 enum Tab {
     EVENT_DATA = 'data',

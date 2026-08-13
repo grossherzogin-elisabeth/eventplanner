@@ -1,6 +1,7 @@
 {
   "key": "3449174e-c8e1-49b7-8ef0-35c8c5f23a0c",
   "email": "bruce.benner@email.com",
+  "emailHash": "e331a62e9594a82febf18376cb6d5ed5cb41703d602b92e054342f36a46e64fd",
   "roles": [
     "ROLE_TEAM_MEMBER"
   ],

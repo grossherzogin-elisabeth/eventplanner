@@ -24,6 +24,7 @@ public class SignedInUserFactory {
             new AuthKey("test"),
             roles != null ? Stream.of(roles).toList() : Collections.emptyList(),
             "test@email.com",
+            "hash",
             Collections.emptyList(),
             "m",
             "John",
