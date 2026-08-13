@@ -39,9 +39,6 @@ import { computed, ref } from 'vue';
 import { v4 as uuid4 } from 'uuid';
 import VInputHint from './VInputHint.vue';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type T = any; // Value type
-
 interface Props {
     label?: string;
     hint?: string;
