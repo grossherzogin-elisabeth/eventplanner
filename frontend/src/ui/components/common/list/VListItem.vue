@@ -11,7 +11,7 @@
         </div>
     </div>
 </template>
-<script lang="ts" setup generic="T">
+<script lang="ts" setup>
 interface Props {
     icon: string;
     label: string;
