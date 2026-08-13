@@ -7,7 +7,7 @@
         <p class="mb-1 hidden font-semibold 2xl:block">
             {{ formatDateRange(props.event?.start, props.event?.end) }}
         </p>
-        <p class="text-sm">
+        <p class="text-sm opacity-75">
             {{ $t('views.event-list.table.day-count', { count: props.event?.days }) }}
         </p>
     </td>
@@ -23,7 +23,7 @@
                 <span>{{ stateDetails.name }}</span>
             </div>
         </div>
-        <p class="hidden truncate text-sm font-light lg:block">
+        <p class="hidden truncate text-sm font-light opacity-75 lg:block">
             <!-- description -->
             <span v-if="props.event?.description" class="">
                 {{ props.event.description }}
@@ -35,11 +35,11 @@
             <!-- placeholder -->
             <span v-else>-</span>
         </p>
-        <div class="flex justify-between gap-x-2 text-sm font-light lg:hidden">
+        <div class="flex justify-between gap-x-2 text-sm font-light opacity-75 lg:hidden">
             <!-- date -->
             <p class="grow truncate">
                 {{ formatDateRange(props.event?.start, props.event?.end) }}
-                <span class="opacity-40"> ({{ $t('views.event-list.table.day-count', { count: props.event?.days }) }}) </span>
+                <span> - {{ $t('views.event-list.table.day-count', { count: props.event?.days }) }} </span>
             </p>
             <!-- crew -->
             <p class="text-right whitespace-nowrap md:hidden">
@@ -64,7 +64,7 @@
                 {{ props.event?.assignedUserCount }}
                 <span v-if="props.event?.waitingListCount" class="opacity-40"> +{{ props.event?.waitingListCount }} </span>
             </p>
-            <p class="pl-4 text-sm">
+            <p class="pl-4 text-sm opacity-75">
                 {{ $t('domain.event.crew', { count: props.event?.assignedUserCount }) }}
             </p>
         </template>
@@ -72,7 +72,7 @@
             <p class="mb-1 pl-4 font-semibold">
                 {{ props.event?.registrations.length }}
             </p>
-            <p class="pl-4 text-sm">
+            <p class="pl-4 text-sm opacity-75">
                 <template v-if="props.event">
                     {{ $t('domain.event.registrations', { count: props.event?.registrations.length }) }}
                 </template>

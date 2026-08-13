@@ -1,25 +1,27 @@
 <template>
-    <VTable
-        :items="userQualifications"
-        class="scrollbar-invisible no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20"
-        :class="{ 'interactive-table': hasPermission(Permission.WRITE_USERS) }"
-        @click="editUserQualification($event.item)"
-    >
-        <template #row="{ item }">
-            <UserQualificationRow :value="item" />
-        </template>
-        <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
-            <li class="context-menu-item" data-test-id="action-edit-qualification" @click="editUserQualification(item)">
-                <i class="fa-solid fa-edit" />
-                <span>{{ $t('generic.edit') }}</span>
-            </li>
-            <li class="context-menu-item text-error" data-test-id="action-delete-qualification" @click="deleteUserQualification(item)">
-                <i class="fa-solid fa-trash-alt" />
-                <span>{{ $t('generic.delete') }}</span>
-            </li>
-        </template>
-    </VTable>
-    <UserQualificationDetailsDlg ref="editUserQualificationDialog" />
+    <div class="full-width-scrollable">
+        <VTable
+            :items="userQualifications"
+            class="scrollbar-invisible no-header"
+            :class="{ 'interactive-table': hasPermission(Permission.WRITE_USERS) }"
+            @click="editUserQualification($event.item)"
+        >
+            <template #row="{ item }">
+                <UserQualificationRow :value="item" />
+            </template>
+            <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
+                <li class="context-menu-item" data-test-id="action-edit-qualification" @click="editUserQualification(item)">
+                    <i class="fa-solid fa-edit" />
+                    <span>{{ $t('generic.edit') }}</span>
+                </li>
+                <li class="context-menu-item text-error" data-test-id="action-delete-qualification" @click="deleteUserQualification(item)">
+                    <i class="fa-solid fa-trash-alt" />
+                    <span>{{ $t('generic.delete') }}</span>
+                </li>
+            </template>
+        </VTable>
+        <UserQualificationDetailsDlg ref="editUserQualificationDialog" />
+    </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';

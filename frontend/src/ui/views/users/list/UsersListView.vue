@@ -20,7 +20,7 @@
             </template>
         </VTabs>
 
-        <div class="filter-panel scrollbar-invisible mt-4">
+        <div class="p-content filter-panel scrollbar-invisible mt-4">
             <FilterMultiselect
                 v-model="filterPositions"
                 data-test-id="filter-positions"
@@ -46,36 +46,38 @@
             />
         </div>
 
-        <div class="w-full">
-            <VTable
-                :items="filteredUsers"
-                :page-size="20"
-                query
-                multiselection
-                class="interactive-table no-header scrollbar-invisible xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
-                @click="editUser($event.item, $event.event)"
-            >
-                <template #icon="{ item }">
-                    <UserAvatar :user="item" class="h-full w-full" :class="item?.verified ? 'text-success' : 'text-secondary'" />
-                    <span v-if="item?.verified" data-test-id="user-verified-badge">
-                        <i class="fa-solid fa-check-circle text-onsuccess-container absolute -right-1 -bottom-1 text-xs sm:text-sm"></i>
-                    </span>
-                </template>
-                <template #row="{ item }">
-                    <UserListRow :user="item" :events="events" />
-                </template>
-                <template #context-menu="{ item }">
-                    <UserListRowActions
-                        :users="[item]"
-                        @contact="contactUsers($event)"
-                        @impersonate="impersonateUser($event)"
-                        @edit="editUser($event.user, $event.event)"
-                        @delete="deleteUser($event)"
-                        @create-registration="createRegistration($event)"
-                    />
-                </template>
-            </VTable>
-        </div>
+        <MainContent>
+            <div class="full-width-scrollable mt-4">
+                <VTable
+                    :items="filteredUsers"
+                    :page-size="20"
+                    query
+                    multiselection
+                    class="interactive-table no-header scrollbar-invisible"
+                    @click="editUser($event.item, $event.event)"
+                >
+                    <template #icon="{ item }">
+                        <UserAvatar :user="item" class="h-full w-full" :class="item?.verified ? 'text-success' : 'text-secondary'" />
+                        <span v-if="item?.verified" data-test-id="user-verified-badge">
+                            <i class="fa-solid fa-check-circle text-onsuccess-container absolute -right-1 -bottom-1 text-xs sm:text-sm"></i>
+                        </span>
+                    </template>
+                    <template #row="{ item }">
+                        <UserListRow :user="item" :events="events" />
+                    </template>
+                    <template #context-menu="{ item }">
+                        <UserListRowActions
+                            :users="[item]"
+                            @contact="contactUsers($event)"
+                            @impersonate="impersonateUser($event)"
+                            @edit="editUser($event.user, $event.event)"
+                            @delete="deleteUser($event)"
+                            @create-registration="createRegistration($event)"
+                        />
+                    </template>
+                </VTable>
+            </div>
+        </MainContent>
 
         <CreateRegistrationForUserDlg ref="createRegistrationForUserDialog" />
         <VConfirmationDialog ref="confirmationDialog" />
@@ -126,7 +128,7 @@ import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
-import { hasAnyOverlap } from '@/common';
+import { hasAnyOverlap, subtractFromDate } from '@/common';
 import type { Event, EventKey, InputSelectOption, PositionKey, User } from '@/domain';
 import { Permission, Role, useUserService } from '@/domain';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
@@ -145,6 +147,7 @@ import CreateUserDlg from '@/ui/views/users/list/CreateUserDlg.vue';
 import UserListRowActions from '@/ui/views/users/list/UserListRowActions.vue';
 import UserListRow from '@/ui/views/users/list/UserListRow.vue';
 import UserAvatar from '@/ui/components/users/UserAvatar.vue';
+import MainContent from '@/ui/components/partials/MainContent.vue';
 
 enum Tab {
     TEAM_MEMBERS = 'members',
@@ -180,7 +183,7 @@ const tabs = [Tab.TEAM_MEMBERS, Tab.ADMINS, Tab.UNMATCHED_USERS].map((it) => ({
 const tab = ref<string>(tabs[0].value);
 
 const events = ref<Event[]>([]);
-const users = ref<(User & Selectable & { hasEvents?: boolean })[] | undefined>(undefined);
+const users = ref<(User & Selectable)[] | undefined>(undefined);
 
 const createUserDialog = ref<Dialog<void, User | undefined> | null>(null);
 const createRegistrationForUserDialog = ref<Dialog<User> | null>(null);
@@ -202,7 +205,7 @@ const filteredUsers = computed<(User & Selectable)[] | undefined>(() =>
     users.value?.filter(
         (it) =>
             matchesActiveCategory(it) &&
-            (!filterOnlyActive.value || it.hasEvents) &&
+            (!filterOnlyActive.value || isActive(it)) &&
             (!filterExpiredQualifications.value || usersService.getExpiredQualifications(it).length > 0) &&
             (!filterPendingVerification.value || !it.verified) &&
             (filterPositions.value.length === 0 || hasAnyOverlap(filterPositions.value, it.positionKeys ?? [])) &&
@@ -220,6 +223,11 @@ function participatesInEvent(user: User): boolean {
         return false;
     }
     return filterEvent.value.slots.some((it) => it.assignedRegistrationKey === userRegistration.key);
+}
+
+function isActive(user: User): boolean {
+    // has the user logged in at least once in the last 6 months?
+    return user.lastLoginAt !== undefined && user.lastLoginAt >= subtractFromDate(new Date(), { months: 6 });
 }
 
 const selectedUsers = computed<(User & Selectable)[] | undefined>(() => {
@@ -322,9 +330,6 @@ async function fetchEvents(): Promise<void> {
 
 async function fetchUsers(): Promise<void> {
     users.value = await usersUseCase.getUsers();
-    users.value?.forEach((user) => {
-        user.hasEvents = events.value.flatMap((evt) => evt.registrations).some((reg) => reg.userKey === user.key);
-    });
 }
 
 init();

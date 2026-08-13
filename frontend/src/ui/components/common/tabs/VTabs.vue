@@ -1,36 +1,40 @@
 <template>
     <div :class="$attrs.class" data-test-id="tabbar">
-        <h2
-            class="scrollbar-invisible border-outline-variant/50 xs:px-8 flex gap-x-4 overflow-x-auto border-b px-4 text-base font-semibold md:px-16 xl:px-20"
-        >
-            <slot name="before" />
-            <div class="flex gap-x-8">
-                <div
-                    v-for="tab in localizedTabs"
-                    :key="tab.value"
-                    class="tab"
-                    :class="{ active: tab.value === props.modelValue && !showSearch }"
-                >
-                    <button class="btn-tab" :data-test-id="`tab-${tab.value}`" @click="emit('update:modelValue', tab.value)">
-                        <slot name="tab" :tab="tab.value">
-                            {{ tab.label }}
-                        </slot>
-                    </button>
+        <div class="scrollbar-invisible border-outline-variant/50 border-b">
+            <MainContent>
+                <div class="full-width-scrollable">
+                    <div class="scrollbar-invisible flex gap-x-4 text-base font-semibold">
+                        <slot name="before" />
+                        <div class="flex gap-x-8">
+                            <h2
+                                v-for="tab in localizedTabs"
+                                :key="tab.value"
+                                class="tab"
+                                :class="{ active: tab.value === props.modelValue && !showSearch }"
+                            >
+                                <button class="btn-tab" :data-test-id="`tab-${tab.value}`" @click="emit('update:modelValue', tab.value)">
+                                    <slot name="tab" :tab="tab.value">
+                                        {{ tab.label }}
+                                    </slot>
+                                </button>
+                            </h2>
+                        </div>
+                        <slot name="after" />
+                        <span class="grow"></span>
+                        <slot name="end" />
+                    </div>
                 </div>
-            </div>
-            <slot name="after" />
-            <span class="grow"></span>
-            <slot name="end" />
-        </h2>
+            </MainContent>
+        </div>
     </div>
     <!-- tab pane -->
-    <div v-if="props.modelValue && $slots[props.modelValue]" class="xs:px-8 flex-1 px-4 pt-4 md:px-16 xl:px-20">
+    <MainContent v-if="props.modelValue && $slots[props.modelValue]" class="flex-1 pt-4">
         <template v-for="tab in localizedTabs" :key="tab.value">
             <div v-show="tab.value === props.modelValue" class="h-full">
                 <slot :name="tab.value" :active="tab.value === props.modelValue" />
             </div>
         </template>
-    </div>
+    </MainContent>
 </template>
 
 <script lang="ts" setup>
@@ -38,6 +42,7 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { InputSelectOption } from '@/domain';
 import { useQuery } from '@/ui/composables/QueryState';
+import MainContent from '@/ui/components/partials/MainContent.vue';
 
 interface Props {
     modelValue?: string;

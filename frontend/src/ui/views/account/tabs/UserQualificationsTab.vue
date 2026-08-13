@@ -1,5 +1,5 @@
 <template>
-    <VTable :items="userQualifications" class="scrollbar-invisible no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20">
+    <VTable :items="userQualifications" class="scrollbar-invisible no-header">
         <template #row="{ item }">
             <UserQualificationRow :value="item" />
         </template>

@@ -280,6 +280,7 @@ generic:
   ok: OK
   optional: optional
   please-select: Bitte auswählen
+  select-all: Alle auswählen
   selected-count: '{count} ausgewählt'
   save: Speichern
   theme:

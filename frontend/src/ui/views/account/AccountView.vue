@@ -17,10 +17,8 @@
                 </div>
             </template>
             <template #[Tab.QUALIFICATIONS]>
-                <div class="xl:max-w-5xl">
-                    <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-                        <UserQualificationsTab v-if="userDetails" :user="userDetails" />
-                    </div>
+                <div class="full-width-scrollable">
+                    <UserQualificationsTab v-if="userDetails" :user="userDetails" />
                 </div>
             </template>
         </VTabs>

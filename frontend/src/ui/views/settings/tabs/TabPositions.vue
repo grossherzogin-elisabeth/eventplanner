@@ -1,9 +1,9 @@
 <template>
-    <div class="flex h-full flex-col xl:max-w-5xl">
-        <div class="flex-1">
+    <div class="flex h-full flex-col">
+        <div class="full-width-scrollable flex-1">
             <VTable
                 :items="positions"
-                class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20"
+                class="scrollbar-invisible interactive-table no-header"
                 :page-size="-1"
                 @click="editPosition($event.item)"
             >

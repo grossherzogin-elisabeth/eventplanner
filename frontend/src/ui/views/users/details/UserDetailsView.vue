@@ -9,7 +9,7 @@
             <template #content>
                 <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-20 xl:pt-8">
                     <template #[Tab.USER_DATA]>
-                        <div class="flex flex-col-reverse justify-between gap-8 lg:flex-row xl:max-w-5xl">
+                        <div class="flex flex-col-reverse justify-between gap-8 lg:flex-row">
                             <div class="w-full max-w-2xl">
                                 <UserDataForm v-if="user" v-model="user" :errors="validation.errors.value" />
                                 <UserContactForm v-if="user" v-model="user" :errors="validation.errors.value" />
@@ -22,46 +22,36 @@
                         </div>
                     </template>
                     <template #[Tab.USER_EVENTS]>
-                        <div class="xl:max-w-5xl">
-                            <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`">
-                                <h2 class="text-secondary mb-4 font-bold">
-                                    <template v-if="year === 0">Zukünftige Veranstaltungen</template>
-                                    <template v-else>Veranstaltungen {{ year }}</template>
-                                </h2>
-                                <UserEventsTable
-                                    v-if="user"
-                                    :events="events"
-                                    :user="user"
-                                    @update:events="year === 0 ? fetchUserFutureEvents() : fetchUserEventsOfYear(year)"
-                                />
-                                <div class="mt-8 mb-4 flex items-center justify-center">
-                                    <div v-if="eventsLoadedUntilYear === year">
-                                        <AsyncButton :action="fetchNextEvents" class="btn-ghost">
-                                            <template #label>
-                                                <span v-if="eventsLoadedUntilYear" class="px-2">
-                                                    Veranstaltungen {{ eventsLoadedUntilYear - 1 }} anzeigen
-                                                </span>
-                                                <span v-else class="px-2"> Vergangene Veranstaltungen anzeigen </span>
-                                            </template>
-                                        </AsyncButton>
-                                    </div>
+                        <div v-for="[year, events] in eventsByYear" :key="`${year}-${events?.length}`">
+                            <h2 class="text-secondary mb-4 font-bold">
+                                <template v-if="year === 0">Zukünftige Veranstaltungen</template>
+                                <template v-else>Veranstaltungen {{ year }}</template>
+                            </h2>
+                            <UserEventsTable
+                                v-if="user"
+                                :events="events"
+                                :user="user"
+                                @update:events="year === 0 ? fetchUserFutureEvents() : fetchUserEventsOfYear(year)"
+                            />
+                            <div class="mt-8 mb-4 flex items-center justify-center">
+                                <div v-if="eventsLoadedUntilYear === year">
+                                    <AsyncButton :action="fetchNextEvents" class="btn-ghost">
+                                        <template #label>
+                                            <span v-if="eventsLoadedUntilYear" class="px-2">
+                                                Veranstaltungen {{ eventsLoadedUntilYear - 1 }} anzeigen
+                                            </span>
+                                            <span v-else class="px-2"> Vergangene Veranstaltungen anzeigen </span>
+                                        </template>
+                                    </AsyncButton>
                                 </div>
                             </div>
                         </div>
                     </template>
                     <template #[Tab.USER_CERTIFICATES]>
-                        <div class="xl:max-w-5xl">
-                            <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-                                <UserQualificationsTable v-if="user" v-model="user" />
-                            </div>
-                        </div>
+                        <UserQualificationsTable v-if="user" v-model="user" />
                     </template>
                     <template #[Tab.USER_ROLES]>
-                        <div class="xl:max-w-5xl">
-                            <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-                                <UserRolesTable v-if="user" v-model="user" />
-                            </div>
-                        </div>
+                        <UserRolesTable v-if="user" v-model="user" />
                     </template>
                 </VTabs>
             </template>

@@ -4,8 +4,8 @@
             {{ event?.name }}
         </template>
         <template #content>
-            <div v-if="event" class="xs:px-8 px-4 pt-6 pb-8 md:px-16 xl:px-20">
-                <div class="flex flex-col gap-x-20 gap-y-8 md:flex-row-reverse md:gap-y-4 md:pr-4 xl:max-w-5xl">
+            <MainContent v-if="event" class="pt-6 pb-8">
+                <div class="flex flex-col gap-x-20 gap-y-8 md:flex-row-reverse md:gap-y-4 md:pr-4">
                     <div class="flex w-full flex-col gap-8 md:w-96">
                         <EventStateBanner :event="event" sticky />
                         <EventRegistrationDetailsCard
@@ -21,7 +21,7 @@
                         <EventParticipantsCard :event="event" />
                     </div>
                 </div>
-            </div>
+            </MainContent>
         </template>
         <template v-if="event && hasPermission(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
             <AsyncButton
@@ -130,6 +130,7 @@ import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetails
 import { useEventExports } from '@/ui/composables/EventExports.ts';
 import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes.ts';
+import MainContent from '@/ui/components/partials/MainContent.vue';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 
