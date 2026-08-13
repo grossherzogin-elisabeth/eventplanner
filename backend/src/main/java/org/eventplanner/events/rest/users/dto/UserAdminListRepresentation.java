@@ -1,8 +1,10 @@
 package org.eventplanner.events.rest.users.dto;
 
+import static java.util.Optional.ofNullable;
 import static org.eventplanner.common.StringUtils.trimToNull;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 
 import org.eventplanner.events.domain.entities.users.UserDetails;
@@ -21,6 +23,7 @@ public record UserAdminListRepresentation(
     @NonNull List<UserQualificationRepresentation> qualifications,
     @Nullable String email,
     @Nullable String emailHash,
+    @Nullable String lastLoginAt,
     boolean verified
 ) implements Serializable {
     public static UserAdminListRepresentation fromDomain(@NonNull UserDetails user) {
@@ -36,6 +39,10 @@ public record UserAdminListRepresentation(
                 .toList(),
             trimToNull(user.getEmail()),
             user.getEmailHash(),
+            ofNullable(user.getLastLoginAt())
+                .map(Instant::toString)
+                .map(s -> s.substring(0, 10))
+                .orElse(null),
             user.getVerifiedAt() != null
         );
     }

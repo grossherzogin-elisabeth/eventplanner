@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.Instant;
+
 import org.eventplanner.testutil.TestResources;
 import org.eventplanner.testutil.TestUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,6 +73,7 @@ class ListUsersIntegrationTest {
     @Test
     void shouldReturnListOfExtendedUsers() throws Exception {
         var expected = TestResources.getString("/integration/api/users/list-users-extended.json");
+        expected = expected.replace("{{ admin_last_login_at }}", Instant.now().toString().substring(0, 10));
         webMvc.perform(get("/api/v1/users")
                 .with(withAuthentication(TestUser.ADMIN))
                 .accept(MediaType.APPLICATION_JSON))

@@ -15,6 +15,7 @@ export interface UserRepresentation {
     email?: string;
     emailHash?: string;
     verified?: boolean;
+    lastLoginAt?: string;
 }
 
 export interface UserDetailsRepresentation {
@@ -161,6 +162,7 @@ export class UserRestRepository implements UserRepository {
             email: userRepresentation.email,
             emailHash: userRepresentation.emailHash,
             verified: userRepresentation.verified,
+            lastLoginAt: UserRestRepository.parseDate(userRepresentation.lastLoginAt),
         }));
     }
 

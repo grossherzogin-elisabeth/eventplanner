@@ -19,6 +19,7 @@
     ],
     "email": "bruce.benner@email.com",
     "emailHash": "e331a62e9594a82febf18376cb6d5ed5cb41703d602b92e054342f36a46e64fd",
+    "lastLoginAt": "2025-03-16",
     "verified": true
   },
   {
@@ -42,6 +43,7 @@
     ],
     "email": "stephen.strange@email.com",
     "emailHash": "ff887722e99ac76160c0f7d9c25103ca07a40b06c5b35e131f00d8f7ed2478b1",
+    "lastLoginAt": null,
     "verified": true
   },
   {
@@ -54,6 +56,7 @@
     "qualifications": [],
     "email": "loki.odinson@asgard.email",
     "emailHash": "fbeb973da625165a1bed585418ddb25762a39102ef305ed17c05f15a12c7cfb1",
+    "lastLoginAt": "2025-03-16",
     "verified": false
   },
   {
@@ -76,6 +79,7 @@
     ],
     "email": "natasha.romanoff@email.com",
     "emailHash": "57fba0c3c6a384237c8a7186e41e5199b5789b7e7c6b9d532e0ec3ed0b8abd4e",
+    "lastLoginAt": null,
     "verified": false
   },
   {
@@ -92,6 +96,7 @@
     "qualifications": [],
     "email": "nick.fury@email.com",
     "emailHash": "071caaba18a17b9e7e52efec9336742bd0ae70ce5ec45ab7fe13f8ec0914fe51",
+    "lastLoginAt": null,
     "verified": false
   },
   {
@@ -114,6 +119,7 @@
     ],
     "email": "peter.parker@email.com",
     "emailHash": "2aebc6f4839dccf6b87b67b764e634ded76af13f0fdc3398ac1c26418a0758c9",
+    "lastLoginAt": null,
     "verified": true
   },
   {
@@ -137,6 +143,7 @@
     ],
     "email": "captain.america@email.com",
     "emailHash": "319c61e445b5a55f8e2dac706d5bb15f68b644af85d21337a5b8ec365da607e1",
+    "lastLoginAt": null,
     "verified": true
   },
   {
@@ -159,6 +166,7 @@
     ],
     "email": "thor.odinson@email.com",
     "emailHash": "dcc2cea9402462d0d1e95d7517b6bb4f3f6d0fee8262bb8e19f69ebf1ec410ec",
+    "lastLoginAt": null,
     "verified": false
   },
   {
@@ -182,6 +190,7 @@
     ],
     "email": "tony.stark@email.com",
     "emailHash": "fdc14228daf8d89d88e7ce2195845c47e84e1bdf978f8ca40cbd82fffb2d1cf7",
+    "lastLoginAt": "{{ admin_last_login_at }}",
     "verified": true
   },
   {
@@ -204,6 +213,7 @@
     ],
     "email": "wanda.maximoff@email.com",
     "emailHash": "d3f2cf4a5c99888e5e817c66620b4a619347d7fa5417af5df31b855d8800a50e",
+    "lastLoginAt": null,
     "verified": false
   }
 ]
