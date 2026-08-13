@@ -17,11 +17,11 @@
                 {{ positions.get(positionKey).name }}
             </span>
         </div>
-        <p class="line-clamp-3 text-xs">
+        <p class="line-clamp-3 text-sm opacity-75">
             {{ props.value?.description }}
         </p>
-        <div v-if="props.value?.expiresAt" class="mt-2 flex items-center justify-end font-semibold sm:hidden">
-            <p class="mb-1 text-sm">
+        <div v-if="props.value?.expiresAt" class="mt-2 flex items-center justify-end font-semibold opacity-75 sm:hidden">
+            <p class="mb-1 text-sm opacity-75">
                 {{ $t('domain.user-qualification.expires-at', { date: $d(props.value.expiresAt, DateTimeFormat.DD_MM_YYYY) }) }}
             </p>
         </div>
@@ -47,13 +47,13 @@
                     {{ props.value.expiresAt ? $d(props.value.expiresAt, DateTimeFormat.DD_MM_YYYY) : $t('generic.no-information') }}
                 </template>
             </p>
-            <p class="text-sm">
+            <p class="text-sm opacity-75">
                 <template v-if="props.value">
                     {{ $t('views.account.qualifications.status-expires-on') }}
                 </template>
             </p>
         </template>
-        <p v-else class="text-sm">
+        <p v-else class="text-sm opacity-75">
             {{ $t('views.account.qualifications.status-no-expires') }}
         </p>
     </td>

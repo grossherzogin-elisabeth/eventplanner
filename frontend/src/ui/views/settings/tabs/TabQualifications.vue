@@ -22,7 +22,7 @@
                     </td>
                     <td class="w-full min-w-80">
                         <p class="mb-1 line-clamp-2 font-semibold" data-test-id="qualification-name">{{ item?.name }}</p>
-                        <p class="line-clamp-2 text-sm">
+                        <p class="line-clamp-2 text-sm opacity-75">
                             {{ item?.description }}
                         </p>
                     </td>
