@@ -4,7 +4,8 @@
             <div class="wrapper flex grow items-stretch self-stretch rounded-lg">
                 <button
                     class="mr-1 flex h-10 w-10 items-center justify-center"
-                    :class="showSearch ? 'xs:ml-4' : 'btn-icon'"
+                    type="button"
+                    :class="showSearch ? 'xs:ml-4 ml-1' : 'btn-icon'"
                     @click="openSearch()"
                 >
                     <i class="fa-solid fa-search"></i>
@@ -18,7 +19,7 @@
                     @input="onInput($event)"
                     @keydown.esc="input?.blur()"
                 />
-                <button class="btn-icon xs:mr-4" @click="cancel()">
+                <button class="btn-icon xs:mr-4 mr-1" type="button" @click="cancel()">
                     <i class="fa-solid fa-xmark" />
                 </button>
             </div>
@@ -70,7 +71,7 @@ function cancel(): void {
     top: 0;
     bottom: 0;
     /* left side - btn-icon width (10) */
-    left: calc(100vw - var(--spacing) * 10);
+    left: calc(100vw - var(--spacing) * 11);
     width: 100vw;
     padding-block: calc(var(--spacing) * 1);
     display: flex;

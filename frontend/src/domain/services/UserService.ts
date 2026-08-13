@@ -80,6 +80,12 @@ export class UserService {
         return this.getExpiredQualifications(user, referenceTime);
     }
 
+    public resolveGravatarUrl(user?: User): string | undefined {
+        const defaultHash = '0000000000000000000000000000000000000000000000000000000000000000';
+        const initials = `${user?.nickName?.[0] || user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toLowerCase();
+        return `https://www.gravatar.com/avatar/${user?.emailHash ?? defaultHash}?d=retro&initials=${initials}`;
+    }
+
     public validate(user: UserDetails | null): Record<string, string[]> {
         let errors: Record<string, string[]> = {};
         errors = Object.assign(errors, UserService.validateName(user));

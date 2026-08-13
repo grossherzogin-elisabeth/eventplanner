@@ -1,83 +1,85 @@
 <template>
-    <VTable
-        :items="props.event.slots"
-        class="scrollbar-invisible interactive-table no-header xs:px-8 overflow-x-auto px-4 md:px-16 xl:px-20"
-        :class="$attrs.class"
-        :page-size="-1"
-        sortable
-        @click="editSlot($event.item)"
-        @reordered="updateOrders"
-    >
-        <template #row="{ item, index }">
-            <td class="w-0">
-                <span class="bg-surface-container-highest inline-block rounded-full px-2 py-1 text-sm font-semibold">
-                    #{{ index + 1 }}
-                </span>
-            </td>
-            <td class="w-1/3">
-                <p class="font-semibold whitespace-nowrap">
-                    {{ item?.positionName || positions.get(item?.positionKeys[0]).name }}
-                </p>
-                <p v-if="item?.assignedRegistrationKey" class="truncate text-sm">
-                    {{ props.registrations.find((r) => r.registration?.key === item.assignedRegistrationKey)?.name }}
-                </p>
-                <p v-else class="truncate text-sm">
-                    {{ $t('views.event-edit.free') }}
-                </p>
-            </td>
-            <td class="w-2/3 min-w-96">
-                <div class="flex flex-wrap items-center gap-1">
-                    <div
-                        v-for="positionKey in item?.positionKeys"
-                        :key="positionKey"
-                        :style="{ '--color': positions.get(positionKey).color }"
-                        class="tag custom"
-                    >
-                        <span>{{ positions.get(positionKey).name }}</span>
+    <div class="full-width-scrollable">
+        <VTable
+            :items="props.event.slots"
+            class="scrollbar-invisible interactive-table no-header"
+            :class="$attrs.class"
+            :page-size="-1"
+            sortable
+            @click="editSlot($event.item)"
+            @reordered="updateOrders"
+        >
+            <template #row="{ item, index }">
+                <td class="w-0">
+                    <span class="bg-surface-container-highest inline-block rounded-full px-2 py-1 text-sm font-semibold">
+                        #{{ index + 1 }}
+                    </span>
+                </td>
+                <td class="w-1/3">
+                    <p class="font-semibold whitespace-nowrap">
+                        {{ item?.positionName || positions.get(item?.positionKeys[0]).name }}
+                    </p>
+                    <p v-if="item?.assignedRegistrationKey" class="truncate text-sm">
+                        {{ props.registrations.find((r) => r.registration?.key === item.assignedRegistrationKey)?.name }}
+                    </p>
+                    <p v-else class="truncate text-sm">
+                        {{ $t('views.event-edit.free') }}
+                    </p>
+                </td>
+                <td class="w-2/3 min-w-96">
+                    <div class="flex flex-wrap items-center gap-1">
+                        <div
+                            v-for="positionKey in item?.positionKeys"
+                            :key="positionKey"
+                            :style="{ '--color': positions.get(positionKey).color }"
+                            class="tag custom"
+                        >
+                            <span>{{ positions.get(positionKey).name }}</span>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td class="w-64">
-                <div class="flex items-center justify-end">
-                    <span v-if="item?.criticality === 2" class="status-badge error">
-                        <i class="fa-solid fa-warning"></i>
-                        <span>{{ $t('domain.event-slot.required') }}</span>
-                    </span>
-                    <span v-else-if="item?.criticality === 1" class="status-badge warning">
-                        <i class="fa-solid fa-circle-info"></i>
-                        <span>{{ $t('domain.event-slot.important') }}</span>
-                    </span>
-                    <span v-else class="status-badge neutral">
-                        <i class="fa-solid fa-circle-question"></i>
-                        <span>{{ $t('domain.event-slot.optional') }}</span>
-                    </span>
-                </div>
-            </td>
-        </template>
-        <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
-            <li class="context-menu-item" data-test-id="action-edit" @click="editSlot(item)">
-                <i class="fa-solid fa-edit" />
-                <span>{{ $t('views.event-edit.actions.edit-slot') }}</span>
-            </li>
-            <li class="context-menu-item" data-test-id="action-duplicate" @click="duplicateSlot(item)">
-                <i class="fa-solid fa-clone" />
-                <span>{{ $t('views.event-edit.actions.duplicate-slot') }}</span>
-            </li>
-            <li class="context-menu-item" data-test-id="action-move-up" @click="moveSlotUp(item)">
-                <i class="fa-solid fa-arrow-up" />
-                <span>{{ $t('generic.move-up') }}</span>
-            </li>
-            <li class="context-menu-item" data-test-id="action-move-down" @click="moveSlotDown(item)">
-                <i class="fa-solid fa-arrow-down" />
-                <span>{{ $t('generic.move-down') }}</span>
-            </li>
-            <li class="context-menu-item text-error" data-test-id="action-delete" @click="deleteSlot(item)">
-                <i class="fa-solid fa-trash-alt" />
-                <span>{{ $t('views.event-edit.actions.delete-slot') }}</span>
-            </li>
-        </template>
-    </VTable>
-    <SlotEditDlg ref="editSlotDialog" />
+                </td>
+                <td class="w-64">
+                    <div class="flex items-center justify-end">
+                        <span v-if="item?.criticality === 2" class="status-badge error">
+                            <i class="fa-solid fa-warning"></i>
+                            <span>{{ $t('domain.event-slot.required') }}</span>
+                        </span>
+                        <span v-else-if="item?.criticality === 1" class="status-badge warning">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>{{ $t('domain.event-slot.important') }}</span>
+                        </span>
+                        <span v-else class="status-badge neutral">
+                            <i class="fa-solid fa-circle-question"></i>
+                            <span>{{ $t('domain.event-slot.optional') }}</span>
+                        </span>
+                    </div>
+                </td>
+            </template>
+            <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
+                <li class="context-menu-item" data-test-id="action-edit" @click="editSlot(item)">
+                    <i class="fa-solid fa-edit" />
+                    <span>{{ $t('views.event-edit.actions.edit-slot') }}</span>
+                </li>
+                <li class="context-menu-item" data-test-id="action-duplicate" @click="duplicateSlot(item)">
+                    <i class="fa-solid fa-clone" />
+                    <span>{{ $t('views.event-edit.actions.duplicate-slot') }}</span>
+                </li>
+                <li class="context-menu-item" data-test-id="action-move-up" @click="moveSlotUp(item)">
+                    <i class="fa-solid fa-arrow-up" />
+                    <span>{{ $t('generic.move-up') }}</span>
+                </li>
+                <li class="context-menu-item" data-test-id="action-move-down" @click="moveSlotDown(item)">
+                    <i class="fa-solid fa-arrow-down" />
+                    <span>{{ $t('generic.move-down') }}</span>
+                </li>
+                <li class="context-menu-item text-error" data-test-id="action-delete" @click="deleteSlot(item)">
+                    <i class="fa-solid fa-trash-alt" />
+                    <span>{{ $t('views.event-edit.actions.delete-slot') }}</span>
+                </li>
+            </template>
+        </VTable>
+        <SlotEditDlg ref="editSlotDialog" />
+    </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';

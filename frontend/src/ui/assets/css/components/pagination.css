@@ -3,7 +3,7 @@
         display: flex;
         align-items: center;
         justify-content: end;
-        @apply space-x-2;
+        @apply sm:gap-x-2;
         @apply mr-1;
         @apply px-4 py-2;
         @apply bg-surface;

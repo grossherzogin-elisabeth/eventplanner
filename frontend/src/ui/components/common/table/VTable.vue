@@ -13,6 +13,9 @@
                 <slot name="loading" :colspan="columnCount">
                     <tr v-for="i in 10" :key="i" class="skeleton">
                         <td></td>
+                        <td v-if="$slots['icon']" class="pr-4">
+                            <div class="bg-secondary-container/40 dark:bg-secondary-container/5 h-7 w-7 rounded-full"></div>
+                        </td>
                         <slot name="row" :item="undefined" :index="i" :first="i === 0" :last="i === pagedItems.length - 1"> </slot>
                         <!-- context menu placeholder-->
                         <td v-if="$slots['context-menu']" class="w-10">
@@ -58,16 +61,25 @@
                         <i class="fa-solid fa-grip-vertical text-secondary-variant cursor-move"></i>
                     </td>
                     <td
-                        v-if="props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024)"
-                        class="pr-2"
+                        v-if="props.multiselection && (selected.length > 0 || $slots['icon'] || viewPortSize.width.value > 1024)"
+                        class="pr-4"
                         data-test-id="table-row-select"
                         @click.stop.prevent="row.selected = !row.selected"
                     >
-                        <div v-if="row.selected">
-                            <i class="fa-solid fa-check-square text-primary text-xl sm:text-2xl"></i>
-                        </div>
-                        <div v-else>
-                            <i class="fa-solid fa-square text-surface-container-high text-xl sm:text-2xl"></i>
+                        <div
+                            class="relative flex h-7 w-7 items-center justify-center rounded-full"
+                            :class="
+                                row.selected
+                                    ? 'bg-secondary-container text-onsecondary-container'
+                                    : 'bg-secondary-container/40 dark:bg-secondary-container/5'
+                            "
+                        >
+                            <span v-if="row.selected">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </span>
+                            <slot v-else name="icon" :item="row">
+                                <!--                                                                <i class="fa-solid fa-sailboat"></i>-->
+                            </slot>
                         </div>
                     </td>
                     <slot
@@ -191,6 +203,7 @@ interface Emits {
 interface Slots {
     'head'?: (props: { sortBy: string; sortDirection: 'asc' | 'desc' }) => void;
     'row'?: (props: { item: (T & Selectable) | undefined; index: number; first: boolean; last: boolean }) => void;
+    'icon'?: (props: { item: (T & Selectable) | undefined }) => void;
     'no-data'?: (props: { colspan: number }) => void;
     'context-menu'?: (props: { item: T & Selectable }) => void;
     'loading'?: (props: { colspan: number }) => void;

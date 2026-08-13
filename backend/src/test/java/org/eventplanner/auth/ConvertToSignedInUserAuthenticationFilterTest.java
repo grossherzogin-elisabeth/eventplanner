@@ -272,6 +272,7 @@ class ConvertToSignedInUserAuthenticationFilterTest {
                 new AuthKey("testuser-" + i),
                 Collections.emptyList(),
                 "testuser" + i + "@email.com",
+                "hash",
                 Collections.emptyList(),
                 "m",
                 "User",

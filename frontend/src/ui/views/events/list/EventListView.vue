@@ -20,7 +20,7 @@
             </template>
         </VTabs>
 
-        <div class="filter-panel scrollbar-invisible mt-4">
+        <div class="p-content filter-panel scrollbar-invisible mt-4">
             <FilterMultiselect
                 v-model="filterEventType"
                 data-test-id="filter-event-type"
@@ -36,28 +36,30 @@
             <FilterToggle v-model="filterFreeSlots" data-test-id="filter-free-slots" :label="$t('views.event-list.filter.free-slots')" />
         </div>
 
-        <div class="w-full">
-            <VTable
-                :items="filteredEvents"
-                multiselection
-                query
-                :page-size="20"
-                class="interactive-table no-header scrollbar-invisible xs:px-8 overflow-x-auto px-4 pt-4 md:px-16 xl:px-20"
-                @click="openEvent($event.item, $event.event)"
-            >
-                <template #row="{ item }">
-                    <EventListRow :event="item" />
-                </template>
-                <template #context-menu="{ item }">
-                    <EventListRowActions
-                        :events="[item]"
-                        @join="joinEvents($event)"
-                        @leave-all="leaveEvents($event)"
-                        @leave-waiting-list="leaveEvents($event, true)"
-                    />
-                </template>
-            </VTable>
-        </div>
+        <MainContent>
+            <div class="full-width-scrollable mt-4">
+                <VTable
+                    :items="filteredEvents"
+                    multiselection
+                    query
+                    :page-size="20"
+                    class="interactive-table no-header scrollbar-invisible"
+                    @click="openEvent($event.item, $event.event)"
+                >
+                    <template #row="{ item }">
+                        <EventListRow :event="item" />
+                    </template>
+                    <template #context-menu="{ item }">
+                        <EventListRowActions
+                            :events="[item]"
+                            @join="joinEvents($event)"
+                            @leave-all="leaveEvents($event)"
+                            @leave-waiting-list="leaveEvents($event, true)"
+                        />
+                    </template>
+                </VTable>
+            </div>
+        </MainContent>
 
         <VConfirmationDialog />
 
@@ -117,6 +119,7 @@ import { Routes } from '@/ui/views/Routes';
 import EventListRow from './EventListRow.vue';
 import type { Selectable } from '@/ui/model/Selectable';
 import EventListRowActions from './EventListRowActions.vue';
+import MainContent from '@/ui/components/partials/MainContent.vue';
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
 

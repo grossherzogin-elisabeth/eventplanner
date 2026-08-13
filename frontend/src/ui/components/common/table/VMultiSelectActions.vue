@@ -1,28 +1,31 @@
 <template>
     <div class="multi-select-bar sticky bottom-0 z-20" data-test-id="multi-select-actions">
-        <div class="border-outline-variant bg-surface border-t px-2 md:px-12 xl:rounded-bl-3xl xl:pr-20 xl:pl-16">
-            <div class="flex h-18 items-stretch gap-2 py-4 whitespace-nowrap">
+        <MainContent class="border-outline-variant bg-surface border-t xl:rounded-bl-3xl">
+            <div class="-ml-3 flex h-18 items-stretch gap-2 py-4 whitespace-nowrap">
                 <button class="btn-ghost" @click="emit('selectNone')">
                     <i class="fa-solid fa-xmark" />
                 </button>
-                <span class="self-center font-bold">{{ props.count }} ausgewählt</span>
+                <span class="self-center font-bold">
+                    {{ $t('generic.selected-count', { count: props.count }) }}
+                </span>
                 <div class="grow"></div>
                 <slot name="action" />
                 <ContextMenuButton v-if="$slots.menu" class="btn-ghost">
                     <template #default>
                         <li class="context-menu-item" @click="emit('selectAll')">
                             <i class="fa-solid fa-list-check" />
-                            <span>Alle auswählen</span>
+                            <span>{{ $t('generic.select-all') }}</span>
                         </li>
                         <slot name="menu" />
                     </template>
                 </ContextMenuButton>
             </div>
-        </div>
+        </MainContent>
     </div>
 </template>
 <script setup lang="ts">
 import { ContextMenuButton } from '@/ui/components/common';
+import MainContent from '@/ui/components/partials/MainContent.vue';
 
 interface Props {
     count: number;
