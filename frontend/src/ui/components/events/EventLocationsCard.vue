@@ -37,8 +37,9 @@
                                             <VMarkdown :value="location.information" />
                                         </p>
                                         <p v-if="location.informationLink">
-                                            <a :href="location.informationLink" class="link">
+                                            <a :href="location.informationLink" class="link" target="_blank">
                                                 {{ $t('components.event-locations-card.learn-more') }}
+                                                <i class="fa-solid fa-external-link-alt mb-0.5 text-xs"></i>
                                             </a>
                                         </p>
                                     </div>

@@ -152,8 +152,8 @@ domain:
     weekend-event: Wochenendreise
     work-event: Arbeitsdienst
   location:
-    address: Liegeplatz
-    address-link: Liegeplatz Link
+    address: Adresse
+    address-link: Adress Link (z.b. Google Maps)
     eda: EDA
     edd: EDD
     eta: ETA
@@ -185,11 +185,11 @@ domain:
     registration: Anmeldung|Anmeldungen
     user: Nutzer:in|Nutzer:innen
   user:
-    address: Adresse
     actions:
-      write-email: Email schreiben
-      impersonate: Impersonate
       create: Nutzer erstellen
+      impersonate: Impersonate
+      write-email: Email schreiben
+    address: Adresse
     date-and-place-of-birth: Geburtsdatum und -ort
     date-of-birth: Geburtstag
     diet: Ernährungsweise
@@ -199,6 +199,7 @@ domain:
     first-name: Vorname
     gender: Geschlecht
     intolerances: Unverträglichkeiten
+    last-login-at: Letzter Login am {date}
     last-name: Nachname
     medication: Medikamente
     middle-name: Zweiter Vorname
@@ -206,6 +207,7 @@ domain:
     name: Name
     nationality: Nationalität
     nick-name: Anzeigename
+    no-login-recorded: Bisher kein Login registriert
     pass-nr: Personalausweis- oder Passnummer
     phone: Telefon Festnetz
     phone-work: Telefon dienstlich
@@ -214,8 +216,6 @@ domain:
       all-valid: Alle gültig
       expired-count: '{count} abgelaufene'
     title: Titel
-    last-login-at: Letzter Login am {date}
-    no-login-recorded: Bisher kein Login registriert
   user-qualification:
     expires-at: Gültig bis {date}
     status:
@@ -280,16 +280,16 @@ generic:
   ok: OK
   optional: optional
   please-select: Bitte auswählen
+  save: Speichern
   select-all: Alle auswählen
   selected-count: '{count} ausgewählt'
-  save: Speichern
   theme:
     dark: Dunkel
     light: Hell
     system: Automatisch
   validation:
-    after: Datum muss nach dem {} liegen
-    before: Datum muss vor dem {} liegen
+    after: Datum muss nach dem {0} liegen
+    before: Datum muss vor dem {0} liegen
     invalid: Eingabe enthält ungültige Zeichen
     invalid-date: Eingabe ist kein valides Datum
     invalid-email: Eingabe ist keine gültige Email Adresse
@@ -633,18 +633,18 @@ views:
       other: Sonstige Daten
       roles: Anwendungsrollen
   user-list:
+    filter:
+      active-crew: Aktive Stammcrew
+      all-events: Alle Veranstaltungen
+      all-positions: Alle Positionen
+      expired-qualifications: Abgelaufene Qualifikationen
+      not-verified: Verifizierung ausstehend
+    no-position: Keine Position zugewiesen
+    qualification-summary:
+      all-valid: Alle gültig
+      expired: '{count} abgelaufen'
+      expiring-soon: 1 läuft bald ab|{count} laufen bald ab
     tab:
       admins: Verwalter
       members: Stammcrew
       unknown: Nutzer ohne Rolle
-    no-position: Keine Position zugewiesen
-    qualification-summary:
-      expired: '{count} abgelaufen'
-      expiring-soon: '1 läuft bald ab|{count} laufen bald ab'
-      all-valid: Alle gültig
-    filter:
-      all-positions: Alle Positionen
-      all-events: Alle Veranstaltungen
-      not-verified: Verifizierung ausstehend
-      expired-qualifications: Abgelaufene Qualifikationen
-      active-crew: Aktive Stammcrew

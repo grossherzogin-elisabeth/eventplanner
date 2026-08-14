@@ -50,7 +50,9 @@
                             <VInputDate
                                 :label="$t('domain.location.eda')"
                                 :model-value="location.eta"
-                                :errors="validation.errors.value['start']"
+                                :highlight-from="props.event?.start"
+                                :highlight-to="props.event?.end"
+                                :errors="validation.errors.value['eta']"
                                 :errors-visible="validation.showErrors.value"
                                 @update:model-value="location.eta = updateDate(location.eta, $event)"
                             />
@@ -59,7 +61,7 @@
                             <VInputTime
                                 :label="$t('domain.location.eta')"
                                 :model-value="location.eta"
-                                :errors="validation.errors.value['start']"
+                                :errors="validation.errors.value['eta']"
                                 :errors-visible="validation.showErrors.value"
                                 @update:model-value="location.eta = updateTime(location.eta, $event, 'minutes')"
                             />
@@ -75,6 +77,8 @@
                             <VInputDate
                                 :label="$t('domain.location.edd')"
                                 :model-value="location.etd"
+                                :highlight-from="props.event?.start"
+                                :highlight-to="props.event?.end"
                                 :errors="validation.errors.value['etd']"
                                 :errors-visible="validation.showErrors.value"
                                 @update:model-value="location.etd = updateDate(location.etd, $event)"
@@ -99,7 +103,6 @@
                         <VInputTextArea
                             v-model.trim="location.address"
                             :label="$t('domain.location.address')"
-                            class="h-24"
                             :errors="validation.errors.value['address']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -116,7 +119,6 @@
                         <VInputTextArea
                             v-model.trim="location.information"
                             :label="$t('domain.location.information')"
-                            class="h-24"
                             :errors="validation.errors.value['information']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -146,11 +148,16 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { deepCopy, updateDate, updateTime } from '@/common';
-import { Validator, notEmpty } from '@/common/validation';
-import type { Location } from '@/domain';
+import { Validator, notEmpty, after, before } from '@/common/validation';
+import type { Location, Event } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { VDialog, VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
 import { useValidation } from '@/ui/composables/Validation.ts';
+
+interface Props {
+    event?: Event;
+}
+const props = defineProps<Props>();
 
 const dlg = ref<Dialog<Location | undefined, Location | undefined> | null>(null);
 const location = ref<Location>({
@@ -162,7 +169,11 @@ const location = ref<Location>({
 });
 
 const validation = useValidation(location, (value) => {
-    return Validator.validate('name', value.name, notEmpty()).validate('icon', value.icon, notEmpty()).getErrors();
+    return Validator.validate('name', value.name, notEmpty())
+        .validate('icon', value.icon, notEmpty())
+        .validate('eta', value.eta, after(props.event?.start), before(props.event?.end))
+        .validate('etd', value.etd, after(props.event?.start), before(props.event?.end))
+        .getErrors();
 });
 
 async function open(value?: Location): Promise<Location | undefined> {

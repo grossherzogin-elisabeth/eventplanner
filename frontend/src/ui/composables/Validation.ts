@@ -1,6 +1,7 @@
 import type { ComputedRef, Ref } from 'vue';
 import { computed, ref, toValue, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { DateTimeFormat } from '@/common/date';
 
 export type AttributeKey = string;
 
@@ -30,9 +31,15 @@ export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunct
         const translatedErrors: Record<AttributeKey, string[]> = {};
         Object.entries(validationFunction(toValue(t))).forEach(([key, value]) => {
             translatedErrors[key] = value.map((rawError) => {
-                const parts = rawError.split(':');
+                const parts = rawError.split('|');
                 const i18nKey = parts[0];
-                const i18nParams = parts[1]?.split(',') ?? [];
+                const i18nParams = (parts[1]?.split(',') ?? []).map((param) => {
+                    if (param.startsWith('date(') && param.endsWith(')')) {
+                        const date = new Date(param.substring(5, param.length - 1));
+                        return i18n.d(date, DateTimeFormat.DD_MM_YYYY);
+                    }
+                    return param;
+                });
                 try {
                     if (i18n.te(i18nKey)) {
                         return i18n.t(i18nKey, i18nParams);
