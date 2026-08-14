@@ -12,7 +12,10 @@
                 <AppMenu class="text-onprimary dark:text-onsurface-variant relative z-10" />
             </div>
             <div class="bg-surface relative flex w-0 grow flex-col xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl">
-                <RouterView id="router-view" v-model:tab-title="title" class="flex flex-1 flex-col" />
+                <RouterView v-show="!loading" id="router-view" v-model:tab-title="title" class="flex flex-1 flex-col" />
+                <div v-if="loading" class="flex w-full flex-1 flex-col items-center justify-center">
+                    <VLoadingSpinner />
+                </div>
             </div>
         </div>
     </div>
@@ -24,20 +27,23 @@
 import { ref, watch } from 'vue';
 import { useConfigService } from '@/application';
 import { Permission } from '@/domain';
-import { VErrorDialog } from '@/ui/components/common';
+import { VErrorDialog, VLoadingSpinner } from '@/ui/components/common';
 import AppMenu from '@/ui/components/partials/AppMenu.vue';
 import AppNavbar from '@/ui/components/partials/AppNavbar.vue';
 import VNotifications from '@/ui/components/partials/VNotifications.vue';
 import { useSession } from '@/ui/composables/Session.ts';
 import { useViewportSize } from '@/ui/composables/ViewportSize';
+import { useRouter } from 'vue-router';
 
 useViewportSize();
+const router = useRouter();
 const configService = useConfigService();
 const { signedInUser } = useSession();
 
 const title = ref<string>('');
+const loading = ref<boolean>(false);
 
-async function init(): Promise<void> {
+function init(): void {
     console.info('🚀 Mounting app');
     setTitle();
     watch(title, setTitle);
@@ -45,6 +51,8 @@ async function init(): Promise<void> {
         Object.values(Permission).forEach((permission) => document.body.classList.remove(permission));
         signedInUser.value?.permissions.forEach((permission) => document.body.classList.add(permission));
     });
+    router.beforeEach(() => (loading.value = true));
+    router.afterEach(() => (loading.value = false));
 }
 
 function setTitle(): void {
