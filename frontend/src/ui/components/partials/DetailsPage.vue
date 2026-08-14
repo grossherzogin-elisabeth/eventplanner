@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-full flex-1 flex-col xl:overflow-y-scroll">
+    <div class="flex h-full flex-1 flex-col xl:overflow-y-scroll" :class="{ skeleton: loading }">
         <div v-if="props.backTo" class="absolute top-7 left-6 z-30 hidden xl:block">
             <BackButton :to="props.backTo" />
         </div>

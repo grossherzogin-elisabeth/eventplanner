@@ -1,7 +1,7 @@
 <template>
     <DetailsPage :back-to="{ name: Routes.EventsListAdmin }" :class="$attrs.class" :loading="!event">
         <template #header>
-            {{ event?.name || $t('generic.loading') }}
+            {{ event?.name }}
         </template>
         <template #subheader> </template>
         <template #content>
@@ -33,20 +33,20 @@
             <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 lg:top-14 xl:top-20">
                 <template #[Tab.EVENT_DATA]>
                     <div class="max-w-2xl space-y-8 xl:space-y-16">
-                        <TabEventDetailsForm v-if="event" v-model:event="event" />
+                        <TabEventDetailsForm v-model:event="event" />
                     </div>
                 </template>
                 <template #[Tab.EVENT_CREW_EDITOR]>
                     <TabCrewEditor v-if="event" v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
                 </template>
                 <template #[Tab.EVENT_SLOTS]>
-                    <TabSlots v-if="event" v-model:event="event" :crew="crew" :registrations="registrations" />
+                    <TabSlots v-model:event="event" :crew="crew" :registrations="registrations" />
                 </template>
                 <template #[Tab.EVENT_LOCATIONS]>
-                    <TabLocations v-if="event" v-model:event="event" />
+                    <TabLocations v-model:event="event" />
                 </template>
                 <template #[Tab.EVENT_REGISTRATIONS]>
-                    <TabRegistrations v-if="event" v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
+                    <TabRegistrations v-model:event="event" :crew="crew" :waitinglist="waitinglist" />
                 </template>
             </VTabs>
         </template>
@@ -214,19 +214,19 @@ const usersAdminUseCase = useUserAdministrationUseCase();
 const eventExports = useEventExports();
 const { hasPermission } = useSession();
 
-const eventOriginal = ref<Event | null>(null);
-const event = ref<Event | null>(null);
+const eventOriginal = ref<Event | undefined>(undefined);
+const event = ref<Event | undefined>(undefined);
 const waitinglist = ref<ResolvedRegistrationSlot[]>([]);
 const crew = ref<ResolvedRegistrationSlot[]>([]);
-const validation = useValidation(event, (evt) => (evt === null ? {} : eventService.validate(evt)));
+const validation = useValidation(event, (evt) => (evt === undefined ? {} : eventService.validate(evt)));
 const hasChanges = ref<boolean>(false);
 
 const registrations = computed<ResolvedRegistrationSlot[]>(() => crew.value.concat(waitinglist.value));
 const tabs = computed<InputSelectOption<Tab>[]>(() => {
     const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
-    if (hasPermission(Permission.WRITE_EVENT_SLOTS)) {
+    if (!event.value || hasPermission(Permission.WRITE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_REGISTRATIONS);
-        if (event.value?.signupType === EventSignupType.Assignment) {
+        if (!event.value || event.value?.signupType === EventSignupType.Assignment) {
             visibleTabs.push(Tab.EVENT_SLOTS, Tab.EVENT_CREW_EDITOR);
         }
     }
@@ -241,7 +241,7 @@ const cancelEventDialog = ref<Dialog<Event, string | undefined> | null>(null);
 const confirmDialog = ref<ConfirmationDialog | null>(null);
 
 const hasEmptyRequiredSlots = computed<boolean>(() => {
-    return event.value !== null && eventService.hasOpenRequiredSlots(event.value);
+    return event.value !== undefined && eventService.hasOpenRequiredSlots(event.value);
 });
 
 async function init(): Promise<void> {
@@ -303,7 +303,7 @@ function preventPageUnloadOnUnsavedChanges(): void {
 }
 
 function updateHasChanges(): void {
-    if (eventOriginal.value !== null && event.value !== null) {
+    if (eventOriginal.value && event.value) {
         const changes = diff(eventOriginal.value, event.value);
         hasChanges.value = Object.keys(changes).length > 0;
     } else {

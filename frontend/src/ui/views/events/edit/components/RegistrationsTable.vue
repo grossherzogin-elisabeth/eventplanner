@@ -23,7 +23,7 @@
                                 <p class="mb-1 flex items-center gap-x-1 font-semibold">
                                     {{ item.name || $t('domain.registration.unknown-user') }}
                                 </p>
-                                <p v-if="item.registration?.note" class="text-onsurface-variant mb-2 line-clamp-2 text-sm italic">
+                                <p v-if="item.registration?.note" class="text-onsurface-variant/75 mb-2 line-clamp-2 text-sm italic">
                                     <i class="fa-solid fa-comment-dots" />
                                     {{ item.registration?.note.trim() }}
                                 </p>
@@ -72,7 +72,9 @@
                 </template>
                 <td v-else class="w-full">
                     <p class="text-error mb-1 font-semibold italic opacity-50">
-                        {{ $t('domain.event.slot.empty') }}
+                        <template v-if="item">
+                            {{ $t('domain.event.slot.empty') }}
+                        </template>
                     </p>
                     <p v-if="item?.slot" class="flex items-center gap-x-1 gap-y-2 opacity-50">
                         <span
@@ -96,7 +98,7 @@
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     <span>{{ $t('views.event-edit.actions.show-user') }}</span>
                 </RouterLink>
-                <template v-if="event.signupType === EventSignupType.Assignment">
+                <template v-if="event?.signupType === EventSignupType.Assignment">
                     <li
                         v-if="item.slot"
                         class="context-menu-item"
@@ -140,8 +142,8 @@ import { Routes } from '@/ui/views/Routes.ts';
 import RegistrationTooltip from '@/ui/views/events/edit/components/RegistrationTooltip.vue';
 
 interface Props {
-    event: Event;
-    registrations: ResolvedRegistrationSlot[];
+    event?: Event;
+    registrations?: ResolvedRegistrationSlot[];
 }
 
 interface Emits {

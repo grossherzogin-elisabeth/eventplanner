@@ -20,7 +20,7 @@
                             </h2>
                         </div>
                         <slot name="after" />
-                        <span class="grow"></span>
+                        <div class="grow"></div>
                         <slot name="end" />
                     </div>
                 </div>
