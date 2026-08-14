@@ -134,7 +134,7 @@ import { useValidation } from '@/ui/composables/Validation.ts';
 import { v4 as uuid } from 'uuid';
 
 interface Props {
-    event: Event;
+    event?: Event;
 }
 
 const props = defineProps<Props>();
@@ -178,7 +178,7 @@ const expiredQualifications = computed<QualificationKey[]>(() => {
         return [];
     }
     return usersService
-        .getExpiredQualifications(selectedUser.value, props.event.end)
+        .getExpiredQualifications(selectedUser.value, props.event?.end)
         .map((key) => qualifications.get(key))
         .filter(filterUndefined)
         .map((qualification) => qualification.key);

@@ -3,12 +3,26 @@
         @apply animate-pulse;
         --skeleton-height: 1em;
         --skeleton-width: 90%;
-        pointer-events: none;
     }
 
-    .skeleton *:not(svg):not(svg *) {
+    .skeleton * {
+        pointer-events: none !important;
+    }
+
+    .skeleton *:not(svg):not(svg *),
+    .skeleton label::after{
         /* remove any real text */
-        color: transparent;
+        color: transparent !important;
+    }
+
+    .skeleton ::-moz-selection {
+        color: transparent !important;
+        background: transparent;
+    }
+
+    .skeleton ::selection {
+        color: transparent !important;
+        background: transparent;
     }
 
     .skeleton p,
@@ -75,7 +89,10 @@
     .skeleton h2 span:before,
     .skeleton h3 span:before,
     .skeleton h4 span:before,
-    .skeleton h5 span:before {
-        display: none;
+    .skeleton h5 span:before,
+    .skeleton button span:before,
+    .skeleton button svg:before,
+    .skeleton button svg {
+        display: none !important;
     }
 }

@@ -11,12 +11,12 @@
             <div class="relative hidden h-screen w-104 flex-col xl:flex">
                 <AppMenu class="text-onprimary dark:text-onsurface-variant relative z-10" />
             </div>
-            <div class="bg-surface relative flex w-0 grow flex-col xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl">
+            <main class="bg-surface relative flex w-0 grow flex-col xl:h-screen xl:overflow-hidden xl:rounded-l-3xl xl:shadow-2xl">
                 <RouterView v-show="!loading" id="router-view" v-model:tab-title="title" class="flex flex-1 flex-col" />
-                <div v-if="loading" class="flex w-full flex-1 flex-col items-center justify-center">
+                <div v-if="loading" class="bg-surface absolute top-0 right-0 bottom-0 left-0 z-20 flex items-center justify-center">
                     <VLoadingSpinner />
                 </div>
-            </div>
+            </main>
         </div>
     </div>
     <div class="ruler"></div>

@@ -195,7 +195,10 @@ export class EventService {
         return event.registrations.filter((reg) => !event.slots.some((slt) => slt.assignedRegistrationKey === reg.key));
     }
 
-    public validate(event: Event): Record<string, string[]> {
+    public validate(event?: Event): Record<string, string[]> {
+        if (!event) {
+            return {};
+        }
         return Validator.validate('name', event.name, notEmpty(), maxLength(35))
             .validate('start', event.start, notEmpty())
             .validate('end', event.end, notEmpty(), after(event.start, 'Das Enddatum muss nach dem Startdatum liegen'))

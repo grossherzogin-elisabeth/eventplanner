@@ -2,7 +2,7 @@
     <section>
         <div class="mb-4">
             <VInputSelect
-                :model-value="props.event.state"
+                :model-value="props.event?.state"
                 :label="$t('domain.event.status')"
                 :options="eventStates.options.value"
                 :errors="validation.errors.value['state']"
@@ -15,7 +15,7 @@
         <div class="mb-4">
             <VInputText
                 data-test-id="input-name"
-                :model-value="props.event.name"
+                :model-value="props.event?.name"
                 :label="$t('domain.event.name')"
                 :errors="validation.errors.value['name']"
                 :errors-visible="validation.showErrors.value"
@@ -26,7 +26,7 @@
         </div>
         <div class="mb-4">
             <VInputSelect
-                :model-value="props.event.type"
+                :model-value="props.event?.type"
                 :label="$t('domain.event.category')"
                 :options="eventTypes.options.value"
                 :errors="validation.errors.value['type']"
@@ -38,7 +38,7 @@
         </div>
         <div class="mb-4">
             <VInputSelect
-                :model-value="props.event.signupType"
+                :model-value="props.event?.signupType"
                 :label="$t('domain.event.signup-type')"
                 :options="eventSignupTypes.options.value"
                 :errors="validation.errors.value['signupType']"
@@ -50,7 +50,7 @@
         </div>
         <div class="mb-4">
             <VInputTextArea
-                :model-value="props.event.description"
+                :model-value="props.event?.description"
                 :label="$t('domain.event.description')"
                 :hint="$t('generic.markdown-supported')"
                 :errors="validation.errors.value['description']"
@@ -63,25 +63,25 @@
             <div class="w-3/5">
                 <VInputDate
                     :label="$t('domain.event.start-date')"
-                    :model-value="props.event.start"
-                    :highlight-from="props.event.start"
-                    :highlight-to="props.event.end"
+                    :model-value="props.event?.start"
+                    :highlight-from="props.event?.start"
+                    :highlight-to="props.event?.end"
                     :errors="validation.errors.value['start']"
                     :errors-visible="validation.showErrors.value"
                     required
                     :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
-                    @update:model-value="update({ start: updateDate(event.start, $event) })"
+                    @update:model-value="update({ start: updateDate(props.event?.start, $event) })"
                 />
             </div>
             <div class="w-2/5">
                 <VInputTime
                     :label="$t('domain.event.start-time')"
-                    :model-value="props.event.start"
+                    :model-value="props.event?.start"
                     :errors="validation.errors.value['start']"
                     :errors-visible="validation.showErrors.value"
                     required
                     :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
-                    @update:model-value="update({ start: updateTime(props.event.start, $event, 'minutes') })"
+                    @update:model-value="update({ start: updateTime(props.event?.start, $event, 'minutes') })"
                 />
             </div>
         </div>
@@ -90,25 +90,25 @@
             <div class="w-3/5">
                 <VInputDate
                     :label="$t('domain.event.end-date')"
-                    :model-value="props.event.end"
-                    :highlight-from="props.event.start"
-                    :highlight-to="props.event.end"
+                    :model-value="props.event?.end"
+                    :highlight-from="props.event?.start"
+                    :highlight-to="props.event?.end"
                     :errors="validation.errors.value['end']"
                     :errors-visible="validation.showErrors.value"
                     required
                     :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
-                    @update:model-value="update({ end: updateDate(props.event.end, $event) })"
+                    @update:model-value="update({ end: updateDate(props.event?.end, $event) })"
                 />
             </div>
             <div class="w-2/5">
                 <VInputTime
                     :label="$t('domain.event.end-time')"
-                    :model-value="props.event.end"
+                    :model-value="props.event?.end"
                     :errors="validation.errors.value['end']"
                     :errors-visible="validation.showErrors.value"
                     required
                     :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
-                    @update:model-value="update({ end: updateTime(props.event.end, $event, 'minutes') })"
+                    @update:model-value="update({ end: updateTime(props.event?.end, $event, 'minutes') })"
                 />
             </div>
         </div>
@@ -127,7 +127,7 @@ import { useSession } from '@/ui/composables/Session.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 interface Props {
-    event: Event;
+    event?: Event;
 }
 
 type Emits = (e: 'update:event', value: Event) => void;
@@ -147,6 +147,9 @@ const validation = useValidation(
 );
 
 function update(patch: Partial<Event>): void {
+    if (!props.event) {
+        return;
+    }
     const updatedEvent = Object.assign(deepCopy(props.event), patch);
     emit('update:event', updatedEvent);
 }
