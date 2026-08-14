@@ -40,15 +40,14 @@ public class LogRequestsFilter extends OncePerRequestFilter {
             var durationMillis = System.currentTimeMillis() - startTimeMillis;
             MDC.put("response_status", String.valueOf(response.getStatus()));
             MDC.put("request_duration_millis", String.valueOf(durationMillis));
-            if (request.getRequestURI().startsWith("/api/")) {
-                log.debug(
-                    "Completed request {} {} with status {} in {} ms",
-                    request.getMethod(),
-                    request.getRequestURI(),
-                    response.getStatus(),
-                    durationMillis
-                );
-            }
+            // log responses for all, not only api requests
+            log.debug(
+                "Completed request {} {} with status {} in {} ms",
+                request.getMethod(),
+                request.getRequestURI(),
+                response.getStatus(),
+                durationMillis
+            );
             MDC.clear();
         }
     }

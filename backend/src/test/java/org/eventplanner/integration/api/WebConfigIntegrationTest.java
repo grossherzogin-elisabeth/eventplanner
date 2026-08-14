@@ -83,13 +83,50 @@ class WebConfigIntegrationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "", "/index.html", "/any", "/any/longer" })
+    @ValueSource(strings = { "", "/index.html", "/any", "/any/longer", "/any/page.html" })
     void shouldFallbackToIndexHtml(String path) throws Exception {
         webMvc.perform(get(path)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType("text/html"))
             .andExpect(content().string(Matchers.containsString("This is a dummy index.html for testing")));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "/frontend-settings.yml", "/manifest.json" })
+    void shouldResolveExistingStaticResources(String path) throws Exception {
+        webMvc.perform(get(path))
+            .andExpect(status().isOk());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "/.env",
+        "/.git/config",
+        "/application.yml",
+    })
+    void shouldReturnNotFoundForSensitiveResourceProbing(String path) throws Exception {
+        webMvc.perform(get(path))
+            .andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "/file.json",
+        "/path/to/file.yml",
+        "/some.js",
+    })
+    void shouldReturnNotFoundOnNonExistingFiles(String path) throws Exception {
+        webMvc.perform(get(path))
+            .andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "/../.env", "/%2e%2e/.env" })
+    void shouldRejectPathTraversalPatterns(String path) throws Exception {
+        webMvc.perform(get(path)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
