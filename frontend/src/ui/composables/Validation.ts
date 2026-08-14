@@ -29,7 +29,13 @@ export function useValidation<T>(t: T | Ref<T> | ComputedRef<T>, validationFunct
 
     function validate(): void {
         const translatedErrors: Record<AttributeKey, string[]> = {};
-        Object.entries(validationFunction(toValue(t))).forEach(([key, value]) => {
+        let validationResult: Record<string, string[]> = {};
+        try {
+            validationResult = validationFunction(toValue(t));
+        } catch (e) {
+            console.error('Validation failed with error:', e);
+        }
+        Object.entries(validationResult).forEach(([key, value]) => {
             translatedErrors[key] = value.map((rawError) => {
                 const parts = rawError.split('|');
                 const i18nKey = parts[0];

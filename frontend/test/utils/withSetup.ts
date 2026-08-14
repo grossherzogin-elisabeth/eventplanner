@@ -1,5 +1,6 @@
-import type { App } from 'vue';
+import type { App, Plugin } from 'vue';
 import { createApp } from 'vue';
+import { config } from '@vue/test-utils';
 
 export function withSetup<T>(composable: () => T): { instance: T; app: App } {
     let instance: T | undefined;
@@ -9,6 +10,11 @@ export function withSetup<T>(composable: () => T): { instance: T; app: App } {
             return (): void => {};
         },
     });
+
+    config.global.plugins.forEach((plugin) => {
+        app.use(plugin as Plugin);
+    });
+
     app.mount(document.createElement('div'));
     if (instance) {
         return { instance, app };
