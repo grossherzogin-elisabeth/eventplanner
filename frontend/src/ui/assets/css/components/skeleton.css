@@ -10,7 +10,7 @@
     }
 
     .skeleton *:not(svg):not(svg *),
-    .skeleton label::after{
+    .skeleton label::after {
         /* remove any real text */
         color: transparent !important;
     }
