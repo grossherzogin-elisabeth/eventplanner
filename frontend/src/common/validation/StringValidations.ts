@@ -5,7 +5,7 @@ export function minLength(length: number, message?: string): ValidateFunc<string
         if (!value || value.length > length) {
             return undefined;
         }
-        return message ?? `generic.validation.min-length:${length}`;
+        return message ?? `generic.validation.min-length|${length}`;
     };
 }
 
@@ -14,7 +14,7 @@ export function maxLength(length: number, message?: string): ValidateFunc<string
         if (!value || value.length <= length) {
             return undefined;
         }
-        return message ?? `generic.validation.max-length:${length}`;
+        return message ?? `generic.validation.max-length|${length}`;
     };
 }
 

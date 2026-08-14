@@ -593,7 +593,7 @@ describe('EventService', () => {
         });
 
         it('should return error for name with more than 35 characters', () => {
-            expect(testee.validate(mockEvent({ name: 'a'.repeat(36) }))).toEqual({ name: ['generic.validation.max-length:35'] });
+            expect(testee.validate(mockEvent({ name: 'a'.repeat(36) }))).toEqual({ name: ['generic.validation.max-length|35'] });
         });
 
         it('should return error for end date before start date', () => {
@@ -621,7 +621,7 @@ describe('EventService', () => {
         });
 
         it('should return error for name with more than 35 characters', () => {
-            expect(testee.validatePartial(mockEvent({ name: 'a'.repeat(36) }))).toEqual({ name: ['generic.validation.max-length:35'] });
+            expect(testee.validatePartial(mockEvent({ name: 'a'.repeat(36) }))).toEqual({ name: ['generic.validation.max-length|35'] });
         });
 
         it('should return error for end date before start date', () => {

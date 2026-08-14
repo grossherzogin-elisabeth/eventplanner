@@ -152,6 +152,8 @@ function init(): void {
 function updateDisplayValue(date?: Date): void {
     if (date) {
         displayValue.value = i18n.d(date, DateTimeFormat.DD_MM_YYYY);
+    } else {
+        displayValue.value = '';
     }
 }
 

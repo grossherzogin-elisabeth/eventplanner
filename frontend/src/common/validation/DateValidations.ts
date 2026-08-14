@@ -5,7 +5,7 @@ export function before(other: Date | null | undefined, message?: string): Valida
         if (!value || !other || value.getTime() < other.getTime()) {
             return undefined;
         }
-        return message ?? `generic.validation.before:${other.getTime()}`;
+        return message ?? `generic.validation.before|date(${other.toISOString()})`;
     };
 }
 
@@ -14,6 +14,6 @@ export function after(other: Date | null | undefined, message?: string): Validat
         if (!value || !other || value.getTime() > other.getTime()) {
             return undefined;
         }
-        return message ?? `generic.validation.after:${other.getTime()}`;
+        return message ?? `generic.validation.after|date(${other.toISOString()})`;
     };
 }
