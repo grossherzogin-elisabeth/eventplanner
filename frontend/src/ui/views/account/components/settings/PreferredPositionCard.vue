@@ -4,7 +4,6 @@
         icon="fa-anchor"
         dialog-type="modal"
         :label="$t('views.account.app-settings.preferred-position')"
-        :disabled="availablePositions.length < 2"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -28,7 +27,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { PositionKey, UserSettings } from '@/domain';
+import type { InputSelectOption, PositionKey, UserSettings } from '@/domain';
 import { VInputSelectionList, VInteractiveListItem } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 
@@ -44,5 +43,23 @@ const emit = defineEmits<Emits>();
 
 const positions = usePositions();
 
-const filteredPositions = computed(() => positions.options.value.filter((it) => it.value && props.availablePositions.includes(it.value)));
+const filteredPositions = computed<InputSelectOption<PositionKey | undefined>[]>(() => {
+    return positions.options.value
+        .filter((it) => isAvailablePosition(it.value, true))
+        .map((it) => ({
+            value: it.value,
+            label: it.label,
+            disabled: !isAvailablePosition(it.value),
+        }));
+});
+
+function isAvailablePosition(position: PositionKey | undefined, includeCurrent: boolean = false): boolean {
+    if (!position) {
+        return false;
+    }
+    if (props.availablePositions.includes(position)) {
+        return true;
+    }
+    return includeCurrent && position === props.modelValue.preferredPosition;
+}
 </script>

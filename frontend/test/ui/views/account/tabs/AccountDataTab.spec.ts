@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { UserDetails } from '@/domain';
+import { useCountries } from '@/ui/composables/Countries';
 import AccountDataTab from '@/ui/views/account/tabs/AccountDataTab.vue';
 import { mockUserCaptain, mockUserDetails } from '~/mocks';
 
@@ -56,6 +57,44 @@ describe('AccountDataTab.vue', () => {
 
     it('should render users work phone number', async () => {
         expect(testee.text()).toContain(user.phoneWork);
+    });
+
+    describe('address', () => {
+        it('should render users address', async () => {
+            const countries = useCountries();
+            const addressCard = testee.find('[data-test-id="account-address-card"]');
+
+            expect(addressCard.exists()).toBe(true);
+            expect(addressCard.text()).toContain(user.address.addressLine1);
+            expect(addressCard.text()).toContain(user.address.addressLine2 ?? '');
+            expect(addressCard.text()).toContain(user.address.zipcode);
+            expect(addressCard.text()).toContain(user.address.town);
+            expect(addressCard.text()).toContain(countries.getName(user.address.country));
+        });
+
+        it('should update users address', async () => {
+            const addressCard = testee.find('[data-test-id="account-address-card"]');
+            expect(addressCard.exists()).toBe(true);
+            await addressCard.trigger('click');
+
+            const dialog = testee.find('[data-test-id="dialog"]');
+            expect(dialog.exists()).toBe(true);
+
+            await testee.find('[data-test-id="account-address-input-line1"] input').setValue('Updated Street 13');
+            await testee.find('[data-test-id="account-address-input-line2"] input').setValue('3rd Floor');
+            await testee.find('[data-test-id="account-address-input-zipcode"] input').setValue('54321');
+            await testee.find('[data-test-id="account-address-input-town"] input').setValue('Updated Town');
+            await dialog.find('[data-test-id="button-submit"]').trigger('click');
+
+            const emitted = testee.emitted('update:modelValue');
+            expect(emitted).toHaveLength(1);
+
+            const updatedUser = emitted?.[0][0] as UserDetails;
+            expect(updatedUser.address.addressLine1).toEqual('Updated Street 13');
+            expect(updatedUser.address.addressLine2).toEqual('3rd Floor');
+            expect(updatedUser.address.zipcode).toEqual('54321');
+            expect(updatedUser.address.town).toEqual('Updated Town');
+        });
     });
 
     it('should render users mobile phone number', async () => {
