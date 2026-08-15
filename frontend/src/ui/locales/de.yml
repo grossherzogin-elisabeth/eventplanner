@@ -314,6 +314,7 @@ views:
       title: Experimentelle Funktionen
     app-settings:
       language: Sprache
+      language-description: Unterstützung für weitere Sprachen ist gerade noch in Arbeit. Du möchtest bei der Übersetzung aktiv mithelfen? Dann schau mal bei GitHub vorbei und trage zu unserem Open Source Projekt bei!
       notifications: Benachrichtigungen
       permissions: Meine Berechtigungen
       preferred-position: Standard Position

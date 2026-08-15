@@ -15,6 +15,15 @@
             </p>
         </template>
         <template #edit="{ value }">
+            <p class="mb-4 text-sm">
+                {{ $t('views.account.app-settings.language-description') }}
+            </p>
+            <p class="mb-4 text-sm">
+                <a class="link" href="https://github.com/grossherzogin-elisabeth/eventplanner" target="_blank">
+                    https://github.com/grossherzogin-elisabeth/eventplanner
+                    <i class="fa-solid fa-external-link-alt mb-0.5 text-xs"></i>
+                </a>
+            </p>
             <VInputSelectionList v-model="value.language" :options="options" />
         </template>
     </VInteractiveListItem>
