@@ -4,11 +4,11 @@
         icon="fa-language"
         :label="$t('views.account.app-settings.language')"
         direct
-        @update:model-value="emit('update:modelValue', $event)"
+        @update:model-value="selectLanguage($event)"
     >
         <template #default>
-            <p v-if="props.modelValue.language" class="truncate">
-                {{ $t(`generic.language.${props.modelValue.language}`) }}
+            <p v-if="i18n.locale.value" class="truncate">
+                {{ $t(`generic.language.${i18n.locale.value}`) }}
             </p>
             <p v-else class="truncate">
                 {{ $t('generic.theme.system') }}
@@ -23,6 +23,7 @@
 import { useI18n } from 'vue-i18n';
 import type { InputSelectOption, UserSettings } from '@/domain';
 import { VInputSelectionList, VInteractiveListItem } from '@/ui/components/common';
+import { computed } from 'vue';
 
 interface Props {
     modelValue: UserSettings;
@@ -33,10 +34,19 @@ type Emits = (e: 'update:modelValue', value: UserSettings) => void;
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const { t } = useI18n();
+const i18n = useI18n();
 
-const options: InputSelectOption<string>[] = [
-    { value: 'de', label: t('generic.language.de') },
-    { value: 'en', label: t('generic.language.en') },
-];
+const options = computed<InputSelectOption<string>[]>(() => {
+    return i18n.availableLocales.map((locale) => ({
+        value: locale,
+        label: i18n.t(`generic.language.${locale}`),
+    }));
+});
+
+function selectLanguage(updated: UserSettings): void {
+    if (updated.language) {
+        i18n.locale.value = updated.language;
+        emit('update:modelValue', updated);
+    }
+}
 </script>

@@ -46,13 +46,14 @@ datetimeFormatsDe[DateTimeFormat.DDD_DD_MM_hh_mm] = {
     minute: '2-digit',
 };
 
-export function setupI18n(config: { locale: string; fallbackLocale: string; availableLocales: string[]; throwOnMissing?: boolean }): I18n {
+export function setupI18n(config: { locale: string; fallbackLocale: string; throwOnMissing?: boolean }): I18n {
+    console.log(`🏳️‍🌈 Initialising i18n with locale ${config.locale}`);
     return createI18n({
         legacy: false, // required to enable useI18n in Vue setup script
         locale: config.locale,
         fallbackLocale: config.fallbackLocale,
         messages: locales,
-        availableLocales: config.availableLocales,
+        availableLocales: Object.keys(locales),
         silentFallbackWarn: true,
         silentTranslationWarn: true,
         missingWarn: true,

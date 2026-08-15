@@ -9,7 +9,7 @@ import type {
 } from '@/application/services';
 import { diff } from '@/common';
 import type { Position, PositionKey, User, UserDetails, UserKey, UserSettings } from '@/domain';
-import { Permission, Theme } from '@/domain';
+import { Permission } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 
 export class UsersUseCase {
@@ -38,8 +38,6 @@ export class UsersUseCase {
         this.userCachingService = params.userCachingService;
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
-
-        globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.applyUserSettings());
     }
 
     public async getUserDetailsForSignedInUser(): Promise<UserDetails> {
@@ -132,32 +130,10 @@ export class UsersUseCase {
     }
 
     public async getUserSettings(): Promise<UserSettings> {
-        let settings: UserSettings = {};
-        const settingsJson = localStorage.getItem('settings') || '{}';
-        if (settingsJson) {
-            settings = Object.assign(settings, JSON.parse(settingsJson));
-        }
-        if (!settings.theme) {
-            settings.theme = Theme.System;
-        }
-        return settings;
+        return this.configService.getUserSettings();
     }
 
     public async saveUserSettings(patch: Partial<UserSettings>): Promise<UserSettings> {
-        let settings = await this.getUserSettings();
-        settings = Object.assign(settings, patch);
-        localStorage.setItem('settings', JSON.stringify(settings));
-        await this.applyUserSettings(settings);
-        return settings;
-    }
-
-    public async applyUserSettings(settings?: UserSettings): Promise<void> {
-        const loadedSettings = settings ?? (await this.getUserSettings());
-        const prefersDarkMode = globalThis.matchMedia && globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (loadedSettings.theme === Theme.Dark || (loadedSettings.theme === Theme.System && prefersDarkMode)) {
-            document.querySelector('html')?.classList.add('dark');
-        } else if (loadedSettings.theme === Theme.Light || (loadedSettings.theme === Theme.System && !prefersDarkMode)) {
-            document.querySelector('html')?.classList.remove('dark');
-        }
+        return this.configService.saveUserSettings(patch);
     }
 }

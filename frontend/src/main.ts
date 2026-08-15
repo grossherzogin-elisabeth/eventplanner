@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import { useAuthUseCase, useConfigService, useUsersUseCase } from '@/application';
+import { useAuthUseCase, useConfigService } from '@/application';
 import App from '@/ui/App.vue';
 import '@/ui/plugins/countries';
 import '@/ui/plugins/fontawesome';
@@ -16,11 +16,8 @@ app.use(
     setupI18n({
         locale: config.i18nLocale,
         fallbackLocale: config.i18nFallbackLocale,
-        availableLocales: config.i18nAvailableLocales,
     })
 );
 app.use(setupRouter(useAuthUseCase()));
 app.use(setupTooltips());
 app.mount('#app');
-
-useUsersUseCase().applyUserSettings();

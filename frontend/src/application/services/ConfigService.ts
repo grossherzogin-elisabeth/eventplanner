@@ -1,10 +1,11 @@
 import type { SettingsRepository } from '@/application/ports';
 import type { Config } from '@/application/values/Config';
+import type { UserSettings } from '@/domain';
+import { Theme } from '@/domain';
 
 export const defaultConfig: Config = {
     baseUrl: import.meta.env.BASE_URL,
     i18nLocale: import.meta.env.VITE_I18N_LOCALE || 'de',
-    i18nAvailableLocales: (import.meta.env.VITE_I18N_LOCALES || 'de').split(','),
     i18nFallbackLocale: import.meta.env.VITE_I18N_FALLBACK_LOCALE || 'de',
     overrideSignedInUserKey: localStorage.getItem('eventplanner.overrideSignedInUserKey') || undefined,
     menuTitle: 'Reiseplaner',
@@ -33,6 +34,7 @@ export class ConfigService {
         this.settingsRepository = params.settingsRepository;
         this.config = defaultConfig;
         this.init = this.initialize();
+        globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => this.applyUserSettings());
     }
 
     public async initialization(): Promise<void> {
@@ -40,6 +42,7 @@ export class ConfigService {
     }
 
     private async initialize(): Promise<void> {
+        this.applyUserSettings();
         this.readFeatureFlag('enableEventAdminListPositionsOverview');
         this.readFeatureFlag('enableEventAdminListPreviewSheet');
         this.readFeatureFlag('enableTableActionsButtonMobile');
@@ -55,6 +58,37 @@ export class ConfigService {
 
     public getConfig(): Config {
         return this.config;
+    }
+
+    public getUserSettings(): UserSettings {
+        let settings: UserSettings = {};
+        const settingsJson = localStorage.getItem('settings') || '{}';
+        if (settingsJson) {
+            settings = Object.assign(settings, JSON.parse(settingsJson));
+        }
+        if (!settings.theme) {
+            settings.theme = Theme.System;
+        }
+        return settings;
+    }
+
+    public saveUserSettings(patch: UserSettings): UserSettings {
+        let settings = this.getUserSettings();
+        settings = Object.assign(settings, patch);
+        localStorage.setItem('settings', JSON.stringify(settings));
+        this.applyUserSettings(settings);
+        return settings;
+    }
+
+    private applyUserSettings(settings?: UserSettings): void {
+        const loadedSettings = settings ?? this.getUserSettings();
+        this.config.i18nLocale = loadedSettings.language ?? this.config.i18nFallbackLocale;
+        const prefersDarkMode = globalThis.matchMedia && globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (loadedSettings.theme === Theme.Dark || (loadedSettings.theme === Theme.System && prefersDarkMode)) {
+            document.querySelector('html')?.classList.add('dark');
+        } else if (loadedSettings.theme === Theme.Light || (loadedSettings.theme === Theme.System && !prefersDarkMode)) {
+            document.querySelector('html')?.classList.remove('dark');
+        }
     }
 
     private async fetchServerConfig(): Promise<void> {
