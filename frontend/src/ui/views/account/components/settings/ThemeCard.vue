@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="user-settings-theme-card"
         icon="fa-paint-brush"
         dialog-type="modal"
         :label="$t('views.account.app-settings.theme')"
@@ -16,7 +17,7 @@
             </p>
         </template>
         <template #edit="{ value }">
-            <VInputSelectionList v-model="value.theme" :options="options" />
+            <VInputSelectionList v-model="value.theme" data-test-id="user-settings-theme-input" :options="options" />
         </template>
     </VInteractiveListItem>
 </template>

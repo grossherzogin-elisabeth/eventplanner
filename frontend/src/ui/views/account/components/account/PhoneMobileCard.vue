@@ -1,14 +1,15 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
-        icon="fa-phone"
-        :label="$t('domain.user.phone')"
-        :validate="UserService.validatePhone"
+        data-test-id="account-phone-mobile-card"
+        icon="fa-mobile"
+        :label="$t('domain.user.mobile')"
+        :validate="UserService.validateMobile"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p v-if="props.modelValue.phone" class="truncate">
-                {{ props.modelValue.phone }}
+            <p v-if="props.modelValue.mobile" class="truncate">
+                {{ props.modelValue.mobile }}
             </p>
             <p v-else class="truncate italic">
                 {{ $t('generic.no-information') }}
@@ -19,7 +20,13 @@
                 {{ $t('views.account.contact.phone-description') }}
             </p>
             <div class="mb-4">
-                <VInputText v-model="value.phone" :errors="errors['phone']" :errors-visible="true" :label="$t('domain.user.phone')" />
+                <VInputText
+                    v-model="value.mobile"
+                    data-test-id="account-phone-mobile-input"
+                    :errors="errors['mobile']"
+                    :errors-visible="true"
+                    :label="$t('domain.user.mobile')"
+                />
             </div>
         </template>
     </VInteractiveListItem>

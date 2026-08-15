@@ -1,0 +1,15 @@
+export { default as AddressCard } from './AddressCard.vue';
+export { default as DateAndPlaceOfBirthCard } from './DateAndPlaceOfBirthCard.vue';
+export { default as DietCard } from './DietCard.vue';
+export { default as DiseasesCard } from './DiseasesCard.vue';
+export { default as EmailCard } from './EmailCard.vue';
+export { default as EmergencyContactCard } from './EmergencyContactCard.vue';
+export { default as GenderCard } from './GenderCard.vue';
+export { default as IntolerancesCard } from './IntolerancesCard.vue';
+export { default as MedicationCard } from './MedicationCard.vue';
+export { default as NameCard } from './NameCard.vue';
+export { default as NationalityCard } from './NationalityCard.vue';
+export { default as PassNumberCard } from './PassNumberCard.vue';
+export { default as PhoneCard } from './PhoneCard.vue';
+export { default as PhoneMobileCard } from './PhoneMobileCard.vue';
+export { default as PhoneWorkCard } from './PhoneWorkCard.vue';

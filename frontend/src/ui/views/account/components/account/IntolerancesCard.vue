@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-intolerances-card"
         icon="fa-wheat-awn-circle-exclamation"
         :label="$t('domain.user.intolerances')"
         :validate="UserService.validateIntolerances"
@@ -19,6 +20,7 @@
             <div class="mb-4">
                 <VInputTextArea
                     v-model="value.intolerances"
+                    data-test-id="account-intolerances-input"
                     :errors="errors['intolerances']"
                     :errors-visible="true"
                     :max-length="1000"

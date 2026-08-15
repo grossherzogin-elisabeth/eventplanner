@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-pass-number-card"
         icon="fa-passport"
         :label="$t('domain.user.pass-nr')"
         :validate="UserService.validatePassNr"
@@ -30,6 +31,7 @@
             <div class="mb-4">
                 <VInputText
                     :model-value="value.passNr"
+                    data-test-id="account-pass-number-input"
                     :label="$t('domain.user.pass-nr')"
                     required
                     :errors="errors['passNr']"

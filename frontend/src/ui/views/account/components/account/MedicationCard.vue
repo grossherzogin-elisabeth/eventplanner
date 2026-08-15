@@ -1,33 +1,34 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
-        icon="fa-file-medical-alt"
-        :label="$t('domain.user.diseases')"
-        :validate="UserService.validateDiseases"
+        data-test-id="account-medication-card"
+        icon="fa-pills"
+        :label="$t('domain.user.medication')"
+        :validate="UserService.validateMedication"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p v-if="props.modelValue.diseases" class="truncate">
+            <p v-if="props.modelValue.medication" class="truncate">
                 {{ $t('views.account.emergency.click-to-show') }}
             </p>
-            <p v-else class="truncate">
+            <p v-else class="truncate italic">
                 {{ $t('generic.no-information') }}
             </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-4 text-sm">
-                {{ $t('views.account.emergency.diseases-description') }}
+                {{ $t('views.account.emergency.medication-description') }}
             </p>
             <p class="mb-8 text-sm font-bold">
                 {{ $t('views.account.emergency.privacy') }}
             </p>
             <div class="mb-4">
                 <VInputTextArea
-                    v-model="value.diseases"
-                    :errors="errors['diseases']"
+                    v-model="value.medication"
+                    data-test-id="account-medication-input"
+                    :errors="errors['medication']"
                     :errors-visible="true"
-                    :max-length="1000"
-                    :label="$t('domain.user.diseases')"
+                    :label="$t('domain.user.medication')"
                 />
             </div>
         </template>

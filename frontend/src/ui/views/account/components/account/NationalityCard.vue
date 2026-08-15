@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-nationality-card"
         icon="fa-flag"
         :label="$t('domain.user.nationality')"
         @update:model-value="emit('update:modelValue', $event)"
@@ -20,7 +21,7 @@
             <VInfo class="mb-8">
                 {{ $t('views.account.personal.passport-info') }}
             </VInfo>
-            <VInputSelectionList v-model="value.nationality" :options="nationalities.options" />
+            <VInputSelectionList v-model="value.nationality" data-test-id="account-nationality-input" :options="nationalities.options" />
         </template>
     </VInteractiveListItem>
 </template>

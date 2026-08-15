@@ -310,6 +310,8 @@ generic:
   yes: Ja
 views:
   account:
+    app-features:
+      title: Experimentelle Funktionen
     app-settings:
       language: Sprache
       notifications: Benachrichtigungen

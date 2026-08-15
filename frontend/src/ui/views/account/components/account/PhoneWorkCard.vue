@@ -1,27 +1,31 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
-        icon="fa-envelope"
-        :label="$t('domain.user.email')"
+        data-test-id="account-phone-work-card"
+        icon="fa-briefcase"
+        :label="$t('domain.user.phone-work')"
+        :validate="UserService.validatePhoneWork"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p class="truncate">
-                {{ props.modelValue.email }}
+            <p v-if="props.modelValue.phoneWork" class="truncate">
+                {{ props.modelValue.phoneWork }}
+            </p>
+            <p v-else class="truncate italic">
+                {{ $t('generic.no-information') }}
             </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">
-                {{ $t('views.account.contact.email-description') }}
+                {{ $t('views.account.contact.phone-description') }}
             </p>
             <div class="mb-4">
                 <VInputText
-                    v-model="value.email"
-                    :errors="errors['email']"
+                    v-model="value.phoneWork"
+                    data-test-id="account-phone-work-input"
+                    :errors="errors['phoneWork']"
                     :errors-visible="true"
-                    required
-                    :label="$t('domain.user.email')"
-                    disabled
+                    :label="$t('domain.user.phone-work')"
                 />
             </div>
         </template>
@@ -29,6 +33,7 @@
 </template>
 <script setup lang="ts">
 import type { UserDetails } from '@/domain';
+import { UserService } from '@/domain';
 import { VInputText, VInteractiveListItem } from '@/ui/components/common';
 
 interface Props {

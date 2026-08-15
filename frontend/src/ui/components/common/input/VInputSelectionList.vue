@@ -5,7 +5,8 @@
                 v-for="option in props.options"
                 :key="String(option.value)"
                 class="flex cursor-pointer items-center gap-2 py-1"
-                @click="emit('update:modelValue', option.value)"
+                :class="{ 'opacity-50': option.disabled }"
+                @click="select(option)"
             >
                 <button v-if="props.modelValue === option.value" class="btn-icon">
                     <i class="fa-regular fa-circle text-primary text-xl" />
@@ -55,4 +56,12 @@ const emit = defineEmits<Emits>();
 
 const visited: Ref<boolean> = ref(false);
 const showErrors: ComputedRef<boolean> = computed(() => visited.value || props.errorsVisible === true);
+
+function select(option: InputSelectOption<T>): void {
+    if (option.disabled) {
+        return;
+    }
+    emit('update:modelValue', option.value);
+    visited.value = true;
+}
 </script>

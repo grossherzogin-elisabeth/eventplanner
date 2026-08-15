@@ -17,3 +17,14 @@ export async function selectDropdownOption(parent: BaseWrapper<Node>, option: st
     await li?.trigger('click');
     await nextTick();
 }
+
+export async function selectSelectionListOption(testee: BaseWrapper<Node>, inputSelector: string, option: string | number): Promise<void> {
+    const options = testee.find(inputSelector).findAll('li');
+    const selectedOption = typeof option === 'number' ? options[option] : options.find((it) => it.text().includes(option));
+    expect(selectedOption).toBeTruthy();
+    if (!selectedOption) {
+        throw new Error(`Option "${option}" not found`);
+    }
+    await selectedOption.trigger('click');
+    await nextTick();
+}

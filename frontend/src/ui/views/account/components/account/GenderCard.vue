@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-gender-card"
         icon="fa-venus-mars"
         dialog-type="modal"
         :label="$t('domain.user.gender')"
@@ -16,7 +17,7 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">{{ $t('views.account.personal.gender-description') }}</p>
-            <VInputSelectionList v-model="value.gender" :options="gender.options" />
+            <VInputSelectionList v-model="value.gender" data-test-id="account-gender-input" :options="gender.options" />
         </template>
     </VInteractiveListItem>
 </template>

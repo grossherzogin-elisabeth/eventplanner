@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-address-card"
         icon="fa-map-location-dot"
         :label="$t('domain.user.address')"
         :validate="UserService.validateAddress"
@@ -34,6 +35,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model.trim="value.address.addressLine1"
+                    data-test-id="account-address-input-line1"
                     :label="$t('domain.address.address-line-1')"
                     required
                     :errors="errors['address.addressLine1']"
@@ -44,6 +46,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model.trim="value.address.addressLine2"
+                    data-test-id="account-address-input-line2"
                     :label="$t('domain.address.address-line-2')"
                     :errors="errors['address.addressLine2']"
                     :errors-visible="true"
@@ -54,6 +57,7 @@
                 <div class="mb-4 sm:w-36">
                     <VInputText
                         v-model.trim="value.address.zipcode"
+                        data-test-id="account-address-input-zipcode"
                         :label="$t('domain.address.zipcode')"
                         required
                         :errors="errors['address.zipcode']"
@@ -64,6 +68,7 @@
                 <div class="mb-4 sm:grow">
                     <VInputText
                         v-model.trim="value.address.town"
+                        data-test-id="account-address-input-town"
                         :label="$t('domain.address.town')"
                         required
                         :errors="errors['address.town']"
@@ -75,6 +80,7 @@
             <div class="mb-4">
                 <VInputCombobox
                     v-model="value.address.country"
+                    data-test-id="account-address-input-country"
                     :label="$t('domain.address.country')"
                     :options="countries.options"
                     required

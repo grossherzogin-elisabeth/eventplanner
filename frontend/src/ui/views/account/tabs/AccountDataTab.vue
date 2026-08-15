@@ -41,22 +41,24 @@
 </template>
 <script lang="ts" setup>
 import type { UserDetails } from '@/domain';
-import AddressCard from '@/ui/views/account/components/AddressCard.vue';
-import DateAndPlaceOfBirthCard from '@/ui/views/account/components/DateAndPlaceOfBirthCard.vue';
-import DietCard from '@/ui/views/account/components/DietCard.vue';
-import DiseasesCard from '@/ui/views/account/components/DiseasesCard.vue';
-import EmailCard from '@/ui/views/account/components/EmailCard.vue';
-import EmergencyContactCard from '@/ui/views/account/components/EmergencyContactCard.vue';
-import GenderCard from '@/ui/views/account/components/GenderCard.vue';
-import IntolerancesCard from '@/ui/views/account/components/IntolerancesCard.vue';
-import MedicationCard from '@/ui/views/account/components/MedicationCard.vue';
-import NameCard from '@/ui/views/account/components/NameCard.vue';
-import NationalityCard from '@/ui/views/account/components/NationalityCard.vue';
-import PassNumberCard from '@/ui/views/account/components/PassNumberCard.vue';
-import PhoneCard from '@/ui/views/account/components/PhoneCard.vue';
-import PhoneMobileCard from '@/ui/views/account/components/PhoneMobileCard.vue';
-import PhoneWorkCard from '@/ui/views/account/components/PhoneWorkCard.vue';
-import VInteractiveList from '../../../components/common/list/VInteractiveList.vue';
+import { VInteractiveList } from '@/ui/components/common';
+import {
+    AddressCard,
+    DateAndPlaceOfBirthCard,
+    DietCard,
+    DiseasesCard,
+    EmailCard,
+    EmergencyContactCard,
+    GenderCard,
+    IntolerancesCard,
+    MedicationCard,
+    NameCard,
+    NationalityCard,
+    PassNumberCard,
+    PhoneCard,
+    PhoneMobileCard,
+    PhoneWorkCard,
+} from '@/ui/views/account/components/account';
 
 interface Props {
     modelValue: UserDetails;

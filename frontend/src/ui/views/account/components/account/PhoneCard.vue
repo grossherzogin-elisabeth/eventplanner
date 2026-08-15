@@ -1,32 +1,31 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
-        icon="fa-pills"
-        :label="$t('domain.user.medication')"
-        :validate="UserService.validateMedication"
+        data-test-id="account-phone-card"
+        icon="fa-phone"
+        :label="$t('domain.user.phone')"
+        :validate="UserService.validatePhone"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p v-if="props.modelValue.medication" class="truncate">
-                {{ $t('views.account.emergency.click-to-show') }}
+            <p v-if="props.modelValue.phone" class="truncate">
+                {{ props.modelValue.phone }}
             </p>
             <p v-else class="truncate italic">
                 {{ $t('generic.no-information') }}
             </p>
         </template>
         <template #edit="{ value, errors }">
-            <p class="mb-4 text-sm">
-                {{ $t('views.account.emergency.medication-description') }}
-            </p>
-            <p class="mb-8 text-sm font-bold">
-                {{ $t('views.account.emergency.privacy') }}
+            <p class="mb-8 text-sm">
+                {{ $t('views.account.contact.phone-description') }}
             </p>
             <div class="mb-4">
-                <VInputTextArea
-                    v-model="value.medication"
-                    :errors="errors['medication']"
+                <VInputText
+                    v-model="value.phone"
+                    data-test-id="account-phone-input"
+                    :errors="errors['phone']"
                     :errors-visible="true"
-                    :label="$t('domain.user.medication')"
+                    :label="$t('domain.user.phone')"
                 />
             </div>
         </template>
@@ -35,7 +34,7 @@
 <script setup lang="ts">
 import type { UserDetails } from '@/domain';
 import { UserService } from '@/domain';
-import { VInputTextArea, VInteractiveListItem } from '@/ui/components/common';
+import { VInputText, VInteractiveListItem } from '@/ui/components/common';
 
 interface Props {
     modelValue: UserDetails;

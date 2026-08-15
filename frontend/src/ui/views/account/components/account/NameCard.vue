@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-name-card"
         icon="fa-user-tag"
         :label="$t('domain.user.name')"
         :validate="UserService.validateName"
@@ -29,6 +30,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.nickName"
+                    data-test-id="account-name-input-nick-name"
                     :label="$t('domain.user.nick-name')"
                     :placeholder="value.firstName"
                     :hint="$t('views.account.personal.nick-name-hint')"

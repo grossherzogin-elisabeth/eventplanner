@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-diet-card"
         icon="fa-utensils"
         dialog-type="modal"
         :label="$t('domain.user.diet')"
@@ -18,7 +19,7 @@
             <p class="mb-8 text-sm">
                 {{ $t('views.account.diet.diet-description') }}
             </p>
-            <VInputSelectionList v-model="value.diet" :options="diet.options" required />
+            <VInputSelectionList v-model="value.diet" data-test-id="account-diet-input" :options="diet.options" required />
         </template>
     </VInteractiveListItem>
 </template>
