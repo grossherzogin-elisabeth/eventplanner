@@ -5,7 +5,7 @@ import type { UserSettings } from '@/domain';
 import { Theme } from '@/domain';
 import { usePositions } from '@/ui/composables/Positions';
 import UserSettingsTab from '@/ui/views/account/tabs/UserSettingsTab.vue';
-import { CAPTAIN, MATE, mockUserCaptain, mockUserDetails } from '~/mocks';
+import { CAPTAIN, MATE, mockUserCaptain, mockUserDetails, mockUserEngineer } from '~/mocks';
 import { getLastEmittedModelValue, openCard, selectSelectionListOption, submit } from '~/utils';
 
 describe('UserSettingsTab.vue', () => {
@@ -59,6 +59,32 @@ describe('UserSettingsTab.vue', () => {
             const preferredPositionCard = testee.find('[data-test-id="user-settings-preferred-position-card"]');
             expect(preferredPositionCard.exists()).toBe(true);
             expect(preferredPositionCard.text()).toContain('Captain');
+        });
+
+        it('should show selected position even if not available', async () => {
+            testee.unmount();
+            testee = mount(UserSettingsTab, {
+                props: {
+                    modelValue: userSettings,
+                    user: mockUserDetails(
+                        mockUserEngineer({
+                            positionKeys: [],
+                        })
+                    ),
+                },
+            });
+
+            const dialog = await openCard(testee, '[data-test-id="user-settings-preferred-position-card"]');
+            await expect
+                .poll(() => testee.find('[data-test-id="user-settings-preferred-position-input"]').findAll('li').length)
+                .toBeGreaterThan(0);
+
+            const selectedPosition = testee.find('[data-test-id="user-settings-preferred-position-input"]').findAll('li')[0];
+            expect(selectedPosition.text()).toContain('Captain');
+            expect(selectedPosition.classes()).toContain('opacity-50');
+            expect(selectedPosition.find('.fa-solid.fa-circle').exists()).toBe(true);
+
+            await dialog.find('[data-test-id="button-cancel"]').trigger('click');
         });
 
         it('should update preferred position', async () => {

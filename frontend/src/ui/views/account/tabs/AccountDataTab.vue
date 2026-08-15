@@ -41,22 +41,24 @@
 </template>
 <script lang="ts" setup>
 import type { UserDetails } from '@/domain';
-import VInteractiveList from '@/ui/components/common/list/VInteractiveList.vue';
-import AddressCard from '../components/account/AddressCard.vue';
-import DateAndPlaceOfBirthCard from '../components/account/DateAndPlaceOfBirthCard.vue';
-import DietCard from '../components/account/DietCard.vue';
-import DiseasesCard from '../components/account/DiseasesCard.vue';
-import EmailCard from '../components/account/EmailCard.vue';
-import EmergencyContactCard from '../components/account/EmergencyContactCard.vue';
-import GenderCard from '../components/account/GenderCard.vue';
-import IntolerancesCard from '../components/account/IntolerancesCard.vue';
-import MedicationCard from '../components/account/MedicationCard.vue';
-import NameCard from '../components/account/NameCard.vue';
-import NationalityCard from '../components/account/NationalityCard.vue';
-import PassNumberCard from '../components/account/PassNumberCard.vue';
-import PhoneCard from '../components/account/PhoneCard.vue';
-import PhoneMobileCard from '../components/account/PhoneMobileCard.vue';
-import PhoneWorkCard from '../components/account/PhoneWorkCard.vue';
+import { VInteractiveList } from '@/ui/components/common';
+import {
+    AddressCard,
+    DateAndPlaceOfBirthCard,
+    DietCard,
+    DiseasesCard,
+    EmailCard,
+    EmergencyContactCard,
+    GenderCard,
+    IntolerancesCard,
+    MedicationCard,
+    NameCard,
+    NationalityCard,
+    PassNumberCard,
+    PhoneCard,
+    PhoneMobileCard,
+    PhoneWorkCard,
+} from '@/ui/views/account/components/account';
 
 interface Props {
     modelValue: UserDetails;
