@@ -7,7 +7,6 @@ export interface Config {
     // i18n
     i18nLocale: string;
     i18nFallbackLocale: string;
-    i18nAvailableLocales: string[];
 
     overrideSignedInUserKey?: string;
 

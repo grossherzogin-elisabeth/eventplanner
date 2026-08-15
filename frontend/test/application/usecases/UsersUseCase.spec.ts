@@ -10,7 +10,7 @@ import type {
 } from '@/application/services';
 import { defaultConfig } from '@/application/services/ConfigService.ts';
 import { UsersUseCase } from '@/application/usecases/UsersUseCase';
-import { Permission, Theme } from '@/domain';
+import { Permission } from '@/domain';
 import type { RegistrationService } from '@/domain/services/RegistrationService';
 import {
     mockPositionCaptain,
@@ -49,6 +49,7 @@ describe('UsersUseCase', () => {
         } as unknown as AuthService;
         configService = {
             getConfig: vi.fn(() => ({ overrideSignedInUserKey: undefined })),
+            getUserSettings: vi.fn(() => ({ preferredPosition: MATE })),
         } as unknown as ConfigService;
         positionCachingService = {
             getPositions: vi.fn(async () => [mockPositionCaptain(), mockPositionDeckhand()]),
@@ -202,68 +203,6 @@ describe('UsersUseCase', () => {
             const result = await testee.resolveUserNames([mockUserCaptain().key]);
 
             expect(result.get(mockUserCaptain().key)).toBe('Charlie Captain');
-        });
-    });
-
-    describe('getUserSettings', () => {
-        it('should return default system theme when no settings are stored', async () => {
-            const result = await testee.getUserSettings();
-
-            expect(result.theme).toBe(Theme.System);
-        });
-
-        it('should return stored settings from localStorage', async () => {
-            localStorage.setItem('settings', JSON.stringify({ theme: Theme.Dark, preferredPosition: CAPTAIN }));
-
-            const result = await testee.getUserSettings();
-
-            expect(result.theme).toBe(Theme.Dark);
-            expect(result.preferredPosition).toBe(CAPTAIN);
-        });
-    });
-
-    describe('saveUserSettings', () => {
-        it('should persist merged settings to localStorage', async () => {
-            await testee.saveUserSettings({ theme: Theme.Dark });
-
-            const stored = JSON.parse(localStorage.getItem('settings') ?? '{}');
-            expect(stored.theme).toBe(Theme.Dark);
-        });
-
-        it('should merge patch with existing settings', async () => {
-            localStorage.setItem('settings', JSON.stringify({ preferredPosition: CAPTAIN }));
-
-            const result = await testee.saveUserSettings({ theme: Theme.Light });
-
-            expect(result.theme).toBe(Theme.Light);
-            expect(result.preferredPosition).toBe(CAPTAIN);
-        });
-    });
-
-    describe('applyUserSettings', () => {
-        it('should add dark class to html element when theme is dark', async () => {
-            await testee.applyUserSettings({ theme: Theme.Dark });
-
-            expect(document.querySelector('html')?.classList.contains('dark')).toBe(true);
-        });
-
-        it('should remove dark class from html element when theme is light', async () => {
-            document.querySelector('html')?.classList.add('dark');
-
-            await testee.applyUserSettings({ theme: Theme.Light });
-
-            expect(document.querySelector('html')?.classList.contains('dark')).toBe(false);
-        });
-
-        it('should apply dark class when theme is system and system prefers dark', async () => {
-            vi.stubGlobal(
-                'matchMedia',
-                vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }))
-            );
-
-            await testee.applyUserSettings({ theme: Theme.System });
-
-            expect(document.querySelector('html')?.classList.contains('dark')).toBe(true);
         });
     });
 });

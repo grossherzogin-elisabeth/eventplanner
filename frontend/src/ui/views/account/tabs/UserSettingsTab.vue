@@ -9,6 +9,7 @@
                     :available-positions="user.positionKeys"
                     @update:model-value="emit('update:modelValue', $event)"
                 />
+                <LanguageCard :model-value="props.modelValue" @update:model-value="emit('update:modelValue', $event)" />
             </VInteractiveList>
         </div>
     </div>
@@ -16,7 +17,7 @@
 <script lang="ts" setup>
 import type { UserDetails, UserSettings } from '@/domain';
 import { VInteractiveList } from '@/ui/components/common';
-import { PreferredPositionCard, ThemeCard } from '@/ui/views/account/components/settings';
+import { LanguageCard, PreferredPositionCard, ThemeCard } from '@/ui/views/account/components/settings';
 
 interface Props {
     modelValue: UserSettings;

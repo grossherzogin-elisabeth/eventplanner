@@ -10,7 +10,7 @@ import { server } from '~/mocks';
 // mock http requests
 // ---------------------------------------------------------------
 
-const i18n = setupI18n({ locale: 'de', fallbackLocale: 'de', availableLocales: ['de'], throwOnMissing: true });
+const i18n = setupI18n({ locale: 'de', fallbackLocale: 'de', throwOnMissing: true });
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
