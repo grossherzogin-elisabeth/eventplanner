@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-phone-mobile-card"
         icon="fa-mobile"
         :label="$t('domain.user.mobile')"
         :validate="UserService.validateMobile"
@@ -19,7 +20,13 @@
                 {{ $t('views.account.contact.phone-description') }}
             </p>
             <div class="mb-4">
-                <VInputText v-model="value.mobile" :errors="errors['mobile']" :errors-visible="true" :label="$t('domain.user.mobile')" />
+                <VInputText
+                    v-model="value.mobile"
+                    data-test-id="account-phone-mobile-input"
+                    :errors="errors['mobile']"
+                    :errors-visible="true"
+                    :label="$t('domain.user.mobile')"
+                />
             </div>
         </template>
     </VInteractiveListItem>

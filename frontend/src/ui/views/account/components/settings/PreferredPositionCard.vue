@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="user-settings-preferred-position-card"
         icon="fa-anchor"
         dialog-type="modal"
         :label="$t('views.account.app-settings.preferred-position')"
@@ -21,7 +22,11 @@
             <p class="mb-4 text-sm">
                 {{ $t('views.account.app-settings.preferred-position-description') }}
             </p>
-            <VInputSelectionList v-model="value.preferredPosition" :options="filteredPositions" />
+            <VInputSelectionList
+                v-model="value.preferredPosition"
+                data-test-id="user-settings-preferred-position-input"
+                :options="filteredPositions"
+            />
         </template>
     </VInteractiveListItem>
 </template>

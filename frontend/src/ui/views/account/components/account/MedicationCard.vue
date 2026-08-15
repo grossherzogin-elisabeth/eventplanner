@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-medication-card"
         icon="fa-pills"
         :label="$t('domain.user.medication')"
         :validate="UserService.validateMedication"
@@ -24,6 +25,7 @@
             <div class="mb-4">
                 <VInputTextArea
                     v-model="value.medication"
+                    data-test-id="account-medication-input"
                     :errors="errors['medication']"
                     :errors-visible="true"
                     :label="$t('domain.user.medication')"

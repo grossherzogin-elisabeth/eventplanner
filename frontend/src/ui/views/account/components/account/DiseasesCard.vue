@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-diseases-card"
         icon="fa-file-medical-alt"
         :label="$t('domain.user.diseases')"
         :validate="UserService.validateDiseases"
@@ -24,6 +25,7 @@
             <div class="mb-4">
                 <VInputTextArea
                     v-model="value.diseases"
+                    data-test-id="account-diseases-input"
                     :errors="errors['diseases']"
                     :errors-visible="true"
                     :max-length="1000"

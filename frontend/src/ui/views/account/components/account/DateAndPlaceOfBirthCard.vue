@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-date-and-place-of-birth-card"
         icon="fa-birthday-cake"
         :label="$t('domain.user.date-and-place-of-birth')"
         :validate="UserService.validateDateAndPlaceOfBirth"
@@ -24,6 +25,7 @@
             <div class="mb-4">
                 <VInputDate
                     v-model="value.dateOfBirth"
+                    data-test-id="account-date-and-place-of-birth-input-date-of-birth"
                     :label="$t('domain.user.date-of-birth')"
                     :errors="errors['dateOfBirth']"
                     :errors-visible="true"
@@ -33,6 +35,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.placeOfBirth"
+                    data-test-id="account-date-and-place-of-birth-input-place-of-birth"
                     :label="$t('domain.user.place-of-birth')"
                     :errors="errors['placeOfBirth']"
                     :errors-visible="true"

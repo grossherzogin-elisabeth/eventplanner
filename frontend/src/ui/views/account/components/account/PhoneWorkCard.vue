@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-phone-work-card"
         icon="fa-briefcase"
         :label="$t('domain.user.phone-work')"
         :validate="UserService.validatePhoneWork"
@@ -21,6 +22,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.phoneWork"
+                    data-test-id="account-phone-work-input"
                     :errors="errors['phoneWork']"
                     :errors-visible="true"
                     :label="$t('domain.user.phone-work')"

@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-email-card"
         icon="fa-envelope"
         :label="$t('domain.user.email')"
         @update:model-value="emit('update:modelValue', $event)"
@@ -17,6 +18,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.email"
+                    data-test-id="account-email-input"
                     :errors="errors['email']"
                     :errors-visible="true"
                     required

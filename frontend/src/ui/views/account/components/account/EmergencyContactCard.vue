@@ -1,6 +1,7 @@
 <template>
     <VInteractiveListItem
         :model-value="props.modelValue"
+        data-test-id="account-emergency-contact-card"
         icon="fa-address-book"
         :label="$t('domain.user.emergency-contact')"
         :validate="UserService.validateEmergencyContact"
@@ -22,6 +23,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.emergencyContact.name"
+                    data-test-id="account-emergency-contact-input-name"
                     :errors="errors['emergencyContact.name']"
                     :errors-visible="true"
                     :label="$t('domain.emergency-contact.name')"
@@ -30,6 +32,7 @@
             <div class="mb-4">
                 <VInputText
                     v-model="value.emergencyContact.phone"
+                    data-test-id="account-emergency-contact-input-phone"
                     :errors="errors['emergencyContact.phone']"
                     :errors-visible="true"
                     :label="$t('domain.emergency-contact.phone')"
