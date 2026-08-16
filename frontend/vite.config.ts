@@ -94,7 +94,7 @@ export default defineConfig(({ mode }) => {
                 // removes esm warning: https://github.com/intlify/vue-i18n-next/issues/789
                 'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
                 // use @ as placeholder for src dir
-                '@': path.resolve(__dirname, './src'),
+                '@': path.resolve(import.meta.dirname, './src'),
             },
         },
     };

@@ -15,10 +15,11 @@
 
     /* Linting */
     "strict": true,
+    "types": ["node"],
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "generate-i18n-dts.ts", "generate-color-scheme.ts"]
 }

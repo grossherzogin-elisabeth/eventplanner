@@ -2,12 +2,13 @@ import type { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
-import { HttpResponse, http } from 'msw';
-import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
+import type { EventUseCase } from '@/application';
+import { useEventUseCase } from '@/application';
+import type { Event, Registration } from '@/domain';
 import { EventType, Permission, SlotCriticality } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
 import EventListView from '@/ui/views/events/list/EventListView.vue';
-import { DECKHAND, mockEventRepresentation, mockRegistrationDeckhand, mockRouter, server } from '~/mocks';
+import { DECKHAND, mockEvent, mockRegistrationDeckhand, mockRouter } from '~/mocks';
 import { openTableContextMenu, setupSignedInUser, setupUserPermissions, stubs } from '~/utils';
 
 const router = mockRouter();
@@ -18,57 +19,61 @@ vi.mock('vue-router', () => ({
 
 describe('EventListView.vue', () => {
     let testee: VueWrapper;
-    let events: EventRepresentation[];
-    const capturedCreateRegistration: string[] = [];
-    const capturedDeleteRegistration: string[] = [];
+    let events: Event[];
+    let eventUseCase: EventUseCase;
 
     beforeEach(async () => {
+        eventUseCase = useEventUseCase();
         vi.setSystemTime(new Date(2024, 3, 1).getTime());
         const signedInUser = setupUserPermissions([Permission.READ_EVENTS, Permission.EXPORT_EVENTS]);
         events = [
-            mockEventRepresentation({
+            mockEvent({
                 name: 'event in past year',
-                start: '2023-05-05T16:00',
-                end: '2023-05-08T16:00',
+                start: new Date('2023-05-05T16:00'),
+                end: new Date('2023-05-08T16:00'),
             }),
-            mockEventRepresentation({
+            mockEvent({
                 name: 'past event in current year',
-                start: '2024-02-05T16:00',
-                end: '2024-02-08T16:00',
+                start: new Date('2024-02-05T16:00'),
+                end: new Date('2024-02-08T16:00'),
             }),
-            mockEventRepresentation({
+            mockEvent({
                 name: 'future event in current year',
-                start: '2024-04-05T16:00',
-                end: '2024-04-08T16:00',
+                start: new Date('2024-04-05T16:00'),
+                end: new Date('2024-04-08T16:00'),
             }),
-            mockEventRepresentation({
+            mockEvent({
                 type: EventType.SingleDayEvent,
                 name: 'single day event',
-                start: '2024-04-05T16:00',
-                end: '2024-04-08T16:00',
+                start: new Date('2024-04-05T16:00'),
+                end: new Date('2024-04-08T16:00'),
             }),
-            mockEventRepresentation({
+            mockEvent({
                 type: EventType.MultiDayEvent,
                 name: 'multi day event',
-                start: '2024-05-05T16:00',
-                end: '2024-05-08T16:00',
+                start: new Date('2024-05-05T16:00'),
+                end: new Date('2024-05-08T16:00'),
             }),
-            mockEventRepresentation({
+            mockEvent({
                 type: EventType.WorkEvent,
                 name: 'work event',
-                start: '2024-06-05T16:00',
-                end: '2024-06-08T16:00',
+                start: new Date('2024-06-05T16:00'),
+                end: new Date('2024-06-08T16:00'),
             }),
-            mockEventRepresentation({
+            mockEvent({
                 name: 'event with signed-in user on waiting list',
-                start: '2024-07-05T16:00',
-                end: '2024-07-08T16:00',
+                start: new Date('2024-07-05T16:00'),
+                end: new Date('2024-07-08T16:00'),
                 registrations: [{ key: 'reg-1-key', positionKey: DECKHAND, userKey: signedInUser.key }],
+                isSignedInUserAssigned: false,
+                canSignedInUserLeave: true,
+                canSignedInUserJoin: false,
+                signedInUserRegistration: { key: 'reg-1-key', positionKey: DECKHAND, userKey: signedInUser.key },
             }),
-            mockEventRepresentation({
+            mockEvent({
                 name: 'event with signed-in user in crew',
-                start: '2024-08-05T16:00',
-                end: '2024-08-08T16:00',
+                start: new Date('2024-08-05T16:00'),
+                end: new Date('2024-08-08T16:00'),
                 registrations: [{ key: 'reg-2-key', positionKey: DECKHAND, userKey: signedInUser.key }],
                 slots: [
                     {
@@ -79,29 +84,22 @@ describe('EventListView.vue', () => {
                         assignedRegistrationKey: 'reg-2-key',
                     },
                 ],
+                isSignedInUserAssigned: true,
+                canSignedInUserLeave: true,
+                canSignedInUserJoin: false,
+                signedInUserRegistration: { key: 'reg-1-key', positionKey: DECKHAND, userKey: signedInUser.key },
             }),
-            mockEventRepresentation({
+            mockEvent({
                 name: 'event in next year',
-                start: '2025-05-05T16:00',
-                end: '2025-05-08T16:00',
+                start: new Date('2025-05-05T16:00'),
+                end: new Date('2025-05-08T16:00'),
             }),
         ];
         events.forEach((e, i) => (e.key = String(i)));
 
-        server.use(http.get('/api/v1/events', () => HttpResponse.json(events)));
-
-        capturedCreateRegistration.length = 0;
-        capturedDeleteRegistration.length = 0;
-        server.use(
-            http.post('/api/v1/events/:key/registrations', ({ params }) => {
-                capturedCreateRegistration.push(params.key as string);
-                return HttpResponse.json(mockEventRepresentation({ key: params.key as string }));
-            }),
-            http.delete('/api/v1/events/:key/registrations/:regKey', ({ params }) => {
-                capturedDeleteRegistration.push(`${params.key}/${params.regKey}`);
-                return HttpResponse.json(mockEventRepresentation({ key: params.key as string, registrations: [] }));
-            })
-        );
+        vi.spyOn(eventUseCase, 'getEvents').mockImplementation(async (year: number) => {
+            return events.filter((event) => event.start.getFullYear() === year);
+        });
 
         await router.push({ name: Routes.EventsList });
         testee = mount(EventListView, { global: { plugins: [router] } });
@@ -118,7 +116,7 @@ describe('EventListView.vue', () => {
     it('should show all future events in initial tab', async () => {
         await loading();
         const rows = testee.findAll('tbody tr');
-        expect(rows.length).toBe(events.filter((it) => it.start.startsWith('2024')).length);
+        expect(rows).toHaveLength(events.filter((it) => it.start.getFullYear() === 2024).length);
     });
 
     it('should render future events', async () => {
@@ -176,6 +174,12 @@ describe('EventListView.vue', () => {
     });
 
     it('should join event', async () => {
+        const joinEventFunc = vi
+            .spyOn(eventUseCase, 'joinEvents')
+            .mockImplementation(async (events: Event[], registration: Registration) => {
+                events.forEach((event) => event.registrations.push(registration));
+            });
+
         const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
         const openSpy = vi.fn(async () => registration);
         testee.unmount();
@@ -193,10 +197,14 @@ describe('EventListView.vue', () => {
             .find((item) => item.text().includes(testee.vm.$t('domain.event.actions.sign-up')));
         await signUpAction!.trigger('click');
 
-        await expect.poll(() => capturedCreateRegistration).toHaveLength(1);
+        await expect.poll(() => joinEventFunc).toHaveBeenCalled();
     });
 
     it('should delete waiting list registration', async () => {
+        const leaveEventsFunc = vi.spyOn(eventUseCase, 'leaveEventsWaitingListOnly').mockImplementation(async (events: Event[]) => {
+            events.forEach((event) => (event.registrations = []));
+        });
+
         await loading();
 
         const menu = await openTableContextMenu(testee, 4); // row 4: event with signed-in user on waiting list
@@ -205,11 +213,14 @@ describe('EventListView.vue', () => {
             .find((item) => item.text().includes(testee.vm.$t('domain.event.actions.leave-waiting-list')));
         await leaveAction!.trigger('click');
 
-        await expect.poll(() => capturedDeleteRegistration).toHaveLength(1);
-        expect(capturedDeleteRegistration[0]).toContain('reg-1-key');
+        await expect.poll(() => leaveEventsFunc).toHaveBeenCalled();
     });
 
     it('should cancel crew registration', async () => {
+        const leaveEventsFunc = vi.spyOn(eventUseCase, 'leaveEvents').mockImplementation(async (events: Event[]) => {
+            events.forEach((event) => (event.registrations = []));
+        });
+
         await loading();
 
         const menu = await openTableContextMenu(testee, 5); // row 5: event with signed-in user in crew
@@ -218,8 +229,7 @@ describe('EventListView.vue', () => {
             .find((item) => item.text().includes(testee.vm.$t('domain.event.actions.cancel')));
         await cancelAction!.trigger('click');
 
-        await expect.poll(() => capturedDeleteRegistration).toHaveLength(1);
-        expect(capturedDeleteRegistration[0]).toContain('reg-2-key');
+        await expect.poll(() => leaveEventsFunc).toHaveBeenCalled();
     });
 
     it('should not show no-position banner when signed-in user has positions', () => {
