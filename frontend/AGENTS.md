@@ -2,10 +2,10 @@
 
 ## Agent quick start (60 seconds)
 
-- Use Node 26.x assumptions; start with `npm install` then `npm run dev` (Vite
-  on `http://localhost:8090`, proxies to backend `:8091`).
-- Before handing off changes, run: `npm run format`, `npm run lint`,
-  `npm run build`, `npm run test:coverage`.
+- Use Node 26.x assumptions; start with `pnpm install` then `pnpm dev` (Vite on
+  `http://localhost:8090`, proxies to backend `:8091`).
+- Before handing off changes, run: `pnpm format`, `pnpm lint`, `pnpm build`,
+  `pnpm test:coverage`.
 - Domain is the core business layer (`src/domain`); UI consumes application use
   cases and selected domain types; adapter integration stays behind application
   ports.
@@ -35,9 +35,9 @@
 
 ## Fast start (verified from repo config)
 
-- Install and run: `npm install`, `npm run dev`.
-- Recommended pre-PR checks: `npm run format`, `npm run lint`, `npm run build`,
-  `npm run test:coverage`.
+- Install and run: `pnpm install`, `pnpm dev`.
+- Recommended pre-PR checks: `pnpm format`, `pnpm lint`, `pnpm build`,
+  `pnpm test:coverage`.
 - Tests run with `TZ=CET` and Vitest (`package.json`).
 
 ## Architecture map (follow this layering)

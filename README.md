@@ -97,8 +97,8 @@ cd backend
 
 ```bash
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Frontend runs on `http://localhost:8080` by default and proxies API/auth traffic to backend on `http://localhost:8081`.
@@ -109,11 +109,11 @@ Frontend runs on `http://localhost:8080` by default and proxies API/auth traffic
 
 ```bash
 cd frontend
-npm run check:format
-npm run check:lint
-npm run check:typescript
-npm run build
-npm run test:coverage
+pnpm check:format
+pnpm check:lint
+pnpm check:typescript
+pnpm build
+pnpm test:coverage
 ```
 
 ### Backend
@@ -140,8 +140,8 @@ cd backend
 
 ## Authentication notes
 
-Eventplanner relies on external OIDC providers and does not manage local user passwords.
-For local testing, Keycloak is a common self-hosted option.
+Eventplanner relies on external OIDC providers and does not manage local user passwords. For local testing, Keycloak is
+a common self-hosted option.
 
 ## Additional docs
 

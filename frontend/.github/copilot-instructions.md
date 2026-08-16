@@ -18,16 +18,16 @@ CI). This file keeps frontend-only guidance concise.
 - Dev server: http://localhost:8090 (Vite). Proxies `/api/`, `/auth/`,
   `/login/oauth2/code/` to backend at http://localhost:8091. Override host with
   `VITE_HOST`.
-- Node: 26.x. Install deps and run dev: `npm install` then `npm run dev`.
+- Node: 26.x. Install deps and run dev: `pnpm install` then `pnpm dev`.
 - Aliases: `@` → `frontend/src`.
 - PWA: `vite-plugin-pwa` enabled; ensure denylist avoids caching API/auth
   routes.
 
 ## Build, lint, and test
 
-- Format/lint/typecheck: `npm run check:format` ; `npm run check:lint`
-- Build: `npm run build`
-- Tests: `npm run test:coverage` (CET timezone). Uses Vitest + happy-dom + MSW.
+- Format/lint/typecheck: `pnpm check:format` ; `pnpm check:lint`
+- Build: `pnpm build`
+- Tests: `pnpm test:coverage` (CET timezone). Uses Vitest + happy-dom + MSW.
 - In tests, prefer existing shared stubs/matchers/helpers from `test/utils`
   before introducing new ad-hoc versions.
 - UI test boundary: mock at the application use-case level (`useXUseCase()`),

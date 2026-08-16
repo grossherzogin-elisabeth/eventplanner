@@ -47,27 +47,27 @@ jobs:
       - name: Install dependencies
         shell: bash
         working-directory: frontend
-        run: npm ci
+        run: pnpm ci
 
       - name: Check format
         shell: bash
         working-directory: frontend
-        run: npm run check:format
+        run: pnpm check:format
 
       - name: Check eslint
         shell: bash
         working-directory: frontend
-        run: npm run check:lint
+        run: pnpm check:lint
 
       - name: Check build
         shell: bash
         working-directory: frontend
-        run: npm run build
+        run: pnpm build
 
       - name: Run tests
         shell: bash
         working-directory: frontend
-        run: npm run test:coverage
+        run: pnpm test:coverage
 
       - name: Upload test coverage artifact
         uses: actions/upload-artifact@v7
