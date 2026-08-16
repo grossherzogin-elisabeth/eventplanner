@@ -8,7 +8,7 @@ export default mergeConfig(
         resolve: {
             alias: {
                 // use ~ as placeholder for test dir
-                '~': path.resolve(__dirname, 'test'),
+                '~': path.resolve(import.meta.dirname, 'test'),
             },
         },
         test: {
