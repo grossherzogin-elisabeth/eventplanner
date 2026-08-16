@@ -70,9 +70,8 @@ describe('locales', () => {
     }
 
     function transformToRegex(pattern: string): RegExp {
-        let regex = `^${pattern}$`;
-        regex = regex.replace(/\./g, '\\.');
-        regex = regex.replace(/\*/g, '.*');
+        const escaped = pattern.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+        const regex = `^${escaped.replace(/\\\*/g, '.*')}$`;
         return new RegExp(regex);
     }
 
