@@ -116,7 +116,7 @@ describe('EventListView.vue', () => {
     it('should show all future events in initial tab', async () => {
         await loading();
         const rows = testee.findAll('tbody tr');
-        expect(rows.length).toBe(events.filter((it) => it.start.getFullYear() === 2024).length);
+        expect(rows).toHaveLength(events.filter((it) => it.start.getFullYear() === 2024).length);
     });
 
     it('should render future events', async () => {

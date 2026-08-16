@@ -38,7 +38,7 @@ describe('TabSlots.vue', () => {
     it('Should render all slots', () => {
         const rows = testee.findAll('tbody tr');
         expect(event.slots.length).toBeGreaterThan(0);
-        expect(rows.length).toBe(event.slots.length);
+        expect(rows).toHaveLength(event.slots.length);
     });
 
     it('should not render context menu', async () => {

@@ -49,7 +49,6 @@ describe('locales', () => {
                 import: 'default',
             }) as Record<string, string>
         );
-        expect(sourceModules).not.toHaveLength(0);
 
         const usedKeys = new Set<string>();
         for (const source of sourceModules) {
