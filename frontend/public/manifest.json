@@ -1,14 +1,14 @@
 {
-    "short_name": "Lissi",
-    "name": "Lissi Reiseplaner",
-    "icons": [
-        {
-            "src": "/favicon.svg",
-            "sizes": "any"
-        }
-    ],
-    "start_url": ".",
-    "display": "standalone",
-    "theme_color": "#082f49",
-    "background_color": "#082f49"
+  "short_name": "Lissi",
+  "name": "Lissi Reiseplaner",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#082f49",
+  "background_color": "#082f49"
 }
