@@ -1,5 +1,11 @@
 declare const value: {
     components: {
+        'create-registration-for-user-dialog': {
+            'note-adding-to-waiting-list': string;
+        };
+        'create-user-dialog': {
+            'note-edits': string;
+        };
         'error-dialog': {
             'default-text': string;
             'default-title': string;
@@ -47,24 +53,6 @@ declare const value: {
             'planning': string;
             'waiting-list': string;
         };
-        'registration-note-card': {
-            description: string;
-            none: string;
-        };
-        'registration-arrival-card': {
-            description: string;
-            note: string;
-            yes: string;
-            no: string;
-        };
-        'registration-overnight-stay-card': {
-            description: string;
-            note: string;
-        };
-        'registration-position-card': {
-            label: string;
-            description: string;
-        };
         'menu': {
             'account': string;
             'calendar': string;
@@ -85,6 +73,34 @@ declare const value: {
             'users': string;
             'users-admin': string;
         };
+        'registration-arrival-card': {
+            description: string;
+            no: string;
+            note: string;
+            yes: string;
+        };
+        'registration-note-card': {
+            description: string;
+            none: string;
+        };
+        'registration-overnight-stay-card': {
+            description: string;
+            note: string;
+        };
+        'registration-position-card': {
+            description: string;
+            label: string;
+        };
+        'user-emergency-form': {
+            'note-privacy': string;
+            'short-title': string;
+            'title': string;
+        };
+        'user-other-form': {
+            comment: string;
+            diet: string;
+            other: string;
+        };
     };
     domain: {
         'address': {
@@ -100,18 +116,18 @@ declare const value: {
         };
         'event': {
             'actions': {
-                'contact-crew': string;
                 'cancel': string;
-                'create-calendar-entry': string;
+                'contact-crew': string;
                 'create': string;
+                'create-calendar-entry': string;
                 'delete': string;
                 'edit': string;
-                'reset-crew': string;
                 'export-to-template': string;
                 'leave-waiting-list': string;
+                'publish-crew': string;
+                'reset-crew': string;
                 'sign-up': string;
                 'start-crew-signup': string;
-                'publish-crew': string;
                 'view': string;
             };
             'category': string;
@@ -120,6 +136,7 @@ declare const value: {
             'description': string;
             'end-date': string;
             'end-time': string;
+            'location': string;
             'name': string;
             'no-slot-for-position-error': {
                 message: string;
@@ -128,7 +145,6 @@ declare const value: {
             };
             'registration-count': string;
             'registrations': string;
-            'location': string;
             'signup-type': string;
             'start': string;
             'start-date': string;
@@ -147,17 +163,17 @@ declare const value: {
             'actions': {
                 create: string;
                 delete: string;
-                edit: string;
                 duplicate: string;
+                edit: string;
             };
             'alternative-positions': string;
             'criticality': string;
             'display-name': string;
+            'empty': string;
             'important': string;
             'optional': string;
             'position': string;
             'required': string;
-            'empty': string;
         };
         'event-state': {
             'canceled': string;
@@ -180,9 +196,9 @@ declare const value: {
             'actions': {
                 'create': string;
                 'delete': string;
-                'edit': string;
                 'delete-eta': string;
                 'delete-etd': string;
+                'edit': string;
             };
             'address': string;
             'address-link': string;
@@ -197,15 +213,50 @@ declare const value: {
             'information-link': string;
             'name': string;
         };
+        'position': {
+            'actions': {
+                create: string;
+                edit: string;
+            };
+            'color': string;
+            'imo-list-rank': string;
+            'key': string;
+            'name': string;
+            'prio': string;
+            'validation': {
+                'key-must-be-unique': string;
+                'name-must-be-unique': string;
+            };
+        };
+        'qualification': {
+            'actions': {
+                create: string;
+                delete: string;
+                edit: string;
+            };
+            'description': string;
+            'expires': string;
+            'expires-on': string;
+            'icon': string;
+            'key': string;
+            'name': string;
+            'no-expiration-date': string;
+            'positions': string;
+            'validation': {
+                'key-must-be-unique': string;
+                'name-must-be-unique': string;
+            };
+            'with-expiration-date': string;
+        };
         'registration': {
             'actions': {
                 'add-note': string;
-                'create': string;
-                'cancel': string;
-                'leave-waiting-list': string;
-                'edit': string;
                 'assign': string;
+                'cancel': string;
+                'create': string;
                 'delete': string;
+                'edit': string;
+                'leave-waiting-list': string;
                 'unassign': string;
             };
             'arrival': string;
@@ -218,6 +269,7 @@ declare const value: {
             'overnight-stay': string;
             'position': string;
             'unknown-user': string;
+            'user': string;
         };
         'role': {
             ROLE_ADMIN: string;
@@ -229,17 +281,17 @@ declare const value: {
         };
         'types': {
             event: string;
+            location: string;
             position: string;
             qualification: string;
             registration: string;
-            location: string;
             user: string;
         };
         'user': {
             'actions': {
-                'view': string;
                 'create': string;
                 'impersonate': string;
+                'view': string;
                 'write-email': string;
             };
             'address': string;
@@ -249,9 +301,11 @@ declare const value: {
             'diet': string;
             'diseases': string;
             'email': string;
+            'email-and-phone': string;
             'emergency-contact': string;
             'first-name': string;
             'gender': string;
+            'generic-data': string;
             'intolerances': string;
             'last-login-at': string;
             'last-name': string;
@@ -264,6 +318,7 @@ declare const value: {
             'no-login-recorded': string;
             'official-name-hint': string;
             'pass-nr': string;
+            'personal-data': string;
             'phone': string;
             'phone-work': string;
             'place-of-birth': string;
@@ -276,58 +331,22 @@ declare const value: {
                 delete: string;
                 edit: string;
             };
-            'expires-at': string;
-            'note': string;
             'expired': string;
             'expired-count': string;
+            'expires-at': string;
             'expiring-soon': string;
             'expiring-soon-count': string;
+            'note': string;
             'valid': string;
-        };
-        'qualification': {
-            'actions': {
-                create: string;
-                delete: string;
-                edit: string;
-            };
-            'expires-on': string;
-            'no-expiration-date': string;
-            'with-expiration-date': string;
-            'description': string;
-            'expires': string;
-            'icon': string;
-            'key': string;
-            'name': string;
-            'positions': string;
-            'validation': {
-                'key-must-be-unique': string;
-                'name-must-be-unique': string;
-            };
-        };
-        'position': {
-            'actions': {
-                create: string;
-                edit: string;
-            };
-            'color': string;
-            'prio': string;
-            'key': string;
-            'name': string;
-            'imo-list-rank': string;
-            'validation': {
-                'key-must-be-unique': string;
-                'name-must-be-unique': string;
-            };
         };
     };
     generic: {
-        'show-details': string;
         'add': string;
         'apply': string;
         'cancel': string;
+        'click-to-show': string;
         'close': string;
         'created-at': string;
-        'click-to-show': string;
         'days': string;
         'delete': string;
         'deselect': string;
@@ -393,10 +412,16 @@ declare const value: {
         'select': string;
         'select-all': string;
         'selected-count': string;
+        'show-details': string;
         'theme': {
             dark: string;
             light: string;
             system: string;
+        };
+        'unsaved-changes-dialog': {
+            message: string;
+            submit: string;
+            title: string;
         };
         'updated-at': string;
         'validation': {
@@ -423,11 +448,6 @@ declare const value: {
             '6': string;
         };
         'yes': string;
-        'unsaved-changes-dialog': {
-            message: string;
-            title: string;
-            submit: string;
-        };
     };
     views: {
         'account': {
@@ -480,7 +500,6 @@ declare const value: {
             'title': string;
         };
         'event-admin-list': {
-            'export': string;
             'batch-edit': {
                 'copy-slots-from': string;
                 'copy-slots-warning': string;
@@ -507,6 +526,7 @@ declare const value: {
                     title: string;
                 };
             };
+            'export': string;
             'filter': {
                 'all-events': string;
                 'all-status': string;
@@ -664,6 +684,7 @@ declare const value: {
                 positions: string;
                 qualifications: string;
             };
+            title: string;
             ui: {
                 'menu-title': string;
                 'menu-title-description': string;
@@ -677,6 +698,10 @@ declare const value: {
                 'theme-color-description': string;
                 'title': string;
             };
+        };
+        'unauthorized': {
+            message: string;
+            title: string;
         };
         'user-details': {
             tab: {
