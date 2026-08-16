@@ -1,12 +1,20 @@
 components:
   error-dialog:
-    default-text: Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.
+    default-text:
+      Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.
     default-title: Unerwarteter Fehler
     details: Fehler Details
     retry: Erneut versuchen
     show-details: Details anzeigen
   event-cancel-dialog:
-    message: Bist du sicher, dass du diese Veranstaltung absagen möchtest? Aktuell wird vom System noch keine automatische Mail an die Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die Veranstaltung absagst. | Bist du sicher, dass du die ausgewählten Veranstaltungen absagen möchtest? Aktuell wird vom System noch keine automatische Mail an die Crew versand. Wenn du die Crew über die Absage informieren möchtest, tue dies bitte bevor du die Veranstaltung absagst.
+    message:
+      Bist du sicher, dass du diese Veranstaltung absagen möchtest? Aktuell wird
+      vom System noch keine automatische Mail an die Crew versand. Wenn du die
+      Crew über die Absage informieren möchtest, tue dies bitte bevor du die
+      Veranstaltung absagst. | Bist du sicher, dass du die ausgewählten
+      Veranstaltungen absagen möchtest? Aktuell wird vom System noch keine
+      automatische Mail an die Crew versand. Wenn du die Crew über die Absage
+      informieren möchtest, tue dies bitte bevor du die Veranstaltung absagst.
     submit: Absagen
     title: Veranstaltung absagen | Veranstaltungen absagen
   event-details-card:
@@ -17,41 +25,64 @@ components:
     waitinglist: '{count} Warteliste | {count} Warteliste'
   event-details-sheet:
     note-assigned: Du bist für diese Veranstaltung als {0} eingeplant
-    note-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht:'
-    note-on-waiting-list: Du stehst für diese Veranstaltung als {0} auf der Warteliste
+    note-missing-crew:
+      'Für diese Veranstaltung wird noch Crew für die folgenden Positionen
+      gesucht:'
+    note-on-waiting-list:
+      Du stehst für diese Veranstaltung als {0} auf der Warteliste
     show-details: Details anzeigen
   event-locations-card:
     address-link: Anreiseinformationen
     eta: 'Ankunft:'
     etd: 'Abfahrt:'
     learn-more: Weitere Informationen
-    placeholder: Für diese Veranstaltung wurde noch keine Route bekannt gegeben. Sobald diese Informationen verfügbar sind, kannst du sie hier sehen.
+    placeholder:
+      Für diese Veranstaltung wurde noch keine Route bekannt gegeben. Sobald
+      diese Informationen verfügbar sind, kannst du sie hier sehen.
     title: Ort | Route
   event-participants-card:
     assigned: Crew ({count})
     empty: Noch nicht besetzt
     no-registrations: Für diese Veranstaltung gibt es noch keine Anmeldungen.
     no-waitinglist: Für diese Veranstaltung gibt es aktuell keine Warteliste.
-    placeholder: Für diese Veranstaltung hat sich bisher noch niemand angemeldet. Du kannst den Anfang machen und dich anmelden.
+    placeholder:
+      Für diese Veranstaltung hat sich bisher noch niemand angemeldet. Du kannst
+      den Anfang machen und dich anmelden.
     placeholder-title: Du könntest den Anfang machen!
     placeholder-title-f: Du könntest die Erste sein!
     placeholder-title-m: Du könntest der Erste sein!
-    placeholder-waiting-list-hint: Alle Anmeldungen werden zuerst auf der Warteliste gesammelt. Anschließend wird aus diesen Anmeldungen eine Crew zusammengestellt. Wenn du zur Crew hinzugefügt wirst, benachrichtigen wir dich per Email darüber.
+    placeholder-waiting-list-hint:
+      Alle Anmeldungen werden zuerst auf der Warteliste gesammelt. Anschließend
+      wird aus diesen Anmeldungen eine Crew zusammengestellt. Wenn du zur Crew
+      hinzugefügt wirst, benachrichtigen wir dich per Email darüber.
     registrations: Anmeldungen ({count})
     unknown: Unbekannter Nutzer
     waitinglist: Warteliste ({count})
   event-registration-details-card:
     arrival: Anreise am Vortag gewünscht
-    arrival-description: Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen. Bitte gib hier an, falls du bereits vorher anreisen möchtest, damit das Büro entsprechend planen kann.
-    arrival-note: Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn nicht garantiert werden kann.
+    arrival-description:
+      Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen.
+      Bitte gib hier an, falls du bereits vorher anreisen möchtest, damit das
+      Büro entsprechend planen kann.
+    arrival-note:
+      Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn
+      nicht garantiert werden kann.
     note: Notiz fürs Büro
-    note-description: Hier kannst du zusätzliche Informationen für deine Anmeldung hinterlegen, die für das Büro bei der Planung relevant sein könnten.
+    note-description:
+      Hier kannst du zusätzliche Informationen für deine Anmeldung hinterlegen,
+      die für das Büro bei der Planung relevant sein könnten.
     note-none: Du hast keine Notiz hinterlegt
     overnight-stay: Übernachtung an Bord gewünscht
-    overnight-stay-description: Möchtest du an Bord übernachten? Bei mehrtägigen Veranstaltungen wird immer von einer Übernachtung an Bord ausgegangen.
-    overnight-stay-note: Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn nicht garantiert werden kann.
+    overnight-stay-description:
+      Möchtest du an Bord übernachten? Bei mehrtägigen Veranstaltungen wird
+      immer von einer Übernachtung an Bord ausgegangen.
+    overnight-stay-note:
+      Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn
+      nicht garantiert werden kann.
     position: Meine Position
-    position-description: Du hast die Qualifikation für mehrere Positionen. Mit welcher Position möchtest du dich anmelden?
+    position-description:
+      Du hast die Qualifikation für mehrere Positionen. Mit welcher Position
+      möchtest du dich anmelden?
     title: Meine Anmeldung
   menu:
     account: Mein Profil
@@ -64,7 +95,9 @@ components:
     no-account:
       header: Noch kein Account?
       login: Zum Login
-      message: Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten Veranstaltungen einsehen und dich zu Veranstaltungen an und abmelden.
+      message:
+        Mit einem Lissi Account kannst du jederzeit den Status deiner nächsten
+        Veranstaltungen einsehen und dich zu Veranstaltungen an und abmelden.
       register: Jetzt registrieren
     settings: Einstellungen
     sign-out: Abmelden
@@ -108,7 +141,11 @@ domain:
     end-time: Crew von Bord
     name: Veranstaltungsname
     no-slot-for-position-error:
-      message: '{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot für die Position {position} gibt. Du kannst entweder einen passenden Slot freigeben, indem du jemand anderes aus der Crew entfernst oder einen neuen Slot für diese Veranstaltung hinzufügen.'
+      message:
+        '{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot
+        für die Position {position} gibt. Du kannst entweder einen passenden
+        Slot freigeben, indem du jemand anderes aus der Crew entfernst oder
+        einen neuen Slot für diese Veranstaltung hinzufügen.'
       retry: Slot hinzufügen
       title: Zuweisung nicht möglich
     registration-count: Anmeldungen ({count})
@@ -314,41 +351,85 @@ views:
       title: Experimentelle Funktionen
     app-settings:
       language: Sprache
-      language-description: Unterstützung für weitere Sprachen ist gerade noch in Arbeit. Du möchtest bei der Übersetzung aktiv mithelfen? Dann schau mal bei GitHub vorbei und trage zu unserem Open Source Projekt bei!
+      language-description:
+        Unterstützung für weitere Sprachen ist gerade noch in Arbeit. Du
+        möchtest bei der Übersetzung aktiv mithelfen? Dann schau mal bei GitHub
+        vorbei und trage zu unserem Open Source Projekt bei!
       notifications: Benachrichtigungen
       permissions: Meine Berechtigungen
       preferred-position: Standard Position
-      preferred-position-description: Mit welcher Position möchtest du dich standardmäßg bei Veranstaltungen anmelden? Du kannst deine Position für jede Anmeldung individuall anpassen.
+      preferred-position-description:
+        Mit welcher Position möchtest du dich standardmäßg bei Veranstaltungen
+        anmelden? Du kannst deine Position für jede Anmeldung individuall
+        anpassen.
       roles: Meine Anwendungsrollen
       theme: Design
       title: App
     contact:
       address-description: Bitte gib deine primäre Wohnanschrift an.
-      email-description: Deine Email Adresse wird sowohl als Kontakt Email für Benachrichtigungen, als auch für deinen Login verwendet. Wenn du sie ändern möchtest, schreib uns bitte eine Email, damit wir auch den Login für dich anpassen können.
-      phone-description: 'Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer an: Festnetz, mobil oder dienstlich.'
+      email-description:
+        Deine Email Adresse wird sowohl als Kontakt Email für
+        Benachrichtigungen, als auch für deinen Login verwendet. Wenn du sie
+        ändern möchtest, schreib uns bitte eine Email, damit wir auch den Login
+        für dich anpassen können.
+      phone-description:
+        'Wie können wir dich erreichen? Bitte gib mindestens eine Telefonnummer
+        an: Festnetz, mobil oder dienstlich.'
       title: Kontakt Daten
     diet:
-      diet-description: Bitte gib an, falls du dich vegetarisch oder vegan ernährst. Diese Information ist wichtig, damit die Kombüse ausreichend planen kann.
-      intolerances-description: Hier kannst du Unverträglichkeiten und Allergien angeben, die der Kombüse bekannt sein sollten.
+      diet-description:
+        Bitte gib an, falls du dich vegetarisch oder vegan ernährst. Diese
+        Information ist wichtig, damit die Kombüse ausreichend planen kann.
+      intolerances-description:
+        Hier kannst du Unverträglichkeiten und Allergien angeben, die der
+        Kombüse bekannt sein sollten.
       kitchen-info: Informationen für die Kombüse
       title: Ernährung
     emergency:
       click-to-show: '[zum Ansehen klicken]'
-      diseases-description: Sollte während einer Veranstaltung etwas passieren, kann es wichtig sein, dass jemand an Bord über eventuelle Krankheiten informiert ist, die besondere Behandlungen erfordern.
-      emergency-contact-description: Im Notfall zählt jede Sekunde. Hier kannst du eine Person hinterlegen, die wir im Falle eines medizinischen Notfalls oder einer anderen dringenden Situation kontaktieren können. Bitte gib Namen und Telefonnummer der Person an.
-      medication-description: Wenn auf einer Veranstaltung mal etwas passiert, ist es wichtig, dass jemand an Bord weiß, welche Medikamente du benötigst.
-      privacy: Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt gespeichert und sind nur für autorisierte Personen einsehbar!
+      diseases-description:
+        Sollte während einer Veranstaltung etwas passieren, kann es wichtig
+        sein, dass jemand an Bord über eventuelle Krankheiten informiert ist,
+        die besondere Behandlungen erfordern.
+      emergency-contact-description:
+        Im Notfall zählt jede Sekunde. Hier kannst du eine Person hinterlegen,
+        die wir im Falle eines medizinischen Notfalls oder einer anderen
+        dringenden Situation kontaktieren können. Bitte gib Namen und
+        Telefonnummer der Person an.
+      medication-description:
+        Wenn auf einer Veranstaltung mal etwas passiert, ist es wichtig, dass
+        jemand an Bord weiß, welche Medikamente du benötigst.
+      privacy:
+        Alle Angaben sind freiwillig! Deine Daten werden verschlüsselt
+        gespeichert und sind nur für autorisierte Personen einsehbar!
       title: Notfall Informationen
     personal:
-      date-and-place-of-birth-description: Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum Erstellen der offiziellen Crew Liste verwendet werden.
+      date-and-place-of-birth-description:
+        Alle Daten, die du hier angibst, müssen genau so auch auf deinem
+        Ausweisdokument stehen, da diese zum Erstellen der offiziellen Crew
+        Liste verwendet werden.
       gender-description: Mit welchem Geschlecht identifizierst du dich?
-      hint: Alle Daten, die du hier angibst, müssen genau so auch auf deinem Ausweisdokument stehen, da diese zum Erstellen der offiziellen Crew Liste verwendet werden.
-      name-description: Dein Name, wie hier angegeben, muss genau so auch auf deinem Ausweisdokument stehen, da dieser zum Erstellen der offiziellen Crew Liste verwendet wird. Solltest du mit einem anderen Namen angesprochen werden wollen, kannst du einen Anzeigenamen für die App vergeben.
-      nationality-description: Deine Nationalität wird für das Erstellen der offiziellen Crewliste benötigt. Solltest du mehrere Nationalitäten haben, gib hier bitte diejenige an, die auch auf deinem Ausweisdokumentes steht.
+      hint:
+        Alle Daten, die du hier angibst, müssen genau so auch auf deinem
+        Ausweisdokument stehen, da diese zum Erstellen der offiziellen Crew
+        Liste verwendet werden.
+      name-description:
+        Dein Name, wie hier angegeben, muss genau so auch auf deinem
+        Ausweisdokument stehen, da dieser zum Erstellen der offiziellen Crew
+        Liste verwendet wird. Solltest du mit einem anderen Namen angesprochen
+        werden wollen, kannst du einen Anzeigenamen für die App vergeben.
+      nationality-description:
+        Deine Nationalität wird für das Erstellen der offiziellen Crewliste
+        benötigt. Solltest du mehrere Nationalitäten haben, gib hier bitte
+        diejenige an, die auch auf deinem Ausweisdokumentes steht.
       nick-name-hint: Wie möchtest du angesprochen werden?
       official-name-hint: Name wie im Ausweisdokument
-      passport-description: Bitte gib die Nummer eines offiziellen Ausweisdokuments an. Dies kann entweder dein Personalausweis oder alternativ auch dein Reisepass sein.
-      passport-info: Bitte beachte, dass du dein eingetragenes Ausweisdokument bei allen Reisen mitführen musst!
+      passport-description:
+        Bitte gib die Nummer eines offiziellen Ausweisdokuments an. Dies kann
+        entweder dein Personalausweis oder alternativ auch dein Reisepass sein.
+      passport-info:
+        Bitte beachte, dass du dein eingetragenes Ausweisdokument bei allen
+        Reisen mitführen musst!
       passport-link: So findest du deine Personalausweis Nummer
       title: Persönliche Daten
     qualifications:
@@ -382,24 +463,38 @@ views:
       show-event: Veranstaltung anzeigen
     batch-edit:
       copy-slots-from: Slots kopieren von
-      copy-slots-warning: Bereits geplante Crews werden durch das überschreiben der Slots für alle ausgewählten Veranstaltungen zurückgesetzt. Du musst dann alle Crews händisch erneut planen.
+      copy-slots-warning:
+        Bereits geplante Crews werden durch das überschreiben der Slots für alle
+        ausgewählten Veranstaltungen zurückgesetzt. Du musst dann alle Crews
+        händisch erneut planen.
       dont-change-slots: Slots nicht ändern
-      info: Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier eingegebenen Werte für alle Veranstaltungen übernommen.
+      info:
+        Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier
+        eingegebenen Werte für alle Veranstaltungen übernommen.
       not-changed: nicht geändert
       title: Alle bearbeiten
     dialog:
       delete:
-        message: Bist du sicher, dass du die ausgewählten {count} Veranstaltungen löschen möchtest? Diese Aktion kann später nicht rückgängig gemacht werden.
+        message:
+          Bist du sicher, dass du die ausgewählten {count} Veranstaltungen
+          löschen möchtest? Diese Aktion kann später nicht rückgängig gemacht
+          werden.
         submit: Unwiederruflich löschen
         title: Veranstaltung löschen
       open-signup:
         cancel: Nein, nur die Entwürfe
-        message: Unter den ausgewählten Veranstaltungen ist mindestens eine, die nicht im Status "Entwurf" ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crew Anmeldung" ändern?
+        message:
+          Unter den ausgewählten Veranstaltungen ist mindestens eine, die nicht
+          im Status "Entwurf" ist. Möchtest du trotzdem alle ausgewählten Reisen
+          in den Status "Crew Anmeldung" ändern?
         submit: Ja, alle ändern
         title: Anmeldungen freigeben
       publish-crew:
         cancel: Nein, nur die in Anmeldung
-        message: Unter den ausgewählten Veranstaltungen ist mindestens eine, die nicht im Status "Crew Anmeldung" ist. Möchtest du trotzdem alle ausgewählten Reisen in den Status "Crewplanung veröffentlicht" ändern?
+        message:
+          Unter den ausgewählten Veranstaltungen ist mindestens eine, die nicht
+          im Status "Crew Anmeldung" ist. Möchtest du trotzdem alle ausgewählten
+          Reisen in den Status "Crewplanung veröffentlicht" ändern?
         submit: Ja, alle ändern
         title: Crew veröffentlichen
     filter:
@@ -421,29 +516,61 @@ views:
       team: Crew
   event-confirm-participation:
     canceled:
-      info: Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der Crewliste. Falls du doch an der Veranstaltung teilnehmen möchtest, melde dich bitte telefonisch im Büro.
+      info:
+        Deine Anmeldung wurde bereits abgesagt und du stehst nicht mehr auf der
+        Crewliste. Falls du doch an der Veranstaltung teilnehmen möchtest, melde
+        dich bitte telefonisch im Büro.
       title: Anmeldung wurde bereits abgesagt
     canceled-now:
-      info: Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen kannst. Deine Teilnahme an der Veranstaltung wurde storniert. Bitte versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann schwierig ist noch einen Ersatz für dich zu finden.
+      info:
+        Vielen Dank für deine Rückmeldung. Schade, dass du nicht teilnehmen
+        kannst. Deine Teilnahme an der Veranstaltung wurde storniert. Bitte
+        versuche kurzfristige Absagen soweit möglich zu vermeiden, da es dann
+        schwierig ist noch einen Ersatz für dich zu finden.
       title: Teilnahme storniert
     confirm: Ja, ich nehme teil
     confirmed:
-      info: Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Veranstaltung wurde als bestätigt markiert. Bitte denk daran, deine Ausweisdokumente und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir und der gesamten Crew einen angenehmen Törn und immer eine handbreit Wasser unterm Kiel!
+      info:
+        Vielen Dank für deine Rückmeldung. Deine Teilnahme an der Veranstaltung
+        wurde als bestätigt markiert. Bitte denk daran, deine Ausweisdokumente
+        und Qualifikationsnachweise im Original mitzuführen. Wir wünschen dir
+        und der gesamten Crew einen angenehmen Törn und immer eine handbreit
+        Wasser unterm Kiel!
       title: Teilnahme bestätigt
     decline: Ich muss leider absagen
     details:
       title: 'Hier noch einmal die wichtigsten Details zur Veranstaltung:'
     info:
       deadline: spätestens 7 Tage vor Veranstaltungsbeginn
-      message: In {days} Tagen startet die Veranstaltung {event}, bei der du als Crew eingeplant bist. Bitte bestätige deine Teilnahme bis {deadline}, damit das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich zu finden.
+      message:
+        In {days} Tagen startet die Veranstaltung {event}, bei der du als Crew
+        eingeplant bist. Bitte bestätige deine Teilnahme bis {deadline}, damit
+        das Büro noch genügend Zeit hat, um gegebenenfalls einen Ersatz für dich
+        zu finden.
     invalid-link:
-      info: Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder gehört zu einem anderen Nutzer. Du kannst nur deine eigenen Teilnamen bestätigen. Bitte überprüfe, ob die Email Adresse des Accounts, mit dem du dich angemeldet hast mit der Email Adresse übereinstimmt, über die du diesen Link erhalten hast. Wenn du weiterhin Probleme bei der Bestätigung hast, melde dich gerne telefonisch im Büro.
+      info:
+        Der Link, mit dem du auf diese Seite gekommen bist, ist ungültig oder
+        gehört zu einem anderen Nutzer. Du kannst nur deine eigenen Teilnamen
+        bestätigen. Bitte überprüfe, ob die Email Adresse des Accounts, mit dem
+        du dich angemeldet hast mit der Email Adresse übereinstimmt, über die du
+        diesen Link erhalten hast. Wenn du weiterhin Probleme bei der
+        Bestätigung hast, melde dich gerne telefonisch im Büro.
       title: Ungültiger Link
     no-registration:
-      info: Wir haben überall gesucht, konnten für dich aber keine Anmeldung zu dieser Verantstaltung finden. Das kann daran liegen, dass du deine Teilnahme abgesagt hast, oder das du dich mit einem anderen Account angemeldet hast. Wenn du bereits abgesagt hast und doch teilnehmen möchtest, melde dich bitte telefonisch im Büro.
+      info:
+        Wir haben überall gesucht, konnten für dich aber keine Anmeldung zu
+        dieser Verantstaltung finden. Das kann daran liegen, dass du deine
+        Teilnahme abgesagt hast, oder das du dich mit einem anderen Account
+        angemeldet hast. Wenn du bereits abgesagt hast und doch teilnehmen
+        möchtest, melde dich bitte telefonisch im Büro.
       title: Anmeldung nicht gefunden
     not-found:
-      info: Wir konnten keine Anmeldung für diesen Link finden. Das kann daran liegen, dass du deine Teilnahme bereits abgesagt hast, oder dein Link ungültig ist. Falls du Probleme mit der Teilnahmebestätigung hast oder doch an der Veranstaltung teilnehmen möchtest, melde dich bitte telefonisch im Büro.
+      info:
+        Wir konnten keine Anmeldung für diesen Link finden. Das kann daran
+        liegen, dass du deine Teilnahme bereits abgesagt hast, oder dein Link
+        ungültig ist. Falls du Probleme mit der Teilnahmebestätigung hast oder
+        doch an der Veranstaltung teilnehmen möchtest, melde dich bitte
+        telefonisch im Büro.
       title: Anmeldung nicht gefunden
     title: Bitte bestätige deine Teilnahme
   event-details:
@@ -451,16 +578,29 @@ views:
     create-calendar-entry: Kalendereintrag erstellen
     edit-event: Veranstaltung bearbeiten
     edit-registration: Anmeldung bearbeiten
-    info-assigned: Du bist für diese Veranstaltung als {signedInUserPosition} eingeplant.
+    info-assigned:
+      Du bist für diese Veranstaltung als {signedInUserPosition} eingeplant.
     info-canceled: Diese Veranstaltung wurde abgesagt!
     info-confirmed: Du hast deine Teilnahme bestätigt.
-    info-draft: Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist nur für Nutzer mit Bearbeiten-Berechtigung sichtbar.
-    info-missing-crew: 'Für diese Veranstaltung wird noch Crew für die folgenden Positionen gesucht: {openPositions}.'
-    info-planning: Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung garantiert keine Teilnahme an der Veranstaltung! Sobald die Crewplanung veröffentlicht wird, wirst du per Email darüber informiert.
-    info-waitinglist: Du stehst für diese Veranstaltung als {signedInUserPosition} auf der Warteliste.
+    info-draft:
+      Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist nur für
+      Nutzer mit Bearbeiten-Berechtigung sichtbar.
+    info-missing-crew:
+      'Für diese Veranstaltung wird noch Crew für die folgenden Positionen
+      gesucht: {openPositions}.'
+    info-planning:
+      Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung
+      garantiert keine Teilnahme an der Veranstaltung! Sobald die Crewplanung
+      veröffentlicht wird, wirst du per Email darüber informiert.
+    info-waitinglist:
+      Du stehst für diese Veranstaltung als {signedInUserPosition} auf der
+      Warteliste.
     leave-crew: Teilnahme absagen
     leave-crew-dialog:
-      message: Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event} absagen möchtest? Du hast dann keinen Anspruch mehr auf eine Teilnahme an der Veranstaltung und dein Platz wird an eine andere Person vergeben.
+      message:
+        Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event}
+        absagen möchtest? Du hast dann keinen Anspruch mehr auf eine Teilnahme
+        an der Veranstaltung und dein Platz wird an eine andere Person vergeben.
       submit: Teilnahme absagen
       title: Teilnahme absagen?
     leave-waitinglist: Warteliste verlassen
@@ -491,17 +631,28 @@ views:
       show-user: Nutzer anzeigen
     edit-registration:
       guest-title: Gastcrewanmeldung
-      guest-warning: '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher nicht automatisiert geprüft werden.'
-      no-qualification: '{name} hat keine Qualifikation für die Position {position}'
-      qualifications: '{name} hat zum Zeitpunkt der Veranstaltung die folgenden Qualifikationen:'
+      guest-warning:
+        '{name} ist Gastcrew. Die Gültigkeit der Qualifikationen kann daher
+        nicht automatisiert geprüft werden.'
+      no-qualification:
+        '{name} hat keine Qualifikation für die Position {position}'
+      qualifications:
+        '{name} hat zum Zeitpunkt der Veranstaltung die folgenden
+        Qualifikationen:'
       select-position: Bitte wähle eine Position
       select-user: Bitte wähle ein Stammcrew Mitglied
       title: Anmeldung von {name} {lastName}
     empty-crew:
-      desc: Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots" Tab kannst du Slots für diese Veranstaltung definieren. Anschließend kannst du Nutzer von der Warteliste in die Crew ziehen.
+      desc:
+        Für diese Veranstaltung wurden noch keine Slots definiert. Im "Slots"
+        Tab kannst du Slots für diese Veranstaltung definieren. Anschließend
+        kannst du Nutzer von der Warteliste in die Crew ziehen.
       title: Hier ist noch nichts...
     empty-waitinglist:
-      desc: Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer sich für diese Veranstaltung anmelden, werden sie hier aufgelistet und können für die Crew eingeplant werden.
+      desc:
+        Für diese Veranstaltung gibt es gerade keine Anmeldungen. Sobald Nutzer
+        sich für diese Veranstaltung anmelden, werden sie hier aufgelistet und
+        können für die Crew eingeplant werden.
       title: Die Warteliste ist leer...
     filter:
       all-positions: Alle Positionen
@@ -509,10 +660,22 @@ views:
       pending-confirmation: Teilnahmebestätigung ausstehend
       valid-qualifications: Gültige Qualifikationen
     free: frei
-    info-canceled: Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter bearbeiten und auch die Absage im Tab Veranstaltungsdaten zurücknehmen, solange die Veranstaltung nicht gelöscht wird.
-    info-draft: Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch nicht für Anmeldungen freigegeben. Du kannst als Admin allerdings bereits Anmeldungen eintragen und auch bereits eine Crew planen.
-    info-missing-crew: Die Voraussetzungen für eine sichere Mindestbesatzung für diese Veranstaltung sind noch nicht erfüllt!
-    info-signup: Die Crewplanung für diese Veranstaltung wurde noch nicht freigegeben. Crew Zuweisungen sind darum nur für Nutzer mit der Berechtigung zur Crewplanung sichtbar. Wenn du mit der Crewplanung fertig bist kannst du die Crewplanung veröffentlichen, um die zugewiesene Crew zu informieren.
+    info-canceled:
+      Diese Veranstaltung wurde abgesagt. Du kannst sie trotzdem weiter
+      bearbeiten und auch die Absage im Tab Veranstaltungsdaten zurücknehmen,
+      solange die Veranstaltung nicht gelöscht wird.
+    info-draft:
+      Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist noch
+      nicht für Anmeldungen freigegeben. Du kannst als Admin allerdings bereits
+      Anmeldungen eintragen und auch bereits eine Crew planen.
+    info-missing-crew:
+      Die Voraussetzungen für eine sichere Mindestbesatzung für diese
+      Veranstaltung sind noch nicht erfüllt!
+    info-signup:
+      Die Crewplanung für diese Veranstaltung wurde noch nicht freigegeben. Crew
+      Zuweisungen sind darum nur für Nutzer mit der Berechtigung zur Crewplanung
+      sichtbar. Wenn du mit der Crewplanung fertig bist kannst du die
+      Crewplanung veröffentlichen, um die zugewiesene Crew zu informieren.
     registration-id: Anmeldungs ID
     secure-crew: Sichere Besatzung
     tab:
@@ -522,12 +685,16 @@ views:
       registrations: Anmeldungen
       slots: Slots
     tooltip:
-      guest-info: '{name} ist Gastcrew. Positionen und Qualifikationen sind daher unbekannt.'
+      guest-info:
+        '{name} ist Gastcrew. Positionen und Qualifikationen sind daher
+        unbekannt.'
       information: Anmeldung
       positions: Positionen
       qualifications: Qualifikationen
     unsaved-changes:
-      message: Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden diese Änderungen verworfen. Möchtest du fortfahren?
+      message:
+        Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu
+        lädst, werden diese Änderungen verworfen. Möchtest du fortfahren?
       title: Änderungen verwerfen?
     validation:
       missing-location-icon: Bitte wähle ein Icon
@@ -545,7 +712,10 @@ views:
       free-slots: Freie Plätze
       search: Einträge filtern
       waitinglist: Warteliste
-    note-no-position: Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du kannst dich deshalb nicht selber für Veranstaltungen anmelden. Bitte melde dich im Büro um dir eine Position zuweisen zu lassen.
+    note-no-position:
+      Deinem Benutzerkonto wurde bisher noch keine Position zugewiesen. Du
+      kannst dich deshalb nicht selber für Veranstaltungen anmelden. Bitte melde
+      dich im Büro um dir eine Position zuweisen zu lassen.
     state:
       assigned: Eingeplant
       waitinglist: Warteliste
@@ -561,7 +731,12 @@ views:
     find-next-event: Veranstaltung anzeigen
     loading-events: Veranstaltungen werden geladen...
     next-month: Nächsten Monat
-    no-upcoming-events-description: Du hast aktuell keine anstehenden Veranstaltungen. Du kannst im Kalender oder der Veranstaltungsliste nach Veranstaltungen suchen und dich für Veranstaltungen anmelden, an denen du gerne teilnehmen möchtest. Je nach Veranstaltungsart wirst du dann zuerst auf die Warteliste gesetzt und per Email benachrichtigt, wenn du für die Crew eingeplant wirst.
+    no-upcoming-events-description:
+      Du hast aktuell keine anstehenden Veranstaltungen. Du kannst im Kalender
+      oder der Veranstaltungsliste nach Veranstaltungen suchen und dich für
+      Veranstaltungen anmelden, an denen du gerne teilnehmen möchtest. Je nach
+      Veranstaltungsart wirst du dann zuerst auf die Warteliste gesetzt und per
+      Email benachrichtigt, wenn du für die Crew eingeplant wirst.
     no-upcoming-events-title: Keine zukünftigen Veranstaltungen
     tab-title: Übersicht
     this-month: Diesen Monat
@@ -572,16 +747,20 @@ views:
       positions: Alle Positionen
     notifications:
       email: Emails
-      email-description: Diese Email wird verwendet um Benachrichtigungen an Nutzer zu schicken.
+      email-description:
+        Diese Email wird verwendet um Benachrichtigungen an Nutzer zu schicken.
       teams-webhook-not-set-up: Nicht eingerichtet
       teams-webhook-set-up: Eingerichtet
       teams-webhook-url: MS Teams Webhook
-      teams-webhook-url-description: An diesen Teams Webhook werden Admin Benachrichtigungen verschickt
+      teams-webhook-url-description:
+        An diesen Teams Webhook werden Admin Benachrichtigungen verschickt
       title: Benachrichtigungen
     positions:
       add-new: Position hinzufügen
       color: Farbe
-      delete-message: Bist du sicher, dass du die Position löschen möchtest? Die Position wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt.
+      delete-message:
+        Bist du sicher, dass du die Position löschen möchtest? Die Position wird
+        bei allen Nutzern, bei denen sie assoziiert ist, entfernt.
       delete-title: Position löschen
       edit: Position bearbeiten
       id: ID
@@ -593,7 +772,10 @@ views:
         name-must-be-unique: Eine Position mit diesem Namen existiert bereits
     qualifications:
       add-new: Qualifikation hinzufügen
-      delete-message: Bist du sicher, dass du die Qualifikation löschen möchtest? Die Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist, entfernt.
+      delete-message:
+        Bist du sicher, dass du die Qualifikation löschen möchtest? Die
+        Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist,
+        entfernt.
       delete-title: Qualifikation löschen
       description: Beschreibung
       edit: Qualifikation bearbeiten
@@ -607,7 +789,8 @@ views:
       status-no-expires: Ohne Ablaufdatum
       validation:
         key-must-be-unique: Eine Qualifikation mit dieser ID existiert bereits
-        name-must-be-unique: Eine Qualifikation mit diesem Namen existiert bereits
+        name-must-be-unique:
+          Eine Qualifikation mit diesem Namen existiert bereits
     tab:
       email: Email
       general: Allgemein
@@ -622,9 +805,11 @@ views:
       tab-title: Tab Titel
       tab-title-description: Prefix, der im Tab Titel angezeigt wird
       tech-support-email: Technical Support Email
-      tech-support-email-description: Email, die Nutzern für technischen Support angezeigt wird
+      tech-support-email-description:
+        Email, die Nutzern für technischen Support angezeigt wird
       theme-color: Theme Color
-      theme-color-description: Primärfarbe, die im Design für alle Nutzer verwendet wird
+      theme-color-description:
+        Primärfarbe, die im Design für alle Nutzer verwendet wird
       title: Oberfläche
   user-details:
     tab:

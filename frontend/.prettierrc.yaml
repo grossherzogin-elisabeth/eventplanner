@@ -1,0 +1,34 @@
+arrowParens: always
+bracketSpacing: true
+importOrder:
+  - '^vue$'
+  - '^vue-router$'
+  - '^vue-i18n$'
+  - '^vitest$'
+  - '^@vue/'
+  - 'msw'
+  - '<THIRD_PARTY_MODULES>'
+  - '^@/lib/(.*)$'
+  - '^@/shared/(.*)$'
+  - '^@/ctx-(.*)$'
+  - '^[./]'
+  - '^(.*).css$'
+importOrderSeparation: false
+importOrderSortSpecifiers: true
+overrides:
+  - files: ['*.yml', '*.yaml', '*.json']
+    options:
+      tabWidth: 2
+  - files: ['*.yml', '*.yaml', '*.md']
+    options:
+      printWidth: 80
+      proseWrap: always
+plugins:
+  - '@trivago/prettier-plugin-sort-imports'
+  - 'prettier-plugin-tailwindcss'
+printWidth: 140
+quoteProps: consistent
+semi: true
+singleQuote: true
+tabWidth: 4
+trailingComma: es5

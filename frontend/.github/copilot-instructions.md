@@ -9,25 +9,31 @@
 - [Back to root instructions](#back-to-root-instructions)
 - [Root instructions (overview)](../.github/copilot-instructions.md)
 
-Primary reference: Use the repository root file `../.github/copilot-instructions.md` for cross-cutting guidance (env,
-Docker, CI). This file keeps frontend-only guidance concise.
+Primary reference: Use the repository root file
+`../.github/copilot-instructions.md` for cross-cutting guidance (env, Docker,
+CI). This file keeps frontend-only guidance concise.
 
 ## Frontend-specific quick pointers
 
-- Dev server: http://localhost:8090 (Vite). Proxies `/api/`, `/auth/`, `/login/oauth2/code/` to backend
-  at http://localhost:8091. Override host with `VITE_HOST`.
+- Dev server: http://localhost:8090 (Vite). Proxies `/api/`, `/auth/`,
+  `/login/oauth2/code/` to backend at http://localhost:8091. Override host with
+  `VITE_HOST`.
 - Node: 26.x. Install deps and run dev: `npm install` then `npm run dev`.
 - Aliases: `@` → `frontend/src`.
-- PWA: `vite-plugin-pwa` enabled; ensure denylist avoids caching API/auth routes.
+- PWA: `vite-plugin-pwa` enabled; ensure denylist avoids caching API/auth
+  routes.
 
 ## Build, lint, and test
 
 - Format/lint/typecheck: `npm run check:format` ; `npm run check:lint`
 - Build: `npm run build`
 - Tests: `npm run test:coverage` (CET timezone). Uses Vitest + happy-dom + MSW.
-- In tests, prefer existing shared stubs/matchers/helpers from `test/utils` before introducing new ad-hoc versions.
-- UI test boundary: mock at the application use-case level (`useXUseCase()`), not repository/REST level.
-- MSW is fallback infrastructure in UI specs (mainly for unmocked reads). UI tests should not assert repository or HTTP details.
+- In tests, prefer existing shared stubs/matchers/helpers from `test/utils`
+  before introducing new ad-hoc versions.
+- UI test boundary: mock at the application use-case level (`useXUseCase()`),
+  not repository/REST level.
+- MSW is fallback infrastructure in UI specs (mainly for unmocked reads). UI
+  tests should not assert repository or HTTP details.
 
 ## Local dev
 
@@ -42,4 +48,5 @@ Docker, CI). This file keeps frontend-only guidance concise.
 
 ## Back to root instructions
 
-- See `../.github/copilot-instructions.md` for repository-wide guidance, environment variables, and Docker.
+- See `../.github/copilot-instructions.md` for repository-wide guidance,
+  environment variables, and Docker.
