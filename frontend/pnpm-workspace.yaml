@@ -1,0 +1,3 @@
+allowBuilds:
+    vite: true
+    msw: true
