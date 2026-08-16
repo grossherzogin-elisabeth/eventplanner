@@ -320,9 +320,9 @@ function resetCrewPlanning(): void {
 
 async function cancelEvent(): Promise<void> {
     if (event.value) {
-        const message = await cancelEventDialog.value?.open(event.value);
-        if (message !== undefined) {
-            const updatedEvent = await eventAdministrationUseCase.cancelEvent(event.value, message);
+        const confirmed = await cancelEventDialog.value?.open(event.value);
+        if (confirmed) {
+            const updatedEvent = await eventAdministrationUseCase.cancelEvent(event.value);
             updateState(updatedEvent);
             await router.push({ name: Routes.EventsListAdmin });
         }

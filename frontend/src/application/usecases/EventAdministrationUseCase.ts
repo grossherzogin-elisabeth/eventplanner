@@ -43,11 +43,10 @@ export class EventAdministrationUseCase {
         }
     }
 
-    public async cancelEvent(event: Event, message: string): Promise<Event> {
+    public async cancelEvent(event: Event): Promise<Event> {
         try {
             let savedEvent = await this.eventRepository.updateEvent(event.key, {
                 state: EventState.Canceled,
-                description: message, // TODO is this the right place to put the message?
             });
             savedEvent = this.eventService.updateComputedValues(savedEvent, this.authService.getSignedInUser());
             savedEvent = await this.eventCachingService.updateCache(savedEvent);

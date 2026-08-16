@@ -77,7 +77,7 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
+            <button class="btn-ghost" type="button" data-test-id="button-cancel" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
             <AsyncButton

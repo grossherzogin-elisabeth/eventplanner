@@ -11,10 +11,10 @@ components:
       Bist du sicher, dass du diese Veranstaltung absagen möchtest? Aktuell wird
       vom System noch keine automatische Mail an die Crew versand. Wenn du die
       Crew über die Absage informieren möchtest, tue dies bitte bevor du die
-      Veranstaltung absagst. | Bist du sicher, dass du die ausgewählten
+      Veranstaltung absagst. | Bist du sicher, dass du die ausgewählten {count}
       Veranstaltungen absagen möchtest? Aktuell wird vom System noch keine
-      automatische Mail an die Crew versand. Wenn du die Crew über die Absage
-      informieren möchtest, tue dies bitte bevor du die Veranstaltung absagst.
+      automatische Mail an die Crews versand. Wenn du die Crews über die Absagen
+      informieren möchtest, tue dies bitte bevor du die Veranstaltungen absagst.
     submit: Absagen
     title: Veranstaltung absagen | Veranstaltungen absagen
   event-details-card:

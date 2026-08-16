@@ -94,18 +94,17 @@ describe('EventAdministrationUseCase', () => {
         }
     });
 
-    it('should cancel event and persist canceled state with message', async () => {
+    it('should cancel event', async () => {
         const event = mockEvent({ key: 'event-1', state: EventState.OpenForSignup });
-        const updated = mockEvent({ key: 'event-1', state: EventState.Canceled, description: 'crew canceled' });
-        const cached = mockEvent({ key: 'event-1', state: EventState.Canceled, description: 'crew canceled' });
+        const updated = mockEvent({ key: 'event-1', state: EventState.Canceled });
+        const cached = mockEvent({ key: 'event-1', state: EventState.Canceled });
         eventRepository.updateEvent = vi.fn(async () => updated);
         eventCachingService.updateCache = vi.fn(async () => cached);
 
-        const result = await testee.cancelEvent(event, 'crew canceled');
+        const result = await testee.cancelEvent(event);
 
         expect(eventRepository.updateEvent).toHaveBeenCalledWith('event-1', {
             state: EventState.Canceled,
-            description: 'crew canceled',
         });
         expect(eventService.updateComputedValues).toHaveBeenCalledWith(updated, undefined);
         expect(eventCachingService.updateCache).toHaveBeenCalledWith(updated);
