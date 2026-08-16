@@ -26,12 +26,12 @@
         />
     </section>
     <section class="relative mb-16 grid gap-4">
-        <!-- TODO i18n -->
-        <span id="emergency-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Gesundheit</span>
-        <h2 class="text-secondary col-span-full font-bold">Wichtige gesundheitliche Informationen</h2>
+        <span id="emergency-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
+            {{ $t('components.user-emergency-form.short-title') }}
+        </span>
+        <h2 class="text-secondary col-span-full font-bold">{{ $t('components.user-emergency-form.title') }}</h2>
         <VInfo class="col-span-full">
-            Diese Daten sind vertraulich zu behandlen und nur für den Kapitän im Rahmen der Reiseunterlagen bestimmt! Alle Angaben werden
-            von der Stammcrew freiwillig gemacht.
+            {{ $t('components.user-emergency-form.note-privacy') }}
         </VInfo>
         <VInputTextArea
             v-model.trim="user.diseases"

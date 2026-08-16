@@ -1,6 +1,6 @@
 <template>
     <VDialog ref="dlg">
-        <template #title>Nutzer hinzufügen</template>
+        <template #title>{{ $t('domain.user.actions.create') }}</template>
         <template #default>
             <div class="px-4 pt-4 sm:px-8 lg:px-10">
                 <section>
@@ -30,8 +30,7 @@
                             :errors-visible="validation.showErrors.value"
                         />
                     </div>
-                    <!-- TODO i18n-->
-                    <VInfo> Du kannst im Anschluss weitere Daten eingeben und alle Eingaben noch nachträglich bearbeiten. </VInfo>
+                    <VInfo> {{ $t('components.create-user-dialog.note-edits') }} </VInfo>
                 </section>
             </div>
         </template>

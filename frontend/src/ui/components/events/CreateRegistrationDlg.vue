@@ -1,17 +1,18 @@
 <template>
     <VDialog ref="dlg" data-test-id="add-registration-dialog">
-        <template #title>Anmeldung hinzufügen</template>
+        <template #title>{{ $t('domain.registration.actions.create') }}</template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
+                        <!-- TODO i18n -->
                         Du kannst eine Anmeldung für ein Stammcrew Mitglied oder Gastcrew anlegen. Die Position kannst du nachträglich noch
                         auf der Warteliste ändern.
                     </p>
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.userKey"
-                            :label="$t('domain.types.user', 1)"
+                            :label="$t('domain.registration.user')"
                             required
                             :options="userOptions"
                             :errors="validation.errors.value['userKey']"
@@ -22,7 +23,7 @@
                         <VInputText
                             v-model="registration.name"
                             required
-                            :label="$t('domain.user.name')"
+                            :label="$t('domain.registration.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -30,7 +31,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.positionKey"
-                            :label="$t('domain.types.position')"
+                            :label="$t('domain.registration.position')"
                             required
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"

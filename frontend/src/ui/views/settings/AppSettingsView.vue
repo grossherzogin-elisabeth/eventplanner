@@ -60,7 +60,7 @@ const settings = ref<AppSettings | null>(null);
 const filter = useQuery<string>('filter', '').parameter;
 
 function init(): void {
-    emit('update:tab-title', 'Einstellungen'); // TODO i18n
+    emit('update:tab-title', t('views.settings.title'));
     fetchSettings();
 }
 

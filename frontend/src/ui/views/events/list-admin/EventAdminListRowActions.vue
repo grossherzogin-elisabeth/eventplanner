@@ -54,7 +54,7 @@
             @click="emit('update-events:cancel', props.events)"
         >
             <i class="fa-solid fa-ban" />
-            <span>{{ $t('domain.event.actions.cancel') }}</span>
+            <span>{{ $t('domain.event.actions.cancel', props.events.length) }}</span>
         </li>
         <!-- Delete -->
         <li
@@ -63,7 +63,7 @@
             @click="emit('update-events:delete', props.events)"
         >
             <i class="fa-solid fa-trash-alt" />
-            <span>{{ $t('domain.event.actions.delete') }}</span>
+            <span>{{ $t('domain.event.actions.delete', props.events.length) }}</span>
         </li>
 
         <hr />

@@ -1,8 +1,9 @@
 <template>
     <section class="relative mb-16 grid gap-4">
-        <!-- TODO i18n -->
-        <span id="contact-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Email & Telefon</span>
-        <h2 class="text-secondary col-span-full font-bold">Email & Telefon</h2>
+        <span id="contact-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
+            {{ $t('domain.user.email-and-phone') }}
+        </span>
+        <h2 class="text-secondary col-span-full font-bold">{{ $t('domain.user.email-and-phone') }}</h2>
         <VInputText
             v-model.trim="user.email"
             data-test-id="email"

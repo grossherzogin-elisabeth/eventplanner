@@ -48,7 +48,7 @@
                     <i class="fa-solid fa-user-minus" />
                 </template>
                 <template #label>
-                    {{ $t('domain.registration.actions.cancel-waiting-list') }}
+                    {{ $t('domain.registration.actions.leave-waiting-list') }}
                 </template>
             </AsyncButton>
             <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">

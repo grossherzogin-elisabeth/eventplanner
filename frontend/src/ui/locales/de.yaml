@@ -1,4 +1,13 @@
 components:
+  create-registration-for-user-dialog:
+    note-adding-to-waiting-list:
+      '{name} wird zur Warteliste der ausgewählten Veranstaltung hinzugefügt.
+      Wenn {name} auch direkt zur Crew hinzugefügt werden soll, musst du die
+      Veranstaltung noch manuell bearbeiten.'
+  create-user-dialog:
+    note-edits:
+      Du kannst im Anschluss weitere Daten eingeben und alle Eingaben noch
+      nachträglich bearbeiten.
   error-dialog:
     default-text:
       Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.
@@ -110,6 +119,17 @@ components:
       Du hast die Qualifikation für mehrere Positionen. Mit welcher Position
       möchtest du an dieser Veranstaltung teilnehmen?
     label: Meine Position
+  user-emergency-form:
+    note-privacy:
+      Diese Daten sind vertraulich zu behandlen und nur für den Kapitän im
+      Rahmen der Reiseunterlagen bestimmt! Alle Angaben werden von der Stammcrew
+      freiwillig gemacht.
+    short-title: Gesundheit
+    title: Wichtige gesundheitliche Informationen
+  user-other-form:
+    comment: Kommentar (nicht für den Nutzer einsehbar)
+    diet: Ernährung
+    other: Sonstiges
 domain:
   address:
     address-line-1: Straße, Hausnr.
@@ -122,12 +142,12 @@ domain:
     phone: Telefonnummer des Notfallkontakts
   event:
     actions:
-      cancel: Veranstaltung absagen
+      cancel: Veranstaltung absagen | Ausgewählte absagen
       contact-crew: Crew kontaktieren
       create: Veranstaltung erstellen
       create-calendar-entry: Kalendereintrag erstellen
-      delete: Veranstaltung löschen
-      edit: Veranstaltung bearbeiten|Alle bearbeiten
+      delete: Veranstaltung löschen | Ausgewählte löschen
+      edit: Veranstaltung bearbeiten | Ausgewählte bearbeiten
       export-to-template: '{template} exportieren'
       leave-waiting-list: Warteliste verlassen
       publish-crew: Crew veröffentlichen
@@ -248,10 +268,10 @@ domain:
       add-note: Notiz fürs Büro hinzufügen
       assign: Zur Crew hinzufügen
       cancel: Teilnahme absagen
-      cancel-waiting-list: Warteliste verlassen
       create: Anmeldung hinzufügen
       delete: Anmeldung löschen
       edit: Anmeldung bearbeiten
+      leave-waiting-list: Warteliste verlassen
       unassign: Auf die Warteliste
     arrival: Anreise am
     arrival-on-day-before: Anreise am Vortag
@@ -263,6 +283,7 @@ domain:
     overnight-stay: Übernachtung an Bord
     position: Position
     unknown-user: Unbekannter Nutzer
+    user: Nutzer
   role:
     ROLE_ADMIN: Admin
     ROLE_EVENT_LEADER: Veranstaltungsleiter:in
@@ -290,9 +311,11 @@ domain:
     diet: Ernährungsweise
     diseases: Krankheiten
     email: Email
+    email-and-phone: Email & Telefon
     emergency-contact: Notfallkontakt
     first-name: Vorname
     gender: Geschlecht
+    generic-data: Algemeine Daten
     intolerances: Unverträglichkeiten
     last-login-at: Letzter Login am {date}
     last-name: Nachname
@@ -305,6 +328,7 @@ domain:
     no-login-recorded: Bisher kein Login registriert
     official-name-hint: Name wie im Ausweisdokument
     pass-nr: Personalausweis- oder Passnummer
+    personal-data: Persönliche Daten
     phone: Telefon Festnetz
     phone-work: Telefon dienstlich
     place-of-birth: Geburtsort
@@ -743,6 +767,7 @@ views:
       notifications: Benachrichtigungen
       positions: Positionen
       qualifications: Qualifikationen
+    title: Einstellungen
     ui:
       menu-title: Menü Titel
       menu-title-description: Titel, der im Navigationsmenü angezeigt wird
@@ -757,6 +782,9 @@ views:
       theme-color-description:
         Primärfarbe, die im Design für alle Nutzer verwendet wird
       title: Oberfläche
+  unauthorized:
+    message: Diese Seite ist nur für angemeldete Benutzer sichtbar
+    title: Fehlende Berechtigung
   user-details:
     tab:
       certificates: Qualifikationen

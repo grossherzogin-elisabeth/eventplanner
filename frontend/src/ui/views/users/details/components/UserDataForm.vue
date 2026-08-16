@@ -1,8 +1,9 @@
 <template>
     <section v-if="hasPermission(Permission.WRITE_USERS)" class="relative mb-16 grid gap-4">
-        <!-- TODO i18n -->
-        <span id="app-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">App</span>
-        <h2 class="text-secondary col-span-full font-bold">App</h2>
+        <span id="app-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
+            {{ $t('domain.user.generic-data') }}
+        </span>
+        <h2 class="text-secondary col-span-full font-bold">{{ $t('domain.user.generic-data') }}</h2>
         <VInputText
             v-model.trim="user.authKey"
             data-test-id="auth-key"
@@ -62,9 +63,9 @@
     </section>
     <section class="relative mb-16 grid gap-4 sm:grid-cols-6">
         <span id="personal-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
-            Persönliche Daten
+            {{ $t('domain.user.personal-data') }}
         </span>
-        <h2 class="text-secondary col-span-full font-bold">Persönliche Daten</h2>
+        <h2 class="text-secondary col-span-full font-bold">{{ $t('domain.user.personal-data') }}</h2>
         <VInputSelect
             v-model="user.gender"
             data-test-id="gender"

@@ -123,7 +123,7 @@
                     </button>
                     <button v-else class="permission-write-events btn-ghost" type="button" @click="editEvents(selectedEvents)">
                         <i class="fa-solid fa-edit"></i>
-                        <span class="truncate">{{ $t('views.event-admin-list.batch-edit.title') }}</span>
+                        <span class="truncate">{{ $t('domain.event.actions.edit', 2) }}</span>
                     </button>
                 </div>
             </template>

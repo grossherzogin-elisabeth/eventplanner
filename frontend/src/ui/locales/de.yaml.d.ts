@@ -202,7 +202,7 @@ declare const value: {
                 'add-note': string;
                 'create': string;
                 'cancel': string;
-                'cancel-waiting-list': string;
+                'leave-waiting-list': string;
                 'edit': string;
                 'assign': string;
                 'delete': string;

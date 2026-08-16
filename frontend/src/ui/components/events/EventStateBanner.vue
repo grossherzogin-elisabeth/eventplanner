@@ -1,7 +1,7 @@
 <template>
     <section v-if="content" class="event-state-banner" :class="{ 'sticky md:static': props.sticky }">
         <component :is="content.type">
-            <i18n-t tag="span" :keypath="content.message">
+            <i18n-t tag="span" :keypath="`components.event-state-banner.${content.message}`">
                 <template #signedInUserPosition>
                     <b>{{ positions.get(props.event.signedInUserRegistration?.positionKey).name }}</b>
                 </template>
@@ -47,26 +47,26 @@ const openPositions = computed<Position[]>(() => {
 const content = computed<StateBannerContent | undefined>(() => {
     // event is still in planning state
     if (props.event.state === EventState.Draft) {
-        return { type: VInfo, message: 'components.event-state-banner.draft' };
+        return { type: VInfo, message: 'draft' };
     }
     if (props.event.state === EventState.OpenForSignup && props.event.signupType === EventSignupType.Assignment) {
-        return { type: VInfo, message: 'components.event-state-banner.planning' };
+        return { type: VInfo, message: 'planning' };
     }
     // event was canceled
     if (props.event.state === EventState.Canceled) {
-        return { type: VWarning, message: 'components.event-state-banner.canceled' };
+        return { type: VWarning, message: 'canceled' };
     }
     // user is assigned
     if (props.event.signedInUserRegistration && props.event.isSignedInUserAssigned) {
-        return { type: VSuccess, message: 'components.event-state-banner.assigned' };
+        return { type: VSuccess, message: 'assigned' };
     }
     // user is on waiting list
     if (props.event.signedInUserRegistration) {
-        return { type: VInfo, message: 'components.event-state-banner.waiting-list' };
+        return { type: VInfo, message: 'waiting-list' };
     }
     // user has no registration on this event, but crew members are missing
     if (openPositions.value.length > 0) {
-        return { type: VWarning, message: 'components.event-state-banner.missing-crew' };
+        return { type: VWarning, message: 'missing-crew' };
     }
     // no banner
     return undefined;

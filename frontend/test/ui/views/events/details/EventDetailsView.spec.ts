@@ -85,7 +85,7 @@ describe('EventDetailsView.vue', () => {
             await awaitPageContentLoaded(testee);
             const primaryBtn = testee.find('.btn-danger');
             expect(primaryBtn.exists()).toBe(true);
-            expect(primaryBtn.text()).toContain(testee.vm.$t('domain.registration.actions.cancel-waiting-list'));
+            expect(primaryBtn.text()).toContain(testee.vm.$t('domain.registration.actions.leave-waiting-list'));
         });
 
         it('should have calendar entry action', async () => {

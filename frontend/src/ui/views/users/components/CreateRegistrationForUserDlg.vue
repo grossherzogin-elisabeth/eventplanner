@@ -1,14 +1,15 @@
 <template>
     <VDialog ref="dlg">
-        <!-- TODO i18n -->
-        <template #title>Anmeldung hinzufügen</template>
+        <template #title>{{ $t('domain.registration.actions.create') }}</template>
         <template #default>
             <div v-if="registration" class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
-                        {{ registration.user.firstName }} wird zur Warteliste der ausgewählten Veranstaltung hinzugefügt. Wenn
-                        {{ registration.user.firstName }} auch direkt zur Crew hinzugefügt werden soll, musst du die Veranstaltung noch
-                        manuell bearbeiten.
+                        {{
+                            $t('components.create-registration-for-user-dialog.note-adding-to-waiting-list', {
+                                name: registration.user.nickName || registration.user.firstName,
+                            })
+                        }}
                     </p>
                     <div class="mb-4">
                         <VInputCombobox
