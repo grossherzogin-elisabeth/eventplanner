@@ -1,11 +1,5 @@
-trailingComma: es5
-tabWidth: 4
-printWidth: 140
-semi: true
-singleQuote: true
-quoteProps: consistent
-bracketSpacing: true
 arrowParens: always
+bracketSpacing: true
 importOrder:
   - '^vue$'
   - '^vue-router$'
@@ -21,9 +15,6 @@ importOrder:
   - '^(.*).css$'
 importOrderSeparation: false
 importOrderSortSpecifiers: true
-plugins:
-  - '@trivago/prettier-plugin-sort-imports'
-  - 'prettier-plugin-tailwindcss'
 overrides:
   - files: ['*.yml', '*.yaml', '*.json']
     options:
@@ -32,3 +23,12 @@ overrides:
     options:
       printWidth: 80
       proseWrap: always
+plugins:
+  - '@trivago/prettier-plugin-sort-imports'
+  - 'prettier-plugin-tailwindcss'
+printWidth: 140
+quoteProps: consistent
+semi: true
+singleQuote: true
+tabWidth: 4
+trailingComma: es5
