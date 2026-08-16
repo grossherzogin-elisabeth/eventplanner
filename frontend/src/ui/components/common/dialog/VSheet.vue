@@ -33,7 +33,7 @@
                                 :class="{ 'shadow-sm': isFullyExpanded }"
                             >
                                 <div v-if="props.showBackButton" class="mr-4 -ml-4">
-                                    <button class="btn-icon" @click="back()">
+                                    <button class="btn-icon" type="button" @click="back()">
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
                                 </div>
@@ -45,7 +45,7 @@
                                     </div>
                                 </div>
                                 <div class="-mr-4 hidden sm:block">
-                                    <button class="btn-icon" @click="reject()">
+                                    <button class="btn-icon" type="button" @click="reject()">
                                         <i class="fa-solid fa-close"></i>
                                     </button>
                                 </div>

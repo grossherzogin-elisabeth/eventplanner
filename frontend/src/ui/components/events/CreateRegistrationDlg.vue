@@ -11,7 +11,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.userKey"
-                            label="Nutzer"
+                            :label="$t('domain.types.user', 1)"
                             required
                             :options="userOptions"
                             :errors="validation.errors.value['userKey']"
@@ -22,7 +22,7 @@
                         <VInputText
                             v-model="registration.name"
                             required
-                            label="Name"
+                            :label="$t('domain.user.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -30,7 +30,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.positionKey"
-                            label="Position"
+                            :label="$t('domain.types.position')"
                             required
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"
@@ -48,7 +48,7 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model="registration.note"
-                            label="Notiz"
+                            :label="$t('domain.registration.note')"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -58,13 +58,13 @@
                             v-model="registration.overnightStay"
                             :errors="validation.errors.value['overnightStay']"
                             :errors-visible="validation.showErrors.value"
-                            label="Übernachtung an Bord"
+                            :label="$t('domain.registration.overnight-stay')"
                         />
                     </div>
                     <div v-if="registration.overnightStay" class="mb-4">
                         <VInputDate
                             v-model="registration.arrival"
-                            label="Anreise am"
+                            :label="$t('domain.registration.arrival')"
                             :errors="validation.errors.value['arrival']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Am ersten Tag der Veranstaltung"
@@ -93,11 +93,11 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+            <button class="btn-ghost" type="button" @click="cancel">
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>{{ props.submitText || 'Übernehmen' }}</span>
+            <button class="btn-ghost" type="button" :disabled="validation.disableSubmit.value" @click="submit">
+                <span>{{ props.submitText || $t('generic.apply') }}</span>
             </button>
         </template>
     </VDialog>

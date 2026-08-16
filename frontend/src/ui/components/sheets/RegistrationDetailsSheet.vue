@@ -1,4 +1,5 @@
 <template>
+    <!-- TODO i18n  -->
     <VSheet ref="sheet" min-height="20rem" :show-back-button="view !== View.OVERVIEW" @back="view = View.OVERVIEW">
         <template #title>
             <template v-if="view === View.POSITION">Position auswählen</template>
@@ -14,11 +15,11 @@
         </template>
         <template #bottom>
             <div v-if="view === View.OVERVIEW" class="lg:px-10-lg xs:px-8 flex justify-end gap-2 px-4 py-4">
-                <button class="btn-ghost" name="save" @click="cancel()">
-                    <span>Abbrechen</span>
+                <button class="btn-ghost" type="button" name="save" @click="cancel()">
+                    <span>{{ $t('generic.cancel') }}</span>
                 </button>
-                <button class="btn-primary" @click="submit()">
-                    <span v-if="registration.key">Speichern</span>
+                <button class="btn-primary" type="button" @click="submit()">
+                    <span v-if="registration.key">{{ $t('generic.save') }}</span>
                     <span v-else>Anmelden</span>
                 </button>
             </div>

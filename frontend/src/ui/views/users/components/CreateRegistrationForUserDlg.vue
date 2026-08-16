@@ -1,5 +1,6 @@
 <template>
     <VDialog ref="dlg">
+        <!-- TODO i18n -->
         <template #title>Anmeldung hinzufügen</template>
         <template #default>
             <div v-if="registration" class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -12,7 +13,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.eventKey"
-                            label="Veranstaltung"
+                            :label="$t('domain.types.event')"
                             :options="eventOptions"
                             :errors="validation.errors.value['eventKey']"
                             :errors-visible="validation.showErrors.value"
@@ -21,7 +22,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.positionKey"
-                            label="Position"
+                            :label="$t('domain.registration.position')"
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"
                             :errors-visible="validation.showErrors.value"
@@ -30,7 +31,7 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model="registration.note"
-                            label="Notiz"
+                            :label="$t('domain.registration.note')"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -39,11 +40,11 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+            <button class="btn-ghost" type="button" @click="cancel">
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <AsyncButton class="btn-ghost" name="save" :action="submit" :disabled="validation.disableSubmit.value">
-                <template #label>Speichern</template>
+                <template #label>{{ $t('generic.save') }}</template>
             </AsyncButton>
         </template>
     </VDialog>

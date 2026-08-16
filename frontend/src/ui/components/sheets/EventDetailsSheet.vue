@@ -14,7 +14,7 @@
                     :to="{ name: props.linkTo ?? Routes.EventDetails, params: { year: event.start.getFullYear(), key: event.key } }"
                     class="btn-ghost"
                 >
-                    <span>{{ props.linkLabel ?? $t('components.event-details-sheet.show-details') }}</span>
+                    <span>{{ props.linkLabel ?? $t('generic.show-details') }}</span>
                 </RouterLink>
             </div>
         </template>

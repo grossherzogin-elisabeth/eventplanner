@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto" data-test-id="edit-slot-dialog">
         <template #title>
-            <template v-if="createMode">{{ $t('views.event-edit.actions.add-slot') }}</template>
-            <template v-else>{{ $t('views.event-edit.actions.edit-slot') }}</template>
+            <template v-if="createMode">{{ $t('domain.event-slot.actions.create') }}</template>
+            <template v-else>{{ $t('domain.event-slot.actions.edit') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 flex flex-1 flex-col px-4 pt-4 lg:px-10">
@@ -60,10 +60,10 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
+            <button class="btn-ghost" type="button" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" @click="submit">
+            <button class="btn-ghost" type="button" @click="submit">
                 <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>

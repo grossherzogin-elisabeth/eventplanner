@@ -3,8 +3,8 @@ import { PositionService, usePositionService } from '@/domain';
 import { mockPositionCaptain, mockPositions } from '~/mocks';
 
 const ERR_REQUIRED = 'generic.validation.required';
-const ERR_DUPLICATE_KEY = 'views.settings.positions.validation.key-must-be-unique';
-const ERR_DUPLICATE_NAME = 'views.settings.positions.validation.name-must-be-unique';
+const ERR_DUPLICATE_KEY = 'domain.position.validation.key-must-be-unique';
+const ERR_DUPLICATE_NAME = 'domain.position.validation.name-must-be-unique';
 
 describe('PositionService', () => {
     let testee: PositionService;

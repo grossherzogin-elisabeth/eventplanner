@@ -3,8 +3,8 @@ import { QualificationService, useQualificationService } from '@/domain';
 import { mockQualificationCaptain, mockQualifications } from '~/mocks';
 
 const ERR_REQUIRED = 'generic.validation.required';
-const ERR_DUPLICATE_KEY = 'views.settings.qualifications.validation.key-must-be-unique';
-const ERR_DUPLICATE_NAME = 'views.settings.qualifications.validation.name-must-be-unique';
+const ERR_DUPLICATE_KEY = 'domain.qualification.validation.key-must-be-unique';
+const ERR_DUPLICATE_NAME = 'domain.qualification.validation.name-must-be-unique';
 
 describe('QualificationService', () => {
     let testee: QualificationService;

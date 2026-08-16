@@ -1,9 +1,8 @@
 <template>
     <VDialog ref="dlg" data-test-id="edit-location-dialog">
         <template #title>
-            <template v-if="location.order === 1">{{ $t('views.event-edit.actions.edit-start-location') }}</template>
-            <template v-else-if="location.order === -1">{{ $t('views.event-edit.actions.add-location') }}</template>
-            <template v-else>{{ $t('views.event-edit.actions.edit-location') }}</template>
+            <template v-if="location.order === -1">{{ $t('domain.location.actions.create') }}</template>
+            <template v-else>{{ $t('domain.location.actions.edit') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -69,7 +68,7 @@
                     </div>
                     <div class="mb-4 flex justify-end">
                         <button class="link text-sm" @click="location.eta = undefined">
-                            {{ $t('views.event-edit.actions.delete-eta') }}
+                            {{ $t('domain.location.actions.delete-eta') }}
                         </button>
                     </div>
                     <div class="mb-2 flex space-x-4">
@@ -96,7 +95,7 @@
                     </div>
                     <div class="mb-4 flex justify-end">
                         <button class="link text-sm" @click="location.etd = undefined">
-                            {{ $t('views.event-edit.actions.delete-etd') }}
+                            {{ $t('domain.location.actions.delete-etd') }}
                         </button>
                     </div>
                     <div class="mb-4">
@@ -135,10 +134,10 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
+            <button class="btn-ghost" type="button" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" type="button" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>

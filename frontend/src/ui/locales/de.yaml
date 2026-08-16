@@ -5,7 +5,6 @@ components:
     default-title: Unerwarteter Fehler
     details: Fehler Details
     retry: Erneut versuchen
-    show-details: Details anzeigen
   event-cancel-dialog:
     message:
       Bist du sicher, dass du diese Veranstaltung absagen möchtest? Aktuell wird
@@ -17,32 +16,21 @@ components:
       informieren möchtest, tue dies bitte bevor du die Veranstaltungen absagst.
     submit: Absagen
     title: Veranstaltung absagen | Veranstaltungen absagen
+  event-create-dialog:
+    description-placeholder: Kurze Beschreibung oder Zusatzinformationen
+    name-placeholder: Titel der Veranstaltung
   event-details-card:
-    assigned: '{count} Crew | {count} Crew'
-    days: '{count} Tag|{count} Tage'
+    assigned: '{count} Crew'
     registrations: '{count} Anmeldung | {count} Anmeldungen'
     title: Details
-    waitinglist: '{count} Warteliste | {count} Warteliste'
-  event-details-sheet:
-    note-assigned: Du bist für diese Veranstaltung als {0} eingeplant
-    note-missing-crew:
-      'Für diese Veranstaltung wird noch Crew für die folgenden Positionen
-      gesucht:'
-    note-on-waiting-list:
-      Du stehst für diese Veranstaltung als {0} auf der Warteliste
-    show-details: Details anzeigen
+    waitinglist: '{count} Warteliste'
   event-locations-card:
     address-link: Anreiseinformationen
-    eta: 'Ankunft:'
-    etd: 'Abfahrt:'
     learn-more: Weitere Informationen
     placeholder:
       Für diese Veranstaltung wurde noch keine Route bekannt gegeben. Sobald
       diese Informationen verfügbar sind, kannst du sie hier sehen.
-    title: Ort | Route
   event-participants-card:
-    assigned: Crew ({count})
-    empty: Noch nicht besetzt
     no-registrations: Für diese Veranstaltung gibt es noch keine Anmeldungen.
     no-waitinglist: Für diese Veranstaltung gibt es aktuell keine Warteliste.
     placeholder:
@@ -55,41 +43,31 @@ components:
       Alle Anmeldungen werden zuerst auf der Warteliste gesammelt. Anschließend
       wird aus diesen Anmeldungen eine Crew zusammengestellt. Wenn du zur Crew
       hinzugefügt wirst, benachrichtigen wir dich per Email darüber.
-    registrations: Anmeldungen ({count})
-    unknown: Unbekannter Nutzer
-    waitinglist: Warteliste ({count})
   event-registration-details-card:
-    arrival: Anreise am Vortag gewünscht
-    arrival-description:
-      Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen.
-      Bitte gib hier an, falls du bereits vorher anreisen möchtest, damit das
-      Büro entsprechend planen kann.
-    arrival-note:
-      Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn
-      nicht garantiert werden kann.
-    note: Notiz fürs Büro
-    note-description:
-      Hier kannst du zusätzliche Informationen für deine Anmeldung hinterlegen,
-      die für das Büro bei der Planung relevant sein könnten.
-    note-none: Du hast keine Notiz hinterlegt
-    overnight-stay: Übernachtung an Bord gewünscht
-    overnight-stay-description:
-      Möchtest du an Bord übernachten? Bei mehrtägigen Veranstaltungen wird
-      immer von einer Übernachtung an Bord ausgegangen.
-    overnight-stay-note:
-      Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn
-      nicht garantiert werden kann.
-    position: Meine Position
-    position-description:
-      Du hast die Qualifikation für mehrere Positionen. Mit welcher Position
-      möchtest du dich anmelden?
     title: Meine Anmeldung
+  event-state-banner:
+    assigned:
+      Du bist für diese Veranstaltung als {signedInUserPosition} eingeplant.
+    canceled: Diese Veranstaltung wurde abgesagt!
+    confirmed: Du hast deine Teilnahme bestätigt.
+    draft:
+      Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist nur für
+      Nutzer mit Bearbeiten-Berechtigung sichtbar.
+    missing-crew:
+      'Für diese Veranstaltung wird noch Crew für die folgenden Positionen
+      gesucht: {openPositions}.'
+    planning:
+      Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung
+      garantiert keine Teilnahme an der Veranstaltung! Sobald die Crewplanung
+      veröffentlicht wird, wirst du per Email darüber informiert.
+    waiting-list:
+      Du stehst für diese Veranstaltung als {signedInUserPosition} auf der
+      Warteliste.
   menu:
     account: Mein Profil
     calendar: Kalender
     events: Alle Veranstaltungen
     events-admin: Veranstaltungen verwalten
-    feedback: Feedback
     home: Übersicht
     impersonate: Du siehst die Anwendung aus Sicht von {0}
     no-account:
@@ -102,8 +80,36 @@ components:
     settings: Einstellungen
     sign-out: Abmelden
     start: Start
+    stop-impersonate: Impersonate Modus beenden
     users: Nutzerliste
     users-admin: Nutzer verwalten
+  registration-arrival-card:
+    description:
+      Bei manchen Veranstaltungen ist es möglich bereits am Vortag anzureisen.
+      Bitte gib hier an, falls du bereits vorher anreisen möchtest, damit das
+      Büro entsprechend planen kann.
+    no: Nein, ich reise am Tag der Veranstaltung an
+    note:
+      Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn
+      nicht garantiert werden kann.
+    yes: Ja, ich möchte wenn möglich am Vortag anreisen
+  registration-note-card:
+    description:
+      Hier kannst du zusätzliche Informationen für deine Anmeldung hinterlegen,
+      die für das Büro bei der Planung relevant sein könnten.
+    none: Du hast keine Notiz hinterlegt
+  registration-overnight-stay-card:
+    description:
+      Möchtest du an Bord übernachten? Bei mehrtägigen Veranstaltungen wird
+      immer von einer Übernachtung an Bord ausgegangen.
+    note:
+      Bitte beachte, das eine Übernachtung an Bord vor Veranstaltungsbeginn
+      nicht garantiert werden kann.
+  registration-position-card:
+    description:
+      Du hast die Qualifikation für mehrere Positionen. Mit welcher Position
+      möchtest du an dieser Veranstaltung teilnehmen?
+    label: Meine Position
 domain:
   address:
     address-line-1: Straße, Hausnr.
@@ -116,30 +122,28 @@ domain:
     phone: Telefonnummer des Notfallkontakts
   event:
     actions:
-      add-to-crew: Zur Crew hinzufügen
-      cancel: Teilnahme absagen
+      cancel: Veranstaltung absagen
       contact-crew: Crew kontaktieren
+      create: Veranstaltung erstellen
       create-calendar-entry: Kalendereintrag erstellen
-      create-registration: Anmeldung hinzufügen
       delete: Veranstaltung löschen
       edit: Veranstaltung bearbeiten|Alle bearbeiten
       export-to-template: '{template} exportieren'
       leave-waiting-list: Warteliste verlassen
-      remove-from-crew: Auf die Warteliste
+      publish-crew: Crew veröffentlichen
+      reset-crew: Crew zurücksetzen
       sign-up: Anmelden
-      update-state-to-canceled: Absagen
-      update-state-to-open-for-signup: Anmeldungen freischalten
-      update-state-to-published: Crew veröffentlichen
+      start-crew-signup: Anmeldungen freischalten
       view: Veranstaltung anzeigen
     category: Kategorie
     crew: Crew
     crew-count: Crew ({count})
     description: Beschreibung
-    duration: Veranstaltungsdauer
-    end: Veranstaltungsende
     end-date: Enddatum
     end-time: Crew von Bord
+    location: Ort|Geplante Route
     name: Veranstaltungsname
+    # TODO move this to a better fitting place
     no-slot-for-position-error:
       message:
         '{name} kann nicht zur Crew hinzugefügt werden, da es keinen freien Slot
@@ -150,10 +154,7 @@ domain:
       title: Zuweisung nicht möglich
     registration-count: Anmeldungen ({count})
     registrations: Anmeldungen
-    route: Geplante Route
     signup-type: Anmeldetyp
-    slot:
-      empty: noch nicht besetzt
     start: Veranstaltungsbeginn
     start-date: Startdatum
     start-time: Crew an Bord
@@ -166,9 +167,15 @@ domain:
     assignment: Warteliste
     open: Direktanmeldung
   event-slot:
+    actions:
+      create: Crewslot hinzufügen
+      delete: Crewslot löschen
+      duplicate: Crewslot duplizieren
+      edit: Crewslot bearbeiten
     alternative-positions: Alternative Positionen
     criticality: Kritikalität
     display-name: Anzeigename
+    empty: Noch nicht besetzt
     important: Wichtig
     optional: Optional
     position: Position
@@ -189,8 +196,16 @@ domain:
     weekend-event: Wochenendreise
     work-event: Arbeitsdienst
   location:
+    actions:
+      create: Routenabschnitt hinzufügen
+      delete: Routenabschnitt löschen
+      delete-eta: ETA löschen
+      delete-etd: ETD löschen
+      edit: Routenabschnitt bearbeiten
     address: Adresse
     address-link: Adress Link (z.b. Google Maps)
+    arrival: Ankunft
+    departure: Abfahrt
     eda: EDA
     edd: EDD
     eta: ETA
@@ -199,14 +214,52 @@ domain:
     information: Weitere Informationen
     information-link: Weitere Informationen Link
     name: Name
+  position:
+    actions:
+      create: Position hinzufügen
+      edit: Position bearbeiten
+    color: Farbe
+    imo-list-rank: Anzeigename IMO Liste
+    key: ID
+    name: Name
+    prio: Priorität
+    validation:
+      key-must-be-unique: Eine Position mit dieser ID existiert bereits
+      name-must-be-unique: Eine Position mit diesem Namen existiert bereits
+  qualification:
+    actions:
+      create: Qualifikation hinzufügen
+      delete: Qualifikation löschen
+      edit: Qualifikation bearbeiten
+    description: Beschreibung
+    expires: Mit Ablaufdatum
+    expires-on: Gültig bis
+    icon: Icon
+    key: ID
+    name: Name
+    no-expiration-date: Ohne Ablaufdatum
+    positions: Positionen
+    validation:
+      key-must-be-unique: Eine Qualifikation mit dieser ID existiert bereits
+      name-must-be-unique: Eine Qualifikation mit diesem Namen existiert bereits
+    with-expiration-date: Gültigkeit der Qualifikation ist zeitlich begrenzt
   registration:
+    actions:
+      add-note: Notiz fürs Büro hinzufügen
+      assign: Zur Crew hinzufügen
+      cancel: Teilnahme absagen
+      cancel-waiting-list: Warteliste verlassen
+      create: Anmeldung hinzufügen
+      delete: Anmeldung löschen
+      edit: Anmeldung bearbeiten
+      unassign: Auf die Warteliste
     arrival: Anreise am
     arrival-on-day-before: Anreise am Vortag
     confirmation-pending: Bestätigung austehend
     confirmed: Teilnahme bestätigt
     guest: Gastcrew
     name: Name
-    note: Notiz
+    note: Notiz fürs Büro
     overnight-stay: Übernachtung an Bord
     position: Position
     unknown-user: Unbekannter Nutzer
@@ -219,14 +272,19 @@ domain:
     ROLE_USER_MANAGER: Nutzerverwalter:in
   types:
     event: Veranstaltung|Veranstaltungen
+    location: Ort|Route
+    position: Position|Positionen
+    qualification: Qualifikation|Qualifikationen
     registration: Anmeldung|Anmeldungen
     user: Nutzer:in|Nutzer:innen
   user:
     actions:
       create: Nutzer erstellen
       impersonate: Impersonate
+      view: Nutzer anzeigen
       write-email: Email schreiben
     address: Adresse
+    auth-key: OpenID Connect Subject ID
     date-and-place-of-birth: Geburtsdatum und -ort
     date-of-birth: Geburtstag
     diet: Ernährungsweise
@@ -245,26 +303,35 @@ domain:
     nationality: Nationalität
     nick-name: Anzeigename
     no-login-recorded: Bisher kein Login registriert
+    official-name-hint: Name wie im Ausweisdokument
     pass-nr: Personalausweis- oder Passnummer
     phone: Telefon Festnetz
     phone-work: Telefon dienstlich
     place-of-birth: Geburtsort
-    qualification:
-      all-valid: Alle gültig
-      expired-count: '{count} abgelaufene'
     title: Titel
+    verified-at: Daten verifiziert am {date}
   user-qualification:
+    actions:
+      create: Qualifikation zuweisen
+      delete: Qualifikation entfernen
+      edit: Qualifikation bearbeiten
+    expired: Abgelaufen
+    expired-count: '{count} abgelaufene'
     expires-at: Gültig bis {date}
-    status:
-      expired: Abgelaufen
-      expiring-soon: Läuft bald ab
-      valid: Gültig
+    expiring-soon: Läuft bald ab
+    expiring-soon-count: '{count} läuft bald ab|{count} laufen bald ab'
+    note: Bemerkung
+    valid: Gültig|Alle gültig
 generic:
   add: Hinzufügen
   apply: Übernehmen
   cancel: Abbrechen
+  click-to-show: 'zum Ansehen klicken'
   close: Schließen
+  created-at: Erstellt am
+  days: '{count} Tag | {count} Tage'
   delete: Löschen
+  deselect: Abwählen
   diet:
     omnivore: Fleisch
     vegan: Vegan
@@ -311,6 +378,7 @@ generic:
   move-down: Nach unten verschieben
   move-up: Nach oben verschieben
   no: Nein
+  no-data: Keine Daten
   no-entries: Keine Einträge
   no-information: Keine Angabe
   no-matches: Keine Treffer
@@ -318,12 +386,21 @@ generic:
   optional: optional
   please-select: Bitte auswählen
   save: Speichern
+  select: Auswählen
   select-all: Alle auswählen
   selected-count: '{count} ausgewählt'
+  show-details: Details anzeigen
   theme:
     dark: Dunkel
     light: Hell
     system: Automatisch
+  unsaved-changes-dialog:
+    message:
+      Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu
+      lädst, werden diese Änderungen verworfen. Möchtest du fortfahren?
+    submit: Änderungen verwerfen
+    title: Änderungen verwerfen?
+  updated-at: Letzte Änderung am
   validation:
     after: Datum muss nach dem {0} liegen
     before: Datum muss vor dem {0} liegen
@@ -336,6 +413,7 @@ generic:
     min-length: Eingabe muss mindestens {0} Zeichen lang sein
     must-not-include-lastname: Anzeigenamen dürfen nicht den Nachnamen enthalten
     required: Eingabe ist erforderlich
+  view: Anzeigen
   weekday-short:
     0: Mo
     1: Di
@@ -347,22 +425,17 @@ generic:
   yes: Ja
 views:
   account:
-    app-features:
-      title: Experimentelle Funktionen
     app-settings:
       language: Sprache
       language-description:
         Unterstützung für weitere Sprachen ist gerade noch in Arbeit. Du
         möchtest bei der Übersetzung aktiv mithelfen? Dann schau mal bei GitHub
         vorbei und trage zu unserem Open Source Projekt bei!
-      notifications: Benachrichtigungen
-      permissions: Meine Berechtigungen
       preferred-position: Standard Position
       preferred-position-description:
         Mit welcher Position möchtest du dich standardmäßg bei Veranstaltungen
         anmelden? Du kannst deine Position für jede Anmeldung individuall
         anpassen.
-      roles: Meine Anwendungsrollen
       theme: Design
       title: App
     contact:
@@ -384,9 +457,7 @@ views:
         Hier kannst du Unverträglichkeiten und Allergien angeben, die der
         Kombüse bekannt sein sollten.
       kitchen-info: Informationen für die Kombüse
-      title: Ernährung
     emergency:
-      click-to-show: '[zum Ansehen klicken]'
       diseases-description:
         Sollte während einer Veranstaltung etwas passieren, kann es wichtig
         sein, dass jemand an Bord über eventuelle Krankheiten informiert ist,
@@ -404,10 +475,6 @@ views:
         gespeichert und sind nur für autorisierte Personen einsehbar!
       title: Notfall Informationen
     personal:
-      date-and-place-of-birth-description:
-        Alle Daten, die du hier angibst, müssen genau so auch auf deinem
-        Ausweisdokument stehen, da diese zum Erstellen der offiziellen Crew
-        Liste verwendet werden.
       gender-description: Mit welchem Geschlecht identifizierst du dich?
       hint:
         Alle Daten, die du hier angibst, müssen genau so auch auf deinem
@@ -423,7 +490,6 @@ views:
         benötigt. Solltest du mehrere Nationalitäten haben, gib hier bitte
         diejenige an, die auch auf deinem Ausweisdokumentes steht.
       nick-name-hint: Wie möchtest du angesprochen werden?
-      official-name-hint: Name wie im Ausweisdokument
       passport-description:
         Bitte gib die Nummer eines offiziellen Ausweisdokuments an. Dies kann
         entweder dein Personalausweis oder alternativ auch dein Reisepass sein.
@@ -432,12 +498,6 @@ views:
         Reisen mitführen musst!
       passport-link: So findest du deine Personalausweis Nummer
       title: Persönliche Daten
-    qualifications:
-      status-expired: Abgelaufen
-      status-expires-on: Gültig bis
-      status-expiring-soon: Läuft bald ab
-      status-no-expires: Ohne Ablaufdatum
-      status-valid: Gültig
     tab:
       data: Meine Daten
       qualifications: Meine Qualifikationen
@@ -445,29 +505,14 @@ views:
     title: Profil
   calendar:
     create-event: Neue Veranstaltung
-    days: '{count} Tag|{count} Tage'
     title: Alle Veranstaltungen
   event-admin-list:
-    action:
-      add-event: Hinzufügen
-      add-registration: Anmeldung hinzufügen
-      cancel-event: Veranstaltung absagen
-      contact-crew: Crew kontaktieren ({count} Pers.)
-      create-event: Veranstaltung erstellen
-      delete-event: Veranstaltung löschen
-      edit-event: Veranstaltung bearbeiten
-      export: Export
-      open-signup: Anmeldungen freischalten
-      publish-crew: Crew veröffentlichen
-      request-more-crew: Weitere Crew anfragen*
-      show-event: Veranstaltung anzeigen
     batch-edit:
       copy-slots-from: Slots kopieren von
       copy-slots-warning:
         Bereits geplante Crews werden durch das überschreiben der Slots für alle
         ausgewählten Veranstaltungen zurückgesetzt. Du musst dann alle Crews
         händisch erneut planen.
-      dont-change-slots: Slots nicht ändern
       info:
         Du kannst mehrere Reisen auf einmal bearbeiten. Dabei werden die hier
         eingegebenen Werte für alle Veranstaltungen übernommen.
@@ -497,12 +542,12 @@ views:
           Reisen in den Status "Crewplanung veröffentlicht" ändern?
         submit: Ja, alle ändern
         title: Crew veröffentlichen
+    export: Export
     filter:
       all-events: Alle Veranstaltungen
       all-status: Alle Status
       free-slots: Freie Plätze
       search: Einträge filtern
-      status: Status
       waitinglist: Warteliste
     state:
       free-slots-for: Freie Plätze für
@@ -510,10 +555,6 @@ views:
     tab:
       future: Zukünftige
     tab-title: Veranstaltungen verwalten
-    table:
-      day-count: '{count} Tag | {count} Tage'
-      no-route: keine Rroute angegeben
-      team: Crew
   event-confirm-participation:
     canceled:
       info:
@@ -574,28 +615,6 @@ views:
       title: Anmeldung nicht gefunden
     title: Bitte bestätige deine Teilnahme
   event-details:
-    add-note: Notiz fürs Büro hinzufügen
-    create-calendar-entry: Kalendereintrag erstellen
-    edit-event: Veranstaltung bearbeiten
-    edit-registration: Anmeldung bearbeiten
-    info-assigned:
-      Du bist für diese Veranstaltung als {signedInUserPosition} eingeplant.
-    info-canceled: Diese Veranstaltung wurde abgesagt!
-    info-confirmed: Du hast deine Teilnahme bestätigt.
-    info-draft:
-      Diese Veranstaltung befindet sich noch im Entwurfsstadium und ist nur für
-      Nutzer mit Bearbeiten-Berechtigung sichtbar.
-    info-missing-crew:
-      'Für diese Veranstaltung wird noch Crew für die folgenden Positionen
-      gesucht: {openPositions}.'
-    info-planning:
-      Diese Veranstaltung befindet sich noch in der Planung. Eine Anmeldung
-      garantiert keine Teilnahme an der Veranstaltung! Sobald die Crewplanung
-      veröffentlicht wird, wirst du per Email darüber informiert.
-    info-waitinglist:
-      Du stehst für diese Veranstaltung als {signedInUserPosition} auf der
-      Warteliste.
-    leave-crew: Teilnahme absagen
     leave-crew-dialog:
       message:
         Bist du sicher, dass du deine Teilnahme an der Veranstaltung {event}
@@ -603,32 +622,7 @@ views:
         an der Veranstaltung und dein Platz wird an eine andere Person vergeben.
       submit: Teilnahme absagen
       title: Teilnahme absagen?
-    leave-waitinglist: Warteliste verlassen
-    save-calendar: In Kalender speichern
-    sign-up: Anmelden
   event-edit:
-    actions:
-      add-location: Routenabschnitt hinzufügen
-      add-registration: Anmeldung hinzufügen
-      add-slot: Crewslot hinzufügen
-      add-to-crew: Zur Crew hinzufügen
-      cancel-event: Veranstaltung absagen
-      contact-crew: Crew kontaktieren
-      delete-eta: ETA löschen
-      delete-etd: ETD löschen
-      delete-location: Routenabschnitt löschen
-      delete-registration: Anmeldung löschen
-      delete-slot: Crewslot löschen
-      duplicate-slot: Crewslot duplizieren
-      edit-location: Routenabschnitt bearbeiten
-      edit-registration: Anmeldung bearbeiten
-      edit-slot: Crewslot bearbeiten
-      edit-start-location: Starthafen bearbeiten
-      move-to-waiting-list: Auf Warteliste setzen
-      open-signup: Anmeldungen freischalten
-      publish-crew: Crew veröffentlichen
-      reset-crew: Crew zurücksetzen
-      show-user: Nutzer anzeigen
     edit-registration:
       guest-title: Gastcrewanmeldung
       guest-warning:
@@ -639,8 +633,6 @@ views:
       qualifications:
         '{name} hat zum Zeitpunkt der Veranstaltung die folgenden
         Qualifikationen:'
-      select-position: Bitte wähle eine Position
-      select-user: Bitte wähle ein Stammcrew Mitglied
       title: Anmeldung von {name} {lastName}
     empty-crew:
       desc:
@@ -676,7 +668,6 @@ views:
       Zuweisungen sind darum nur für Nutzer mit der Berechtigung zur Crewplanung
       sichtbar. Wenn du mit der Crewplanung fertig bist kannst du die
       Crewplanung veröffentlichen, um die zugewiesene Crew zu informieren.
-    registration-id: Anmeldungs ID
     secure-crew: Sichere Besatzung
     tab:
       crew: Crewplanung
@@ -691,21 +682,7 @@ views:
       information: Anmeldung
       positions: Positionen
       qualifications: Qualifikationen
-    unsaved-changes:
-      message:
-        Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu
-        lädst, werden diese Änderungen verworfen. Möchtest du fortfahren?
-      title: Änderungen verwerfen?
-    validation:
-      missing-location-icon: Bitte wähle ein Icon
-      missing-location-name: Bitte gib einen Namen an
   event-list:
-    action:
-      cancel: Teilnahme absagen
-      create-calendar-entry: Kalendereintrag erstellen
-      leave-waitinglist: Warteliste verlassen
-      link-event-details: Veranstaltung anzeigen
-      signup: Anmelden
     filter:
       all-types: Alle Veranstaltungen
       assigned: Eingeplant
@@ -721,12 +698,6 @@ views:
       waitinglist: Warteliste
     tab:
       future: Zukünftige
-    table:
-      assigned-as: Du bist als {0} eingeplant.
-      day-count: '{count} Tag | {count} Tage'
-      on-waiting-list-as: Du stehst als {0} auf der Warteliste.
-      registration-count: Anmeldung | Anmeldungen
-      team-count: Crew
   home:
     find-next-event: Veranstaltung anzeigen
     loading-events: Veranstaltungen werden geladen...
@@ -756,41 +727,16 @@ views:
         An diesen Teams Webhook werden Admin Benachrichtigungen verschickt
       title: Benachrichtigungen
     positions:
-      add-new: Position hinzufügen
-      color: Farbe
       delete-message:
         Bist du sicher, dass du die Position löschen möchtest? Die Position wird
         bei allen Nutzern, bei denen sie assoziiert ist, entfernt.
       delete-title: Position löschen
-      edit: Position bearbeiten
-      id: ID
-      imo-list-rank: Anzeigename IMO Liste
-      name: Name
-      prio: Priorität
-      validation:
-        key-must-be-unique: Eine Position mit dieser ID existiert bereits
-        name-must-be-unique: Eine Position mit diesem Namen existiert bereits
     qualifications:
-      add-new: Qualifikation hinzufügen
       delete-message:
         Bist du sicher, dass du die Qualifikation löschen möchtest? Die
         Qualifikation wird bei allen Nutzern, bei denen sie assoziiert ist,
         entfernt.
       delete-title: Qualifikation löschen
-      description: Beschreibung
-      edit: Qualifikation bearbeiten
-      expires: Gültigkeit der Qualifikation ist zeitlich begrenzt
-      icon: Icon
-      icon-placeholder: fa-id-card
-      key: ID
-      name: Name
-      positions: Positionen
-      status-expires: Mit Ablaufdatum
-      status-no-expires: Ohne Ablaufdatum
-      validation:
-        key-must-be-unique: Eine Qualifikation mit dieser ID existiert bereits
-        name-must-be-unique:
-          Eine Qualifikation mit diesem Namen existiert bereits
     tab:
       email: Email
       general: Allgemein
@@ -827,11 +773,7 @@ views:
       all-positions: Alle Positionen
       expired-qualifications: Abgelaufene Qualifikationen
       not-verified: Verifizierung ausstehend
-    no-position: Keine Position zugewiesen
-    qualification-summary:
-      all-valid: Alle gültig
-      expired: '{count} abgelaufen'
-      expiring-soon: 1 läuft bald ab|{count} laufen bald ab
+    no-position-assigned: Keine Position zugewiesen
     tab:
       admins: Verwalter
       members: Stammcrew

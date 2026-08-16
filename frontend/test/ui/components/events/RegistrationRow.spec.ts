@@ -55,7 +55,7 @@ describe('RegistrationRow.vue', () => {
             hasOverwrittenPosition: false,
         };
         await testee.setProps({ event, registration });
-        expect(testee.text()).toContain(testee.vm.$t('components.event-participants-card.empty'));
+        expect(testee.text()).toContain(testee.vm.$t('domain.event-slot.empty'));
         expect(testee.text()).toContain(position.name);
     });
 

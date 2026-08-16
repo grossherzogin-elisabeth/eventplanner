@@ -4,8 +4,8 @@ import type { PositionKey, Qualification } from '@/domain';
 
 export class QualificationService {
     private readonly keyPattern = /^[a-z-_0-9]*$/;
-    private readonly uniqueKeyErrMessage = 'views.settings.qualifications.validation.key-must-be-unique';
-    private readonly uniqueNameErrMessage = 'views.settings.qualifications.validation.name-must-be-unique';
+    private readonly uniqueKeyErrMessage = 'domain.qualification.validation.key-must-be-unique';
+    private readonly uniqueNameErrMessage = 'domain.qualification.validation.name-must-be-unique';
 
     public validate(value: Qualification, allQualifications?: Qualification[]): Record<string, string[]> {
         const allKeys = allQualifications?.map((it) => it.key) ?? [];

@@ -8,10 +8,10 @@
                     <p class="line-clamp-3">{{ props.content }}</p>
                 </slot>
             </div>
-            <button v-if="props.readonly" class="btn-icon hidden group-hover:inline">
+            <button v-if="props.readonly" type="button" class="btn-icon hidden group-hover:inline">
                 <i class="fa-solid fa-expand-alt" />
             </button>
-            <button v-else-if="!props.disabled" class="btn-icon hidden group-hover:inline">
+            <button v-else-if="!props.disabled" type="button" class="btn-icon hidden group-hover:inline">
                 <i class="fa-solid fa-pen" />
             </button>
         </div>
@@ -24,12 +24,12 @@
             </template>
             <template #buttons>
                 <div v-if="props.direct || props.readonly" class="flex justify-end gap-2">
-                    <button class="btn-ghost" name="save" data-test-id="button-cancel" @click="submit()">
+                    <button class="btn-ghost" type="button" name="save" data-test-id="button-cancel" @click="submit()">
                         <span>{{ $t('generic.close') }}</span>
                     </button>
                 </div>
                 <div v-else class="flex justify-end gap-2">
-                    <button class="btn-ghost" name="save" data-test-id="button-cancel" @click="cancel()">
+                    <button class="btn-ghost" type="button" name="save" data-test-id="button-cancel" @click="cancel()">
                         <span>{{ $t('generic.cancel') }}</span>
                     </button>
                     <AsyncButton class="btn-ghost" :disabled="validation.disableSubmit.value" :action="submit" data-test-id="button-submit">

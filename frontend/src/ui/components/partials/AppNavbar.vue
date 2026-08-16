@@ -25,14 +25,13 @@
     <div class="h-nav"></div>
     <div
         v-if="signedInUser && signedInUser.impersonated"
-        class="bg-error-container text-onerror-container h-16 pr-4 pl-8 shadow-inner md:pr-12 md:pl-16"
+        class="bg-error-container dark:bg-error-container/30 text-onerror-container h-16 pr-4 pl-8 shadow-inner md:pr-12 md:pl-16"
     >
         <div class="flex h-full items-center">
             <i class="fa-solid fa-warning" />
-            <p class="mr-2 ml-4 line-clamp-3 w-0 grow py-4 text-sm font-bold">
-                Du siehst die Anwendung aus Sicht von
+            <i18n-t tag="p" keypath="components.menu.impersonate" class="mr-2 ml-4 line-clamp-3 w-0 grow py-4 text-sm font-bold">
                 <span class="italic">{{ signedInUser.firstName }} {{ signedInUser.lastName }}</span>
-            </p>
+            </i18n-t>
             <button class="btn-icon" type="button" @click="authUseCase.impersonateUser(null)">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </button>

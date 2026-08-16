@@ -1,5 +1,6 @@
 <template>
     <div class="mt-8">
+        <!-- TODO i18n -->
         <h2 class="card-headline">Diese Seite ist nur für angemeldete Benutzer sichtbar</h2>
     </div>
 </template>

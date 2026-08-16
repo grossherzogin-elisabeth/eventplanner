@@ -34,7 +34,7 @@ describe('QualificationDetailsDlg.vue', () => {
         it('should open dialog and show correct title', async () => {
             const dialog = testee.find('[data-test-id="qualification-details-dialog"]');
             expect(dialog.isVisible()).toBe(true);
-            expect(testee.find('h1').text()).toEqual(testee.vm.$t('views.settings.qualifications.add-new'));
+            expect(testee.find('h1').text()).toEqual(testee.vm.$t('domain.qualification.actions.create'));
         });
 
         it('should close dialog on cancel and return undefined', async () => {
@@ -71,7 +71,7 @@ describe('QualificationDetailsDlg.vue', () => {
         it('should open dialog and show correct title', async () => {
             const dialog = testee.find('[data-test-id="qualification-details-dialog"]');
             expect(dialog.isVisible()).toBe(true);
-            expect(testee.find('h1').text()).toEqual(testee.vm.$t('views.settings.qualifications.edit'));
+            expect(testee.find('h1').text()).toEqual(testee.vm.$t('domain.qualification.actions.edit'));
         });
 
         it('should close dialog on cancel and return undefined', async () => {

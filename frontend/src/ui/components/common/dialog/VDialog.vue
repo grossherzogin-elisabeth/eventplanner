@@ -21,7 +21,7 @@
                                 class="dialog-header border-outline-variant/40 xs:pl-8 flex h-16 w-full items-center justify-between pl-4 lg:pr-2 lg:pl-10"
                             >
                                 <div class="fullscreen-back-button -ml-4">
-                                    <button class="btn-icon" @click="reject()">
+                                    <button class="btn-icon" type="button" @click="reject()">
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </button>
                                 </div>

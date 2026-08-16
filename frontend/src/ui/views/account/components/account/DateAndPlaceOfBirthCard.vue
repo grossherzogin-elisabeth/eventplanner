@@ -10,14 +10,14 @@
         <template #default>
             <p class="truncate">
                 <span v-if="props.modelValue.dateOfBirth"> {{ $d(props.modelValue.dateOfBirth, DateTimeFormat.DD_MM_YYYY) }} </span>
-                <span v-else> {{ $t('generic.no-information') }} </span>
+                <span v-else class="italic"> {{ $t('generic.no-information') }} </span>
                 <span v-if="props.modelValue.placeOfBirth"> in {{ props.modelValue.placeOfBirth }} </span>
-                <span v-else> in {{ $t('generic.no-information') }} </span>
+                <span v-else class="italic"> in {{ $t('generic.no-information') }} </span>
             </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-4 text-sm">
-                {{ $t('views.account.personal.date-and-place-of-birth-description') }}
+                {{ $t('views.account.personal.hint') }}
             </p>
             <VInfo class="mb-8">
                 {{ $t('views.account.personal.passport-info') }}

@@ -8,10 +8,10 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p v-if="props.modelValue.diseases" class="truncate">
-                {{ $t('views.account.emergency.click-to-show') }}
+            <p v-if="props.modelValue.diseases" class="truncate italic">
+                {{ $t('generic.click-to-show') }}
             </p>
-            <p v-else class="truncate">
+            <p v-else class="truncate italic">
                 {{ $t('generic.no-information') }}
             </p>
         </template>

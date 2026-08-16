@@ -7,40 +7,40 @@
                     <div class="mb-4">
                         <VInputText
                             v-model="user.firstName"
-                            label="Vorname"
+                            :label="$t('domain.user.first-name')"
                             :errors="validation.errors.value['firstName']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="Vorname laut Auweisdokument"
+                            :hint="$t('domain.user.official-name-hint')"
                         />
                     </div>
                     <div class="mb-4">
                         <VInputText
                             v-model="user.lastName"
-                            label="Nachname"
+                            :label="$t('domain.user.last-name')"
                             :errors="validation.errors.value['lastName']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="Nachname laut Auweisdokument"
+                            :hint="$t('domain.user.official-name-hint')"
                         />
                     </div>
                     <div class="mb-4">
                         <VInputText
                             v-model="user.email"
-                            label="Email"
+                            :label="$t('domain.user.email')"
                             :errors="validation.errors.value['email']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="Kontakt Email Adresse"
                         />
                     </div>
+                    <!-- TODO i18n-->
                     <VInfo> Du kannst im Anschluss weitere Daten eingeben und alle Eingaben noch nachträglich bearbeiten. </VInfo>
                 </section>
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+            <button class="btn-ghost" type="button" @click="cancel">
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
             <AsyncButton class="btn-ghost" name="save" :action="submit" :disabled="validation.disableSubmit.value">
-                <template #label> Speichern </template>
+                <template #label> {{ $t('generic.save') }} </template>
             </AsyncButton>
         </template>
     </VDialog>

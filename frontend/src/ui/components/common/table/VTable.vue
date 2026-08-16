@@ -32,7 +32,7 @@
                 <tr class="no-data">
                     <td></td>
                     <slot name="no-data" :colspan="columnCount">
-                        <td :colspan="columnCount" class="italic">Keine Daten.</td>
+                        <td :colspan="columnCount" class="italic">{{ $t('generic.no-data') }}</td>
                     </slot>
                     <td></td>
                 </tr>
@@ -101,7 +101,7 @@
                         :class="{ 'hidden sm:table-cell': !config.enableTableActionsButtonMobile }"
                         @click.stop="openContextMenu(contextColumns?.[index], row as T & Selectable)"
                     >
-                        <button class="btn-icon lg:mr-3">
+                        <button class="btn-icon lg:mr-3" type="button">
                             <i class="fa-solid fa-ellipsis-vertical" />
                         </button>
                     </td>
@@ -130,7 +130,7 @@
                             @click="dropdownItem.selected = !dropdownItem.selected"
                         >
                             <i class="fa-solid fa-xmark" />
-                            <span>Abwählen</span>
+                            <span>{{ $t('generic.deselect') }}</span>
                         </li>
                         <li
                             v-else
@@ -139,7 +139,7 @@
                             @click="dropdownItem.selected = !dropdownItem.selected"
                         >
                             <i class="fa-solid fa-check" />
-                            <span>Auswählen</span>
+                            <span>{{ $t('generic.select') }}</span>
                         </li>
                     </template>
                     <slot name="context-menu" :item="dropdownItem" />

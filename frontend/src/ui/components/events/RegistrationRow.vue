@@ -11,10 +11,10 @@
             </RouterLink>
             <span v-else-if="props.registration.name">{{ props.registration.name }}</span>
             <span v-else-if="props.registration.user?.key" class="text-error italic">
-                {{ $t('components.event-participants-card.unknown') }}
+                {{ $t('domain.registration.unknown-user') }}
             </span>
             <span v-else class="text-error/60 italic">
-                {{ $t('components.event-participants-card.empty') }}
+                {{ $t('domain.event-slot.empty') }}
             </span>
         </div>
         <span

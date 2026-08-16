@@ -8,8 +8,11 @@
             <div class="mr-4">
                 <h3 class="mb-4 text-base">
                     <i class="fa-solid fa-trophy opacity-75"></i>
-                    <span v-if="['m', 'f'].includes(signedInUser?.gender ?? '')" class="ml-4">
-                        {{ $t(`components.event-participants-card.placeholder-title-${signedInUser?.gender}`) }}
+                    <span v-if="signedInUser?.gender === 'm'" class="ml-4">
+                        {{ $t('components.event-participants-card.placeholder-title-m') }}
+                    </span>
+                    <span v-else-if="signedInUser?.gender === 'f'" class="ml-4">
+                        {{ $t('components.event-participants-card.placeholder-title-f') }}
                     </span>
                     <span v-else class="ml-4">
                         {{ $t('components.event-participants-card.placeholder-title') }}
@@ -27,7 +30,7 @@
     <div v-else-if="hasHiddenCrewAssignments">
         <section>
             <h2 class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
-                {{ $t('components.event-participants-card.registrations', { count: waitingList.length }) }}
+                {{ $t('domain.event.registrations') }} ({{ waitingList.length }})
             </h2>
             <div class="bg-surface-container/50 -mx-4 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
                 <ul class="space-y-2" data-test-id="registration-list">
@@ -38,18 +41,16 @@
     </div>
     <div v-else>
         <section>
-            <h2 class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
-                {{ $t('components.event-participants-card.assigned', { count: team.length }) }}
-            </h2>
+            <h2 class="text-secondary mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">{{ $t('domain.event.crew') }} ({{ crew.length }})</h2>
             <div class="bg-surface-container/50 -mx-4 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
                 <ul class="space-y-2" data-test-id="crew-list">
-                    <RegistrationRow v-for="it in team" :key="it.slot?.key || ''" :registration="it" />
+                    <RegistrationRow v-for="it in crew" :key="it.slot?.key || ''" :registration="it" />
                 </ul>
             </div>
         </section>
         <section>
             <h2 class="text-secondary mt-8 mb-2 flex space-x-4 font-bold md:mb-6 md:ml-0">
-                {{ $t('components.event-participants-card.waitinglist', { count: waitingList.length }) }}
+                {{ $t('domain.event.waiting-list') }} ({{ waitingList.length }})
             </h2>
             <div class="bg-surface-container/50 -mx-4 rounded-2xl p-4 md:mx-0 md:rounded-none md:bg-transparent md:p-0">
                 <ul class="space-y-2" data-test-id="waiting-list">
@@ -85,7 +86,7 @@ const eventUseCase = useEventUseCase();
 const { signedInUser } = useSession();
 
 const waitingList = ref<ResolvedRegistrationSlot[]>([]);
-const team = ref<ResolvedRegistrationSlot[]>([]);
+const crew = ref<ResolvedRegistrationSlot[]>([]);
 
 const hasHiddenCrewAssignments = computed<boolean>(() => {
     return (
@@ -100,7 +101,7 @@ function init(): void {
 
 async function fetchTeam(event: Event): Promise<void> {
     const registrations = await eventUseCase.resolveRegistrations(event);
-    team.value = eventUseCase.filterForCrew(event, registrations);
+    crew.value = eventUseCase.filterForCrew(event, registrations);
     waitingList.value = eventUseCase.filterForWaitingList(event, registrations);
 }
 

@@ -1,5 +1,6 @@
 <template>
     <div class="full-width-scrollable">
+        <!-- TODO i18n -->
         <VTable :items="userRoles" class="scrollbar-invisible no-header">
             <template #row="{ item }">
                 <td class="w-0 pr-4">

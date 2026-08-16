@@ -33,6 +33,7 @@
         </li>
         <li
             class="permission-write-own-registrations context-menu-item"
+            data-test-id="action-sign-up"
             :class="{ disabled: joinableEvents === 0 }"
             @click="emit('join', props.events)"
         >
@@ -41,6 +42,7 @@
         </li>
         <li
             class="permission-write-own-registrations context-menu-item"
+            data-test-id="action-leave-waiting-list"
             :class="{ disabled: eventsWithUserOnWaitingList === 0 }"
             @click="emit('leave-waiting-list', props.events)"
         >
@@ -49,11 +51,12 @@
         </li>
         <li
             class="permission-write-own-registrations context-menu-item text-error"
+            data-test-id="action-leave-all"
             :class="{ disabled: eventsWithUserInCrew === 0 }"
             @click="emit('leave-all', props.events)"
         >
             <i class="fa-solid fa-ban" />
-            <span>{{ $t('domain.event.actions.cancel') }}</span>
+            <span>{{ $t('domain.registration.actions.cancel') }}</span>
         </li>
         <template v-if="props.events?.length === 1 && eventExports.templates.value.length > 0">
             <hr />

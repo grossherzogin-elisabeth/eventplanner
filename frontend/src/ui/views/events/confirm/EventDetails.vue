@@ -8,7 +8,9 @@
                 </td>
             </tr>
             <tr class="mb-2 block sm:table-row">
-                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">{{ $t('domain.event.route') }}</td>
+                <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">
+                    {{ $t('domain.event.location', props.event.locations.length) }}
+                </td>
                 <td class="block py-1 font-bold sm:table-cell">
                     {{ props.event.locations.map((l) => l.name).join(' - ') }}
                 </td>

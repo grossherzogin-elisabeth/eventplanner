@@ -2,6 +2,7 @@
     <div class="xl:overflow-x-hidden xl:overflow-y-auto">
         <DetailsPage :back-to="{ name: Routes.UsersList }" :loading="!user">
             <template #header>
+                <!-- TODO i18n -->
                 <template v-if="!user">{{ $t('generic.loading') }}</template>
                 <template v-else-if="hasPermission(Permission.WRITE_USERS)"> {{ user.firstName }} {{ user.lastName }} bearbeiten </template>
                 <template v-else>Nutzerdetails {{ user.firstName }} {{ user.lastName }} </template>
@@ -61,7 +62,7 @@
                         <i class="fa-solid fa-save"></i>
                     </template>
                     <template #label>
-                        <span>Speichern</span>
+                        <span>{{ $t('generic.save') }}</span>
                     </template>
                 </AsyncButton>
             </template>
@@ -73,7 +74,7 @@
                     @click="createRegistration()"
                 >
                     <i class="fa-solid fa-user-plus"></i>
-                    <span>Anmeldung hinzufügen</span>
+                    <span>{{ $t('domain.registration.actions.create') }}</span>
                 </button>
                 <button
                     v-else-if="tab === Tab.USER_CERTIFICATES && hasPermission(Permission.WRITE_USERS)"
@@ -82,7 +83,7 @@
                     @click="addUserQualification()"
                 >
                     <i class="fa-solid fa-file-circle-plus"></i>
-                    <span>Qualifikation hinzufügen</span>
+                    <span>{{ $t('domain.user-qualification.actions.create') }}</span>
                 </button>
                 <a
                     v-else-if="user?.email"
@@ -92,13 +93,13 @@
                     target="_blank"
                 >
                     <i class="fa-solid fa-envelope"></i>
-                    <span>Email schreiben</span>
+                    <span>{{ $t('domain.user.actions.write-email') }}</span>
                 </a>
             </template>
             <template v-if="hasPermission(Permission.WRITE_USERS)" #actions-menu>
                 <li data-test-id="action-impersonate" class="context-menu-item" @click="impersonateUser()">
                     <i class="fa-solid fa-user-secret" />
-                    <span>Impersonate</span>
+                    <span>{{ $t('domain.user.actions.impersonate') }}</span>
                 </li>
                 <li>
                     <a
@@ -109,16 +110,16 @@
                         target="_blank"
                     >
                         <i class="fa-solid fa-envelope"></i>
-                        <span>Email schreiben</span>
+                        <span>{{ $t('domain.user.actions.write-email') }}</span>
                     </a>
                 </li>
                 <li data-test-id="action-add-registration" class="context-menu-item" @click="createRegistration()">
                     <i class="fa-solid fa-user-plus" />
-                    <span>Anmeldung hinzufügen</span>
+                    <span>{{ $t('domain.registration.actions.create') }}</span>
                 </li>
                 <li data-test-id="action-add-qualification" class="context-menu-item" @click="addUserQualification()">
                     <i class="fa-solid fa-file-circle-plus" />
-                    <span>Qualifikation hinzufügen</span>
+                    <span>{{ $t('domain.user-qualification.actions.create') }}</span>
                 </li>
             </template>
         </DetailsPage>
@@ -154,12 +155,9 @@ import UserRolesTable from './components/UserRolesTable.vue';
 
 enum Tab {
     USER_DATA = 'data',
-    USER_CONTACT_DATA = 'contact',
     USER_CERTIFICATES = 'certificates',
     USER_EVENTS = 'events',
     USER_ROLES = 'roles',
-    USER_EMERGENCY = 'emergency',
-    USER_OTHER = 'other',
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -222,11 +220,10 @@ function preventPageUnloadOnUnsavedChanges(): void {
         }
         if (hasChanges.value) {
             const continueNavigation = await confirmDialog.value?.open({
-                title: 'Änderungen verwerfen?',
-                message: `Du hast ungespeicherte Änderungen. Wenn du die Seite verlässt oder neu lädst, werden
-                    diese Änderungen verworfen. Möchtest du forfahren?`,
-                cancel: 'Abbrechen',
-                submit: 'Änderungen verwerfen',
+                title: t('generic.unsaved-changes-dialog.title'),
+                message: t('generic.unsaved-changes-dialog.message'),
+                cancel: t('generic.cancel'),
+                submit: t('generic.unsaved-changes-dialog.submit'),
             });
             if (!continueNavigation) {
                 return false;

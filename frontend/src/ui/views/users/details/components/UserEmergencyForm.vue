@@ -1,15 +1,15 @@
 <template>
     <section class="gab-4 relative mb-16 grid gap-4">
         <span id="emergency-contact" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
-            Notfallkontakt
+            {{ $t('domain.user.emergency-contact') }}
         </span>
-        <h2 class="text-secondary col-span-full font-bold">Notfallkontakt</h2>
+        <h2 class="text-secondary col-span-full font-bold">{{ $t('domain.user.emergency-contact') }}</h2>
         <VInputText
             v-model.trim="user.emergencyContact.name"
             data-test-id="emergency-contact-name"
             class="col-span-full"
-            label="Name des Notfallkontakts"
-            placeholder="Keine Angabe"
+            :label="$t('domain.emergency-contact.name')"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['emergencyContact.name']"
             :errors-visible="true"
@@ -18,14 +18,15 @@
             v-model.trim="user.emergencyContact.phone"
             data-test-id="emergency-contact-phone"
             class="col-span-full"
-            label="Telefonnummer des Notfallkontakts"
-            placeholder="Keine Angabe"
+            :label="$t('domain.emergency-contact.phone')"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['emergencyContact.phone']"
             :errors-visible="true"
         />
     </section>
     <section class="relative mb-16 grid gap-4">
+        <!-- TODO i18n -->
         <span id="emergency-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Gesundheit</span>
         <h2 class="text-secondary col-span-full font-bold">Wichtige gesundheitliche Informationen</h2>
         <VInfo class="col-span-full">
@@ -36,8 +37,8 @@
             v-model.trim="user.diseases"
             data-test-id="diseases"
             class="col-span-full"
-            label="Krankheiten"
-            placeholder="Keine Angabe"
+            :label="$t('domain.user.diseases')"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['diseases']"
             :errors-visible="true"
@@ -46,8 +47,8 @@
             v-model.trim="user.medication"
             data-test-id="medication"
             class="col-span-full"
-            label="Medikamente"
-            placeholder="Keine Angabe"
+            :label="$t('domain.user.medication')"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['medication']"
             :errors-visible="true"

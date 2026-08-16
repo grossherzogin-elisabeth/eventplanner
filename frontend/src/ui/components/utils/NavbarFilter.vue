@@ -14,7 +14,7 @@
                     ref="input"
                     name="search"
                     :value="props.modelValue"
-                    :placeholder="placeholder || 'Einträge filtern'"
+                    :placeholder="placeholder || $t('generic.filter-entries')"
                     :disabled="!showSearch"
                     @input="onInput($event)"
                     @keydown.esc="input?.blur()"

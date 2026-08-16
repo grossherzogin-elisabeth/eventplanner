@@ -1,4 +1,5 @@
 <template>
+    <!-- TODO i18n  -->
     <VDialog ref="dlg" height="h-auto max-h-screen" type="modal" :class="$attrs.class">
         <template #title>Position auswählen</template>
         <template #default>
@@ -22,10 +23,10 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+            <button class="btn-ghost" type="button" @click="cancel">
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" @click="submit">
+            <button class="btn-ghost" type="button" @click="submit">
                 <span>Anmelden</span>
             </button>
         </template>

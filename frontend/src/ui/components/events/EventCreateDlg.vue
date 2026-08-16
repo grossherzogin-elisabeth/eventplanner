@@ -1,6 +1,6 @@
 <template>
     <VDialog ref="dlg" data-test-id="event-create-dialog">
-        <template #title>Neue Veranstaltung erstellen</template>
+        <template #title>{{ $t('domain.event.actions.create') }}</template>
         <template #default>
             <div class="px-4 pt-4 sm:px-8 lg:px-10">
                 <section>
@@ -11,7 +11,7 @@
                             :label="$t('domain.event.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="Titel der Veranstaltung"
+                            :placeholder="$t('components.event-create-dialog.name-placeholder')"
                             required
                         />
                     </div>
@@ -51,7 +51,7 @@
                             :hint="$t('generic.markdown-supported')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
-                            placeholder="Kurze Beschreibung oder Zusatzinformationen"
+                            :placeholder="$t('components.event-create-dialog.description-placeholder')"
                         />
                     </div>
                     <div class="mb-4 flex space-x-4">

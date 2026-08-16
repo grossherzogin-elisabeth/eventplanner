@@ -1,7 +1,7 @@
 <template>
     <section>
         <h2 class="text-secondary mb-2 font-bold">
-            {{ $t('components.event-locations-card.title', { count: props.event.locations.length }) }}
+            {{ $t('domain.event.location', { count: props.event.locations.length }) }}
         </h2>
         <div class="bg-surface-container/50 -mx-4 space-y-1 rounded-2xl p-4 pb-0">
             <p v-if="props.event.locations.length === 0" class="pb-4 text-sm">
@@ -56,11 +56,11 @@
                             {{ location.address }}
                         </p>
                         <p v-if="location.eta" class="text-sm" data-test-id="eta">
-                            <span class="inline-block"> {{ $t('components.event-locations-card.eta') }} </span>
+                            <span class="inline-block"> {{ $t('domain.location.arrival') }}: </span>
                             {{ $d(location.eta, DateTimeFormat.DDD_DD_MM_hh_mm) }}
                         </p>
                         <p v-if="location.etd" class="text-sm" data-test-id="etd">
-                            <span class="inline-block"> {{ $t('components.event-locations-card.etd') }} </span>
+                            <span class="inline-block"> {{ $t('domain.location.departure') }}: </span>
                             {{ $d(location.etd, DateTimeFormat.DDD_DD_MM_hh_mm) }}
                         </p>
                     </div>

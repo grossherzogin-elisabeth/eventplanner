@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg" data-test-id="position-details-dialog">
         <template #title>
-            <template v-if="mode === Mode.EDIT">{{ $t('views.settings.positions.edit') }}</template>
-            <template v-else>{{ $t('views.settings.positions.add-new') }}</template>
+            <template v-if="mode === Mode.EDIT">{{ $t('domain.position.actions.edit') }}</template>
+            <template v-else>{{ $t('domain.position.actions.create') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
@@ -11,7 +11,7 @@
                         <VInputText
                             v-model.trim="position.key"
                             data-test-id="input-key"
-                            :label="$t('views.settings.positions.id')"
+                            :label="$t('domain.position.key')"
                             :errors="validation.errors.value['key']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -22,7 +22,7 @@
                         <VInputText
                             v-model="position.name"
                             data-test-id="input-name"
-                            :label="$t('views.settings.positions.name')"
+                            :label="$t('domain.position.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             :disabled="!hasWritePermission"
@@ -33,7 +33,7 @@
                         <VInputText
                             v-model="position.imoListRank"
                             data-test-id="input-imo-list-rank"
-                            :label="$t('views.settings.positions.imo-list-rank')"
+                            :label="$t('domain.position.imo-list-rank')"
                             :errors="validation.errors.value['imoListRank']"
                             :errors-visible="validation.showErrors.value"
                             :disabled="!hasWritePermission"
@@ -44,7 +44,7 @@
                         <VInputText
                             v-model="position.color"
                             data-test-id="input-color"
-                            :label="$t('views.settings.positions.color')"
+                            :label="$t('domain.position.color')"
                             :errors="validation.errors.value['color']"
                             :errors-visible="validation.showErrors.value"
                             :disabled="!hasWritePermission"
@@ -59,7 +59,7 @@
                         <VInputNumber
                             v-model="position.prio"
                             data-test-id="input-prio"
-                            :label="$t('views.settings.positions.prio')"
+                            :label="$t('domain.position.prio')"
                             :errors="validation.errors.value['prio']"
                             :errors-visible="validation.showErrors.value"
                             :disabled="!hasWritePermission"
@@ -71,15 +71,27 @@
         </template>
         <template #buttons>
             <template v-if="hasWritePermission">
-                <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
+                <button class="btn-ghost" type="button" data-test-id="button-cancel" @click="cancel">
                     <span>{{ $t('generic.cancel') }}</span>
                 </button>
-                <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="submit">
+                <button
+                    class="btn-ghost"
+                    type="button"
+                    data-test-id="button-submit"
+                    :disabled="validation.disableSubmit.value"
+                    @click="submit"
+                >
                     <span>{{ $t('generic.save') }}</span>
                 </button>
             </template>
             <template v-else>
-                <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="cancel">
+                <button
+                    class="btn-ghost"
+                    type="button"
+                    data-test-id="button-submit"
+                    :disabled="validation.disableSubmit.value"
+                    @click="cancel"
+                >
                     <span>{{ $t('generic.close') }}</span>
                 </button>
             </template>

@@ -71,7 +71,7 @@ describe('TabQualifications.vue', () => {
             const rows = testee.findAll('table tbody tr');
             expect(rows).toHaveLength(2);
             for (const row of rows) {
-                expect(row.text()).toContain(testee.vm.$t('views.settings.qualifications.status-expires'));
+                expect(row.text()).toContain(testee.vm.$t('domain.qualification.expires'));
             }
         });
 

@@ -4,6 +4,7 @@
         class="whitespace-nowrap"
         :class="$attrs.class || 'btn-primary'"
         :name="props.name"
+        type="button"
         @click="onClick()"
     >
         <VLoadingSpinner v-if="loading" class="-mx-1 block w-6 text-current" />

@@ -4,15 +4,20 @@
         <div class="relative flex items-center">
             <input
                 ref="input"
-                :placeholder="placeholder ?? 'Einträge filtern'"
+                :placeholder="placeholder ?? $t('generic.filter-entries')"
                 class="absolute"
                 name="search"
                 :value="props.modelValue"
                 @input="onInput"
                 @keydown.esc="input?.blur()"
             />
-            <div class="placeholder pointer-events-none opacity-0">{{ placeholder ?? 'Einträge filtern' }}</div>
-            <button v-if="props.modelValue !== ''" class="absolute top-0 right-0 bottom-0" @click="emit('update:modelValue', '')">
+            <div class="placeholder pointer-events-none opacity-0">{{ placeholder ?? $t('generic.filter-entries') }}</div>
+            <button
+                v-if="props.modelValue !== ''"
+                class="absolute top-0 right-0 bottom-0"
+                type="button"
+                @click="emit('update:modelValue', '')"
+            >
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>

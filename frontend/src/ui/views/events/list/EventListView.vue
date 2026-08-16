@@ -79,7 +79,7 @@
                         @click="joinEvents(selectedEvents)"
                     >
                         <i class="fa-solid fa-user-plus"></i>
-                        <span>{{ $t('views.event-list.action.signup') }}</span>
+                        <span>{{ $t('domain.event.actions.sign-up') }}</span>
                     </button>
                 </div>
             </template>

@@ -13,18 +13,18 @@
             </div>
         </template>
         <template #buttons>
-            <button v-if="error.error && !showDetails" class="btn-ghost-danger" @click="showDetails = true">
-                {{ $t('components.error-dialog.show-details') }}
+            <button v-if="error.error && !showDetails" type="button" class="btn-ghost-danger" @click="showDetails = true">
+                {{ $t('generic.show-details') }}
             </button>
             <template v-if="error.retry">
-                <button data-test-id="button-close" class="btn-ghost-danger" @click="submit">
+                <button data-test-id="button-close" type="button" class="btn-ghost-danger" @click="submit">
                     {{ error.cancelText || $t('generic.close') }}
                 </button>
-                <button data-test-id="button-retry" class="btn-ghost-danger" @click="retry()">
+                <button data-test-id="button-retry" type="button" class="btn-ghost-danger" @click="retry()">
                     {{ error.retryText || $t('components.error-dialog.retry') }}
                 </button>
             </template>
-            <button v-else data-test-id="button-close" class="btn-ghost-danger" @click="submit">
+            <button v-else data-test-id="button-close" type="button" class="btn-ghost-danger" @click="submit">
                 {{ error.cancelText || $t('generic.close') }}
             </button>
         </template>

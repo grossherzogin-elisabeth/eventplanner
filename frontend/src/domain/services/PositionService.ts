@@ -4,8 +4,8 @@ import type { Position } from '@/domain';
 export class PositionService {
     private readonly keyPattern = /^[a-z-_0-9]*$/;
     private readonly colorPattern = /^#[a-fA-F 0-9]{3,6}$/;
-    private readonly uniqueKeyErrMessage = 'views.settings.positions.validation.key-must-be-unique';
-    private readonly uniqueNameErrMessage = 'views.settings.positions.validation.name-must-be-unique';
+    private readonly uniqueKeyErrMessage = 'domain.position.validation.key-must-be-unique';
+    private readonly uniqueNameErrMessage = 'domain.position.validation.name-must-be-unique';
 
     public validate(value: Position, allPositions?: Position[]): Record<string, string[]> {
         const allKeys = allPositions?.map((it) => it.key) ?? [];

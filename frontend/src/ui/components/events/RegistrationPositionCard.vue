@@ -3,7 +3,7 @@
         :model-value="props.modelValue"
         icon="fa-anchor"
         dialog-type="modal"
-        :label="$t('components.event-registration-details-card.position')"
+        :label="$t('components.registration-position-card.label')"
         :disabled="filteredPositions.length < 2"
         @update:model-value="emit('update:modelValue', $event)"
     >
@@ -13,7 +13,7 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                {{ $t('components.event-registration-details-card.position-description') }}
+                {{ $t('components.registration-position-card.description') }}
             </p>
             <VInputSelectionList v-model="value.positionKey" :options="filteredPositions" />
         </template>

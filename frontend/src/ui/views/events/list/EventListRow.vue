@@ -8,7 +8,7 @@
             {{ formatDateRange(props.event?.start, props.event?.end) }}
         </p>
         <p class="text-sm opacity-75">
-            {{ $t('views.event-list.table.day-count', { count: props.event?.days }) }}
+            {{ $t('generic.days', { count: props.event?.days }) }}
         </p>
     </td>
     <!-- name -->
@@ -39,7 +39,7 @@
             <!-- date -->
             <p class="grow truncate">
                 {{ formatDateRange(props.event?.start, props.event?.end) }}
-                <span> - {{ $t('views.event-list.table.day-count', { count: props.event?.days }) }} </span>
+                <span> - {{ $t('generic.days', { count: props.event?.days }) }} </span>
             </p>
             <!-- crew -->
             <p class="text-right whitespace-nowrap md:hidden">

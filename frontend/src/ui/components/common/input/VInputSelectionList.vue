@@ -8,11 +8,11 @@
                 :class="{ 'opacity-50': option.disabled }"
                 @click="select(option)"
             >
-                <button v-if="props.modelValue === option.value" class="btn-icon">
+                <button v-if="props.modelValue === option.value" class="btn-icon" type="button">
                     <i class="fa-regular fa-circle text-primary text-xl" />
                     <i class="fa-solid fa-circle text-primary absolute text-xs" />
                 </button>
-                <button v-else class="btn-icon">
+                <button v-else class="btn-icon" type="button">
                     <i class="fa-regular fa-circle text-onsurface-variant text-xl" />
                 </button>
                 <span class="w-0 grow">{{ option.label }}</span>
