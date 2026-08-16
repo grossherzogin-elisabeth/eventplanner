@@ -8,13 +8,22 @@ describe('locales', () => {
     const i18nKeysUsedInSource = findI18nKeysUsedInSource();
     const whitelistedKeys = [
         // add exceptions here for unused i18n keys, e.g. when used with concatenation
-        'components.event-state-banner.*', // EventStateBanner.vue
-        'components.menu.impersonate', // AppMenu.vue, AppNavbar.vue
-        'views.event-confirm-participation.info.message', // ConfirmParticipation.vue
         'domain.*.validation.*', // used in services
+        'generic.validation.*', // used in services
         'generic.*',
         'domain.*', // TODO remove this exception after i18n is complete
     ].map((it) => transformToRegex(it));
+
+    it('should load plausible key counts', () => {
+        console.log(`Found ${defaultLocaleKeys.size} unique i18n messages in default locale`);
+        console.log(`Found ${i18nKeysUsedInSource.size} unique i18n keys used in the source code`);
+        // Safety net, to ensure we still find a realistic amount of i18n keys used. At the time of
+        // writing this test, the default locale has 400+ keys, so when we drop >25% this is a sign that
+        // probably something is wrong with the i18n setup or the test itself
+        expect(defaultLocale).toBeDefined();
+        expect(defaultLocaleKeys.size).toBeGreaterThan(300);
+        expect(i18nKeysUsedInSource.size).toBeGreaterThan(300);
+    });
 
     it.each(Object.keys(locales))('$0 should have same keys as the default locale', (locale) => {
         const localeKeys = flattenKeys(locales[locale as Locale]);
@@ -30,7 +39,7 @@ describe('locales', () => {
         expect(unused).toEqual([]);
     });
 
-    it('should not miss any localization key used in source', async () => {
+    it('should not miss any localization key used in source code', async () => {
         const missingKeys = new Set<string>();
         [...i18nKeysUsedInSource]
             .filter((it) => it.endsWith('*'))
@@ -54,16 +63,23 @@ describe('locales', () => {
 
         const usedKeys = new Set<string>();
         for (const source of sourceModules) {
-            const regex = /[$ .](?:t|tc|te|tm)\(\s*['"`]([^'"`]+)['"`]/g;
-            for (const match of source.matchAll(regex)) {
-                const key = match[1];
-                if (key.includes('${')) {
-                    const prefix = key.substring(0, key.indexOf('${'));
+            const matches: string[] = [];
+            const functionRegex = /[$ .](?:t|tc|te|tm)\(\s*['"`]([^'"`]+)['"`]/g;
+            for (const match of source.matchAll(functionRegex)) {
+                matches.push(match[1]);
+            }
+            const componentRegex = /<i18n-t.*keypath=['"`]*([^'"`]+)['"`]/g;
+            for (const match of source.matchAll(componentRegex)) {
+                matches.push(match[1]);
+            }
+            for (const match of matches) {
+                if (match.includes('${')) {
+                    const prefix = match.substring(0, match.indexOf('${'));
                     usedKeys.add(prefix + '*');
-                } else if (key.endsWith('.')) {
-                    usedKeys.add(key + '*');
+                } else if (match.endsWith('.')) {
+                    usedKeys.add(match + '*');
                 } else {
-                    usedKeys.add(key);
+                    usedKeys.add(match);
                 }
             }
         }
