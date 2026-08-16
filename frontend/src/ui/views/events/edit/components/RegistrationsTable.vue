@@ -43,11 +43,11 @@
                                         :title="item.expiredQualifications.join(', ')"
                                     >
                                         <i class="fa-solid fa-ban" />
-                                        {{ $t('domain.user.qualification.expired-count', { count: item.expiredQualifications.length }) }}
+                                        {{ $t('domain.user-qualification.expired-count', item.expiredQualifications.length) }}
                                     </span>
                                     <span v-else class="tag success">
                                         <i class="fa-solid fa-check" />
-                                        {{ $t('domain.user.qualification.all-valid') }}
+                                        {{ $t('domain.user-qualification.valid', 2) }}
                                     </span>
 
                                     <span v-if="!item.registration?.userKey" class="tag info">
@@ -73,7 +73,7 @@
                 <td v-else class="w-full">
                     <p class="text-error mb-1 font-semibold italic opacity-50">
                         <template v-if="item">
-                            {{ $t('domain.event.slot.empty') }}
+                            {{ $t('domain.event-slot.empty') }}
                         </template>
                     </p>
                     <p v-if="item?.slot" class="flex items-center gap-x-1 gap-y-2 opacity-50">
@@ -96,7 +96,7 @@
                     :class="{ disabled: !item.user }"
                 >
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    <span>{{ $t('views.event-edit.actions.show-user') }}</span>
+                    <span>{{ $t('domain.user.actions.view') }}</span>
                 </RouterLink>
                 <template v-if="event?.signupType === EventSignupType.Assignment">
                     <li
@@ -106,28 +106,28 @@
                         @click="emit('removeFromCrew', item)"
                     >
                         <i class="fa-solid fa-hourglass-half"></i>
-                        <span>{{ $t('views.event-edit.actions.move-to-waiting-list') }}</span>
+                        <span>{{ $t('domain.registration.actions.unassign') }}</span>
                     </li>
                     <li v-else class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('addToCrew', item)">
                         <i class="fa-solid fa-user-plus"></i>
-                        <span>{{ $t('views.event-edit.actions.add-to-crew') }}</span>
+                        <span>{{ $t('domain.registration.actions.assign') }}</span>
                     </li>
                 </template>
                 <li class="context-menu-item" :class="{ disabled: !item.registration }" @click="emit('editRegistration', item)">
                     <i class="fa-solid fa-clipboard-list"></i>
-                    <span>{{ $t('views.event-edit.actions.edit-registration') }}</span>
+                    <span>{{ $t('domain.registration.actions.edit') }}</span>
                 </li>
                 <li v-if="item.slot" class="context-menu-item" @click="emit('editSlot', item)">
                     <i class="fa-solid fa-edit"></i>
-                    <span>{{ $t('views.event-edit.actions.edit-slot') }}</span>
+                    <span>{{ $t('domain.event-slot.actions.edit') }}</span>
                 </li>
                 <li v-if="item.registration" class="context-menu-item text-error" @click="emit('deleteRegistration', item)">
                     <i class="fa-solid fa-trash-alt"></i>
-                    <span>{{ $t('views.event-edit.actions.delete-registration') }}</span>
+                    <span>{{ $t('domain.registration.actions.delete') }}</span>
                 </li>
                 <li v-else class="context-menu-item text-error" @click="emit('deleteSlot', item)">
                     <i class="fa-solid fa-trash-alt"></i>
-                    <span>{{ $t('views.event-edit.actions.delete-slot') }}</span>
+                    <span>{{ $t('domain.event-slot.actions.delete') }}</span>
                 </li>
             </template>
         </VTable>

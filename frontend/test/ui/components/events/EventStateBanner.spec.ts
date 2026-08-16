@@ -23,25 +23,25 @@ describe('EventStateBanner.vue', () => {
     it('should show draft banner as info', async () => {
         const event = mockEvent({ state: EventState.Draft });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-draft'));
+        expect(testee.text()).toContain(testee.vm.$t('components.event-state-banner.draft'));
     });
 
     it('should show planning banner as info', async () => {
         const event = mockEvent({ state: EventState.OpenForSignup });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-planning'));
+        expect(testee.text()).toContain(testee.vm.$t('components.event-state-banner.planning'));
     });
 
     it('should show canceled banner as warning', async () => {
         const event = mockEvent({ state: EventState.Canceled });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-canceled'));
+        expect(testee.text()).toContain(testee.vm.$t('components.event-state-banner.canceled'));
     });
 
     it('should show waiting list banner as info', async () => {
         const event = mockEvent({ state: EventState.Planned, signedInUserRegistration: mockRegistrationCaptain() });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-waitinglist', { signedInUserPosition: 'Captain' }));
+        expect(testee.text()).toContain(testee.vm.$t('components.event-state-banner.waiting-list', { signedInUserPosition: 'Captain' }));
     });
 
     it('should show assigned banner as success', async () => {
@@ -52,14 +52,14 @@ describe('EventStateBanner.vue', () => {
             isSignedInUserAssigned: true,
         });
         await testee.setProps({ event });
-        expect(testee.text()).toContain(testee.vm.$t('views.event-details.info-assigned', { signedInUserPosition: 'Captain' }));
+        expect(testee.text()).toContain(testee.vm.$t('components.event-state-banner.assigned', { signedInUserPosition: 'Captain' }));
     });
 
     it('should show missing crew banner as warning', async () => {
         const event = mockEvent({ state: EventState.Planned });
         await testee.setProps({ event });
         expect(testee.text()).toContain(
-            testee.vm.$t('views.event-details.info-missing-crew', { openPositions: 'Deckhand, Mate, Engineer, Captain' })
+            testee.vm.$t('components.event-state-banner.missing-crew', { openPositions: 'Deckhand, Mate, Engineer, Captain' })
         );
     });
 });

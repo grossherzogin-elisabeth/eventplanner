@@ -8,10 +8,12 @@ describe('locales', () => {
     const i18nKeysUsedInSource = findI18nKeysUsedInSource();
     const whitelistedKeys = [
         // add exceptions here for unused i18n keys, e.g. when used with concatenation
+        'components.event-state-banner.*', // EventStateBanner.vue
+        'components.menu.impersonate', // AppMenu.vue, AppNavbar.vue
+        'views.event-confirm-participation.info.message', // ConfirmParticipation.vue
+        'domain.*.validation.*', // used in services
         'generic.*',
-        'domain.*',
-        'views.*', // TODO remove this exception after cleanup
-        'components.*', // TODO remove this exception after cleanup
+        'domain.*', // TODO remove this exception after i18n is complete
     ].map((it) => transformToRegex(it));
 
     it.each(Object.keys(locales))('$0 should have same keys as the default locale', (locale) => {

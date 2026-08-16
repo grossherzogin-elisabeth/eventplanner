@@ -49,12 +49,12 @@
             </p>
             <p class="text-sm opacity-75">
                 <template v-if="props.value">
-                    {{ $t('views.account.qualifications.status-expires-on') }}
+                    {{ $t('domain.qualification.expires-on') }}
                 </template>
             </p>
         </template>
         <p v-else class="text-sm opacity-75">
-            {{ $t('views.account.qualifications.status-no-expires') }}
+            {{ $t('domain.qualification.no-expiration-date') }}
         </p>
     </td>
     <td class="hidden sm:table-cell">

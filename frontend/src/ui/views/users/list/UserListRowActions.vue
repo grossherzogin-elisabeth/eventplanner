@@ -20,7 +20,7 @@
                 @click="emit('create-registration', props.users[0])"
             >
                 <i class="fa-solid fa-calendar-plus" />
-                <span>{{ $t('domain.event.actions.create-registration') }}</span>
+                <span>{{ $t('domain.registration.actions.create') }}</span>
             </li>
             <li
                 data-test-id="action-edit"

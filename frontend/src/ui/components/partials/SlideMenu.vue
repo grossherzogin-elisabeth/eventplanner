@@ -4,7 +4,7 @@
         <div class="menu" @click.stop>
             <slot />
         </div>
-        <button class="btn-icon mr-6 ml-2 text-xl">
+        <button class="btn-icon mr-6 ml-2 text-xl" type="button" @click="close()">
             <i class="fa-solid fa-close text-white"></i>
         </button>
     </div>

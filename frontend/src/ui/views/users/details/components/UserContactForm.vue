@@ -1,14 +1,16 @@
 <template>
     <section class="relative mb-16 grid gap-4">
-        <span id="contact-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Email & Telefon</span>
-        <h2 class="text-secondary col-span-full font-bold">Email & Telefon</h2>
+        <span id="contact-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
+            {{ $t('domain.user.email-and-phone') }}
+        </span>
+        <h2 class="text-secondary col-span-full font-bold">{{ $t('domain.user.email-and-phone') }}</h2>
         <VInputText
             v-model.trim="user.email"
             data-test-id="email"
             class="col-span-full"
-            label="Email"
+            :label="$t('domain.user.email')"
             required
-            placeholder="keine Angabe"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['email']"
             :errors-visible="true"
@@ -17,8 +19,8 @@
             v-model.trim="user.phone"
             data-test-id="phone"
             class="col-span-full"
-            label="Telefon"
-            placeholder="keine Angabe"
+            :label="$t('domain.user.phone')"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['phone']"
             :errors-visible="true"
@@ -27,8 +29,8 @@
             v-model.trim="user.phoneWork"
             data-test-id="phone-work"
             class="col-span-full"
-            label="Telefon (dienstlich)"
-            placeholder="keine Angabe"
+            :label="$t('domain.user.phone-work')"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['phoneWork']"
             :errors-visible="true"
@@ -37,23 +39,25 @@
             v-model.trim="user.mobile"
             data-test-id="mobile"
             class="col-span-full"
-            label="Mobil"
-            placeholder="keine Angabe"
+            :label="$t('domain.user.mobile')"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['mobile']"
             :errors-visible="true"
         />
     </section>
     <section class="relative mb-16 grid gap-4 sm:grid-cols-4">
-        <span id="address-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">Addresse</span>
-        <h2 class="text-secondary col-span-full font-bold">Addresse</h2>
+        <span id="address-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
+            {{ $t('domain.user.address') }}
+        </span>
+        <h2 class="text-secondary col-span-full font-bold">{{ $t('domain.user.address') }}</h2>
         <VInputText
             v-model.trim="user.address.addressLine1"
             data-test-id="address-line-1"
             class="col-span-full"
-            label="Straße, Hausnr"
+            :label="$t('domain.address.address-line-1')"
             required
-            placeholder="keine Angabe"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['address.addressLine1']"
             :errors-visible="true"
@@ -62,8 +66,8 @@
             v-model.trim="user.address.addressLine2"
             data-test-id="address-line-2"
             class="col-span-full"
-            label="Adresszusatz"
-            placeholder="keine Angabe"
+            :label="$t('domain.address.address-line-2')"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['address.addressLine2']"
             :errors-visible="true"
@@ -72,9 +76,9 @@
             v-model.trim="user.address.zipcode"
             data-test-id="address-zipcode"
             class="col-span-full sm:col-span-1"
-            label="Postleitzahl"
+            :label="$t('domain.address.zipcode')"
             required
-            placeholder="keine Angabe"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['address.zipcode']"
             :errors-visible="true"
@@ -83,9 +87,9 @@
             v-model.trim="user.address.town"
             data-test-id="address-town"
             class="col-span-full sm:col-span-3"
-            label="Ort"
+            :label="$t('domain.address.town')"
             required
-            placeholder="keine Angabe"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['address.town']"
             :errors-visible="true"
@@ -94,10 +98,10 @@
             v-model="user.address.country"
             data-test-id="address-country"
             class="col-span-full"
-            label="Land"
+            :label="$t('domain.address.country')"
             :options="countries.options"
             required
-            placeholder="keine Angabe"
+            :placeholder="$t('generic.no-information')"
             :disabled="!hasPermission(Permission.WRITE_USERS)"
             :errors="props.errors['address.country']"
             :errors-visible="true"

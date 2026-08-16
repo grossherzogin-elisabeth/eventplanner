@@ -29,12 +29,13 @@
                 class="btn-danger"
                 :disabled="!event.canSignedInUserLeave"
                 :action="() => leaveEvent()"
+                data-test-id="delete-registration"
             >
                 <template #icon>
                     <i class="fa-solid fa-cancel" />
                 </template>
                 <template #label>
-                    {{ $t('views.event-details.leave-crew') }}
+                    {{ $t('domain.registration.actions.cancel') }}
                 </template>
             </AsyncButton>
             <AsyncButton
@@ -47,28 +48,28 @@
                     <i class="fa-solid fa-user-minus" />
                 </template>
                 <template #label>
-                    {{ $t('views.event-details.leave-waitinglist') }}
+                    {{ $t('domain.registration.actions.leave-waiting-list') }}
                 </template>
             </AsyncButton>
             <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
                 <i class="fa-solid fa-user-plus" />
-                <span class="truncate text-left"> {{ $t('views.event-details.sign-up') }} </span>
+                <span class="truncate text-left"> {{ $t('domain.event.actions.sign-up') }} </span>
             </button>
         </template>
         <template v-if="event" #secondary-buttons>
             <RouterLink v-if="hasPermission(Permission.WRITE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
                 <i class="fa-solid fa-drafting-compass" />
-                <span>{{ $t('views.event-details.edit-event') }}</span>
+                <span>{{ $t('domain.event.actions.edit') }}</span>
             </RouterLink>
             <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
-                <span>{{ $t('views.event-details.save-calendar') }}</span>
+                <span>{{ $t('domain.event.actions.create-calendar-entry') }}</span>
             </button>
         </template>
         <template v-if="event" #actions-menu>
             <li class="context-menu-item" data-test-id="action-create-calendar-entry" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
-                <span>{{ $t('views.event-details.create-calendar-entry') }}</span>
+                <span>{{ $t('domain.event.actions.create-calendar-entry') }}</span>
             </li>
             <li
                 v-for="template in eventExports.templates.value"
@@ -88,7 +89,7 @@
                     @click="editUserRegistration()"
                 >
                     <i class="fa-solid fa-edit" />
-                    <span>{{ $t('views.event-details.edit-registration') }}</span>
+                    <span>{{ $t('domain.registration.actions.edit') }}</span>
                 </li>
                 <li
                     class="context-menu-item"
@@ -96,13 +97,13 @@
                     @click="editUserRegistration()"
                 >
                     <i class="fa-solid fa-note-sticky" />
-                    <span>{{ $t('views.event-details.add-note') }}</span>
+                    <span>{{ $t('domain.registration.actions.add-note') }}</span>
                 </li>
             </template>
             <li class="permission-write-events" data-test-id="action-edit-event">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-drafting-compass" />
-                    <span>{{ $t('views.event-details.edit-event') }}</span>
+                    <span>{{ $t('domain.event.actions.edit') }}</span>
                 </RouterLink>
             </li>
         </template>

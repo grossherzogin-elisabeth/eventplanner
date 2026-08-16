@@ -21,7 +21,7 @@
             </template>
             <template v-else>
                 <span v-if="userPositions.length === 0" data-test-id="user-no-position" class="text-sm italic">
-                    {{ $t('views.user-list.no-position') }}
+                    {{ $t('views.user-list.no-position-assigned') }}
                 </span>
                 <span
                     v-if="userPositions.length >= 1"

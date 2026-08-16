@@ -1,4 +1,5 @@
 <template>
+    <!-- TODO i18n  -->
     <!-- overview -->
     <div v-if="view === View.OVERVIEW">
         <p v-if="filteredEvents.length === 1" class="mb-8 text-sm">

@@ -3,7 +3,7 @@
         :model-value="props.modelValue"
         icon="fa-calendar"
         dialog-type="modal"
-        :label="$t('components.event-registration-details-card.arrival')"
+        :label="$t('domain.registration.arrival-on-day-before')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -12,18 +12,18 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                {{ $t('components.event-registration-details-card.arrival-description') }}
+                {{ $t('components.registration-arrival-card.description') }}
             </p>
             <VInputSelectionList
                 :model-value="value.arrival !== undefined"
                 :options="[
-                    { label: 'Ja, ich möchte wenn möglich am Vortag anreisen', value: true },
-                    { label: 'Nein, ich reise am Tag der Veranstaltung an', value: false },
+                    { label: $t('components.registration-arrival-card.yes'), value: true },
+                    { label: $t('components.registration-arrival-card.no'), value: false },
                 ]"
                 @update:model-value="update(value, $event)"
             />
             <VInfo class="mt-4">
-                {{ $t('components.event-registration-details-card.arrival-note') }}
+                {{ $t('components.registration-arrival-card.note') }}
             </VInfo>
         </template>
     </VInteractiveListItem>

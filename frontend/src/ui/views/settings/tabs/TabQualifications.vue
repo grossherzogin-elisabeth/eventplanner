@@ -40,11 +40,11 @@
                         <div class="flex justify-end">
                             <div v-if="item?.expires" class="status-badge warning">
                                 <i class="fa-solid fa-clock"></i>
-                                <span>{{ $t('views.settings.qualifications.status-expires') }}</span>
+                                <span>{{ $t('domain.qualification.expires') }}</span>
                             </div>
                             <div v-else class="status-badge success">
                                 <i class="fa-solid fa-check-circle"></i>
-                                <span>{{ $t('views.settings.qualifications.status-no-expires') }}</span>
+                                <span>{{ $t('domain.qualification.no-expiration-date') }}</span>
                             </div>
                         </div>
                     </td>
@@ -67,7 +67,7 @@
         >
             <button class="btn-floating pointer-events-auto" data-test-id="button-create" @click="createQualification()">
                 <i class="fa-solid fa-file-circle-plus"></i>
-                <span>{{ $t('views.settings.qualifications.add-new') }}</span>
+                <span>{{ $t('domain.qualification.actions.create') }}</span>
             </button>
         </div>
         <QualificationEditDlg ref="qualificationDetailsDialog" data-test-id="details-dialog" />

@@ -2,24 +2,48 @@
     <div ref="datepicker" class="v-datepicker max-w-full" @click.stop="" @mouseup.stop="">
         <div class="header text-onsurface-variant pb-3">
             <div class="flex items-stretch justify-between">
-                <button data-test-id="datepicker-previous-month" class="btn-header" :disabled="view !== 'day'" @click="previousMonth()">
+                <button
+                    data-test-id="datepicker-previous-month"
+                    type="button"
+                    class="btn-header"
+                    :disabled="view !== 'day'"
+                    @click="previousMonth()"
+                >
                     <i class="fa-solid fa-chevron-left text-xs"></i>
                 </button>
-                <button data-test-id="datepicker-month" :disabled="view === 'year'" class="btn-header" @click="toggleMonthSelection()">
+                <button
+                    data-test-id="datepicker-month"
+                    type="button"
+                    :disabled="view === 'year'"
+                    class="btn-header"
+                    @click="toggleMonthSelection()"
+                >
                     <span class="">{{ $t(`generic.month.${month}`) }}</span>
                 </button>
-                <button data-test-id="datepicker-next-month" class="btn-header" :disabled="view !== 'day'" @click="nextMonth()">
+                <button
+                    data-test-id="datepicker-next-month"
+                    type="button"
+                    class="btn-header"
+                    :disabled="view !== 'day'"
+                    @click="nextMonth()"
+                >
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
             </div>
             <div class="flex items-stretch justify-between">
-                <button data-test-id="datepicker-previous-year" class="btn-header" :disabled="view !== 'day'" @click="year--">
+                <button data-test-id="datepicker-previous-year" type="button" class="btn-header" :disabled="view !== 'day'" @click="year--">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
                 </button>
-                <button data-test-id="datepicker-year" :disabled="view === 'month'" class="btn-header" @click="toggleYearSelection()">
+                <button
+                    data-test-id="datepicker-year"
+                    type="button"
+                    :disabled="view === 'month'"
+                    class="btn-header"
+                    @click="toggleYearSelection()"
+                >
                     <span class="">{{ year }}</span>
                 </button>
-                <button data-test-id="datepicker-next-year" class="btn-header" :disabled="view !== 'day'" @click="year++">
+                <button data-test-id="datepicker-next-year" type="button" class="btn-header" :disabled="view !== 'day'" @click="year++">
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
             </div>
@@ -47,7 +71,7 @@
                         end: isSameDate(day.date, max(props.highlightFrom, props.highlightTo)),
                     }"
                 >
-                    <button class="btn-icon" @click="selectDate(day)">
+                    <button class="btn-icon" type="button" @click="selectDate(day)">
                         {{ day.date.getDate() }}
                     </button>
                 </div>
@@ -72,7 +96,7 @@
             </div>
             <!-- year selection -->
             <div v-if="view === 'year'" class="year-selection border-onsurface-variant/40 flex flex-col items-center border-t px-4 py-4">
-                <button class="btn-header" @click="showYearSelectionFrom -= 12">
+                <button class="btn-header" type="button" @click="showYearSelectionFrom -= 12">
                     <span class="px-4">...</span>
                 </button>
                 <div class="grid grid-cols-3 gap-2 self-stretch">
@@ -80,6 +104,7 @@
                         v-for="y in years"
                         :key="y"
                         class="year"
+                        type="button"
                         :class="{
                             selected: y === year,
                             current: y === new Date().getFullYear(),
@@ -89,7 +114,7 @@
                         {{ y }}
                     </button>
                 </div>
-                <button class="btn-header" @click="showYearSelectionTo += 12">
+                <button class="btn-header" type="button" @click="showYearSelectionTo += 12">
                     <span class="px-4">...</span>
                 </button>
             </div>

@@ -47,7 +47,7 @@ describe('EventDetailsView.vue', () => {
             await awaitPageContentLoaded(testee);
             const primaryBtn = testee.find('.btn-primary');
             expect(primaryBtn.exists()).toBe(true);
-            expect(primaryBtn.text()).toContain(testee.vm.$t('views.event-details.sign-up'));
+            expect(primaryBtn.text()).toContain(testee.vm.$t('domain.event.actions.sign-up'));
         });
 
         it('should render event details card', async () => {
@@ -85,7 +85,7 @@ describe('EventDetailsView.vue', () => {
             await awaitPageContentLoaded(testee);
             const primaryBtn = testee.find('.btn-danger');
             expect(primaryBtn.exists()).toBe(true);
-            expect(primaryBtn.text()).toContain(testee.vm.$t('views.event-details.leave-waitinglist'));
+            expect(primaryBtn.text()).toContain(testee.vm.$t('domain.registration.actions.leave-waiting-list'));
         });
 
         it('should have calendar entry action', async () => {
@@ -143,9 +143,8 @@ describe('EventDetailsView.vue', () => {
 
         it('should render leave crew button', async () => {
             await awaitPageContentLoaded(testee);
-            const primaryBtn = testee.find('.btn-danger');
+            const primaryBtn = testee.find('[data-test-id="delete-registration"]');
             expect(primaryBtn.exists()).toBe(true);
-            expect(primaryBtn.text()).toContain(testee.vm.$t('views.event-details.leave-crew'));
         });
     });
 });

@@ -1,41 +1,38 @@
 declare const value: {
     components: {
+        'create-registration-for-user-dialog': {
+            'note-adding-to-waiting-list': string;
+        };
+        'create-user-dialog': {
+            'note-edits': string;
+        };
         'error-dialog': {
             'default-text': string;
             'default-title': string;
             'details': string;
             'retry': string;
-            'show-details': string;
         };
         'event-cancel-dialog': {
             message: string;
             submit: string;
             title: string;
         };
+        'event-create-dialog': {
+            'description-placeholder': string;
+            'name-placeholder': string;
+        };
         'event-details-card': {
             assigned: string;
-            days: string;
             registrations: string;
             title: string;
             waitinglist: string;
         };
-        'event-details-sheet': {
-            'note-assigned': string;
-            'note-missing-crew': string;
-            'note-on-waiting-list': string;
-            'show-details': string;
-        };
         'event-locations-card': {
             'address-link': string;
-            'eta': string;
-            'etd': string;
             'learn-more': string;
             'placeholder': string;
-            'title': string;
         };
         'event-participants-card': {
-            'assigned': string;
-            'empty': string;
             'no-registrations': string;
             'no-waitinglist': string;
             'placeholder': string;
@@ -43,30 +40,24 @@ declare const value: {
             'placeholder-title-f': string;
             'placeholder-title-m': string;
             'placeholder-waiting-list-hint': string;
-            'registrations': string;
-            'unknown': string;
-            'waitinglist': string;
         };
         'event-registration-details-card': {
-            'arrival': string;
-            'arrival-description': string;
-            'arrival-note': string;
-            'note': string;
-            'note-description': string;
-            'note-none': string;
-            'overnight-stay': string;
-            'overnight-stay-description': string;
-            'overnight-stay-note': string;
-            'position': string;
-            'position-description': string;
-            'title': string;
+            title: string;
+        };
+        'event-state-banner': {
+            'assigned': string;
+            'canceled': string;
+            'confirmed': string;
+            'draft': string;
+            'missing-crew': string;
+            'planning': string;
+            'waiting-list': string;
         };
         'menu': {
             'account': string;
             'calendar': string;
             'events': string;
             'events-admin': string;
-            'feedback': string;
             'home': string;
             'impersonate': string;
             'no-account': {
@@ -78,8 +69,37 @@ declare const value: {
             'settings': string;
             'sign-out': string;
             'start': string;
+            'stop-impersonate': string;
             'users': string;
             'users-admin': string;
+        };
+        'registration-arrival-card': {
+            description: string;
+            no: string;
+            note: string;
+            yes: string;
+        };
+        'registration-note-card': {
+            description: string;
+            none: string;
+        };
+        'registration-overnight-stay-card': {
+            description: string;
+            note: string;
+        };
+        'registration-position-card': {
+            description: string;
+            label: string;
+        };
+        'user-emergency-form': {
+            'note-privacy': string;
+            'short-title': string;
+            'title': string;
+        };
+        'user-other-form': {
+            comment: string;
+            diet: string;
+            other: string;
         };
     };
     domain: {
@@ -96,30 +116,27 @@ declare const value: {
         };
         'event': {
             'actions': {
-                'add-to-crew': string;
                 'cancel': string;
                 'contact-crew': string;
+                'create': string;
                 'create-calendar-entry': string;
-                'create-registration': string;
                 'delete': string;
                 'edit': string;
                 'export-to-template': string;
                 'leave-waiting-list': string;
-                'remove-from-crew': string;
+                'publish-crew': string;
+                'reset-crew': string;
                 'sign-up': string;
-                'update-state-to-canceled': string;
-                'update-state-to-open-for-signup': string;
-                'update-state-to-published': string;
+                'start-crew-signup': string;
                 'view': string;
             };
             'category': string;
             'crew': string;
             'crew-count': string;
             'description': string;
-            'duration': string;
-            'end': string;
             'end-date': string;
             'end-time': string;
+            'location': string;
             'name': string;
             'no-slot-for-position-error': {
                 message: string;
@@ -128,11 +145,7 @@ declare const value: {
             };
             'registration-count': string;
             'registrations': string;
-            'route': string;
             'signup-type': string;
-            'slot': {
-                empty: string;
-            };
             'start': string;
             'start-date': string;
             'start-time': string;
@@ -147,9 +160,16 @@ declare const value: {
             open: string;
         };
         'event-slot': {
+            'actions': {
+                create: string;
+                delete: string;
+                duplicate: string;
+                edit: string;
+            };
             'alternative-positions': string;
             'criticality': string;
             'display-name': string;
+            'empty': string;
             'important': string;
             'optional': string;
             'position': string;
@@ -173,8 +193,17 @@ declare const value: {
             'work-event': string;
         };
         'location': {
+            'actions': {
+                'create': string;
+                'delete': string;
+                'delete-eta': string;
+                'delete-etd': string;
+                'edit': string;
+            };
             'address': string;
             'address-link': string;
+            'arrival': string;
+            'departure': string;
             'eda': string;
             'edd': string;
             'eta': string;
@@ -184,7 +213,52 @@ declare const value: {
             'information-link': string;
             'name': string;
         };
+        'position': {
+            'actions': {
+                create: string;
+                edit: string;
+            };
+            'color': string;
+            'imo-list-rank': string;
+            'key': string;
+            'name': string;
+            'prio': string;
+            'validation': {
+                'key-must-be-unique': string;
+                'name-must-be-unique': string;
+            };
+        };
+        'qualification': {
+            'actions': {
+                create: string;
+                delete: string;
+                edit: string;
+            };
+            'description': string;
+            'expires': string;
+            'expires-on': string;
+            'icon': string;
+            'key': string;
+            'name': string;
+            'no-expiration-date': string;
+            'positions': string;
+            'validation': {
+                'key-must-be-unique': string;
+                'name-must-be-unique': string;
+            };
+            'with-expiration-date': string;
+        };
         'registration': {
+            'actions': {
+                'add-note': string;
+                'assign': string;
+                'cancel': string;
+                'create': string;
+                'delete': string;
+                'edit': string;
+                'leave-waiting-list': string;
+                'unassign': string;
+            };
             'arrival': string;
             'arrival-on-day-before': string;
             'confirmation-pending': string;
@@ -195,6 +269,7 @@ declare const value: {
             'overnight-stay': string;
             'position': string;
             'unknown-user': string;
+            'user': string;
         };
         'role': {
             ROLE_ADMIN: string;
@@ -206,6 +281,9 @@ declare const value: {
         };
         'types': {
             event: string;
+            location: string;
+            position: string;
+            qualification: string;
             registration: string;
             user: string;
         };
@@ -213,17 +291,21 @@ declare const value: {
             'actions': {
                 'create': string;
                 'impersonate': string;
+                'view': string;
                 'write-email': string;
             };
             'address': string;
+            'auth-key': string;
             'date-and-place-of-birth': string;
             'date-of-birth': string;
             'diet': string;
             'diseases': string;
             'email': string;
+            'email-and-phone': string;
             'emergency-contact': string;
             'first-name': string;
             'gender': string;
+            'generic-data': string;
             'intolerances': string;
             'last-login-at': string;
             'last-name': string;
@@ -234,31 +316,40 @@ declare const value: {
             'nationality': string;
             'nick-name': string;
             'no-login-recorded': string;
+            'official-name-hint': string;
             'pass-nr': string;
+            'personal-data': string;
             'phone': string;
             'phone-work': string;
             'place-of-birth': string;
-            'qualification': {
-                'all-valid': string;
-                'expired-count': string;
-            };
             'title': string;
+            'verified-at': string;
         };
         'user-qualification': {
-            'expires-at': string;
-            'status': {
-                'expired': string;
-                'expiring-soon': string;
-                'valid': string;
+            'actions': {
+                create: string;
+                delete: string;
+                edit: string;
             };
+            'expired': string;
+            'expired-count': string;
+            'expires-at': string;
+            'expiring-soon': string;
+            'expiring-soon-count': string;
+            'note': string;
+            'valid': string;
         };
     };
     generic: {
         'add': string;
         'apply': string;
         'cancel': string;
+        'click-to-show': string;
         'close': string;
+        'created-at': string;
+        'days': string;
         'delete': string;
+        'deselect': string;
         'diet': {
             omnivore: string;
             vegan: string;
@@ -310,6 +401,7 @@ declare const value: {
         'move-down': string;
         'move-up': string;
         'no': string;
+        'no-data': string;
         'no-entries': string;
         'no-information': string;
         'no-matches': string;
@@ -317,13 +409,21 @@ declare const value: {
         'optional': string;
         'please-select': string;
         'save': string;
+        'select': string;
         'select-all': string;
         'selected-count': string;
+        'show-details': string;
         'theme': {
             dark: string;
             light: string;
             system: string;
         };
+        'unsaved-changes-dialog': {
+            message: string;
+            submit: string;
+            title: string;
+        };
+        'updated-at': string;
         'validation': {
             'after': string;
             'before': string;
@@ -337,6 +437,7 @@ declare const value: {
             'must-not-include-lastname': string;
             'required': string;
         };
+        'view': string;
         'weekday-short': {
             '0': string;
             '1': string;
@@ -350,17 +451,11 @@ declare const value: {
     };
     views: {
         'account': {
-            'app-features': {
-                title: string;
-            };
             'app-settings': {
                 'language': string;
                 'language-description': string;
-                'notifications': string;
-                'permissions': string;
                 'preferred-position': string;
                 'preferred-position-description': string;
-                'roles': string;
                 'theme': string;
                 'title': string;
             };
@@ -374,10 +469,8 @@ declare const value: {
                 'diet-description': string;
                 'intolerances-description': string;
                 'kitchen-info': string;
-                'title': string;
             };
             'emergency': {
-                'click-to-show': string;
                 'diseases-description': string;
                 'emergency-contact-description': string;
                 'medication-description': string;
@@ -385,24 +478,15 @@ declare const value: {
                 'title': string;
             };
             'personal': {
-                'date-and-place-of-birth-description': string;
                 'gender-description': string;
                 'hint': string;
                 'name-description': string;
                 'nationality-description': string;
                 'nick-name-hint': string;
-                'official-name-hint': string;
                 'passport-description': string;
                 'passport-info': string;
                 'passport-link': string;
                 'title': string;
-            };
-            'qualifications': {
-                'status-expired': string;
-                'status-expires-on': string;
-                'status-expiring-soon': string;
-                'status-no-expires': string;
-                'status-valid': string;
             };
             'tab': {
                 data: string;
@@ -413,28 +497,12 @@ declare const value: {
         };
         'calendar': {
             'create-event': string;
-            'days': string;
             'title': string;
         };
         'event-admin-list': {
-            'action': {
-                'add-event': string;
-                'add-registration': string;
-                'cancel-event': string;
-                'contact-crew': string;
-                'create-event': string;
-                'delete-event': string;
-                'edit-event': string;
-                'export': string;
-                'open-signup': string;
-                'publish-crew': string;
-                'request-more-crew': string;
-                'show-event': string;
-            };
             'batch-edit': {
                 'copy-slots-from': string;
                 'copy-slots-warning': string;
-                'dont-change-slots': string;
                 'info': string;
                 'not-changed': string;
                 'title': string;
@@ -458,12 +526,12 @@ declare const value: {
                     title: string;
                 };
             };
+            'export': string;
             'filter': {
                 'all-events': string;
                 'all-status': string;
                 'free-slots': string;
                 'search': string;
-                'status': string;
                 'waitinglist': string;
             };
             'state': {
@@ -474,11 +542,6 @@ declare const value: {
                 future: string;
             };
             'tab-title': string;
-            'table': {
-                'day-count': string;
-                'no-route': string;
-                'team': string;
-            };
         };
         'event-confirm-participation': {
             'canceled': {
@@ -517,58 +580,18 @@ declare const value: {
             'title': string;
         };
         'event-details': {
-            'add-note': string;
-            'create-calendar-entry': string;
-            'edit-event': string;
-            'edit-registration': string;
-            'info-assigned': string;
-            'info-canceled': string;
-            'info-confirmed': string;
-            'info-draft': string;
-            'info-missing-crew': string;
-            'info-planning': string;
-            'info-waitinglist': string;
-            'leave-crew': string;
             'leave-crew-dialog': {
                 message: string;
                 submit: string;
                 title: string;
             };
-            'leave-waitinglist': string;
-            'save-calendar': string;
-            'sign-up': string;
         };
         'event-edit': {
-            'actions': {
-                'add-location': string;
-                'add-registration': string;
-                'add-slot': string;
-                'add-to-crew': string;
-                'cancel-event': string;
-                'contact-crew': string;
-                'delete-eta': string;
-                'delete-etd': string;
-                'delete-location': string;
-                'delete-registration': string;
-                'delete-slot': string;
-                'duplicate-slot': string;
-                'edit-location': string;
-                'edit-registration': string;
-                'edit-slot': string;
-                'edit-start-location': string;
-                'move-to-waiting-list': string;
-                'open-signup': string;
-                'publish-crew': string;
-                'reset-crew': string;
-                'show-user': string;
-            };
             'edit-registration': {
                 'guest-title': string;
                 'guest-warning': string;
                 'no-qualification': string;
                 'qualifications': string;
-                'select-position': string;
-                'select-user': string;
                 'title': string;
             };
             'empty-crew': {
@@ -590,7 +613,6 @@ declare const value: {
             'info-draft': string;
             'info-missing-crew': string;
             'info-signup': string;
-            'registration-id': string;
             'secure-crew': string;
             'tab': {
                 crew: string;
@@ -605,23 +627,8 @@ declare const value: {
                 'positions': string;
                 'qualifications': string;
             };
-            'unsaved-changes': {
-                message: string;
-                title: string;
-            };
-            'validation': {
-                'missing-location-icon': string;
-                'missing-location-name': string;
-            };
         };
         'event-list': {
-            'action': {
-                'cancel': string;
-                'create-calendar-entry': string;
-                'leave-waitinglist': string;
-                'link-event-details': string;
-                'signup': string;
-            };
             'filter': {
                 'all-types': string;
                 'assigned': string;
@@ -636,13 +643,6 @@ declare const value: {
             };
             'tab': {
                 future: string;
-            };
-            'table': {
-                'assigned-as': string;
-                'day-count': string;
-                'on-waiting-list-as': string;
-                'registration-count': string;
-                'team-count': string;
             };
         };
         'home': {
@@ -670,38 +670,12 @@ declare const value: {
                 'title': string;
             };
             positions: {
-                'add-new': string;
-                'color': string;
                 'delete-message': string;
                 'delete-title': string;
-                'edit': string;
-                'id': string;
-                'imo-list-rank': string;
-                'name': string;
-                'prio': string;
-                'validation': {
-                    'key-must-be-unique': string;
-                    'name-must-be-unique': string;
-                };
             };
             qualifications: {
-                'add-new': string;
                 'delete-message': string;
                 'delete-title': string;
-                'description': string;
-                'edit': string;
-                'expires': string;
-                'icon': string;
-                'icon-placeholder': string;
-                'key': string;
-                'name': string;
-                'positions': string;
-                'status-expires': string;
-                'status-no-expires': string;
-                'validation': {
-                    'key-must-be-unique': string;
-                    'name-must-be-unique': string;
-                };
             };
             tab: {
                 email: string;
@@ -710,6 +684,7 @@ declare const value: {
                 positions: string;
                 qualifications: string;
             };
+            title: string;
             ui: {
                 'menu-title': string;
                 'menu-title-description': string;
@@ -723,6 +698,10 @@ declare const value: {
                 'theme-color-description': string;
                 'title': string;
             };
+        };
+        'unauthorized': {
+            message: string;
+            title: string;
         };
         'user-details': {
             tab: {
@@ -743,12 +722,7 @@ declare const value: {
                 'expired-qualifications': string;
                 'not-verified': string;
             };
-            'no-position': string;
-            'qualification-summary': {
-                'all-valid': string;
-                'expired': string;
-                'expiring-soon': string;
-            };
+            'no-position-assigned': string;
             'tab': {
                 admins: string;
                 members: string;

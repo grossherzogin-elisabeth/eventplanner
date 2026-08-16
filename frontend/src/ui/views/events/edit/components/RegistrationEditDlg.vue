@@ -109,10 +109,10 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" name="save" @click="cancel">
+            <button class="btn-ghost" type="button" name="save" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
+            <button class="btn-ghost" type="button" :disabled="validation.disableSubmit.value" @click="submit">
                 <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>

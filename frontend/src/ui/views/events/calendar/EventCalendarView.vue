@@ -52,7 +52,7 @@
                                 <div v-else-if="createEventFromDate === d.date" class="create-event-overlay">
                                     <span>{{ $t('views.calendar.create-event') }}</span>
                                     <span v-if="calendarStyle['--create-event-days'] > 1" class="text-xs">
-                                        {{ calendarStyle['--create-event-days'] }} {{ $t('views.calendar.days') }}
+                                        {{ calendarStyle['--create-event-days'] }} {{ $t('generic.days') }}
                                     </span>
                                 </div>
                             </div>

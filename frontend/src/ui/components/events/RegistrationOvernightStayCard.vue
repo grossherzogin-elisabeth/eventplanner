@@ -3,7 +3,7 @@
         :model-value="props.modelValue"
         icon="fa-bed"
         dialog-type="modal"
-        :label="$t('components.event-registration-details-card.overnight-stay')"
+        :label="$t('domain.registration.overnight-stay')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
@@ -12,17 +12,17 @@
         </template>
         <template #edit="{ value }">
             <p class="mb-4 text-sm">
-                {{ $t('components.event-registration-details-card.overnight-stay-description') }}
+                {{ $t('components.registration-overnight-stay-card.description') }}
             </p>
             <VInputSelectionList
                 v-model="value.overnightStay"
                 :options="[
-                    { label: 'Ja', value: true },
-                    { label: 'Nein', value: false },
+                    { label: $t('generic.yes'), value: true },
+                    { label: $t('generic.no'), value: false },
                 ]"
             />
             <VInfo class="mt-4">
-                {{ $t('components.event-registration-details-card.overnight-stay-note') }}
+                {{ $t('components.registration-overnight-stay-card.note') }}
             </VInfo>
         </template>
     </VInteractiveListItem>

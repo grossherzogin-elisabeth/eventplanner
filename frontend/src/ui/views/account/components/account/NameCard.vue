@@ -52,7 +52,7 @@
                 <VInputText
                     v-model="value.firstName"
                     :label="$t('domain.user.first-name')"
-                    :hint="$t('views.account.personal.official-name-hint')"
+                    :hint="$t('domain.user.official-name-hint')"
                     required
                     disabled
                 />
@@ -62,7 +62,7 @@
                     v-model="value.secondName"
                     :label="$t('domain.user.middle-name')"
                     :placeholder="$t('generic.no-information')"
-                    :hint="$t('views.account.personal.official-name-hint')"
+                    :hint="$t('domain.user.official-name-hint')"
                     disabled
                     :errors="errors['secondName']"
                     :errors-visible="true"
@@ -73,7 +73,7 @@
                     v-model="value.lastName"
                     :label="$t('domain.user.last-name')"
                     :placeholder="$t('generic.no-information')"
-                    :hint="$t('views.account.personal.official-name-hint')"
+                    :hint="$t('domain.user.official-name-hint')"
                     required
                     disabled
                     :errors="errors['lastName']"

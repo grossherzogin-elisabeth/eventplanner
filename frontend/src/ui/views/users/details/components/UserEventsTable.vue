@@ -28,14 +28,14 @@
                             +{{ item.waitingListCount }}
                         </span>
                     </p>
-                    <p class="text-sm">Crew</p>
+                    <p class="text-sm">{{ $t('domain.event.crew') }}</p>
                 </td>
                 <td class="whitespace-nowrap">
                     <div class="mb-1 font-semibold">
                         <p class="hidden w-56 lg:block">{{ formatDateRange(item?.start, item?.end) }}</p>
                         <p class="w-20 lg:hidden">{{ $d(item?.start ?? new Date(), DateTimeFormat.DDD_DD_MM) }}</p>
                     </div>
-                    <p class="text-sm">{{ item?.duration }} Tage</p>
+                    <p class="text-sm">{{ $t('generic.days', { count: item?.duration }) }}</p>
                 </td>
                 <td>
                     <span :style="{ '--color': item?.position.color }" class="tag custom">
@@ -54,7 +54,7 @@
                         class="context-menu-item"
                     >
                         <i class="fa-solid fa-search" />
-                        <span>Veranstaltung anzeigen</span>
+                        <span>{{ $t('domain.event.actions.view') }}</span>
                     </RouterLink>
                 </li>
                 <li v-if="hasPermission(Permission.WRITE_EVENTS)">
@@ -67,7 +67,7 @@
                         class="context-menu-item"
                     >
                         <i class="fa-solid fa-drafting-compass" />
-                        <span>Veranstaltung bearbeiten</span>
+                        <span>{{ $t('domain.event.actions.edit') }}</span>
                     </RouterLink>
                 </li>
                 <li
@@ -78,7 +78,7 @@
                     @click="addUserToCrew(item)"
                 >
                     <i class="fa-solid fa-user-plus" />
-                    <span>Zur Crew hinzufügen</span>
+                    <span>{{ $t('domain.registration.actions.assign') }}</span>
                 </li>
                 <li
                     class="context-menu-item text-error"
@@ -87,7 +87,7 @@
                     @click="deleteRegistration(item)"
                 >
                     <i class="fa-solid fa-trash-alt" />
-                    <span>Anmeldung löschen</span>
+                    <span>{{ $t('domain.registration.actions.delete') }}</span>
                 </li>
             </template>
             <template #loading>

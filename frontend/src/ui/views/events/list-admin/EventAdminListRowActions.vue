@@ -24,7 +24,7 @@
             @click="emit('update-events:edit', props.events)"
         >
             <i class="fa-solid fa-compass-drafting" />
-            <span>{{ $t('generic.edit') }}</span>
+            <span>{{ $t('domain.event.actions.edit') }}</span>
         </li>
 
         <!-- Transition event state DRAFT -> OPEN_FOR_SIGNUP -->
@@ -35,7 +35,7 @@
             @click="emit('update-events:open-for-signup', props.events)"
         >
             <i class="fa-solid fa-people-group" />
-            <span>{{ $t('domain.event.actions.update-state-to-open-for-signup') }}</span>
+            <span>{{ $t('domain.event.actions.start-crew-signup') }}</span>
         </li>
         <!-- Transition event state OPEN_FOR_SIGNUP -> PLANNED -->
         <li
@@ -45,7 +45,7 @@
             @click="emit('update-events:publish-crew', props.events)"
         >
             <i class="fa-solid fa-earth-europe" />
-            <span>{{ $t('domain.event.actions.update-state-to-published') }}</span>
+            <span>{{ $t('domain.event.actions.publish-crew') }}</span>
         </li>
         <!-- Transition event state to CANCELED -->
         <li
@@ -54,7 +54,7 @@
             @click="emit('update-events:cancel', props.events)"
         >
             <i class="fa-solid fa-ban" />
-            <span>{{ $t('domain.event.actions.update-state-to-canceled') }}</span>
+            <span>{{ $t('domain.event.actions.cancel', props.events.length) }}</span>
         </li>
         <!-- Delete -->
         <li
@@ -63,7 +63,7 @@
             @click="emit('update-events:delete', props.events)"
         >
             <i class="fa-solid fa-trash-alt" />
-            <span>{{ $t('generic.delete') }}</span>
+            <span>{{ $t('domain.event.actions.delete', props.events.length) }}</span>
         </li>
 
         <hr />
@@ -81,7 +81,7 @@
             @click="emit('update-events:create-registration', props.events)"
         >
             <i class="fa-solid fa-user-plus" />
-            <span>{{ $t('domain.event.actions.create-registration') }}</span>
+            <span>{{ $t('domain.registration.actions.create') }}</span>
         </li>
 
         <!-- Excel exports -->

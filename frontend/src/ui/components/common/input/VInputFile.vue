@@ -17,7 +17,13 @@
                 class="input-field w-full cursor-pointer text-ellipsis"
                 readonly
             />
-            <button v-if="file" class="hover:bg-primary-container h-10 w-10 rounded-full" tabindex="-1" @click.stop="clearSelection()">
+            <button
+                v-if="file"
+                type="button"
+                class="hover:bg-primary-container h-10 w-10 rounded-full"
+                tabindex="-1"
+                @click.stop="clearSelection()"
+            >
                 <i class="fa-solid fa-file-circle-xmark text-onprimary-container" />
             </button>
             <span v-else>

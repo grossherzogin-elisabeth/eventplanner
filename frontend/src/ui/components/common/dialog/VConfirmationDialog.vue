@@ -11,11 +11,21 @@
             </div>
         </template>
         <template #buttons>
-            <button data-test-id="button-cancel" :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'" @click="cancel()">
-                <slot name="cancel">{{ content?.cancel || 'Abbrechen' }}</slot>
+            <button
+                data-test-id="button-cancel"
+                type="button"
+                :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'"
+                @click="cancel()"
+            >
+                <slot name="cancel">{{ content?.cancel || $t('generic.cancel') }}</slot>
             </button>
-            <button data-test-id="button-confirm" :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'" @click="submit()">
-                <slot name="submit">{{ content?.submit || 'Ja' }}</slot>
+            <button
+                data-test-id="button-confirm"
+                type="button"
+                :class="content?.danger ? 'btn-ghost-danger' : 'btn-ghost'"
+                @click="submit()"
+            >
+                <slot name="submit">{{ content?.submit || $t('generic.yes') }}</slot>
             </button>
         </template>
     </VDialog>

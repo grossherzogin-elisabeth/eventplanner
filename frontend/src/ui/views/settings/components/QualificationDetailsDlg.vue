@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg" data-test-id="qualification-details-dialog">
         <template #title>
-            <template v-if="mode === Mode.CREATE">{{ $t('views.settings.qualifications.add-new') }}</template>
-            <template v-else>{{ $t('views.settings.qualifications.edit') }}</template>
+            <template v-if="mode === Mode.CREATE">{{ $t('domain.qualification.actions.create') }}</template>
+            <template v-else>{{ $t('domain.qualification.actions.edit') }}</template>
         </template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 pb-8 lg:w-xl lg:px-10">
@@ -11,7 +11,7 @@
                         <VInputText
                             v-model="qualification.key"
                             data-test-id="input-key"
-                            :label="$t('views.settings.qualifications.key')"
+                            :label="$t('domain.qualification.key')"
                             :errors="validation.errors.value['key']"
                             :errors-visible="validation.showErrors.value"
                             required
@@ -22,7 +22,7 @@
                         <VInputText
                             v-model="qualification.name"
                             data-test-id="input-name"
-                            :label="$t('views.settings.qualifications.name')"
+                            :label="$t('domain.qualification.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                             :disabled="!hasWritePermission"
@@ -33,8 +33,8 @@
                         <VInputText
                             v-model="qualification.icon"
                             data-test-id="input-icon"
-                            :label="$t('views.settings.qualifications.icon')"
-                            :placeholder="$t('views.settings.qualifications.icon-placeholder')"
+                            :label="$t('domain.qualification.icon')"
+                            placeholder="fa-id-card"
                             :errors="validation.errors.value['icon']"
                             :errors-visible="validation.showErrors.value"
                             :disabled="!hasWritePermission"
@@ -51,7 +51,7 @@
                         <VInputTextArea
                             v-model="qualification.description"
                             data-test-id="input-description"
-                            :label="$t('views.settings.qualifications.description')"
+                            :label="$t('domain.qualification.description')"
                             :errors="validation.errors.value['description']"
                             :errors-visible="validation.showErrors.value"
                             :disabled="!hasWritePermission"
@@ -62,12 +62,12 @@
                 <div class="mb-4">
                     <VInputCheckBox
                         v-model="qualification.expires"
-                        :label="$t('views.settings.qualifications.expires')"
+                        :label="$t('domain.qualification.with-expiration-date')"
                         :disabled="!hasWritePermission"
                     />
                 </div>
                 <div data-test-id="input-positions" class="bg-surface-container-highest xs:-mx-4 mt-8 rounded-xl p-4 pr-8 text-sm">
-                    <h2 class="mb-4 text-xs font-bold">{{ $t('views.settings.qualifications.positions') }}</h2>
+                    <h2 class="mb-4 text-xs font-bold">{{ $t('domain.qualification.positions') }}</h2>
                     <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                         <div v-for="position in positions.all.value" :key="position.key">
                             <VInputCheckBox
@@ -83,15 +83,27 @@
         </template>
         <template #buttons>
             <template v-if="hasWritePermission">
-                <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
+                <button class="btn-ghost" type="button" data-test-id="button-cancel" @click="cancel">
                     <span>{{ $t('generic.cancel') }}</span>
                 </button>
-                <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="submit">
+                <button
+                    class="btn-ghost"
+                    type="button"
+                    data-test-id="button-submit"
+                    :disabled="validation.disableSubmit.value"
+                    @click="submit"
+                >
                     <span>{{ $t('generic.save') }}</span>
                 </button>
             </template>
             <template v-else>
-                <button class="btn-ghost" data-test-id="button-submit" :disabled="validation.disableSubmit.value" @click="cancel">
+                <button
+                    class="btn-ghost"
+                    type="button"
+                    data-test-id="button-submit"
+                    :disabled="validation.disableSubmit.value"
+                    @click="cancel"
+                >
                     <span>{{ $t('generic.close') }}</span>
                 </button>
             </template>

@@ -52,7 +52,7 @@
         >
             <button class="btn-floating pointer-events-auto" data-test-id="button-create" @click="createPosition()">
                 <i class="fa-solid fa-file-circle-plus"></i>
-                <span>{{ $t('views.settings.positions.add-new') }}</span>
+                <span>{{ $t('domain.position.actions.create') }}</span>
             </button>
         </div>
 

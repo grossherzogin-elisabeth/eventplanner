@@ -26,6 +26,7 @@
                 v-else
                 :class="focusOptionIndex === null ? 'rotate-0' : 'rotate-180'"
                 class="transition-transform"
+                type="button"
                 tabindex="-1"
                 @click="showDropdown()"
             >
@@ -70,7 +71,7 @@
                     @keydown.esc="hideDropdown(true)"
                 />
                 <slot name="after-filter">
-                    <button v-if="filter" class="flex items-center self-stretch pr-4" @click.stop="filter = ''">
+                    <button v-if="filter" type="button" class="flex items-center self-stretch pr-4" @click.stop="filter = ''">
                         <i class="fa-solid fa-xmark-circle opacity-75 hover:opacity-100"></i>
                     </button>
                 </slot>

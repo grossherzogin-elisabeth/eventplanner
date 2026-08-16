@@ -2,7 +2,7 @@
     <div class="multi-select-bar sticky bottom-0 z-20" data-test-id="multi-select-actions">
         <MainContent class="border-outline-variant bg-surface border-t xl:rounded-bl-3xl">
             <div class="-ml-3 flex h-18 items-stretch gap-2 py-4 whitespace-nowrap">
-                <button class="btn-ghost" @click="emit('selectNone')">
+                <button class="btn-ghost" type="button" @click="emit('selectNone')">
                     <i class="fa-solid fa-xmark" />
                 </button>
                 <span class="self-center font-bold">

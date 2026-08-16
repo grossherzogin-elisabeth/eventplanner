@@ -12,7 +12,12 @@
                                 class="tab"
                                 :class="{ active: tab.value === props.modelValue && !showSearch }"
                             >
-                                <button class="btn-tab" :data-test-id="`tab-${tab.value}`" @click="emit('update:modelValue', tab.value)">
+                                <button
+                                    class="btn-tab"
+                                    type="button"
+                                    :data-test-id="`tab-${tab.value}`"
+                                    @click="emit('update:modelValue', tab.value)"
+                                >
                                     <slot name="tab" :tab="tab.value">
                                         {{ tab.label }}
                                     </slot>

@@ -8,7 +8,7 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p v-if="!props.modelValue.emergencyContact.name && !props.modelValue.emergencyContact.phone" class="truncate">
+            <p v-if="!props.modelValue.emergencyContact.name && !props.modelValue.emergencyContact.phone" class="truncate italic">
                 {{ $t('generic.no-information') }}
             </p>
             <p v-else class="truncate">

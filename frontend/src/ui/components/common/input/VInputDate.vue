@@ -22,6 +22,7 @@
             <button
                 v-if="!disabled"
                 class="btn-icon -mr-3"
+                type="button"
                 @click.stop="showDatepicker()"
                 @keydown.esc="showDropdown = false"
                 @keydown.exact.left="subtractDays(1)"
@@ -64,10 +65,10 @@
                 />
             </template>
             <template #buttons="{ close, submit }">
-                <button class="btn-ghost" @click="close()">
+                <button class="btn-ghost" type="button" @click="close()">
                     <span>{{ $t('generic.cancel') }}</span>
                 </button>
-                <button class="btn-ghost" @click="submit(dialogValue)">
+                <button class="btn-ghost" type="button" @click="submit(dialogValue)">
                     <span>{{ $t('generic.ok') }}</span>
                 </button>
             </template>

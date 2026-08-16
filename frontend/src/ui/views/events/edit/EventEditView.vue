@@ -68,7 +68,7 @@
                     @click="addRegistration()"
                 >
                     <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('views.event-edit.actions.add-registration') }}</span>
+                    <span>{{ $t('domain.registration.actions.create') }}</span>
                 </button>
                 <button
                     v-else-if="tab === Tab.EVENT_REGISTRATIONS"
@@ -76,22 +76,22 @@
                     @click="addRegistration()"
                 >
                     <i class="fa-solid fa-user-plus" />
-                    <span>{{ $t('views.event-edit.actions.add-registration') }}</span>
+                    <span>{{ $t('domain.registration.actions.create') }}</span>
                 </button>
                 <button v-else-if="tab === Tab.EVENT_SLOTS" class="permission-write-event-slots btn-secondary" @click="addSlot()">
                     <i class="fa-solid fa-list" />
-                    <span>{{ $t('views.event-edit.actions.add-slot') }}</span>
+                    <span>{{ $t('domain.event-slot.actions.create') }}</span>
                 </button>
                 <button v-else-if="tab === Tab.EVENT_LOCATIONS" class="permission-write-event-details btn-secondary" @click="addLocation()">
                     <i class="fa-solid fa-route" />
-                    <span>{{ $t('views.event-edit.actions.add-location') }}</span>
+                    <span>{{ $t('domain.location.actions.create') }}</span>
                 </button>
             </div>
         </template>
         <template #actions-menu>
             <li class="permission-write-registrations context-menu-item" data-test-id="action-add-registration" @click="addRegistration()">
                 <i class="fa-solid fa-user-plus" />
-                <span>{{ $t('views.event-edit.actions.add-registration') }}</span>
+                <span>{{ $t('domain.registration.actions.create') }}</span>
             </li>
             <li
                 v-if="event?.signupType === EventSignupType.Assignment"
@@ -100,15 +100,15 @@
                 @click="addSlot()"
             >
                 <i class="fa-solid fa-list" />
-                <span>{{ $t('views.event-edit.actions.add-slot') }}</span>
+                <span>{{ $t('domain.event-slot.actions.create') }}</span>
             </li>
             <li class="permission-write-event-details context-menu-item" data-test-id="action-add-location" @click="addLocation()">
                 <i class="fa-solid fa-route" />
-                <span>{{ $t('views.event-edit.actions.add-location') }}</span>
+                <span>{{ $t('domain.location.actions.create') }}</span>
             </li>
             <li class="permission-read-user-details context-menu-item" data-test-id="action-contact-crew" @click="contactCrew()">
                 <i class="fa-solid fa-envelope" />
-                <span>{{ $t('views.event-edit.actions.contact-crew') }}</span>
+                <span>{{ $t('domain.event.actions.contact-crew') }}</span>
             </li>
             <template v-if="event">
                 <li
@@ -130,7 +130,7 @@
                     @click="openEventForCrewSignup()"
                 >
                     <i class="fa-solid fa-lock-open" />
-                    <span>{{ $t('views.event-edit.actions.open-signup') }}</span>
+                    <span>{{ $t('domain.event.actions.start-crew-signup') }}</span>
                 </li>
                 <li
                     v-if="event?.state === EventState.OpenForSignup"
@@ -139,7 +139,7 @@
                     @click="publishPlannedCrew()"
                 >
                     <i class="fa-solid fa-earth-europe" />
-                    <span>{{ $t('views.event-edit.actions.publish-crew') }}</span>
+                    <span>{{ $t('domain.event.actions.publish-crew') }}</span>
                 </li>
                 <li
                     class="permission-write-event-slots context-menu-item"
@@ -147,12 +147,12 @@
                     @click="resetCrewPlanning()"
                 >
                     <i class="fa-solid fa-rotate" />
-                    <span>{{ $t('views.event-edit.actions.reset-crew') }}</span>
+                    <span>{{ $t('domain.event.actions.reset-crew') }}</span>
                 </li>
             </template>
             <li class="permission-write-event-details context-menu-item text-error" data-test-id="action-cancel" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
-                <span>{{ $t('views.event-edit.actions.cancel-event') }}</span>
+                <span>{{ $t('domain.event.actions.cancel') }}</span>
             </li>
         </template>
     </DetailsPage>
@@ -288,8 +288,8 @@ function preventPageUnloadOnUnsavedChanges(): void {
         }
         if (hasChanges.value) {
             const continueNavigation = await confirmDialog.value?.open({
-                title: t('views.event-edit.unsaved-changes.title'),
-                message: t('views.event-edit.unsaved-changes.message'),
+                title: t('generic.unsaved-changes-dialog.title'),
+                message: t('generic.unsaved-changes-dialog.message'),
                 cancel: t('generic.cancel'),
                 submit: t('generic.discard-changes'),
             });

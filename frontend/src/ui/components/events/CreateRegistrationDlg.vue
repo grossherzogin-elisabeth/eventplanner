@@ -1,17 +1,18 @@
 <template>
     <VDialog ref="dlg" data-test-id="add-registration-dialog">
-        <template #title>Anmeldung hinzufügen</template>
+        <template #title>{{ $t('domain.registration.actions.create') }}</template>
         <template #default>
             <div class="xs:px-8 px-4 pt-4 lg:px-10">
                 <section>
                     <p class="mb-8 max-w-lg">
+                        <!-- TODO i18n -->
                         Du kannst eine Anmeldung für ein Stammcrew Mitglied oder Gastcrew anlegen. Die Position kannst du nachträglich noch
                         auf der Warteliste ändern.
                     </p>
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.userKey"
-                            label="Nutzer"
+                            :label="$t('domain.registration.user')"
                             required
                             :options="userOptions"
                             :errors="validation.errors.value['userKey']"
@@ -22,7 +23,7 @@
                         <VInputText
                             v-model="registration.name"
                             required
-                            label="Name"
+                            :label="$t('domain.registration.name')"
                             :errors="validation.errors.value['name']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -30,7 +31,7 @@
                     <div class="mb-4">
                         <VInputCombobox
                             v-model="registration.positionKey"
-                            label="Position"
+                            :label="$t('domain.registration.position')"
                             required
                             :options="positions.options.value"
                             :errors="validation.errors.value['positionKey']"
@@ -48,7 +49,7 @@
                     <div class="mb-4">
                         <VInputTextArea
                             v-model="registration.note"
-                            label="Notiz"
+                            :label="$t('domain.registration.note')"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -58,13 +59,13 @@
                             v-model="registration.overnightStay"
                             :errors="validation.errors.value['overnightStay']"
                             :errors-visible="validation.showErrors.value"
-                            label="Übernachtung an Bord"
+                            :label="$t('domain.registration.overnight-stay')"
                         />
                     </div>
                     <div v-if="registration.overnightStay" class="mb-4">
                         <VInputDate
                             v-model="registration.arrival"
-                            label="Anreise am"
+                            :label="$t('domain.registration.arrival')"
                             :errors="validation.errors.value['arrival']"
                             :errors-visible="validation.showErrors.value"
                             placeholder="Am ersten Tag der Veranstaltung"
@@ -93,11 +94,11 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+            <button class="btn-ghost" type="button" @click="cancel">
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>{{ props.submitText || 'Übernehmen' }}</span>
+            <button class="btn-ghost" type="button" :disabled="validation.disableSubmit.value" @click="submit">
+                <span>{{ props.submitText || $t('generic.apply') }}</span>
             </button>
         </template>
     </VDialog>

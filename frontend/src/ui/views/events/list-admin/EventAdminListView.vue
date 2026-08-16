@@ -19,7 +19,7 @@
                                 <i class="fa-solid fa-download"></i>
                             </template>
                             <template #label>
-                                <span>{{ $t('views.event-admin-list.action.export') }}</span>
+                                <span>{{ $t('views.event-admin-list.export') }}</span>
                             </template>
                         </AsyncButton>
                     </div>
@@ -110,7 +110,7 @@
                         @click="openEventsForSignup(selectedEvents)"
                     >
                         <i class="fa-solid fa-lock-open"></i>
-                        <span class="truncate">{{ $t('views.event-admin-list.action.open-signup') }}</span>
+                        <span class="truncate">{{ $t('domain.event.actions.start-crew-signup') }}</span>
                     </button>
                     <button
                         v-else-if="showBatchPublishPlannedCrew"
@@ -119,11 +119,11 @@
                         @click="publishCrewPlanning(selectedEvents)"
                     >
                         <i class="fa-solid fa-earth-europe"></i>
-                        <span class="truncate">{{ $t('views.event-admin-list.action.publish-crew') }}</span>
+                        <span class="truncate">{{ $t('domain.event.actions.publish-crew') }}</span>
                     </button>
                     <button v-else class="permission-write-events btn-ghost" type="button" @click="editEvents(selectedEvents)">
                         <i class="fa-solid fa-edit"></i>
-                        <span class="truncate">{{ $t('views.event-admin-list.batch-edit.title') }}</span>
+                        <span class="truncate">{{ $t('domain.event.actions.edit', 2) }}</span>
                     </button>
                 </div>
             </template>
@@ -146,7 +146,7 @@
         >
             <button class="btn-floating pointer-events-auto" type="button" @click="createEvent()">
                 <i class="fa-solid fa-calendar-plus"></i>
-                <span>{{ $t('views.event-admin-list.action.create-event') }}</span>
+                <span>{{ $t('domain.event.actions.create') }}</span>
             </button>
         </div>
     </div>

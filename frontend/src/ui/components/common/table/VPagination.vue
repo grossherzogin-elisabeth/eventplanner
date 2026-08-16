@@ -4,6 +4,7 @@
             :class="{ enabled: page > 0 }"
             :disabled="page === 0"
             class="pagination-page"
+            type="button"
             name="previous"
             @click="emit('update:page', page - 1)"
         >
@@ -15,6 +16,7 @@
                 v-if="typeof p === 'number'"
                 :class="{ active: p === page }"
                 class="pagination-page enabled"
+                type="button"
                 @click="emit('update:page', p)"
             >
                 <span>{{ p + 1 }}</span>
@@ -26,6 +28,7 @@
             :class="{ enabled: page < pageCount - 1 }"
             :disabled="page === pageCount - 1"
             class="pagination-page"
+            type="button"
             name="next"
             @click="emit('update:page', page + 1)"
         >

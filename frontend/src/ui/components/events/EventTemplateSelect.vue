@@ -14,7 +14,7 @@
     >
         <template #item="{ item }">
             <template v-if="item.value">
-                <span class="w-0 flex-grow truncate">{{ item.value?.name }}</span>
+                <span class="w-0 grow truncate">{{ item.value?.name }}</span>
                 <span class="opacity-50">{{ formatDateRange(item.value?.start, item.value?.end, true) }}</span>
             </template>
             <template v-else>

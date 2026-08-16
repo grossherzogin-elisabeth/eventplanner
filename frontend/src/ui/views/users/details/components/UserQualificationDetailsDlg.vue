@@ -1,8 +1,8 @@
 <template>
     <VDialog ref="dlg" height="max-h-screen h-auto" data-test-id="user-qualification-dialog">
         <template #title>
-            <template v-if="editing">Qualifikation bearbeiten</template>
-            <template v-else>Qualifikation hinzufügen</template>
+            <template v-if="editing">{{ $t('domain.user-qualification.actions.edit') }}</template>
+            <template v-else>{{ $t('domain.user-qualification.actions.create') }}</template>
         </template>
         <template #default>
             <div v-if="userQualification" class="xs:px-8 flex flex-1 flex-col px-4 pt-4 lg:px-10">
@@ -11,7 +11,7 @@
                         <VInputCombobox
                             v-model="userQualification.qualificationKey"
                             data-test-id="input-qualification"
-                            label="Qualifikation"
+                            :label="$t('domain.types.qualification')"
                             :options="qualificationOptions"
                             :disabled="editing"
                             :errors="validation.errors.value['qualificationKey']"
@@ -22,7 +22,7 @@
                         <VInputDate
                             v-model="userQualification.expiresAt"
                             data-test-id="input-expires-at"
-                            label="Gültig bis"
+                            :label="$t('domain.user-qualification.expires-at')"
                             :errors="validation.errors.value['expiresAt']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -31,7 +31,7 @@
                         <VInputTextArea
                             v-model="userQualification.note"
                             data-test-id="input-note"
-                            label="Bemerkung"
+                            :label="$t('domain.user-qualification.note')"
                             :errors="validation.errors.value['note']"
                             :errors-visible="validation.showErrors.value"
                         />
@@ -40,11 +40,11 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" @click="cancel">
-                <span>Abbrechen</span>
+            <button class="btn-ghost" type="button" @click="cancel">
+                <span>{{ $t('generic.cancel') }}</span>
             </button>
-            <button class="btn-ghost" :disabled="validation.disableSubmit.value" @click="submit">
-                <span>Übernehmen</span>
+            <button class="btn-ghost" type="button" :disabled="validation.disableSubmit.value" @click="submit">
+                <span>{{ $t('generic.apply') }}</span>
             </button>
         </template>
     </VDialog>

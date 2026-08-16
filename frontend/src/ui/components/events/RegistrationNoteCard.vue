@@ -2,18 +2,20 @@
     <VInteractiveListItem
         :model-value="props.modelValue"
         icon="fa-note-sticky"
-        :label="$t('components.event-registration-details-card.note')"
+        :label="$t('domain.registration.note')"
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
             <p v-if="props.modelValue.note" class="line-clamp-3 italic">
                 {{ props.modelValue.note }}
             </p>
-            <p v-else class="italic">-</p>
+            <p v-else class="italic opacity-75">
+                {{ $t('components.registration-note-card.none') }}
+            </p>
         </template>
         <template #edit="{ value, errors }">
             <p class="mb-8 text-sm">
-                {{ $t('components.event-registration-details-card.note-description') }}
+                {{ $t('components.registration-note-card.description') }}
             </p>
             <div class="mb-4">
                 <VInputTextArea
@@ -22,7 +24,7 @@
                     :errors="errors['note']"
                     :errors-visible="true"
                     required
-                    :label="$t('components.event-registration-details-card.note')"
+                    :label="$t('domain.registration.note')"
                 />
             </div>
         </template>

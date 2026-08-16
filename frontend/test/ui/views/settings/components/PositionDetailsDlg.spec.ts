@@ -32,7 +32,7 @@ describe('PositionDetailsDlg.vue', () => {
         it('should open dialog and show correct title', async () => {
             const dialog = testee.find('[data-test-id="position-details-dialog"]');
             expect(dialog.isVisible()).toBe(true);
-            expect(testee.find('h1').text()).toEqual(testee.vm.$t('views.settings.positions.add-new'));
+            expect(testee.find('h1').text()).toEqual(testee.vm.$t('domain.position.actions.create'));
         });
 
         it('should close dialog on cancel and return undefined', async () => {
@@ -62,7 +62,7 @@ describe('PositionDetailsDlg.vue', () => {
         it('should open dialog and show correct title', async () => {
             const dialog = testee.find('[data-test-id="position-details-dialog"]');
             expect(dialog.isVisible()).toBe(true);
-            expect(testee.find('h1').text()).toEqual(testee.vm.$t('views.settings.positions.edit'));
+            expect(testee.find('h1').text()).toEqual(testee.vm.$t('domain.position.actions.edit'));
         });
 
         it('should close dialog on cancel and return undefined', async () => {

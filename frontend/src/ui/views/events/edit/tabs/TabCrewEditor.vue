@@ -31,7 +31,7 @@
                         <VDropzone class="h-96" @drop="addToCrew($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-add">
                                 <i class="fa-regular fa-calendar-plus text-3xl opacity-75"></i>
-                                <span>{{ $t('views.event-edit.actions.add-to-crew') }}</span>
+                                <span>{{ $t('domain.registration.actions.assign') }}</span>
                             </div>
                         </VDropzone>
                     </div>
@@ -88,13 +88,13 @@
                         <VDropzone class="h-44" @drop="removeFromCrew($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-remove">
                                 <i class="fa-regular fa-calendar-minus text-3xl opacity-75"></i>
-                                <span>{{ $t('views.event-edit.actions.move-to-waiting-list') }}</span>
+                                <span>{{ $t('domain.registration.actions.unassign') }}</span>
                             </div>
                         </VDropzone>
                         <VDropzone class="h-44" @drop="cancelRegistration($event as ResolvedRegistrationSlot)">
                             <div class="dropzone-delete">
                                 <i class="fa-regular fa-calendar-xmark text-3xl opacity-75"></i>
-                                <span>{{ $t('views.event-edit.actions.delete-registration') }}</span>
+                                <span>{{ $t('domain.registration.actions.delete') }}</span>
                             </div>
                         </VDropzone>
                     </div>

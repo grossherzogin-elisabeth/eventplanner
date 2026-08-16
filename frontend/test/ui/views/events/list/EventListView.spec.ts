@@ -224,9 +224,7 @@ describe('EventListView.vue', () => {
         await loading();
 
         const menu = await openTableContextMenu(testee, 5); // row 5: event with signed-in user in crew
-        const cancelAction = menu
-            .findAll('.context-menu-item')
-            .find((item) => item.text().includes(testee.vm.$t('domain.event.actions.cancel')));
+        const cancelAction = menu.find('[data-test-id="action-leave-all"]');
         await cancelAction!.trigger('click');
 
         await expect.poll(() => leaveEventsFunc).toHaveBeenCalled();
