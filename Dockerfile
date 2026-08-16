@@ -2,7 +2,7 @@
 FROM node:26.5 AS frontend-builder
 WORKDIR /builder
 COPY ./frontend .
-RUN npm install && npm run build
+RUN pnpm install && pnpm run build
 
 # build backend
 FROM eclipse-temurin:25-jdk-alpine AS backend-builder

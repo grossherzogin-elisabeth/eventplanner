@@ -23,6 +23,10 @@ overrides:
     options:
       printWidth: 80
       proseWrap: always
+  - files: ['package.yaml']
+    options:
+      printWidth: 120
+      proseWrap: preserve
 plugins:
   - '@trivago/prettier-plugin-sort-imports'
   - 'prettier-plugin-tailwindcss'

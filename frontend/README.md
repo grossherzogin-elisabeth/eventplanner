@@ -13,7 +13,7 @@ Frontend module for the Event Planner app.
 ### Install dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Start the dev server
@@ -21,7 +21,7 @@ npm install
 This starts Vite on `http://localhost:8090`.
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ## Quality checks and build
@@ -29,13 +29,13 @@ npm run dev
 Please run these before creating a PR:
 
 ```bash
-npm run format
-npm run lint
-npm run build
-npm run test
+pnpm format
+pnpm lint
+pnpm build
+pnpm test
 ```
 
-For test coverage reporting, run `npm run test:coverage`. Aim for about 80%
+For test coverage reporting, run `pnpm test:coverage`. Aim for about 80%
 coverage on new code, but treat this as a target rather than a strict gate.
 
 ## Local development details
