@@ -36,7 +36,6 @@
     "@modyfi/vite-plugin-yaml": "^1.1.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
-    "@types/markdown-it": "^14.1.2",
     "@types/node": "^26.1.2",
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-vue": "^6.0.8",
