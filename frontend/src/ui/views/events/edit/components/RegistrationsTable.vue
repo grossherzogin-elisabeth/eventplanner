@@ -15,7 +15,7 @@
                     />
                     <span v-if="getIconForState(item?.state) != undefined">
                         <i
-                            class="fa-solid fa-check-circle text-onsuccess-container absolute -right-1 -bottom-1 text-xs sm:text-sm"
+                            class="fa-solid fa-check-circle absolute -right-1 -bottom-1 text-xs sm:text-sm"
                             :class="getIconForState(item?.state)"
                         />
                     </span>
@@ -170,9 +170,9 @@ const positions = usePositions();
 function getIconForState(state?: RegistrationSlotState): string | undefined {
     switch (state) {
         case RegistrationSlotState.WAITING_LIST:
-            return 'fa-clock-four';
+            return 'fa-clock-four text-secondary';
         case RegistrationSlotState.CONFIRMED:
-            return 'fa-check-circle';
+            return 'fa-check-circle text-success';
     }
     return undefined;
 }
