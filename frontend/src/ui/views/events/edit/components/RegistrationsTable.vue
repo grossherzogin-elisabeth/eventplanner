@@ -1,21 +1,27 @@
 <template>
     <div class="full-width-scrollable">
         <VTable :items="props.registrations" class="scrollbar-invisible interactive-table no-header" :page-size="-1">
+            <template #icon="{ item }">
+                <template v-if="item?.state === RegistrationSlotState.OPEN">
+                    <div class="bg-error-container/20 flex h-full w-full items-center justify-center rounded-full">
+                        <i class="fa-solid fa-question text-error text-xs sm:text-sm"></i>
+                    </div>
+                </template>
+                <template v-else>
+                    <UserAvatar
+                        :user="item?.user"
+                        class="h-full w-full"
+                        :class="item?.state === RegistrationSlotState.CONFIRMED ? 'text-success' : 'text-secondary'"
+                    />
+                    <span v-if="getIconForState(item?.state) != undefined">
+                        <i
+                            class="fa-solid fa-check-circle absolute -right-1 -bottom-1 text-xs sm:text-sm"
+                            :class="getIconForState(item?.state)"
+                        />
+                    </span>
+                </template>
+            </template>
             <template #row="{ item }">
-                <td class="w-0">
-                    <span v-if="item?.state === RegistrationSlotState.WAITING_LIST">
-                        <i class="fa-solid fa-hourglass-half opacity-25" />
-                    </span>
-                    <span v-else-if="item?.state === RegistrationSlotState.CONFIRMED">
-                        <i class="fa-solid fa-user-check text-success opacity-60" />
-                    </span>
-                    <span v-else-if="item?.state === RegistrationSlotState.ASSIGNED">
-                        <i class="fa-solid fa-user-clock opacity-25" />
-                    </span>
-                    <span v-else-if="item?.state === RegistrationSlotState.OPEN">
-                        <i class="fa-solid fa-user-xmark text-error/50" />
-                    </span>
-                </td>
                 <template v-if="item?.registration">
                     <td class="w-full">
                         <VTooltip :delay="500">
@@ -140,6 +146,7 @@ import { VTable, VTooltip } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';
 import RegistrationTooltip from '@/ui/views/events/edit/components/RegistrationTooltip.vue';
+import UserAvatar from '@/ui/components/users/UserAvatar.vue';
 
 interface Props {
     event?: Event;
@@ -159,4 +166,14 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const positions = usePositions();
+
+function getIconForState(state?: RegistrationSlotState): string | undefined {
+    switch (state) {
+        case RegistrationSlotState.WAITING_LIST:
+            return 'fa-clock-four text-secondary';
+        case RegistrationSlotState.CONFIRMED:
+            return 'fa-check-circle text-success';
+    }
+    return undefined;
+}
 </script>

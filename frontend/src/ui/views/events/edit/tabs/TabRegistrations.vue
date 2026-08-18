@@ -34,18 +34,16 @@
         <h2 class="text-secondary mb-4 font-bold">
             {{ $t('domain.event.registration-count', { count: filteredRegistrations?.length }) }}
         </h2>
-        <div class="xs:-mx-8 -mx-4 md:-mx-16 xl:-mx-20">
-            <RegistrationsTable
-                :event="props.event"
-                :registrations="filteredRegistrations"
-                @delete-registration="deleteRegistration($event)"
-                @edit-registration="editRegistration($event)"
-                @edit-slot="editSlot($event)"
-                @delete-slot="deleteSlot($event)"
-                @add-to-crew="addToCrew($event)"
-                @remove-from-crew="removeFromCrew($event)"
-            />
-        </div>
+        <RegistrationsTable
+            :event="props.event"
+            :registrations="filteredRegistrations"
+            @delete-registration="deleteRegistration($event)"
+            @edit-registration="editRegistration($event)"
+            @edit-slot="editSlot($event)"
+            @delete-slot="deleteSlot($event)"
+            @add-to-crew="addToCrew($event)"
+            @remove-from-crew="removeFromCrew($event)"
+        />
     </template>
     <RegistrationEditDlg ref="editRegistrationDialog" :event="props.event" />
     <SlotEditDlg ref="editSlotDialog" />

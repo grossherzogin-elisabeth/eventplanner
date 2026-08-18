@@ -61,10 +61,10 @@
                         <i class="fa-solid fa-grip-vertical text-secondary-variant cursor-move"></i>
                     </td>
                     <td
-                        v-if="props.multiselection && (selected.length > 0 || $slots['icon'] || viewPortSize.width.value > 1024)"
+                        v-if="$slots['icon'] || (props.multiselection && (selected.length > 0 || viewPortSize.width.value > 1024))"
                         class="pr-4"
                         data-test-id="table-row-select"
-                        @click.stop.prevent="row.selected = !row.selected"
+                        @click.stop.prevent="toggleSelection(row)"
                     >
                         <div
                             class="relative flex h-7 w-7 items-center justify-center rounded-full"
@@ -358,7 +358,7 @@ function onClick(event: MouseEvent, row: T & Selectable): void {
         return;
     }
     if (touch.isTouch() && selected.value.length > 0) {
-        row.selected = !row.selected;
+        toggleSelection(row);
         return;
     }
     event.stopPropagation();
@@ -381,6 +381,12 @@ function openContextMenu(anchor: EventTarget | HTMLElement | undefined, row: T &
     if (slots['context-menu'] && anchor instanceof HTMLElement) {
         dropdownAnchor.value = anchor;
         dropdownItem.value = row;
+    }
+}
+
+function toggleSelection(row: T & Selectable): void {
+    if (props.multiselection) {
+        row.selected = !row.selected;
     }
 }
 
