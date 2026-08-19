@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.NoSuchElementException;
 
 import org.eventplanner.events.domain.values.events.EventKey;
+import org.eventplanner.testdata.EventFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,10 +29,10 @@ class RegistrationJpaRepositoryAdapterTest {
     @Test
     void shouldThrowWhenCreatingRegistrationThatAlreadyExists() {
         var registration = createRegistration();
-        var eventKey = new EventKey("event-1");
+        var event = EventFactory.createEvent();
         when(repository.existsById(registration.getKey().value())).thenReturn(true);
 
-        assertThatThrownBy(() -> testee.createRegistration(registration, eventKey))
+        assertThatThrownBy(() -> testee.createRegistration(registration, event))
             .isInstanceOf(IllegalStateException.class);
         verify(repository, never()).save(any(RegistrationJpaEntity.class));
     }

@@ -119,7 +119,10 @@ spring:
             client-secret: ${OAUTH_CLIENT_SECRET:********************}
             provider: default
             redirect-uri: ${frontend.url}/login/oauth2/code/default
-            scope: openid,email,profile
+            scope:
+              - openid
+              - email
+              - profile
   servlet:
     multipart:
       max-file-size: 10MB

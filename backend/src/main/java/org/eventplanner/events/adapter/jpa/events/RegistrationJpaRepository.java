@@ -1,6 +1,7 @@
 package org.eventplanner.events.adapter.jpa.events;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,8 @@ public interface RegistrationJpaRepository extends JpaRepository<RegistrationJpa
 
     @NonNull
     List<RegistrationJpaEntity> findAllByEventKey(@NonNull String eventKey);
+
+    @NonNull Optional<RegistrationJpaEntity> findByKeyAndEventKey(@NonNull String key, @NonNull String eventKey);
 
     @NonNull
     List<RegistrationJpaEntity> findAllByEventKeyIn(@NonNull List<String> eventKey);

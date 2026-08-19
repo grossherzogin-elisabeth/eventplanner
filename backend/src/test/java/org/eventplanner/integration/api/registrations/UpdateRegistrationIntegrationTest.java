@@ -174,7 +174,7 @@ class UpdateRegistrationIntegrationTest extends EmailSpy {
     private Event saveTestEvent(Event event) {
         eventJpaRepository.save(EventJpaEntity.fromDomain(event));
         registrationJpaRepository.saveAll(event.getRegistrations().stream()
-            .map(r -> RegistrationJpaEntity.fromDomain(r, event.getKey()))
+            .map(r -> RegistrationJpaEntity.fromDomain(r, event))
             .toList());
         return event;
     }

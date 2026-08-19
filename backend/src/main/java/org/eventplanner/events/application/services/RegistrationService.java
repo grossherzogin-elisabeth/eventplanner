@@ -91,7 +91,7 @@ public class RegistrationService {
 
         var user = userService.getUserByKey(spec.userKey())
             .orElseThrow(() -> new IllegalArgumentException("User does not exist"));
-        var registration = registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
+        var registration = registrationRepository.createRegistration(spec.toRegistration(), event);
 
         // send notifications
         notificationService.sendAddedToWaitingListNotification(user, event);
@@ -137,7 +137,7 @@ public class RegistrationService {
             throw new IllegalArgumentException("Registration for " + spec.name() + " already exists");
         }
 
-        return registrationRepository.createRegistration(spec.toRegistration(), event.getKey());
+        return registrationRepository.createRegistration(spec.toRegistration(), event);
     }
 
     /**
