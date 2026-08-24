@@ -212,6 +212,16 @@ export class EventService {
     }
 
     public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {
+        // reset all computed values
+        event.isInPast = false;
+        event.canSignedInUserJoin = false;
+        event.canSignedInUserLeave = false;
+        event.canSignedInUserUpdateRegistration = false;
+        event.canSignedInUserCreateExports = false;
+        event.isSignedInUserAssigned = false;
+        event.signedInUserRegistration = undefined;
+        event.signedInUserAssignedSlot = undefined;
+
         const isStarted = event.start.getTime() < Date.now();
         const isEnded = event.end.getTime() < Date.now();
         const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
