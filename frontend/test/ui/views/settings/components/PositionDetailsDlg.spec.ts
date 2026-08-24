@@ -18,7 +18,7 @@ describe('PositionDetailsDlg.vue', () => {
     beforeEach(async () => {
         result = undefined;
         closed = false;
-        useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_POSITIONS, Permission.WRITE_POSITIONS] }));
+        useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.LIST_POSITIONS, Permission.UPDATE_POSITIONS] }));
         testee = mount(PositionDetailsDlg);
     });
 

@@ -19,7 +19,7 @@ describe('TabSlots.vue', () => {
     let event: Event;
 
     beforeEach(async () => {
-        setupUserPermissions([Permission.WRITE_EVENTS]);
+        setupUserPermissions([Permission.UPDATE_EVENTS]);
         event = mockEvent();
         await usePositions().loading;
         testee = mount(TabSlots, {
@@ -47,7 +47,7 @@ describe('TabSlots.vue', () => {
 
     describe('users with permission events:write-details', () => {
         beforeEach(() => {
-            setupUserPermissions([Permission.WRITE_EVENTS, Permission.WRITE_EVENT_DETAILS]);
+            setupUserPermissions([Permission.UPDATE_EVENTS, Permission.UPDATE_EVENT_DETAILS]);
         });
 
         it('should not render context menu', async () => {

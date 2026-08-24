@@ -63,9 +63,9 @@ describe('EventEditView.vue', () => {
         authService = useAuthService();
         const signedInUser = mockSignedInUser();
         signedInUser.permissions.push(
-            Permission.WRITE_EVENTS,
-            Permission.WRITE_EVENT_DETAILS,
-            Permission.WRITE_EVENT_SLOTS,
+            Permission.UPDATE_EVENTS,
+            Permission.UPDATE_EVENT_DETAILS,
+            Permission.UPDATE_EVENT_SLOTS,
             Permission.EXPORT_EVENTS
         );
         authService.setSignedInUser(signedInUser);

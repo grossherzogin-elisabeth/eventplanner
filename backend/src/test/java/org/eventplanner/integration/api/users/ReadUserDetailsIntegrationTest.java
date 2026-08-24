@@ -71,7 +71,7 @@ class ReadUserDetailsIntegrationTest {
     void shouldReturnUserInformationAsAdmin() throws Exception {
         var expected = TestResources.getString("/integration/api/users/read-user-details.json");
         webMvc.perform(get("/api/v1/users/" + TestUser.TEAM_MEMBER)
-                .with(withAuthentication(TestUser.TEAM_PLANNER))
+                .with(withAuthentication(TestUser.ADMIN))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))

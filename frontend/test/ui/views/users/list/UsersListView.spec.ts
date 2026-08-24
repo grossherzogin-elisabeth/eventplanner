@@ -28,7 +28,7 @@ describe('UsersListView.vue', () => {
     let events: Event[];
 
     beforeEach(async () => {
-        setupUserPermissions([Permission.READ_USER_DETAILS, Permission.WRITE_USERS, Permission.WRITE_REGISTRATIONS]);
+        setupUserPermissions([Permission.READ_DETAILED_USERS, Permission.UPDATE_USERS, Permission.UPDATE_REGISTRATIONS]);
         vi.setSystemTime(new Date('2026-01-10T08:00:00Z'));
         eventUseCase = useEventUseCase();
         usersUseCase = useUsersUseCase();

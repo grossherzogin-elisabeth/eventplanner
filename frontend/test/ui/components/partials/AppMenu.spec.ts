@@ -63,12 +63,12 @@ describe('AppMenu.vue', () => {
         const signedInUser = mockSignedInUser({
             permissions: [
                 Permission.READ_EVENTS,
-                Permission.READ_USERS,
-                Permission.READ_QUALIFICATIONS,
-                Permission.READ_POSITIONS,
+                Permission.LIST_USERS,
+                Permission.LIST_QUALIFICATIONS,
+                Permission.LIST_POSITIONS,
                 Permission.READ_OWN_USER,
-                Permission.WRITE_OWN_USER,
-                Permission.WRITE_OWN_REGISTRATIONS,
+                Permission.UPDATE_OWN_USER,
+                Permission.UPDATE_OWN_REGISTRATIONS,
             ],
             roles: [Role.TEAM_MEMBER],
         });
@@ -147,14 +147,15 @@ describe('AppMenu.vue', () => {
     describe('users with role EVENT_LEADER', () => {
         const signedInUser = mockSignedInUser({
             permissions: [
+                Permission.LIST_EVENTS,
                 Permission.READ_EVENTS,
-                Permission.READ_USERS,
-                Permission.READ_USER_DETAILS,
-                Permission.READ_QUALIFICATIONS,
-                Permission.READ_POSITIONS,
+                Permission.LIST_USERS,
+                Permission.READ_DETAILED_USERS,
+                Permission.LIST_QUALIFICATIONS,
+                Permission.LIST_POSITIONS,
                 Permission.READ_OWN_USER,
-                Permission.WRITE_OWN_USER,
-                Permission.WRITE_OWN_REGISTRATIONS,
+                Permission.UPDATE_OWN_USER,
+                Permission.UPDATE_OWN_REGISTRATIONS,
             ],
             roles: [Role.EVENT_LEADER],
         });
@@ -172,7 +173,7 @@ describe('AppMenu.vue', () => {
             expected.set('[data-test-id="menu-item-calendar"]', true);
             expected.set('[data-test-id="menu-item-event-list"]', true);
             expected.set('[data-test-id="menu-item-event-admin"]', false);
-            expected.set('[data-test-id="menu-item-user-list"]', true);
+            expected.set('[data-test-id="menu-item-user-list"]', false);
             expected.set('[data-test-id="menu-item-admin-settings"]', false);
             expected.set('[data-test-id="menu-item-account"]', true);
             expected.set('[data-test-id="menu-item-logout"]', true);

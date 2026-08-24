@@ -91,7 +91,7 @@ describe('UsersUseCase', () => {
 
         it('should fetch by key when override key is configured and user has READ_USER_DETAILS permission', async () => {
             configService.getConfig = vi.fn(() => ({ ...defaultConfig, overrideSignedInUserKey: 'captain-key' }));
-            authService.getSignedInUser = vi.fn(() => mockSignedInUser({ permissions: [Permission.READ_USER_DETAILS] }));
+            authService.getSignedInUser = vi.fn(() => mockSignedInUser({ permissions: [Permission.READ_DETAILED_USERS] }));
 
             await testee.getUserDetailsForSignedInUser();
 

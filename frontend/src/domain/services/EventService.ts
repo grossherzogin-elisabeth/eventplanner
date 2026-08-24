@@ -1,7 +1,8 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
 import { Validator, after, maxLength, notEmpty } from '@/common/validation';
 import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
-import { EventSignupType, EventState, SlotCriticality } from '@/domain';
+import { Permission } from '@/domain';
+import { EventSignupType, EventState, Role, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
 export class EventService {
@@ -212,21 +213,26 @@ export class EventService {
     }
 
     public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {
-        event.isInPast = event.start.getTime() < Date.now();
+        const isStarted = event.start.getTime() < Date.now();
+        const isEnded = event.end.getTime() < Date.now();
+        const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
+
+        event.isInPast = isStarted;
         event.signedInUserRegistration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
         if (event.signedInUserRegistration !== undefined) {
             // singed in user has a registration
             event.canSignedInUserJoin = false;
             event.signedInUserAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === event.signedInUserRegistration?.key);
             event.isSignedInUserAssigned = event.signupType !== EventSignupType.Assignment || event.signedInUserAssignedSlot !== undefined;
-            const isInPast = event.start.getTime() < Date.now();
-            const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
             if (event.isSignedInUserAssigned) {
-                event.canSignedInUserUpdateRegistration = !isInPast;
+                event.canSignedInUserUpdateRegistration = !isStarted;
                 event.canSignedInUserLeave = !isLessThan7daysInFuture;
+                if (signedInUser?.roles.includes(Role.EVENT_LEADER) && signedInUser?.permissions.includes(Permission.EXPORT_EVENTS)) {
+                    event.canSignedInUserCreateExports = !isEnded && isLessThan7daysInFuture;
+                }
             } else {
-                event.canSignedInUserLeave = !isInPast;
-                event.canSignedInUserUpdateRegistration = !isInPast;
+                event.canSignedInUserLeave = !isStarted;
+                event.canSignedInUserUpdateRegistration = !isStarted;
             }
         } else {
             // singed in user has no registration

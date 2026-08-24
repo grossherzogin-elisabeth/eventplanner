@@ -139,7 +139,7 @@ class UpdateRegistrationIntegrationTest extends EmailSpy {
     }
 
     @Test
-    void shouldUpdateRegistration() throws Exception {
+    void shouldUpdateOwnRegistration() throws Exception {
         var registration = createRegistration()
             .withPosition(PositionKeys.DECKHAND)
             .withUserKey(TestUser.TEAM_MEMBER.getKey());

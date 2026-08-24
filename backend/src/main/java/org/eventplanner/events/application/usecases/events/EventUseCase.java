@@ -24,7 +24,7 @@ public class EventUseCase {
     private final EventService eventService;
     private final EventRepository eventRepository;
 
-    @PreAuthorize("hasAuthority('events:read')")
+    @PreAuthorize("hasAuthority('events:list')")
     public @NonNull List<Event> getEvents(final int year) {
         log.debug("Reading events of year {}", year);
         var signedInUser = authenticationService.getSignedInUser();

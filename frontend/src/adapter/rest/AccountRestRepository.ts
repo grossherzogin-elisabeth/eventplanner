@@ -1,7 +1,8 @@
 import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
 import type { AccountRepository } from '@/application';
 import { wait } from '@/common';
-import type { Permission, Role, SignedInUser } from '@/domain';
+import type { Role, SignedInUser } from '@/domain';
+import type { Permission } from '@/domain';
 
 export interface AccountRepresentation {
     key: string;

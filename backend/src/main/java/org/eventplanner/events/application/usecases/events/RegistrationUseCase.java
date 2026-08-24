@@ -46,15 +46,15 @@ public class RegistrationUseCase {
             .orElseThrow(() -> new NoSuchElementException("Event does not exist"));
 
         if (spec.isSelfSignup()) {
-            signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
+            signedInUser.assertHasAnyPermission(Permission.UPDATE_OWN_REGISTRATIONS, Permission.UPDATE_REGISTRATIONS);
             log.info("User {} signed up on event {}", spec.userKey(), event.getKey());
             registrationService.createUserRegistration(event, spec);
         } else if (spec.userKey() != null) {
-            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
+            signedInUser.assertHasPermission(Permission.UPDATE_REGISTRATIONS);
             log.info("Adding registration for user {} on event {}", spec.userKey(), event.getKey());
             registrationService.createUserRegistration(event, spec);
         } else if (spec.name() != null) {
-            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
+            signedInUser.assertHasPermission(Permission.UPDATE_REGISTRATIONS);
             log.info("Adding registration for guest {} on event {}", spec.name(), event.getKey());
             registrationService.createGuestRegistration(event, spec);
         } else {
@@ -86,13 +86,13 @@ public class RegistrationUseCase {
 
         var isRemovedByUser = signedInUser.key().equals(registration.getUserKey());
         if (isRemovedByUser) {
-            signedInUser.assertHasAnyPermission(Permission.WRITE_OWN_REGISTRATIONS, Permission.WRITE_REGISTRATIONS);
+            signedInUser.assertHasAnyPermission(Permission.UPDATE_OWN_REGISTRATIONS, Permission.UPDATE_REGISTRATIONS);
             log.info("User {} removed their registration from event {}", signedInUser.key(), event.getKey());
         } else if (registration.getUserKey() != null) {
-            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
+            signedInUser.assertHasPermission(Permission.UPDATE_REGISTRATIONS);
             log.info("Removing registration of {} from event {}", registration.getUserKey(), event.getKey());
         } else if (registration.getName() != null) {
-            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
+            signedInUser.assertHasPermission(Permission.UPDATE_REGISTRATIONS);
             log.info("Removing guest registration of {} from event {}", registration.getName(), event.getKey());
         }
 
@@ -107,7 +107,7 @@ public class RegistrationUseCase {
      * @throws NoSuchElementException when the event or the registration does not exist
      * @throws IllegalStateException  when the event cannot be reloaded after removing the registration
      */
-    @PreAuthorize("hasAuthority('registrations:write') or hasAuthority('registrations:write-self')")
+    @PreAuthorize("hasAuthority('registrations:update') or hasAuthority('registrations:update-own')")
     @Transactional
     public @NonNull Event updateRegistration(@NonNull final UpdateRegistrationSpec spec)
     throws NoSuchElementException, IllegalStateException {
@@ -124,7 +124,7 @@ public class RegistrationUseCase {
                 event.getKey()
             );
         } else {
-            signedInUser.assertHasPermission(Permission.WRITE_REGISTRATIONS);
+            signedInUser.assertHasPermission(Permission.UPDATE_REGISTRATIONS);
             log.info("Updating registration {} on event {}", spec.registrationKey(), event.getKey());
         }
 

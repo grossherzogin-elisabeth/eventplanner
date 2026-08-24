@@ -55,7 +55,7 @@
                     </div>
                 </td>
             </template>
-            <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
+            <template v-if="hasPermission(Permission.UPDATE_EVENT_DETAILS)" #context-menu="{ item }">
                 <li class="context-menu-item" data-test-id="action-edit" @click="editSlot(item)">
                     <i class="fa-solid fa-edit" />
                     <span>{{ $t('domain.event-slot.actions.edit') }}</span>
@@ -110,7 +110,7 @@ const eventService = useEventService();
 const editSlotDialog = ref<Dialog<Slot, Slot | undefined> | null>(null);
 
 async function editSlot(slot: Slot): Promise<void> {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const editedSlot = await editSlotDialog.value?.open(slot);
         if (editedSlot) {
             const updatedEvent = eventService.updateSlot(deepCopy(props.event), editedSlot);
@@ -120,7 +120,7 @@ async function editSlot(slot: Slot): Promise<void> {
 }
 
 function updateOrders(): void {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = deepCopy(props.event);
         updatedEvent.slots.forEach((slot, index) => (slot.order = index));
         emit('update:event', updatedEvent);
@@ -128,28 +128,28 @@ function updateOrders(): void {
 }
 
 async function moveSlotUp(slot: Slot): Promise<void> {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = eventService.moveSlot(deepCopy(props.event), slot, -1);
         emit('update:event', updatedEvent);
     }
 }
 
 async function moveSlotDown(slot: Slot): Promise<void> {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = eventService.moveSlot(deepCopy(props.event), slot, 1);
         emit('update:event', updatedEvent);
     }
 }
 
 function deleteSlot(slot: Slot): void {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = eventService.removeSlot(deepCopy(props.event), slot);
         emit('update:event', updatedEvent);
     }
 }
 
 function duplicateSlot(slot: Slot): void {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = eventService.duplicateSlot(deepCopy(props.event), slot);
         emit('update:event', updatedEvent);
     }

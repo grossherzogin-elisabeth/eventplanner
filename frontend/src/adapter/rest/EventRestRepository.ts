@@ -359,6 +359,7 @@ export class EventRestRepository implements EventRepository {
             canSignedInUserJoin: false,
             canSignedInUserLeave: false,
             canSignedInUserUpdateRegistration: false,
+            canSignedInUserCreateExports: false,
         };
         return event;
     }

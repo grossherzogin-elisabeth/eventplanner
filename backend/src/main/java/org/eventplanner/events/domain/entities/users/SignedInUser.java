@@ -42,6 +42,10 @@ public record SignedInUser(
 
     private static final List<Permission> WHITELISTED_PERMISSIONS_FOR_ACCESS_KEY_AUTH = List.of(
         Permission.READ_ACCOUNT,
+        Permission.LIST_QUALIFICATIONS,
+        Permission.LIST_POSITIONS,
+        Permission.LIST_USERS,
+        Permission.LIST_EVENTS,
         Permission.READ_EVENTS,
         Permission.CONFIRM_OWN_REGISTRATIONS,
         Permission.DECLINE_OWN_REGISTRATIONS

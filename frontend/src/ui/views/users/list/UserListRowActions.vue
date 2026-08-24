@@ -8,7 +8,7 @@
         <template v-if="props.users.length === 1">
             <li
                 data-test-id="action-impersonate"
-                class="permission-write-registrations context-menu-item"
+                class="permission-read-user-details context-menu-item"
                 @click="emit('impersonate', props.users[0])"
             >
                 <i class="fa-solid fa-user-secret" />
@@ -16,7 +16,7 @@
             </li>
             <li
                 data-test-id="action-create-registration"
-                class="permission-write-registrations context-menu-item"
+                class="permission-create-registrations context-menu-item"
                 @click="emit('create-registration', props.users[0])"
             >
                 <i class="fa-solid fa-calendar-plus" />
@@ -24,7 +24,7 @@
             </li>
             <li
                 data-test-id="action-edit"
-                class="permission-write-users context-menu-item"
+                class="permission-update-user-details context-menu-item"
                 @click="emit('edit', { user: props.users[0], event: $event })"
             >
                 <i class="fa-solid fa-edit" />
