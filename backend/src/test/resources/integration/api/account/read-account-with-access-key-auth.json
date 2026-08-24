@@ -7,13 +7,13 @@
   ],
   "permissions": [
     "account:read",
-    "positions:list",
-    "qualifications:list",
-    "users:list",
     "events:list",
     "events:read",
     "registrations:confirm-own",
-    "registrations:decline-own"
+    "registrations:decline-own",
+    "users:list",
+    "positions:list",
+    "qualifications:list"
   ],
   "positions": [
     "08c609d2-26c9-4848-b17b-8feac2e2a91f"

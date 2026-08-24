@@ -21,7 +21,7 @@ describe('AppSettingsView.vue', async () => {
 
     beforeEach(() => {
         testee = mount(AppSettingsView);
-        setupUserPermissions([Permission.WRITE_SETTINGS]);
+        setupUserPermissions([Permission.UPDATE_SETTINGS]);
     });
 
     afterEach(() => testee.unmount());

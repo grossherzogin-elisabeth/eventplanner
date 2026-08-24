@@ -97,7 +97,7 @@
                     <span v-else>{{ $t('components.menu.users') }}</span>
                 </RouterLink>
             </li>
-            <li v-if="hasPermission(Permission.WRITE_SETTINGS)" class="menu-item" data-test-id="menu-item-admin-settings">
+            <li v-if="hasPermission(Permission.UPDATE_SETTINGS)" class="menu-item" data-test-id="menu-item-admin-settings">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>
                     <span>{{ $t('components.menu.settings') }}</span>

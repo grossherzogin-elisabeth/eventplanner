@@ -54,7 +54,7 @@ public class EventUseCase {
         eventRepository.deleteByKey(event.getKey());
     }
 
-    @PreAuthorize("hasAuthority('events:write-slots')")
+    @PreAuthorize("hasAuthority('events:update-slots')")
     public @NonNull Event optimizeEventSlots(@NonNull final Event event) {
         event.optimizeSlots();
         return event;
