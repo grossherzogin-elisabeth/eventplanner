@@ -1,8 +1,7 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
 import { Validator, after, maxLength, notEmpty } from '@/common/validation';
 import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
-import { Permission } from '@/domain';
-import { EventSignupType, EventState, Role, SlotCriticality } from '@/domain';
+import { EventSignupType, EventState, Permission, Role, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
 export class EventService {
