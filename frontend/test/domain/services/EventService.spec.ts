@@ -526,7 +526,7 @@ describe('EventService', () => {
     describe('getRegistrationsOnWaitinglist', () => {
         it('should return all registrations if non are assigned', () => {
             const event = mockEvent();
-            const waitinglist = testee.getRegistrationsOnWaitinglist(event);
+            const waitinglist = testee.getRegistrationsOnWaitingList(event);
             expect(waitinglist).toHaveLength(event.registrations.length);
         });
 
@@ -539,7 +539,7 @@ describe('EventService', () => {
                     mockSlotDeckhand({ assignedRegistrationKey: REGISTRATION_DECKHAND }),
                 ],
             });
-            const unassigned = testee.getRegistrationsOnWaitinglist(event);
+            const unassigned = testee.getRegistrationsOnWaitingList(event);
             expect(unassigned).toContainEqual(mockRegistrationCaptain());
             expect(unassigned).toContainEqual(mockRegistrationGuest());
             expect(unassigned).toHaveLength(2);
@@ -555,7 +555,7 @@ describe('EventService', () => {
                     mockSlotDeckhand({ assignedRegistrationKey: REGISTRATION_GUEST }),
                 ],
             });
-            expect(testee.getRegistrationsOnWaitinglist(event)).toEqual([]);
+            expect(testee.getRegistrationsOnWaitingList(event)).toEqual([]);
         });
     });
 

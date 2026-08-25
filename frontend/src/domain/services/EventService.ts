@@ -1,6 +1,6 @@
-import { addToDate, cropToPrecision, filterUndefined } from '@/common';
+import { cropToPrecision, filterUndefined, subtractFromDate } from '@/common';
 import { Validator, after, maxLength, notEmpty } from '@/common/validation';
-import type { Event, Location, PositionKey, Registration, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
+import type { Event, Location, PositionKey, Registration, RegistrationKey, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
 import { EventSignupType, EventState, Permission, Role, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
@@ -186,12 +186,28 @@ export class EventService {
         return event.registrations.find((r) => (userKey && r.userKey === userKey) || (name && r.name === name));
     }
 
+    public findSignedInUserRegistration(event: Event, signedInUser: SignedInUser): Registration | undefined {
+        return this.findRegistration(event, signedInUser.key, undefined);
+    }
+
+    public findSlotAssignedToRegistration(event: Event, registrationKey: RegistrationKey): Slot | undefined {
+        return event.slots.find((s) => s.assignedRegistrationKey === registrationKey);
+    }
+
+    public findSlotAssignedToSignedInUser(event: Event, signedInUser: SignedInUser): Slot | undefined {
+        const registration = this.findSignedInUserRegistration(event, signedInUser);
+        if (registration) {
+            return event.slots.find((s) => s.assignedRegistrationKey === registration.key);
+        }
+        return undefined;
+    }
+
     public getAssignedRegistrations(event: Event): Registration[] {
         const assignedRegistrationKeys = event.slots.map((it) => it.assignedRegistrationKey).filter(filterUndefined);
         return event.registrations.filter((it) => assignedRegistrationKeys.includes(it.key));
     }
 
-    public getRegistrationsOnWaitinglist(event: Event): Registration[] {
+    public getRegistrationsOnWaitingList(event: Event): Registration[] {
         return event.registrations.filter((reg) => !event.slots.some((slt) => slt.assignedRegistrationKey === reg.key));
     }
 
@@ -211,56 +227,95 @@ export class EventService {
             .getErrors();
     }
 
-    public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {
-        // reset all computed values
-        event.isInPast = false;
-        event.canSignedInUserJoin = false;
-        event.canSignedInUserLeave = false;
-        event.canSignedInUserUpdateRegistration = false;
-        event.canSignedInUserCreateExports = false;
-        event.isSignedInUserAssigned = false;
-        event.signedInUserRegistration = undefined;
-        event.signedInUserAssignedSlot = undefined;
+    public isInPast(event: Event): boolean {
+        return event.end.getTime() < Date.now();
+    }
 
-        const isStarted = event.start.getTime() < Date.now();
-        const isEnded = event.end.getTime() < Date.now();
-        const isLessThan7daysInFuture = event.start.getTime() < addToDate(new Date(), { days: 7 }).getTime();
+    public isStarted(event: Event): boolean {
+        return event.start.getTime() < Date.now();
+    }
 
-        event.isInPast = isStarted;
-        event.signedInUserRegistration = event.registrations.find((it: Registration) => it.userKey === signedInUser?.key);
-        if (event.signedInUserRegistration !== undefined) {
-            // singed in user has a registration
-            event.canSignedInUserJoin = false;
-            event.signedInUserAssignedSlot = event.slots.find((it) => it.assignedRegistrationKey === event.signedInUserRegistration?.key);
-            event.isSignedInUserAssigned = event.signupType !== EventSignupType.Assignment || event.signedInUserAssignedSlot !== undefined;
-            if (event.isSignedInUserAssigned) {
-                event.canSignedInUserUpdateRegistration = !isStarted;
-                event.canSignedInUserLeave = !isLessThan7daysInFuture;
-                if (signedInUser?.roles.includes(Role.EVENT_LEADER) && signedInUser?.permissions.includes(Permission.EXPORT_EVENTS)) {
-                    event.canSignedInUserCreateExports = !isEnded && isLessThan7daysInFuture;
-                }
-            } else {
-                event.canSignedInUserLeave = !isStarted;
-                event.canSignedInUserUpdateRegistration = !isStarted;
-            }
-        } else {
-            // singed in user has no registration
-            event.isSignedInUserAssigned = false;
-            event.canSignedInUserLeave = false;
-            event.canSignedInUserJoin =
-                (signedInUser?.positions || []).length > 0 &&
-                event.start.getTime() > Date.now() &&
-                ![EventState.Canceled].includes(event.state);
-        }
-
-        // canceled events cannot be joined
-        if (event.state === EventState.Canceled) {
-            event.canSignedInUserJoin = false;
-        }
+    public getDurationDays(event: Event): number {
         const dayStart = cropToPrecision(event.start, 'days');
         const dayEnd = cropToPrecision(event.end, 'days');
-        event.days = new Date(dayEnd.getTime() - dayStart.getTime()).getDate();
+        return new Date(dayEnd.getTime() - dayStart.getTime()).getDate();
+    }
 
+    public canSignedInUserJoin(event: Event, signedInUser: SignedInUser): boolean {
+        if (this.findSignedInUserRegistration(event, signedInUser) != undefined) {
+            // user already has a registration
+            return false;
+        }
+        if (this.isInPast(event) || [EventState.Canceled].includes(event.state)) {
+            // event is not in valid state to create a registration
+            return false;
+        }
+        return signedInUser.positions.length > 0;
+    }
+
+    public canSignedInUserLeave(event: Event, signedInUser: SignedInUser): boolean {
+        const userRegistration = this.findSignedInUserRegistration(event, signedInUser);
+        if (userRegistration === undefined) {
+            // user already has no registration
+            return false;
+        }
+        const assignedSlot = this.findSlotAssignedToRegistration(event, userRegistration.key);
+        if (assignedSlot) {
+            // user is assigned and can cancel the registration until 7 days before event start
+            return event.start.getTime() < subtractFromDate(new Date(), { days: 7 }).getTime();
+        }
+        // user is on the waiting list, or the event is open signup
+        // registration can be canceled until the event is finished
+        return !this.isInPast(event);
+    }
+
+    public canSignedInUserUpdateRegistration(event: Event, signedInUser: SignedInUser): boolean {
+        // users can update their registration until the event is finished
+        return this.findSignedInUserRegistration(event, signedInUser) != undefined && !this.isInPast(event);
+    }
+
+    public canSignedInUserCreateExports(event: Event, signedInUser: SignedInUser): boolean {
+        if (!signedInUser?.permissions.includes(Permission.EXPORT_EVENTS)) {
+            return false;
+        }
+        if (signedInUser?.roles.includes(Role.EVENT_LEADER)) {
+            return (
+                // allow exports in a limited time from 7 days before the event start until the events end and only for
+                // events with the signed-in user assigned
+                subtractFromDate(new Date(), { days: 7 }).getTime() < event.start.getTime() &&
+                event.end.getTime() < new Date().getTime() &&
+                this.isSignedInUserAssigned(event, signedInUser)
+            );
+        }
+        return true;
+    }
+
+    public isSignedInUserAssigned(event: Event, signedInUser: SignedInUser): boolean {
+        // user is assigned or event is open signup (no assignment required)
+        return event.signupType !== EventSignupType.Assignment || this.findSlotAssignedToSignedInUser(event, signedInUser) !== undefined;
+    }
+
+    public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {
+        // reset all computed values
+        event.isInPast = this.isInPast(event);
+        event.days = this.getDurationDays(event);
+        if (signedInUser) {
+            event.signedInUserRegistration = this.findSignedInUserRegistration(event, signedInUser);
+            event.signedInUserAssignedSlot = this.findSlotAssignedToSignedInUser(event, signedInUser);
+            event.canSignedInUserJoin = this.canSignedInUserJoin(event, signedInUser);
+            event.canSignedInUserLeave = this.canSignedInUserLeave(event, signedInUser);
+            event.canSignedInUserUpdateRegistration = this.canSignedInUserUpdateRegistration(event, signedInUser);
+            event.canSignedInUserCreateExports = this.canSignedInUserCreateExports(event, signedInUser);
+            event.isSignedInUserAssigned = this.isSignedInUserAssigned(event, signedInUser);
+        } else {
+            event.signedInUserRegistration = undefined;
+            event.signedInUserAssignedSlot = undefined;
+            event.canSignedInUserJoin = false;
+            event.canSignedInUserLeave = false;
+            event.canSignedInUserUpdateRegistration = false;
+            event.canSignedInUserCreateExports = false;
+            event.isSignedInUserAssigned = false;
+        }
         return event;
     }
 
