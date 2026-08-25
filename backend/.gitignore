@@ -3,7 +3,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-application-*secrets.*
+application-local.yml
+application-secrets.yml
 
 .apt_generated
 .classpath
