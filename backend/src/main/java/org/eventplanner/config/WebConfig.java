@@ -54,7 +54,8 @@ public class WebConfig implements WebMvcConfigurer {
                 || resourcePath.contains("/.env")
                 || resourcePath.contains("/.git")
                 || resourcePath.contains("/application.yml")
-                || resourcePath.contains("/application-local.yml")) {
+                || resourcePath.contains("/application-local.yml")
+                || resourcePath.contains("/application-secrets.yml")) {
                 throw new NoSuchElementException("Resource not found");
             }
             if (resourcePath.startsWith("/api/")) {
