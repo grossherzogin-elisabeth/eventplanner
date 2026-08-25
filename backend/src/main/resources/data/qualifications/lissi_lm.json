@@ -1,8 +1,0 @@
-{
-  "key": "lissi-lm",
-  "icon": "fa-anchor",
-  "name": "Leichtmatrose:in",
-  "description": "Leichtmatrose:in nach vereinsinternem Ausbildungskonzept",
-  "expires": false,
-  "grantsPositions": ["leichtmatrose"]
-}
