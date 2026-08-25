@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Event } from '@/domain';
-import { EventSignupType, EventState, SlotCriticality, useEventService } from '@/domain';
+import { Role } from '@/domain';
+import { EventSignupType, EventState, Permission, SlotCriticality, useEventService } from '@/domain';
 import { EventService } from '@/domain/services/EventService';
 import {
     CAPTAIN,
@@ -685,62 +686,6 @@ describe('EventService', () => {
             expect(updatedEvent.signedInUserAssignedSlot).toBeUndefined();
         });
 
-        it('should update flags of past event for signed-in user with registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...pastEvent }, userWithRegistration);
-            expect(updatedEvent.canSignedInUserJoin).toBe(false);
-            expect(updatedEvent.canSignedInUserLeave).toBe(false);
-            expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(false);
-        });
-
-        it('should update flags of past event for signed-in user without registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...pastEvent }, userWithoutRegistration);
-            expect(updatedEvent.canSignedInUserJoin).toBe(false);
-            expect(updatedEvent.canSignedInUserLeave).toBe(false);
-            expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(false);
-        });
-
-        it('should update flags of soon event for signed-in user with assigned registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...soonEvent }, userWithAssignment);
-            expect(updatedEvent.canSignedInUserJoin).toBe(false);
-            expect(updatedEvent.canSignedInUserLeave).toBe(false);
-            expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
-        });
-
-        it('should update flags of soon event for signed-in user with registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...soonEvent }, userWithRegistration);
-            expect(updatedEvent.canSignedInUserJoin).toBe(false);
-            expect(updatedEvent.canSignedInUserLeave).toBe(true);
-            expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
-        });
-
-        it('should update flags of soon event for signed-in user without registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...soonEvent }, userWithoutRegistration);
-            expect(updatedEvent.canSignedInUserJoin).toBe(true);
-            expect(updatedEvent.canSignedInUserLeave).toBe(false);
-            expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(false);
-        });
-
-        it('should update flags of future event for signed-in user with assigned registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...futureEvent }, userWithAssignment);
-            expect(updatedEvent.canSignedInUserJoin).toBe(false);
-            expect(updatedEvent.canSignedInUserLeave).toBe(true);
-            expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
-        });
-
-        it('should update flags of future event for signed-in user with registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...futureEvent }, userWithRegistration);
-            expect(updatedEvent.canSignedInUserJoin).toBe(false);
-            expect(updatedEvent.canSignedInUserLeave).toBe(true);
-            expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(true);
-        });
-
-        it('should update flags of future event for signed-in user without registration correctly', () => {
-            const updatedEvent = testee.updateComputedValues({ ...futureEvent }, userWithoutRegistration);
-            expect(updatedEvent.canSignedInUserJoin).toBe(true);
-            expect(updatedEvent.canSignedInUserLeave).toBe(false);
-            expect(updatedEvent.canSignedInUserUpdateRegistration).toBe(false);
-        });
-
         it('should set flags for canceled events correctly', () => {
             const canceledEvent = mockEvent({ ...futureEvent, state: EventState.Canceled });
             const updatedEvent = testee.updateComputedValues(canceledEvent, userWithoutRegistration);
@@ -755,6 +700,95 @@ describe('EventService', () => {
             const multiDayEvent = mockEvent({ start: new Date('2024-07-10T09:00:00Z'), end: new Date('2024-07-17T17:00:00Z') });
             updatedEvent = testee.updateComputedValues(multiDayEvent);
             expect(updatedEvent.days).toBe(8);
+        });
+
+        describe('canSignedInUserJoin', () => {
+            it('should return true for users without existing registration', () => {
+                expect(testee.canSignedInUserJoin(futureEvent, userWithoutRegistration)).toBe(true);
+            });
+
+            it('should return false for users with existing registration', () => {
+                expect(testee.canSignedInUserJoin(futureEvent, userWithRegistration)).toBe(false);
+            });
+
+            it('should return false for users with assigned registration', () => {
+                expect(testee.canSignedInUserJoin(futureEvent, userWithAssignment)).toBe(false);
+            });
+
+            it('should return false for events in past', () => {
+                expect(testee.canSignedInUserJoin(pastEvent, userWithoutRegistration)).toBe(false);
+            });
+        });
+
+        describe('canSignedInUserLeave', () => {
+            it('should return false for users without existing registration', () => {
+                expect(testee.canSignedInUserLeave(futureEvent, userWithoutRegistration)).toBe(false);
+            });
+
+            it('should return true for users with existing registration', () => {
+                expect(testee.canSignedInUserLeave(futureEvent, userWithRegistration)).toBe(true);
+            });
+
+            it('should return false for users with assigned registration', () => {
+                expect(testee.canSignedInUserLeave(futureEvent, userWithAssignment)).toBe(true);
+            });
+
+            it('should return false for users with assigned registrations on soon starting events', () => {
+                expect(testee.canSignedInUserLeave(soonEvent, userWithAssignment)).toBe(false);
+            });
+
+            it('should return true for users with unassigned registrations on soon starting events', () => {
+                expect(testee.canSignedInUserLeave(futureEvent, userWithRegistration)).toBe(true);
+            });
+
+            it('should return false for events in past', () => {
+                expect(testee.canSignedInUserLeave(pastEvent, userWithRegistration)).toBe(false);
+            });
+        });
+
+        describe('canSignedInUserUpdateRegistration', () => {
+            it('should return false for users without existing registration', () => {
+                expect(testee.canSignedInUserUpdateRegistration(futureEvent, userWithoutRegistration)).toBe(false);
+            });
+
+            it('should return true for users with existing registration', () => {
+                expect(testee.canSignedInUserUpdateRegistration(futureEvent, userWithRegistration)).toBe(true);
+            });
+
+            it('should return true for users with assigned registration', () => {
+                expect(testee.canSignedInUserUpdateRegistration(futureEvent, userWithAssignment)).toBe(true);
+            });
+
+            it('should return false for events in past', () => {
+                expect(testee.canSignedInUserUpdateRegistration(pastEvent, userWithRegistration)).toBe(false);
+            });
+        });
+
+        describe('canSignedInUserCreateExports', () => {
+            it('should return false for users without permission', () => {
+                expect(testee.canSignedInUserCreateExports(futureEvent, userWithAssignment)).toBe(false);
+            });
+
+            it('should return true for event leaders with assigned registration', () => {
+                const user = { ...userWithAssignment };
+                user.permissions.push(Permission.EXPORT_EVENTS);
+                user.roles.push(Role.EVENT_LEADER);
+                expect(testee.canSignedInUserCreateExports(soonEvent, user)).toBe(true);
+            });
+
+            it('should return false for event leaders with assigned registration for events in past', () => {
+                const user = { ...userWithAssignment };
+                user.permissions.push(Permission.EXPORT_EVENTS);
+                user.roles.push(Role.EVENT_LEADER);
+                expect(testee.canSignedInUserCreateExports(pastEvent, user)).toBe(false);
+            });
+
+            it('should return false for event leaders with assigned registration for events to far in future', () => {
+                const user = { ...userWithAssignment };
+                user.permissions.push(Permission.EXPORT_EVENTS);
+                user.roles.push(Role.EVENT_LEADER);
+                expect(testee.canSignedInUserCreateExports(futureEvent, user)).toBe(false);
+            });
         });
     });
 });

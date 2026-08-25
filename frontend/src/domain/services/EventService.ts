@@ -1,4 +1,4 @@
-import { cropToPrecision, filterUndefined, subtractFromDate } from '@/common';
+import { addToDate, cropToPrecision, filterUndefined } from '@/common';
 import { Validator, after, maxLength, notEmpty } from '@/common/validation';
 import type { Event, Location, PositionKey, Registration, RegistrationKey, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
 import { EventSignupType, EventState, Permission, Role, SlotCriticality } from '@/domain';
@@ -262,7 +262,7 @@ export class EventService {
         const assignedSlot = this.findSlotAssignedToRegistration(event, userRegistration.key);
         if (assignedSlot) {
             // user is assigned and can cancel the registration until 7 days before event start
-            return event.start.getTime() < subtractFromDate(new Date(), { days: 7 }).getTime();
+            return event.start.getTime() > addToDate(new Date(), { days: 7 }).getTime();
         }
         // user is on the waiting list, or the event is open signup
         // registration can be canceled until the event is finished
@@ -282,8 +282,8 @@ export class EventService {
             return (
                 // allow exports in a limited time from 7 days before the event start until the events end and only for
                 // events with the signed-in user assigned
-                subtractFromDate(new Date(), { days: 7 }).getTime() < event.start.getTime() &&
-                event.end.getTime() < new Date().getTime() &&
+                addToDate(new Date(), { days: 7 }).getTime() > event.start.getTime() &&
+                new Date().getTime() < event.end.getTime() &&
                 this.isSignedInUserAssigned(event, signedInUser)
             );
         }
