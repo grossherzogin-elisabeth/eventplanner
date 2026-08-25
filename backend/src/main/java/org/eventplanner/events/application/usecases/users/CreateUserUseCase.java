@@ -24,7 +24,7 @@ public class CreateUserUseCase {
     private final UserService userService;
 
     @Transactional
-    @PreAuthorize("hasAuthority('users:write')")
+    @PreAuthorize("hasAuthority('users:create')")
     public @NonNull UserDetails createUser(@NonNull final CreateUserSpec spec) {
         if (userService.getUserByEmail(spec.email()).isPresent()) {
             throw new UserAlreadyExistsException(

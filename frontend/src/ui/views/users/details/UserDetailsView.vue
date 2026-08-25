@@ -4,7 +4,9 @@
             <template #header>
                 <!-- TODO i18n -->
                 <template v-if="!user">{{ $t('generic.loading') }}</template>
-                <template v-else-if="hasPermission(Permission.WRITE_USERS)"> {{ user.firstName }} {{ user.lastName }} bearbeiten </template>
+                <template v-else-if="hasPermission(Permission.UPDATE_USERS)">
+                    {{ user.firstName }} {{ user.lastName }} bearbeiten
+                </template>
                 <template v-else>Nutzerdetails {{ user.firstName }} {{ user.lastName }} </template>
             </template>
             <template #content>
@@ -56,7 +58,7 @@
                     </template>
                 </VTabs>
             </template>
-            <template v-if="hasPermission(Permission.WRITE_USERS)" #primary-button>
+            <template v-if="hasPermission(Permission.UPDATE_USERS)" #primary-button>
                 <AsyncButton :action="save" name="save" :disabled="validation.disableSubmit.value">
                     <template #icon>
                         <i class="fa-solid fa-save"></i>
@@ -68,7 +70,7 @@
             </template>
             <template #secondary-buttons>
                 <button
-                    v-if="tab === Tab.USER_EVENTS && hasPermission(Permission.WRITE_USERS)"
+                    v-if="tab === Tab.USER_EVENTS && hasPermission(Permission.UPDATE_USERS)"
                     data-test-id="button-add-registration"
                     class="btn-secondary"
                     @click="createRegistration()"
@@ -77,7 +79,7 @@
                     <span>{{ $t('domain.registration.actions.create') }}</span>
                 </button>
                 <button
-                    v-else-if="tab === Tab.USER_CERTIFICATES && hasPermission(Permission.WRITE_USERS)"
+                    v-else-if="tab === Tab.USER_CERTIFICATES && hasPermission(Permission.UPDATE_USERS)"
                     data-test-id="button-add-qualification"
                     class="btn-secondary"
                     @click="addUserQualification()"
@@ -96,7 +98,7 @@
                     <span>{{ $t('domain.user.actions.write-email') }}</span>
                 </a>
             </template>
-            <template v-if="hasPermission(Permission.WRITE_USERS)" #actions-menu>
+            <template v-if="hasPermission(Permission.UPDATE_USERS)" #actions-menu>
                 <li data-test-id="action-impersonate" class="context-menu-item" @click="impersonateUser()">
                     <i class="fa-solid fa-user-secret" />
                     <span>{{ $t('domain.user.actions.impersonate') }}</span>
@@ -123,9 +125,9 @@
                 </li>
             </template>
         </DetailsPage>
-        <CreateRegistrationForUserDlg v-if="hasPermission(Permission.WRITE_USERS)" ref="createRegistrationForUserDialog" />
-        <UserQualificationDetailsDlg v-if="hasPermission(Permission.WRITE_USERS)" ref="addUserQualificationDialog" />
-        <VConfirmationDialog v-if="hasPermission(Permission.WRITE_USERS)" ref="confirmDialog" />
+        <CreateRegistrationForUserDlg v-if="hasPermission(Permission.UPDATE_USERS)" ref="createRegistrationForUserDialog" />
+        <UserQualificationDetailsDlg v-if="hasPermission(Permission.UPDATE_USERS)" ref="addUserQualificationDialog" />
+        <VConfirmationDialog v-if="hasPermission(Permission.UPDATE_USERS)" ref="confirmDialog" />
     </div>
 </template>
 <script lang="ts" setup>
@@ -189,7 +191,7 @@ const userKey = computed<string>(() => (route.params.key as string) || '');
 
 const tabs = computed<{ value: Tab; label: string }[]>(() => {
     const result = [Tab.USER_DATA, Tab.USER_EVENTS, Tab.USER_CERTIFICATES];
-    if (hasPermission(Permission.WRITE_USERS)) {
+    if (hasPermission(Permission.UPDATE_USERS)) {
         result.push(Tab.USER_ROLES);
     }
     return result.map((it) => ({

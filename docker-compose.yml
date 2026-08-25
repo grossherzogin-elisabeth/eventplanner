@@ -1,4 +1,4 @@
-# This docker compose file is intended for local testing and preview only and not production
+# This docker compose file is intended for local testing and preview only and is not production
 # ready, but you can use it as a starting point.
 #
 # For the authentication flow to work locally we need the keycloak container to be reachable
@@ -16,8 +16,8 @@ services:
   eventplanner:
     # Use eventplanner:local when running this on an ARM Mac or if you want to test a locally
     # created docker image
-    #image: ghcr.io/grossherzogin-elisabeth/eventplanner:latest
-    image: eventplanner:local
+    image: ghcr.io/grossherzogin-elisabeth/eventplanner:latest
+    #image: eventplanner:local
     container_name: eventplanner
     depends_on:
       - keycloak

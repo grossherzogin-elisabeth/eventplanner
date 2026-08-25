@@ -4,7 +4,7 @@
             :items="props.event?.locations"
             class="scrollbar-invisible interactive-table no-header"
             :class="$attrs.class"
-            :sortable="hasPermission(Permission.WRITE_EVENT_DETAILS)"
+            :sortable="hasPermission(Permission.UPDATE_EVENT_DETAILS)"
             @reordered="updateOrders"
             @click="editLocation($event.item)"
         >
@@ -67,7 +67,7 @@
                     </p>
                 </td>
             </template>
-            <template v-if="hasPermission(Permission.WRITE_EVENT_DETAILS)" #context-menu="{ item }">
+            <template v-if="hasPermission(Permission.UPDATE_EVENT_DETAILS)" #context-menu="{ item }">
                 <li class="context-menu-item" data-test-id="action-edit" @click="editLocation(item)">
                     <i class="fa-solid fa-edit" />
                     <span>{{ $t('domain.location.actions.edit') }}</span>
@@ -116,7 +116,7 @@ const { hasPermission } = useSession();
 const editLocationDialog = ref<Dialog<Location, Location | undefined> | null>(null);
 
 async function editLocation(location: Location): Promise<void> {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const editedLocation = await editLocationDialog.value?.open(location);
         if (editedLocation) {
             const updatedEvent = eventService.updateLocation(deepCopy(props.event), editedLocation);
@@ -126,21 +126,21 @@ async function editLocation(location: Location): Promise<void> {
 }
 
 async function moveLocationUp(location: Location): Promise<void> {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = eventService.moveLocation(deepCopy(props.event), location, -1);
         emit('update:event', updatedEvent);
     }
 }
 
 async function moveLocationDown(location: Location): Promise<void> {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = eventService.moveLocation(deepCopy(props.event), location, 1);
         emit('update:event', updatedEvent);
     }
 }
 
 async function updateOrders(): Promise<void> {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = deepCopy(props.event);
         updatedEvent.locations.forEach((location, index) => (location.order = index + 1));
         emit('update:event', updatedEvent);
@@ -148,7 +148,7 @@ async function updateOrders(): Promise<void> {
 }
 
 function deleteLocation(location: Location): void {
-    if (props.event && hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+    if (props.event && hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
         const updatedEvent = eventService.removeLocation(deepCopy(props.event), location);
         emit('update:event', updatedEvent);
     }

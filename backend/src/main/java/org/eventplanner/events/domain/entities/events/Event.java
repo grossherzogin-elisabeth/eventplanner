@@ -119,19 +119,19 @@ public class Event {
 
     public boolean isVisibleForUser(@NonNull final SignedInUser signedInUser) {
         if (EventState.DRAFT.equals(state)) {
-            return signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS);
+            return signedInUser.hasPermission(Permission.UPDATE_EVENT_DETAILS);
         }
         return true;
     }
 
     public void clearConfidentialData(@NonNull final SignedInUser signedInUser) {
-        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS)
+        if (!signedInUser.hasPermission(Permission.UPDATE_EVENT_SLOTS)
             && List.of(EventState.DRAFT, EventState.OPEN_FOR_SIGNUP).contains(state)) {
             // clear assigned registrations on slots if crew is not published yet
             log.trace("Clearing assigned registrations on event {}", key);
             slots.forEach(slot -> slot.setAssignedRegistration(null));
         }
-        if (!signedInUser.hasPermission(Permission.WRITE_REGISTRATIONS)) {
+        if (!signedInUser.hasPermission(Permission.UPDATE_REGISTRATIONS)) {
             // clear notes of all but the signed-in user
             log.trace("Clearing registration notes on event {}", key);
             registrations.stream()

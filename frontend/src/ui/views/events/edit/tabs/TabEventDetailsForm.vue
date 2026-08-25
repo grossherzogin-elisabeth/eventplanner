@@ -8,7 +8,7 @@
                 :errors="validation.errors.value['state']"
                 :errors-visible="validation.showErrors.value"
                 required
-                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ state: $event })"
             />
         </div>
@@ -20,7 +20,7 @@
                 :errors="validation.errors.value['name']"
                 :errors-visible="validation.showErrors.value"
                 required
-                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ name: $event })"
             />
         </div>
@@ -32,7 +32,7 @@
                 :errors="validation.errors.value['type']"
                 :errors-visible="validation.showErrors.value"
                 required
-                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ type: $event })"
             />
         </div>
@@ -44,7 +44,7 @@
                 :errors="validation.errors.value['signupType']"
                 :errors-visible="validation.showErrors.value"
                 required
-                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ signupType: $event })"
             />
         </div>
@@ -55,7 +55,7 @@
                 :hint="$t('generic.markdown-supported')"
                 :errors="validation.errors.value['description']"
                 :errors-visible="validation.showErrors.value"
-                :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ description: $event })"
             />
         </div>
@@ -69,7 +69,7 @@
                     :errors="validation.errors.value['start']"
                     :errors-visible="validation.showErrors.value"
                     required
-                    :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                    :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                     @update:model-value="update({ start: updateDate(props.event?.start, $event) })"
                 />
             </div>
@@ -80,7 +80,7 @@
                     :errors="validation.errors.value['start']"
                     :errors-visible="validation.showErrors.value"
                     required
-                    :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                    :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                     @update:model-value="update({ start: updateTime(props.event?.start, $event, 'minutes') })"
                 />
             </div>
@@ -96,7 +96,7 @@
                     :errors="validation.errors.value['end']"
                     :errors-visible="validation.showErrors.value"
                     required
-                    :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                    :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                     @update:model-value="update({ end: updateDate(props.event?.end, $event) })"
                 />
             </div>
@@ -107,7 +107,7 @@
                     :errors="validation.errors.value['end']"
                     :errors-visible="validation.showErrors.value"
                     required
-                    :disabled="!hasPermission(Permission.WRITE_EVENT_DETAILS)"
+                    :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                     @update:model-value="update({ end: updateTime(props.event?.end, $event, 'minutes') })"
                 />
             </div>

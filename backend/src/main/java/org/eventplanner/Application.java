@@ -7,6 +7,9 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @EnableConfigurationProperties
 @ConfigurationPropertiesScan
 @EnableScheduling
@@ -14,6 +17,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class Application {
 
     public static void main(@NonNull String[] args) {
-        SpringApplication.run(Application.class, args);
+        try {
+            SpringApplication.run(Application.class, args);
+        } catch (Exception e) {
+            log.error("Application failed to start", e);
+        }
     }
 }

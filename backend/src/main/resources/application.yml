@@ -52,7 +52,7 @@ email:
   # If not empty, email notifications will only be sent to these email addresses
   recipients-whitelist: ${EMAIL_WHITELIST:}
   # Adds a prefix to the subject of all emails sent by the application
-  title-prefix: ''
+  title-prefix: ${EMAIL_PREFIX:}
 
 auth:
   logout-success-url: ${frontend.url}/login
@@ -105,6 +105,7 @@ spring:
     locations: classpath:db/migration
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
+    open-in-view: true
     hibernate:
       ddl-auto: none
   security:
@@ -115,11 +116,14 @@ spring:
             issuer-uri: ${OAUTH_ISSUER_URI}
         registration:
           default:
-            client-id: ${OAUTH_CLIENT_ID:eventplanner}
-            client-secret: ${OAUTH_CLIENT_SECRET:********************}
+            client-id: ${OAUTH_CLIENT_ID}
+            client-secret: ${OAUTH_CLIENT_SECRET}
             provider: default
             redirect-uri: ${frontend.url}/login/oauth2/code/default
-            scope: openid,email,profile
+            scope:
+              - openid
+              - email
+              - profile
   servlet:
     multipart:
       max-file-size: 10MB

@@ -23,7 +23,7 @@
                 </div>
             </MainContent>
         </template>
-        <template v-if="event && hasPermission(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
+        <template v-if="event && hasPermission(Permission.UPDATE_OWN_REGISTRATIONS)" #primary-button>
             <AsyncButton
                 v-if="event.isSignedInUserAssigned"
                 class="btn-danger"
@@ -57,7 +57,7 @@
             </button>
         </template>
         <template v-if="event" #secondary-buttons>
-            <RouterLink v-if="hasPermission(Permission.WRITE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
+            <RouterLink v-if="hasPermission(Permission.UPDATE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
                 <i class="fa-solid fa-drafting-compass" />
                 <span>{{ $t('domain.event.actions.edit') }}</span>
             </RouterLink>
@@ -75,6 +75,7 @@
                 v-for="template in eventExports.templates.value"
                 :key="template"
                 class="permission-export-events context-menu-item"
+                :class="{ disabled: !event.canSignedInUserCreateExports }"
                 data-test-id="action-export"
                 @click="eventExports.exportEvent(event, template)"
             >
@@ -100,7 +101,7 @@
                     <span>{{ $t('domain.registration.actions.add-note') }}</span>
                 </li>
             </template>
-            <li class="permission-write-events" data-test-id="action-edit-event">
+            <li class="permission-update-event-details" data-test-id="action-edit-event">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-drafting-compass" />
                     <span>{{ $t('domain.event.actions.edit') }}</span>

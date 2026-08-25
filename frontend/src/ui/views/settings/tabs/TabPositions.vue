@@ -33,7 +33,7 @@
                         </span>
                     </td>
                 </template>
-                <template v-if="hasPermission(Permission.WRITE_POSITIONS)" #context-menu="{ item }">
+                <template v-if="hasPermission(Permission.UPDATE_POSITIONS)" #context-menu="{ item }">
                     <li class="context-menu-item" data-test-id="context-menu-edit" @click="editPosition(item)">
                         <i class="fa-solid fa-edit" />
                         <span>{{ $t('generic.edit') }}</span>
@@ -47,7 +47,7 @@
         </div>
 
         <div
-            v-if="hasPermission(Permission.WRITE_POSITIONS)"
+            v-if="hasPermission(Permission.UPDATE_POSITIONS)"
             class="pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12"
         >
             <button class="btn-floating pointer-events-auto" data-test-id="button-create" @click="createPosition()">

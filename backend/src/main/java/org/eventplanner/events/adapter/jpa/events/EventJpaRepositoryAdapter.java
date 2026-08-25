@@ -38,7 +38,7 @@ public class EventJpaRepositoryAdapter implements EventRepository {
         return eventEntities.stream()
             .map(entity -> entity.toDomain(allRegistrationEntities
                 .stream()
-                .filter(it -> it.eventKey.equals(entity.getKey()))
+                .filter(it -> it.getEventKey().equals(entity.getKey()))
                 .map(RegistrationJpaEntity::toDomain)
                 .toList()
             ))

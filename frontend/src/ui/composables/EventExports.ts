@@ -25,6 +25,7 @@ export function useEventExports(): UseEventExports {
     async function update(): Promise<void> {
         templates.value = await eventExportUseCase.getExportTemplates();
     }
+
     const loading = update();
 
     return { templates, loading, exportEvents, exportEvent };

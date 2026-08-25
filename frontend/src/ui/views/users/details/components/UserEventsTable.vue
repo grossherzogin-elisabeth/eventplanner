@@ -43,7 +43,7 @@
                     </span>
                 </td>
             </template>
-            <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
+            <template v-if="hasPermission(Permission.UPDATE_USERS)" #context-menu="{ item }">
                 <li>
                     <RouterLink
                         :to="{
@@ -57,7 +57,7 @@
                         <span>{{ $t('domain.event.actions.view') }}</span>
                     </RouterLink>
                 </li>
-                <li v-if="hasPermission(Permission.WRITE_EVENTS)">
+                <li v-if="hasPermission(Permission.UPDATE_EVENTS)">
                     <RouterLink
                         :to="{
                             name: Routes.EventEdit,
@@ -255,7 +255,7 @@ async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<voi
         name: Routes.EventDetails,
         params: { year: item.start.getFullYear(), key: item.eventKey },
     };
-    if (hasPermission(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.UPDATE_EVENTS)) {
         to = {
             name: Routes.EventEdit,
             params: { year: item.start.getFullYear(), key: item.eventKey },

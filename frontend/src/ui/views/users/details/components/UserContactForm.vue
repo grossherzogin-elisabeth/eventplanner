@@ -11,7 +11,7 @@
             :label="$t('domain.user.email')"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['email']"
             :errors-visible="true"
         />
@@ -21,7 +21,7 @@
             class="col-span-full"
             :label="$t('domain.user.phone')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['phone']"
             :errors-visible="true"
         />
@@ -31,7 +31,7 @@
             class="col-span-full"
             :label="$t('domain.user.phone-work')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['phoneWork']"
             :errors-visible="true"
         />
@@ -41,7 +41,7 @@
             class="col-span-full"
             :label="$t('domain.user.mobile')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['mobile']"
             :errors-visible="true"
         />
@@ -58,7 +58,7 @@
             :label="$t('domain.address.address-line-1')"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['address.addressLine1']"
             :errors-visible="true"
         />
@@ -68,7 +68,7 @@
             class="col-span-full"
             :label="$t('domain.address.address-line-2')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['address.addressLine2']"
             :errors-visible="true"
         />
@@ -79,7 +79,7 @@
             :label="$t('domain.address.zipcode')"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['address.zipcode']"
             :errors-visible="true"
         />
@@ -90,7 +90,7 @@
             :label="$t('domain.address.town')"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['address.town']"
             :errors-visible="true"
         />
@@ -102,7 +102,7 @@
             :options="countries.options"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['address.country']"
             :errors-visible="true"
         />

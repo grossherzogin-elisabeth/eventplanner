@@ -23,13 +23,13 @@ public class ReadUserUseCase {
     private final AuthenticationService authenticationService;
     private final UserService userService;
 
-    @PreAuthorize("hasAuthority('users:read')")
+    @PreAuthorize("hasAuthority('users:list') or hasAuthority('users:list-details')")
     public @NonNull List<User> getUsers() {
         log.debug("Reading user list");
         return userService.getUsers();
     }
 
-    @PreAuthorize("hasAuthority('users:read-details')")
+    @PreAuthorize("hasAuthority('users:list-details')")
     public @NonNull List<UserDetails> getDetailedUsers() {
         log.debug("Reading user details list");
         return userService.getDetailedUsers();
@@ -41,7 +41,7 @@ public class ReadUserUseCase {
         return userService.getUserByKey(key);
     }
 
-    @PreAuthorize("hasAuthority('users:read-details-self')")
+    @PreAuthorize("hasAuthority('users:read-own-details')")
     public @NonNull Optional<UserDetails> getSignedInUserDetails() {
         var signedInUser = authenticationService.getSignedInUser();
         log.debug("Reading details of signed in user {}", signedInUser.key());

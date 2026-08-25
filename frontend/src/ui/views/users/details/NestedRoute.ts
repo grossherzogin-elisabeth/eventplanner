@@ -5,7 +5,7 @@ import { Routes } from '@/ui/views/Routes.ts';
 
 const routeMeta: RouteMetaData = {
     authenticated: true,
-    permissions: [Permission.READ_USER_DETAILS],
+    permissions: [Permission.READ_DETAILED_USERS],
     backTo: Routes.UsersList,
 };
 

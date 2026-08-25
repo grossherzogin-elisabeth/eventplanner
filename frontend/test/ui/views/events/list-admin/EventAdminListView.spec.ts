@@ -32,10 +32,10 @@ describe('EventAdminListView.vue', () => {
         eventUseCase = useEventUseCase();
         eventAdministrationUseCase = useEventAdministrationUseCase();
         setupUserPermissions([
-            Permission.WRITE_EVENTS,
-            Permission.WRITE_EVENT_DETAILS,
-            Permission.WRITE_EVENT_SLOTS,
-            Permission.WRITE_USERS,
+            Permission.UPDATE_EVENTS,
+            Permission.UPDATE_EVENT_DETAILS,
+            Permission.UPDATE_EVENT_SLOTS,
+            Permission.UPDATE_USERS,
             Permission.EXPORT_EVENTS,
         ]);
         vi.setSystemTime(new Date(2024, 3, 1).getTime());

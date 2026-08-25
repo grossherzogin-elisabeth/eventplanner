@@ -19,7 +19,7 @@ describe('QualificationDetailsDlg.vue', () => {
         result = undefined;
         closed = false;
         useAuthService().setSignedInUser(
-            mockSignedInUser({ permissions: [Permission.READ_QUALIFICATIONS, Permission.WRITE_QUALIFICATIONS] })
+            mockSignedInUser({ permissions: [Permission.LIST_QUALIFICATIONS, Permission.UPDATE_QUALIFICATIONS] })
         );
         testee = mount(QualificationDetailsDlg);
     });

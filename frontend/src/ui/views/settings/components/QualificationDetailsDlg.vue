@@ -137,7 +137,7 @@ const dlg = ref<Dialog<Qualification | undefined, Qualification | undefined> | n
 const mode = ref<Mode>(Mode.CREATE);
 const qualification = ref<Qualification>({ key: '', icon: 'fa-id-card', expires: false, name: '', description: '', grantsPositions: [] });
 const qualifications = useQualifications();
-const hasWritePermission = computed<boolean>(() => authUseCase.getSignedInUser().permissions.includes(Permission.WRITE_QUALIFICATIONS));
+const hasWritePermission = computed<boolean>(() => authUseCase.getSignedInUser().permissions.includes(Permission.UPDATE_QUALIFICATIONS));
 const others = computed(() => {
     if (mode.value === Mode.CREATE) return qualifications.all.value;
     return qualifications.all.value.filter((it) => it.key !== qualification.value.key);
