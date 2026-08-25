@@ -36,7 +36,7 @@ describe('TabPositions.vue', () => {
 
     describe('users with permission positions:read', () => {
         beforeEach(async () => {
-            authService.setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_POSITIONS] }));
+            authService.setSignedInUser(mockSignedInUser({ permissions: [Permission.LIST_POSITIONS] }));
             testee = mount(TabPositions, { global: { plugins: [router] } });
         });
 
@@ -64,7 +64,7 @@ describe('TabPositions.vue', () => {
 
     describe('users with permission positions:write', () => {
         beforeEach(async () => {
-            const signedInUser = mockSignedInUser({ permissions: [Permission.READ_POSITIONS, Permission.WRITE_POSITIONS] });
+            const signedInUser = mockSignedInUser({ permissions: [Permission.LIST_POSITIONS, Permission.UPDATE_POSITIONS] });
             authService.setSignedInUser(signedInUser);
             testee = mount(TabPositions, { global: { plugins: [router] } });
         });

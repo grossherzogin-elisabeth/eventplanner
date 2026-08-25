@@ -107,7 +107,7 @@ describe('UserEventsTable.vue', () => {
 
     describe('Users with permission users:read-details', () => {
         beforeEach(() => {
-            setupUserPermissions([Permission.READ_USER_DETAILS]);
+            setupUserPermissions([Permission.READ_DETAILED_USERS]);
         });
 
         it('should not render context menu', async () => {
@@ -117,7 +117,7 @@ describe('UserEventsTable.vue', () => {
 
     describe('Users with permission users:write', () => {
         beforeEach(() => {
-            setupUserPermissions([Permission.READ_USER_DETAILS, Permission.WRITE_USERS]);
+            setupUserPermissions([Permission.READ_DETAILED_USERS, Permission.UPDATE_USERS]);
         });
 
         it('should render context menu', async () => {

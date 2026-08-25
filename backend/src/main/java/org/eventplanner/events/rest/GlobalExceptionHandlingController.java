@@ -117,7 +117,8 @@ public class GlobalExceptionHandlingController {
         log.warn(
             "Tried to access resource at {} {} without proper permission",
             request.getMethod(),
-            request.getRequestURI()
+            request.getRequestURI(),
+            exception
         );
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, exception.getMessage());
         body.setInstance(URI.create(request.getRequestURI()));

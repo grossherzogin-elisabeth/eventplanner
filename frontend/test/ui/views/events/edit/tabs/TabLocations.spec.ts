@@ -18,7 +18,7 @@ describe('TabLocations.vue', () => {
     let event: Event;
 
     beforeEach(() => {
-        setupUserPermissions([Permission.WRITE_EVENTS]);
+        setupUserPermissions([Permission.UPDATE_EVENTS]);
         event = mockEvent({
             locations: [
                 { name: 'LocationA', order: 0, icon: 'fa-icon-a' },
@@ -57,7 +57,7 @@ describe('TabLocations.vue', () => {
 
     describe('users with permission events:write-details', () => {
         beforeEach(() => {
-            setupUserPermissions([Permission.WRITE_EVENTS, Permission.WRITE_EVENT_DETAILS]);
+            setupUserPermissions([Permission.UPDATE_EVENTS, Permission.UPDATE_EVENT_DETAILS]);
         });
 
         it('should not render context menu', async () => {

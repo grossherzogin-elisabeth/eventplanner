@@ -3,7 +3,7 @@
         <UserAvatar :user="registration.user" class="h-7 w-7" :class="props.registration.name ? 'text-secondary' : 'text-error'" />
         <div class="w-0 grow truncate">
             <RouterLink
-                v-if="props.registration.user && hasPermission(Permission.READ_USER_DETAILS)"
+                v-if="props.registration.user && hasPermission(Permission.READ_DETAILED_USERS)"
                 :to="{ name: Routes.UserDetails, params: { key: props.registration.user.key } }"
                 class="hover:text-primary hover:underline"
             >

@@ -134,9 +134,9 @@ public class RegistrationConfirmationUseCase {
         }
     }
 
-    @PreAuthorize("hasAuthority('registrations:write') " +
-        "or hasAuthority('registrations:write-self') " +
-        "or hasAuthority('registrations:confirm-self')")
+    @PreAuthorize("hasAuthority('registrations:update') " +
+        "or hasAuthority('registrations:update-own') " +
+        "or hasAuthority('registrations:confirm-own')")
     @Transactional
     public void confirmRegistration(
         @NonNull final EventKey eventKey,
@@ -174,9 +174,9 @@ public class RegistrationConfirmationUseCase {
         // event does not need to be updated, because all changed data resides in the registration alone
     }
 
-    @PreAuthorize("hasAuthority('registrations:write') " +
-        "or hasAuthority('registrations:write-self') " +
-        "or hasAuthority('registrations:decline-self')")
+    @PreAuthorize("hasAuthority('registrations:update') " +
+        "or hasAuthority('registrations:update-own') " +
+        "or hasAuthority('registrations:decline-own')")
     @Transactional
     public void declineRegistration(
         @NonNull final EventKey eventKey,

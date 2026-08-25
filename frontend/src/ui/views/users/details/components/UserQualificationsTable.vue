@@ -3,13 +3,13 @@
         <VTable
             :items="userQualifications"
             class="scrollbar-invisible no-header"
-            :class="{ 'interactive-table': hasPermission(Permission.WRITE_USERS) }"
+            :class="{ 'interactive-table': hasPermission(Permission.UPDATE_USERS) }"
             @click="editUserQualification($event.item)"
         >
             <template #row="{ item }">
                 <UserQualificationRow :value="item" />
             </template>
-            <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
+            <template v-if="hasPermission(Permission.UPDATE_USERS)" #context-menu="{ item }">
                 <li class="context-menu-item" data-test-id="action-edit-qualification" @click="editUserQualification(item)">
                     <i class="fa-solid fa-edit" />
                     <span>{{ $t('generic.edit') }}</span>
@@ -72,7 +72,7 @@ function deleteUserQualification(userQualification: ResolvedUserQualification): 
 }
 
 async function editUserQualification(userQualification: ResolvedUserQualification): Promise<void> {
-    if (!hasPermission(Permission.WRITE_USERS)) {
+    if (!hasPermission(Permission.UPDATE_USERS)) {
         return;
     }
     const user = props.modelValue;

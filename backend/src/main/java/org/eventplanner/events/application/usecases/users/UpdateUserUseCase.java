@@ -39,7 +39,7 @@ public class UpdateUserUseCase {
     private final PositionRepository positionRepository;
 
     @Transactional
-    @PreAuthorize("hasAuthority('users:write') or hasAuthority('users:write-self')")
+    @PreAuthorize("hasAuthority('users:update-details') or hasAuthority('users:update-own-details')")
     public @NonNull UserDetails updateUserSelf(@NonNull final UpdateUserSpec spec) {
         var signedInUser = authenticationService.getSignedInUser();
         log.info("User {} is updating their personal information", signedInUser.key());
@@ -49,7 +49,7 @@ public class UpdateUserUseCase {
     }
 
     @Transactional
-    @PreAuthorize("hasAuthority('users:write')")
+    @PreAuthorize("hasAuthority('users:update-details')")
     public @NonNull UserDetails updateUser(
         @NonNull final UserKey userKey,
         @NonNull final UpdateUserSpec spec
@@ -84,7 +84,7 @@ public class UpdateUserUseCase {
         ofNullable(spec.diet()).ifPresent(user::setDiet);
 
         // these may only be changed by admins
-        var hasWritePermission = signedInUser.hasPermission(Permission.WRITE_USERS);
+        var hasWritePermission = signedInUser.hasPermission(Permission.UPDATE_USERS);
         if (hasWritePermission) {
             if (spec.authKey() != null) {
                 var existingUser = userService.getUserByAuthKey(spec.authKey());

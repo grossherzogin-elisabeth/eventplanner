@@ -10,7 +10,7 @@
             class="col-span-full"
             :label="$t('domain.emergency-contact.name')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['emergencyContact.name']"
             :errors-visible="true"
         />
@@ -20,7 +20,7 @@
             class="col-span-full"
             :label="$t('domain.emergency-contact.phone')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['emergencyContact.phone']"
             :errors-visible="true"
         />
@@ -39,7 +39,7 @@
             class="col-span-full"
             :label="$t('domain.user.diseases')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['diseases']"
             :errors-visible="true"
         />
@@ -49,7 +49,7 @@
             class="col-span-full"
             :label="$t('domain.user.medication')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['medication']"
             :errors-visible="true"
         />

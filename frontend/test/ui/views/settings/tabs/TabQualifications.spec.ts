@@ -34,7 +34,7 @@ describe('TabQualifications.vue', () => {
 
     describe('users with permission qualifications:read', () => {
         beforeEach(async () => {
-            useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.READ_QUALIFICATIONS] }));
+            useAuthService().setSignedInUser(mockSignedInUser({ permissions: [Permission.LIST_QUALIFICATIONS] }));
             testee = mount(TabQualifications, { global: { plugins: [router] } });
         });
 
@@ -101,7 +101,7 @@ describe('TabQualifications.vue', () => {
     describe('users with permission qualifications:write', () => {
         beforeEach(async () => {
             useAuthService().setSignedInUser(
-                mockSignedInUser({ permissions: [Permission.READ_QUALIFICATIONS, Permission.WRITE_QUALIFICATIONS] })
+                mockSignedInUser({ permissions: [Permission.LIST_QUALIFICATIONS, Permission.UPDATE_QUALIFICATIONS] })
             );
             testee = mount(TabQualifications, { global: { plugins: [router] } });
         });

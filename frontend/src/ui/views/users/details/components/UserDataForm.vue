@@ -1,5 +1,5 @@
 <template>
-    <section v-if="hasPermission(Permission.WRITE_USERS)" class="relative mb-16 grid gap-4">
+    <section v-if="hasPermission(Permission.UPDATE_USERS)" class="relative mb-16 grid gap-4">
         <span id="app-data" class="site-link pointer-events-none absolute -top-48 -z-10 col-span-full opacity-0">
             {{ $t('domain.user.generic-data') }}
         </span>
@@ -10,7 +10,7 @@
             class="col-span-full"
             :label="$t('domain.user.auth-key')"
             placeholder="Nicht verknüpft"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['authKey']"
             :errors-visible="true"
         />
@@ -20,7 +20,7 @@
             class="col-span-full"
             :label="$t('domain.user.nick-name')"
             :placeholder="user.firstName"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['nickName']"
             :errors-visible="true"
         />
@@ -56,7 +56,7 @@
             data-test-id="verified-at"
             class="col-span-full"
             :label="$t('domain.user.verified-at')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['verifiedAt']"
             :errors-visible="true"
         />
@@ -73,7 +73,7 @@
             :label="$t('domain.user.gender')"
             :options="genders.options"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['gender']"
             :errors-visible="true"
         />
@@ -83,7 +83,7 @@
             class="col-span-full sm:col-span-3"
             :label="$t('domain.user.title')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['title']"
             :errors-visible="true"
         />
@@ -94,7 +94,7 @@
             :label="$t('domain.user.first-name')"
             :hint="$t('domain.user.official-name-hint')"
             required
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['firstName']"
             :errors-visible="true"
         />
@@ -105,7 +105,7 @@
             :label="$t('domain.user.middle-name')"
             :hint="$t('domain.user.official-name-hint')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['secondName']"
             :errors-visible="true"
         />
@@ -117,7 +117,7 @@
             :hint="$t('domain.user.official-name-hint')"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['lastName']"
             :errors-visible="true"
         />
@@ -128,7 +128,7 @@
             :label="$t('domain.user.date-of-birth')"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['dateOfBirth']"
             :errors-visible="true"
         />
@@ -139,7 +139,7 @@
             :label="$t('domain.user.place-of-birth')"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['placeOfBirth']"
             :errors-visible="true"
         />
@@ -150,7 +150,7 @@
             :label="$t('domain.user.pass-nr')"
             required
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['passNr']"
             :errors-visible="true"
         />
@@ -161,7 +161,7 @@
             :label="$t('domain.user.nationality')"
             :options="nationalities.options"
             required
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :errors="props.errors['nationality']"
             :errors-visible="true"
         />

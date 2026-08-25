@@ -24,6 +24,7 @@ export function mockEvent(overwrite?: Partial<Event>): Event {
         isSignedInUserAssigned: false,
         canSignedInUserUpdateRegistration: false,
         canSignedInUserLeave: false,
+        canSignedInUserCreateExports: false,
         signedInUserAssignedSlot: undefined,
         days: 0,
         assignedUserCount: 0,

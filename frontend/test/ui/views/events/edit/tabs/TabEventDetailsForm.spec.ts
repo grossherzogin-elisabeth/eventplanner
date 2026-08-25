@@ -27,7 +27,7 @@ describe('TabEventDetailsForm.vue', () => {
     describe('Users with permission events:write-details', () => {
         beforeAll(() => {
             signedInUser = mockSignedInUser();
-            signedInUser.permissions.push(Permission.WRITE_EVENT_DETAILS);
+            signedInUser.permissions.push(Permission.UPDATE_EVENT_DETAILS);
             authService.setSignedInUser(signedInUser);
         });
 
@@ -48,7 +48,7 @@ describe('TabEventDetailsForm.vue', () => {
     describe('Users without permission events:write-details', () => {
         beforeAll(() => {
             signedInUser = mockSignedInUser();
-            signedInUser.permissions = signedInUser.permissions.filter((it) => it !== Permission.WRITE_EVENT_DETAILS);
+            signedInUser.permissions = signedInUser.permissions.filter((it) => it !== Permission.UPDATE_EVENT_DETAILS);
             authService.setSignedInUser(signedInUser);
         });
 

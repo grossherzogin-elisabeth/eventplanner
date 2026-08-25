@@ -49,7 +49,7 @@
                         </div>
                     </td>
                 </template>
-                <template v-if="hasPermission(Permission.WRITE_QUALIFICATIONS)" #context-menu="{ item }">
+                <template v-if="hasPermission(Permission.UPDATE_QUALIFICATIONS)" #context-menu="{ item }">
                     <li class="context-menu-item" data-test-id="context-menu-edit" @click="editQualification(item)">
                         <i class="fa-solid fa-edit" />
                         <span>{{ $t('generic.edit') }}</span>
@@ -62,7 +62,7 @@
             </VTable>
         </div>
         <div
-            v-if="hasPermission(Permission.WRITE_QUALIFICATIONS)"
+            v-if="hasPermission(Permission.UPDATE_QUALIFICATIONS)"
             class="pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12"
         >
             <button class="btn-floating pointer-events-auto" data-test-id="button-create" @click="createQualification()">

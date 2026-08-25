@@ -23,7 +23,7 @@ public class EventService {
         @NonNull final SignedInUser signedInUser,
         final int year
     ) {
-        //noinspection SimplifyStreamApiCallChains
+        // noinspection SimplifyStreamApiCallChains
         return eventRepository.findAllByYear(year).stream()
             .filter(evt -> evt.isVisibleForUser(signedInUser))
             .map(evt -> {

@@ -24,7 +24,7 @@ public class EventUseCase {
     private final EventService eventService;
     private final EventRepository eventRepository;
 
-    @PreAuthorize("hasAuthority('events:read')")
+    @PreAuthorize("hasAuthority('events:list')")
     public @NonNull List<Event> getEvents(final int year) {
         log.debug("Reading events of year {}", year);
         var signedInUser = authenticationService.getSignedInUser();
@@ -54,7 +54,7 @@ public class EventUseCase {
         eventRepository.deleteByKey(event.getKey());
     }
 
-    @PreAuthorize("hasAuthority('events:write-slots')")
+    @PreAuthorize("hasAuthority('events:update-slots')")
     public @NonNull Event optimizeEventSlots(@NonNull final Event event) {
         event.optimizeSlots();
         return event;

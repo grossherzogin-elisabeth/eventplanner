@@ -123,7 +123,7 @@ const dlg = ref<Dialog<Position | undefined, Position | undefined> | null>(null)
 const mode = ref<Mode>(Mode.CREATE);
 const position = ref<Position>({ key: '', name: '', imoListRank: '', color: '', prio: 0 });
 const positions = usePositions();
-const hasWritePermission = computed<boolean>(() => authUseCase.getSignedInUser().permissions.includes(Permission.WRITE_POSITIONS));
+const hasWritePermission = computed<boolean>(() => authUseCase.getSignedInUser().permissions.includes(Permission.UPDATE_POSITIONS));
 const others = computed(() => {
     if (mode.value === Mode.CREATE) return positions.all.value;
     return positions.all.value.filter((it) => it.key !== position.value.key);

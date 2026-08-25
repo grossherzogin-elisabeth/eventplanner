@@ -39,7 +39,7 @@ describe('UserContactForm.vue', () => {
 
     describe('Users with permission users:read-details', () => {
         beforeEach(() => {
-            setupUserPermissions([Permission.READ_USER_DETAILS]);
+            setupUserPermissions([Permission.READ_DETAILED_USERS]);
         });
 
         it.each(inputs)('should disable $selector input', async ({ selector }) => {
@@ -51,7 +51,7 @@ describe('UserContactForm.vue', () => {
 
     describe('Users with permission users:write', () => {
         beforeEach(() => {
-            setupUserPermissions([Permission.READ_USER_DETAILS, Permission.WRITE_USERS]);
+            setupUserPermissions([Permission.READ_DETAILED_USERS, Permission.UPDATE_USERS]);
         });
 
         it.each(inputs)('should enable $selector input', async ({ selector }) => {

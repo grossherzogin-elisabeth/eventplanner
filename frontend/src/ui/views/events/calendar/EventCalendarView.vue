@@ -16,7 +16,7 @@
                     ref="calendar"
                     :style="calendarStyle"
                     class="calendar"
-                    :class="{ 'enable-create': hasPermission(Permission.WRITE_EVENTS) }"
+                    :class="{ 'enable-create': hasPermission(Permission.UPDATE_EVENTS) }"
                 >
                     <div v-for="m in months.entries()" :key="m[0]" class="calendar-month">
                         <div class="calendar-header">
@@ -221,14 +221,14 @@ function updateEvent(event: Event): void {
 }
 
 function startCreateEventDrag(date: Date): void {
-    if (hasPermission(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.UPDATE_EVENTS)) {
         createEventFromDate.value = date;
         calendarStyle.value['--create-event-days'] = 1;
     }
 }
 
 async function stopCreateEventDrag(date: Date): Promise<void> {
-    if (hasPermission(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.UPDATE_EVENTS)) {
         const from = createEventFromDate.value;
         const to = date;
         if (from && to && createEventDialog.value) {
@@ -243,7 +243,7 @@ async function stopCreateEventDrag(date: Date): Promise<void> {
 }
 
 function updateCreateEventDrag(date: Date): void {
-    if (hasPermission(Permission.WRITE_EVENTS) && createEventFromDate.value !== null) {
+    if (hasPermission(Permission.UPDATE_EVENTS) && createEventFromDate.value !== null) {
         const durationMillis = date.getTime() - createEventFromDate.value.getTime();
         if (durationMillis >= 0) {
             calendarStyle.value['--create-event-days'] = new Date(durationMillis).getDate();

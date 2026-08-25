@@ -19,7 +19,7 @@
     <template v-if="props.events">
         <!-- Contact crew -->
         <li
-            class="permission-write-event-details context-menu-item"
+            class="permission-update-event-details context-menu-item"
             data-test-id="action-edit"
             @click="emit('update-events:edit', props.events)"
         >
@@ -29,7 +29,7 @@
 
         <!-- Transition event state DRAFT -> OPEN_FOR_SIGNUP -->
         <li
-            class="permission-write-event-details context-menu-item"
+            class="permission-update-event-details context-menu-item"
             data-test-id="action-open-for-signup"
             :class="{ disabled: !hasAnyDraftEvents }"
             @click="emit('update-events:open-for-signup', props.events)"
@@ -39,7 +39,7 @@
         </li>
         <!-- Transition event state OPEN_FOR_SIGNUP -> PLANNED -->
         <li
-            class="permission-write-event-details context-menu-item"
+            class="permission-update-event-details context-menu-item"
             data-test-id="action-publish-crew"
             :class="{ disabled: !hasAnyOpenForSignUpEvents }"
             @click="emit('update-events:publish-crew', props.events)"
@@ -76,7 +76,7 @@
 
         <!-- Add registration -->
         <li
-            class="permission-write-registrations context-menu-item"
+            class="permission-create-registrations context-menu-item"
             data-test-id="action-create-registration"
             @click="emit('update-events:create-registration', props.events)"
         >

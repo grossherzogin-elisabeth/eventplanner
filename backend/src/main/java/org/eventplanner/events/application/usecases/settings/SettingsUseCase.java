@@ -25,7 +25,7 @@ public class SettingsUseCase {
         return configurationService.getConfig();
     }
 
-    @PreAuthorize("hasAuthority('application-settings:write')")
+    @PreAuthorize("hasAuthority('application-settings:update')")
     @Transactional
     public @NonNull ApplicationConfig updateSettings(
         @NonNull final ApplicationConfigUpdateSpec updateSpec

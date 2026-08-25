@@ -11,7 +11,7 @@
                         <VSearchButton v-model="filter" :placeholder="$t('views.event-admin-list.filter.search')" />
                     </div>
                     <div
-                        v-if="hasPermission(Permission.WRITE_USERS) && !Number.isNaN(Number.parseInt(tab, 10))"
+                        v-if="hasPermission(Permission.UPDATE_USERS) && !Number.isNaN(Number.parseInt(tab, 10))"
                         class="z-10 hidden lg:block"
                     >
                         <AsyncButton class="btn-ghost" name="export" :action="() => eventExports.exportEvents(Number.parseInt(tab, 10))">
@@ -105,7 +105,7 @@
                 <div class="hidden sm:inline">
                     <button
                         v-if="showBatchOpenEventForSignup"
-                        class="permission-write-events btn-ghost"
+                        class="permission-update-event-details btn-ghost"
                         type="button"
                         @click="openEventsForSignup(selectedEvents)"
                     >
@@ -114,14 +114,14 @@
                     </button>
                     <button
                         v-else-if="showBatchPublishPlannedCrew"
-                        class="permission-write-events btn-ghost"
+                        class="permission-update-event-details btn-ghost"
                         type="button"
                         @click="publishCrewPlanning(selectedEvents)"
                     >
                         <i class="fa-solid fa-earth-europe"></i>
                         <span class="truncate">{{ $t('domain.event.actions.publish-crew') }}</span>
                     </button>
-                    <button v-else class="permission-write-events btn-ghost" type="button" @click="editEvents(selectedEvents)">
+                    <button v-else class="permission-update-event-details btn-ghost" type="button" @click="editEvents(selectedEvents)">
                         <i class="fa-solid fa-edit"></i>
                         <span class="truncate">{{ $t('domain.event.actions.edit', 2) }}</span>
                     </button>
@@ -231,7 +231,7 @@ const selectedEvents = computed<(Event & Selectable)[] | undefined>(() => {
 
 const showBatchOpenEventForSignup = computed<boolean>(() => {
     return (
-        hasPermission(Permission.WRITE_EVENTS) &&
+        hasPermission(Permission.UPDATE_EVENTS) &&
         selectedEvents.value != undefined &&
         selectedEvents.value.some((it) => it.state === EventState.Draft)
     );
@@ -239,7 +239,7 @@ const showBatchOpenEventForSignup = computed<boolean>(() => {
 
 const showBatchPublishPlannedCrew = computed<boolean>(() => {
     return (
-        hasPermission(Permission.WRITE_EVENTS) &&
+        hasPermission(Permission.UPDATE_EVENTS) &&
         selectedEvents.value != undefined &&
         selectedEvents.value.some((it) => it.state === EventState.OpenForSignup)
     );
@@ -295,7 +295,7 @@ async function editEvent(item: Event, evt: MouseEvent): Promise<void> {
         name: Routes.EventDetails,
         params: { year: item.start.getFullYear(), key: item.key },
     };
-    if (hasPermission(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.UPDATE_EVENTS)) {
         to = {
             name: Routes.EventEdit,
             params: { year: item.start.getFullYear(), key: item.key },

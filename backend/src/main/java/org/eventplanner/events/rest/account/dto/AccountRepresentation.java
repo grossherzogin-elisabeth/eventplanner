@@ -29,8 +29,11 @@ public record AccountRepresentation(
             signedInUser.email(),
             signedInUser.emailHash(),
             signedInUser.roles(),
-            signedInUser.permissions(),
-            signedInUser.positions().stream().map(PositionKey::value).toList(),
+            signedInUser.permissions().stream().sorted().toList(),
+            signedInUser.positions().stream()
+                .map(PositionKey::value)
+                .sorted()
+                .toList(),
             signedInUser.gender(),
             signedInUser.firstName(),
             signedInUser.lastName(),

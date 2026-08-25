@@ -25,7 +25,7 @@
                     </div>
                 </td>
             </template>
-            <template v-if="hasPermission(Permission.WRITE_USERS)" #context-menu="{ item }">
+            <template v-if="hasPermission(Permission.UPDATE_USERS)" #context-menu="{ item }">
                 <li v-if="!item.enabled" class="context-menu-item" data-test-id="action-add-role" @click="toggleRole(item.role)">
                     <i class="fa-solid fa-plus" />
                     <span>Rolle hinzufügen</span>

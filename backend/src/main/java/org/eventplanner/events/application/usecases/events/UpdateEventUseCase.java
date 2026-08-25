@@ -38,9 +38,9 @@ public class UpdateEventUseCase {
     private final RegistrationService registrationService;
     private final EventRepository eventRepository;
 
-    @PreAuthorize("hasAuthority('events:write-details') " +
-        "or hasAuthority('events:write-slots') " +
-        "or hasAuthority('events:write-registrations')")
+    @PreAuthorize("hasAuthority('events:update-details') " +
+        "or hasAuthority('events:update-slots') " +
+        "or hasAuthority('registrations:update')")
     public @NonNull Event updateEvent(
         @NonNull final UpdateEventSpec spec
     ) throws NoSuchElementException {
@@ -87,7 +87,7 @@ public class UpdateEventUseCase {
         @NonNull Event event,
         @NonNull final UpdateEventSpec spec
     ) {
-        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_DETAILS)) {
+        if (!signedInUser.hasPermission(Permission.UPDATE_EVENT_DETAILS)) {
             return;
         }
         var changedAttributes = new LinkedList<String>();
@@ -137,7 +137,7 @@ public class UpdateEventUseCase {
         @NonNull Event event,
         @NonNull final UpdateEventSpec spec
     ) {
-        if (!signedInUser.hasPermission(Permission.WRITE_REGISTRATIONS)) {
+        if (!signedInUser.hasPermission(Permission.UPDATE_REGISTRATIONS)) {
             return;
         }
 
@@ -166,7 +166,7 @@ public class UpdateEventUseCase {
         @NonNull Event event,
         @NonNull final UpdateEventSpec spec
     ) {
-        if (!signedInUser.hasPermission(Permission.WRITE_REGISTRATIONS)) {
+        if (!signedInUser.hasPermission(Permission.UPDATE_REGISTRATIONS)) {
             return;
         }
 
@@ -190,7 +190,7 @@ public class UpdateEventUseCase {
         @NonNull Event event,
         @NonNull final UpdateEventSpec spec
     ) {
-        if (!signedInUser.hasPermission(Permission.WRITE_REGISTRATIONS)) {
+        if (!signedInUser.hasPermission(Permission.UPDATE_REGISTRATIONS)) {
             return;
         }
 
@@ -217,7 +217,7 @@ public class UpdateEventUseCase {
         @NonNull final List<RegistrationKey> assignedRegistrations,
         @NonNull final List<RegistrationKey> unassignedRegistrations
     ) {
-        if (!signedInUser.hasPermission(Permission.WRITE_EVENT_SLOTS) || spec.slots() == null) {
+        if (!signedInUser.hasPermission(Permission.UPDATE_EVENT_SLOTS) || spec.slots() == null) {
             return;
         }
         var before = event.getAssignedRegistrationKeys();

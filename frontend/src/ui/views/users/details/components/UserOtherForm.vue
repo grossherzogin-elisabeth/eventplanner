@@ -9,7 +9,7 @@
             data-test-id="diet"
             class="col-span-full"
             :label="$t('domain.user.diet')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
             :options="diet.options"
         />
         <VInputTextArea
@@ -18,7 +18,7 @@
             class="col-span-full"
             :label="$t('domain.user.intolerances')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
         />
     </section>
     <section class="relative mb-16 grid gap-4">
@@ -32,7 +32,7 @@
             class="col-span-full"
             :label="$t('components.user-other-form.comment')"
             :placeholder="$t('generic.no-information')"
-            :disabled="!hasPermission(Permission.WRITE_USERS)"
+            :disabled="!hasPermission(Permission.UPDATE_USERS)"
         />
     </section>
 </template>

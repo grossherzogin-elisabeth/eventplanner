@@ -14,7 +14,7 @@
                     <span>{{ $t('domain.event.actions.view') }}</span>
                 </RouterLink>
             </li>
-            <li class="permission-write-events block">
+            <li class="permission-update-events block">
                 <RouterLink
                     :to="{
                         name: Routes.EventEdit,
@@ -32,7 +32,7 @@
             <span>{{ $t('domain.event.actions.create-calendar-entry') }}</span>
         </li>
         <li
-            class="permission-write-own-registrations context-menu-item"
+            class="permission-create-own-registrations context-menu-item"
             data-test-id="action-sign-up"
             :class="{ disabled: joinableEvents === 0 }"
             @click="emit('join', props.events)"
@@ -41,7 +41,7 @@
             <span>{{ $t('domain.event.actions.sign-up') }}</span>
         </li>
         <li
-            class="permission-write-own-registrations context-menu-item"
+            class="permission-delete-own-registrations context-menu-item"
             data-test-id="action-leave-waiting-list"
             :class="{ disabled: eventsWithUserOnWaitingList === 0 }"
             @click="emit('leave-waiting-list', props.events)"
@@ -50,7 +50,7 @@
             <span>{{ $t('domain.event.actions.leave-waiting-list') }}</span>
         </li>
         <li
-            class="permission-write-own-registrations context-menu-item text-error"
+            class="permission-delete-own-registrations context-menu-item text-error"
             data-test-id="action-leave-all"
             :class="{ disabled: eventsWithUserInCrew === 0 }"
             @click="emit('leave-all', props.events)"
@@ -64,6 +64,7 @@
                 v-for="template in eventExports.templates.value"
                 :key="template"
                 class="permission-export-events context-menu-item"
+                :class="{ disabled: !props.events[0].canSignedInUserCreateExports }"
                 data-test-id="action-export"
                 @click="eventExports.exportEvent(props.events[0], template)"
             >
