@@ -52,7 +52,7 @@ email:
   # If not empty, email notifications will only be sent to these email addresses
   recipients-whitelist: ${EMAIL_WHITELIST:}
   # Adds a prefix to the subject of all emails sent by the application
-  title-prefix: ''
+  title-prefix: ${EMAIL_PREFIX:}
 
 auth:
   logout-success-url: ${frontend.url}/login
@@ -90,23 +90,19 @@ data:
 # -----------------------------------
 
 spring:
-  datasource:
-    driver-class-name: org.sqlite.JDBC
-    hikari:
-      connection-init-sql: |
-        PRAGMA journal_mode=WAL;
-        PRAGMA synchronous=NORMAL;
-        PRAGMA cache_size=-10000;
-        PRAGMA temp_store=MEMORY;
-    url: jdbc:sqlite:${data.directory}/eventplanner.db
   flyway:
     baseline-on-migrate: true
     enabled: true
     locations: classpath:db/migration
+    baseline-version: 22
   jpa:
-    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    open-in-view: true
     hibernate:
       ddl-auto: none
+  profiles:
+    active:
+      - ${MODE:production} # switching between local and production mode
+      - ${DATABASE:sqlite} # enables a db specific profile
   security:
     oauth2:
       client:
@@ -115,11 +111,14 @@ spring:
             issuer-uri: ${OAUTH_ISSUER_URI}
         registration:
           default:
-            client-id: ${OAUTH_CLIENT_ID:eventplanner}
-            client-secret: ${OAUTH_CLIENT_SECRET:********************}
+            client-id: ${OAUTH_CLIENT_ID}
+            client-secret: ${OAUTH_CLIENT_SECRET}
             provider: default
             redirect-uri: ${frontend.url}/login/oauth2/code/default
-            scope: openid,email,profile
+            scope:
+              - openid
+              - email
+              - profile
   servlet:
     multipart:
       max-file-size: 10MB
