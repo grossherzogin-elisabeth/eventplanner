@@ -187,7 +187,7 @@ export class EventService {
     }
 
     public findSignedInUserRegistration(event: Event, signedInUser: SignedInUser): Registration | undefined {
-        return this.findRegistration(event, signedInUser.key, undefined);
+        return this.findRegistration(event, signedInUser.key);
     }
 
     public findSlotAssignedToRegistration(event: Event, registrationKey: RegistrationKey): Slot | undefined {
@@ -283,7 +283,7 @@ export class EventService {
                 // allow exports in a limited time from 7 days before the event start until the events end and only for
                 // events with the signed-in user assigned
                 addToDate(new Date(), { days: 7 }).getTime() > event.start.getTime() &&
-                new Date().getTime() < event.end.getTime() &&
+                Date.now() < event.end.getTime() &&
                 this.isSignedInUserAssigned(event, signedInUser)
             );
         }
