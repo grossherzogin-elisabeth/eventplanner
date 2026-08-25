@@ -1,0 +1,14 @@
+# SQLite specific configuration. The database file will be created in the
+# data directory.
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      connection-init-sql: |
+        PRAGMA journal_mode=WAL;
+        PRAGMA synchronous=NORMAL;
+        PRAGMA cache_size=-10000;
+        PRAGMA temp_store=MEMORY;
+    url: jdbc:sqlite:${data.directory}/eventplanner.db
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
