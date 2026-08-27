@@ -291,8 +291,16 @@ export class EventService {
     }
 
     public isSignedInUserAssigned(event: Event, signedInUser: SignedInUser): boolean {
-        // user is assigned or event is open signup (no assignment required)
-        return event.signupType !== EventSignupType.Assignment || this.findSlotAssignedToSignedInUser(event, signedInUser) !== undefined;
+        const registration = this.findSignedInUserRegistration(event, signedInUser);
+        if (!registration) {
+            return false;
+        }
+        if (event.signupType === EventSignupType.Open) {
+            // event is open signup (every registration is automatically assigned)
+            return true;
+        }
+        // user is assigned, when a slot exists for their registration
+        return this.findSlotAssignedToRegistration(event, registration.key) !== undefined;
     }
 
     public updateComputedValues(event: Event, signedInUser?: SignedInUser): Event {
