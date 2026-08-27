@@ -12,37 +12,29 @@ CSRF_ENABLED: false
 # -----------------
 
 notifications:
-  added-to-waiting-list:
-    enabled: true
-  removed-from-waiting-list:
-    enabled: true
-  added-to-crew:
-    enabled: true
-  removed-from-crew:
-    enabled: true
-  confirm-participation-request:
-    enabled: true
-  confirm-participation-reminder:
-    enabled: true
-  crew-registration-canceled:
-    enabled: true
-  crew-registration-added:
-    enabled: true
-  user-data-changed:
-    enabled: true
-  qualification-added:
-    enabled: true
-  qualification-updated:
-    enabled: true
-  qualification-removed:
-    enabled: true
-  qualification-close-to-expired:
-    enabled: true
-  qualification-expired:
-    enabled: true
+  added-to-waiting-list.enabled: true
+  removed-from-waiting-list.enabled: true
+  added-to-crew.enabled: true
+  removed-from-crew.enabled: true
+  confirm-participation-request.enabled: true
+  confirm-participation-reminder.enabled: true
+  crew-registration-canceled.enabled: true
+  crew-registration-added.enabled: true
+  user-data-changed.enabled: true
+  qualification-added.enabled: true
+  qualification-updated.enabled: true
+  qualification-removed.enabled: true
+  qualification-close-to-expired.enabled: true
+  qualification-expired.enabled: true
 
 data:
   directory: src/test/resources
+
+resilience:
+  retry:
+    delay: 1
+    jitter: 0
+    multiplier: 1
 
 spring:
   datasource:

@@ -3,8 +3,10 @@ package org.eventplanner.events.adapter.jpa.accesskeys;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,22 +14,26 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
+import org.eventplanner.config.RetryConfig;
 import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+@SpringBootTest(classes = { AccessKeyJpaRepositoryAdapter.class, RetryConfig.class })
+@ActiveProfiles(profiles = { "test" })
 class AccessKeyJpaRepositoryAdapterTest {
 
-    private AccessKeyJpaRepository repository;
+    @Autowired
     private AccessKeyJpaRepositoryAdapter testee;
 
-    @BeforeEach
-    void setup() {
-        repository = mock();
-        testee = new AccessKeyJpaRepositoryAdapter(repository);
-    }
+    @MockitoBean
+    private AccessKeyJpaRepository repository;
 
     @Test
     void shouldPersistAccessKeyForUser() {
@@ -91,5 +97,30 @@ class AccessKeyJpaRepositoryAdapterTest {
         assertThat(threshold)
             .isAfterOrEqualTo(beforeDelete.minus(maxAge))
             .isBeforeOrEqualTo(Instant.now().minus(maxAge));
+    }
+
+    @Test
+    void shouldRetryCreate() {
+        when(repository.existsById(any())).thenReturn(false);
+        when(repository.save(any()))
+            .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
+            .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
+            .thenReturn(mock(AccessKeyJpaEntity.class));
+
+        testee.create(new UserKey("user-1"), "access-key-hash");
+
+        verify(repository, times(3)).save(any());
+    }
+
+    @Test
+    void shouldRetryDelete() {
+        doThrow(new CannotAcquireLockException("mocked 1st attempt"))
+            .doThrow(new CannotAcquireLockException("mocked 2nd attempt"))
+            .doNothing()
+            .when(repository).deleteAllByCreatedAtBefore(any());
+
+        testee.deleteExpired(Duration.ofDays(2));
+
+        verify(repository, times(3)).deleteAllByCreatedAtBefore(any());
     }
 }

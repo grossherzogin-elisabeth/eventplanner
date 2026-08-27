@@ -5,7 +5,10 @@ import java.util.Optional;
 import org.eventplanner.events.application.ports.QueuedEmailRepository;
 import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.jspecify.annotations.NonNull;
+import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,13 @@ public class QueuedEmailJpaRepositoryAdapter implements QueuedEmailRepository {
     }
 
     @Override
+    @Transactional
+    @Retryable(
+        includes = PessimisticLockingFailureException.class,
+        delayString = "${resilience.retry.delay:1000}",
+        jitterString = "${resilience.retry.jitter:0}",
+        multiplierString = "${resilience.retry.multiplier:1}",
+        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void queue(@NonNull QueuedEmail email) {
         if (repository.existsById(email.getKey())) {
             log.error("Failed to queue email: key {} already exists", email.getKey());
@@ -42,6 +52,13 @@ public class QueuedEmailJpaRepositoryAdapter implements QueuedEmailRepository {
     }
 
     @Override
+    @Transactional
+    @Retryable(
+        includes = PessimisticLockingFailureException.class,
+        delayString = "${resilience.retry.delay:1000}",
+        jitterString = "${resilience.retry.jitter:0}",
+        multiplierString = "${resilience.retry.multiplier:1}",
+        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void deleteByKey(@NonNull String key) {
         repository.deleteById(key);
     }

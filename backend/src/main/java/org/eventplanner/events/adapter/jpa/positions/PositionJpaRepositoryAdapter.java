@@ -13,6 +13,8 @@ import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +50,12 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
 
     @Override
     @Transactional
+    @Retryable(
+        includes = PessimisticLockingFailureException.class,
+        delayString = "${resilience.retry.delay:1000}",
+        jitterString = "${resilience.retry.jitter:0}",
+        multiplierString = "${resilience.retry.multiplier:1}",
+        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void create(@NonNull final Position position) {
         if (positionJpaRepository.existsById(position.getKey().value())) {
             log.error("Failed to create new position: key {} already exists", position.getKey());
@@ -58,6 +66,12 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
 
     @Override
     @Transactional
+    @Retryable(
+        includes = PessimisticLockingFailureException.class,
+        delayString = "${resilience.retry.delay:1000}",
+        jitterString = "${resilience.retry.jitter:0}",
+        multiplierString = "${resilience.retry.multiplier:1}",
+        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void update(@NonNull final Position position) {
         if (!positionJpaRepository.existsById(position.getKey().value())) {
             throw new NoSuchElementException("Position with key " + position.getKey() + " does not exist");
@@ -67,6 +81,12 @@ public class PositionJpaRepositoryAdapter implements PositionRepository {
 
     @Override
     @Transactional
+    @Retryable(
+        includes = PessimisticLockingFailureException.class,
+        delayString = "${resilience.retry.delay:1000}",
+        jitterString = "${resilience.retry.jitter:0}",
+        multiplierString = "${resilience.retry.multiplier:1}",
+        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void deleteByKey(@NonNull final PositionKey key) {
         if (!positionJpaRepository.existsById(key.value())) {
             throw new NoSuchElementException("Position with key " + key + " does not exist");

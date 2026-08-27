@@ -8,19 +8,13 @@ import org.eventplanner.events.domain.values.events.EventKey;
 import org.jspecify.annotations.NonNull;
 
 public interface EventRepository {
-    @NonNull
-    Optional<Event> findByKey(@NonNull EventKey key);
+    @NonNull Optional<Event> findByKey(@NonNull EventKey key);
 
-    @NonNull
-    List<Event> findAllByYear(int year);
+    @NonNull List<Event> findAllByYear(int year);
 
-    @NonNull
-    Event create(@NonNull Event event);
+    @NonNull Event create(@NonNull Event event);
 
-    @NonNull
-    Event update(@NonNull Event event);
+    @NonNull Event update(@NonNull Event event);
 
     void deleteByKey(@NonNull EventKey key);
-
-    void deleteAllByYear(int year);
 }
