@@ -692,7 +692,7 @@ describe('EventService', () => {
             expect(updatedEvent.canSignedInUserJoin).toBe(false);
         });
 
-        it('should calculate days corerctly', () => {
+        it('should calculate days correctly', () => {
             const oneDayEvent = mockEvent({ start: new Date('2024-07-10T09:00:00Z'), end: new Date('2024-07-10T17:00:00Z') });
             let updatedEvent = testee.updateComputedValues(oneDayEvent);
             expect(updatedEvent.days).toBe(1);
@@ -700,6 +700,21 @@ describe('EventService', () => {
             const multiDayEvent = mockEvent({ start: new Date('2024-07-10T09:00:00Z'), end: new Date('2024-07-17T17:00:00Z') });
             updatedEvent = testee.updateComputedValues(multiDayEvent);
             expect(updatedEvent.days).toBe(8);
+        });
+
+        describe('isSignedInUserAssigned', () => {
+            it('should return false for users without existing registration', () => {
+                expect(testee.isSignedInUserAssigned(futureEvent, userWithoutRegistration)).toBe(false);
+            });
+
+            it('should return true for events with signup-type Open', () => {
+                const event = { ...futureEvent, signupType: EventSignupType.Open };
+                expect(testee.isSignedInUserAssigned(event, userWithRegistration)).toBe(true);
+            });
+
+            it('should return true for users with assigned slot', () => {
+                expect(testee.isSignedInUserAssigned(futureEvent, userWithAssignment)).toBe(true);
+            });
         });
 
         describe('canSignedInUserJoin', () => {
