@@ -1,5 +1,5 @@
 <template>
-    <table class="block sm:table">
+    <table class="block sm:table" role="presentation">
         <tbody>
             <tr class="mb-2 block sm:table-row">
                 <td class="block pr-8 text-xs sm:table-cell sm:py-1 sm:text-base">{{ $t('domain.types.event') }}</td>

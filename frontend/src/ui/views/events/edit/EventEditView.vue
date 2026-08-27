@@ -65,6 +65,7 @@
                 <button
                     v-if="tab === Tab.EVENT_CREW_EDITOR"
                     class="permission-create-registrations btn-secondary"
+                    type="button"
                     @click="addRegistration()"
                 >
                     <i class="fa-solid fa-user-plus" />
@@ -73,18 +74,25 @@
                 <button
                     v-else-if="tab === Tab.EVENT_REGISTRATIONS"
                     class="permission-create-registrations btn-secondary"
+                    type="button"
                     @click="addRegistration()"
                 >
                     <i class="fa-solid fa-user-plus" />
                     <span>{{ $t('domain.registration.actions.create') }}</span>
                 </button>
-                <button v-else-if="tab === Tab.EVENT_SLOTS" class="permission-update-event-slots btn-secondary" @click="addSlot()">
+                <button
+                    v-else-if="tab === Tab.EVENT_SLOTS"
+                    class="permission-update-event-slots btn-secondary"
+                    type="button"
+                    @click="addSlot()"
+                >
                     <i class="fa-solid fa-list" />
                     <span>{{ $t('domain.event-slot.actions.create') }}</span>
                 </button>
                 <button
                     v-else-if="tab === Tab.EVENT_LOCATIONS"
                     class="permission-update-event-details btn-secondary"
+                    type="button"
                     @click="addLocation()"
                 >
                     <i class="fa-solid fa-route" />

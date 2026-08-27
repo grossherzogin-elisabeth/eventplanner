@@ -3,12 +3,12 @@
         <div v-if="events" class="flex h-full flex-1 flex-col">
             <div class="relative flex h-full flex-1 items-stretch">
                 <div class="bg-surface absolute top-0 left-0 z-30 hidden w-14 pt-0.5 lg:block xl:pt-6">
-                    <button class="btn-icon ml-5" name="previous" @click="scrollLeft()">
+                    <button class="btn-icon ml-5" type="button" name="previous" @click="scrollLeft()">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                 </div>
                 <div class="bg-surface absolute top-0 right-0 z-30 hidden w-14 pt-0.5 lg:block xl:pt-6">
-                    <button class="btn-icon" name="next" @click="scrollRight()">
+                    <button class="btn-icon" type="button" name="next" @click="scrollRight()">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>

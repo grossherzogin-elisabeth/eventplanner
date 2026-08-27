@@ -50,7 +50,7 @@
                 class="menu-item"
                 data-test-id="menu-item-calendar"
             >
-                <button @click="eventsExpanded = !eventsExpanded">
+                <button type="button" @click="eventsExpanded = !eventsExpanded">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>{{ $t('components.menu.calendar') }}</span>
                     <i class="menu-chevron fa-solid fa-chevron-right"></i>

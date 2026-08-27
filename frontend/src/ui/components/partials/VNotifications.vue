@@ -9,7 +9,7 @@
                         <i class="fa-solid text-xl" :class="notification.icon" />
                         <p class="text-sm font-bold">{{ notification.text }}</p>
                         <div class="w-0 grow"></div>
-                        <button class="self-stretch" @click="hideNotification(index)">
+                        <button class="self-stretch" type="button" @click="hideNotification(index)">
                             <i class="fa-solid fa-xmark text-xl"></i>
                         </button>
                     </div>

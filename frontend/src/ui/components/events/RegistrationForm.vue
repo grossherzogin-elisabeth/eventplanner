@@ -25,7 +25,7 @@
                     <p class="mb-1 text-sm font-bold">Deine Position</p>
                     <p>{{ positions.get(props.registration.positionKey).name }}</p>
                 </div>
-                <button v-if="availablePositionsForSignedInUser.length > 1" class="btn-icon -mr-4">
+                <button v-if="availablePositionsForSignedInUser.length > 1" class="btn-icon -mr-4" type="button">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
@@ -39,7 +39,7 @@
                     <p v-if="!props.registration.overnightStay">Nein</p>
                     <p v-else>Ja</p>
                 </div>
-                <button class="btn-icon -mr-4">
+                <button class="btn-icon -mr-4" type="button">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
@@ -52,7 +52,7 @@
                     <p v-if="props.registration.arrival">Ja</p>
                     <p v-else>Nein</p>
                 </div>
-                <button class="btn-icon -mr-4">
+                <button class="btn-icon -mr-4" type="button">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
@@ -65,7 +65,7 @@
                     <p v-if="props.registration.note" class="truncate italic">{{ props.registration.note }}</p>
                     <p v-else>-</p>
                 </div>
-                <button class="btn-icon -mr-4">
+                <button class="btn-icon -mr-4" type="button">
                     <i class="fa-solid fa-chevron-right" />
                 </button>
             </li>
