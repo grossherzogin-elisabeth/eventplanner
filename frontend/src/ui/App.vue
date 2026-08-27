@@ -67,7 +67,7 @@ function setTitle(): void {
 }
 
 onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info: string) => {
-    errorHandlingService.report(info, instance?.$.type.__name ?? 'Vue', error);
+    errorHandlingService.report(info, instance?.$options.name ?? instance?.$options.__name ?? 'Vue', error);
 });
 
 init();

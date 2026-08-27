@@ -1,6 +1,6 @@
 package org.eventplanner.events.application.usecases.errors;
 
-import org.eventplanner.events.domain.values.ErrorReport;
+import org.eventplanner.events.domain.values.errors.ErrorReport;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.event.Level;
@@ -19,7 +19,7 @@ public class ReportErrorsUseCase {
         log.atLevel(level)
             .addKeyValue("component", sanitizeInput(error.component()))
             .addKeyValue("stacktrace", sanitizeInput(error.stacktrace()))
-            .log("An exception occurred in the frontend: {}", sanitizeInput(error.message()));
+            .log(sanitizeInput(error.message()));
     }
 
     protected @Nullable String sanitizeInput(@Nullable String raw) {

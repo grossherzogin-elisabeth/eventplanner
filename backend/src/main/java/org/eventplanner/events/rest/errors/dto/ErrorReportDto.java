@@ -2,7 +2,7 @@ package org.eventplanner.events.rest.errors.dto;
 
 import java.io.Serializable;
 
-import org.eventplanner.events.domain.values.ErrorReport;
+import org.eventplanner.events.domain.values.errors.ErrorReport;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 

@@ -16,13 +16,6 @@ export class ErrorHandlingService {
     public constructor(params: { accountRepository: AccountRepository; errorReportingRepository: ErrorReportingRepository }) {
         this.accountRepository = params.accountRepository;
         this.errorReportingRepository = params.errorReportingRepository;
-        window.addEventListener('error', (event) => {
-            this.report(
-                event.message || 'Unhandled window error',
-                'window',
-                event.error ?? `${event.filename}:${event.lineno}:${event.colno}`
-            );
-        });
     }
 
     private errorHandler: (error: ErrorDetails) => void = (error: ErrorDetails) => {
@@ -34,14 +27,15 @@ export class ErrorHandlingService {
         this.errorHandler = handler;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public report(message: string, component: string, e?: any): void {
+    public report(message: string, component: string, e?: unknown | Error | Response): void {
         if (e instanceof Response) {
             // don't report errors that come from an unsuccessful request
             return;
         }
         console.log('📢 Reporting error');
-        this.errorReportingRepository.report(message, component, e?.stack || e?.message || e?.toString());
+        const stackTrace = e instanceof Error ? e.stack : e?.toString();
+        const msg = e instanceof Error ? `${message}: ${e.message}` : message;
+        this.errorReportingRepository.report(msg, component, stackTrace);
     }
 
     public handleError(error: ErrorDetails): void {
