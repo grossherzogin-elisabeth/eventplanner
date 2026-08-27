@@ -149,7 +149,12 @@ public enum Permission implements GrantedAuthority {
     /**
      * Allows updating the application settings
      */
-    UPDATE_APP_SETTINGS("application-settings:update");
+    UPDATE_APP_SETTINGS("application-settings:update"),
+
+    /**
+     * Allows reporting frontend errors, that will be logged in the backend
+     */
+    REPORT_ERRORS("errors:report");
 
     private final String value;
 
