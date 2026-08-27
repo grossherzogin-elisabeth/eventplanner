@@ -40,7 +40,7 @@ export class ErrorHandlingService {
             // don't report errors that come from an unsuccessful request
             return;
         }
-        console.log('Reporting error');
+        console.log('📢 Reporting error');
         this.errorReportingRepository.report(message, component, e?.stack || e?.message || e?.toString());
     }
 

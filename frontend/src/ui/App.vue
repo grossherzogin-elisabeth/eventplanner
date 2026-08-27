@@ -67,7 +67,7 @@ function setTitle(): void {
 }
 
 onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info: string) => {
-    errorHandlingService.report(`Vue error: ${info}`, instance?.$.type.__name ?? 'unknown-component', error);
+    errorHandlingService.report(info, instance?.$.type.__name ?? 'Vue', error);
 });
 
 init();

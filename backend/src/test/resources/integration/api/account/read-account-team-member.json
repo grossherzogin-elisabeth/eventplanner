@@ -16,7 +16,8 @@
     "users:read-own-details",
     "users:update-own-details",
     "positions:list",
-    "qualifications:list"
+    "qualifications:list",
+    "errors:report"
   ],
   "positions": [
     "08c609d2-26c9-4848-b17b-8feac2e2a91f"

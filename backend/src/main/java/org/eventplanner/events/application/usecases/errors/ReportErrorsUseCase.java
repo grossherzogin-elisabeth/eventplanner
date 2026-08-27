@@ -19,7 +19,7 @@ public class ReportErrorsUseCase {
         log.atLevel(level)
             .addKeyValue("component", sanitizeInput(error.component()))
             .addKeyValue("stacktrace", sanitizeInput(error.stacktrace()))
-            .log(sanitizeInput(error.message()));
+            .log("An exception occurred in the frontend: {}", sanitizeInput(error.message()));
     }
 
     protected @Nullable String sanitizeInput(@Nullable String raw) {
