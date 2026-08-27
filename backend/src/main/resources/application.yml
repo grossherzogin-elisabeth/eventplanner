@@ -18,34 +18,20 @@ build:
   branch: ${BUILD_BRANCH:main}
 
 notifications:
-  added-to-waiting-list:
-    enabled: true
-  removed-from-waiting-list:
-    enabled: true
-  added-to-crew:
-    enabled: true
-  removed-from-crew:
-    enabled: true
-  confirm-participation-request:
-    enabled: true
-  confirm-participation-reminder:
-    enabled: true
-  crew-registration-canceled:
-    enabled: true
-  crew-registration-added:
-    enabled: true
-  user-data-changed:
-    enabled: true
-  qualification-added:
-    enabled: true
-  qualification-updated:
-    enabled: true
-  qualification-removed:
-    enabled: true
-  qualification-close-to-expired:
-    enabled: false
-  qualification-expired:
-    enabled: false
+  added-to-waiting-list.enabled: true
+  removed-from-waiting-list.enabled: true
+  added-to-crew.enabled: true
+  removed-from-crew.enabled: true
+  confirm-participation-request.enabled: true
+  confirm-participation-reminder.enabled: true
+  crew-registration-canceled.enabled: true
+  crew-registration-added.enabled: true
+  user-data-changed.enabled: true
+  qualification-added.enabled: true
+  qualification-updated.enabled: true
+  qualification-removed.enabled: true
+  qualification-close-to-expired.enabled: false
+  qualification-expired.enabled: false
 
 email:
   enabled: true
@@ -84,6 +70,13 @@ data:
     old-secret: ${DATA_ENCRYPTION_PASSWORD_OLD:}
     new-secret: ${DATA_ENCRYPTION_PASSWORD:}
 
+resilience:
+  # default properties for retries
+  retry:
+    delay: 1000
+    jitter: 100
+    multiplier: 1.5
+    max-retries: 3
 
 # -----------------------------------
 # Framework properties
