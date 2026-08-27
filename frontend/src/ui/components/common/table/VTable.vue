@@ -77,9 +77,7 @@
                             <span v-if="row.selected">
                                 <i class="fa-solid fa-check text-xs"></i>
                             </span>
-                            <slot v-else name="icon" :item="row">
-                                <!--                                                                <i class="fa-solid fa-sailboat"></i>-->
-                            </slot>
+                            <slot v-else name="icon" :item="row" />
                         </div>
                     </td>
                     <slot
