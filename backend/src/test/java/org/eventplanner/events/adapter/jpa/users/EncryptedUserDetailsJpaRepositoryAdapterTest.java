@@ -87,13 +87,14 @@ class EncryptedUserDetailsJpaRepositoryAdapterTest {
 
     @Test
     void shouldRetryCreate() {
+        var user = UserFactory.createUser().encrypt(this::mockEncrypt);
+        var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
         when(repository.existsById(any())).thenReturn(false);
         when(repository.save(any()))
             .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
             .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
-            .thenReturn(mock(EncryptedUserDetailsJpaEntity.class));
+            .thenReturn(entity);
 
-        var user = UserFactory.createUser().encrypt(this::mockEncrypt);
         testee.create(user);
 
         verify(repository, times(3)).save(any());
@@ -101,13 +102,14 @@ class EncryptedUserDetailsJpaRepositoryAdapterTest {
 
     @Test
     void shouldRetryUpdate() {
+        var user = UserFactory.createUser().encrypt(this::mockEncrypt);
+        var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
         when(repository.existsById(any())).thenReturn(true);
         when(repository.save(any()))
             .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
             .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
-            .thenReturn(mock(EncryptedUserDetailsJpaEntity.class));
+            .thenReturn(entity);
 
-        var user = UserFactory.createUser().encrypt(this::mockEncrypt);
         testee.update(user);
 
         verify(repository, times(3)).save(any());
@@ -115,13 +117,14 @@ class EncryptedUserDetailsJpaRepositoryAdapterTest {
 
     @Test
     void shouldRetryDelete() {
+        var user = UserFactory.createUser().encrypt(this::mockEncrypt);
         when(repository.existsById(any())).thenReturn(true);
         doThrow(new CannotAcquireLockException("mocked 1st attempt"))
             .doThrow(new CannotAcquireLockException("mocked 2nd attempt"))
             .doNothing()
             .when(repository).deleteById(any());
 
-        testee.deleteByKey(mock());
+        testee.deleteByKey(user.getKey());
 
         verify(repository, times(3)).deleteById(any());
     }

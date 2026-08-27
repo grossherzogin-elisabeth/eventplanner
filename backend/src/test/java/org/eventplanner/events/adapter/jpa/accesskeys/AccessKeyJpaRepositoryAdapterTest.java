@@ -101,11 +101,12 @@ class AccessKeyJpaRepositoryAdapterTest {
 
     @Test
     void shouldRetryCreate() {
+        var entity = mock(AccessKeyJpaEntity.class);
         when(repository.existsById(any())).thenReturn(false);
         when(repository.save(any()))
             .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
             .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
-            .thenReturn(mock(AccessKeyJpaEntity.class));
+            .thenReturn(entity);
 
         testee.create(new UserKey("user-1"), "access-key-hash");
 

@@ -3,7 +3,6 @@ package org.eventplanner.events.adapter.jpa.notifications;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -53,13 +52,7 @@ class QueuedEmailJpaRepositoryAdapterTest {
 
     @Test
     void shouldRetryQueue() {
-        when(repository.existsById(any())).thenReturn(false);
-        when(repository.save(any()))
-            .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
-            .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
-            .thenReturn(mock(QueuedEmailJpaEntity.class));
-
-        testee.queue(new QueuedEmail(
+        var email = new QueuedEmail(
             "queued-email-1",
             NotificationType.ADDED_TO_CREW,
             "user@example.org",
@@ -68,7 +61,15 @@ class QueuedEmailJpaRepositoryAdapterTest {
             "body",
             0,
             Instant.now()
-        ));
+        );
+        var entity = QueuedEmailJpaEntity.fromDomain(email);
+        when(repository.existsById(any())).thenReturn(false);
+        when(repository.save(any()))
+            .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
+            .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
+            .thenReturn(entity);
+
+        testee.queue(email);
 
         verify(repository, times(3)).save(any());
     }

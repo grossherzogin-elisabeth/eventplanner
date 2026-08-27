@@ -63,4 +63,17 @@ public class QueuedEmailJpaEntity {
             Instant.parse(createdAt)
         );
     }
+
+    public static @NonNull QueuedEmailJpaEntity fromDomain(@NonNull QueuedEmail email) {
+        return new QueuedEmailJpaEntity(
+            email.getKey(),
+            email.getType().toString(),
+            email.getTo(),
+            email.getUserKey().toString(),
+            email.getSubject(),
+            email.getBody(),
+            email.getRetries(),
+            email.getCreatedAt().toString()
+        );
+    }
 }

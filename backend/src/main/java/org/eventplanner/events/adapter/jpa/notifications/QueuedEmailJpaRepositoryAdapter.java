@@ -39,16 +39,7 @@ public class QueuedEmailJpaRepositoryAdapter implements QueuedEmailRepository {
             log.error("Failed to queue email: key {} already exists", email.getKey());
             throw new IllegalStateException("Queued email with key " + email.getKey() + " already exists");
         }
-        repository.save(new QueuedEmailJpaEntity(
-            email.getKey(),
-            email.getType().toString(),
-            email.getTo(),
-            email.getUserKey().toString(),
-            email.getSubject(),
-            email.getBody(),
-            email.getRetries(),
-            email.getCreatedAt().toString()
-        ));
+        repository.save(QueuedEmailJpaEntity.fromDomain(email));
     }
 
     @Override
