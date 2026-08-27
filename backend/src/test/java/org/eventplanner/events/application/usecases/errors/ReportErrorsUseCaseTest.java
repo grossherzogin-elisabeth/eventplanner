@@ -19,7 +19,7 @@ class ReportErrorsUseCaseTest {
     @ParameterizedTest
     @CsvSource({
         "<script>alert(\"XSS\")</script>,*script*alert(*XSS*)*/script*",
-        "Lorem ispum dolor sit amet 1234,Lorem ispum dolor sit amet 1234",
+        "Lorem ipsum dolor sit amet 1234,Lorem ipsum dolor sit amet 1234",
     })
     void shouldSanitizeStrings(String in, String out) {
         assertThat(testee.sanitizeInput(in)).isEqualTo(out);
