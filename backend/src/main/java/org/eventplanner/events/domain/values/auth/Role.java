@@ -46,6 +46,7 @@ public enum Role {
         return switch (this) {
             case ADMIN -> Stream.of(Permission.values());
             case NONE -> Stream.of(
+                Permission.REPORT_ERRORS,
                 Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER,
                 Permission.UPDATE_OWN_USER,
@@ -53,6 +54,7 @@ public enum Role {
                 Permission.LIST_QUALIFICATIONS
             );
             case TEAM_MEMBER -> Stream.of(
+                Permission.REPORT_ERRORS,
                 Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER,
                 Permission.UPDATE_OWN_USER,
@@ -66,6 +68,7 @@ public enum Role {
                 Permission.DECLINE_OWN_REGISTRATIONS
             );
             case EVENT_PLANNER -> Stream.of(
+                Permission.REPORT_ERRORS,
                 Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER,
                 Permission.UPDATE_OWN_USER,
@@ -81,6 +84,7 @@ public enum Role {
                 Permission.EXPORT_EVENTS
             );
             case TEAM_PLANNER -> Stream.of(
+                Permission.REPORT_ERRORS,
                 Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER,
                 Permission.UPDATE_OWN_USER,
@@ -96,6 +100,7 @@ public enum Role {
                 Permission.EXPORT_EVENTS
             );
             case USER_MANAGER -> Stream.of(
+                Permission.REPORT_ERRORS,
                 Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER,
                 Permission.UPDATE_OWN_USER,
@@ -116,6 +121,7 @@ public enum Role {
                 Permission.DELETE_USERS
             );
             case EVENT_LEADER -> Stream.of(
+                Permission.REPORT_ERRORS,
                 Permission.READ_ACCOUNT,
                 Permission.READ_OWN_USER,
                 Permission.UPDATE_OWN_USER,

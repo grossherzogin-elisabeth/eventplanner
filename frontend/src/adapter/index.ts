@@ -1,7 +1,8 @@
 import { getConnection } from '@/adapter/indexeddb/IndexedDB.ts';
 import { IndexedDBStorage } from '@/adapter/indexeddb/IndexedDBStorage.ts';
 import { InMemoryStorage } from '@/adapter/memory/InMemoryStorage.ts';
-import type { CacheableEntity, Storage } from '@/application';
+import { ErrorReportingRestRepository } from '@/adapter/rest/ErrorReportingRestRepository.ts';
+import type { CacheableEntity, ErrorReportingRepository, Storage } from '@/application';
 import type {
     AccountRepository,
     EventRegistrationsRepository,
@@ -26,6 +27,7 @@ let positionRepository: PositionRepository | undefined;
 let qualificationRepository: QualificationRepository | undefined;
 let settingsRepository: SettingsRepository | undefined;
 let userRepository: UserRepository | undefined;
+let errorReportingRepository: ErrorReportingRepository | undefined;
 let indexedDb: Promise<IDBDatabase> | undefined;
 const caches = new Map<string, Storage<string | number, CacheableEntity<string | number>>>();
 
@@ -102,6 +104,14 @@ export function useUserRepository(): UserRepository {
         userRepository = new UserRestRepository();
     }
     return userRepository;
+}
+
+export function useErrorReportingRepository(): ErrorReportingRepository {
+    if (!errorReportingRepository) {
+        console.log('🚀 Initializing ErrorReportingRepository');
+        errorReportingRepository = new ErrorReportingRestRepository();
+    }
+    return errorReportingRepository;
 }
 
 function useIndexedDb(): Promise<IDBDatabase> {

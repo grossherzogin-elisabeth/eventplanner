@@ -24,8 +24,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
-import { useConfigService } from '@/application';
+import type { ComponentPublicInstance } from 'vue';
+import { onErrorCaptured, ref, watch } from 'vue';
+import { useConfigService, useErrorHandlingService } from '@/application';
 import { Permission } from '@/domain';
 import { VErrorDialog, VLoadingSpinner } from '@/ui/components/common';
 import AppMenu from '@/ui/components/partials/AppMenu.vue';
@@ -38,6 +39,7 @@ import { useRouter } from 'vue-router';
 useViewportSize();
 const router = useRouter();
 const configService = useConfigService();
+const errorHandlingService = useErrorHandlingService();
 const { signedInUser } = useSession();
 
 const title = ref<string>('');
@@ -63,6 +65,10 @@ function setTitle(): void {
         document.title = tabTitle;
     }
 }
+
+onErrorCaptured((error: unknown, instance: ComponentPublicInstance | null, info: string) => {
+    errorHandlingService.report(info, instance?.$options.name ?? instance?.$options.__name ?? 'Vue', error);
+});
 
 init();
 </script>

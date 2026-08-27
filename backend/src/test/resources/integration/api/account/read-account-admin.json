@@ -39,7 +39,8 @@
     "qualifications:delete",
     "access-keys:delete",
     "application-settings:read",
-    "application-settings:update"
+    "application-settings:update",
+    "errors:report"
   ],
   "positions": [
     "08c609d2-26c9-4848-b17b-8feac2e2a91f"

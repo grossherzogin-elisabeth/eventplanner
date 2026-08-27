@@ -1,5 +1,6 @@
 import {
     useAccountRepository,
+    useErrorReportingRepository,
     useEventRepository,
     usePositionRepository,
     useQualificationRepository,
@@ -73,6 +74,7 @@ export function useErrorHandlingService(): ErrorHandlingService {
         console.log('🚀 Initializing ErrorHandlingService');
         errorHandlingService = new ErrorHandlingService({
             accountRepository: useAccountRepository(),
+            errorReportingRepository: useErrorReportingRepository(),
         });
     }
     return errorHandlingService;
