@@ -32,6 +32,7 @@ data:
 
 resilience:
   retry:
+    # set to constant 1ms to speed up tests
     delay: 1
     jitter: 0
     multiplier: 1
