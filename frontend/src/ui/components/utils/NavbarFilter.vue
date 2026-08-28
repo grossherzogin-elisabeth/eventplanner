@@ -11,6 +11,7 @@
                     <i class="fa-solid fa-search"></i>
                 </button>
                 <input
+                    id="navbar-input"
                     ref="input"
                     name="search"
                     :value="props.modelValue"

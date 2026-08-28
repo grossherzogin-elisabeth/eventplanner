@@ -18,22 +18,22 @@
                 <EventDetails v-if="event" :event="event" class="mb-8" />
 
                 <div class="hidden items-center gap-4 sm:flex">
-                    <button class="btn-primary" data-test-id="button-confirm" @click="confirm()">
+                    <button class="btn-primary" type="button" data-test-id="button-confirm" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
                         <span class="py-2 sm:py-0">{{ $t('views.event-confirm-participation.confirm') }}</span>
                     </button>
-                    <button class="btn-danger" data-test-id="button-decline" @click="decline()">
+                    <button class="btn-danger" type="button" data-test-id="button-decline" @click="decline()">
                         <i class="fa-solid fa-xmark"></i>
                         <span class="py-2 sm:py-0">{{ $t('views.event-confirm-participation.decline') }}</span>
                     </button>
                 </div>
                 <div class="h-20 sm:hidden"></div>
                 <div class="bg-surface fixed right-0 bottom-0 left-0 flex flex-col items-stretch gap-4 px-4 py-2 sm:hidden">
-                    <button class="btn-primary" data-test-id="button-confirm" @click="confirm()">
+                    <button class="btn-primary" type="button" data-test-id="button-confirm" @click="confirm()">
                         <i class="fa-solid fa-check"></i>
                         <span class="py-2 text-sm whitespace-normal">{{ $t('views.event-confirm-participation.confirm') }}</span>
                     </button>
-                    <button class="btn-danger" data-test-id="button-decline" @click="decline()">
+                    <button class="btn-danger" type="button" data-test-id="button-decline" @click="decline()">
                         <i class="fa-solid fa-xmark"></i>
                         <span class="py-2 text-sm whitespace-normal">{{ $t('views.event-confirm-participation.decline') }}</span>
                     </button>

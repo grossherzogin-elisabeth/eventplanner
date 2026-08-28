@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="mb-4 flex justify-end">
-                        <button class="link text-sm" @click="location.eta = undefined">
+                        <button class="link text-sm" type="button" @click="location.eta = undefined">
                             {{ $t('domain.location.actions.delete-eta') }}
                         </button>
                     </div>
@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     <div class="mb-4 flex justify-end">
-                        <button class="link text-sm" @click="location.etd = undefined">
+                        <button class="link text-sm" type="button" @click="location.etd = undefined">
                             {{ $t('domain.location.actions.delete-etd') }}
                         </button>
                     </div>

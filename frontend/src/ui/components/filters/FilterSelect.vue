@@ -6,6 +6,7 @@
             <button
                 v-if="modelValue"
                 class="text-xs opacity-75 transition-colors duration-1000 hover:opacity-100"
+                type="button"
                 @click.stop="modelValue = undefined"
             >
                 <i class="fa-solid fa-close" />

@@ -51,7 +51,7 @@
                     {{ $t('domain.registration.actions.leave-waiting-list') }}
                 </template>
             </AsyncButton>
-            <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
+            <button v-else class="btn-primary max-w-80" type="button" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
                 <i class="fa-solid fa-user-plus" />
                 <span class="truncate text-left"> {{ $t('domain.event.actions.sign-up') }} </span>
             </button>
@@ -61,7 +61,7 @@
                 <i class="fa-solid fa-drafting-compass" />
                 <span>{{ $t('domain.event.actions.edit') }}</span>
             </RouterLink>
-            <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
+            <button v-else class="btn-secondary" type="button" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
                 <span>{{ $t('domain.event.actions.create-calendar-entry') }}</span>
             </button>

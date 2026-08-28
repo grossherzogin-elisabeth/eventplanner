@@ -75,6 +75,7 @@
                 <div class="hidden sm:inline">
                     <button
                         class="btn-ghost"
+                        type="button"
                         :disabled="!hasAnySelectedEventInFuture || signedInUser?.positions.length === 0"
                         @click="joinEvents(selectedEvents)"
                     >

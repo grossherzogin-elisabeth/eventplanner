@@ -325,7 +325,7 @@ async function fetchEvents(): Promise<void> {
             eventUseCase.getEvents(currentYear),
             eventUseCase.getEvents(currentYear + 1),
         ])
-    ).flatMap((array) => array);
+    ).flat();
 }
 
 async function fetchUsers(): Promise<void> {
