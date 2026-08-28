@@ -75,7 +75,7 @@ public class GlobalExceptionHandlingController {
         @NonNull final NoSuchElementException exception,
         @NonNull final HttpServletRequest request
     ) {
-        log.error(
+        log.warn(
             "Tried to access non existing element on request {} {}: {}",
             request.getMethod(),
             request.getRequestURI(),
