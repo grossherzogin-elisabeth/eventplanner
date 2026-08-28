@@ -17,6 +17,7 @@ public class ReportErrorsUseCase {
     @PreAuthorize("hasAuthority('errors:report')")
     public void report(@NonNull final Level level, @NonNull @Valid final ErrorReport error) {
         log.atLevel(level)
+            .addKeyValue("frontend_url", sanitizeInput(error.url()))
             .addKeyValue("component", sanitizeInput(error.component()))
             .addKeyValue("stacktrace", sanitizeInput(error.stacktrace()))
             .log(sanitizeInput(error.message()));
