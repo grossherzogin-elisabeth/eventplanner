@@ -161,7 +161,7 @@ const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(),
 const eventsExpanded = ref<boolean>(false);
 
 function init(): void {
-    if (signedInUser) {
+    if (signedInUser.value) {
         loading.value = false;
     } else {
         authUseCase.onLogin().then(() => (loading.value = false));

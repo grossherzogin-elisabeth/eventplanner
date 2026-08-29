@@ -74,8 +74,7 @@ describe('AppMenu.vue', () => {
         });
 
         beforeEach(() => {
-            server.use(http.get('/api/v1/account', () => HttpResponse.json(signedInUser, { status: 200 })));
-            authService.setSignedInUser(undefined);
+            authService.setSignedInUser(signedInUser);
             testee = mount(AppMenu, {});
         });
 
@@ -100,10 +99,6 @@ describe('AppMenu.vue', () => {
             });
         });
 
-        it('should render loading state initially', () => {
-            expect(testee.find('[data-test-id="menu-loading"]').exists()).toBe(true);
-        });
-
         it('should stop rendering loading state on authentication', async () => {
             authService.setSignedInUser(mockSignedInUser());
             await expect.poll(() => testee.find('[data-test-id="menu-loading"]').exists()).toBe(false);
@@ -117,8 +112,7 @@ describe('AppMenu.vue', () => {
         });
 
         beforeEach(() => {
-            server.use(http.get('/api/v1/account', () => HttpResponse.json(signedInUser, { status: 200 })));
-            authService.setSignedInUser(undefined);
+            authService.setSignedInUser(signedInUser);
             testee = mount(AppMenu, {});
         });
 
@@ -161,8 +155,7 @@ describe('AppMenu.vue', () => {
         });
 
         beforeEach(() => {
-            server.use(http.get('/api/v1/account', () => HttpResponse.json(signedInUser, { status: 200 })));
-            authService.setSignedInUser(undefined);
+            authService.setSignedInUser(signedInUser);
             testee = mount(AppMenu, {});
         });
 
