@@ -6,11 +6,11 @@
             </div>
         </teleport>
 
-        <div v-if="signedInUser?.positions.length === 0" class="px-4 md:px-12 xl:px-16">
+        <MainContent v-if="signedInUser?.positions.length === 0">
             <VInfo class="mt-4 xl:mt-8" clamp>
                 {{ $t('views.event-list.note-no-position') }}
             </VInfo>
-        </div>
+        </MainContent>
 
         <VTabs v-model="tab" :tabs="tabs" class="bg-surface sticky top-12 z-20 pt-4 xl:top-0 xl:pt-8">
             <template #end>
