@@ -7,7 +7,7 @@
             <p class="w-0 grow truncate font-semibold" :title="props.value?.name">{{ props.value?.name }}</p>
             <UserQualificationStatus :value="props.value" class="text-xs sm:hidden" />
         </div>
-        <div class="mb-2 flex flex-wrap items-center justify-start sm:hidden">
+        <div class="mb-2 flex flex-wrap items-center justify-start gap-1 sm:hidden">
             <span
                 v-for="positionKey in props.value?.grantsPositions"
                 :key="positionKey"
@@ -28,7 +28,7 @@
     </td>
 
     <td class="hidden w-1/6 sm:table-cell">
-        <div class="flex flex-wrap items-center justify-end">
+        <div class="flex flex-wrap items-center justify-end gap-1">
             <span
                 v-for="positionKey in props.value?.grantsPositions"
                 :key="positionKey"
