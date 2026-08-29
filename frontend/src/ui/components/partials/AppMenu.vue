@@ -161,10 +161,12 @@ const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(),
 const eventsExpanded = ref<boolean>(false);
 
 function init(): void {
-    authUseCase
-        .authenticate(false)
-        .then(() => (loading.value = false))
-        .catch(() => (loading.value = false));
+    if (signedInUser.value) {
+        loading.value = false;
+    } else {
+        authUseCase.onLogin().then(() => (loading.value = false));
+        authUseCase.onLogout().then(() => (loading.value = false));
+    }
     watch(route, () => {
         eventRouteActive.value = route.matched.some((it) => it.name === 'app_event-parent');
         if (route.name === Routes.EventsCalendar) {
