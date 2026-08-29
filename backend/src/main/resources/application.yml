@@ -53,6 +53,8 @@ auth:
     hash-secret: ${ACCESS_KEY_HASH_SECRET:default-access-key-hash-secret}
     # Maximum age for access keys before scheduled cleanup removes them
     max-age: ${ACCESS_KEY_EXPIRATION:P21D}
+  csrf:
+    enabled: ${CSRF_ENABLED:true}
 
 templates:
   directory: ${data.directory}/templates/excel
