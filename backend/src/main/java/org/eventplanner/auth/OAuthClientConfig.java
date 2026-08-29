@@ -37,7 +37,10 @@ public class OAuthClientConfig {
         });
 
         http.logout(logout -> {
-            logout.logoutUrl("/auth/logout");
+            // TODO Springs uses POST requests for logout by default, which allows to also get CSRF protection. However,
+            //  we have to figure out how to add the CSRF token in a page load form request. Until then we allow GET
+            //  requests to get the logout working and accept the risk of CSRF logout attacks.
+            logout.logoutRequestMatcher(request -> request.getRequestURI().equals("/auth/logout"));
             logout.addLogoutHandler(oAuthLogoutHandler);
             logout.logoutSuccessUrl(loginSuccessUrl);
         });
