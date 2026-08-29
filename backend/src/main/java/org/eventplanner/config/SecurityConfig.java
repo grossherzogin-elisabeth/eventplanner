@@ -61,6 +61,7 @@ public class SecurityConfig {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .spa());
         } else {
+            // disable CSRF, useful for testing
             log.warn("CSRF protection is disabled");
             http.csrf(AbstractHttpConfigurer::disable);
         }
