@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EventJpaRepository extends JpaRepository<EventJpaEntity, String> {
 
-    @NonNull
-    List<EventJpaEntity> findAllByYear(int year);
+    @NonNull List<EventJpaEntity> findAllByYear(int year);
 
     void deleteAllByYear(int year);
 }

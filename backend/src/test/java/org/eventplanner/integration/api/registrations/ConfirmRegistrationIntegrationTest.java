@@ -157,7 +157,7 @@ class ConfirmRegistrationIntegrationTest extends EmailSpy {
     private void saveTestEvent(Event event) {
         eventJpaRepository.save(EventJpaEntity.fromDomain(event));
         registrationJpaRepository.saveAll(event.getRegistrations().stream()
-            .map(r -> RegistrationJpaEntity.fromDomain(r, event.getKey()))
+            .map(r -> RegistrationJpaEntity.fromDomain(r, event))
             .toList());
     }
 }

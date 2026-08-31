@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HttpResponse, http } from 'msw';
-import type { AccountRepository } from '@/application/ports';
+import type { AccountRepository, ErrorReportingRepository } from '@/application/ports';
 import type { ErrorHandlingService } from '@/application/services';
 import { ErrorHandlingService as ErrorHandlingServiceImpl } from '@/application/services';
 import { useErrorHandlingService } from '@/application/services';
@@ -82,7 +82,10 @@ describe('ErrorHandlingService', () => {
             login: vi.fn(async () => undefined),
             logout: vi.fn(async () => undefined),
         };
-        const service = new ErrorHandlingServiceImpl({ accountRepository });
+        const errorReportingRepository: ErrorReportingRepository = {
+            report: vi.fn(async () => undefined),
+        };
+        const service = new ErrorHandlingServiceImpl({ accountRepository, errorReportingRepository });
 
         try {
             service.handleRawError(new Response('', { status: 401 }));
@@ -99,7 +102,10 @@ describe('ErrorHandlingService', () => {
             login: vi.fn(async () => undefined),
             logout: vi.fn(async () => undefined),
         };
-        const service = new ErrorHandlingServiceImpl({ accountRepository });
+        const errorReportingRepository: ErrorReportingRepository = {
+            report: vi.fn(async () => undefined),
+        };
+        const service = new ErrorHandlingServiceImpl({ accountRepository, errorReportingRepository });
         const handler = vi.fn();
         service.registerErrorHandler(handler);
 

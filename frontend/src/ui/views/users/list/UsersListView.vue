@@ -10,7 +10,7 @@
                     <div class="hidden lg:block">
                         <VSearchButton v-model="filter" :placeholder="$t('generic.filter-entries')" />
                     </div>
-                    <div v-if="hasPermission(Permission.WRITE_USERS)" class="z-10 hidden 2xl:block">
+                    <div v-if="hasPermission(Permission.UPDATE_USERS)" class="z-10 hidden 2xl:block">
                         <button class="btn-primary" name="create" type="button" @click="createUser()">
                             <i class="fa-solid fa-user-plus"></i>
                             <span>{{ $t('domain.user.actions.create') }}</span>
@@ -113,7 +113,7 @@
         <!-- the floating action button would overlap with the multiselect actions, so only show one of those two -->
         <div
             v-else
-            class="permission-write-users pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden"
+            class="permission-create-users pointer-events-none sticky right-0 bottom-0 z-10 mt-4 flex justify-end pr-3 pb-4 md:pr-7 xl:pr-12 2xl:hidden"
         >
             <button class="btn-floating pointer-events-auto" type="button" @click="createUser()">
                 <i class="fa-solid fa-user-plus"></i>
@@ -265,7 +265,7 @@ function createUser(): void {
 }
 
 async function editUser(user: User, evt: MouseEvent): Promise<void> {
-    if (!hasPermission(Permission.READ_USER_DETAILS)) {
+    if (!hasPermission(Permission.READ_DETAILED_USERS)) {
         console.error('User has no permission to edit users.');
         return;
     }
@@ -325,7 +325,7 @@ async function fetchEvents(): Promise<void> {
             eventUseCase.getEvents(currentYear),
             eventUseCase.getEvents(currentYear + 1),
         ])
-    ).flatMap((array) => array);
+    ).flat();
 }
 
 async function fetchUsers(): Promise<void> {

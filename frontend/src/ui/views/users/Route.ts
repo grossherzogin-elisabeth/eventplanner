@@ -6,7 +6,7 @@ import List from './list/NestedRoute.ts';
 
 const routeMeta: RouteMetaData = {
     authenticated: true,
-    permissions: [Permission.READ_USER_DETAILS],
+    permissions: [Permission.READ_DETAILED_USERS],
 };
 
 const route: RouteRecordRaw = {

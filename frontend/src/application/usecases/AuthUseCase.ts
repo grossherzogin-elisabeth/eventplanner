@@ -50,7 +50,7 @@ export class AuthUseCase {
 
     private async impersonate(signedInUser: SignedInUser): Promise<SignedInUser> {
         const overrideSignedInUserKey = this.configService.getConfig().overrideSignedInUserKey;
-        if (signedInUser && overrideSignedInUserKey && signedInUser.permissions.includes(Permission.READ_USER_DETAILS)) {
+        if (signedInUser && overrideSignedInUserKey && signedInUser.permissions.includes(Permission.READ_DETAILED_USERS)) {
             const impersonatedUser = await this.userRepository.findByKey(overrideSignedInUserKey);
             if (impersonatedUser) {
                 this.authService.impersonate(impersonatedUser);

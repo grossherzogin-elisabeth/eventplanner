@@ -107,7 +107,7 @@
             </div>
         </template>
         <template #buttons>
-            <button class="btn-ghost" data-test-id="button-cancel" @click="cancel">
+            <button class="btn-ghost" type="button" data-test-id="button-cancel" @click="cancel">
                 <span>{{ $t('generic.cancel') }}</span>
             </button>
             <AsyncButton
@@ -161,6 +161,7 @@ const event = ref<Event>({
     canSignedInUserJoin: false,
     canSignedInUserLeave: false,
     canSignedInUserUpdateRegistration: false,
+    canSignedInUserCreateExports: false,
 });
 const validation = useValidation(event, eventService.validate);
 

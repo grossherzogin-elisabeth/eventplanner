@@ -18,41 +18,27 @@ build:
   branch: ${BUILD_BRANCH:main}
 
 notifications:
-  added-to-waiting-list:
-    enabled: true
-  removed-from-waiting-list:
-    enabled: true
-  added-to-crew:
-    enabled: true
-  removed-from-crew:
-    enabled: true
-  confirm-participation-request:
-    enabled: true
-  confirm-participation-reminder:
-    enabled: true
-  crew-registration-canceled:
-    enabled: true
-  crew-registration-added:
-    enabled: true
-  user-data-changed:
-    enabled: true
-  qualification-added:
-    enabled: true
-  qualification-updated:
-    enabled: true
-  qualification-removed:
-    enabled: true
-  qualification-close-to-expired:
-    enabled: false
-  qualification-expired:
-    enabled: false
+  added-to-waiting-list.enabled: true
+  removed-from-waiting-list.enabled: true
+  added-to-crew.enabled: true
+  removed-from-crew.enabled: true
+  confirm-participation-request.enabled: true
+  confirm-participation-reminder.enabled: true
+  crew-registration-canceled.enabled: true
+  crew-registration-added.enabled: true
+  user-data-changed.enabled: true
+  qualification-added.enabled: true
+  qualification-updated.enabled: true
+  qualification-removed.enabled: true
+  qualification-close-to-expired.enabled: false
+  qualification-expired.enabled: false
 
 email:
   enabled: true
   # If not empty, email notifications will only be sent to these email addresses
   recipients-whitelist: ${EMAIL_WHITELIST:}
   # Adds a prefix to the subject of all emails sent by the application
-  title-prefix: ''
+  title-prefix: ${EMAIL_PREFIX:}
 
 auth:
   logout-success-url: ${frontend.url}/login
@@ -84,6 +70,13 @@ data:
     old-secret: ${DATA_ENCRYPTION_PASSWORD_OLD:}
     new-secret: ${DATA_ENCRYPTION_PASSWORD:}
 
+resilience:
+  # default properties for retries
+  retry:
+    delay: 1000
+    jitter: 100
+    multiplier: 1.5
+    max-retries: 3
 
 # -----------------------------------
 # Framework properties
@@ -105,6 +98,7 @@ spring:
     locations: classpath:db/migration
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
+    open-in-view: true
     hibernate:
       ddl-auto: none
   security:
@@ -115,11 +109,14 @@ spring:
             issuer-uri: ${OAUTH_ISSUER_URI}
         registration:
           default:
-            client-id: ${OAUTH_CLIENT_ID:eventplanner}
-            client-secret: ${OAUTH_CLIENT_SECRET:********************}
+            client-id: ${OAUTH_CLIENT_ID}
+            client-secret: ${OAUTH_CLIENT_SECRET}
             provider: default
             redirect-uri: ${frontend.url}/login/oauth2/code/default
-            scope: openid,email,profile
+            scope:
+              - openid
+              - email
+              - profile
   servlet:
     multipart:
       max-file-size: 10MB

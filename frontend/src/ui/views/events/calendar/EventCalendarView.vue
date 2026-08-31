@@ -3,12 +3,12 @@
         <div v-if="events" class="flex h-full flex-1 flex-col">
             <div class="relative flex h-full flex-1 items-stretch">
                 <div class="bg-surface absolute top-0 left-0 z-30 hidden w-14 pt-0.5 lg:block xl:pt-6">
-                    <button class="btn-icon ml-5" name="previous" @click="scrollLeft()">
+                    <button class="btn-icon ml-5" type="button" name="previous" @click="scrollLeft()">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                 </div>
                 <div class="bg-surface absolute top-0 right-0 z-30 hidden w-14 pt-0.5 lg:block xl:pt-6">
-                    <button class="btn-icon" name="next" @click="scrollRight()">
+                    <button class="btn-icon" type="button" name="next" @click="scrollRight()">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
@@ -16,7 +16,7 @@
                     ref="calendar"
                     :style="calendarStyle"
                     class="calendar"
-                    :class="{ 'enable-create': hasPermission(Permission.WRITE_EVENTS) }"
+                    :class="{ 'enable-create': hasPermission(Permission.UPDATE_EVENTS) }"
                 >
                     <div v-for="m in months.entries()" :key="m[0]" class="calendar-month">
                         <div class="calendar-header">
@@ -221,14 +221,14 @@ function updateEvent(event: Event): void {
 }
 
 function startCreateEventDrag(date: Date): void {
-    if (hasPermission(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.UPDATE_EVENTS)) {
         createEventFromDate.value = date;
         calendarStyle.value['--create-event-days'] = 1;
     }
 }
 
 async function stopCreateEventDrag(date: Date): Promise<void> {
-    if (hasPermission(Permission.WRITE_EVENTS)) {
+    if (hasPermission(Permission.UPDATE_EVENTS)) {
         const from = createEventFromDate.value;
         const to = date;
         if (from && to && createEventDialog.value) {
@@ -243,7 +243,7 @@ async function stopCreateEventDrag(date: Date): Promise<void> {
 }
 
 function updateCreateEventDrag(date: Date): void {
-    if (hasPermission(Permission.WRITE_EVENTS) && createEventFromDate.value !== null) {
+    if (hasPermission(Permission.UPDATE_EVENTS) && createEventFromDate.value !== null) {
         const durationMillis = date.getTime() - createEventFromDate.value.getTime();
         if (durationMillis >= 0) {
             calendarStyle.value['--create-event-days'] = new Date(durationMillis).getDate();

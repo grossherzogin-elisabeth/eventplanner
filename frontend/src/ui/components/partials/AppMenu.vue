@@ -50,7 +50,7 @@
                 class="menu-item"
                 data-test-id="menu-item-calendar"
             >
-                <button @click="eventsExpanded = !eventsExpanded">
+                <button type="button" @click="eventsExpanded = !eventsExpanded">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>{{ $t('components.menu.calendar') }}</span>
                     <i class="menu-chevron fa-solid fa-chevron-right"></i>
@@ -80,7 +80,7 @@
                 </RouterLink>
             </li>
             <li
-                v-if="hasPermission(Permission.WRITE_EVENTS)"
+                v-if="hasPermission(Permission.UPDATE_EVENTS)"
                 class="menu-item"
                 data-test-id="menu-item-event-admin"
                 :class="{ active: eventRouteActive && eventRoute === Routes.EventsListAdmin }"
@@ -90,14 +90,14 @@
                     <span>{{ $t('components.menu.events-admin') }}</span>
                 </RouterLink>
             </li>
-            <li v-if="hasPermission(Permission.READ_USER_DETAILS)" class="menu-item" data-test-id="menu-item-user-list">
+            <li v-if="hasPermission(Permission.LIST_DETAILED_USERS)" class="menu-item" data-test-id="menu-item-user-list">
                 <RouterLink :to="{ name: Routes.UsersList }">
                     <i class="fa-solid fa-users"></i>
-                    <span v-if="hasPermission(Permission.WRITE_USERS)">{{ $t('components.menu.users-admin') }}</span>
+                    <span v-if="hasPermission(Permission.UPDATE_USERS)">{{ $t('components.menu.users-admin') }}</span>
                     <span v-else>{{ $t('components.menu.users') }}</span>
                 </RouterLink>
             </li>
-            <li v-if="hasPermission(Permission.WRITE_SETTINGS)" class="menu-item" data-test-id="menu-item-admin-settings">
+            <li v-if="hasPermission(Permission.UPDATE_SETTINGS)" class="menu-item" data-test-id="menu-item-admin-settings">
                 <RouterLink :to="{ name: Routes.AppSettings }">
                     <i class="fa-solid fa-gear"></i>
                     <span>{{ $t('components.menu.settings') }}</span>
@@ -161,10 +161,12 @@ const years: number[] = [new Date().getFullYear() - 1, new Date().getFullYear(),
 const eventsExpanded = ref<boolean>(false);
 
 function init(): void {
-    authUseCase
-        .authenticate(false)
-        .then(() => (loading.value = false))
-        .catch(() => (loading.value = false));
+    if (signedInUser.value) {
+        loading.value = false;
+    } else {
+        authUseCase.onLogin().then(() => (loading.value = false));
+        authUseCase.onLogout().then(() => (loading.value = false));
+    }
     watch(route, () => {
         eventRouteActive.value = route.matched.some((it) => it.name === 'app_event-parent');
         if (route.name === Routes.EventsCalendar) {

@@ -50,7 +50,7 @@
                 </template>
             </VTabs>
         </template>
-        <template v-if="hasPermission(Permission.WRITE_EVENTS)" #primary-button>
+        <template v-if="hasPermission(Permission.UPDATE_EVENTS)" #primary-button>
             <AsyncButton :action="saveIfValid" :disabled="!validation.isValid" name="save">
                 <template #icon>
                     <i class="fa-solid fa-save" />
@@ -64,7 +64,8 @@
             <div class="hidden items-stretch space-x-2 lg:flex">
                 <button
                     v-if="tab === Tab.EVENT_CREW_EDITOR"
-                    class="permission-write-registrations btn-secondary"
+                    class="permission-create-registrations btn-secondary"
+                    type="button"
                     @click="addRegistration()"
                 >
                     <i class="fa-solid fa-user-plus" />
@@ -72,37 +73,48 @@
                 </button>
                 <button
                     v-else-if="tab === Tab.EVENT_REGISTRATIONS"
-                    class="permission-write-registrations btn-secondary"
+                    class="permission-create-registrations btn-secondary"
+                    type="button"
                     @click="addRegistration()"
                 >
                     <i class="fa-solid fa-user-plus" />
                     <span>{{ $t('domain.registration.actions.create') }}</span>
                 </button>
-                <button v-else-if="tab === Tab.EVENT_SLOTS" class="permission-write-event-slots btn-secondary" @click="addSlot()">
+                <button
+                    v-else-if="tab === Tab.EVENT_SLOTS"
+                    class="permission-update-event-slots btn-secondary"
+                    type="button"
+                    @click="addSlot()"
+                >
                     <i class="fa-solid fa-list" />
                     <span>{{ $t('domain.event-slot.actions.create') }}</span>
                 </button>
-                <button v-else-if="tab === Tab.EVENT_LOCATIONS" class="permission-write-event-details btn-secondary" @click="addLocation()">
+                <button
+                    v-else-if="tab === Tab.EVENT_LOCATIONS"
+                    class="permission-update-event-details btn-secondary"
+                    type="button"
+                    @click="addLocation()"
+                >
                     <i class="fa-solid fa-route" />
                     <span>{{ $t('domain.location.actions.create') }}</span>
                 </button>
             </div>
         </template>
         <template #actions-menu>
-            <li class="permission-write-registrations context-menu-item" data-test-id="action-add-registration" @click="addRegistration()">
+            <li class="permission-create-registrations context-menu-item" data-test-id="action-add-registration" @click="addRegistration()">
                 <i class="fa-solid fa-user-plus" />
                 <span>{{ $t('domain.registration.actions.create') }}</span>
             </li>
             <li
                 v-if="event?.signupType === EventSignupType.Assignment"
-                class="permission-write-event-slots context-menu-item"
+                class="permission-update-event-slots context-menu-item"
                 data-test-id="action-add-slot"
                 @click="addSlot()"
             >
                 <i class="fa-solid fa-list" />
                 <span>{{ $t('domain.event-slot.actions.create') }}</span>
             </li>
-            <li class="permission-write-event-details context-menu-item" data-test-id="action-add-location" @click="addLocation()">
+            <li class="permission-update-event-details context-menu-item" data-test-id="action-add-location" @click="addLocation()">
                 <i class="fa-solid fa-route" />
                 <span>{{ $t('domain.location.actions.create') }}</span>
             </li>
@@ -125,7 +137,7 @@
             <template v-if="event?.signupType === EventSignupType.Assignment">
                 <li
                     v-if="event?.state === EventState.Draft"
-                    class="permission-write-event-details context-menu-item"
+                    class="permission-update-event-details context-menu-item"
                     data-test-id="action-open-for-crew-signup"
                     @click="openEventForCrewSignup()"
                 >
@@ -134,7 +146,7 @@
                 </li>
                 <li
                     v-if="event?.state === EventState.OpenForSignup"
-                    class="permission-write-event-details context-menu-item"
+                    class="permission-update-event-details context-menu-item"
                     data-test-id="action-publish-crew-planning"
                     @click="publishPlannedCrew()"
                 >
@@ -142,7 +154,7 @@
                     <span>{{ $t('domain.event.actions.publish-crew') }}</span>
                 </li>
                 <li
-                    class="permission-write-event-slots context-menu-item"
+                    class="permission-update-event-slots context-menu-item"
                     data-test-id="action-reset-crew-planning"
                     @click="resetCrewPlanning()"
                 >
@@ -150,7 +162,7 @@
                     <span>{{ $t('domain.event.actions.reset-crew') }}</span>
                 </li>
             </template>
-            <li class="permission-write-event-details context-menu-item text-error" data-test-id="action-cancel" @click="cancelEvent()">
+            <li class="permission-update-event-details context-menu-item text-error" data-test-id="action-cancel" @click="cancelEvent()">
                 <i class="fa-solid fa-ban" />
                 <span>{{ $t('domain.event.actions.cancel') }}</span>
             </li>
@@ -224,7 +236,7 @@ const hasChanges = ref<boolean>(false);
 const registrations = computed<ResolvedRegistrationSlot[]>(() => crew.value.concat(waitinglist.value));
 const tabs = computed<InputSelectOption<Tab>[]>(() => {
     const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
-    if (!event.value || hasPermission(Permission.WRITE_EVENT_SLOTS)) {
+    if (!event.value || hasPermission(Permission.UPDATE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_REGISTRATIONS);
         if (!event.value || event.value?.signupType === EventSignupType.Assignment) {
             visibleTabs.push(Tab.EVENT_SLOTS, Tab.EVENT_CREW_EDITOR);

@@ -1,4 +1,4 @@
-import type { AccountRepository } from '@/application/ports';
+import type { AccountRepository, ErrorReportingRepository } from '@/application/ports';
 
 export interface ErrorDetails {
     title?: string;
@@ -11,9 +11,11 @@ export interface ErrorDetails {
 
 export class ErrorHandlingService {
     private readonly accountRepository: AccountRepository;
+    private readonly errorReportingRepository: ErrorReportingRepository;
 
-    public constructor(params: { accountRepository: AccountRepository }) {
+    public constructor(params: { accountRepository: AccountRepository; errorReportingRepository: ErrorReportingRepository }) {
         this.accountRepository = params.accountRepository;
+        this.errorReportingRepository = params.errorReportingRepository;
     }
 
     private errorHandler: (error: ErrorDetails) => void = (error: ErrorDetails) => {
@@ -25,7 +27,19 @@ export class ErrorHandlingService {
         this.errorHandler = handler;
     }
 
+    public report(message: string, component: string, e?: unknown | Error | Response): void {
+        if (e instanceof Response) {
+            // don't report errors that come from an unsuccessful request
+            return;
+        }
+        console.log('📢 Reporting error');
+        const stackTrace = e instanceof Error ? e.stack : e?.toString();
+        const msg = e instanceof Error ? `${message}: ${e.message}` : message;
+        this.errorReportingRepository.report(msg, component, stackTrace);
+    }
+
     public handleError(error: ErrorDetails): void {
+        this.report(error.title || 'Frontend encountered an error', 'ErrorHandlingService', error.error);
         if (this.errorHandler) {
             this.errorHandler(error);
         }
@@ -44,7 +58,7 @@ export class ErrorHandlingService {
                 this.handleError({
                     title: 'Server nicht erreichbar',
                     message: 'Der Server ist aktuell nicht erreichbar. Bitte versuche es später erneut.',
-                    error: e,
+                    error: response,
                 });
             } else {
                 this.handleError({ error: e });

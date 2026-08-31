@@ -39,7 +39,7 @@ describe('UserDetailsView.vue', () => {
 
     describe('users with permission users:read-details', () => {
         beforeEach(() => {
-            setupUserPermissions([Permission.READ_USER_DETAILS]);
+            setupUserPermissions([Permission.READ_DETAILED_USERS]);
         });
 
         it('should not render user roles tab', async () => {
@@ -71,7 +71,7 @@ describe('UserDetailsView.vue', () => {
 
     describe('users with permission users:write', () => {
         beforeEach(() => {
-            setupUserPermissions([Permission.READ_USER_DETAILS, Permission.WRITE_USERS]);
+            setupUserPermissions([Permission.READ_DETAILED_USERS, Permission.UPDATE_USERS]);
         });
 
         it('should render user roles tab', async () => {

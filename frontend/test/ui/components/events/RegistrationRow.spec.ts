@@ -69,7 +69,7 @@ describe('RegistrationRow.vue', () => {
     });
 
     describe('Users with permission users:read-details', () => {
-        beforeAll(() => (signedInUser = mockSignedInUser({ permissions: [Permission.READ_USER_DETAILS] })));
+        beforeAll(() => (signedInUser = mockSignedInUser({ permissions: [Permission.READ_DETAILED_USERS] })));
 
         it('should have link to user details', async () => {
             const link = testee.find('a');

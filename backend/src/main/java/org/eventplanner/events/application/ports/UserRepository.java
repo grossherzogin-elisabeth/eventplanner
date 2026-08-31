@@ -26,7 +26,5 @@ public interface UserRepository {
     @NonNull
     EncryptedUserDetails update(@NonNull EncryptedUserDetails user) throws NoSuchElementException;
 
-    void deleteAll();
-
     void deleteByKey(@NonNull UserKey key);
 }

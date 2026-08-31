@@ -1,5 +1,4 @@
-import type { SignedInUser, UserDetails } from '@/domain';
-import { Permission, Role } from '@/domain';
+import type { Permission, SignedInUser, UserDetails } from '@/domain';
 import { v4 as randomUUID } from 'uuid';
 
 type Callback<T> = (t: T) => void;
@@ -43,9 +42,6 @@ export class AuthService {
     public setSignedInUser(signedInUser?: SignedInUser): void {
         this.offlineMode = false;
         if (signedInUser) {
-            if (signedInUser.roles.includes(Role.ADMIN)) {
-                signedInUser.permissions.push(Permission.BETA_FEATURES);
-            }
             this.signedInUser = signedInUser;
             this.storeSignedInUser(signedInUser);
             this.notifyListeners(this.loginListeners, this.signedInUser);

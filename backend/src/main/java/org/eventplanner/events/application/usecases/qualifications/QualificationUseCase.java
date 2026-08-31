@@ -20,13 +20,13 @@ public class QualificationUseCase {
 
     private final QualificationRepository qualificationRepository;
 
-    @PreAuthorize("hasAuthority('qualifications:read')")
+    @PreAuthorize("hasAuthority('qualifications:list')")
     public @NonNull List<Qualification> getQualifications() {
         log.debug("Reading qualifications");
         return this.qualificationRepository.findAll();
     }
 
-    @PreAuthorize("hasAuthority('qualifications:write')")
+    @PreAuthorize("hasAuthority('qualifications:create')")
     @Transactional
     public @NonNull Qualification createQualification(
         @NonNull final Qualification qualification
@@ -37,7 +37,7 @@ public class QualificationUseCase {
         return qualification;
     }
 
-    @PreAuthorize("hasAuthority('qualifications:write')")
+    @PreAuthorize("hasAuthority('qualifications:update')")
     @Transactional
     public @NonNull Qualification updateQualification(
         @NonNull final QualificationKey qualificationKey,
@@ -52,7 +52,7 @@ public class QualificationUseCase {
         return qualification;
     }
 
-    @PreAuthorize("hasAuthority('qualifications:write')")
+    @PreAuthorize("hasAuthority('qualifications:delete')")
     @Transactional
     public void deleteQualification(
         @NonNull final QualificationKey qualificationKey

@@ -15,6 +15,7 @@
             <button
                 v-if="modelValue.length > 0"
                 class="text-xs opacity-75 transition-colors duration-1000 hover:opacity-100"
+                type="button"
                 @click.stop="clear()"
             >
                 <i class="fa-solid fa-close" />

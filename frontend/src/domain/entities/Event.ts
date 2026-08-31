@@ -23,6 +23,7 @@ export interface Event {
     canSignedInUserJoin: boolean;
     canSignedInUserLeave: boolean;
     canSignedInUserUpdateRegistration: boolean;
+    canSignedInUserCreateExports: boolean;
     isSignedInUserAssigned?: boolean;
     signedInUserRegistration?: Registration;
     signedInUserAssignedSlot?: Slot;

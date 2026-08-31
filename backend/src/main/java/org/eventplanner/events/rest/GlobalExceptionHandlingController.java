@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import org.eventplanner.events.domain.exceptions.MissingPermissionException;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.event.Level;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -75,12 +76,15 @@ public class GlobalExceptionHandlingController {
         @NonNull final NoSuchElementException exception,
         @NonNull final HttpServletRequest request
     ) {
-        log.error(
-            "Tried to access non existing element on request {} {}: {}",
-            request.getMethod(),
-            request.getRequestURI(),
-            exception.getMessage()
-        );
+        // don't spam our logs with irrelevant scraping requests on WARN level
+        var level = request.getRequestURI().contains("/api/") ? Level.WARN : Level.DEBUG;
+        log.atLevel(level)
+            .log(
+                "Tried to access non existing resource on request {} {}: {}",
+                request.getMethod(),
+                request.getRequestURI(),
+                exception.getMessage()
+            );
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
         body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(body.getStatus()).body(body);
@@ -117,7 +121,8 @@ public class GlobalExceptionHandlingController {
         log.warn(
             "Tried to access resource at {} {} without proper permission",
             request.getMethod(),
-            request.getRequestURI()
+            request.getRequestURI(),
+            exception
         );
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, exception.getMessage());
         body.setInstance(URI.create(request.getRequestURI()));

@@ -23,7 +23,7 @@
                 </div>
             </MainContent>
         </template>
-        <template v-if="event && hasPermission(Permission.WRITE_OWN_REGISTRATIONS)" #primary-button>
+        <template v-if="event && hasPermission(Permission.UPDATE_OWN_REGISTRATIONS)" #primary-button>
             <AsyncButton
                 v-if="event.isSignedInUserAssigned"
                 class="btn-danger"
@@ -51,17 +51,17 @@
                     {{ $t('domain.registration.actions.leave-waiting-list') }}
                 </template>
             </AsyncButton>
-            <button v-else class="btn-primary max-w-80" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
+            <button v-else class="btn-primary max-w-80" type="button" :disabled="!event.canSignedInUserJoin" @click="joinEvent()">
                 <i class="fa-solid fa-user-plus" />
                 <span class="truncate text-left"> {{ $t('domain.event.actions.sign-up') }} </span>
             </button>
         </template>
         <template v-if="event" #secondary-buttons>
-            <RouterLink v-if="hasPermission(Permission.WRITE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
+            <RouterLink v-if="hasPermission(Permission.UPDATE_EVENTS)" :to="{ name: Routes.EventEdit }" class="btn-secondary">
                 <i class="fa-solid fa-drafting-compass" />
                 <span>{{ $t('domain.event.actions.edit') }}</span>
             </RouterLink>
-            <button v-else class="btn-secondary" @click="eventUseCase.downloadCalendarEntry(event)">
+            <button v-else class="btn-secondary" type="button" @click="eventUseCase.downloadCalendarEntry(event)">
                 <i class="fa-solid fa-calendar-alt" />
                 <span>{{ $t('domain.event.actions.create-calendar-entry') }}</span>
             </button>
@@ -75,6 +75,7 @@
                 v-for="template in eventExports.templates.value"
                 :key="template"
                 class="permission-export-events context-menu-item"
+                :class="{ disabled: !event.canSignedInUserCreateExports }"
                 data-test-id="action-export"
                 @click="eventExports.exportEvent(event, template)"
             >
@@ -100,7 +101,7 @@
                     <span>{{ $t('domain.registration.actions.add-note') }}</span>
                 </li>
             </template>
-            <li class="permission-write-events" data-test-id="action-edit-event">
+            <li class="permission-update-event-details" data-test-id="action-edit-event">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-drafting-compass" />
                     <span>{{ $t('domain.event.actions.edit') }}</span>

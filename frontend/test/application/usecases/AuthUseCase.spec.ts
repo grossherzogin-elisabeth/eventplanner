@@ -117,7 +117,7 @@ describe('AuthUseCase', () => {
     });
 
     it('should impersonate configured override user when caller has permission', async () => {
-        const signedInUser = mockSignedInUser({ permissions: [Permission.READ_USER_DETAILS] });
+        const signedInUser = mockSignedInUser({ permissions: [Permission.READ_DETAILED_USERS] });
         configService.getConfig = vi.fn(() => ({ ...defaultConfig, overrideSignedInUserKey: 'captain-key' }));
         accountRepository.getAccount = vi.fn(async () => signedInUser);
 

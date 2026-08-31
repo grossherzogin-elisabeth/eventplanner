@@ -5,7 +5,7 @@ import { Routes } from '@/ui/views/Routes.ts';
 
 const routeMeta: RouteMetaData = {
     authenticated: true,
-    permissions: [Permission.WRITE_EVENTS],
+    permissions: [Permission.UPDATE_EVENTS],
 };
 
 const route: RouteRecordRaw = {

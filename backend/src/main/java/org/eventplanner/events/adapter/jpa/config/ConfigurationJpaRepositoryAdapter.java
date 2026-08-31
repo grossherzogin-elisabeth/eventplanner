@@ -19,7 +19,10 @@ import org.eventplanner.events.domain.values.config.FrontendConfig.FrontendConfi
 import org.eventplanner.events.domain.values.config.NotificationConfig;
 import org.eventplanner.events.domain.values.config.NotificationConfig.NotificationConfigUpdateSpec;
 import org.jspecify.annotations.NonNull;
+import org.springframework.dao.PessimisticLockingFailureException;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -114,6 +117,13 @@ public class ConfigurationJpaRepositoryAdapter implements ConfigurationSource, C
     }
 
     @Override
+    @Transactional
+    @Retryable(
+        includes = PessimisticLockingFailureException.class,
+        delayString = "${resilience.retry.delay:1000}",
+        jitterString = "${resilience.retry.jitter:0}",
+        multiplierString = "${resilience.retry.multiplier:1}",
+        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void updateConfig(
         @NonNull final ApplicationConfigUpdateSpec spec,
         @NonNull final EncryptFunc encryptFunc

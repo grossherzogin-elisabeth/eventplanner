@@ -17,17 +17,13 @@ public enum Permission implements GrantedAuthority {
     READ_ACCOUNT("account:read"),
 
     /**
+     * List all events
+     */
+    LIST_EVENTS("events:list"),
+    /**
      * Allows reading single events by key
      */
     READ_EVENTS("events:read"),
-    /**
-     * Allows updating events
-     */
-    WRITE_EVENTS("events:write"),
-    /**
-     * Allows deleting events
-     */
-    DELETE_EVENTS("events:delete"),
     /**
      * Allows creating events
      */
@@ -37,81 +33,109 @@ public enum Permission implements GrantedAuthority {
      */
     EXPORT_EVENTS("events:export"),
     /**
+     * Allows updating events
+     */
+    UPDATE_EVENTS("events:update"),
+    /**
      * Allows updating event details
      */
-    WRITE_EVENT_DETAILS("events:write-details"),
+    UPDATE_EVENT_DETAILS("events:update-details"),
     /**
      * Allows updating event slots
      */
-    WRITE_EVENT_SLOTS("events:write-slots"),
+    UPDATE_EVENT_SLOTS("events:update-slots"),
     /**
      * Allows sending participation confirmation requests
      */
     SEND_PARTICIPATION_CONFIRMATION_REQUESTS("events:send-confirmation-requests"),
+    /**
+     * Allows deleting events
+     */
+    DELETE_EVENTS("events:delete"),
 
     /**
      * Allows updating any registration
      */
-    WRITE_REGISTRATIONS("registrations:write"),
+    UPDATE_REGISTRATIONS("registrations:update"),
     /**
      * Allows updating own registrations
      */
-    WRITE_OWN_REGISTRATIONS("registrations:write-self"),
+    UPDATE_OWN_REGISTRATIONS("registrations:update-own"),
     /**
      * Allows confirming own registrations
      */
-    CONFIRM_OWN_REGISTRATIONS("registrations:confirm-self"),
+    CONFIRM_OWN_REGISTRATIONS("registrations:confirm-own"),
     /**
      * Allows declining own registrations
      */
-    DECLINE_OWN_REGISTRATIONS("registrations:decline-self"),
+    DECLINE_OWN_REGISTRATIONS("registrations:decline-own"),
 
     /**
      * Allows reading basic details of all users
      */
-    READ_USERS("users:read"),
-    /**
-     * Allows reading own user details
-     */
-    READ_OWN_USER_DETAILS("users:read-details-self"),
-    /**
-     * Allows updating own user details
-     */
-    WRITE_OWN_USER_DETAILS("users:write-self"),
+    LIST_USERS("users:list"),
     /**
      * Allows listing users with extended details
      */
-    READ_USER_DETAILS("users:read-details"),
+    LIST_DETAILED_USERS("users:list-details"),
     /**
-     * Allows reading all data of single users
+     * Allows reading any user details
      */
-    READ_FULL_USER_DETAILS("users:read-full-details"),
+    READ_DETAILED_USERS("users:read-details"),
+    /**
+     * Allows creating new users
+     */
+    CREATE_USERS("users:create"),
     /**
      * Allows updating any users details
      */
-    WRITE_USERS("users:write"),
+    UPDATE_USERS("users:update-details"),
     /**
      * Allows deleting users
      */
     DELETE_USERS("users:delete"),
+    /**
+     * Allows reading own user details
+     */
+    READ_OWN_USER("users:read-own-details"),
+    /**
+     * Allows updating own user details
+     */
+    UPDATE_OWN_USER("users:update-own-details"),
 
     /**
-     * Allows reading positions
+     * Allows listing all positions
      */
-    READ_POSITIONS("positions:read"),
+    LIST_POSITIONS("positions:list"),
     /**
-     * Allows creating, updating and deleting positions
+     * Allows creating positions
      */
-    WRITE_POSITIONS("positions:write"),
+    CREATE_POSITIONS("positions:create"),
+    /**
+     * Allows updating positions
+     */
+    UPDATE_POSITIONS("positions:update"),
+    /**
+     * Allows deleting positions
+     */
+    DELETE_POSITIONS("positions:delete"),
 
     /**
-     * Allows reading qualifications
+     * Allows listing all qualifications
      */
-    READ_QUALIFICATIONS("qualifications:read"),
+    LIST_QUALIFICATIONS("qualifications:list"),
     /**
-     * Allows creating, updating and deleting qualifications
+     * Allows creating qualifications
      */
-    WRITE_QUALIFICATIONS("qualifications:write"),
+    CREATE_QUALIFICATIONS("qualifications:create"),
+    /**
+     * Allows updating qualifications
+     */
+    UPDATE_QUALIFICATIONS("qualifications:update"),
+    /**
+     * Allows deleting qualifications
+     */
+    DELETE_QUALIFICATIONS("qualifications:delete"),
 
     /**
      * Allows deleting access keys
@@ -125,7 +149,12 @@ public enum Permission implements GrantedAuthority {
     /**
      * Allows updating the application settings
      */
-    WRITE_APP_SETTINGS("application-settings:write");
+    UPDATE_APP_SETTINGS("application-settings:update"),
+
+    /**
+     * Allows reporting frontend errors, that will be logged in the backend
+     */
+    REPORT_ERRORS("errors:report");
 
     private final String value;
 

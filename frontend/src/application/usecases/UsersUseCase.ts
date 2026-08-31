@@ -44,7 +44,7 @@ export class UsersUseCase {
         const overrideSignedInUserKey = this.configService.getConfig().overrideSignedInUserKey;
         try {
             let user: UserDetails;
-            if (overrideSignedInUserKey && this.authService.getSignedInUser()?.permissions.includes(Permission.READ_USER_DETAILS)) {
+            if (overrideSignedInUserKey && this.authService.getSignedInUser()?.permissions.includes(Permission.READ_DETAILED_USERS)) {
                 user = await this.userRepository.findByKey(overrideSignedInUserKey);
             } else {
                 user = await this.userRepository.findBySignedInUser();

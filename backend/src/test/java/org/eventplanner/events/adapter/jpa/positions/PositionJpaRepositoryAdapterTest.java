@@ -3,55 +3,98 @@ package org.eventplanner.events.adapter.jpa.positions;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.eventplanner.testdata.PositionFactory.generateDefaultPositions;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.NoSuchElementException;
 
-import org.eventplanner.events.domain.values.positions.PositionKey;
-import org.junit.jupiter.api.BeforeEach;
+import org.eventplanner.config.RetryConfig;
+import org.eventplanner.events.domain.entities.positions.Position;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+@SpringBootTest(classes = { PositionJpaRepositoryAdapter.class, RetryConfig.class })
+@ActiveProfiles(profiles = { "test" })
 class PositionJpaRepositoryAdapterTest {
 
-    private PositionJpaRepository repository;
+    private static final Position POSITION = generateDefaultPositions().getFirst();
+
+    @Autowired
     private PositionJpaRepositoryAdapter testee;
 
-    @BeforeEach
-    void setup() {
-        repository = mock();
-        testee = new PositionJpaRepositoryAdapter(repository);
-    }
+    @MockitoBean
+    private PositionJpaRepository repository;
 
     @Test
     void shouldThrowWhenCreatingPositionThatAlreadyExists() {
-        var position = generateDefaultPositions().get(0);
-        when(repository.existsById(position.getKey().value())).thenReturn(true);
+        when(repository.existsById(any())).thenReturn(true);
 
-        assertThatThrownBy(() -> testee.create(position))
+        assertThatThrownBy(() -> testee.create(POSITION))
             .isInstanceOf(IllegalArgumentException.class);
         verify(repository, never()).save(any(PositionJpaEntity.class));
     }
 
     @Test
     void shouldThrowWhenUpdatingPositionThatDoesNotExist() {
-        var position = generateDefaultPositions().get(0);
-        when(repository.existsById(position.getKey().value())).thenReturn(false);
+        when(repository.existsById(any())).thenReturn(false);
 
-        assertThatThrownBy(() -> testee.update(position))
+        assertThatThrownBy(() -> testee.update(POSITION))
             .isInstanceOf(NoSuchElementException.class);
         verify(repository, never()).save(any(PositionJpaEntity.class));
     }
 
     @Test
     void shouldThrowWhenDeletingPositionThatDoesNotExist() {
-        var key = new PositionKey("position-1");
-        when(repository.existsById(key.value())).thenReturn(false);
+        when(repository.existsById(any())).thenReturn(false);
 
-        assertThatThrownBy(() -> testee.deleteByKey(key))
+        assertThatThrownBy(() -> testee.deleteByKey(POSITION.getKey()))
             .isInstanceOf(NoSuchElementException.class);
-        verify(repository, never()).deleteById(key.value());
+        verify(repository, never()).deleteById(POSITION.getKey().value());
+    }
+
+    @Test
+    void shouldRetryCreate() {
+        when(repository.existsById(any())).thenReturn(false);
+        when(repository.save(any()))
+            .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
+            .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
+            .thenReturn(PositionJpaEntity.fromDomain(POSITION));
+
+        testee.create(POSITION);
+
+        verify(repository, times(3)).save(any());
+    }
+
+    @Test
+    void shouldRetryUpdate() {
+        when(repository.existsById(any())).thenReturn(true);
+        when(repository.save(any()))
+            .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
+            .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
+            .thenReturn(PositionJpaEntity.fromDomain(POSITION));
+
+        testee.update(POSITION);
+
+        verify(repository, times(3)).save(any());
+    }
+
+    @Test
+    void shouldRetryDelete() {
+        when(repository.existsById(any())).thenReturn(true);
+        doThrow(new CannotAcquireLockException("mocked 1st attempt"))
+            .doThrow(new CannotAcquireLockException("mocked 2nd attempt"))
+            .doNothing()
+            .when(repository).deleteById(any());
+
+        testee.deleteByKey(POSITION.getKey());
+
+        verify(repository, times(3)).deleteById(any());
     }
 }

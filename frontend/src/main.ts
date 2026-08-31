@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import { useAuthUseCase, useConfigService } from '@/application';
+import { useAuthUseCase, useConfigService, useErrorHandlingService } from '@/application';
 import App from '@/ui/App.vue';
 import '@/ui/plugins/countries';
 import '@/ui/plugins/fontawesome';
@@ -10,6 +10,15 @@ import { setupTooltips } from '@/ui/plugins/tooltip';
 import '@/ui/assets/css/main.css';
 
 const config = useConfigService().getConfig();
+const errorHandlingService = useErrorHandlingService();
+
+window.addEventListener('error', (event) => {
+    errorHandlingService.report(
+        event.message || 'Unhandled error',
+        'window',
+        event.error ?? `${event.filename}:${event.lineno}:${event.colno}`
+    );
+});
 
 const app = createApp(App);
 app.use(

@@ -20,13 +20,13 @@ public class PositionUseCase {
 
     private final PositionRepository positionRepository;
 
-    @PreAuthorize("hasAuthority('positions:read')")
+    @PreAuthorize("hasAuthority('positions:list')")
     public @NonNull List<Position> getPosition() {
         log.debug("Reading positions");
         return positionRepository.findAll();
     }
 
-    @PreAuthorize("hasAuthority('positions:write')")
+    @PreAuthorize("hasAuthority('positions:create')")
     @Transactional
     public @NonNull Position createPosition(@NonNull final Position position) {
         position.setKey(new PositionKey());
@@ -35,7 +35,7 @@ public class PositionUseCase {
         return position;
     }
 
-    @PreAuthorize("hasAuthority('positions:write')")
+    @PreAuthorize("hasAuthority('positions:update')")
     @Transactional
     public @NonNull Position updatePosition(
         @NonNull final PositionKey positionKey,
@@ -50,7 +50,7 @@ public class PositionUseCase {
         return position;
     }
 
-    @PreAuthorize("hasAuthority('positions:write')")
+    @PreAuthorize("hasAuthority('positions:delete')")
     @Transactional
     public void deletePosition(
         @NonNull final PositionKey positionKey

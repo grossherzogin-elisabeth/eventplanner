@@ -2,9 +2,10 @@ package org.eventplanner.events.adapter.jpa.events;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
+import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.Registration;
-import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
@@ -31,36 +32,43 @@ import lombok.Setter;
 public class RegistrationJpaEntity {
     @Id
     @Column(name = "key", nullable = false, updatable = false)
-    public @NonNull String key;
+    private @NonNull String key;
 
     @Column(name = "event_key", nullable = false)
-    public @NonNull String eventKey;
+    private @NonNull String eventKey;
+
+    @Column(name = "year", nullable = false)
+    private int year;
 
     @Column(name = "position_key", nullable = false)
-    public @NonNull String positionKey;
+    private @NonNull String positionKey;
 
     @Column(name = "user_key")
-    public @Nullable String userKey;
+    private @Nullable String userKey;
 
     @Column(name = "name")
-    public @Nullable String name;
+    private @Nullable String name;
 
     @Column(name = "note")
-    public @Nullable String note;
+    private @Nullable String note;
 
     @Column(name = "confirmed_at")
-    public @Nullable String confirmedAt;
+    private @Nullable String confirmedAt;
 
     @Column(name = "overnight_stay")
-    public @Nullable Boolean overnightStay;
+    private @Nullable Boolean overnightStay;
 
     @Column(name = "arrival")
-    public @Nullable String arrival;
+    private @Nullable String arrival;
 
-    public static @NonNull RegistrationJpaEntity fromDomain(@NonNull Registration domain, @NonNull EventKey eventKey) {
+    public static @NonNull RegistrationJpaEntity fromDomain(
+        @NonNull Registration domain,
+        @NonNull Event event
+    ) {
         return new RegistrationJpaEntity(
             domain.getKey().value(),
-            eventKey.value(),
+            event.getKey().value(),
+            event.getStart().atZone(ZoneId.systemDefault()).getYear(),
             domain.getPosition().value(),
             domain.getUserKey() != null
                 ? domain.getUserKey().value()
