@@ -14,7 +14,7 @@
             </template>
             <template v-else-if="props.user"> {{ $t('domain.user.no-login-recorded') }} </template>
         </p>
-        <div class="mt-1 flex flex-wrap gap-1 opacity-75 lg:hidden xl:block 2xl:hidden">
+        <div class="mt-1 flex flex-wrap gap-1 space-x-1 opacity-75 lg:hidden xl:block 2xl:hidden">
             <template v-if="!props.user">
                 <span></span>
                 <span></span>
