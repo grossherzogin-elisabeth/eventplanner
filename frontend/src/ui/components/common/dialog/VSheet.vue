@@ -57,7 +57,7 @@
                                 <slot name="content"></slot>
                                 <slot name="default"></slot>
                             </div>
-                            <div class="bg-surface-container-low sticky bottom-0 z-50 sm:bottom-4">
+                            <div class="bg-surface-container-low sticky bottom-0 z-50">
                                 <slot name="bottom"></slot>
                             </div>
                         </div>
