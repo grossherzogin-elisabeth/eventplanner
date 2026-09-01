@@ -20,9 +20,6 @@
                     <span class="block w-full truncate text-xs font-normal">
                         {{ $t('generic.days', props.duration) }}
                     </span>
-                    <span v-if="props.event.description" class="block w-full truncate text-xs font-normal">
-                        {{ props.event.description }}
-                    </span>
                 </template>
             </div>
         </div>
@@ -159,6 +156,7 @@ init();
 
 .calendar-event-entry.draft {
     background-color: var(--color-surface-container-low);
+    color: var(--color-onsurface);
 }
 
 .calendar-event-entry.draft .calendar-event-entry-bar {

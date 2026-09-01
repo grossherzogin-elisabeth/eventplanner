@@ -24,7 +24,8 @@
         <p class="hidden truncate text-sm font-light opacity-75 lg:block">
             <!-- description -->
             <span v-if="props.event?.description" class="">
-                {{ props.event.description }}
+                <!-- replace some markdown control characters -->
+                {{ props.event.description.replace(/[\*#\[\]]/g, '') }}
             </span>
             <!-- locations -->
             <span v-else-if="props.event?.locations.length" class="">

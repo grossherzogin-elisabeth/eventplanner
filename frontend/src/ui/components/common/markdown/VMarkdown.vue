@@ -33,6 +33,11 @@ const rendered = computed<string>(() => {
     margin-bottom: 1rem;
 }
 
+.markdown p:last-of-type,
+.markdown.line-clamp-1 p {
+    margin-bottom: 0;
+}
+
 .markdown h1,
 .markdown h2,
 .markdown h3,
