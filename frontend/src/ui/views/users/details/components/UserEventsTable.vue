@@ -143,8 +143,6 @@ async function addUserToCrew(item: EventTableViewItem): Promise<void> {
         if (slot) {
             event = await eventAdministrationUseCase.assignUserToSlot(event, props.user, slot.key);
             await eventAdministrationUseCase.updateEvent(event.key, event);
-            item.event.assignedUserCount = item.event.assignedUserCount + 1;
-            item.event.waitingListCount = item.event.waitingListCount - 1;
         } else {
             throw new Error(`Die Veranstaltung hat keinen passenden freien Slot für die Position ${item.positionName}`);
         }

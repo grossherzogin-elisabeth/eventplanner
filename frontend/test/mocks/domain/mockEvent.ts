@@ -1,4 +1,5 @@
 import type { Event } from '@/domain';
+import { EventService } from '@/domain';
 import { EventSignupType, EventState, EventType } from '@/domain';
 import { mockLocations } from './mockLocation.ts';
 import { mockRegistrations } from './mockRegistration.ts';

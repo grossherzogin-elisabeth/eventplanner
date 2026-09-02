@@ -16,12 +16,8 @@
             </span>
         </div>
         <div class="hidden truncate text-sm font-light opacity-75 lg:flex">
-            <p v-if="props.event?.description" class="w-0 grow truncate">
-                <!-- replace some markdown control characters -->
-                {{ props.event.description.replace(/[\*#\[\]]/g, '') }}
-            </p>
             <!-- locations -->
-            <p v-else-if="props.event?.locations.length" class="w-0 grow truncate">
+            <p v-if="props.event?.locations.length" class="w-0 grow truncate">
                 {{ props.event.locations.map((it) => it.name).join(' - ') }}
             </p>
             <!-- placeholder -->
@@ -57,7 +53,7 @@
     <!-- crew -->
     <td class="hidden w-1/6 min-w-16 text-right whitespace-nowrap md:table-cell">
         <template v-if="showWaitingList">
-            <p class="mb-1 pl-4 font-semibold">
+            <p class="mb-1 pl-4 font-semibold" data-test-id="crew-count">
                 {{ props.event?.assignedUserCount }}
                 <span v-if="props.event?.waitingListCount" class="opacity-40"> +{{ props.event?.waitingListCount }} </span>
             </p>
