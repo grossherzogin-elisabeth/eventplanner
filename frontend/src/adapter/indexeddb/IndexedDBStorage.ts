@@ -35,7 +35,7 @@ export class IndexedDBStorage<K extends string | number, T extends CacheableEnti
             const store = transaction.objectStore(this.store);
             const query = store.count();
             query.onsuccess = (): void => resolve(query.result);
-            query.onerror = (): void => reject(query.error);
+            query.onerror = (): void => reject(new Error(query.error?.message));
         });
     }
 
@@ -46,7 +46,7 @@ export class IndexedDBStorage<K extends string | number, T extends CacheableEnti
             const store = transaction.objectStore(this.store);
             const query = store.getAll();
             query.onsuccess = (): void => resolve(query.result.map((it) => it.value));
-            query.onerror = (): void => reject(query.error);
+            query.onerror = (): void => reject(new Error(query.error?.message));
         });
     }
 
@@ -65,7 +65,7 @@ export class IndexedDBStorage<K extends string | number, T extends CacheableEnti
                 }
                 resolve(undefined);
             };
-            query.onerror = (): void => reject(query.error);
+            query.onerror = (): void => reject(new Error(query.error?.message));
         });
     }
 
@@ -81,7 +81,7 @@ export class IndexedDBStorage<K extends string | number, T extends CacheableEnti
                 value: clone,
             });
             query.onsuccess = (): void => resolve(clone);
-            query.onerror = (): void => reject(query.error);
+            query.onerror = (): void => reject(new Error(query.error?.message));
         });
     }
 
@@ -101,7 +101,7 @@ export class IndexedDBStorage<K extends string | number, T extends CacheableEnti
                 });
             });
             transaction.oncomplete = (): void => resolve(entities);
-            transaction.onerror = (): void => reject(transaction.error);
+            transaction.onerror = (): void => reject(new Error(transaction.error?.message));
         });
     }
 
@@ -112,7 +112,7 @@ export class IndexedDBStorage<K extends string | number, T extends CacheableEnti
             const store = transaction.objectStore(this.store);
             const query = store.delete(key);
             query.onsuccess = (): void => resolve();
-            query.onerror = (): void => reject(query.error);
+            query.onerror = (): void => reject(new Error(query.error?.message));
         });
     }
 
@@ -127,7 +127,7 @@ export class IndexedDBStorage<K extends string | number, T extends CacheableEnti
             const store = transaction.objectStore(this.store);
             const query = store.clear();
             query.onsuccess = (): void => resolve();
-            query.onerror = (): void => reject(query.error);
+            query.onerror = (): void => reject(new Error(query.error?.message));
         });
     }
 }

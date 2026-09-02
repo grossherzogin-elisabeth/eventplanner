@@ -6,12 +6,11 @@ export function useLongTouch(longTouchDelay: number = 500) {
     let longTouchFired: boolean | undefined = undefined;
 
     function start(event: TouchEvent): Promise<void> {
-        // clearTimeout(longTouchTimeout);
         touchStartEvent = event;
         touchMoveEvent = event;
         return new Promise<void>((resolve, reject) => {
             longTouchTimeout = setTimeout(() => {
-                if (!touchMoveEvent || !touchMoveEvent) {
+                if (!touchMoveEvent) {
                     longTouchFired = false;
                     reject();
                     return;

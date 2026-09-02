@@ -89,14 +89,14 @@ describe('UserEventsTable.vue', () => {
         expect(tableRow.text()).toContain('Captain');
     });
 
-    it('should render checkmark for events where user is assigned', async () => {
+    it('should render icon for events where user is assigned', async () => {
         const tableRow = testee.find('tbody tr');
-        expect(tableRow.html()).toContain('fa-check');
+        expect(tableRow.html()).toContain('fa-user-check');
     });
 
-    it('should render hourglass for events where user is on waiting list', async () => {
+    it('should render icon for events where user is on waiting list', async () => {
         const tableRow = testee.findAll('tbody tr')[1];
-        expect(tableRow.html()).toContain('fa-hourglass');
+        expect(tableRow.html()).toContain('fa-user-clock');
     });
 
     it('should open event on row click', async () => {
@@ -141,6 +141,7 @@ describe('UserEventsTable.vue', () => {
         it('should add user to crew', async () => {
             const row = testee.findAll('tbody tr')[1];
             expect(row.find('[data-test-id="crew-count"]').text()).toContain(0);
+            expect(events[1].assignedUserCount).toBe(0);
             const menu = await openTableContextMenu(testee, row);
             const action = menu.find('[data-test-id="action-add-to-crew"]');
             await action.trigger('click');
@@ -148,6 +149,7 @@ describe('UserEventsTable.vue', () => {
             expect(row.find('[data-test-id="crew-count"]').text()).toContain(1);
             expect(events[1].slots[0].assignedRegistrationKey).toEqual(events[1].registrations[0].key);
             expect(events[1].assignedUserCount).toBe(1);
+            expect(events[1].waitingListCount).toBe(0);
         });
 
         it('should remove user registration', async () => {
