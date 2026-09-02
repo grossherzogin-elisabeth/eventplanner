@@ -211,7 +211,11 @@ describe('AuthUseCase', () => {
 
     it('should resolve onLogout immediately when already signed out', async () => {
         authService.getSignedInUser = vi.fn(() => undefined);
-        await testee.onLogout();
+        const promiseResolved = testee
+            .onLogout()
+            .then(() => true)
+            .catch(() => false);
+        await expect.poll(() => promiseResolved).toBe(true);
     });
 
     it('should resolve onLogout via logout listener', async () => {
@@ -222,8 +226,11 @@ describe('AuthUseCase', () => {
             return (): void => undefined;
         }) as unknown as AuthService['onLogout'];
 
-        const onLogout = testee.onLogout();
+        const promiseResolved = testee
+            .onLogout()
+            .then(() => true)
+            .catch(() => false);
         logoutListener?.();
-        await onLogout;
+        await expect.poll(() => promiseResolved).toBe(true);
     });
 });
