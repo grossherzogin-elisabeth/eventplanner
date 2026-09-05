@@ -18,6 +18,15 @@ export class EventService {
         return (aEnd >= bStart && aEnd <= bEnd) || (bEnd >= aStart && bEnd <= aEnd);
     }
 
+    public isEnclosedByAnyOtherEvent(event: Event, others: Event[]): boolean {
+        return (
+            others
+                .filter((other) => other !== event)
+                .filter((other) => other.start <= event.start)
+                .filter((other) => other.end >= event.end).length > 0
+        );
+    }
+
     public doesEventMatchFilter(event: Event, filter: string): boolean {
         const filterLc = filter.toLowerCase();
         if (event.name.toLowerCase().includes(filterLc)) {
