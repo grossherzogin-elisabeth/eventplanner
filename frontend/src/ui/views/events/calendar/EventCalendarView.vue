@@ -39,8 +39,9 @@
                                     <EventCalendarItem
                                         v-for="evt in d.events"
                                         :key="evt.event.key"
+                                        :title="evt.title"
                                         :event="evt.event"
-                                        :class="evt.class"
+                                        :class="evt.classes.join(' ')"
                                         :duration="evt.duration"
                                         :duration-in-month="evt.durationInMonth"
                                         :start="evt.offset"
@@ -92,11 +93,15 @@ interface CalendarDay {
 
 interface CalendarDayEvent {
     event: Event;
+    title: string;
     durationInMonth: number;
     duration: number;
-    class: string;
-    isContinuation: boolean;
+    classes: string[];
     offset: number;
+    isContinuation?: boolean;
+    isEnclosed?: boolean;
+    overlapsWithPrevious?: boolean;
+    overlapsWithNext?: boolean;
 }
 
 type RouteEmits = (e: 'update:tab-title', value: string) => void;
@@ -127,7 +132,7 @@ function init(): void {
     watch(route, () => fetchEvents());
     watch(
         () => events.value,
-        () => populateCalendar(),
+        () => populateCalendar(events.value),
         { deep: true }
     );
     onMounted(() => mounted());
@@ -253,16 +258,14 @@ function updateCreateEventDrag(date: Date): void {
     }
 }
 
-function populateCalendar(): Map<Month, CalendarDay[]> {
+function populateCalendar(evts: Event[]): Map<Month, CalendarDay[]> {
     // reset all events
     [...months.value.values()].forEach((month) => {
         month.forEach((day) => (day.events = []));
     });
 
-    for (let i = 0; i < events.value.length; i++) {
-        const previousEvent: Event | undefined = events.value[i - 1];
-        const event: Event = events.value[i];
-        const nextEvent: Event | undefined = events.value[i + 1];
+    for (let i = 0; i < evts.length; i++) {
+        const event: Event = evts[i];
 
         const month = months.value.get(event.start.getMonth());
         if (!month) {
@@ -271,69 +274,94 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
         }
         const dayIndex = event.start.getDate() - 1;
         const day = month[dayIndex];
-        const overlapsWithPrevious = eventService.doEventsHaveOverlappingDays(previousEvent, event);
-        const overlapsWithNext = eventService.doEventsHaveOverlappingDays(event, nextEvent);
 
         const calendarDayEvent: CalendarDayEvent = {
             event: event,
+            title: event.name,
             duration: event.days,
             durationInMonth: event.days,
-            class: '',
-            isContinuation: false,
+            classes: [],
             offset: 0,
         };
-        if (overlapsWithPrevious) {
-            calendarDayEvent.durationInMonth -= 0.5;
-            calendarDayEvent.offset = 0.5;
-        }
-        if (overlapsWithNext) {
-            calendarDayEvent.durationInMonth -= 0.5;
-        }
-        if (day.events.length === 1) {
-            // we have multiple events on this day
-            // TODO how can we handle more than 2 events on the same day?
-            calendarDayEvent.offset = 0.5;
-        }
 
         // add user event relation class
-        if (event.signedInUserRegistration) {
-            calendarDayEvent.class += event.isSignedInUserAssigned ? ' assigned' : ' waiting-list';
+        if (event.isSignedInUserAssigned) {
+            calendarDayEvent.classes.push('assigned');
+        } else if (event.signedInUserRegistration) {
+            calendarDayEvent.classes.push('waiting-list');
         }
         if (event.end.getTime() < Date.now()) {
-            calendarDayEvent.class += ' in-past';
-        }
-        if (calendarDayEvent.durationInMonth < 1) {
-            calendarDayEvent.class += ' small';
+            calendarDayEvent.classes.push('in-past');
         }
         if (event.state === EventState.Draft) {
-            calendarDayEvent.class += ' draft';
+            calendarDayEvent.classes.push('draft');
         }
+        day.events.push(calendarDayEvent);
+    }
+    smoothenOverlappingDays();
+    splitMultiMonthEvents();
+    return months.value;
+}
 
-        // check if event ends in next month and split into two events
-        if (dayIndex + calendarDayEvent.durationInMonth > month.length) {
-            calendarDayEvent.durationInMonth = month.length - dayIndex;
-            const nextMonth = months.value.get(event.start.getMonth() + 1);
-            if (nextMonth) {
-                const continuedCalendarDayEvent: CalendarDayEvent = {
-                    ...calendarDayEvent,
-                    duration: new Date(event.end.getTime() - event.start.getTime()).getDate(),
-                    durationInMonth: calendarDayEvent.duration - calendarDayEvent.durationInMonth,
+function smoothenOverlappingDays(): void {
+    const renderedEvents = [...months.value.values()].flat().flatMap((day) => day.events);
+    renderedEvents
+        .filter((it) => !eventService.isEnclosedByAnyOtherEvent(it.event, events.value))
+        .forEach((it, i, all) => {
+            const previousEvent: Event | undefined = all[i - 1]?.event;
+            const nextEvent: Event | undefined = all[i + 1]?.event;
+
+            it.overlapsWithPrevious = eventService.doEventsHaveOverlappingDays(previousEvent, it.event);
+            it.overlapsWithNext = eventService.doEventsHaveOverlappingDays(it.event, nextEvent);
+
+            if (it.overlapsWithPrevious) {
+                it.durationInMonth -= 0.5;
+                it.offset = 0.5;
+            }
+            if (it.overlapsWithNext) {
+                it.durationInMonth -= 0.5;
+            }
+            if (it.durationInMonth < 1) {
+                it.classes.push('small');
+            }
+        });
+    renderedEvents
+        .filter((it) => eventService.isEnclosedByAnyOtherEvent(it.event, events.value))
+        .forEach((it) => {
+            // TODO how should we render those?
+            console.log(it.event.name);
+            const day = months.value.get(it.event.start.getMonth())?.[it.event.start.getDate() - 1];
+            it.isEnclosed = true;
+            // TODO this counter is only correct if the enclosed events start all on the same day
+            it.title = `+ ${day?.events.length ?? 0 - 1}`;
+            it.classes.push('enclosed');
+        });
+}
+
+function splitMultiMonthEvents(): void {
+    const renderedEvents = [...months.value.values()].flat().flatMap((day) => day.events);
+
+    renderedEvents.forEach((it) => {
+        if (it.event.start.getMonth() != it.event.end.getMonth()) {
+            const startMonth = months.value.get(it.event.start.getMonth()) || [];
+            it.durationInMonth = startMonth!.length - it.event.start.getDate() + 1;
+            const endMonth = months.value.get(it.event.start.getMonth() + 1);
+            if (endMonth) {
+                const continuation: CalendarDayEvent = {
+                    ...it,
+                    title: `...${it.title}`,
+                    duration: new Date(it.event.end.getTime() - it.event.start.getTime()).getDate(),
+                    durationInMonth: it.duration - it.durationInMonth,
                     isContinuation: true,
                     offset: 0,
                 };
-                if (overlapsWithNext) {
-                    continuedCalendarDayEvent.durationInMonth -= 0.5;
+                if (continuation.overlapsWithNext) {
+                    continuation.durationInMonth -= 0.5;
                 }
-                if (overlapsWithPrevious) {
-                    calendarDayEvent.durationInMonth -= 0.5;
-                }
-                nextMonth[0].events.push(continuedCalendarDayEvent);
+                endMonth[0].events.push(continuation);
             }
         }
-
-        day.events.push(calendarDayEvent);
-    }
-    return months.value;
+    });
 }
 
 init();
