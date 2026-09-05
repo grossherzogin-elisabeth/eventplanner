@@ -11,9 +11,8 @@
             <div class="calendar-event-entry-bar"></div>
             <div class="calendar-event-entry-bg">
                 <div class="w-full truncate" :title="props.event.name">
-                    <span v-if="event.state === EventState.Draft" class="opacity-50"> {{ $t('domain.event-state.draft') }}: </span>
                     <span>
-                        {{ props.event.name }}
+                        {{ props.title }}
                     </span>
                 </div>
                 <template v-if="props.durationInMonth > 1">
@@ -30,12 +29,12 @@
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Event } from '@/domain';
-import { EventState } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
 
 interface Props {
     event: Event;
+    title: string;
     duration: number;
     durationInMonth: number;
     start: number;
@@ -80,6 +79,12 @@ init();
     border-radius: var(--radius-md);
     background-color: var(--color-surface-container);
     @apply shadow;
+}
+
+.calendar-event-wrapper.enclosed {
+    left: auto;
+    right: 0;
+    @apply w-12;
 }
 
 .calendar-event-entry-bar {
