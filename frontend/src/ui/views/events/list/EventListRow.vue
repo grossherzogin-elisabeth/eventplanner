@@ -95,8 +95,9 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
-import { useEventService, EventState } from '@/domain';
+import { EventSignupType, EventState, useEventService } from '@/domain';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
+import { useSession } from '@/ui/composables/Session.ts';
 
 interface StateDetails {
     name: string;
@@ -112,6 +113,7 @@ const props = defineProps<Props>();
 
 const { t } = useI18n();
 const eventService = useEventService();
+const { signedInUser } = useSession();
 
 const showWaitingList = computed<boolean>(() => {
     return props.event !== undefined && eventService.showWaitingList(props.event);
@@ -126,7 +128,7 @@ const hasOpenSlots = computed<boolean>(() => {
 });
 
 const hasOpenImportantSlots = computed<boolean>(() => {
-    return props.event !== undefined && eventService.hasOpenImportantSlots(props.event);
+    return props.event !== undefined && eventService.hasOpenImportantSlots(props.event, signedInUser.value?.positions);
 });
 
 const stateDetails = computed<StateDetails>(() => {
@@ -145,14 +147,14 @@ const stateDetails = computed<StateDetails>(() => {
     if (props.event.state === EventState.Draft) {
         return { name: t('domain.event-state.draft'), icon: 'fa-compass-drafting', color: 'neutral' };
     }
+    if (props.event.signupType === EventSignupType.Open || hasOpenSlots.value) {
+        return { name: t('domain.event-state.open-slots'), icon: 'fa-info-circle', color: 'info' };
+    }
     if (props.event.state === EventState.OpenForSignup) {
         return { name: t('domain.event-state.open-for-signup'), icon: 'fa-people-group', color: 'info' };
     }
     if (hasOpenImportantSlots.value) {
         return { name: t('domain.event-state.crew-wanted'), icon: 'fa-info-circle', color: 'warning' };
-    }
-    if (hasOpenSlots.value) {
-        return { name: t('domain.event-state.open-slots'), icon: 'fa-info-circle', color: 'info' };
     }
     return { name: t('domain.event-state.full'), icon: 'fa-info-circle', color: 'neutral' };
 });
