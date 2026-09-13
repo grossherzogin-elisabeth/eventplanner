@@ -25,22 +25,46 @@
                         </div>
                         <div
                             v-for="d in m[1]"
-                            :key="d.dayOfMonth"
+                            :key="d.date.getDate()"
                             :class="{ weekend: d.isWeekend, holiday: d.isHoliday, today: d.isToday }"
                             class="calendar-day"
                             @mousedown="startCreateEventDrag(d.date)"
                             @mouseover="updateCreateEventDrag(d.date)"
                             @mouseup="stopCreateEventDrag(d.date)"
                         >
-                            <div class="calendar-day-label">{{ d.weekday }}</div>
-                            <div class="calendar-day-label">{{ d.dayOfMonth }}</div>
-                            <div class="relative w-0 grow self-start">
-                                <template v-if="d.events.length > 0">
+                            <div class="bg-surface-container absolute">
+                                <div
+                                    class="flex w-5 items-center justify-center"
+                                    :class="{
+                                        'text-onerror-container bg-error-container/5': d.events.length === 0,
+                                        'text-onerror-container bg-error-container/10': d.events.length === 1,
+                                        'text-onerror-container bg-error-container/80': d.events.length === 2,
+                                        'text-onerror-container bg-error-container': d.events.length > 2,
+                                    }"
+                                >
+                                    {{ d.events.length }}
+                                </div>
+                            </div>
+                            <div class="calendar-day-label">{{ $d(d.date, DateTimeFormat.DDD) }}</div>
+                            <div class="calendar-day-label">{{ d.date.getDate() }}</div>
+                            <div class="relative flex w-0 grow self-start" :class="{ 'pl-8': d.events.length > d.eventsOnThisDay.length }">
+                                <EventCalendarItem
+                                    v-for="evt in d.eventsStartingOnThisDay"
+                                    :key="evt.key"
+                                    :title="evt.title"
+                                    :event="events[evt.key]"
+                                    :class="evt.classes.join(' ')"
+                                    :duration="evt.duration"
+                                    :duration-in-month="evt.durationInMonth"
+                                    :start="evt.offset"
+                                    @update:event="updateEvent"
+                                    @click.stop=""
+                                    @mousedown.stop=""
+                                />
+                                <div v-for="evt in d.eventsOnThisDay" :key="evt.key" class="relative w-0 grow">
                                     <EventCalendarItem
-                                        v-for="evt in d.events"
-                                        :key="evt.event.key"
                                         :title="evt.title"
-                                        :event="evt.event"
+                                        :event="events[evt.key]"
                                         :class="evt.classes.join(' ')"
                                         :duration="evt.duration"
                                         :duration-in-month="evt.durationInMonth"
@@ -49,8 +73,8 @@
                                         @click.stop=""
                                         @mousedown.stop=""
                                     />
-                                </template>
-                                <div v-else-if="createEventFromDate === d.date" class="create-event-overlay">
+                                </div>
+                                <div v-if="createEventFromDate === d.date" class="create-event-overlay">
                                     <span>{{ $t('views.calendar.create-event') }}</span>
                                     <span v-if="calendarStyle['--create-event-days'] > 1" class="text-xs">
                                         {{ calendarStyle['--create-event-days'] }} {{ $t('generic.days') }}
@@ -72,9 +96,9 @@ import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEventUseCase } from '@/application';
-import { DateTimeFormat, Month, addToDate } from '@/common/date';
+import { DateTimeFormat, Month, addToDate, cropToPrecision } from '@/common/date';
+import type { EventKey } from '@/domain';
 import { type Event, EventState, Permission } from '@/domain';
-import { useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import CreateEventDlg from '@/ui/components/events/EventCreateDlg.vue';
 import { useSession } from '@/ui/composables/Session.ts';
@@ -83,19 +107,21 @@ import EventCalendarItem from './EventCalendarItem.vue';
 
 interface CalendarDay {
     date: Date;
-    dayOfMonth: number;
-    weekday: string;
     isHoliday: boolean;
     isWeekend: boolean;
     isToday: boolean;
     events: CalendarDayEvent[];
+    eventsOnThisDay: CalendarDayEvent[];
+    eventsStartingOnThisDay: CalendarDayEvent[];
 }
 
 interface CalendarDayEvent {
-    event: Event;
+    key: EventKey;
     title: string;
     durationInMonth: number;
     duration: number;
+    start: Date;
+    end: Date;
     classes: string[];
     offset: number;
     isContinuation?: boolean;
@@ -111,13 +137,12 @@ const emit = defineEmits<RouteEmits>();
 const route = useRoute();
 const i18n = useI18n();
 const eventUseCase = useEventUseCase();
-const eventService = useEventService();
 const { hasPermission } = useSession();
 
 const createEventDialog = ref<Dialog<Partial<Event>, Event> | null>(null);
 const createEventFromDate = ref<Date | null>(null);
 const year = ref<number>(new Date().getFullYear());
-const events = ref<Event[]>([]);
+const events = ref<Record<EventKey, Event>>({});
 
 const months = ref<Map<Month, CalendarDay[]>>(new Map<Month, CalendarDay[]>());
 const calendar = ref<HTMLDivElement | null>(null);
@@ -132,7 +157,7 @@ function init(): void {
     watch(route, () => fetchEvents());
     watch(
         () => events.value,
-        () => populateCalendar(events.value),
+        () => populateCalendar(Object.values(events.value)),
         { deep: true }
     );
     onMounted(() => mounted());
@@ -195,26 +220,26 @@ async function fetchEvents(): Promise<void> {
     let evts = await eventUseCase.getEvents(year.value);
     evts = evts.filter((it) => it.state !== EventState.Canceled);
     months.value = buildCalender(year.value);
-    events.value = evts;
+    events.value = {};
+    evts.forEach((it) => (events.value[it.key] = it));
 }
 
 function buildCalender(year: number): Map<Month, CalendarDay[]> {
     let date = new Date(year, Month.JANUARY, 1);
-    const today = new Date();
+    const today = cropToPrecision(new Date(), 'days');
     const temp: Map<Month, CalendarDay[]> = new Map<Month, CalendarDay[]>();
     while (date.getFullYear() === year) {
         if (!temp.has(date.getMonth())) {
             temp.set(date.getMonth(), []);
         }
         temp.get(date.getMonth())?.push({
-            date: date,
-            dayOfMonth: date.getDate(),
-            weekday: i18n.d(date, DateTimeFormat.DDD),
+            date: cropToPrecision(date, 'days'),
             isHoliday: isHoliday(date, 'NI'),
             isWeekend: date.getDay() === 0 || date.getDay() === 6,
-            isToday:
-                date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear(),
+            isToday: date.getTime() === today.getTime(),
             events: [],
+            eventsStartingOnThisDay: [],
+            eventsOnThisDay: [],
         });
         date = addToDate(date, { days: 1 });
     }
@@ -222,7 +247,7 @@ function buildCalender(year: number): Map<Month, CalendarDay[]> {
 }
 
 function updateEvent(event: Event): void {
-    events.value = events.value.map((it) => (it.key === event.key ? event : it));
+    events.value[event.key] = event;
 }
 
 function startCreateEventDrag(date: Date): void {
@@ -259,109 +284,121 @@ function updateCreateEventDrag(date: Date): void {
 }
 
 function populateCalendar(evts: Event[]): Map<Month, CalendarDay[]> {
-    // reset all events
-    [...months.value.values()].forEach((month) => {
-        month.forEach((day) => (day.events = []));
-    });
-
-    for (let i = 0; i < evts.length; i++) {
-        const event: Event = evts[i];
-
-        const month = months.value.get(event.start.getMonth());
-        if (!month) {
-            console.error(`Missing month with index ${event.start.getMonth()}!`);
-            continue;
-        }
-        const dayIndex = event.start.getDate() - 1;
-        const day = month[dayIndex];
-
-        const calendarDayEvent: CalendarDayEvent = {
-            event: event,
-            title: event.name,
-            duration: event.days,
-            durationInMonth: event.days,
-            classes: [],
-            offset: 0,
-        };
-
-        // add user event relation class
-        if (event.isSignedInUserAssigned) {
-            calendarDayEvent.classes.push('assigned');
-        } else if (event.signedInUserRegistration) {
-            calendarDayEvent.classes.push('waiting-list');
-        }
-        if (event.end.getTime() < Date.now()) {
-            calendarDayEvent.classes.push('in-past');
-        }
-        if (event.state === EventState.Draft) {
-            calendarDayEvent.classes.push('draft');
-        }
-        day.events.push(calendarDayEvent);
-    }
+    resetCalendar();
+    const renderedEvents = fillCalendarDays(evts);
     smoothenOverlappingDays();
-    splitMultiMonthEvents();
+    calculateEventClasses(renderedEvents);
     return months.value;
 }
 
-function smoothenOverlappingDays(): void {
-    const renderedEvents = [...months.value.values()].flat().flatMap((day) => day.events);
-    renderedEvents
-        .filter((it) => !eventService.isEnclosedByAnyOtherEvent(it.event, events.value))
-        .forEach((it, i, all) => {
-            const previousEvent: Event | undefined = all[i - 1]?.event;
-            const nextEvent: Event | undefined = all[i + 1]?.event;
-
-            it.overlapsWithPrevious = eventService.doEventsHaveOverlappingDays(previousEvent, it.event);
-            it.overlapsWithNext = eventService.doEventsHaveOverlappingDays(it.event, nextEvent);
-
-            if (it.overlapsWithPrevious) {
-                it.durationInMonth -= 0.5;
-                it.offset = 0.5;
-            }
-            if (it.overlapsWithNext) {
-                it.durationInMonth -= 0.5;
-            }
-            if (it.durationInMonth < 1) {
-                it.classes.push('small');
-            }
+function resetCalendar(): void {
+    [...months.value.values()].forEach((month) => {
+        month.forEach((day) => {
+            day.events = [];
+            day.eventsStartingOnThisDay = [];
+            day.eventsOnThisDay = [];
         });
-    renderedEvents
-        .filter((it) => eventService.isEnclosedByAnyOtherEvent(it.event, events.value))
-        .forEach((it) => {
-            // TODO how should we render those?
-            console.log(it.event.name);
-            const day = months.value.get(it.event.start.getMonth())?.[it.event.start.getDate() - 1];
-            it.isEnclosed = true;
-            // TODO this counter is only correct if the enclosed events start all on the same day
-            it.title = `+ ${day?.events.length ?? 0 - 1}`;
-            it.classes.push('enclosed');
-        });
+    });
 }
 
-function splitMultiMonthEvents(): void {
-    const renderedEvents = [...months.value.values()].flat().flatMap((day) => day.events);
+function fillCalendarDays(evts: Event[]): CalendarDayEvent[] {
+    const renderedEvents: CalendarDayEvent[] = [];
+    for (let i = 0; i < evts.length; i++) {
+        const event: Event = evts[i];
+        const startMonth = months.value.get(event.start.getMonth()) ?? [];
+        const startDate = cropToPrecision(event.start, 'days');
+        const endDate = cropToPrecision(event.end, 'days');
 
-    renderedEvents.forEach((it) => {
-        if (it.event.start.getMonth() != it.event.end.getMonth()) {
-            const startMonth = months.value.get(it.event.start.getMonth()) || [];
-            it.durationInMonth = startMonth!.length - it.event.start.getDate() + 1;
-            const endMonth = months.value.get(it.event.start.getMonth() + 1);
-            if (endMonth) {
-                const continuation: CalendarDayEvent = {
-                    ...it,
-                    title: `...${it.title}`,
-                    duration: new Date(it.event.end.getTime() - it.event.start.getTime()).getDate(),
-                    durationInMonth: it.duration - it.durationInMonth,
+        let calendarDayEvent: CalendarDayEvent = {
+            key: event.key,
+            title: event.name,
+            duration: event.days,
+            durationInMonth: Math.min(startMonth.length - event.start.getDate() + 1, event.days),
+            start: startDate,
+            end: endDate,
+            classes: [],
+            offset: 0,
+        };
+        renderedEvents.push(calendarDayEvent);
+
+        const startDay = startMonth[startDate.getDate() - 1];
+        startDay.events.push(calendarDayEvent);
+        if (event.days <= 1) {
+            startDay.eventsOnThisDay.push(calendarDayEvent);
+            // if (startDay?.eventsOnThisDay.length > 1) {
+            //     startDay.eventsOnThisDay.forEach((it) => it.classes.push('small'));
+            // }
+        } else {
+            startDay.eventsStartingOnThisDay.push(calendarDayEvent);
+        }
+
+        // add this event to each calendar day it spans
+        let date = addToDate(startDate, { days: 1 });
+        while (date <= endDate) {
+            const month = months.value.get(date.getMonth()) ?? [];
+            const dayIndex = date.getDate() - 1;
+            if (date.getDate() === 1 && date.getMonth() != startDate.getMonth()) {
+                // event is reaches into next month
+                calendarDayEvent = {
+                    ...calendarDayEvent,
                     isContinuation: true,
+                    title: `...${event.name}`,
                     offset: 0,
+                    duration: new Date(event.end.getTime() - event.start.getTime()).getDate(),
+                    durationInMonth: calendarDayEvent.duration - calendarDayEvent.durationInMonth,
                 };
-                if (continuation.overlapsWithNext) {
-                    continuation.durationInMonth -= 0.5;
+                month[dayIndex].eventsStartingOnThisDay.push(calendarDayEvent);
+            }
+
+            month[dayIndex].events.push(calendarDayEvent);
+            date = addToDate(date, { days: 1 });
+        }
+    }
+    return renderedEvents;
+}
+
+function smoothenOverlappingDays(): void {
+    for (const day of getDays()) {
+        const nonSingleDayEvents = day.events.filter((it) => it.duration > 1);
+        if (nonSingleDayEvents.length > 1) {
+            for (const it of nonSingleDayEvents) {
+                it.durationInMonth -= 0.5;
+                if (day.date.getTime() === it.start.getTime()) {
+                    it.offset = 0.5;
                 }
-                endMonth[0].events.push(continuation);
             }
         }
+    }
+}
+
+function calculateEventClasses(renderedEvents: CalendarDayEvent[]): void {
+    renderedEvents.forEach((it) => {
+        const event = events.value[it.key];
+        if (event.isSignedInUserAssigned) {
+            it.classes.push('assigned');
+        } else if (event.signedInUserRegistration) {
+            it.classes.push('waiting-list');
+        }
+        if (event.end.getTime() < Date.now()) {
+            it.classes.push('in-past');
+        }
+        if (event.state === EventState.Draft) {
+            it.classes.push('draft');
+        }
     });
+    // getDays()
+    //     .filter((day) => day.eventsOnThisDay.length > 1)
+    //     .flatMap((day) => day.eventsOnThisDay)
+    //     .forEach((it) => it.classes.push('small'));
+    getDays()
+        .filter((day) => day.eventsStartingOnThisDay.length >= 1)
+        .filter((day) => day.eventsOnThisDay.length >= 1)
+        .flatMap((day) => day.eventsStartingOnThisDay)
+        .forEach((it) => it.classes.push('overlapped'));
+}
+
+function getDays(): CalendarDay[] {
+    return [...months.value.values()].flat();
 }
 
 init();

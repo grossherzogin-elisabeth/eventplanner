@@ -10,13 +10,13 @@
         <div :class="`${$attrs.class}`" class="calendar-event-entry" @click="showDetails()">
             <div class="calendar-event-entry-bar"></div>
             <div class="calendar-event-entry-bg">
-                <div class="w-full truncate" :title="props.event.name">
+                <div class="w-full truncate" :title="props.title">
                     <span>
                         {{ props.title }}
                     </span>
                 </div>
-                <template v-if="props.durationInMonth > 1">
-                    <span class="block w-full truncate text-xs font-normal">
+                <template v-if="props.durationInMonth > 2">
+                    <span class="subtitle block w-full truncate text-xs font-normal">
                         {{ $t('generic.days', props.duration) }}
                     </span>
                 </template>
@@ -79,12 +79,6 @@ init();
     border-radius: var(--radius-md);
     background-color: var(--color-surface-container);
     @apply shadow;
-}
-
-.calendar-event-wrapper.enclosed {
-    left: auto;
-    right: 0;
-    @apply w-12;
 }
 
 .calendar-event-entry-bar {
@@ -184,5 +178,9 @@ init();
 
 .calendar-event-entry.in-past:hover {
     opacity: 1;
+}
+
+.calendar-event-entry.overlapped > .calendar-event-entry-bg {
+    padding-top: 2.25rem;
 }
 </style>
