@@ -15,7 +15,7 @@
                         {{ props.title }}
                     </span>
                 </div>
-                <template v-if="props.durationInMonth > 2">
+                <template v-if="props.durationInMonth > 1">
                     <span class="subtitle block w-full truncate text-xs font-normal">
                         {{ $t('generic.days', props.duration) }}
                     </span>
@@ -180,7 +180,9 @@ init();
     opacity: 1;
 }
 
-.calendar-event-entry.overlapped > .calendar-event-entry-bg {
-    padding-top: 2.25rem;
+.calendar-event-entry.overlapped > .calendar-event-entry-bg > * {
+    width: calc(50% - 0.5rem);
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 </style>
