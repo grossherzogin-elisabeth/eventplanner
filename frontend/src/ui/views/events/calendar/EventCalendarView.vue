@@ -313,25 +313,22 @@ function populateCalendar(): Map<Month, CalendarDay[]> {
         if (dayIndex + calendarDayEvent.durationInMonth > month.length) {
             calendarDayEvent.durationInMonth = month.length - dayIndex;
             const nextMonth = months.value.get(event.start.getMonth() + 1);
-            if (!nextMonth) {
-                console.error(`Missing month with index ${event.start.getMonth() + 1}!`);
-                continue;
+            if (nextMonth) {
+                const continuedCalendarDayEvent: CalendarDayEvent = {
+                    ...calendarDayEvent,
+                    duration: new Date(event.end.getTime() - event.start.getTime()).getDate(),
+                    durationInMonth: calendarDayEvent.duration - calendarDayEvent.durationInMonth,
+                    isContinuation: true,
+                    offset: 0,
+                };
+                if (overlapsWithNext) {
+                    continuedCalendarDayEvent.durationInMonth -= 0.5;
+                }
+                if (overlapsWithPrevious) {
+                    calendarDayEvent.durationInMonth -= 0.5;
+                }
+                nextMonth[0].events.push(continuedCalendarDayEvent);
             }
-
-            const continuedCalendarDayEvent: CalendarDayEvent = {
-                ...calendarDayEvent,
-                duration: new Date(event.end.getTime() - event.start.getTime()).getDate(),
-                durationInMonth: calendarDayEvent.duration - calendarDayEvent.durationInMonth,
-                isContinuation: true,
-                offset: 0,
-            };
-            if (overlapsWithNext) {
-                continuedCalendarDayEvent.durationInMonth -= 0.5;
-            }
-            if (overlapsWithPrevious) {
-                calendarDayEvent.durationInMonth -= 0.5;
-            }
-            nextMonth[0].events.push(continuedCalendarDayEvent);
         }
 
         day.events.push(calendarDayEvent);
