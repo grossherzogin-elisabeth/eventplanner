@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -105,7 +106,7 @@ class EventMatrixExportServiceTest {
                     .map(Registration::getPosition)
                     .orElse(slot.getPositions().getFirst()))
                 .map(positions::get)
-                .sorted((a, b) -> b.getPriority() - a.getPriority())
+                .sorted(Comparator.comparingInt(Position::getPriority).reversed())
                 .toList();
             for (int i = 0; i < expectedPositions.size(); i++) {
                 var slot = expectedPositions.get(i);

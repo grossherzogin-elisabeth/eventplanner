@@ -6,49 +6,29 @@
             class="scrollbar-invisible interactive-table no-header"
             @click="openEvent($event.item, $event.event)"
         >
+            <template #icon="{ item }">
+                <span v-if="item?.isAssigned" class="bg-success-container/25 flex h-full w-full items-center justify-center rounded-full">
+                    <i class="fa-solid fa-user-check text-onsuccess-container/75"></i>
+                </span>
+                <span v-else class="bg-warning-container flex h-full w-full items-center justify-center rounded-full">
+                    <i class="fa-solid fa-user-clock text-onwarning-container"></i>
+                </span>
+            </template>
             <template #row="{ item }">
-                <td class="w-0 pr-4 text-xl opacity-50">
-                    <span v-if="!item?.waitingList">
-                        <i class="fa-solid fa-check text-success"></i>
-                    </span>
-                    <span v-else>
-                        <i class="fa-solid fa-hourglass-half"></i>
-                    </span>
-                </td>
-                <td class="w-1/2 max-w-[20rem] border-none font-semibold">
-                    <div class="mb-1 md:flex">
-                        <p class="grow truncate md:w-0">{{ item?.name }}</p>
-                    </div>
-                    <p class="truncate text-sm font-light">{{ item?.locations }}</p>
-                </td>
-                <td class="text-center whitespace-nowrap">
-                    <p class="mb-1 w-12 font-semibold">
-                        <span data-test-id="crew-count">{{ item?.crewCount }}</span>
-                        <span v-if="item?.waitingListCount" data-test-id="waiting-list-count" class="opacity-40">
-                            +{{ item.waitingListCount }}
-                        </span>
-                    </p>
-                    <p class="text-sm">{{ $t('domain.event.crew') }}</p>
-                </td>
-                <td class="whitespace-nowrap">
-                    <div class="mb-1 font-semibold">
-                        <p class="hidden w-56 lg:block">{{ formatDateRange(item?.start, item?.end) }}</p>
-                        <p class="w-20 lg:hidden">{{ $d(item?.start ?? new Date(), DateTimeFormat.DDD_DD_MM) }}</p>
-                    </div>
-                    <p class="text-sm">{{ $t('generic.days', { count: item?.duration }) }}</p>
-                </td>
-                <td>
-                    <span :style="{ '--color': item?.position.color }" class="tag custom">
-                        {{ item?.positionName }}
-                    </span>
-                </td>
+                <UserEventsTableRow
+                    :event="item?.event"
+                    :registration="item?.registration"
+                    :position="item?.position"
+                    :position-name="item?.positionName"
+                    :is-assigned="item?.isAssigned"
+                />
             </template>
             <template v-if="hasPermission(Permission.UPDATE_USERS)" #context-menu="{ item }">
                 <li>
                     <RouterLink
                         :to="{
                             name: Routes.EventDetails,
-                            params: { year: item.start.getFullYear(), key: item.eventKey },
+                            params: { year: item.event.start.getFullYear(), key: item.event.key },
                         }"
                         data-test-id="action-view-event"
                         class="context-menu-item"
@@ -61,7 +41,7 @@
                     <RouterLink
                         :to="{
                             name: Routes.EventEdit,
-                            params: { year: item.start.getFullYear(), key: item.eventKey },
+                            params: { year: item.event.start.getFullYear(), key: item.event.key },
                         }"
                         data-test-id="action-edit-event"
                         class="context-menu-item"
@@ -71,10 +51,10 @@
                     </RouterLink>
                 </li>
                 <li
-                    v-if="item.waitingList"
+                    v-if="!item.isAssigned"
                     data-test-id="action-add-to-crew"
                     class="context-menu-item"
-                    :class="{ disabled: item.inPast }"
+                    :class="{ disabled: item.event.isInPast }"
                     @click="addUserToCrew(item)"
                 >
                     <i class="fa-solid fa-user-plus" />
@@ -83,57 +63,12 @@
                 <li
                     class="context-menu-item text-error"
                     data-test-id="action-delete-registration"
-                    :class="{ disabled: item.inPast }"
+                    :class="{ disabled: item.event.isInPast }"
                     @click="deleteRegistration(item)"
                 >
                     <i class="fa-solid fa-trash-alt" />
                     <span>{{ $t('domain.registration.actions.delete') }}</span>
                 </li>
-            </template>
-            <template #loading>
-                <tr v-for="i in 5" :key="i" class="animate-pulse">
-                    <td><!-- spacer --></td>
-                    <td class="w-0 text-xl">
-                        <!-- registration status -->
-                        <i class="fa-solid fa-circle text-surface-container-highest"></i>
-                    </td>
-                    <td class="w-1/2 max-w-[65vw]">
-                        <!-- event name and locations -->
-                        <p class="bg-surface-container-highest mb-1 h-5 w-64 rounded-lg"></p>
-                        <p class="flex items-center space-x-2 text-sm font-light">
-                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                            <span class="bg-surface-container-highest inline-block h-3 w-16 rounded-lg"></span>
-                        </p>
-                    </td>
-                    <td>
-                        <!-- crew -->
-                        <p class="bg-surface-container-highest mb-1 h-5 w-12 rounded-lg"></p>
-                        <p class="bg-surface-container-highest h-3 w-10 rounded-lg"></p>
-                    </td>
-                    <td>
-                        <!-- date -->
-                        <div class="mb-1 font-semibold">
-                            <p class="bg-surface-container-highest hidden h-5 w-56 rounded-lg lg:block"></p>
-                            <p class="bg-surface-container-highest h-5 w-20 rounded-lg lg:hidden"></p>
-                        </div>
-                        <p class="bg-surface-container-highest h-3 w-16 rounded-lg"></p>
-                    </td>
-
-                    <td>
-                        <!-- role -->
-                        <div
-                            class="bg-surface-container-highest inline-flex h-6 w-32 items-center space-x-2 rounded-full py-1 pr-4 pl-3"
-                        ></div>
-                    </td>
-
-                    <td class="w-0">
-                        <div class="px-4 py-2">
-                            <i class="fa-solid fa-circle text-surface-container-highest"></i>
-                        </div>
-                    </td>
-                    <td><!-- spacer --></td>
-                </tr>
             </template>
         </VTable>
     </div>
@@ -144,28 +79,20 @@ import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
 import { filterUndefined } from '@/common';
-import { DateTimeFormat } from '@/common/date';
-import type { Event, Position, UserDetails } from '@/domain';
-import { Permission, useEventService } from '@/domain';
+import type { Event, Position, Registration, UserDetails } from '@/domain';
+import { EventSignupType, Permission, useEventService } from '@/domain';
 import { VTable } from '@/ui/components/common';
-import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { usePositions } from '@/ui/composables/Positions';
 import { useSession } from '@/ui/composables/Session';
 import { Routes } from '@/ui/views/Routes';
+import UserEventsTableRow from '@/ui/views/users/details/components/UserEventsTableRow.vue';
 
 export interface EventTableViewItem {
-    eventKey: string;
-    name: string;
-    locations: string;
-    start: Date;
-    end: Date;
-    duration: number;
+    event: Event;
+    registration: Registration;
     position: Position;
-    positionName?: string;
-    waitingList: boolean;
-    inPast: boolean;
-    crewCount: number;
-    waitingListCount: number;
+    positionName: string;
+    isAssigned: boolean;
 }
 
 interface Props {
@@ -191,20 +118,13 @@ const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
             const registration = evt.registrations.find((it) => it.userKey === props.user.key);
             const slot = evt.slots.find((it) => it.assignedRegistrationKey === registration?.key);
             const position = positions.get(registration?.positionKey || '');
-            if (position) {
+            if (registration && position) {
                 return {
-                    eventKey: evt.key,
-                    name: evt.name,
-                    start: evt.start,
-                    end: evt.end,
-                    duration: new Date(evt.end.getTime() - evt.start.getTime()).getDate(),
-                    position: position,
+                    event: evt,
+                    registration: registration,
                     positionName: slot?.positionName || position.name,
-                    waitingList: slot === undefined,
-                    locations: evt.locations.map((it) => it.name).join(' - '),
-                    crewCount: evt.assignedUserCount,
-                    inPast: evt.start.getTime() < Date.now(),
-                    waitingListCount: evt.registrations.length - evt.assignedUserCount,
+                    position: position,
+                    isAssigned: slot != undefined || evt.signupType === EventSignupType.Open,
                 };
             }
             console.warn('Failed to get users position');
@@ -215,7 +135,7 @@ const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
 
 async function addUserToCrew(item: EventTableViewItem): Promise<void> {
     try {
-        let event = props.events?.find((it) => it.key === item.eventKey);
+        let event = props.events?.find((it) => it.key === item.event.key);
         if (!event) {
             throw new Error('Veranstaltung konnte nicht gefunden werden');
         }
@@ -223,8 +143,6 @@ async function addUserToCrew(item: EventTableViewItem): Promise<void> {
         if (slot) {
             event = await eventAdministrationUseCase.assignUserToSlot(event, props.user, slot.key);
             await eventAdministrationUseCase.updateEvent(event.key, event);
-            item.crewCount = item.crewCount + 1;
-            item.waitingListCount = item.waitingListCount - 1;
         } else {
             throw new Error(`Die Veranstaltung hat keinen passenden freien Slot für die Position ${item.positionName}`);
         }
@@ -235,14 +153,14 @@ async function addUserToCrew(item: EventTableViewItem): Promise<void> {
 
 async function deleteRegistration(item: EventTableViewItem): Promise<void> {
     try {
-        let event = props.events?.find((it) => it.key === item.eventKey);
+        let event = props.events?.find((it) => it.key === item.event.key);
         if (!event) {
             throw new Error('Veranstaltung konnte nicht gefunden werden');
         }
         event = eventService.cancelUserRegistration(event, props.user.key);
         await eventAdministrationUseCase.updateEvent(event.key, event);
         const updatedEvents = props.events || [];
-        const index = updatedEvents.findIndex((it) => it.key === item.eventKey);
+        const index = updatedEvents.findIndex((it) => it.key === item.event.key);
         updatedEvents.splice(index, 1);
         emit('update:events', updatedEvents);
     } catch (e) {
@@ -253,12 +171,12 @@ async function deleteRegistration(item: EventTableViewItem): Promise<void> {
 async function openEvent(item: EventTableViewItem, evt: MouseEvent): Promise<void> {
     let to: RouteLocationRaw = {
         name: Routes.EventDetails,
-        params: { year: item.start.getFullYear(), key: item.eventKey },
+        params: { year: item.event.start.getFullYear(), key: item.event.key },
     };
     if (hasPermission(Permission.UPDATE_EVENTS)) {
         to = {
             name: Routes.EventEdit,
-            params: { year: item.start.getFullYear(), key: item.eventKey },
+            params: { year: item.event.start.getFullYear(), key: item.event.key },
         };
     }
     if (evt.metaKey || evt.ctrlKey) {

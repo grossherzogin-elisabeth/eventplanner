@@ -138,7 +138,7 @@ public class EventExportUseCase {
             .sorted((a, b) -> {
                 var pa = positions.get(a.getPosition());
                 var pb = positions.get(b.getPosition());
-                return pb.getPriority() - pa.getPriority();
+                return Integer.compare(pb.getPriority(), pa.getPriority());
             })
             .toList();
 

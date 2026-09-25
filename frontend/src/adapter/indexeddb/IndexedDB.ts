@@ -57,6 +57,6 @@ export async function deleteDatabase(databaseName: string): Promise<void> {
     return new Promise((resolve, reject) => {
         const deleteRequest = globalThis.indexedDB.deleteDatabase(databaseName);
         deleteRequest.onsuccess = (): void => resolve();
-        deleteRequest.onerror = (): void => reject();
+        deleteRequest.onerror = (): void => reject(new Error(deleteRequest.error?.message));
     });
 }

@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class EventMatrixExportService {
         sheet.setDefaultColumnWidth(18);
 
         var positions = new LinkedList<>(positionRepository.findAll());
-        positions.sort((a, b) -> b.getPriority() - a.getPriority());
+        positions.sort(Comparator.comparingInt(Position::getPriority).reversed());
         var positionsByKey = new HashMap<PositionKey, Position>();
         var cellStyles = getCellStyles(workbook, positions);
         positions.forEach(position -> positionsByKey.put(position.getKey(), position));
