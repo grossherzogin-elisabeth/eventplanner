@@ -3,8 +3,8 @@ plugins {
     id "jacoco"
     id "org.springframework.boot" version "4.1.1"
     id "io.spring.dependency-management" version "1.1.7"
-    id "io.freefair.lombok" version "9.5.0"
-    id "org.sonarqube" version "7.4.0.8496"
+    id "io.freefair.lombok" version "9.7.0"
+    id "org.sonarqube" version "7.5.0.8588"
 }
 
 group = "org.eventplanner"
@@ -55,7 +55,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-validation-test:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-restclient-test:${springBootVersion}"
     testImplementation "org.springframework.security:spring-security-test:7.1.1"
-    testImplementation "com.tngtech.archunit:archunit:1.5.0"
+    testImplementation "com.tngtech.archunit:archunit:1.5.1"
 
     // silence "unknown enum constant javax.annotation.meta.When.MAYBE" warning
     // https://stackoverflow.com/questions/53326271/spring-nullable-annotation-generates-unknown-enum-constant-warning
@@ -66,7 +66,7 @@ dependencies {
     runtimeOnly "io.micrometer:micrometer-registry-prometheus"
 
     // util
-    implementation "org.apache.commons:commons-lang3:3.20.0"
+    implementation "org.apache.commons:commons-lang3:3.21.0"
 }
 
 test {
