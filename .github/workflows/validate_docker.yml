@@ -10,6 +10,7 @@ on:
       - reopened
       - synchronize
     paths:
+      - '.github/workflows/validate_docker.yml'
       - 'Dockerfile'
       - '.dockerignore'
       - '.tool-versions'
