@@ -10,14 +10,13 @@
         <div :class="`${$attrs.class}`" class="calendar-event-entry" @click="showDetails()">
             <div class="calendar-event-entry-bar"></div>
             <div class="calendar-event-entry-bg">
-                <div class="w-full truncate" :title="props.event.name">
-                    <span v-if="event.state === EventState.Draft" class="opacity-50"> {{ $t('domain.event-state.draft') }}: </span>
+                <div class="w-full truncate" :title="props.title">
                     <span>
-                        {{ props.event.name }}
+                        {{ props.title }}
                     </span>
                 </div>
                 <template v-if="props.durationInMonth > 1">
-                    <span class="block w-full truncate text-xs font-normal">
+                    <span class="subtitle block w-full truncate text-xs font-normal">
                         {{ $t('generic.days', props.duration) }}
                     </span>
                 </template>
@@ -30,12 +29,12 @@
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Event } from '@/domain';
-import { EventState } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
 
 interface Props {
     event: Event;
+    title: string;
     duration: number;
     durationInMonth: number;
     start: number;
@@ -179,5 +178,11 @@ init();
 
 .calendar-event-entry.in-past:hover {
     opacity: 1;
+}
+
+.calendar-event-entry.overlapped > .calendar-event-entry-bg > * {
+    width: calc(50% - 0.5rem);
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 </style>
