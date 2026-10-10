@@ -86,11 +86,13 @@ spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
     hikari:
-      connection-init-sql: |
-        PRAGMA journal_mode=WAL;
-        PRAGMA synchronous=NORMAL;
-        PRAGMA cache_size=-10000;
-        PRAGMA temp_store=MEMORY;
+      data-source-properties:
+        journal_mode: WAL
+        synchronous: NORMAL
+        cache_size: -10000
+        temp_store: MEMORY
+        transaction_mode: IMMEDIATE
+        busy_timeout: 5000
     url: jdbc:sqlite:${data.directory}/eventplanner.db
   flyway:
     baseline-on-migrate: true

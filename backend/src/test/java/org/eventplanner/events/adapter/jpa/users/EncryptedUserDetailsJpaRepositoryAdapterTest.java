@@ -2,27 +2,21 @@ package org.eventplanner.events.adapter.jpa.users;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.Serializable;
 import java.util.NoSuchElementException;
 
-import org.eventplanner.common.Encrypted;
 import org.eventplanner.config.RetryConfig;
 import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
-import org.eventplanner.testdata.UserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -83,53 +77,5 @@ class EncryptedUserDetailsJpaRepositoryAdapterTest {
         assertThatThrownBy(() -> testee.deleteByKey(key))
             .isInstanceOf(NoSuchElementException.class);
         verify(repository, never()).deleteById(key.value());
-    }
-
-    @Test
-    void shouldRetryCreate() {
-        var user = UserFactory.createUser().encrypt(this::mockEncrypt);
-        var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
-        when(repository.existsById(any())).thenReturn(false);
-        when(repository.save(any()))
-            .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
-            .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
-            .thenReturn(entity);
-
-        testee.create(user);
-
-        verify(repository, times(3)).save(any());
-    }
-
-    @Test
-    void shouldRetryUpdate() {
-        var user = UserFactory.createUser().encrypt(this::mockEncrypt);
-        var entity = EncryptedUserDetailsJpaEntity.fromDomain(user);
-        when(repository.existsById(any())).thenReturn(true);
-        when(repository.save(any()))
-            .thenThrow(new CannotAcquireLockException("mocked 1st attempt"))
-            .thenThrow(new CannotAcquireLockException("mocked 2nd attempt"))
-            .thenReturn(entity);
-
-        testee.update(user);
-
-        verify(repository, times(3)).save(any());
-    }
-
-    @Test
-    void shouldRetryDelete() {
-        var user = UserFactory.createUser().encrypt(this::mockEncrypt);
-        when(repository.existsById(any())).thenReturn(true);
-        doThrow(new CannotAcquireLockException("mocked 1st attempt"))
-            .doThrow(new CannotAcquireLockException("mocked 2nd attempt"))
-            .doNothing()
-            .when(repository).deleteById(any());
-
-        testee.deleteByKey(user.getKey());
-
-        verify(repository, times(3)).deleteById(any());
-    }
-
-    private <T extends Serializable> Encrypted<T> mockEncrypt(T t) {
-        return new Encrypted<T>("mocked");
     }
 }

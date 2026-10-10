@@ -9,8 +9,6 @@ import org.eventplanner.events.domain.entities.events.Event;
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.jspecify.annotations.NonNull;
-import org.springframework.dao.PessimisticLockingFailureException;
-import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,12 +47,6 @@ public class EventJpaRepositoryAdapter implements EventRepository {
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public @NonNull Event create(@NonNull Event event) {
         if (this.eventJpaRepository.existsById(event.getKey().value())) {
             log.error("Failed to create new event: key {} already exists", event.getKey());
@@ -67,12 +59,6 @@ public class EventJpaRepositoryAdapter implements EventRepository {
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public @NonNull Event update(@NonNull Event event) {
         if (!this.eventJpaRepository.existsById(event.getKey().value())) {
             throw new NoSuchElementException();
@@ -84,12 +70,6 @@ public class EventJpaRepositoryAdapter implements EventRepository {
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void deleteByKey(@NonNull EventKey key) {
         this.eventJpaRepository.deleteById(key.value());
         this.registrationJpaRepository.deleteAllByEventKey(key.value());
