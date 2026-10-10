@@ -21,7 +21,7 @@ public class ErrorReportingController {
 
     @PostMapping("/error")
     public @NonNull ResponseEntity<Void> reportError(@RequestBody @NonNull ErrorReportDto log) {
-        reportErrorsUseCase.report(Level.ERROR, log.toDomain());
+        reportErrorsUseCase.report(Level.WARN, log.toDomain());
         return ResponseEntity.noContent().build();
     }
 }
