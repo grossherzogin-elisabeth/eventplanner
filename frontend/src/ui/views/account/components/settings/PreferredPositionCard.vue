@@ -8,11 +8,14 @@
         @update:model-value="emit('update:modelValue', $event)"
     >
         <template #default>
-            <p v-if="props.modelValue.preferredPosition" class="truncate">
+            <p
+                v-if="props.modelValue.preferredPosition && props.availablePositions.includes(props.modelValue.preferredPosition)"
+                class="truncate"
+            >
                 {{ positions.get(props.modelValue.preferredPosition).name }}
             </p>
             <p v-else-if="availablePositions.length > 0" class="truncate">
-                {{ positions.get(availablePositions[0]).name }}
+                {{ positions.get(props.availablePositions[0]).name }}
             </p>
             <p v-else class="truncate italic">
                 {{ $t('generic.no-information') }}
@@ -49,22 +52,7 @@ const emit = defineEmits<Emits>();
 const positions = usePositions();
 
 const filteredPositions = computed<InputSelectOption<PositionKey | undefined>[]>(() => {
-    return positions.options.value
-        .filter((it) => isAvailablePosition(it.value, true))
-        .map((it) => ({
-            value: it.value,
-            label: it.label,
-            disabled: !isAvailablePosition(it.value),
-        }));
+    const userPositions = props.availablePositions;
+    return userPositions.map((it) => positions.get(it)).map((it) => ({ label: it.name, value: it.key }));
 });
-
-function isAvailablePosition(position: PositionKey | undefined, includeCurrent: boolean = false): boolean {
-    if (!position) {
-        return false;
-    }
-    if (props.availablePositions.includes(position)) {
-        return true;
-    }
-    return includeCurrent && position === props.modelValue.preferredPosition;
-}
 </script>
