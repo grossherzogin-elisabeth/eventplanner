@@ -12,8 +12,6 @@ import org.eventplanner.events.application.ports.QualificationRepository;
 import org.eventplanner.events.domain.entities.qualifications.Qualification;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.jspecify.annotations.NonNull;
-import org.springframework.dao.PessimisticLockingFailureException;
-import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,12 +44,6 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void create(@NonNull final Qualification qualification) {
         if (qualificationJpaRepository.existsById(qualification.getKey().value())) {
             log.error("Failed to create new qualification: key {} already exists", qualification.getKey());
@@ -63,12 +55,6 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void update(@NonNull final Qualification qualification) {
         if (!qualificationJpaRepository.existsById(qualification.getKey().value())) {
             throw new NoSuchElementException("Qualification with key " + qualification.getKey()
@@ -79,12 +65,6 @@ public class QualificationJpaRepositoryAdapter implements QualificationRepositor
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void deleteByKey(@NonNull final QualificationKey key) {
         if (!qualificationJpaRepository.existsById(key.value())) {
             throw new NoSuchElementException("Qualification with key " + key.value() + " does not exist");

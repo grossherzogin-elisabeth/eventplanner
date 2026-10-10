@@ -10,8 +10,6 @@ import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
-import org.springframework.dao.PessimisticLockingFailureException;
-import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,12 +45,6 @@ public class EncryptedUserDetailsJpaRepositoryAdapter implements UserRepository 
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public @NonNull EncryptedUserDetails create(@NonNull final EncryptedUserDetails user)
     throws UserAlreadyExistsException {
         // prevent duplicates on primary key
@@ -73,12 +65,6 @@ public class EncryptedUserDetailsJpaRepositoryAdapter implements UserRepository 
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public @NonNull EncryptedUserDetails update(@NonNull final EncryptedUserDetails user)
     throws NoSuchElementException {
         // make sure user exits
@@ -92,12 +78,6 @@ public class EncryptedUserDetailsJpaRepositoryAdapter implements UserRepository 
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void deleteByKey(@NonNull final UserKey key) {
         if (!encryptedUserDetailsJpaRepository.existsById(key.value())) {
             throw new NoSuchElementException("User with key " + key.value() + " does not exist");

@@ -7,8 +7,6 @@ import java.util.Optional;
 import org.eventplanner.events.application.ports.AccessKeyRepository;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
-import org.springframework.dao.PessimisticLockingFailureException;
-import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +22,6 @@ public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void create(final @NonNull UserKey userKey, final @NonNull String accessKeyHash) {
         if (accessKeyJpaRepository.existsById(accessKeyHash)) {
             log.error("Failed to create new access key for user {}: hash is already in use", userKey);
@@ -51,12 +43,6 @@ public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void deleteExpired(@NonNull final Duration maxAge) {
         accessKeyJpaRepository.deleteAllByCreatedAtBefore(Instant.now().minus(maxAge));
     }

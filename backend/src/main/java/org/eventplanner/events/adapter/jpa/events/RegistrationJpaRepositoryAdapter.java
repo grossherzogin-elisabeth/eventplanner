@@ -10,8 +10,6 @@ import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
 import org.jspecify.annotations.NonNull;
-import org.springframework.dao.PessimisticLockingFailureException;
-import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,12 +25,6 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public @NonNull Registration createRegistration(@NonNull Registration registration, @NonNull Event event) {
         if (registrationJpaRepository.existsById(registration.getKey().value())) {
             log.error("Failed to create new registration: key {} already exists", registration.getKey());
@@ -44,12 +36,6 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public @NonNull Registration updateRegistration(@NonNull Registration registration, @NonNull Event event) {
         var entity = registrationJpaRepository.findByKeyAndEventKey(
                 registration.getKey().value(),
@@ -76,12 +62,6 @@ public class RegistrationJpaRepositoryAdapter implements RegistrationRepository 
 
     @Override
     @Transactional
-    @Retryable(
-        includes = PessimisticLockingFailureException.class,
-        delayString = "${resilience.retry.delay:1000}",
-        jitterString = "${resilience.retry.jitter:0}",
-        multiplierString = "${resilience.retry.multiplier:1}",
-        maxRetriesString = "${resilience.retry.max-retries:3}")
     public void deleteRegistration(@NonNull RegistrationKey registrationKey, @NonNull EventKey eventKey) {
         registrationJpaRepository.deleteByKeyAndEventKey(registrationKey.value(), eventKey.value());
     }
