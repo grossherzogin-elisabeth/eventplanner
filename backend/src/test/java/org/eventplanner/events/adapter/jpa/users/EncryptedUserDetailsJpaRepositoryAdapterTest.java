@@ -7,10 +7,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.Serializable;
 import java.util.NoSuchElementException;
 
-import org.eventplanner.common.Encrypted;
 import org.eventplanner.config.RetryConfig;
 import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
@@ -79,9 +77,5 @@ class EncryptedUserDetailsJpaRepositoryAdapterTest {
         assertThatThrownBy(() -> testee.deleteByKey(key))
             .isInstanceOf(NoSuchElementException.class);
         verify(repository, never()).deleteById(key.value());
-    }
-
-    private <T extends Serializable> Encrypted<T> mockEncrypt(T t) {
-        return new Encrypted<T>("mocked");
     }
 }
