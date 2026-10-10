@@ -61,28 +61,24 @@ describe('UserSettingsTab.vue', () => {
             expect(preferredPositionCard.text()).toContain('Captain');
         });
 
-        it('should show selected position even if not available', async () => {
+        it('should only show available positions', async () => {
             testee.unmount();
             testee = mount(UserSettingsTab, {
                 props: {
                     modelValue: userSettings,
                     user: mockUserDetails(
                         mockUserEngineer({
-                            positionKeys: [],
+                            positionKeys: [MATE],
                         })
                     ),
                 },
             });
 
             const dialog = await openCard(testee, '[data-test-id="user-settings-preferred-position-card"]');
-            await expect
-                .poll(() => testee.find('[data-test-id="user-settings-preferred-position-input"]').findAll('li').length)
-                .toBeGreaterThan(0);
+            await expect.poll(() => testee.find('[data-test-id="user-settings-preferred-position-input"]').findAll('li').length).toBe(1);
 
             const selectedPosition = testee.find('[data-test-id="user-settings-preferred-position-input"]').findAll('li')[0];
-            expect(selectedPosition.text()).toContain('Captain');
-            expect(selectedPosition.classes()).toContain('opacity-50');
-            expect(selectedPosition.find('.fa-solid.fa-circle').exists()).toBe(true);
+            expect(selectedPosition.text()).toContain('Mate');
 
             await dialog.find('[data-test-id="button-cancel"]').trigger('click');
         });

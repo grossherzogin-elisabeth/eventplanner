@@ -36,8 +36,10 @@ import { VSheet } from '@/ui/components/common';
 import RegistrationForm, { View } from '@/ui/components/events/RegistrationForm.vue';
 import { useSession } from '@/ui/composables/Session.ts';
 import { v4 as uuid } from 'uuid';
+import { useUsersUseCase } from '@/application';
 
 const { signedInUser } = useSession();
+const usersUseCase = useUsersUseCase();
 
 const view = ref<View>(View.OVERVIEW);
 const sheet = ref<Sheet<{ registration?: Registration; event: Event | Event[] }, Registration | undefined> | null>(null);
@@ -45,13 +47,19 @@ const registration = ref<Registration>({ key: uuid(), positionKey: '' });
 const events = ref<Event[]>([]);
 
 async function open(value: { registration?: Registration; event: Event | Event[] }): Promise<Registration | undefined> {
+    const userSettings = await usersUseCase.getUserSettings();
+    let position = userSettings.preferredPosition;
+    if (!position || !signedInUser.value?.positions.includes(position)) {
+        position = signedInUser.value?.positions[0];
+    }
+
     events.value = deepCopy(Array.isArray(value.event) ? value.event : [value.event]);
     registration.value = value.registration
         ? deepCopy(value.registration)
         : {
               key: '',
               userKey: signedInUser.value?.key,
-              positionKey: signedInUser.value?.positions[0] ?? '',
+              positionKey: position ?? '',
               overnightStay: !isSameDate(events.value[0].start, events.value[0].end),
           };
     view.value = View.OVERVIEW;
