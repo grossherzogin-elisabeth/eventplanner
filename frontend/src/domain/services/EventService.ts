@@ -10,10 +10,6 @@ export class EventService {
             return false;
         }
 
-        // if (a.days <= 1 && b.days <= 1) {
-        //     return false;
-        // }
-
         const aStart = cropToPrecision(a.start, 'days').getTime();
         const aEnd = cropToPrecision(a.end, 'days').getTime();
         const bStart = cropToPrecision(b.start, 'days').getTime();
