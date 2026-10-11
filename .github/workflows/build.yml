@@ -3,14 +3,13 @@ name: Build and push Docker container
 on:
   workflow_dispatch:
     inputs:
-      version:
-        default: 1.0.0
-        description: Version of this build
-        type: string
-      latest:
+      preview:
         default: false
-        description: Tag this image as latest
+        description: Mark this build as preview (stable builds are tagged as latest)
         type: boolean
+
+env:
+  IMAGE: ghcr.io/grossherzogin-elisabeth/eventplanner
 
 jobs:
   build-and-push-container:
@@ -26,56 +25,87 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
 
+      - name: Read and verify version
+        id: version
+        shell: bash
+        run: |
+          frontend_version=$(jq -r '.version // empty' frontend/package.json)
+          gradle_version=$(sed -nE 's/^version[[:space:]]*=[[:space:]]*["'"'"']([^"'"'"']+)["'"'"'].*/\1/p' backend/build.gradle | head -n 1)
+          # Gradle versions may carry a -SNAPSHOT suffix during development
+          backend_version="${gradle_version%-SNAPSHOT}"
+
+          echo "frontend/package.json: ${frontend_version:-<not found>}"
+          echo "backend/build.gradle:  ${gradle_version:-<not found>}"
+
+          if [[ -z "$frontend_version" || -z "$backend_version" ]]; then
+            echo "::error::Could not read version from frontend/package.json or backend/build.gradle"
+            exit 1
+          fi
+          if [[ "$frontend_version" != "$backend_version" ]]; then
+            echo "::error::Version mismatch: frontend/package.json has '$frontend_version', backend/build.gradle has '$gradle_version'"
+            exit 1
+          fi
+          if ! [[ "$frontend_version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::Version '$frontend_version' is not in the format <major>.<minor>.<patch>"
+            exit 1
+          fi
+
+          {
+            echo "major=${BASH_REMATCH[1]}"
+            echo "minor=${BASH_REMATCH[2]}"
+            echo "patch=${BASH_REMATCH[3]}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Determine image tags
+        id: meta
+        shell: bash
+        env:
+          MAJOR: ${{ steps.version.outputs.major }}
+          MINOR: ${{ steps.version.outputs.minor }}
+          PATCH: ${{ steps.version.outputs.patch }}
+          PREVIEW: ${{ inputs.preview }}
+        run: |
+          version="$MAJOR.$MINOR.$PATCH"
+          if [[ "$PREVIEW" == "true" ]]; then
+            tags=("$version-preview" "preview")
+          else
+            tags=("$version" "$MAJOR.$MINOR" "$MAJOR" "latest")
+          fi
+
+          {
+            echo "date=$(date '+%Y-%m-%d %H:%M:%S')"
+            echo "tags<<EOF"
+            printf "$IMAGE:%s\n" "${tags[@]}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "Image tags:"
+          printf "$IMAGE:%s\n" "${tags[@]}"
+
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
       # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4.4.1
+        uses: docker/setup-buildx-action@v4.2.0
 
-      # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into ghcr registry
-        if: github.event_name != 'pull_request'
         uses: docker/login-action@v4.6.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date '+%Y-%m-%d %H:%M:%S')"
-
       - name: Build and push Docker image
-        if: ${{ github.ref == 'refs/heads/main' && inputs.latest }}
-        id: build-and-push-latest
-        uses: docker/build-push-action@v7.4.0
-        with:
-          context: .
-          build-args: |
-            COMMIT=${{ github.sha }}
-            BRANCH=${{ github.head_ref || github.ref_name }} 
-            TIME=${{ steps.date.outputs.date }}
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ghcr.io/grossherzogin-elisabeth/eventplanner:latest
-            ghcr.io/grossherzogin-elisabeth/eventplanner:${{ inputs.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push Docker image (main)
-        if: ${{ github.ref != 'refs/heads/main' || !inputs.latest }}
         id: build-and-push
-        uses: docker/build-push-action@v7.4.0
+        uses: docker/build-push-action@v7.2.0
         with:
           context: .
           build-args: |
             COMMIT=${{ github.sha }}
-            BRANCH=${{ github.head_ref || github.ref_name }} 
-            TIME=${{ steps.date.outputs.date }}
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/grossherzogin-elisabeth/eventplanner:${{ inputs.version }}
+            BRANCH=${{ github.head_ref || github.ref_name }}
+            TIME=${{ steps.meta.outputs.date }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
