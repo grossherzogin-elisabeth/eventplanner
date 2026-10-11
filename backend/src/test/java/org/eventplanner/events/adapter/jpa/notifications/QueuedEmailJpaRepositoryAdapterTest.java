@@ -1,33 +1,38 @@
 package org.eventplanner.events.adapter.jpa.notifications;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 
-import org.eventplanner.config.RetryConfig;
 import org.eventplanner.events.domain.entities.notifications.QueuedEmail;
 import org.eventplanner.events.domain.values.notifications.NotificationType;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(classes = { QueuedEmailJpaRepositoryAdapter.class, RetryConfig.class })
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(QueuedEmailJpaRepositoryAdapter.class)
 @ActiveProfiles(profiles = { "test" })
 class QueuedEmailJpaRepositoryAdapterTest {
 
     @Autowired
     private QueuedEmailJpaRepositoryAdapter testee;
 
-    @MockitoBean
+    @Autowired
     private QueuedEmailJpaRepository repository;
 
+    @BeforeEach
+    void setup() {
+        repository.deleteAll();
+    }
+    
     @Test
     void shouldThrowWhenQueueingEmailThatAlreadyExists() {
         var email = new QueuedEmail(
@@ -40,10 +45,13 @@ class QueuedEmailJpaRepositoryAdapterTest {
             0,
             Instant.now()
         );
-        when(repository.existsById(email.getKey())).thenReturn(true);
+        repository.save(QueuedEmailJpaEntity.fromDomain(email));
 
-        assertThatThrownBy(() -> testee.queue(email))
+        assertThatThrownBy(() -> testee.queue(email.withTo("other")))
             .isInstanceOf(IllegalStateException.class);
-        verify(repository, never()).save(any(QueuedEmailJpaEntity.class));
+
+        var saved = repository.findAll();
+        assertThat(saved).hasSize(1);
+        assertThat(saved.getFirst().getEmail()).isEqualTo("user@example.org");
     }
 }

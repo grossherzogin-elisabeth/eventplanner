@@ -1,59 +1,65 @@
 package org.eventplanner.events.adapter.jpa.qualifications;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.eventplanner.testdata.QualificationFactory.createQualification;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.NoSuchElementException;
 
-import org.eventplanner.config.RetryConfig;
 import org.eventplanner.events.domain.values.qualifications.QualificationKey;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(classes = { QualificationJpaRepositoryAdapter.class, RetryConfig.class })
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(QualificationJpaRepositoryAdapter.class)
 @ActiveProfiles(profiles = { "test" })
 class QualificationJpaRepositoryAdapterTest {
 
     @Autowired
     private QualificationJpaRepositoryAdapter testee;
 
-    @MockitoBean
+    @Autowired
     private QualificationJpaRepository repository;
+
+    @BeforeEach
+    void setup() {
+        repository.deleteAll();
+    }
 
     @Test
     void shouldThrowWhenCreatingQualificationThatAlreadyExists() {
-        var qualification = createQualification();
-        when(repository.existsById(qualification.getKey().value())).thenReturn(true);
+        var qualification = createQualification().withName("Existing");
+        repository.save(QualificationJpaEntity.fromDomain(qualification));
 
-        assertThatThrownBy(() -> testee.create(qualification))
+        assertThatThrownBy(() -> testee.create(qualification.withName("Other")))
             .isInstanceOf(IllegalArgumentException.class);
-        verify(repository, never()).save(any(QualificationJpaEntity.class));
+
+        var saved = repository.findAll();
+        assertThat(saved).hasSize(1);
+        assertThat(saved.getFirst().getName()).isEqualTo("Existing");
     }
 
     @Test
     void shouldThrowWhenUpdatingQualificationThatDoesNotExist() {
         var qualification = createQualification();
-        when(repository.existsById(qualification.getKey().value())).thenReturn(false);
 
         assertThatThrownBy(() -> testee.update(qualification))
             .isInstanceOf(NoSuchElementException.class);
-        verify(repository, never()).save(any(QualificationJpaEntity.class));
+
+        assertThat(repository.findAll()).isEmpty();
     }
 
     @Test
     void shouldThrowWhenDeletingQualificationThatDoesNotExist() {
         var key = new QualificationKey("qualification-1");
-        when(repository.existsById(key.value())).thenReturn(false);
 
         assertThatThrownBy(() -> testee.deleteByKey(key))
             .isInstanceOf(NoSuchElementException.class);
-        verify(repository, never()).deleteById(key.value());
     }
 }
