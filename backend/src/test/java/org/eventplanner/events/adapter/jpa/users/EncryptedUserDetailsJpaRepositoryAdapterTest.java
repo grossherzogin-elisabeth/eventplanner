@@ -77,14 +77,16 @@ class EncryptedUserDetailsJpaRepositoryAdapterTest {
 
     @Test
     void shouldThrowWhenUpdatingUserThatDoesNotExist() {
-        assertThatThrownBy(() -> testee.update(createEncryptedUserDetails()))
+        var user = createEncryptedUserDetails();
+        assertThatThrownBy(() -> testee.update(user))
             .isInstanceOf(NoSuchElementException.class);
         assertThat(repository.findAll()).isEmpty();
     }
 
     @Test
     void shouldThrowWhenDeletingUserThatDoesNotExist() {
-        assertThatThrownBy(() -> testee.deleteByKey(new UserKey("user-1")))
+        var userKey = new UserKey("user-1");
+        assertThatThrownBy(() -> testee.deleteByKey(userKey))
             .isInstanceOf(NoSuchElementException.class);
         assertThat(repository.findAll()).isEmpty();
     }

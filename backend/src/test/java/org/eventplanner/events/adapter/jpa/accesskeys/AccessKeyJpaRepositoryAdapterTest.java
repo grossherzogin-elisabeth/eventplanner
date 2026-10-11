@@ -58,7 +58,8 @@ class AccessKeyJpaRepositoryAdapterTest {
             Instant.now()
         ));
 
-        assertThatThrownBy(() -> testee.create(new UserKey("user-2"), "access-1"))
+        var userKey = new UserKey("user-2");
+        assertThatThrownBy(() -> testee.create(userKey, "access-1"))
             .isInstanceOf(IllegalStateException.class)
             .hasMessageNotContaining("access-1");
     }
