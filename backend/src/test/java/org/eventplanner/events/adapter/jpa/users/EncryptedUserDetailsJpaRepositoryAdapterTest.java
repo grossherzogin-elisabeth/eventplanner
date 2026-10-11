@@ -1,81 +1,127 @@
 package org.eventplanner.events.adapter.jpa.users;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
+import java.time.Instant;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
-import org.eventplanner.config.RetryConfig;
+import org.eventplanner.common.Encrypted;
 import org.eventplanner.events.domain.entities.users.EncryptedUserDetails;
 import org.eventplanner.events.domain.exceptions.UserAlreadyExistsException;
 import org.eventplanner.events.domain.values.users.AuthKey;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(classes = { EncryptedUserDetailsJpaRepositoryAdapter.class, RetryConfig.class })
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(EncryptedUserDetailsJpaRepositoryAdapter.class)
 @ActiveProfiles(profiles = { "test" })
 class EncryptedUserDetailsJpaRepositoryAdapterTest {
 
     @Autowired
     private EncryptedUserDetailsJpaRepositoryAdapter testee;
 
-    @MockitoBean
+    @Autowired
     private EncryptedUserDetailsJpaRepository repository;
+
+    @BeforeEach
+    void setup() {
+        repository.deleteAll();
+    }
 
     @Test
     void shouldThrowWhenCreatingUserWithExistingKey() {
-        var userKey = new UserKey("user-1");
-        var user = mock(EncryptedUserDetails.class);
-        when(user.getKey()).thenReturn(userKey);
-        when(repository.existsById(userKey.value())).thenReturn(true);
+        var user = createEncryptedUserDetails();
+        repository.save(EncryptedUserDetailsJpaEntity.fromDomain(user));
 
-        assertThatThrownBy(() -> testee.create(user))
+        var other = user
+            .withAuthKey(new AuthKey("differentAuthKey"))
+            .withEmail(new Encrypted<>("differentEmail"))
+            .withFirstName(new Encrypted<>("differentFirstName"))
+            .withLastName(new Encrypted<>("differentLasName"));
+
+        assertThatThrownBy(() -> testee.create(other))
             .isInstanceOf(UserAlreadyExistsException.class);
-        verify(repository, never()).save(any(EncryptedUserDetailsJpaEntity.class));
+
+        var saved = repository.findAll();
+        assertThat(saved).hasSize(1);
+        assertThat(saved.getFirst().getFirstName()).isEqualTo("encryptedFirstName");
     }
 
     @Test
     void shouldThrowWhenCreatingUserWithExistingAuthKey() {
-        var userKey = new UserKey("user-1");
-        var authKey = new AuthKey("auth-1");
-        var user = mock(EncryptedUserDetails.class);
-        when(user.getKey()).thenReturn(userKey);
-        when(user.getAuthKey()).thenReturn(authKey);
-        when(repository.existsById(userKey.value())).thenReturn(false);
-        when(repository.existsByAuthKey(authKey.value())).thenReturn(true);
+        var user = createEncryptedUserDetails();
+        repository.save(EncryptedUserDetailsJpaEntity.fromDomain(user));
 
-        assertThatThrownBy(() -> testee.create(user))
+        var other = user
+            .withKey(new UserKey("different"))
+            .withEmail(new Encrypted<>("differentEmail"))
+            .withFirstName(new Encrypted<>("differentFirstName"))
+            .withLastName(new Encrypted<>("differentLasName"));
+
+        assertThatThrownBy(() -> testee.create(other))
             .isInstanceOf(UserAlreadyExistsException.class);
-        verify(repository, never()).save(any(EncryptedUserDetailsJpaEntity.class));
+
+        var saved = repository.findAll();
+        assertThat(saved).hasSize(1);
+        assertThat(saved.getFirst().getFirstName()).isEqualTo("encryptedFirstName");
     }
 
     @Test
     void shouldThrowWhenUpdatingUserThatDoesNotExist() {
-        var userKey = new UserKey("user-1");
-        var user = mock(EncryptedUserDetails.class);
-        when(user.getKey()).thenReturn(userKey);
-        when(repository.existsById(userKey.value())).thenReturn(false);
-
+        var user = createEncryptedUserDetails();
         assertThatThrownBy(() -> testee.update(user))
             .isInstanceOf(NoSuchElementException.class);
-        verify(repository, never()).save(any(EncryptedUserDetailsJpaEntity.class));
+        assertThat(repository.findAll()).isEmpty();
     }
 
     @Test
     void shouldThrowWhenDeletingUserThatDoesNotExist() {
-        var key = new UserKey("user-1");
-        when(repository.existsById(key.value())).thenReturn(false);
-
-        assertThatThrownBy(() -> testee.deleteByKey(key))
+        var userKey = new UserKey("user-1");
+        assertThatThrownBy(() -> testee.deleteByKey(userKey))
             .isInstanceOf(NoSuchElementException.class);
-        verify(repository, never()).deleteById(key.value());
+        assertThat(repository.findAll()).isEmpty();
+    }
+
+    private EncryptedUserDetails createEncryptedUserDetails() {
+        return new EncryptedUserDetails(
+            new UserKey("user-1"),
+            new AuthKey("auth-1"),
+            Instant.parse("2024-01-01T00:00:00Z"),
+            Instant.parse("2024-01-01T00:00:00Z"),
+            Instant.parse("2024-01-01T00:00:00Z"),
+            Instant.parse("2024-01-01T00:00:00Z"),
+            null,
+            null,
+            new Encrypted<>("encryptedFirstName"),
+            null,
+            null,
+            new Encrypted<>("encryptedLastName"),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
     }
 }

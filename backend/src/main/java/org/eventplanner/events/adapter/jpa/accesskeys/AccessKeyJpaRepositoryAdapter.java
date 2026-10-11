@@ -30,7 +30,7 @@ public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
         var entity = new AccessKeyJpaEntity(
             accessKeyHash,
             userKey.value(),
-            Instant.now().toString()
+            Instant.now()
         );
         accessKeyJpaRepository.save(entity);
     }

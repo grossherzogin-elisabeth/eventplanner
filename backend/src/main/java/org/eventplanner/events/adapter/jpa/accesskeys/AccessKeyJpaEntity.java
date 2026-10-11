@@ -1,5 +1,7 @@
 package org.eventplanner.events.adapter.jpa.accesskeys;
 
+import java.time.Instant;
+
 import org.jspecify.annotations.NonNull;
 
 import jakarta.persistence.Column;
@@ -29,5 +31,5 @@ public class AccessKeyJpaEntity {
     private @NonNull String userKey;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private @NonNull String createdAt;
+    private @NonNull Instant createdAt;
 }

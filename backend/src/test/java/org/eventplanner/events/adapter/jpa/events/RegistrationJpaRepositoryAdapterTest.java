@@ -1,52 +1,60 @@
 package org.eventplanner.events.adapter.jpa.events;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.eventplanner.testdata.RegistrationFactory.createRegistration;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
-import org.eventplanner.config.RetryConfig;
 import org.eventplanner.testdata.EventFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(classes = { RegistrationJpaRepositoryAdapter.class, RetryConfig.class })
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(RegistrationJpaRepositoryAdapter.class)
 @ActiveProfiles(profiles = { "test" })
 class RegistrationJpaRepositoryAdapterTest {
 
     @Autowired
     private RegistrationJpaRepositoryAdapter testee;
 
-    @MockitoBean
+    @Autowired
     private RegistrationJpaRepository repository;
+
+    @BeforeEach
+    void setup() {
+        repository.deleteAll();
+    }
 
     @Test
     void shouldThrowWhenCreatingRegistrationThatAlreadyExists() {
-        var registration = createRegistration();
+        var registration = createRegistration().withName("Existing");
         var event = EventFactory.createEvent();
-        when(repository.existsById(registration.getKey().value())).thenReturn(true);
+        repository.save(RegistrationJpaEntity.fromDomain(registration, event));
 
-        assertThatThrownBy(() -> testee.createRegistration(registration, event))
+        var other = registration.withName("Other");
+        assertThatThrownBy(() -> testee.createRegistration(other, event))
             .isInstanceOf(IllegalStateException.class);
-        verify(repository, never()).save(any(RegistrationJpaEntity.class));
+
+        var saved = repository.findAll();
+        assertThat(saved).hasSize(1);
+        assertThat(saved.getFirst().getName()).isEqualTo("Existing");
     }
 
     @Test
     void shouldThrowWhenUpdatingRegistrationThatDoesNotExist() {
         var registration = createRegistration();
         var event = EventFactory.createEvent();
-        when(repository.findByKeyAndEventKey(any(), any())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> testee.updateRegistration(registration, event))
             .isInstanceOf(NoSuchElementException.class);
-        verify(repository, never()).save(any(RegistrationJpaEntity.class));
+
+        assertThat(repository.findAll()).isEmpty();
     }
 }

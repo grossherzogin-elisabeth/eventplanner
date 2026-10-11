@@ -59,7 +59,7 @@ class AuthenticationIntegrationTest {
         accessKeyJpaRepository.save(new AccessKeyJpaEntity(
             accessKey,
             TestUser.TEAM_MEMBER.getKey().value(),
-            Instant.now().toString()
+            Instant.now()
         ));
 
         var result = webMvc.perform(get("/api/v1/account")
@@ -97,7 +97,7 @@ class AuthenticationIntegrationTest {
         accessKeyJpaRepository.save(new AccessKeyJpaEntity(
             accessKey,
             TestUser.TEAM_MEMBER.getKey().value(),
-            Instant.now().toString()
+            Instant.now()
         ));
 
         var accessKeyResult = webMvc.perform(get("/api/v1/account")
@@ -133,7 +133,7 @@ class AuthenticationIntegrationTest {
         accessKeyJpaRepository.save(new AccessKeyJpaEntity(
             accessKey,
             TestUser.TEAM_MEMBER.getKey().value(),
-            Instant.now().toString()
+            Instant.now()
         ));
 
         var accessKeyResult = webMvc.perform(get("/api/v1/account")

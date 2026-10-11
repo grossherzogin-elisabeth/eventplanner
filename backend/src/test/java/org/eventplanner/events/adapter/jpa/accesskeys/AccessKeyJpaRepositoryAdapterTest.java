@@ -2,34 +2,36 @@ package org.eventplanner.events.adapter.jpa.accesskeys;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Optional;
 
-import org.eventplanner.config.RetryConfig;
 import org.eventplanner.events.domain.values.auth.AccessKey;
 import org.eventplanner.events.domain.values.users.UserKey;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest(classes = { AccessKeyJpaRepositoryAdapter.class, RetryConfig.class })
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(AccessKeyJpaRepositoryAdapter.class)
 @ActiveProfiles(profiles = { "test" })
 class AccessKeyJpaRepositoryAdapterTest {
 
     @Autowired
     private AccessKeyJpaRepositoryAdapter testee;
 
-    @MockitoBean
+    @Autowired
     private AccessKeyJpaRepository repository;
+
+    @BeforeEach
+    void setup() {
+        repository.deleteAll();
+    }
 
     @Test
     void shouldPersistAccessKeyForUser() {
@@ -39,32 +41,36 @@ class AccessKeyJpaRepositoryAdapterTest {
 
         testee.create(userKey, accessKey.value());
 
-        var entityCaptor = ArgumentCaptor.forClass(AccessKeyJpaEntity.class);
-        verify(repository).save(entityCaptor.capture());
-        var saved = entityCaptor.getValue();
-        assertThat(saved.getKey()).isEqualTo("access-1");
-        assertThat(saved.getUserKey()).isEqualTo("user-1");
-        var createdAt = Instant.parse(saved.getCreatedAt());
-        assertThat(createdAt)
+        var saved = repository.findAll();
+        assertThat(saved).hasSize(1);
+        assertThat(saved.getFirst().getKey()).isEqualTo("access-1");
+        assertThat(saved.getFirst().getUserKey()).isEqualTo("user-1");
+        assertThat(saved.getFirst().getCreatedAt())
             .isAfterOrEqualTo(beforeCreate)
             .isBeforeOrEqualTo(Instant.now());
     }
 
     @Test
     void shouldThrowWhenAccessKeyHashAlreadyExists() {
-        var accessKeyHash = "access-1";
-        when(repository.existsById(accessKeyHash)).thenReturn(true);
+        repository.save(new AccessKeyJpaEntity(
+            "access-1",
+            "user-1",
+            Instant.now()
+        ));
 
-        assertThatThrownBy(() -> testee.create(new UserKey("user-1"), accessKeyHash))
+        var userKey = new UserKey("user-2");
+        assertThatThrownBy(() -> testee.create(userKey, "access-1"))
             .isInstanceOf(IllegalStateException.class)
-            .hasMessageNotContaining(accessKeyHash);
-        verify(repository, never()).save(any(AccessKeyJpaEntity.class));
+            .hasMessageNotContaining("access-1");
     }
 
     @Test
     void shouldReturnUserForAccessKeyWhenExisting() {
-        when(repository.findById("access-1"))
-            .thenReturn(Optional.of(new AccessKeyJpaEntity("access-1", "user-1", Instant.now().toString())));
+        repository.save(new AccessKeyJpaEntity(
+            "access-1",
+            "user-1",
+            Instant.now()
+        ));
 
         var result = testee.findUserByAccessKey("access-1");
 
@@ -73,8 +79,6 @@ class AccessKeyJpaRepositoryAdapterTest {
 
     @Test
     void shouldReturnEmptyForUnknownAccessKey() {
-        when(repository.findById("unknown")).thenReturn(Optional.empty());
-
         var result = testee.findUserByAccessKey("unknown");
 
         assertThat(result).isEmpty();
@@ -82,16 +86,14 @@ class AccessKeyJpaRepositoryAdapterTest {
 
     @Test
     void shouldDeleteKeysOlderThanMaxAge() {
-        var maxAge = Duration.ofHours(2);
-        var beforeDelete = Instant.now();
+        repository.save(new AccessKeyJpaEntity(
+            "access-1",
+            "user-1",
+            Instant.now().minusSeconds(20)
+        ));
 
-        testee.deleteExpired(maxAge);
+        testee.deleteExpired(Duration.ofSeconds(10));
 
-        var thresholdCaptor = ArgumentCaptor.forClass(Instant.class);
-        verify(repository).deleteAllByCreatedAtBefore(thresholdCaptor.capture());
-        var threshold = thresholdCaptor.getValue();
-        assertThat(threshold)
-            .isAfterOrEqualTo(beforeDelete.minus(maxAge))
-            .isBeforeOrEqualTo(Instant.now().minus(maxAge));
+        assertThat(repository.findAll()).isEmpty();
     }
 }
