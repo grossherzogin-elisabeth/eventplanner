@@ -38,7 +38,8 @@ class RegistrationJpaRepositoryAdapterTest {
         var event = EventFactory.createEvent();
         repository.save(RegistrationJpaEntity.fromDomain(registration, event));
 
-        assertThatThrownBy(() -> testee.createRegistration(registration.withName("Other"), event))
+        var other = registration.withName("Other");
+        assertThatThrownBy(() -> testee.createRegistration(other, event))
             .isInstanceOf(IllegalStateException.class);
 
         var saved = repository.findAll();

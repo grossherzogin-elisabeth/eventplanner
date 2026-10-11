@@ -37,7 +37,9 @@ class QualificationJpaRepositoryAdapterTest {
         var qualification = createQualification().withName("Existing");
         repository.save(QualificationJpaEntity.fromDomain(qualification));
 
-        assertThatThrownBy(() -> testee.create(qualification.withName("Other")))
+        var other = qualification.withName("Other");
+
+        assertThatThrownBy(() -> testee.create(other))
             .isInstanceOf(IllegalArgumentException.class);
 
         var saved = repository.findAll();

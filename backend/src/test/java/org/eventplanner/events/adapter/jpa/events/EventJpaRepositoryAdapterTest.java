@@ -37,10 +37,11 @@ class EventJpaRepositoryAdapterTest {
 
     @Test
     void shouldThrowWhenCreatingEventThatAlreadyExists() {
-        var event = createEvent().withName("Existing");
-        eventJpaRepository.save(EventJpaEntity.fromDomain(event));
+        var existing = createEvent().withName("Existing");
+        eventJpaRepository.save(EventJpaEntity.fromDomain(existing));
 
-        assertThatThrownBy(() -> testee.create(event.withName("Other")))
+        var other = existing.withName("Other");
+        assertThatThrownBy(() -> testee.create(other))
             .isInstanceOf(IllegalStateException.class);
 
         var saved = eventJpaRepository.findAll();

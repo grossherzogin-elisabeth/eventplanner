@@ -32,7 +32,7 @@ class QueuedEmailJpaRepositoryAdapterTest {
     void setup() {
         repository.deleteAll();
     }
-    
+
     @Test
     void shouldThrowWhenQueueingEmailThatAlreadyExists() {
         var email = new QueuedEmail(
@@ -47,7 +47,8 @@ class QueuedEmailJpaRepositoryAdapterTest {
         );
         repository.save(QueuedEmailJpaEntity.fromDomain(email));
 
-        assertThatThrownBy(() -> testee.queue(email.withTo("other")))
+        var other = email.withTo("other");
+        assertThatThrownBy(() -> testee.queue(other))
             .isInstanceOf(IllegalStateException.class);
 
         var saved = repository.findAll();
