@@ -10,6 +10,8 @@ on:
 
 env:
   IMAGE: ghcr.io/grossherzogin-elisabeth/eventplanner
+  # Images are only pushed from main, all other branches do a dry run
+  PUSH: ${{ github.ref == 'refs/heads/main' }}
 
 jobs:
   build-and-push-container:
@@ -81,14 +83,23 @@ jobs:
           echo "Image tags:"
           printf "$IMAGE:%s\n" "${tags[@]}"
 
+          if [[ "$PUSH" == "true" ]]; then
+            echo "### Pushing image" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::notice::Dry run: images are only pushed from main, not from $GITHUB_REF_NAME"
+            echo "### Dry run (branch \`$GITHUB_REF_NAME\`), image is built but not pushed" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          printf -- "- \`$IMAGE:%s\`\n" "${tags[@]}" >> "$GITHUB_STEP_SUMMARY"
+
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
       # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4.2.0
+        uses: docker/setup-buildx-action@v4.4.1
 
       # https://github.com/docker/login-action
       - name: Log into ghcr registry
+        if: env.PUSH == 'true'
         uses: docker/login-action@v4.6.0
         with:
           registry: ghcr.io
@@ -98,14 +109,14 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v7.2.0
+        uses: docker/build-push-action@v7.4.0
         with:
           context: .
           build-args: |
             COMMIT=${{ github.sha }}
             BRANCH=${{ github.head_ref || github.ref_name }}
             TIME=${{ steps.meta.outputs.date }}
-          push: true
+          push: ${{ env.PUSH == 'true' }}
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
