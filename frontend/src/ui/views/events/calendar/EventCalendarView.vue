@@ -368,8 +368,7 @@ function smoothenOverlappingDays(days: CalendarDay[]): void {
 }
 
 function smoothenParallelEvents(days: CalendarDay[]): void {
-    for (let i = 0; i < days.length; i++) {
-        const day = days[i];
+    for (const day of days) {
         if (day.events.length <= 1 || day.eventsOnThisDay.length <= 0) {
             continue;
         }
