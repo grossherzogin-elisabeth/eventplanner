@@ -44,6 +44,10 @@ public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
     @Override
     @Transactional
     public void deleteExpired(@NonNull final Duration maxAge) {
-        accessKeyJpaRepository.deleteAllByCreatedAtBefore(Instant.now().minus(maxAge));
+        var deleteOlderThan = Instant.now().minus(maxAge);
+        var keysToDelete = accessKeyJpaRepository.findAll().stream()
+            .filter(accessKey -> accessKey.getCreatedAt().isBefore(deleteOlderThan))
+            .toList();
+        accessKeyJpaRepository.deleteAll(keysToDelete);
     }
 }
