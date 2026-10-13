@@ -27,7 +27,7 @@ public class InstantStringConverter implements AttributeConverter<Instant, Strin
         }
         try {
             return Instant.parse(value);
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeParseException _) {
             return Instant.ofEpochMilli(Long.parseLong(value));
         }
     }
