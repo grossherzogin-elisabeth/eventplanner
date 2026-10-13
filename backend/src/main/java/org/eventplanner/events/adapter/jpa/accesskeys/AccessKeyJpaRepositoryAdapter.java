@@ -2,6 +2,7 @@ package org.eventplanner.events.adapter.jpa.accesskeys;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.Optional;
 
 import org.eventplanner.events.application.ports.AccessKeyRepository;
@@ -44,6 +45,14 @@ public class AccessKeyJpaRepositoryAdapter implements AccessKeyRepository {
     @Override
     @Transactional
     public void deleteExpired(@NonNull final Duration maxAge) {
-        accessKeyJpaRepository.deleteAllByCreatedAtBefore(Instant.now().minus(maxAge));
+        var deleteOlderThan = Instant.now().minus(maxAge);
+        var accessKeys = accessKeyJpaRepository.findAll();
+        var keysToDelete = new LinkedList<AccessKeyJpaEntity>();
+        for (var accessKey : accessKeys) {
+            if (accessKey.getCreatedAt().isBefore(deleteOlderThan)) {
+                keysToDelete.add(accessKey);
+            }
+        }
+        accessKeyJpaRepository.deleteAll(keysToDelete);
     }
 }
