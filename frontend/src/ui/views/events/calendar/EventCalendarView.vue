@@ -92,8 +92,8 @@ import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEventUseCase } from '@/application';
 import { DateTimeFormat, Month, addToDate, cropToPrecision, isSameDate } from '@/common/date';
-import type { EventKey } from '@/domain';
-import { type Event, EventState, Permission } from '@/domain';
+import type { Event, EventKey } from '@/domain';
+import { EventState, Permission } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import CreateEventDlg from '@/ui/components/events/EventCreateDlg.vue';
 import { useSession } from '@/ui/composables/Session.ts';
@@ -297,13 +297,12 @@ function resetCalendar(): void {
 }
 
 function fillCalendarDays(evts: Event[]): CalendarDay[] {
-    for (let i = 0; i < evts.length; i++) {
-        const event: Event = evts[i];
+    for (const event of evts) {
         const startMonth = months.value.get(event.start.getMonth()) ?? [];
         const startDate = cropToPrecision(event.start, 'days');
         const endDate = cropToPrecision(event.end, 'days');
 
-        let calendarDayEvent: CalendarDayEvent = {
+        const calendarDayEvent: CalendarDayEvent = {
             key: event.key,
             title: event.name,
             duration: event.days,
@@ -322,29 +321,33 @@ function fillCalendarDays(evts: Event[]): CalendarDay[] {
             startDay.eventsStartingOnThisDay.push(calendarDayEvent);
         }
 
-        // add this event to each calendar day it spans
-        let date = addToDate(startDate, { days: 1 });
-        while (date <= endDate) {
-            const month = months.value.get(date.getMonth()) ?? [];
-            const dayIndex = date.getDate() - 1;
-            if (date.getDate() === 1 && date.getMonth() != startDate.getMonth() && date.getFullYear() === startDate.getFullYear()) {
-                // event is reaches into next month
-                calendarDayEvent = {
-                    ...calendarDayEvent,
-                    isContinuation: true,
-                    title: `...${event.name}`,
-                    offset: 0,
-                    duration: new Date(event.end.getTime() - event.start.getTime()).getDate(),
-                    durationInMonth: calendarDayEvent.duration - calendarDayEvent.durationInMonth,
-                };
-                month[dayIndex].eventsStartingOnThisDay.push(calendarDayEvent);
-            }
-
-            month[dayIndex].events.push(calendarDayEvent);
-            date = addToDate(date, { days: 1 });
-        }
+        addToEachSpannedDay(calendarDayEvent);
     }
     return [...months.value.values()].flat();
+}
+
+function addToEachSpannedDay(event: CalendarDayEvent): void {
+    let calendarDayEvent: CalendarDayEvent = { ...event };
+    let date = addToDate(event.start, { days: 1 });
+    while (date <= event.end) {
+        const month = months.value.get(date.getMonth()) ?? [];
+        const dayIndex = date.getDate() - 1;
+        if (date.getDate() === 1 && date.getMonth() != event.start.getMonth() && date.getFullYear() === event.start.getFullYear()) {
+            // event is reaches into next month
+            calendarDayEvent = {
+                ...calendarDayEvent,
+                isContinuation: true,
+                title: `...${event.title}`,
+                offset: 0,
+                duration: new Date(event.end.getTime() - event.start.getTime()).getDate(),
+                durationInMonth: calendarDayEvent.duration - calendarDayEvent.durationInMonth,
+            };
+            month[dayIndex].eventsStartingOnThisDay.push(calendarDayEvent);
+        }
+
+        month[dayIndex].events.push(calendarDayEvent);
+        date = addToDate(date, { days: 1 });
+    }
 }
 
 function smoothenOverlappingDays(days: CalendarDay[]): void {
