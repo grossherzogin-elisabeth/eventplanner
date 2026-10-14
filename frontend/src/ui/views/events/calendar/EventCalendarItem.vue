@@ -6,18 +6,16 @@
             top: `calc(var(--row-height) * ${props.start})`,
         }"
         class="calendar-event-wrapper"
+        :title="props.title"
     >
         <div :class="`${$attrs.class}`" class="calendar-event-entry" @click="showDetails()">
             <div class="calendar-event-entry-bar"></div>
             <div class="calendar-event-entry-bg">
-                <div class="w-full truncate" :title="props.event.name">
-                    <span v-if="event.state === EventState.Draft" class="opacity-50"> {{ $t('domain.event-state.draft') }}: </span>
-                    <span>
-                        {{ props.event.name }}
-                    </span>
+                <div class="w-full truncate">
+                    <span>{{ props.title }}</span>
                 </div>
                 <template v-if="props.durationInMonth > 1">
-                    <span class="block w-full truncate text-xs font-normal">
+                    <span class="subtitle block w-full truncate text-xs font-normal">
                         {{ $t('generic.days', props.duration) }}
                     </span>
                 </template>
@@ -30,12 +28,12 @@
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Event } from '@/domain';
-import { EventState } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';
 
 interface Props {
     event: Event;
+    title: string;
     duration: number;
     durationInMonth: number;
     start: number;
@@ -120,8 +118,8 @@ init();
     );
     background-size: 10px 10px;
     @apply py-1;
-    @apply pl-2;
-    @apply pr-4;
+    @apply pl-1;
+    @apply pr-1;
     font-size: var(--text-sm);
     font-weight: var(--font-weight-semibold);
     @apply sm:px-2;
@@ -179,5 +177,11 @@ init();
 
 .calendar-event-entry.in-past:hover {
     opacity: 1;
+}
+
+.calendar-event-entry.overlapped > .calendar-event-entry-bg > * {
+    width: calc(50% - 0.5rem);
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 </style>
