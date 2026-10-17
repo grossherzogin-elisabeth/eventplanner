@@ -85,4 +85,6 @@ The following environment variables are not required, but highly recommended to 
 - **OAUTH_ISSUER_URI:** OIDC issuer URI.
 - **OAUTH_CLIENT_ID:** OIDC client ID.
 - **OAUTH_CLIENT_SECRET:** OIDC client secret.
+- **HOST**: The hostname used to construct the public URL when `HOST_URL` is unset. Defaults to `localhost`.
 - **PORT**: The port on which the application listens. Defaults to `80`.
+- **PROTOCOL**: The protocol used to construct the public URL when `HOST_URL` is unset. Defaults to `https`.
