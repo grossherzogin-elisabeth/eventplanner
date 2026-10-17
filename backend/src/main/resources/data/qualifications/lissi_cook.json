@@ -1,8 +1,0 @@
-{
-  "key": "lissi-koch",
-  "icon": "fa-anchor",
-  "name": "Koch:in",
-  "description": "Koch nach vereinsinternem Ausbildungskonzept",
-  "expires": false,
-  "grantsPositions": ["koch"]
-}
