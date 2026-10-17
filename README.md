@@ -71,8 +71,8 @@ The following environment variables are not required, but highly recommended to 
 - **ADMIN_EMAILS**: Comma-separated emails automatically granted admin role. Recommended to get admin access with your
   first user.
 - **CSRF_ENABLED**: Whether CSRF protection is enabled. Defaults to `true`.
-- **DATA_DIRECTORY**: The directory where data is stored. Defaults to `/app/data`. When using Docker, you typically
-  don't change this, but mount a volume to this path to persist data.
+- **DATA_DIRECTORY**: The directory where data is stored. Defaults to `data`, relative to the working directory.
+  In Docker, this resolves to `/app/data`; mount a volume there to persist data.
 - **DATA_ENCRYPTION_PASSWORD**: The secret used to encrypt sensitive data like user information. It is recommended to
   change this for production use.
 - **EMAIL_WHITELIST**: Comma-separated list of email addresses. When set, notifications are only sent to these email
