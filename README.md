@@ -4,45 +4,31 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=grossherzogin-elisabeth_eventplanner&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=grossherzogin-elisabeth_eventplanner)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=grossherzogin-elisabeth_eventplanner&metric=coverage)](https://sonarcloud.io/summary/new_code?id=grossherzogin-elisabeth_eventplanner)
 
-# Eventplanner
+# Open Source Crew and Sailing Leg Planning
 
-Eventplanner is a web application for planning multi-day events with scheduling, crew management, notifications, and
-exports.
+Manage your crew and plan sailing legs with minimum effort. Crew planner offers all you need to plan your crews, manage
+certificates and organize your sailing year.
 
-## Tech stack
+## Getting started
 
-- Backend: Java 25, Spring Boot, SQLite, Flyway
-- Frontend: Vue 3 + TypeScript + Vite
-- Packaging: single Docker image serving backend and built frontend
-
-## Repository layout
-
-- `backend/` Spring Boot application
-- `frontend/` Vue application
-- `data/` local database and runtime data (for local/dev usage)
-
-## Quick start (Docker)
-
-The published image exposes port `80` inside the container.
+To run the crew planner, we recommend to use our Docker image for quick setup. Use the following command for a quick
+start:
 
 ```bash
 docker run \
   -e OAUTH_ISSUER_URI="https://your-issuer" \
   -e OAUTH_CLIENT_ID="your-client-id" \
   -e OAUTH_CLIENT_SECRET="your-client-secret" \
-  -e DATA_ENCRYPTION_PASSWORD="change-me" \
-  -e PROTOCOL="http" \
   -e HOST_URL="http://localhost:8080" \
+  -e EMAIL_WHITELIST="admin@example.com" \
   -e ADMIN_EMAILS="admin@example.com" \
+  -e DATA_ENCRYPTION_PASSWORD="change-me" \
+  -e ACCESS_KEY_HASH_SECRET="change-me" \
   -p 8080:80 \
   ghcr.io/grossherzogin-elisabeth/eventplanner:latest
 ```
 
-Open `http://localhost:8080` afterwards.
-
-## Sample docker-compose
-
-Use this as a starting point and move sensitive values to a local `.env` file before sharing.
+Or if you prefer to use `docker-compose`, create a `docker-compose.yml` file with the following content:
 
 ```yaml
 services:
@@ -55,95 +41,55 @@ services:
       OAUTH_ISSUER_URI: "https://your-issuer"
       OAUTH_CLIENT_ID: "your-client-id"
       OAUTH_CLIENT_SECRET: "your-client-secret"
-      DATA_ENCRYPTION_PASSWORD: "change-me"
-      PROTOCOL: "http"
-      HOST: "localhost"
       HOST_URL: "http://localhost:8080"
-      EMAIL_WHITELIST: ""
+      EMAIL_WHITELIST: "admin@example.com"
       ADMIN_EMAILS: "admin@example.com"
+      DATA_ENCRYPTION_PASSWORD: "change-me"
+      ACCESS_KEY_HASH_SECRET: "change-me"
     volumes:
       - ./data:/app/data
     restart: unless-stopped
 ```
 
-## Run from source
+### Configuration
 
-### Prerequisites
+The application can be configured using environment variables.
 
-- Java 25 (Temurin recommended)
-- Node.js 26
-- An OIDC provider (for login)
+### Required Environment Variables
 
-### 1) Start backend
+The following environment variables are required to run the application:
 
-Set OIDC values either as environment variables or in `backend/bin/main/application-secrets.yml`.
+- **OAUTH_ISSUER_URI**
+- **OAUTH_CLIENT_ID**
+- **OAUTH_CLIENT_SECRET**
 
-Required values:
+The following environment variables are not required, but highly recommended to set for production use:
 
-```yaml
-OAUTH_ISSUER_URI: <oidc-issuer-uri>
-OAUTH_CLIENT_ID: <oidc-client-id>
-OAUTH_CLIENT_SECRET: <oidc-client-secret>
-```
+- **ACCESS_KEY_HASH_SECRET**
+- **DATA_ENCRYPTION_PASSWORD**
+- **HOST_URL**
 
-Run backend:
+### All Environment Variables
 
-```bash
-cd backend
-./gradlew bootRun --args='--spring.profiles.active=local,secrets'
-```
-
-### 2) Start frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend runs on `http://localhost:8080` by default and proxies API/auth traffic to backend on `http://localhost:8081`.
-
-## Build, lint, and test
-
-### Frontend
-
-```bash
-cd frontend
-npm run check:format
-npm run check:lint
-npm run check:typescript
-npm run build
-npm run test:coverage
-```
-
-### Backend
-
-```bash
-cd backend
-./gradlew build test jacocoTestReport
-```
-
-## Environment variables
-
-| Variable                   | Description                                                         | Default                         | Required             |
-|----------------------------|---------------------------------------------------------------------|---------------------------------|----------------------|
-| `OAUTH_ISSUER_URI`         | OIDC issuer URI                                                     | -                               | yes                  |
-| `OAUTH_CLIENT_ID`          | OIDC client ID                                                      | -                               | yes                  |
-| `OAUTH_CLIENT_SECRET`      | OIDC client secret                                                  | -                               | yes                  |
-| `PORT`                     | HTTP port used by backend service                                   | `80`                            | no                   |
-| `PROTOCOL`                 | Public protocol (`http` or `https`)                                 | `https`                         | no                   |
-| `HOST`                     | Public host name                                                    | `localhost`                     | no                   |
-| `HOST_URL`                 | Full public URL (important when exposed port differs from app port) | `${PROTOCOL}://${HOST}/${PORT}` | no                   |
-| `DATA_ENCRYPTION_PASSWORD` | Password used to encrypt PII data                                   | `default-encryption-password`   | strongly recommended |
-| `EMAIL_WHITELIST`          | Restrict outgoing email notifications to listed addresses           | empty                           | no                   |
-| `ADMIN_EMAILS`             | Comma-separated emails automatically granted admin role             | empty                           | no                   |
-
-## Authentication notes
-
-Eventplanner relies on external OIDC providers and does not manage local user passwords.
-For local testing, Keycloak is a common self-hosted option.
-
-## Additional docs
-
-- `frontend/README.md`
-- `backend/src/main/resources/application.yml`
+- **ACCESS_KEY_HASH_SECRET**: The secret used for hashing access keys.
+- **ACCESS_KEY_EXPIRATION**: How long access keys are valid. Defaults to `P21D` (21 days).
+- **ADMIN_EMAILS**: Comma-separated emails automatically granted admin role. Recommended to get admin access with your
+  first user.
+- **CSRF_ENABLED**: Whether CSRF protection is enabled. Defaults to `true`.
+- **DATA_DIRECTORY**: The directory where data is stored. Defaults to `data`, relative to the working directory. In 
+  Docker, this resolves to `/app/data`. Mount a volume there to persist data.
+- **DATA_ENCRYPTION_PASSWORD**: The secret used to encrypt sensitive data like user information. It is recommended to
+  change this for production use.
+- **EMAIL_WHITELIST**: Comma-separated list of email addresses. When set, notifications are only sent to these email
+  addresses.
+- **EMAIL_PREFIX**: A prefix for all outgoing email notifications. Mainly used to easily distinguish between different
+  environments (e.g. `[TEST]`). By default, no prefix is used.
+- **HOST_URL**: The full publicly reachable URL of the application. E.g. https://events.your-domain.com
+- **LOG_LEVEL:** Default log level for all application logs. Supported values are `DEBUG`, `INFO`, `WARN` and `ERROR`.
+  Defaults to `INFO`.
+- **OAUTH_ISSUER_URI:** OIDC issuer URI.
+- **OAUTH_CLIENT_ID:** OIDC client ID.
+- **OAUTH_CLIENT_SECRET:** OIDC client secret.
+- **HOST**: The hostname used to construct the public URL when `HOST_URL` is unset. Defaults to `localhost`.
+- **PORT**: The port on which the application listens. Defaults to `80`.
+- **PROTOCOL**: The protocol used to construct the public URL when `HOST_URL` is unset. Defaults to `https`.
