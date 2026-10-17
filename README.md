@@ -59,37 +59,37 @@ The application can be configured using environment variables.
 
 The following environment variables are required to run the application:
 
-- **OAUTH_ISSUER_URI**
-- **OAUTH_CLIENT_ID**
-- **OAUTH_CLIENT_SECRET**
+- `OAUTH_ISSUER_URI`
+- `OAUTH_CLIENT_ID`
+- `OAUTH_CLIENT_SECRET`
 
 The following environment variables are not required, but highly recommended to set for production use:
 
-- **ACCESS_KEY_HASH_SECRET**
-- **DATA_ENCRYPTION_PASSWORD**
-- **HOST_URL**
+- `ACCESS_KEY_HASH_SECRET`
+- `DATA_ENCRYPTION_PASSWORD`
+- `HOST_URL`
 
 ### All Environment Variables
 
-- **ACCESS_KEY_HASH_SECRET**: The secret used for hashing access keys.
-- **ACCESS_KEY_EXPIRATION**: How long access keys are valid. Defaults to `P21D` (21 days).
-- **ADMIN_EMAILS**: Comma-separated emails automatically granted admin role. Recommended to get admin access with your
+- `ACCESS_KEY_HASH_SECRET`: The secret used for hashing access keys.
+- ACCESS_KEY_EXPIRATION`: How long access keys are valid. Defaults to `P21D` (21 days).
+- `ADMIN_EMAILS`: Comma-separated emails automatically granted admin role. Recommended to get admin access with your
   first user.
-- **CSRF_ENABLED**: Whether CSRF protection is enabled. Defaults to `true`.
-- **DATA_DIRECTORY**: The directory where data is stored. Defaults to `data`, relative to the working directory. In 
+- `CSRF_ENABLED`: Whether CSRF protection is enabled. Defaults to `true`.
+- `DATA_DIRECTORY`: The directory where data is stored. Defaults to `data`, relative to the working directory. In 
   Docker, this resolves to `/app/data`. Mount a volume there to persist data.
-- **DATA_ENCRYPTION_PASSWORD**: The secret used to encrypt sensitive data like user information. It is recommended to
+- `DATA_ENCRYPTION_PASSWORD`: The secret used to encrypt sensitive data like user information. It is recommended to
   change this for production use.
-- **EMAIL_WHITELIST**: Comma-separated list of email addresses. When set, notifications are only sent to these email
+- `EMAIL_WHITELIST`: Comma-separated list of email addresses. When set, notifications are only sent to these email
   addresses.
-- **EMAIL_PREFIX**: A prefix for all outgoing email notifications. Mainly used to easily distinguish between different
+- `EMAIL_PREFIX`: A prefix for all outgoing email notifications. Mainly used to easily distinguish between different
   environments (e.g. `[TEST]`). By default, no prefix is used.
-- **HOST_URL**: The full publicly reachable URL of the application. E.g. https://events.your-domain.com
-- **LOG_LEVEL:** Default log level for all application logs. Supported values are `DEBUG`, `INFO`, `WARN` and `ERROR`.
+- `HOST_URL`: The full publicly reachable URL of the application. E.g. https://events.your-domain.com
+- `LOG_LEVEL`: Default log level for all application logs. Supported values are `DEBUG`, `INFO`, `WARN` and `ERROR`.
   Defaults to `INFO`.
-- **OAUTH_ISSUER_URI:** OIDC issuer URI.
-- **OAUTH_CLIENT_ID:** OIDC client ID.
-- **OAUTH_CLIENT_SECRET:** OIDC client secret.
-- **HOST**: The hostname used to construct the public URL when `HOST_URL` is unset. Defaults to `localhost`.
-- **PORT**: The port on which the application listens. Defaults to `80`.
-- **PROTOCOL**: The protocol used to construct the public URL when `HOST_URL` is unset. Defaults to `https`.
+- `OAUTH_ISSUER_URI`: OIDC issuer URI.
+- `OAUTH_CLIENT_ID`: OIDC client ID.
+- `OAUTH_CLIENT_SECRET`: OIDC client secret.
+- `HOST`: The hostname used to construct the public URL when `HOST_URL` is unset. Defaults to `localhost`.
+- `PORT`: The port on which the application listens. Defaults to `80`.
+- `PROTOCOL`: The protocol used to construct the public URL when `HOST_URL` is unset. Defaults to `https`.
