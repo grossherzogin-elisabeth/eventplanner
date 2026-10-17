@@ -1,4 +1,4 @@
-package org.eventplanner.integration;
+package org.eventplanner.integration.database;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +23,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import jakarta.persistence.EntityManagerFactory;
 
-class DatabaseStartupIntegrationTest {
+class SupportedDatabasesIntegrationTest {
 
     private static final String CURRENT_BASELINE_MIGRATION = "B21__baseline.sql";
     private static final List<String> TABLES = List.of(
