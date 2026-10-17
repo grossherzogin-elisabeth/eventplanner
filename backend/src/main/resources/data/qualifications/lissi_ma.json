@@ -1,8 +1,0 @@
-{
-  "key": "lissi-ma",
-  "icon": "fa-anchor",
-  "name": "Matrose:in",
-  "description": "Matrose:in nach vereinsinternem Ausbildungskonzept",
-  "expires": false,
-  "grantsPositions": ["matrose"]
-}

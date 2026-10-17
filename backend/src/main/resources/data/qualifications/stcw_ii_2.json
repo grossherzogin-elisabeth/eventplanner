@@ -1,8 +1,0 @@
-{
-  "key": "stcw-ii-2",
-  "icon": "fa-life-ring",
-  "name": "STCW-II/2 (Kapitän)",
-  "description": "Kapitän oder Erster Nautischer Offizier auf Schiffen ab 500 BRZ",
-  "expires": true,
-  "grantsPositions": ["steuermann", "matrose"]
-}
