@@ -95,6 +95,7 @@ spring:
   profiles:
     active:
       - ${MODE:production} # switching between local and production mode
+    include:
       - ${DATABASE:sqlite} # enables a db specific profile
   security:
     oauth2:
