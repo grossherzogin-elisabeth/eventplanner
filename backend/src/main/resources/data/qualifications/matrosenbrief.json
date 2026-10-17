@@ -1,8 +1,0 @@
-{
-  "key": "matrosenbrief",
-  "icon": "fa-anchor",
-  "name": "Matrosenbrief",
-  "description": "",
-  "expires": false,
-  "grantsPositions": ["matrose"]
-}
