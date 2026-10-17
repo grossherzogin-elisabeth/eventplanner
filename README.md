@@ -21,6 +21,7 @@ docker run \
   -e OAUTH_CLIENT_SECRET="your-client-secret" \
   -e EMAIL_WHITELIST="admin@example.com" \
   -e ADMIN_EMAILS="admin@example.com" \
+  -e HOST_URL="http://localhost:8080" \
   -p 8080:80 \
   ghcr.io/grossherzogin-elisabeth/eventplanner:latest
 ```
