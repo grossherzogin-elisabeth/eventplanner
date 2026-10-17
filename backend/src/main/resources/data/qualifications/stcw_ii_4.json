@@ -1,8 +1,0 @@
-{
-  "key": "stcw-ii-4",
-  "icon": "fa-life-ring",
-  "name": "STCW-II/4",
-  "description": "Wachbefähigung Deck",
-  "expires": false,
-  "grantsPositions": ["leichtmatrose"]
-}
