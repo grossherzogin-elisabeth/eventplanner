@@ -1,0 +1,9 @@
+# PostgreSQL specific configuration
+spring:
+  jpa:
+    properties:
+      hibernate.auto_quote_keyword: true
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}

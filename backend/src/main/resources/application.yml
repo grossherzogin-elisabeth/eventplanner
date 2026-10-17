@@ -60,6 +60,7 @@ templates:
   directory: ${data.directory}/templates/excel
 
 data:
+  # the location where all application data is stored, including the database file (when using sqlite)
   directory: ${DATA_DIRECTORY:data}
   # the password to use for encrypting sensible data
   encryption-password: ${DATA_ENCRYPTION_PASSWORD:default-encryption-password}
@@ -83,26 +84,19 @@ resilience:
 # -----------------------------------
 
 spring:
-  datasource:
-    driver-class-name: org.sqlite.JDBC
-    hikari:
-      data-source-properties:
-        journal_mode: WAL
-        synchronous: NORMAL
-        cache_size: -10000
-        temp_store: MEMORY
-        transaction_mode: IMMEDIATE
-        busy_timeout: 5000
-    url: jdbc:sqlite:${data.directory}/eventplanner.db
   flyway:
-    baseline-on-migrate: true
+    baseline-on-migrate: false
     enabled: true
     locations: classpath:db/migration
   jpa:
-    database-platform: org.hibernate.community.dialect.SQLiteDialect
     open-in-view: true
     hibernate:
       ddl-auto: none
+  profiles:
+    active:
+      - ${MODE:production} # switching between local and production mode
+    include:
+      - ${DATABASE:sqlite} # enables a db specific profile
   security:
     oauth2:
       client:

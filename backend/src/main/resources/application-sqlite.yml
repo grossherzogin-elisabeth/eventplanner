@@ -1,0 +1,15 @@
+# SQLite specific configuration
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      data-source-properties:
+        journal_mode: WAL
+        synchronous: NORMAL
+        cache_size: -10000
+        temp_store: MEMORY
+        transaction_mode: IMMEDIATE
+        busy_timeout: 5000
+    url: jdbc:sqlite:${data.directory}/eventplanner.db
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect

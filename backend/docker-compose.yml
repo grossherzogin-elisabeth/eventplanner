@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: postgres
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: eventplanner
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+
+volumes:
+  postgres-data:
+    name: eventplanner-postgres-data

@@ -80,6 +80,11 @@ The following environment variables are not required, but highly recommended to 
   Docker, this resolves to `/app/data`. Mount a volume there to persist data.
 - `DATA_ENCRYPTION_PASSWORD`: The secret used to encrypt sensitive data like user information. It is recommended to
   change this for production use.
+- `DATABASE`: The database to use. Supported values are `sqlite` and `postgresql`. Defaults to `sqlite`.
+- `DATABASE_URL`: The jdc url when using a database other than `sqlite`, e.g.
+  `jdbc:postgresql://localhost:5432/eventplanner`
+- `DATABASE_USERNAME`: The username to use in the database connection.
+- `DATABASE_PASSWORD`: The password to use in the database connection.
 - `EMAIL_WHITELIST`: Comma-separated list of email addresses. When set, notifications are only sent to these email
   addresses.
 - `EMAIL_PREFIX`: A prefix for all outgoing email notifications. Mainly used to easily distinguish between different
