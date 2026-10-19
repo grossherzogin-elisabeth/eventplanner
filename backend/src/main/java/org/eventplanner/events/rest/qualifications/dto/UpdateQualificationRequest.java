@@ -1,35 +1,30 @@
 package org.eventplanner.events.rest.qualifications.dto;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
-import org.eventplanner.events.domain.entities.qualifications.Qualification;
+import org.eventplanner.events.domain.specs.UpdateQualificationSpec;
 import org.eventplanner.events.domain.values.positions.PositionKey;
-import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import jakarta.validation.constraints.NotBlank;
-
 public record UpdateQualificationRequest(
-    @NonNull @NotBlank String name,
+    @NonNull String name,
     @Nullable String icon,
     @Nullable String description,
     @Nullable Boolean expires,
     @Nullable List<String> grantsPositions
 ) implements Serializable {
 
-    public @NonNull Qualification toDomain(@NonNull String key) {
-        return new Qualification(
-            new QualificationKey(key),
+    public @NonNull UpdateQualificationSpec toDomain() {
+        return new UpdateQualificationSpec(
             name,
             icon,
             description,
-            Boolean.TRUE.equals(expires),
+            expires,
             grantsPositions != null
                 ? grantsPositions.stream().map(PositionKey::new).toList()
-                : Collections.emptyList()
+                : null
         );
     }
 }

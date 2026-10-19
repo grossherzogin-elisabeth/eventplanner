@@ -1,5 +1,7 @@
 package org.eventplanner.events.rest;
 
+import static org.eventplanner.common.validation.ValidationUtils.convertToLogAttribute;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -162,13 +165,33 @@ public class GlobalExceptionHandlingController {
         @NonNull final HttpServletRequest request
     ) {
         log.warn(
-            "Request {} {} failed with validation exception {}",
+            "Request {} {} failed with a validation exception: {}",
             request.getMethod(),
             request.getRequestURI(),
             exception.getMessage()
         );
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
         body.setInstance(URI.create(request.getRequestURI()));
+        return ResponseEntity.status(body.getStatus()).body(body);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public @NonNull ResponseEntity<ProblemDetail> handleValidationException(
+        @NonNull final ConstraintViolationException exception,
+        @NonNull final HttpServletRequest request
+    ) {
+        var errors = convertToLogAttribute(exception.getConstraintViolations());
+        log.atWarn()
+            .addKeyValue("violations", errors)
+            .log(
+                "Request {} {} failed with a validation exception",
+                request.getMethod(),
+                request.getRequestURI()
+            );
+        var body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request data is invalid");
+        body.setInstance(URI.create(request.getRequestURI()));
+        body.setProperty("errors", errors);
+
         return ResponseEntity.status(body.getStatus()).body(body);
     }
 
