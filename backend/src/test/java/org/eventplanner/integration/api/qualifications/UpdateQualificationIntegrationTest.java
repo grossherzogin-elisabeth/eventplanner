@@ -2,7 +2,7 @@ package org.eventplanner.integration.api.qualifications;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testutil.TestUser.withAuthentication;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -147,8 +147,7 @@ class UpdateQualificationIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.detail").value(containsString("name")))
-            .andExpect(jsonPath("$.detail").value(containsString("must not be blank")));
+            .andExpect(jsonPath("$.errors.name").value(hasItem("must not be blank")));
     }
 
     @Test
@@ -163,7 +162,6 @@ class UpdateQualificationIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.detail").value(containsString("name")))
-            .andExpect(jsonPath("$.detail").value(containsString("must not be blank")));
+            .andExpect(jsonPath("$.errors.name").value(hasItem("must not be blank")));
     }
 }

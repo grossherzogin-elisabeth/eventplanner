@@ -1,6 +1,5 @@
 package org.eventplanner.common.validation;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,8 +10,8 @@ import org.jspecify.annotations.NonNull;
 import jakarta.validation.ConstraintViolation;
 
 public class ValidationUtils {
-    public static <T> @NonNull Map<String, List<String>> convertToLogAttribute(
-        @NonNull Collection<ConstraintViolation<T>> violations
+    public static @NonNull Map<String, List<String>> convertToLogAttribute(
+        @NonNull Iterable<? extends ConstraintViolation<?>> violations
     ) {
         var messages = new HashMap<String, List<String>>();
         for (var violation : violations) {

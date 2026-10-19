@@ -34,9 +34,9 @@ public class UpdateQualificationUseCase {
     ) throws ConstraintViolationException {
         var qualification = qualificationRepository.findByKey(qualificationKey)
             .orElseThrow(() -> new NoSuchElementException("Qualification not found"));
-        log.info("Updating qualification {}", qualificationKey);
         qualification = spec.apply(qualification);
         validate(qualification);
+        log.info("Updating qualification {}", qualificationKey);
         qualificationRepository.update(qualification);
         return qualification;
     }
@@ -49,9 +49,9 @@ public class UpdateQualificationUseCase {
     ) throws ConstraintViolationException {
         var qualification = qualificationRepository.findByKey(qualificationKey)
             .orElseThrow(() -> new NoSuchElementException("Qualification not found"));
-        log.info("Patching qualification {}", qualificationKey);
         qualification = spec.patch(qualification);
         validate(qualification);
+        log.info("Patching qualification {}", qualificationKey);
         qualificationRepository.update(qualification);
         return qualification;
     }
@@ -59,7 +59,7 @@ public class UpdateQualificationUseCase {
     private void validate(@NonNull final Qualification qualification) throws ConstraintViolationException {
         var violations = validator.validate(qualification);
         if (!violations.isEmpty()) {
-            log.atWarn()
+            log.atInfo()
                 .addKeyValue("violations", convertToLogAttribute(violations))
                 .log("Rejected qualification update because of validation errors");
             throw new ConstraintViolationException(violations);

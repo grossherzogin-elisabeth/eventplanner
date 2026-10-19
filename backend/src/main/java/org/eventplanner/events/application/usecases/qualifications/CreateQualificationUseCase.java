@@ -38,7 +38,7 @@ public class CreateQualificationUseCase {
     private void validate(@NonNull final Qualification qualification) throws ConstraintViolationException {
         var violations = validator.validate(qualification);
         if (!violations.isEmpty()) {
-            log.atWarn()
+            log.atInfo()
                 .addKeyValue("violations", convertToLogAttribute(violations))
                 .log("Rejected qualification creation because of validation errors");
             throw new ConstraintViolationException(violations);
