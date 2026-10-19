@@ -2,7 +2,9 @@ package org.eventplanner.integration.api.qualifications;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testutil.TestUser.withAuthentication;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -105,5 +107,63 @@ class UpdateQualificationIntegrationTest {
         assertThat(persisted.orElseThrow().getIcon()).isEqualTo("fa-updated");
         assertThat(persisted.orElseThrow().getDescription()).isEqualTo("Updated description");
         assertThat(persisted.orElseThrow().isExpires()).isTrue();
+    }
+
+    @Test
+    void shouldPatchQualification() throws Exception {
+        var qualificationKey = QualificationKeys.DECK.value();
+        var original = qualificationJpaRepository.findById(qualificationKey).orElseThrow();
+
+        var updateRequest = "{ \"name\": \"Patched Qualification\" }";
+        webMvc.perform(patch("/api/v1/qualifications/" + qualificationKey)
+                .with(withAuthentication(TestUser.ADMIN))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(updateRequest))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.key").value(qualificationKey))
+            .andExpect(jsonPath("$.name").value("Patched Qualification"))
+            .andExpect(jsonPath("$.icon").value(original.getIcon()))
+            .andExpect(jsonPath("$.description").value(original.getDescription()))
+            .andExpect(jsonPath("$.expires").value(original.isExpires()));
+
+        var persisted = qualificationJpaRepository.findById(qualificationKey).orElseThrow();
+        assertThat(persisted.getName()).isEqualTo("Patched Qualification");
+        assertThat(persisted.getIcon()).isEqualTo(original.getIcon());
+        assertThat(persisted.getDescription()).isEqualTo(original.getDescription());
+        assertThat(persisted.isExpires()).isEqualTo(original.isExpires());
+        assertThat(persisted.getGrantsPositions()).isEqualTo(original.getGrantsPositions());
+    }
+
+    @Test
+    void shouldReturnValidationErrorsOnUpdate() throws Exception {
+        var qualificationKey = QualificationKeys.DECK.value();
+        var requestBody =
+            TestResources.getString("/integration/api/qualifications/invalid-update-qualification-request.json");
+
+        webMvc.perform(put("/api/v1/qualifications/" + qualificationKey)
+                .with(withAuthentication(TestUser.ADMIN))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value(containsString("name")))
+            .andExpect(jsonPath("$.detail").value(containsString("must not be blank")));
+    }
+
+    @Test
+    void shouldReturnValidationErrorsOnPatch() throws Exception {
+        var qualificationKey = QualificationKeys.DECK.value();
+        var requestBody =
+            TestResources.getString("/integration/api/qualifications/invalid-update-qualification-request.json");
+
+        webMvc.perform(patch("/api/v1/qualifications/" + qualificationKey)
+                .with(withAuthentication(TestUser.ADMIN))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value(containsString("name")))
+            .andExpect(jsonPath("$.detail").value(containsString("must not be blank")));
     }
 }

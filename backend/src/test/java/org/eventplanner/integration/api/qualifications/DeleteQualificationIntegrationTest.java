@@ -73,7 +73,7 @@ class DeleteQualificationIntegrationTest {
 
         webMvc.perform(delete("/api/v1/qualifications/" + qualificationKey)
                 .with(withAuthentication(TestUser.ADMIN)))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
 
         assertThat(qualificationJpaRepository.existsById(qualificationKey)).isFalse();
     }
