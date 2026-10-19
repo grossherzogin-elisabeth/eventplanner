@@ -9,6 +9,8 @@ import org.eventplanner.events.domain.values.qualifications.QualificationKey;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,11 +29,16 @@ import lombok.With;
 @NoArgsConstructor
 @ToString
 public class Qualification implements Serializable {
+    @NotNull
     private @NonNull QualificationKey key;
+    @NotBlank
     private @NonNull String name;
+    @NotBlank
     private @Nullable String icon;
+    @NotBlank
     private @Nullable String description;
     private boolean expires;
+    @NotNull
     private @NonNull List<PositionKey> grantsPositions = Collections.emptyList();
 
     public boolean getExpires() {
