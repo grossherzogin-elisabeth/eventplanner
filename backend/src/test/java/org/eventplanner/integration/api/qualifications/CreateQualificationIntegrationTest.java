@@ -2,6 +2,7 @@ package org.eventplanner.integration.api.qualifications;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eventplanner.testutil.TestUser.withAuthentication;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -106,5 +107,16 @@ class CreateQualificationIntegrationTest {
         assertThat(persisted.orElseThrow().getIcon()).isEqualTo("fa-certificate");
         assertThat(persisted.orElseThrow().getDescription()).isEqualTo("A test qualification for integration testing");
         assertThat(persisted.orElseThrow().isExpires()).isFalse();
+    }
+
+    @Test
+    void shouldReturnValidationErrors() throws Exception {
+        webMvc.perform(post("/api/v1/qualifications")
+                .with(withAuthentication(TestUser.ADMIN))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content("{}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors.name").value(hasItem("must not be blank")));
     }
 }
