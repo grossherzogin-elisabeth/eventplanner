@@ -3,6 +3,7 @@ package org.eventplanner.config;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.eventplanner.common.logging.LogAttribute;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
@@ -28,9 +29,9 @@ public class LogRequestsFilter extends OncePerRequestFilter {
     )
     throws ServletException, IOException {
         var startTimeMillis = System.currentTimeMillis();
-        MDC.put("request_method", request.getMethod());
-        MDC.put("request_url", request.getRequestURI());
-        MDC.put("trace_id", UUID.randomUUID().toString());
+        MDC.put(LogAttribute.REQUEST_METHOD, request.getMethod());
+        MDC.put(LogAttribute.REQUEST_URL, request.getRequestURI());
+        MDC.put(LogAttribute.TRACE_ID, UUID.randomUUID().toString());
         if (request.getRequestURI().startsWith("/api/")) {
             log.debug("Received request {} {}", request.getMethod(), request.getRequestURI());
         }
@@ -38,8 +39,8 @@ public class LogRequestsFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } finally {
             var durationMillis = System.currentTimeMillis() - startTimeMillis;
-            MDC.put("response_status", String.valueOf(response.getStatus()));
-            MDC.put("request_duration_millis", String.valueOf(durationMillis));
+            MDC.put(LogAttribute.RESPONSE_STATUS, String.valueOf(response.getStatus()));
+            MDC.put(LogAttribute.REQUEST_DURATION, String.valueOf(durationMillis));
             // log responses for all, not only api requests
             log.debug(
                 "Completed request {} {} with status {} in {} ms",
