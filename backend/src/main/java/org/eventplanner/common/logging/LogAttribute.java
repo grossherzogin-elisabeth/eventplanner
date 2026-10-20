@@ -1,6 +1,9 @@
 package org.eventplanner.common.logging;
 
 public class LogAttribute {
+    private LogAttribute() {
+    }
+
     public static final String TRACE_ID = "trace_id";
     public static final String USER_ID = "user";
     public static final String REQUEST_METHOD = "request_method";
