@@ -3,6 +3,7 @@ package org.eventplanner.events.application.scheduled;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.eventplanner.common.logging.LogAttribute;
 import org.eventplanner.events.application.services.EmailService;
 import org.eventplanner.events.domain.entities.users.SystemUser;
 import org.slf4j.MDC;
@@ -22,7 +23,7 @@ public class EmailScheduler {
 
     @Scheduled(fixedRate = 1L, timeUnit = TimeUnit.SECONDS)
     public void sendNotification() {
-        MDC.put("trace_id", UUID.randomUUID().toString());
+        MDC.put(LogAttribute.TRACE_ID, UUID.randomUUID().toString());
         try {
             SecurityContextHolder.getContext().setAuthentication(new SystemUser());
             emailService.sendNextEmail();

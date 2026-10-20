@@ -2,6 +2,7 @@ package org.eventplanner.events.application.scheduled;
 
 import java.util.UUID;
 
+import org.eventplanner.common.logging.LogAttribute;
 import org.eventplanner.events.application.usecases.AuthenticationUseCase;
 import org.eventplanner.events.domain.entities.users.SystemUser;
 import org.slf4j.MDC;
@@ -21,7 +22,7 @@ public class AccessKeyScheduler {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteExpiredAccessKeys() {
-        MDC.put("trace_id", UUID.randomUUID().toString());
+        MDC.put(LogAttribute.TRACE_ID, UUID.randomUUID().toString());
         try {
             SecurityContextHolder.getContext().setAuthentication(new SystemUser());
             authenticationUseCase.deleteExpiredAccessKeys();

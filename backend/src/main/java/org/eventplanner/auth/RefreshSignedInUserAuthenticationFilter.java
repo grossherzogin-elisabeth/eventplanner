@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 
+import org.eventplanner.common.logging.LogAttribute;
 import org.eventplanner.events.application.services.UserService;
 import org.eventplanner.events.domain.entities.users.SignedInUser;
 import org.eventplanner.events.domain.exceptions.UnauthorizedException;
@@ -41,7 +42,7 @@ public class RefreshSignedInUserAuthenticationFilter extends OncePerRequestFilte
                     // reload authentication, as it might already been converted by another thread
                     authentication = SecurityContextHolder.getContext().getAuthentication();
                     if (authentication instanceof SignedInUser signedInUser) {
-                        MDC.put("user", signedInUser.key().value());
+                        MDC.put(LogAttribute.USER_ID, signedInUser.key().value());
                         if (signedInUser.loginAt().isBefore(Instant.now().minus(MAX_AGE))) {
                             log.debug("Refreshing signed-in user, because session is older than {}", MAX_AGE);
                             refreshSignedInUser(signedInUser);
