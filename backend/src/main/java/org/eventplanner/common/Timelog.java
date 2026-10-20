@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.eventplanner.common.logging.LogAttribute;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.MDC;
 
@@ -55,7 +56,7 @@ public class Timelog {
     }
 
     private static @NonNull UUID getTraceId() {
-        var traceid = MDC.get("trace_id");
+        var traceid = MDC.get(LogAttribute.TRACE_ID);
         if (traceid != null) {
             return UUID.fromString(traceid);
         }

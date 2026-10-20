@@ -2,6 +2,7 @@ package org.eventplanner.events.application.scheduled;
 
 import java.util.UUID;
 
+import org.eventplanner.common.logging.LogAttribute;
 import org.eventplanner.events.application.usecases.events.RegistrationConfirmationUseCase;
 import org.eventplanner.events.application.usecases.users.UserQualificationExpirationUseCase;
 import org.eventplanner.events.domain.entities.users.SystemUser;
@@ -25,7 +26,7 @@ public class NotificationScheduler {
     @Scheduled(cron = "0 0 8 * * *")
     @PostConstruct
     public void sendConfirmationRequest() {
-        MDC.put("trace_id", UUID.randomUUID().toString());
+        MDC.put(LogAttribute.TRACE_ID, UUID.randomUUID().toString());
         try {
             SecurityContextHolder.getContext().setAuthentication(new SystemUser());
             registrationConfirmationUseCase.sendConfirmationRequests();
@@ -40,7 +41,7 @@ public class NotificationScheduler {
     @Scheduled(cron = "0 0 8 * * *")
     @PostConstruct
     public void sendQualificationExpirationNotifications() {
-        MDC.put("trace_id", UUID.randomUUID().toString());
+        MDC.put(LogAttribute.TRACE_ID, UUID.randomUUID().toString());
         try {
             SecurityContextHolder.getContext().setAuthentication(new SystemUser());
             userQualificationExpirationUseCase.sendExpirationNotifications();
