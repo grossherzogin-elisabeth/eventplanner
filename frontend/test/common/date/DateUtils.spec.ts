@@ -239,21 +239,21 @@ describe('DateUtils', () => {
 
     describe('deserializeDate', () => {
         it('should deserialize date with timezone name correctly', () => {
-            const expected = new Date(2024, 5, 25, 10, 15);
+            const expected = new Date(2024, 5, 25, 8, 15);
             const result = deserializeDate('2024-06-25T10:15+02:00[Europe/Berlin]');
-            expect(result).toEqual(expected);
+            expect(result).toEqual(expected); // test runs in UTC
         });
 
         it('should deserialize date without timezone name correctly correctly', () => {
-            const expected = new Date(2024, 5, 25, 10, 15);
+            const expected = new Date(2024, 5, 25, 8, 15);
             const result = deserializeDate('2024-06-25T10:15+02:00');
-            expect(result).toEqual(expected);
+            expect(result).toEqual(expected); // test runs in UTC
         });
 
         it('should deserialize UTC date correctly', () => {
-            const expected = new Date(2024, 5, 25, 10, 15);
+            const expected = new Date(2024, 5, 25, 8, 15);
             const result = deserializeDate('2024-06-25T08:15Z');
-            expect(result).toEqual(expected);
+            expect(result).toEqual(expected); // test runs in UTC
         });
 
         it('should deserialize date', () => {
