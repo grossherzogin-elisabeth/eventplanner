@@ -1,7 +1,12 @@
 {
   "name": "Updated planned event",
   "type": "other",
-  "signupType": "open",
+  "flags": {
+    "enableDirectSignup": true,
+    "enableRegistrationConfirmation": true,
+    "enableOvernightStaySelection": true,
+    "enableArrivalDaySelection": true
+  },
   "state": "open-for-signup",
   "note": "Updated note",
   "description": "Updated description",

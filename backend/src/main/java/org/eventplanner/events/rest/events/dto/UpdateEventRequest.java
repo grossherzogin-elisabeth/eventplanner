@@ -8,7 +8,6 @@ import org.eventplanner.common.validation.EnumValue;
 import org.eventplanner.common.validation.IsoTimestamp;
 import org.eventplanner.events.domain.specs.UpdateEventSpec;
 import org.eventplanner.events.domain.values.events.EventKey;
-import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
@@ -20,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 public record UpdateEventRequest(
     @Nullable String name,
     @Nullable @EnumValue(EventType.class) String type,
-    @Nullable @EnumValue(EventSignupType.class) String signupType,
+    @Nullable EventFlagsRepresentation flags,
     @Nullable String state,
     @Nullable String note,
     @Nullable String description,
@@ -38,9 +37,7 @@ public record UpdateEventRequest(
             type != null
                 ? EventType.fromString(type).orElseThrow(IllegalArgumentException::new)
                 : null,
-            signupType != null
-                ? EventSignupType.fromString(signupType).orElseThrow(IllegalArgumentException::new)
-                : null,
+            flags != null ? flags.toDomain() : null,
             name,
             state != null
                 ? EventState.fromString(state).orElseThrow(IllegalArgumentException::new)

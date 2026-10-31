@@ -20,7 +20,7 @@ import type {
     ResolvedRegistrationSlot,
     UserKey,
 } from '@/domain';
-import { EventSignupType, EventState } from '@/domain';
+import { EventState } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
 export class EventUseCase {
@@ -152,10 +152,10 @@ export class EventUseCase {
     public async joinEvent(event: Event, registration: Registration): Promise<Event> {
         try {
             const savedEvent = await this.joinEventInternal(event, registration);
-            if (savedEvent.signupType === EventSignupType.Assignment) {
-                this.notificationService.success('Du stehst jetzt auf der Warteliste');
-            } else {
+            if (savedEvent.flags.enableDirectSignup) {
                 this.notificationService.success('Deine Anmeldung wurde gespeichert');
+            } else {
+                this.notificationService.success('Du stehst jetzt auf der Warteliste');
             }
             return savedEvent;
         } catch (e) {

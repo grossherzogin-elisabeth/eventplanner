@@ -10,7 +10,6 @@ import org.jspecify.annotations.NonNull;
 public record EventRepresentation(
     @NonNull String key,
     @NonNull String type,
-    @NonNull String signupType,
     @NonNull String name,
     @NonNull String state,
     @NonNull String note,
@@ -19,14 +18,14 @@ public record EventRepresentation(
     @NonNull String end,
     @NonNull List<EventLocationRepresentation> locations,
     @NonNull List<EventSlotRepresentation> slots,
-    @NonNull List<RegistrationRepresentation> registrations
+    @NonNull List<RegistrationRepresentation> registrations,
+    @NonNull EventFlagsRepresentation flags
 ) implements Serializable {
 
     public static @NonNull EventRepresentation fromDomain(@NonNull Event event) {
         return new EventRepresentation(
             event.getKey().value(),
             event.getType().value(),
-            event.getSignupType().value(),
             event.getName(),
             event.getState().value(),
             event.getNote(),
@@ -35,7 +34,8 @@ public record EventRepresentation(
             event.getEnd().toString(),
             event.getLocations().stream().map(EventLocationRepresentation::fromDomain).toList(),
             event.getSlots().stream().map(EventSlotRepresentation::fromDomain).toList(),
-            event.getRegistrations().stream().map(RegistrationRepresentation::fromDomain).toList()
+            event.getRegistrations().stream().map(RegistrationRepresentation::fromDomain).toList(),
+            EventFlagsRepresentation.fromDomain(event.getFlags())
         );
     }
 }

@@ -49,6 +49,7 @@ public class RegistrationConfirmationUseCase {
                 eventRepository.findAllByYear(currentYear + 1).stream(),
                 eventRepository.findAllByYear(currentYear).stream()
             )
+            .filter(event -> event.getFlags().isEnableRegistrationConfirmation())
             .filter(event -> event.getState().equals(EventState.PLANNED))
             // only events that start in the future within the next 2 weeks
             .filter(event -> event.getStart().isAfter(Instant.now()))

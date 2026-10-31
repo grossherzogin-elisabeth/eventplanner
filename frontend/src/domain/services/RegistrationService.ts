@@ -1,5 +1,5 @@
 import type { Event, Position, PositionKey, QualificationKey, Registration, RegistrationKey, Slot, User, UserKey } from '@/domain';
-import { EventSignupType, RegistrationSlotState } from '@/domain';
+import { RegistrationSlotState } from '@/domain';
 import type { ResolvedRegistrationSlot } from '@/domain/aggregates/ResolvedRegistrationSlot';
 
 export class RegistrationService {
@@ -19,7 +19,7 @@ export class RegistrationService {
             const user = userMap.get(registration.userKey || 'none');
             const slot = slotMap.get(registration.key);
             let state = RegistrationSlotState.WAITING_LIST;
-            if (slot !== undefined || event.signupType === EventSignupType.Open) {
+            if (slot !== undefined || event.flags.enableDirectSignup) {
                 if (registration.confirmed) {
                     state = RegistrationSlotState.CONFIRMED;
                 } else {

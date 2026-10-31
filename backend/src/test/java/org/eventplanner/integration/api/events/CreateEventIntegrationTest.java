@@ -83,7 +83,6 @@ class CreateEventIntegrationTest {
                 .content(requestBody))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors.type").isNotEmpty())
-            .andExpect(jsonPath("$.errors.signupType").isNotEmpty())
             .andExpect(jsonPath("$.errors.start").isNotEmpty())
             .andExpect(jsonPath("$.errors.end").isNotEmpty());
     }
@@ -104,7 +103,12 @@ class CreateEventIntegrationTest {
             .andExpect(jsonPath("$.note").value(request.note()))
             .andExpect(jsonPath("$.description").value(request.description()))
             .andExpect(jsonPath("$.type").value(request.type()))
-            .andExpect(jsonPath("$.signupType").value(request.signupType()))
+            .andExpect(jsonPath("$.flags.enableDirectSignup").value(request.flags().enableDirectSignup()))
+            .andExpect(jsonPath("$.flags.enableRegistrationConfirmation").value(request.flags()
+                .enableRegistrationConfirmation()))
+            .andExpect(jsonPath("$.flags.enableOvernightStaySelection").value(request.flags()
+                .enableOvernightStaySelection()))
+            .andExpect(jsonPath("$.flags.enableArrivalDaySelection").value(request.flags().enableArrivalDaySelection()))
             .andExpect(jsonPath("$.start").value(request.start()))
             .andExpect(jsonPath("$.end").value(request.end()))
             .andExpect(jsonPath("$.locations").value(request.locations()))

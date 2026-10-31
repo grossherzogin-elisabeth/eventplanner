@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Event } from '@/domain';
 import { Role } from '@/domain';
-import { EventSignupType, EventState, Permission, SlotCriticality, useEventService } from '@/domain';
+import { EventState, Permission, SlotCriticality, useEventService } from '@/domain';
 import { EventService } from '@/domain/services/EventService';
 import {
     CAPTAIN,
@@ -562,22 +562,22 @@ describe('EventService', () => {
 
     describe('showWaitingList', () => {
         it('should return false for open signup events', () => {
-            const event = mockEvent({ signupType: EventSignupType.Open, state: EventState.Planned });
+            const event = mockEvent({ flags: { enableDirectSignup: true }, state: EventState.Planned });
             expect(testee.showWaitingList(event)).toBe(false);
         });
 
         it('should return false for draft events', () => {
-            const event = mockEvent({ signupType: EventSignupType.Assignment, state: EventState.Draft });
+            const event = mockEvent({ state: EventState.Draft });
             expect(testee.showWaitingList(event)).toBe(false);
         });
 
         it('should return false for events open for signup', () => {
-            const event = mockEvent({ signupType: EventSignupType.Assignment, state: EventState.OpenForSignup });
+            const event = mockEvent({ state: EventState.OpenForSignup });
             expect(testee.showWaitingList(event)).toBe(false);
         });
 
         it('should return true for planned assignment events', () => {
-            const event = mockEvent({ signupType: EventSignupType.Assignment, state: EventState.Planned });
+            const event = mockEvent({ state: EventState.Planned });
             expect(testee.showWaitingList(event)).toBe(true);
         });
     });
@@ -708,7 +708,7 @@ describe('EventService', () => {
             });
 
             it('should return true for events with signup-type Open', () => {
-                const event = { ...futureEvent, signupType: EventSignupType.Open };
+                const event = { ...futureEvent, flags: { enableDirectSignup: true } };
                 expect(testee.isSignedInUserAssigned(event, userWithRegistration)).toBe(true);
             });
 
