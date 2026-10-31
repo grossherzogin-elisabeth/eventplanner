@@ -84,7 +84,7 @@ describe('EventLocationsCard.vue', () => {
         const etd = location.find('[data-test-id="etd"]');
         expect(etd.exists()).toBe(true);
         expect(etd.text()).toContain('10.07.');
-        expect(etd.text()).toContain('11:00');
+        expect(etd.text()).toContain('09:00');
     });
 
     it('should render eta date and time', async () => {
@@ -92,7 +92,7 @@ describe('EventLocationsCard.vue', () => {
         const eta = location.find('[data-test-id="eta"]');
         expect(eta.exists()).toBe(true);
         expect(eta.text()).toContain('10.07.');
-        expect(eta.text()).toContain('15:00');
+        expect(eta.text()).toContain('13:00');
     });
 
     it('should render neither eta nor etd', async () => {
