@@ -1,7 +1,12 @@
 {
   "key": "7fa48570-963a-4e95-b72f-acaf70c70a24",
   "type": "weekend-event",
-  "signupType": "assignment",
+  "flags": {
+    "enableDirectSignup": false,
+    "enableRegistrationConfirmation": true,
+    "enableOvernightStaySelection": true,
+    "enableArrivalDaySelection": true
+  },
   "name": "Planned event",
   "state": "planned",
   "note": "",

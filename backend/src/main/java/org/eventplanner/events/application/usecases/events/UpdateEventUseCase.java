@@ -99,9 +99,9 @@ public class UpdateEventUseCase {
             event.setType(spec.type());
             changedAttributes.add("type");
         }
-        if (spec.signupType() != null && !spec.signupType().equals(event.getSignupType())) {
-            event.setSignupType(spec.signupType());
-            changedAttributes.add("signupType");
+        if (spec.flags() != null && !spec.flags().equals(event.getFlags())) {
+            event.setFlags(spec.flags());
+            changedAttributes.add("flags");
         }
         if (spec.description() != null && !spec.description().equals(event.getDescription())) {
             event.setDescription(spec.description());

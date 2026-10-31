@@ -97,7 +97,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import type { Event, Position, User } from '@/domain';
-import { EventSignupType, EventType, useEventService } from '@/domain';
+import { EventType, useEventService } from '@/domain';
 import { filterUndefined } from '@/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import UserQualificationsSummaryBadge from './UserQualificationsSummaryBadge.vue';
@@ -159,7 +159,7 @@ function getUserEventSummary(event: Event, user?: User): EventSummary {
     if (!userRegistration) {
         return { type: event.type, hasRegistration: false, isAssigned: false };
     }
-    if (event.signupType === EventSignupType.Open) {
+    if (event.flags.enableDirectSignup) {
         return { type: event.type, hasRegistration: true, isAssigned: true };
     }
     const assignedRegistrationKeys = event.slots.map((it) => it.assignedRegistrationKey).filter(filterUndefined);

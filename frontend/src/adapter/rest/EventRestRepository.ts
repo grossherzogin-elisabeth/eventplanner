@@ -2,7 +2,7 @@ import { getAccessKeyHeader } from '@/adapter/rest/util/getAccessKeyHeader';
 import { getCsrfTokenHeader } from '@/adapter/rest/util/getCsrfTokenHeader';
 import type { EventRepository } from '@/application';
 import { deserializeDate } from '@/common';
-import type { Event, EventKey, EventSignupType, EventState, EventType, Registration, Slot } from '@/domain';
+import type { Event, EventKey, EventState, EventType, Registration, Slot } from '@/domain';
 import type { RegistrationCreateRequest, RegistrationUpdateRequest } from './EventRegistrationRestRepository';
 
 export interface SlotRepresentation {
@@ -38,10 +38,17 @@ export interface LocationRepresentation {
     etd?: string;
 }
 
+interface EventFlagsRepresentation {
+    enableDirectSignup?: boolean;
+    enableRegistrationConfirmation?: boolean;
+    enableOvernightStaySelection?: boolean;
+    enableArrivalDaySelection?: boolean;
+}
+
 export interface EventRepresentation {
     key: string;
     type: string;
-    signupType: string;
+    flags: EventFlagsRepresentation;
     state: string;
     name: string;
     description: string;
@@ -54,7 +61,7 @@ export interface EventRepresentation {
 
 interface EventCreateRequest {
     type: string;
-    signupType: string;
+    flags: EventFlagsRepresentation;
     state: string;
     name: string;
     description: string;
@@ -67,7 +74,7 @@ interface EventCreateRequest {
 interface EventUpdateRequest {
     state?: string | null;
     type?: string | null;
-    signupType?: string | null;
+    flags?: EventFlagsRepresentation | null;
     name?: string | null;
     description?: string | null;
     start?: string | null;
@@ -130,7 +137,7 @@ export class EventRestRepository implements EventRepository {
         const requestBody: EventCreateRequest = {
             state: event.state,
             type: event.type,
-            signupType: event.signupType,
+            flags: event.flags,
             name: event.name,
             description: event.description,
             start: event.start.toISOString(),
@@ -184,7 +191,7 @@ export class EventRestRepository implements EventRepository {
         const requestBody: EventUpdateRequest = {
             state: updateRequest.state,
             type: updateRequest.type,
-            signupType: updateRequest.signupType,
+            flags: updateRequest.flags,
             name: updateRequest.name,
             description: updateRequest.description,
             start: updateRequest.start?.toISOString(),
@@ -324,7 +331,7 @@ export class EventRestRepository implements EventRepository {
         const event: Event = {
             key: eventRepresentation.key,
             type: eventRepresentation.type as EventType,
-            signupType: eventRepresentation.signupType as EventSignupType,
+            flags: eventRepresentation.flags ?? {},
             name: eventRepresentation.name,
             description: eventRepresentation.description,
             state: eventRepresentation.state as EventState,

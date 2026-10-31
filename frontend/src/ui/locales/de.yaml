@@ -161,6 +161,23 @@ domain:
     description: Beschreibung
     end-date: Enddatum
     end-time: Crew von Bord
+    flag:
+      enableArrivalDaySelection: Anreise am Vortag
+      enableArrivalDaySelectionHint:
+        Crewmitglieder können angeben, dass sie bereits am Vortag anreisen
+        möchten.
+      enableDirectSignup: Direktanmeldung
+      enableDirectSignupHint:
+        Crewmitglieder  werden direkt in die Crew eingeplant, ohne vorher auf
+        die Warteliste gesetzt zu werden.
+      enableOvernightStaySelection: Übernachtung an Bord
+      enableOvernightStaySelectionHint:
+        Crewmitglieder können angeben, dass sie eine Übernachtung an Bord
+        wünschen.
+      enableRegistrationConfirmation: Teilnahmebestätigung
+      enableRegistrationConfirmationHint:
+        Eingeplante Crewmitglieder müssen ihre Teilnahme an der Veranstalgung
+        einige Tage vor Veranstaltungsbeginn bestätigen.
     location: Ort|Geplante Route
     name: Veranstaltungsname
     # TODO move this to a better fitting place

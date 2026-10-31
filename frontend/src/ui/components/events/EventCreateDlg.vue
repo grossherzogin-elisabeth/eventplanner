@@ -35,16 +35,6 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputSelect
-                            v-model="event.signupType"
-                            :label="$t('domain.event.signup-type')"
-                            :options="eventSignupTypes.options.value"
-                            :errors="validation.errors.value['signupType']"
-                            :errors-visible="validation.showErrors.value"
-                            required
-                        />
-                    </div>
-                    <div class="mb-4">
                         <VInputTextArea
                             v-model.trim="event.description"
                             :label="$t('domain.event.description')"
@@ -128,16 +118,14 @@ import { ref, watch } from 'vue';
 import { useEventAdministrationUseCase } from '@/application';
 import { cropToPrecision, deepCopy, updateDate, updateTime } from '@/common';
 import type { Event } from '@/domain';
-import { EventSignupType, EventState, EventType, useEventService } from '@/domain';
+import { EventState, EventType, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VDialog, VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
 import EventTemplateSelect from '@/ui/components/events/EventTemplateSelect.vue';
-import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation';
 
 const eventTypes = useEventTypes();
-const eventSignupTypes = useEventSignupTypes();
 const eventAdminUseCase = useEventAdministrationUseCase();
 const eventService = useEventService();
 
@@ -148,7 +136,9 @@ const event = ref<Event>({
     name: '',
     description: '',
     type: EventType.WeekendEvent,
-    signupType: EventSignupType.Assignment,
+    flags: {
+        enableRegistrationConfirmation: true,
+    },
     state: EventState.Draft,
     start: new Date(),
     days: 0,

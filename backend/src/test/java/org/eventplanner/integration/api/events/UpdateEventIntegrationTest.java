@@ -97,7 +97,6 @@ class UpdateEventIntegrationTest {
                 .content(requestBody))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors.type").isNotEmpty())
-            .andExpect(jsonPath("$.errors.signupType").isNotEmpty())
             .andExpect(jsonPath("$.errors.start").isNotEmpty())
             .andExpect(jsonPath("$.errors.end").isNotEmpty());
         var eventAfterUpdate = eventJpaRepository.findById(EVENT_KEY).orElseThrow();
@@ -129,7 +128,12 @@ class UpdateEventIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value(request.name()))
             .andExpect(jsonPath("$.type").value(request.type()))
-            .andExpect(jsonPath("$.signupType").value(request.signupType()))
+            .andExpect(jsonPath("$.flags.enableDirectSignup").value(request.flags().enableDirectSignup()))
+            .andExpect(jsonPath("$.flags.enableRegistrationConfirmation").value(request.flags()
+                .enableRegistrationConfirmation()))
+            .andExpect(jsonPath("$.flags.enableOvernightStaySelection").value(request.flags()
+                .enableOvernightStaySelection()))
+            .andExpect(jsonPath("$.flags.enableArrivalDaySelection").value(request.flags().enableArrivalDaySelection()))
             .andExpect(jsonPath("$.state").value(request.state()))
             .andExpect(jsonPath("$.note").value(request.note()))
             .andExpect(jsonPath("$.description").value(request.description()))
@@ -147,7 +151,10 @@ class UpdateEventIntegrationTest {
         var eventAfterUpdate = eventJpaRepository.findById(EVENT_KEY).orElseThrow();
         assertThat(eventAfterUpdate.getName()).isEqualTo(request.name());
         assertThat(eventAfterUpdate.getType()).isEqualTo(request.type());
-        assertThat(eventAfterUpdate.getSignupType()).isEqualTo(request.signupType());
+        assertThat(eventAfterUpdate.getFlagsRaw()).contains("\"enableDirectSignup\":true");
+        assertThat(eventAfterUpdate.getFlagsRaw()).contains("\"enableRegistrationConfirmation\":true");
+        assertThat(eventAfterUpdate.getFlagsRaw()).contains("\"enableOvernightStaySelection\":true");
+        assertThat(eventAfterUpdate.getFlagsRaw()).contains("\"enableArrivalDaySelection\":true");
         assertThat(eventAfterUpdate.getState()).isEqualTo(request.state());
         assertThat(eventAfterUpdate.getNote()).isEqualTo(request.note());
         assertThat(eventAfterUpdate.getDescription()).isEqualTo(request.description());

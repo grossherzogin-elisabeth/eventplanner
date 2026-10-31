@@ -14,6 +14,7 @@ export { default as VInputCombobox } from './input/VInputCombobox.vue';
 export { default as VInputSelectionList } from './input/VInputSelectionList.vue';
 export { default as VInputDate } from './input/VInputDate.vue';
 export { default as VInputRadio } from './input/VInputRadio.vue';
+export { default as VInputSwitch } from './input/VInputSwitch.vue';
 export { default as VInputNumber } from './input/VInputNumber.vue';
 export { default as VInputSlider } from './input/VInputSlider.vue';
 export { default as VInputSelect } from './input/VInputSelect.vue';

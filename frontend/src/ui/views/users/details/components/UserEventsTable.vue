@@ -80,7 +80,7 @@ import { useRouter } from 'vue-router';
 import { useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
 import { filterUndefined } from '@/common';
 import type { Event, Position, Registration, UserDetails } from '@/domain';
-import { EventSignupType, Permission, useEventService } from '@/domain';
+import { Permission, useEventService } from '@/domain';
 import { VTable } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions';
 import { useSession } from '@/ui/composables/Session';
@@ -124,7 +124,7 @@ const renderedEvents = computed<EventTableViewItem[] | undefined>(() => {
                     registration: registration,
                     positionName: slot?.positionName || position.name,
                     position: position,
-                    isAssigned: slot != undefined || evt.signupType === EventSignupType.Open,
+                    isAssigned: evt.flags.enableDirectSignup === true || slot != undefined,
                 };
             }
             console.warn('Failed to get users position');

@@ -4,9 +4,9 @@
             {{ err }}
         </p>
     </div>
-    <div v-else-if="props.hint" class="input-hint">
+    <p v-else-if="props.hint" class="input-hint">
         {{ props.hint }}
-    </div>
+    </p>
 </template>
 <script lang="ts" setup>
 interface Props {

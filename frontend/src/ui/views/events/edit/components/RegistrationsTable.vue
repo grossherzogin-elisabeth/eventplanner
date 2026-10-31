@@ -104,7 +104,7 @@
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     <span>{{ $t('domain.user.actions.view') }}</span>
                 </RouterLink>
-                <template v-if="event?.signupType === EventSignupType.Assignment">
+                <template v-if="!event?.flags.enableDirectSignup">
                     <li
                         v-if="item.slot"
                         class="context-menu-item"
@@ -141,7 +141,7 @@
 </template>
 <script lang="ts" setup>
 import type { Event, ResolvedRegistrationSlot } from '@/domain';
-import { EventSignupType, RegistrationSlotState } from '@/domain';
+import { RegistrationSlotState } from '@/domain';
 import { VTable, VTooltip } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 import { Routes } from '@/ui/views/Routes.ts';

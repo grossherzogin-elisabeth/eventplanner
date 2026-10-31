@@ -20,7 +20,7 @@
                 </h3>
                 <p class="text-sm">
                     {{ $t('components.event-participants-card.placeholder') }}
-                    <template v-if="event.signupType === EventSignupType.Assignment">
+                    <template v-if="!event.flags.enableDirectSignup">
                         {{ $t('components.event-participants-card.placeholder-waiting-list-hint') }}
                     </template>
                 </p>
@@ -74,7 +74,7 @@
 import { computed, ref, watch } from 'vue';
 import { useEventUseCase } from '@/application';
 import type { Event, ResolvedRegistrationSlot } from '@/domain';
-import { EventSignupType, EventState } from '@/domain';
+import { EventState } from '@/domain';
 import RegistrationRow from '@/ui/components/events/RegistrationRow.vue';
 import { useSession } from '@/ui/composables/Session.ts';
 
@@ -91,9 +91,7 @@ const waitingList = ref<ResolvedRegistrationSlot[]>([]);
 const crew = ref<ResolvedRegistrationSlot[]>([]);
 
 const hasHiddenCrewAssignments = computed<boolean>(() => {
-    return (
-        props.event.signupType !== EventSignupType.Assignment || [EventState.OpenForSignup, EventState.Draft].includes(props.event.state)
-    );
+    return props.event.flags.enableDirectSignup || [EventState.OpenForSignup, EventState.Draft].includes(props.event.state);
 });
 
 function init(): void {

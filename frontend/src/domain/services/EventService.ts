@@ -1,7 +1,7 @@
 import { addToDate, cropToPrecision, filterUndefined } from '@/common';
 import { Validator, after, maxLength, notEmpty } from '@/common/validation';
 import type { Event, Location, PositionKey, Registration, RegistrationKey, SignedInUser, Slot, SlotKey, User, UserKey } from '@/domain';
-import { EventSignupType, EventState, Permission, Role, SlotCriticality } from '@/domain';
+import { EventState, Permission, Role, SlotCriticality } from '@/domain';
 import { v4 as uuid } from 'uuid';
 
 export class EventService {
@@ -168,7 +168,7 @@ export class EventService {
     }
 
     public hasOpenSlots(event: Event, positions?: PositionKey[], criticality: number = 0): boolean {
-        if (event.signupType === EventSignupType.Open && criticality === 0) {
+        if (event.flags.enableDirectSignup && criticality === 0) {
             // this event has no limited slots
             // only return true for criticality 0 though to prevent hasOpenRequiredSlots returning a false positive
             return true;
@@ -295,7 +295,7 @@ export class EventService {
         if (!registration) {
             return false;
         }
-        if (event.signupType === EventSignupType.Open) {
+        if (event.flags.enableDirectSignup) {
             // event is open signup (every registration is automatically assigned)
             return true;
         }
@@ -329,9 +329,7 @@ export class EventService {
 
     public showWaitingList(event: Event): boolean {
         return (
-            event !== undefined &&
-            event.signupType !== EventSignupType.Open &&
-            ![EventState.Draft, EventState.OpenForSignup].includes(event.state)
+            event !== undefined && !event.flags.enableDirectSignup && ![EventState.Draft, EventState.OpenForSignup].includes(event.state)
         );
     }
 }

@@ -37,18 +37,6 @@
             />
         </div>
         <div class="mb-4">
-            <VInputSelect
-                :model-value="props.event?.signupType"
-                :label="$t('domain.event.signup-type')"
-                :options="eventSignupTypes.options.value"
-                :errors="validation.errors.value['signupType']"
-                :errors-visible="validation.showErrors.value"
-                required
-                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
-                @update:model-value="update({ signupType: $event })"
-            />
-        </div>
-        <div class="mb-4">
             <VInputTextArea
                 :model-value="props.event?.description"
                 :label="$t('domain.event.description')"
@@ -112,6 +100,33 @@
                 />
             </div>
         </div>
+
+        <div class="my-16 space-y-6">
+            <VInputSwitch
+                :model-value="props.event?.flags.enableDirectSignup"
+                :label="$t('domain.event.flag.enableDirectSignup')"
+                :hint="$t('domain.event.flag.enableDirectSignupHint')"
+                @update:model-value="update({ flags: { ...props.event?.flags, enableDirectSignup: $event } })"
+            />
+            <VInputSwitch
+                :model-value="props.event?.flags.enableRegistrationConfirmation"
+                :label="$t('domain.event.flag.enableRegistrationConfirmation')"
+                :hint="$t('domain.event.flag.enableRegistrationConfirmationHint')"
+                @update:model-value="update({ flags: { ...props.event?.flags, enableRegistrationConfirmation: $event } })"
+            />
+            <VInputSwitch
+                :model-value="props.event?.flags.enableOvernightStaySelection"
+                :label="$t('domain.event.flag.enableOvernightStaySelection')"
+                :hint="$t('domain.event.flag.enableOvernightStaySelectionHint')"
+                @update:model-value="update({ flags: { ...props.event?.flags, enableOvernightStaySelection: $event } })"
+            />
+            <VInputSwitch
+                :model-value="props.event?.flags.enableArrivalDaySelection"
+                :label="$t('domain.event.flag.enableArrivalDaySelection')"
+                :hint="$t('domain.event.flag.enableArrivalDaySelectionHint')"
+                @update:model-value="update({ flags: { ...props.event?.flags, enableArrivalDaySelection: $event } })"
+            />
+        </div>
     </section>
 </template>
 <script lang="ts" setup>
@@ -119,8 +134,7 @@ import { computed } from 'vue';
 import { deepCopy, updateDate, updateTime } from '@/common';
 import type { Event } from '@/domain';
 import { Permission, useEventService } from '@/domain';
-import { VInputDate, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
-import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
+import { VInputDate, VInputSwitch, VInputSelect, VInputText, VInputTextArea, VInputTime } from '@/ui/components/common';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useSession } from '@/ui/composables/Session.ts';
@@ -137,7 +151,6 @@ const emit = defineEmits<Emits>();
 
 const eventStates = useEventStates();
 const eventTypes = useEventTypes();
-const eventSignupTypes = useEventSignupTypes();
 const eventService = useEventService();
 const { hasPermission } = useSession();
 

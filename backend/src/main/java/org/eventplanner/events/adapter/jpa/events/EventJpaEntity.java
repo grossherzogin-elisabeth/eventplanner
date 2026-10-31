@@ -10,11 +10,11 @@ import java.util.List;
 
 import org.eventplanner.beans.JsonMapperFactory;
 import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.EventFlags;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.values.events.EventKey;
 import org.eventplanner.events.domain.values.events.EventLocation;
-import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.jspecify.annotations.NonNull;
@@ -46,8 +46,8 @@ public class EventJpaEntity {
     @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name = "signup_type", nullable = false)
-    private String signupType;
+    @Column(name = "flags")
+    private String flagsRaw;
 
     @Column(name = "year", nullable = false)
     private Integer year;
@@ -82,7 +82,7 @@ public class EventJpaEntity {
     public static @NonNull EventJpaEntity fromDomain(@NonNull Event domain) {
         var eventJpaEntity = new EventJpaEntity();
         eventJpaEntity.setType(domain.getType().value());
-        eventJpaEntity.setSignupType(domain.getSignupType().value());
+        eventJpaEntity.setFlagsRaw(serializeFlags(domain.getFlags()));
         eventJpaEntity.setKey(domain.getKey().value());
         eventJpaEntity.setYear(domain.getStart().atZone(ZoneId.systemDefault()).getYear());
         eventJpaEntity.setName(domain.getName());
@@ -95,6 +95,22 @@ public class EventJpaEntity {
         eventJpaEntity.setSlotsRaw(serializeSlots(domain.getSlots()));
         eventJpaEntity.setConfirmationsRequestsSent(domain.getConfirmationsRequestsSent());
         return eventJpaEntity;
+    }
+
+    public static @NonNull EventFlags deserializeFlags(@NonNull String json) {
+        try {
+            return jsonMapper.readValue(json, EventFlags.class);
+        } catch (IOException _) {
+            return new EventFlags();
+        }
+    }
+
+    public static @NonNull String serializeFlags(@NonNull EventFlags flags) {
+        try {
+            return jsonMapper.writeValueAsString(flags);
+        } catch (IOException _) {
+            return "{}";
+        }
     }
 
     public static @NonNull List<EventLocation> deserializeLocations(@NonNull String json) {
@@ -164,7 +180,7 @@ public class EventJpaEntity {
         return new Event(
             new EventKey(key),
             mapEventType(),
-            EventSignupType.fromString(signupType).orElse(EventSignupType.ASSIGNMENT),
+            deserializeFlags(flagsRaw),
             name,
             EventState.fromString(state).orElse(EventState.PLANNED),
             note != null ? note : "",
