@@ -9,8 +9,8 @@
     "build": "vue-tsc --noEmit -p tsconfig.app.json --composite false && vite build",
     "lint": "npx eslint --fix src",
     "format": "yq -i 'sort_keys(..)' src/ui/locales/*.yaml && ./node_modules/.bin/prettier . --ignore-path .gitignore --write --list-different",
-    "test": "TZ=CET vitest",
-    "test:coverage": "TZ=CET vitest run --coverage",
+    "test": "TZ=UTC vitest",
+    "test:coverage": "TZ=UTC vitest run --coverage",
     "check:format": "./node_modules/.bin/prettier --ignore-path .gitignore --check .",
     "check:lint": "npx eslint src",
     "check:typescript": "vue-tsc"

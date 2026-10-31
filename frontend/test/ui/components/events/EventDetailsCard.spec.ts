@@ -36,7 +36,7 @@ describe('EventDetailsCard.vue', () => {
     });
 
     it('should render start time', async () => {
-        expect(testee.text()).toContain('11:00'); // CET
+        expect(testee.text()).toContain('9:00');
     });
 
     it('should render end date', async () => {
@@ -44,7 +44,7 @@ describe('EventDetailsCard.vue', () => {
     });
 
     it('should render end time', async () => {
-        expect(testee.text()).toContain('18:00'); // CET
+        expect(testee.text()).toContain('16:00');
     });
 
     it('should render description', async () => {
