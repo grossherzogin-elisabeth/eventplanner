@@ -47,7 +47,7 @@
     "eslint-plugin-prettier": "^5.5.7",
     "eslint-plugin-vue": "^10.11.1",
     "fake-indexeddb": "^6.2.5",
-    "happy-dom": "^20.14.6",
+    "happy-dom": "^21.0.3",
     "msw": "^2.15.0",
     "postcss": "^8.5.30",
     "prettier": "^3.9.10",
