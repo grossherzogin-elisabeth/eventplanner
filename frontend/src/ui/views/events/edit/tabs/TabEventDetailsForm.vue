@@ -106,24 +106,28 @@
                 :model-value="props.event?.flags.enableDirectSignup"
                 :label="$t('domain.event.flag.enableDirectSignup')"
                 :hint="$t('domain.event.flag.enableDirectSignupHint')"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ flags: { ...props.event?.flags, enableDirectSignup: $event } })"
             />
             <VInputSwitch
                 :model-value="props.event?.flags.enableRegistrationConfirmation"
                 :label="$t('domain.event.flag.enableRegistrationConfirmation')"
                 :hint="$t('domain.event.flag.enableRegistrationConfirmationHint')"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ flags: { ...props.event?.flags, enableRegistrationConfirmation: $event } })"
             />
             <VInputSwitch
                 :model-value="props.event?.flags.enableOvernightStaySelection"
                 :label="$t('domain.event.flag.enableOvernightStaySelection')"
                 :hint="$t('domain.event.flag.enableOvernightStaySelectionHint')"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ flags: { ...props.event?.flags, enableOvernightStaySelection: $event } })"
             />
             <VInputSwitch
                 :model-value="props.event?.flags.enableArrivalDaySelection"
                 :label="$t('domain.event.flag.enableArrivalDaySelection')"
                 :hint="$t('domain.event.flag.enableArrivalDaySelectionHint')"
+                :disabled="!hasPermission(Permission.UPDATE_EVENT_DETAILS)"
                 @update:model-value="update({ flags: { ...props.event?.flags, enableArrivalDaySelection: $event } })"
             />
         </div>
