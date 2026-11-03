@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eventplanner.common.validation.EnumValue;
 import org.eventplanner.common.validation.IsoTimestamp;
+import org.eventplanner.events.domain.entities.events.EventFlags;
 import org.eventplanner.events.domain.specs.CreateEventSpec;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.jspecify.annotations.NonNull;
@@ -29,7 +30,7 @@ public record CreateEventRequest(
     public @NonNull CreateEventSpec toDomain() {
         return new CreateEventSpec(
             EventType.fromString(type).orElse(EventType.OTHER),
-            flags.toDomain(),
+            flags != null ? flags.toDomain() : new EventFlags(),
             name,
             note,
             description,

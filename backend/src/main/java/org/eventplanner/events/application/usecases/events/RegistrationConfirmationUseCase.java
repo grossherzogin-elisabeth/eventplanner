@@ -66,6 +66,10 @@ public class RegistrationConfirmationUseCase {
     }
 
     private void sendConfirmationRequests(@NonNull final Event event) {
+        if (!event.getFlags().isEnableRegistrationConfirmation()) {
+            // this event has registration confirmations disabled, so we don't need to send any requests
+            return;
+        }
         if (event.getConfirmationsRequestsSent() >= 2) {
             log.debug("All confirmation requests for event {} have already been sent", event.getKey());
             // all requests have been sent
