@@ -26,7 +26,6 @@ import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.events.EventKey;
-import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.positions.PositionKey;
 import org.eventplanner.events.domain.values.users.UserKey;
 import org.jspecify.annotations.NonNull;
@@ -108,7 +107,7 @@ public class EventExportUseCase {
         model.put("event", event);
         var assignedRegistrations = resolveRegistrations(event, users, positions, true);
         var unassignedRegistrations = resolveRegistrations(event, users, positions, false);
-        if (event.getSignupType().equals(EventSignupType.ASSIGNMENT)) {
+        if (!event.getFlags().isEnableDirectSignup()) {
             model.put("crew", assignedRegistrations);
             model.put("waitinglist", unassignedRegistrations);
         } else {

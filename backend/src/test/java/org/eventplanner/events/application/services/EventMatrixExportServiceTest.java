@@ -24,12 +24,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eventplanner.events.application.ports.PositionRepository;
 import org.eventplanner.events.domain.entities.events.Event;
+import org.eventplanner.events.domain.entities.events.EventFlags;
 import org.eventplanner.events.domain.entities.events.EventSlot;
 import org.eventplanner.events.domain.entities.events.Registration;
 import org.eventplanner.events.domain.entities.positions.Position;
 import org.eventplanner.events.domain.entities.users.UserDetails;
 import org.eventplanner.events.domain.values.events.EventKey;
-import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventState;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.eventplanner.events.domain.values.events.RegistrationKey;
@@ -281,7 +281,7 @@ class EventMatrixExportServiceTest {
         return new Event(
             new EventKey(),
             EventType.SINGLE_DAY_EVENT,
-            EventSignupType.ASSIGNMENT,
+            new EventFlags(),
             "Event without any registrations",
             EventState.PLANNED,
             "Eventnote",
@@ -299,7 +299,7 @@ class EventMatrixExportServiceTest {
         var event = new Event(
             new EventKey(),
             EventType.SINGLE_DAY_EVENT,
-            EventSignupType.ASSIGNMENT,
+            new EventFlags(),
             "Event with waitinglist",
             EventState.PLANNED,
             "Eventnote",
@@ -337,7 +337,7 @@ class EventMatrixExportServiceTest {
         var event = new Event(
             new EventKey(),
             EventType.SINGLE_DAY_EVENT,
-            EventSignupType.ASSIGNMENT,
+            new EventFlags(),
             "Event with crew",
             EventState.PLANNED,
             "Eventnote",
@@ -375,7 +375,7 @@ class EventMatrixExportServiceTest {
         var event = new Event(
             new EventKey(),
             EventType.SINGLE_DAY_EVENT,
-            EventSignupType.ASSIGNMENT,
+            new EventFlags(),
             "Event with half crew",
             EventState.PLANNED,
             "Eventnote",
@@ -414,7 +414,7 @@ class EventMatrixExportServiceTest {
         var event = new Event(
             new EventKey(),
             EventType.SINGLE_DAY_EVENT,
-            EventSignupType.ASSIGNMENT,
+            new EventFlags(),
             "Event with crew and waitinglist",
             EventState.PLANNED,
             "Eventnote",

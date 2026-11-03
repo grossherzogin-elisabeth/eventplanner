@@ -49,6 +49,7 @@ public class RegistrationConfirmationUseCase {
                 eventRepository.findAllByYear(currentYear + 1).stream(),
                 eventRepository.findAllByYear(currentYear).stream()
             )
+            .filter(event -> event.getFlags().isEnableRegistrationConfirmation())
             .filter(event -> event.getState().equals(EventState.PLANNED))
             // only events that start in the future within the next 2 weeks
             .filter(event -> event.getStart().isAfter(Instant.now()))
@@ -65,6 +66,10 @@ public class RegistrationConfirmationUseCase {
     }
 
     private void sendConfirmationRequests(@NonNull final Event event) {
+        if (!event.getFlags().isEnableRegistrationConfirmation()) {
+            // this event has registration confirmations disabled, so we don't need to send any requests
+            return;
+        }
         if (event.getConfirmationsRequestsSent() >= 2) {
             log.debug("All confirmation requests for event {} have already been sent", event.getKey());
             // all requests have been sent

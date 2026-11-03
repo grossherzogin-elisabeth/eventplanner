@@ -13,7 +13,7 @@
                     {{ $t('views.event-edit.info-canceled') }}
                 </VWarning>
                 <VInfo
-                    v-else-if="event?.signupType === EventSignupType.Assignment && event?.state === EventState.OpenForSignup"
+                    v-else-if="event?.state === EventState.OpenForSignup && !event?.flags.enableDirectSignup"
                     class="mt-4"
                     data-test-id="info-crew-signup-state"
                     dismissable
@@ -106,7 +106,7 @@
                 <span>{{ $t('domain.registration.actions.create') }}</span>
             </li>
             <li
-                v-if="event?.signupType === EventSignupType.Assignment"
+                v-if="!event?.flags.enableDirectSignup"
                 class="permission-update-event-slots context-menu-item"
                 data-test-id="action-add-slot"
                 @click="addSlot()"
@@ -134,7 +134,7 @@
                     <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
                 </li>
             </template>
-            <template v-if="event?.signupType === EventSignupType.Assignment">
+            <template v-if="!event?.flags.enableDirectSignup">
                 <li
                     v-if="event?.state === EventState.Draft"
                     class="permission-update-event-details context-menu-item"
@@ -182,7 +182,7 @@ import { useI18n } from 'vue-i18n';
 import { useEventAdministrationUseCase, useEventUseCase, useUserAdministrationUseCase, useUsersUseCase } from '@/application';
 import { deepCopy, diff, filterUndefined } from '@/common';
 import type { Event, InputSelectOption, Location, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
-import { EventSignupType, EventState, Permission } from '@/domain';
+import { EventState, Permission } from '@/domain';
 import { useEventService } from '@/domain/services';
 import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog, VInfo, VTabs } from '@/ui/components/common';
@@ -238,7 +238,7 @@ const tabs = computed<InputSelectOption<Tab>[]>(() => {
     const visibleTabs: Tab[] = [Tab.EVENT_DATA, Tab.EVENT_LOCATIONS];
     if (!event.value || hasPermission(Permission.UPDATE_EVENT_SLOTS)) {
         visibleTabs.push(Tab.EVENT_REGISTRATIONS);
-        if (!event.value || event.value?.signupType === EventSignupType.Assignment) {
+        if (!event.value || !event.value?.flags.enableDirectSignup) {
             visibleTabs.push(Tab.EVENT_SLOTS, Tab.EVENT_CREW_EDITOR);
         }
     }
@@ -282,7 +282,7 @@ async function fetchCrew(): Promise<void> {
         return;
     }
     const all = await eventUseCase.resolveRegistrations(event.value);
-    if (event.value?.signupType === EventSignupType.Open) {
+    if (event.value?.flags.enableDirectSignup) {
         crew.value = all;
         waitinglist.value = [];
     } else {
@@ -369,7 +369,7 @@ async function addSlot(): Promise<void> {
 async function contactCrew(): Promise<void> {
     if (event.value) {
         let userKeys = event.value.registrations.map((it) => it.userKey).filter(filterUndefined);
-        if (event.value.signupType === EventSignupType.Open) {
+        if (event.value.flags.enableDirectSignup) {
             userKeys = eventService
                 .getAssignedRegistrations(event.value)
                 .map((it) => it.userKey)

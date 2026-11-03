@@ -95,7 +95,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
-import { EventSignupType, EventState, useEventService } from '@/domain';
+import { EventState, useEventService } from '@/domain';
 import { formatDateRange } from '@/ui/composables/DateRangeFormatter';
 import { useSession } from '@/ui/composables/Session.ts';
 
@@ -147,7 +147,7 @@ const stateDetails = computed<StateDetails>(() => {
     if (props.event.state === EventState.Draft) {
         return { name: t('domain.event-state.draft'), icon: 'fa-compass-drafting', color: 'neutral' };
     }
-    if (props.event.signupType === EventSignupType.Open || hasOpenSlots.value) {
+    if (props.event.flags.enableDirectSignup || hasOpenSlots.value) {
         return { name: t('domain.event-state.open-slots'), icon: 'fa-info-circle', color: 'info' };
     }
     if (props.event.state === EventState.OpenForSignup) {

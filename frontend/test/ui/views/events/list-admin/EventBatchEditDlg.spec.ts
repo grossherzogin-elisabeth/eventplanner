@@ -7,9 +7,7 @@ import { mount } from '@vue/test-utils';
 import type { EventAdministrationUseCase, EventUseCase } from '@/application';
 import { useEventAdministrationUseCase, useEventUseCase } from '@/application';
 import type { Event } from '@/domain';
-import { EventSignupType } from '@/domain';
-import { EventType } from '@/domain';
-import { EventState } from '@/domain';
+import { EventState, EventType } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import EventBatchEditDlg from '@/ui/views/events/list-admin/EventBatchEditDlg.vue';
 import { mockEvent } from '~/mocks';
@@ -88,15 +86,6 @@ describe('EventBatchEditDlg.vue', () => {
 
         await submit();
         expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { type });
-        await expect.poll(() => result).toBe(true);
-    });
-
-    it.each([EventSignupType.Assignment, EventSignupType.Open])('should patch only event signup type to $0', async (signupType) => {
-        await testee.find('[data-test-id="input-event-signup-type"] input').trigger('click');
-        await selectDropdownOption(testee, testee.vm.$t(`domain.event-signup-type.${signupType}`));
-
-        await submit();
-        expect(updateFunc).toHaveBeenCalledExactlyOnceWith(['a', 'b'], { signupType });
         await expect.poll(() => result).toBe(true);
     });
 

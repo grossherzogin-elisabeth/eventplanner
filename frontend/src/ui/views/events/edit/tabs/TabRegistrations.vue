@@ -8,14 +8,14 @@
             :options="positions.options.value"
         />
         <FilterToggle
-            v-if="props.event?.signupType === EventSignupType.Assignment"
+            v-if="!props.event?.flags.enableDirectSignup"
             v-model="filterFreeSlots"
             :label="$t('views.event-edit.filter.free-slots')"
         />
         <FilterToggle v-model="filterValidQualifications" :label="$t('views.event-edit.filter.valid-qualifications')" />
         <FilterToggle v-model="filterUnconfirmed" :label="$t('views.event-edit.filter.pending-confirmation')" />
     </div>
-    <template v-if="props.event?.signupType === EventSignupType.Assignment">
+    <template v-if="!props.event?.flags.enableDirectSignup">
         <h2 class="text-secondary mb-4 font-bold">
             {{ $t('domain.event.crew-count', { count: filteredCrew?.length }) }}
         </h2>
@@ -30,7 +30,7 @@
         @add-to-crew="addToCrew($event)"
         @remove-from-crew="removeFromCrew($event)"
     />
-    <template v-if="props.event?.signupType === EventSignupType.Assignment">
+    <template v-if="!props.event?.flags.enableDirectSignup">
         <h2 class="text-secondary mb-4 font-bold">
             {{ $t('domain.event.registration-count', { count: filteredRegistrations?.length }) }}
         </h2>
@@ -54,7 +54,7 @@ import { useI18n } from 'vue-i18n';
 import { useErrorHandlingService, useEventAdministrationUseCase } from '@/application';
 import { deepCopy, hasAnyOverlap } from '@/common';
 import type { Event, PositionKey, Registration, ResolvedRegistrationSlot, Slot } from '@/domain';
-import { EventSignupType, RegistrationSlotState, useEventService } from '@/domain';
+import { RegistrationSlotState, useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
 import { usePositions } from '@/ui/composables/Positions.ts';

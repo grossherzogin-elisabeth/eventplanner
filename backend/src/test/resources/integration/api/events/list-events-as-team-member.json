@@ -2,7 +2,12 @@
   {
     "key": "de9da329-7cc3-40ba-b9a4-1bc22a81f9e7",
     "type": "weekend-event",
-    "signupType": "assignment",
+    "flags": {
+      "enableDirectSignup": false,
+      "enableRegistrationConfirmation": true,
+      "enableOvernightStaySelection": true,
+      "enableArrivalDaySelection": true
+    },
     "name": "Canceled Event",
     "state": "canceled",
     "note": "",
@@ -127,7 +132,12 @@
   {
     "key": "7fa48570-963a-4e95-b72f-acaf70c70a24",
     "type": "weekend-event",
-    "signupType": "assignment",
+    "flags": {
+      "enableDirectSignup": false,
+      "enableRegistrationConfirmation": true,
+      "enableOvernightStaySelection": true,
+      "enableArrivalDaySelection": true
+    },
     "name": "Planned event",
     "state": "planned",
     "note": "",
@@ -285,7 +295,12 @@
   {
     "key": "98b55fb5-7f10-42c7-9b94-2e5c9b92f264",
     "type": "weekend-event",
-    "signupType": "assignment",
+    "flags": {
+      "enableDirectSignup": false,
+      "enableRegistrationConfirmation": true,
+      "enableOvernightStaySelection": true,
+      "enableArrivalDaySelection": true
+    },
     "name": "Open for signup",
     "state": "open-for-signup",
     "note": "",

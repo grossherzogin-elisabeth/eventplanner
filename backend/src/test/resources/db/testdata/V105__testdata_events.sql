@@ -1,5 +1,5 @@
 INSERT INTO events (key, year, name, state, note, description, start, end, locations, slots,
-                    participation_confirmations_requests_sent, type, signup_type)
+                    participation_confirmations_requests_sent, type, flags)
 VALUES ('689573b4-20c0-4279-bc2c-43a4d63e2c2b',
         2025,
         'Template',
@@ -116,10 +116,15 @@ VALUES ('689573b4-20c0-4279-bc2c-43a4d63e2c2b',
         ]',
         0,
         '',
-        'assignment');
+        '{
+           "enableDirectSignup": false,
+            "enableRegistrationConfirmation": true,
+            "enableOvernightStaySelection": true,
+            "enableArrivalDaySelection": true
+        }');
 
 INSERT INTO events (key, year, name, state, note, description, start, end, locations, slots,
-                    participation_confirmations_requests_sent, type, signup_type)
+                    participation_confirmations_requests_sent, type, flags)
 VALUES ('de9da329-7cc3-40ba-b9a4-1bc22a81f9e7',
         2025,
         'Canceled Event',
@@ -236,10 +241,15 @@ VALUES ('de9da329-7cc3-40ba-b9a4-1bc22a81f9e7',
         ]',
         0,
         '',
-        'assignment');
+        '{
+            "enableDirectSignup": false,
+            "enableRegistrationConfirmation": true,
+            "enableOvernightStaySelection": true,
+            "enableArrivalDaySelection": true
+        }');
 
 INSERT INTO events (key, year, name, state, note, description, start, end, locations, slots,
-                    participation_confirmations_requests_sent, type, signup_type)
+                    participation_confirmations_requests_sent, type, flags)
 VALUES ('7fa48570-963a-4e95-b72f-acaf70c70a24',
         2025,
         'Planned event',
@@ -356,10 +366,15 @@ VALUES ('7fa48570-963a-4e95-b72f-acaf70c70a24',
         ]',
         0,
         'weekend-event',
-        'assignment');
+        '{
+    "enableDirectSignup": false,
+    "enableRegistrationConfirmation": true,
+    "enableOvernightStaySelection": true,
+    "enableArrivalDaySelection": true
+}');
 
 INSERT INTO events (key, year, name, state, note, description, start, end, locations, slots,
-                    participation_confirmations_requests_sent, type, signup_type)
+                    participation_confirmations_requests_sent, type, flags)
 VALUES ('8def4517-6c06-4aee-9fdf-ae889e9ec627',
         2025,
         'Draft event',
@@ -476,10 +491,15 @@ VALUES ('8def4517-6c06-4aee-9fdf-ae889e9ec627',
         ]',
         0,
         '',
-        'assignment');
+        '{
+    "enableDirectSignup": false,
+    "enableRegistrationConfirmation": true,
+    "enableOvernightStaySelection": true,
+    "enableArrivalDaySelection": true
+}');
 
 INSERT INTO events (key, year, name, state, note, description, start, end, locations, slots,
-                    participation_confirmations_requests_sent, type, signup_type)
+                    participation_confirmations_requests_sent, type, flags)
 VALUES ('98b55fb5-7f10-42c7-9b94-2e5c9b92f264',
         2025,
         'Open for signup',
@@ -596,4 +616,9 @@ VALUES ('98b55fb5-7f10-42c7-9b94-2e5c9b92f264',
         ]',
         0,
         'weekend-event',
-        'assignment');
+        '{
+    "enableDirectSignup": false,
+    "enableRegistrationConfirmation": true,
+    "enableOvernightStaySelection": true,
+    "enableArrivalDaySelection": true
+}');

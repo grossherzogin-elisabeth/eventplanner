@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Event, Position } from '@/domain';
-import { EventSignupType, EventState, useEventService } from '@/domain';
+import { EventState, useEventService } from '@/domain';
 import { VInfo, VSuccess, VWarning } from '@/ui/components/common';
 import { usePositions } from '@/ui/composables/Positions.ts';
 
@@ -49,7 +49,7 @@ const content = computed<StateBannerContent | undefined>(() => {
     if (props.event.state === EventState.Draft) {
         return { type: VInfo, message: 'draft' };
     }
-    if (props.event.state === EventState.OpenForSignup && props.event.signupType === EventSignupType.Assignment) {
+    if (!props.event.flags.enableDirectSignup && props.event.state === EventState.OpenForSignup) {
         return { type: VInfo, message: 'planning' };
     }
     // event was canceled
