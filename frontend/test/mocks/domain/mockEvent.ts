@@ -1,5 +1,5 @@
 import type { Event } from '@/domain';
-import { EventSignupType, EventState, EventType } from '@/domain';
+import { EventState, EventType } from '@/domain';
 import { mockLocations } from './mockLocation.ts';
 import { mockRegistrations } from './mockRegistration.ts';
 import { mockSlots } from './mockSlot.ts';
@@ -14,7 +14,12 @@ export function mockEvent(overwrite?: Partial<Event>): Event {
         start: new Date(`${year}-07-10T09:00:00Z`),
         end: new Date(`${year}-07-12T17:00:00Z`),
         state: EventState.Planned,
-        signupType: EventSignupType.Assignment,
+        flags: {
+            enableDirectSignup: false,
+            enableRegistrationConfirmation: true,
+            enableArrivalDaySelection: true,
+            enableOvernightStaySelection: true,
+        },
         registrations: mockRegistrations(),
         slots: mockSlots(),
         locations: mockLocations(),

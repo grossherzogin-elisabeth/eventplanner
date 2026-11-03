@@ -7,11 +7,16 @@
             <RegistrationPositionCard :model-value="props.registration" @update:model-value="saveRegistration($event)" />
             <RegistrationNoteCard :model-value="props.registration" @update:model-value="saveRegistration($event)" />
             <RegistrationOvernightStayCard
-                v-if="props.event.days <= 1"
+                v-if="props.event.flags.enableOvernightStaySelection"
                 :model-value="props.registration"
                 @update:model-value="saveRegistration($event)"
             />
-            <RegistrationArrivalDateCard :event="event" :model-value="props.registration" @update:model-value="saveRegistration($event)" />
+            <RegistrationArrivalDateCard
+                v-if="props.event.flags.enableArrivalDaySelection"
+                :event="event"
+                :model-value="props.registration"
+                @update:model-value="saveRegistration($event)"
+            />
         </VInteractiveList>
     </section>
 </template>

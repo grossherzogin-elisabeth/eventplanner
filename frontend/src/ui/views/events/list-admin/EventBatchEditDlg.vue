@@ -40,17 +40,6 @@
                         />
                     </div>
                     <div class="mb-4">
-                        <VInputSelect
-                            v-model="patch.signupType"
-                            data-test-id="input-event-signup-type"
-                            :label="$t('domain.event.signup-type')"
-                            :options="eventSignupTypes.options.value"
-                            :errors="validation.errors.value['signupType']"
-                            :errors-visible="validation.showErrors.value"
-                            :placeholder="$t('views.event-admin-list.batch-edit.not-changed')"
-                        />
-                    </div>
-                    <div class="mb-4">
                         <EventTemplateSelect
                             v-model="copySlotsFrom"
                             data-test-id="input-event-slots"
@@ -101,14 +90,12 @@ import { useEventService } from '@/domain';
 import type { Dialog } from '@/ui/components/common';
 import { AsyncButton, VDialog, VInputSelect, VInputText, VInputTextArea, VWarning } from '@/ui/components/common';
 import EventTemplateSelect from '@/ui/components/events/EventTemplateSelect.vue';
-import { useEventSignupTypes } from '@/ui/composables/EventSignupTypes.ts';
 import { useEventStates } from '@/ui/composables/EventStates.ts';
 import { useEventTypes } from '@/ui/composables/EventTypes.ts';
 import { useValidation } from '@/ui/composables/Validation.ts';
 
 const eventStates = useEventStates();
 const eventTypes = useEventTypes();
-const eventSignupTypes = useEventSignupTypes();
 const eventService = useEventService();
 const eventAdminUseCase = useEventAdministrationUseCase();
 

@@ -95,4 +95,8 @@
     .skeleton button svg {
         display: none !important;
     }
+
+    .skeleton .skeleton\:hidden {
+        display: none !important;
+    }
 }

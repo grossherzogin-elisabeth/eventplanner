@@ -1,5 +1,5 @@
 import type { EventRepresentation } from '@/adapter/rest/EventRestRepository';
-import { EventSignupType, EventState, EventType, SlotCriticality } from '@/domain';
+import { EventState, EventType, SlotCriticality } from '@/domain';
 import {
     CAPTAIN,
     DECKHAND,
@@ -30,7 +30,12 @@ export function mockEventRepresentation(overwrite?: Partial<EventRepresentation>
         start: `${year}-07-10T09:00:00Z`,
         end: `${year}-07-12T17:00:00Z`,
         state: EventState.Planned,
-        signupType: EventSignupType.Assignment,
+        flags: {
+            enableDirectSignup: false,
+            enableRegistrationConfirmation: true,
+            enableArrivalDaySelection: true,
+            enableOvernightStaySelection: true,
+        },
         registrations: [
             {
                 key: REGISTRATION_CAPTAIN,

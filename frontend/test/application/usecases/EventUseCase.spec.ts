@@ -12,7 +12,7 @@ import type {
 import { EventUseCase } from '@/application/usecases/EventUseCase';
 import * as DownloadUtils from '@/common/utils/DownloadUtils';
 import type { Event, EventService, RegistrationService } from '@/domain';
-import { EventSignupType, EventState } from '@/domain';
+import { EventState } from '@/domain';
 import {
     mockEvent,
     mockPositionCaptain,
@@ -124,9 +124,9 @@ describe('EventUseCase', () => {
     });
 
     it('should join event and show waiting list notification for assignment events', async () => {
-        const event = mockEvent({ key: 'event-1', signupType: EventSignupType.Assignment, registrations: [] });
+        const event = mockEvent({ key: 'event-1', registrations: [] });
         const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
-        const saved = mockEvent({ key: 'event-1', signupType: EventSignupType.Assignment });
+        const saved = mockEvent({ key: 'event-1' });
         eventRegistrationsRepository.createRegistration = vi.fn(async () => saved);
 
         const result = await testee.joinEvent(event, registration);

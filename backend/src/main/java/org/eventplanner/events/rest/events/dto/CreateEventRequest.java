@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.eventplanner.common.validation.EnumValue;
 import org.eventplanner.common.validation.IsoTimestamp;
+import org.eventplanner.events.domain.entities.events.EventFlags;
 import org.eventplanner.events.domain.specs.CreateEventSpec;
-import org.eventplanner.events.domain.values.events.EventSignupType;
 import org.eventplanner.events.domain.values.events.EventType;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateEventRequest(
     @Nullable @EnumValue(EventType.class) String type,
-    @Nullable @EnumValue(EventSignupType.class) String signupType,
+    @Nullable EventFlagsRepresentation flags,
     @NonNull @NotNull @NotBlank String name,
     @Nullable String note,
     @Nullable String description,
@@ -30,7 +30,7 @@ public record CreateEventRequest(
     public @NonNull CreateEventSpec toDomain() {
         return new CreateEventSpec(
             EventType.fromString(type).orElse(EventType.OTHER),
-            EventSignupType.fromString(signupType).orElse(EventSignupType.ASSIGNMENT),
+            flags != null ? flags.toDomain() : new EventFlags(),
             name,
             note,
             description,

@@ -1,6 +1,11 @@
 {
   "type": "other",
-  "signupType": "assignment",
+  "flags": {
+    "enableDirectSignup": false,
+    "enableRegistrationConfirmation": true,
+    "enableOvernightStaySelection": true,
+    "enableArrivalDaySelection": true
+  },
   "name": "Test event",
   "note": "Note",
   "description": "Description",

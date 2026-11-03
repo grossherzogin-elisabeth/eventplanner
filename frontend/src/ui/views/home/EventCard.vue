@@ -20,7 +20,7 @@
                         <span class="grow">
                             {{ formatDateRange(props.event.start, props.event.end) }}
                         </span>
-                        <span v-if="props.event.signupType === EventSignupType.Open || props.event.state !== EventState.Planned">
+                        <span v-if="props.event.flags.enableDirectSignup || props.event.state !== EventState.Planned">
                             {{ props.event.registrations.length }}
                         </span>
                         <span v-else>{{ props.event.assignedUserCount }}</span>
@@ -89,7 +89,7 @@
 import { ref } from 'vue';
 import { DateTimeFormat } from '@/common/date';
 import type { Event } from '@/domain';
-import { EventSignupType, EventState } from '@/domain';
+import { EventState } from '@/domain';
 import type { Sheet } from '@/ui/components/common';
 import { VMarkdown } from '@/ui/components/common';
 import EventDetailsSheet from '@/ui/components/sheets/EventDetailsSheet.vue';

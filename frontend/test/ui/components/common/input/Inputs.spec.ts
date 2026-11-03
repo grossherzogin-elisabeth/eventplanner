@@ -8,6 +8,7 @@ import {
     VInputNumber,
     VInputSelect,
     VInputSlider,
+    VInputSwitch,
     VInputText,
     VInputTextArea,
     VInputTime,
@@ -23,6 +24,7 @@ const components = [
     { component: VInputSlider },
     { component: VInputText },
     { component: VInputTextArea },
+    { component: VInputSwitch },
     { component: VInputTime },
 ];
 
@@ -40,7 +42,7 @@ describe.each(components)('$component.__name', ({ component, props }) => {
     it('should generate id for input field', async () => {
         const testee = mount(component, { props: { ...props } });
         const label = testee.find('label');
-        const input = testee.find('input,textarea');
+        const input = testee.find('input,textarea,button');
 
         expect(input.attributes().id).not.toBeUndefined();
         expect(label.attributes().for).toEqual(input.attributes().id);

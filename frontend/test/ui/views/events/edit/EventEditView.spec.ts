@@ -5,7 +5,7 @@ import { mount } from '@vue/test-utils';
 import { HttpResponse, http } from 'msw';
 import type { AuthService } from '@/application';
 import { useAuthService } from '@/application';
-import { EventSignupType, EventState, Permission } from '@/domain';
+import { EventState, Permission } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
 import EventEditView from '@/ui/views/events/edit/EventEditView.vue';
 import { mockEventRepresentation, mockRouter, mockSignedInUser, server } from '~/mocks';
@@ -21,35 +21,33 @@ const eventInStateDraft = {
     name: 'Events in state draft',
     representation: mockEventRepresentation({
         state: EventState.Draft,
-        signupType: EventSignupType.Assignment,
     }),
 };
 const eventInStateCrewSignup = {
     name: 'Events in state crew signup',
     representation: mockEventRepresentation({
         state: EventState.OpenForSignup,
-        signupType: EventSignupType.Assignment,
     }),
 };
 const eventInStatePlanned = {
     name: 'Events in state planned',
     representation: mockEventRepresentation({
         state: EventState.Planned,
-        signupType: EventSignupType.Assignment,
     }),
 };
 const eventInStateCanceled = {
     name: 'Events in state canceled',
     representation: mockEventRepresentation({
         state: EventState.Canceled,
-        signupType: EventSignupType.Assignment,
     }),
 };
 const eventWithOpenSignup = {
     name: 'Events with open signup',
     representation: mockEventRepresentation({
         state: EventState.OpenForSignup,
-        signupType: EventSignupType.Open,
+        flags: {
+            enableDirectSignup: true,
+        },
     }),
 };
 const eventsWithCrewAssignment = [eventInStateDraft, eventInStateCrewSignup, eventInStatePlanned];

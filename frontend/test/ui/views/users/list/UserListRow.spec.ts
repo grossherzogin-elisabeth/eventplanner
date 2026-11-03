@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils';
 import type { PositionUseCase } from '@/application';
 import { usePositionUseCase } from '@/application';
 import type { Event, User } from '@/domain';
-import { EventSignupType, EventType } from '@/domain';
+import { EventType } from '@/domain';
 import UserListRow from '@/ui/views/users/list/UserListRow.vue';
 import {
     CAPTAIN,
@@ -67,19 +67,19 @@ describe('UserListRow.vue', () => {
         const events: Event[] = [
             mockEvent({
                 type: EventType.SingleDayEvent,
-                signupType: EventSignupType.Assignment,
                 registrations: [mockRegistrationEngineer()],
                 slots: [mockSlotEngineer({ assignedRegistrationKey: REGISTRATION_ENGINEER })],
             }),
             mockEvent({
                 type: EventType.WeekendEvent,
-                signupType: EventSignupType.Assignment,
                 registrations: [mockRegistrationEngineer()],
                 slots: [mockSlotEngineer({ assignedRegistrationKey: undefined })],
             }),
             mockEvent({
                 type: EventType.MultiDayEvent,
-                signupType: EventSignupType.Open,
+                flags: {
+                    enableDirectSignup: true,
+                },
                 registrations: [mockRegistrationEngineer()],
                 slots: [],
             }),

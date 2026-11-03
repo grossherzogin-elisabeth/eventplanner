@@ -1,6 +1,6 @@
 {
   "type": "invalid",
-  "signupType": "invalid",
+  "flags": {},
   "name": null,
   "note": null,
   "description": null,

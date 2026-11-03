@@ -2,7 +2,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { usePositionCachingService, useUserCachingService } from '@/application';
-import { EventSignupType, EventState } from '@/domain';
+import { EventState } from '@/domain';
 import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.vue';
 import { mockEvent } from '~/mocks';
 
@@ -40,7 +40,7 @@ describe('EventParticipantsCard.vue', () => {
 
     it('should render registrations for open signup', async () => {
         event.assignedUserCount = event.registrations.length;
-        event.signupType = EventSignupType.Open;
+        event.flags.enableDirectSignup = true;
         testee = mount(EventParticipantsCard, { props: { event } });
         expect(placeholder().exists()).toBe(false);
         expect(registrationList().exists()).toBe(true);
