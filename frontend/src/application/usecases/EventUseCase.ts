@@ -8,7 +8,6 @@ import type {
     PositionCachingService,
     UserCachingService,
 } from '@/application/services';
-import { isSameDate, subtractFromDate } from '@/common';
 import { saveStringToFile } from '@/common/utils/DownloadUtils';
 import type {
     Event,
@@ -149,9 +148,9 @@ export class EventUseCase {
         }
     }
 
-    public async joinEvent(event: Event, registration: Registration): Promise<Event> {
+    public async joinEvent(event: Event): Promise<Event> {
         try {
-            const savedEvent = await this.joinEventInternal(event, registration);
+            const savedEvent = await this.joinEventInternal(event);
             if (savedEvent.flags.enableDirectSignup) {
                 this.notificationService.success('Deine Anmeldung wurde gespeichert');
             } else {
@@ -164,24 +163,11 @@ export class EventUseCase {
         }
     }
 
-    public async joinEvents(events: Event[], registration: Registration): Promise<void> {
+    public async joinEvents(events: Event[]): Promise<void> {
         try {
-            await Promise.all(
-                events.map((event) => {
-                    const eventRegistration = {
-                        ...registration,
-                        key: uuid(),
-                    };
-                    if (!isSameDate(event.start, event.end)) {
-                        eventRegistration.overnightStay = true;
-                    }
-                    if (!eventRegistration.arrival) {
-                        // we only support setting arrival on the day before the event start for now
-                        eventRegistration.arrival = subtractFromDate(event.start, { days: 1 });
-                    }
-                    return this.joinEventInternal(event, eventRegistration);
-                })
-            );
+            for (const event of events) {
+                await this.joinEventInternal(event);
+            }
             this.notificationService.success('Deine Anmeldungen wurde gespeichert');
         } catch (e) {
             this.errorHandlingService.handleRawError(e);
@@ -189,13 +175,22 @@ export class EventUseCase {
         }
     }
 
-    private async joinEventInternal(event: Event, registration: Registration): Promise<Event> {
+    private async joinEventInternal(event: Event): Promise<Event> {
         const signedInUser = this.authService.getSignedInUser();
+        if (!signedInUser) {
+            throw new Error('Login required');
+        }
         if (event.registrations.some((it) => it.userKey === signedInUser?.key)) {
             // There already is a registration for this user. Nothing to do here to get required state.
             return this.eventService.updateComputedValues(event, signedInUser);
         }
-        let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, registration);
+        let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
+            key: uuid(),
+            userKey: signedInUser.key,
+            positionKey: signedInUser.positions[0],
+            arrival: undefined,
+            overnightStay: false,
+        });
         savedEvent = this.eventService.updateComputedValues(savedEvent, signedInUser);
         savedEvent = await this.eventCachingService.updateCache(savedEvent);
         return savedEvent;

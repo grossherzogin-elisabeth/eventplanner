@@ -93,8 +93,6 @@
                 />
             </template>
         </VMultiSelectActions>
-
-        <RegistrationDetailsSheet ref="createRegistrationSheet" />
     </div>
 </template>
 
@@ -104,13 +102,11 @@ import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEventUseCase } from '@/application';
-import type { Event, EventType, InputSelectOption, Registration } from '@/domain';
+import type { Event, EventType, InputSelectOption } from '@/domain';
 import { useEventService } from '@/domain';
-import type { Sheet } from '@/ui/components/common';
 import { VConfirmationDialog, VInfo, VMultiSelectActions, VTable, VTabs } from '@/ui/components/common';
 import VSearchButton from '@/ui/components/common/input/VSearchButton.vue';
 import { FilterMultiselect, FilterToggle } from '@/ui/components/filters';
-import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import NavbarFilter from '@/ui/components/utils/NavbarFilter.vue';
 import { useEventTypes } from '@/ui/composables/EventTypes';
 import { useQuery } from '@/ui/composables/QueryState';
@@ -141,14 +137,6 @@ const filterEventType = useQuery<EventType[]>('types', []).parameter;
 
 const events = ref<(Event & Selectable)[] | null>(null);
 const tab = ref<string>('future');
-
-const createRegistrationSheet = ref<Sheet<
-    {
-        registration?: Registration;
-        event: Event | Event[];
-    },
-    Registration | undefined
-> | null>(null);
 
 const hasAnySelectedEventInFuture = computed<boolean>(() => {
     const now = Date.now();
@@ -249,14 +237,8 @@ async function openEvent(item: Event, evt: MouseEvent): Promise<void> {
 }
 
 async function joinEvents(events: Event[]): Promise<void> {
-    const registration = await createRegistrationSheet.value?.open({
-        event: events,
-        registration: undefined,
-    });
-    if (registration) {
-        await eventUseCase.joinEvents(events, registration);
-        await fetchEvents();
-    }
+    await eventUseCase.joinEvents(events);
+    await fetchEvents();
 }
 
 async function leaveEvents(events: Event[], waitingListOnly = false): Promise<void> {

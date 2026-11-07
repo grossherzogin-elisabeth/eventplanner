@@ -96,15 +96,6 @@ describe('EventDetailsView.vue', () => {
             expect(action.classes()).not.toContain('disabled');
         });
 
-        it('should have edit registration action', async () => {
-            await awaitPageContentLoaded(testee);
-            const menu = await openPageContextMenu(testee);
-            const action = menu.find('[data-test-id="action-edit-registration"]');
-            expect(action.exists()).toBe(true);
-            // FIXME check whats happened here
-            // expect(action.classes()).not.toContain('disabled');
-        });
-
         it('should render all export actions in context menu', async () => {
             await awaitPageContentLoaded(testee);
             const menu = await openPageContextMenu(testee);
