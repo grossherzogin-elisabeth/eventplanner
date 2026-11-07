@@ -99,6 +99,7 @@ export function useEventUseCase(): EventUseCase {
             registrationService: useRegistrationService(),
             eventRegistrationsRepository: useEventRegistrationsRepository(),
             eventRepository: useEventRepository(),
+            configService: useConfigService(),
         });
     }
     return eventUseCase;

@@ -3,6 +3,7 @@ import type { EventRegistrationsRepository, EventRepository } from '@/applicatio
 import type {
     AuthService,
     CalendarService,
+    ConfigService,
     ErrorHandlingService,
     EventCachingService,
     NotificationService,
@@ -36,6 +37,7 @@ describe('EventUseCase', () => {
     let registrationService: RegistrationService;
     let eventRegistrationsRepository: EventRegistrationsRepository;
     let calendarService: CalendarService;
+    let configService: ConfigService;
 
     beforeEach(() => {
         notificationService = { success: vi.fn() } as unknown as NotificationService;
@@ -63,6 +65,7 @@ describe('EventUseCase', () => {
             declineParticipation: vi.fn(async () => undefined),
         } as unknown as EventRegistrationsRepository;
         calendarService = { createCalendarEntries: vi.fn(() => 'BEGIN:VCALENDAR') } as unknown as CalendarService;
+        configService = { getUserSettings: vi.fn(() => ({ preferredPosition: DECKHAND })) } as unknown as ConfigService;
 
         testee = new EventUseCase({
             notificationService,
@@ -76,6 +79,7 @@ describe('EventUseCase', () => {
             registrationService,
             eventRegistrationsRepository,
             calendarService,
+            configService,
         });
     });
 

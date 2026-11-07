@@ -2,6 +2,7 @@ import type { EventRegistrationsRepository, EventRepository } from '@/applicatio
 import type {
     AuthService,
     CalendarService,
+    ConfigService,
     ErrorHandlingService,
     EventCachingService,
     NotificationService,
@@ -34,6 +35,7 @@ export class EventUseCase {
     private readonly registrationService: RegistrationService;
     private readonly eventRegistrationsRepository: EventRegistrationsRepository;
     private readonly calendarService: CalendarService;
+    private readonly configService: ConfigService;
 
     constructor(params: {
         notificationService: NotificationService;
@@ -47,6 +49,7 @@ export class EventUseCase {
         registrationService: RegistrationService;
         eventRegistrationsRepository: EventRegistrationsRepository;
         calendarService: CalendarService;
+        configService: ConfigService;
     }) {
         this.notificationService = params.notificationService;
         this.errorHandlingService = params.errorHandlingService;
@@ -59,6 +62,7 @@ export class EventUseCase {
         this.registrationService = params.registrationService;
         this.eventRegistrationsRepository = params.eventRegistrationsRepository;
         this.calendarService = params.calendarService;
+        this.configService = params.configService;
     }
 
     public async getEvents(year: number): Promise<Event[]> {
@@ -180,6 +184,11 @@ export class EventUseCase {
         if (!signedInUser) {
             throw new Error('Login required');
         }
+        const userSettings = this.configService.getUserSettings();
+        let position = userSettings.preferredPosition;
+        if (!position || !signedInUser.positions.includes(position)) {
+            position = signedInUser.positions[0];
+        }
         if (event.registrations.some((it) => it.userKey === signedInUser?.key)) {
             // There already is a registration for this user. Nothing to do here to get required state.
             return this.eventService.updateComputedValues(event, signedInUser);
@@ -187,7 +196,7 @@ export class EventUseCase {
         let savedEvent = await this.eventRegistrationsRepository.createRegistration(event.key, {
             key: uuid(),
             userKey: signedInUser.key,
-            positionKey: signedInUser.positions[0],
+            positionKey: position,
             arrival: undefined,
             overnightStay: false,
         });
