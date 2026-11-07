@@ -3,6 +3,7 @@ import type { EventRegistrationsRepository, EventRepository } from '@/applicatio
 import type {
     AuthService,
     CalendarService,
+    ConfigService,
     ErrorHandlingService,
     EventCachingService,
     NotificationService,
@@ -14,6 +15,7 @@ import * as DownloadUtils from '@/common/utils/DownloadUtils';
 import type { Event, EventService, RegistrationService } from '@/domain';
 import { EventState } from '@/domain';
 import {
+    DECKHAND,
     mockEvent,
     mockPositionCaptain,
     mockRegistrationCaptain,
@@ -35,6 +37,7 @@ describe('EventUseCase', () => {
     let registrationService: RegistrationService;
     let eventRegistrationsRepository: EventRegistrationsRepository;
     let calendarService: CalendarService;
+    let configService: ConfigService;
 
     beforeEach(() => {
         notificationService = { success: vi.fn() } as unknown as NotificationService;
@@ -62,6 +65,7 @@ describe('EventUseCase', () => {
             declineParticipation: vi.fn(async () => undefined),
         } as unknown as EventRegistrationsRepository;
         calendarService = { createCalendarEntries: vi.fn(() => 'BEGIN:VCALENDAR') } as unknown as CalendarService;
+        configService = { getUserSettings: vi.fn(() => ({ preferredPosition: DECKHAND })) } as unknown as ConfigService;
 
         testee = new EventUseCase({
             notificationService,
@@ -75,6 +79,7 @@ describe('EventUseCase', () => {
             registrationService,
             eventRegistrationsRepository,
             calendarService,
+            configService,
         });
     });
 
@@ -125,13 +130,20 @@ describe('EventUseCase', () => {
 
     it('should join event and show waiting list notification for assignment events', async () => {
         const event = mockEvent({ key: 'event-1', registrations: [] });
-        const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
         const saved = mockEvent({ key: 'event-1' });
         eventRegistrationsRepository.createRegistration = vi.fn(async () => saved);
 
-        const result = await testee.joinEvent(event, registration);
+        const result = await testee.joinEvent(event);
 
-        expect(eventRegistrationsRepository.createRegistration).toHaveBeenCalledWith('event-1', registration);
+        expect(eventRegistrationsRepository.createRegistration).toHaveBeenCalledWith(
+            'event-1',
+            expect.objectContaining({
+                userKey: 'mocked',
+                positionKey: DECKHAND,
+                arrival: undefined,
+                overnightStay: false,
+            })
+        );
         expect(eventCachingService.updateCache).toHaveBeenCalledWith(saved);
         expect(notificationService.success).toHaveBeenCalled();
         expect(result).toEqual(saved);
@@ -139,9 +151,8 @@ describe('EventUseCase', () => {
 
     it('should skip join registration creation when signed-in user is already registered', async () => {
         const event = mockEvent({ key: 'event-1', registrations: [mockRegistrationDeckhand({ userKey: 'mocked' })] });
-        const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
 
-        await testee.joinEvent(event, registration);
+        await testee.joinEvent(event);
 
         expect(eventRegistrationsRepository.createRegistration).not.toHaveBeenCalled();
     });
@@ -153,13 +164,17 @@ describe('EventUseCase', () => {
             start: new Date('2026-07-10T09:00:00Z'),
             end: new Date('2026-07-12T17:00:00Z'),
         });
-        const registration = mockRegistrationDeckhand({ arrival: undefined, overnightStay: undefined, userKey: 'mocked' });
 
-        await testee.joinEvents([event], registration);
+        await testee.joinEvents([event]);
 
         expect(eventRegistrationsRepository.createRegistration).toHaveBeenCalledWith(
             'event-1',
-            expect.objectContaining({ overnightStay: true, arrival: new Date('2026-07-09T09:00:00Z') })
+            expect.objectContaining({
+                userKey: 'mocked',
+                positionKey: DECKHAND,
+                arrival: undefined,
+                overnightStay: false,
+            })
         );
         expect(notificationService.success).toHaveBeenCalled();
     });
@@ -174,7 +189,7 @@ describe('EventUseCase', () => {
             return mockEvent();
         });
 
-        await testee.joinEvents([eventA, eventB], registration);
+        await testee.joinEvents([eventA, eventB]);
 
         const [regA, regB] = capturedRegistrations as Array<{ key: string }>;
         expect(regA.key).not.toEqual(registration.key);

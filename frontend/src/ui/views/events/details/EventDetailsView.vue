@@ -12,7 +12,6 @@
                             v-if="event.signedInUserRegistration"
                             v-model:event="event"
                             :registration="event.signedInUserRegistration"
-                            @edit="editUserRegistration()"
                         />
                         <EventDetailsCard :event="event" />
                         <EventLocationsCard :event="event" />
@@ -82,25 +81,6 @@
                 <i class="fa-solid fa-file-excel" />
                 <span>{{ $t('domain.event.actions.export-to-template', { template }) }}</span>
             </li>
-            <template v-if="event.signedInUserRegistration">
-                <li
-                    data-test-id="action-edit-registration"
-                    class="context-menu-item"
-                    :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
-                    @click="editUserRegistration()"
-                >
-                    <i class="fa-solid fa-edit" />
-                    <span>{{ $t('domain.registration.actions.edit') }}</span>
-                </li>
-                <li
-                    class="context-menu-item"
-                    :class="{ disabled: !event.canSignedInUserUpdateRegistration }"
-                    @click="editUserRegistration()"
-                >
-                    <i class="fa-solid fa-note-sticky" />
-                    <span>{{ $t('domain.registration.actions.add-note') }}</span>
-                </li>
-            </template>
             <li class="permission-update-event-details" data-test-id="action-edit-event">
                 <RouterLink :to="{ name: Routes.EventEdit }" class="context-menu-item">
                     <i class="fa-solid fa-drafting-compass" />
@@ -110,7 +90,6 @@
         </template>
     </DetailsPage>
     <VConfirmationDialog ref="confirmationDialog" />
-    <RegistrationDetailsSheet ref="registrationSheet" />
 </template>
 
 <script lang="ts" setup>
@@ -118,9 +97,9 @@ import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useEventUseCase } from '@/application';
-import type { Event, Registration } from '@/domain';
+import type { Event } from '@/domain';
 import { Permission } from '@/domain';
-import type { ConfirmationDialog, Dialog } from '@/ui/components/common';
+import type { ConfirmationDialog } from '@/ui/components/common';
 import { AsyncButton, VConfirmationDialog } from '@/ui/components/common';
 import EventDetailsCard from '@/ui/components/events/EventDetailsCard.vue';
 import EventLocationsCard from '@/ui/components/events/EventLocationsCard.vue';
@@ -128,7 +107,6 @@ import EventParticipantsCard from '@/ui/components/events/EventParticipantsCard.
 import EventRegistrationDetailsCard from '@/ui/components/events/EventRegistrationDetailsCard.vue';
 import EventStateBanner from '@/ui/components/events/EventStateBanner.vue';
 import DetailsPage from '@/ui/components/partials/DetailsPage.vue';
-import RegistrationDetailsSheet from '@/ui/components/sheets/RegistrationDetailsSheet.vue';
 import { useEventExports } from '@/ui/composables/EventExports.ts';
 import { useSession } from '@/ui/composables/Session.ts';
 import { Routes } from '@/ui/views/Routes.ts';
@@ -147,13 +125,6 @@ const { hasPermission } = useSession();
 
 const event = ref<Event | null>(null);
 
-const registrationSheet = ref<Dialog<
-    {
-        registration?: Registration;
-        event: Event;
-    },
-    Registration | undefined
-> | null>(null);
 const confirmationDialog = ref<ConfirmationDialog | null>(null);
 
 function init(): void {
@@ -183,13 +154,7 @@ async function joinEvent(): Promise<void> {
     if (!event.value) {
         return;
     }
-    const registration = await registrationSheet.value?.open({
-        event: event.value,
-        registration: undefined,
-    });
-    if (event.value && registration) {
-        event.value = await eventUseCase.joinEvent(event.value, registration);
-    }
+    event.value = await eventUseCase.joinEvent(event.value);
 }
 
 async function leaveEvent(): Promise<void> {
@@ -206,19 +171,6 @@ async function leaveEvent(): Promise<void> {
             }
         }
         event.value = await eventUseCase.leaveEvent(event.value);
-    }
-}
-
-async function editUserRegistration(): Promise<void> {
-    if (event.value && event.value.signedInUserRegistration) {
-        const updatedRegistration = await registrationSheet.value?.open({
-            event: event.value,
-            registration: event.value.signedInUserRegistration,
-        });
-        if (updatedRegistration) {
-            await eventUseCase.updateRegistration(event.value, updatedRegistration);
-            await fetchEvent();
-        }
     }
 }
 

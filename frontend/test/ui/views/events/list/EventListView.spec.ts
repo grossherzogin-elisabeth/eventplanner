@@ -4,7 +4,7 @@ import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import type { EventUseCase } from '@/application';
 import { useEventUseCase } from '@/application';
-import type { Event, Registration } from '@/domain';
+import type { Event } from '@/domain';
 import { EventType, Permission, SlotCriticality } from '@/domain';
 import { Routes } from '@/ui/views/Routes';
 import EventListView from '@/ui/views/events/list/EventListView.vue';
@@ -174,11 +174,9 @@ describe('EventListView.vue', () => {
     });
 
     it('should join event', async () => {
-        const joinEventFunc = vi
-            .spyOn(eventUseCase, 'joinEvents')
-            .mockImplementation(async (events: Event[], registration: Registration) => {
-                events.forEach((event) => event.registrations.push(registration));
-            });
+        const joinEventFunc = vi.spyOn(eventUseCase, 'joinEvents').mockImplementation(async (events: Event[]) => {
+            events.forEach((event) => event.registrations.push(registration));
+        });
 
         const registration = mockRegistrationDeckhand({ userKey: 'mocked' });
         const openSpy = vi.fn(async () => registration);
