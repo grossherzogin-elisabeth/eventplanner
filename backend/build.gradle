@@ -3,8 +3,8 @@ plugins {
     id "jacoco"
     id "org.springframework.boot" version "4.1.2"
     id "io.spring.dependency-management" version "1.1.7"
-    id "io.freefair.lombok" version "9.8.2"
-    id "org.sonarqube" version "7.5.0.8588"
+    id "io.freefair.lombok" version "9.8.3"
+    id "org.sonarqube" version "7.6.0.18749"
 }
 
 group = "org.eventplanner"
@@ -39,10 +39,10 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     // database
-    implementation "org.xerial:sqlite-jdbc:3.53.4.0"
-    implementation "org.hibernate.orm:hibernate-community-dialects:7.4.14.Final"
+    implementation "org.xerial:sqlite-jdbc:3.54.1.0"
+    implementation "org.hibernate.orm:hibernate-community-dialects:7.4.15.Final"
     implementation "org.postgresql:postgresql:42.7.14"
-    implementation "org.flywaydb:flyway-database-postgresql:13.10.0"
+    implementation "org.flywaydb:flyway-database-postgresql:13.12.2"
 
     // excel
     implementation "org.apache.poi:poi:${apachePoiVersion}"
@@ -69,7 +69,7 @@ dependencies {
     runtimeOnly "io.micrometer:micrometer-registry-prometheus"
 
     // util
-    implementation "org.apache.commons:commons-lang3:3.21.0"
+    implementation "org.apache.commons:commons-lang3:3.22.0"
 }
 
 test {
