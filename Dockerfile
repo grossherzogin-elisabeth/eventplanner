@@ -9,7 +9,9 @@ FROM eclipse-temurin:25-jdk-alpine AS backend-builder
 WORKDIR /builder
 COPY ./backend .
 COPY --from=frontend-builder /builder/dist/ ./src/main/resources/static/
-RUN ./gradlew build
+# only build, as some integration tests require a docker machine
+# tests have already run in pipeline
+RUN ./gradlew bootJar
 
 # combine frontend and backend
 FROM eclipse-temurin:25-jdk-alpine
